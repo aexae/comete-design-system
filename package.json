@@ -57,7 +57,7 @@
     "@naxit/comete-design-tokens": "^0.4.5",
     "@naxit/comete-icons": "^0.3.1",
     "@naxit/comete-illustrations": "0.1.0-alpha.2",
-    "@naxit/comete-logos": "0.6.1",
+    "@naxit/comete-logos": "0.4.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
