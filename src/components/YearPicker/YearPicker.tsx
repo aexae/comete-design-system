@@ -97,10 +97,15 @@ export function YearPicker({
     onChange?.(resolvedYear + 1);
   };
 
-  // -- Handler calendar selection (ne ferme PAS le popover) --
+  // -- Popover state --
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  // -- Handler calendar selection --
 
   const handleYearSelect = (date: CalendarDate) => {
     onChange?.(date.year);
+    setIsOpen(false);
   };
 
   // -- Handler editable input --
@@ -160,7 +165,7 @@ export function YearPicker({
               disabled={isDisabled}
               aria-label={`Année : ${resolvedYear}`}
             />
-            <DialogTrigger>
+            <DialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
               <Button
                 variant="subtle"
                 iconBefore="CalendarMonth"
@@ -197,7 +202,7 @@ export function YearPicker({
               aria-label="Année précédente"
             />
 
-            <DialogTrigger>
+            <DialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
               <Button
                 variant="subtle"
                 iconAfter="ArrowDropDown"
