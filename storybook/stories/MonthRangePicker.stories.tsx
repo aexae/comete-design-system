@@ -132,7 +132,7 @@ export const Default: Story = {
 };
 
 /** Mode navigation — boutons mois cliquables. */
-export const Navigable: Story = {
+export const NonEditable: Story = {
   render: ControlledRender,
   args: {
     startMonth: 8,

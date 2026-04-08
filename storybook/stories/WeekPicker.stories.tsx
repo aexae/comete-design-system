@@ -107,7 +107,7 @@ export const Default: Story = {
 };
 
 /** Mode navigation — chevrons ←/→ + bouton semaine formaté. */
-export const Navigable: Story = {
+export const NonEditable: Story = {
   render: ControlledRender,
   args: {
     week: 28,

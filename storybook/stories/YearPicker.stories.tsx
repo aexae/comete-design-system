@@ -101,7 +101,7 @@ export const Default: Story = {
 };
 
 /** Mode navigation — chevrons ←/→ + bouton année. */
-export const Navigable: Story = {
+export const NonEditable: Story = {
   render: ControlledRender,
   args: {
     year: 2025,

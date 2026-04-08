@@ -108,7 +108,7 @@ export const Default: Story = {
 };
 
 /** Mode navigation — chevrons ←/→ + bouton mois/année. */
-export const Navigable: Story = {
+export const NonEditable: Story = {
   render: ControlledRender,
   args: {
     month: 6,

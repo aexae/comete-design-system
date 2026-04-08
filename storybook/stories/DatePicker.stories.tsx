@@ -108,7 +108,7 @@ export const FieldInvalid: Story = {
 };
 
 /** Mode navigation — chevrons ←/→ + bouton date formatée. */
-export const Navigable: Story = {
+export const NonEditable: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("3246:2714") } },
   args: { isEditable: false, defaultValue: today(getLocalTimeZone()) },
 };

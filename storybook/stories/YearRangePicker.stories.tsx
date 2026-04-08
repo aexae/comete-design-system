@@ -113,7 +113,7 @@ export const Default: Story = {
 };
 
 /** Mode navigation — boutons année cliquables. */
-export const Navigable: Story = {
+export const NonEditable: Story = {
   render: ControlledRender,
   args: {
     startYear: 2023,
