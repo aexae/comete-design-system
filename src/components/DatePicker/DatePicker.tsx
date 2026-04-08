@@ -195,6 +195,9 @@ function NavigationDatePicker<T extends DateValue = DateValue>({
 
   const formattedDate = formatDateLong(resolvedValue, locale);
 
+  // -- Popover state --
+  const [isOpen, setIsOpen] = useState(false);
+
   const updateValue = (newDate: CalendarDate) => {
     if (!isControlled) setInternalValue(newDate);
     (onChange as ((value: CalendarDate) => void) | undefined)?.(newDate);
@@ -212,6 +215,7 @@ function NavigationDatePicker<T extends DateValue = DateValue>({
 
   const handleCalendarSelect = (date: DateValue) => {
     updateValue(date as CalendarDate);
+    setIsOpen(false);
   };
 
   const rootClassNames = [styles.datePicker, className]
@@ -242,7 +246,7 @@ function NavigationDatePicker<T extends DateValue = DateValue>({
             aria-label="Jour précédent"
           />
 
-          <DialogTrigger>
+          <DialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
             <Button
               variant="subtle"
               iconAfter="ArrowDropDown"

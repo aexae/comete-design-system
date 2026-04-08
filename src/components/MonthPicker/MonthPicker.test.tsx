@@ -199,7 +199,7 @@ describe("MonthPicker", () => {
     // Click the first cell (January)
     await user.click(cells[0]);
     expect(onChange).toHaveBeenCalled();
-    // Popover should NOT close after selection
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    // Popover should close after selection
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 });

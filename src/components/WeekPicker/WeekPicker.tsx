@@ -259,13 +259,18 @@ export function WeekPicker({
     onChange?.(nextWeek, nextYear);
   };
 
-  // -- Handler calendar selection (ne ferme PAS le popover) --
+  // -- Popover state --
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  // -- Handler calendar selection --
 
   const handleWeekSelect = (range: RangeValue<CalendarDate>) => {
     const weekStart = startOfWeek(range.start, locale);
     const wk = getISOWeekNumber(weekStart);
     const yr = getISOWeekYear(weekStart);
     onChange?.(wk, yr);
+    setIsOpen(false);
   };
 
   // -- Derived --
@@ -326,7 +331,7 @@ export function WeekPicker({
               aria-label={`Semaine ${resolvedWeek} : ${weekLabel}`}
             />
 
-            <DialogTrigger>
+            <DialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
               <Button
                 variant="subtle"
                 iconBefore="CalendarMonth"
@@ -363,7 +368,7 @@ export function WeekPicker({
               aria-label="Semaine précédente"
             />
 
-            <DialogTrigger>
+            <DialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
               <Button
                 variant="subtle"
                 iconAfter="ArrowDropDown"

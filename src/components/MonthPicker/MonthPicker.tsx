@@ -147,10 +147,15 @@ export function MonthPicker({
     }
   };
 
-  // -- Handler calendar selection (ne ferme PAS le popover) --
+  // -- Popover state --
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  // -- Handler calendar selection --
 
   const handleMonthSelect = (date: CalendarDate) => {
     onChange?.(date.month, date.year);
+    setIsOpen(false);
   };
 
   // -- Editable input state --
@@ -249,7 +254,7 @@ export function MonthPicker({
               aria-label={`Année : ${resolvedYear}`}
             />
 
-            <DialogTrigger>
+            <DialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
               <Button
                 variant="subtle"
                 iconBefore="CalendarMonth"
@@ -286,7 +291,7 @@ export function MonthPicker({
               aria-label="Mois précédent"
             />
 
-            <DialogTrigger>
+            <DialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
               <Button
                 variant="subtle"
                 iconAfter="ArrowDropDown"

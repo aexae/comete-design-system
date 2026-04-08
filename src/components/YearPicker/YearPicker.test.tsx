@@ -66,8 +66,8 @@ describe("YearPicker", () => {
     const cell2023 = screen.getByRole("gridcell", { name: "2023" });
     await user.click(cell2023);
     expect(onChange).toHaveBeenCalledWith(2023);
-    // Popover should NOT close after selection
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    // Popover should close after selection
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
   // -- Navigation mode (isEditable=false) --
@@ -116,7 +116,7 @@ describe("YearPicker", () => {
     const cell2023 = screen.getByRole("gridcell", { name: "2023" });
     await user.click(cell2023);
     expect(onChange).toHaveBeenCalledWith(2023);
-    // Popover should NOT close after selection
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    // Popover should close after selection
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 });
