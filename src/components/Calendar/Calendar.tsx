@@ -27,12 +27,14 @@ import { MonthCalendar } from "./MonthCalendar.js";
 import { DualMonthCalendar } from "./DualMonthCalendar.js";
 import { YearCalendar } from "./YearCalendar.js";
 import { DualYearCalendar } from "./DualYearCalendar.js";
+import { TimeCalendar } from "./TimeCalendar.js";
+import type { TimeCalendarProps as TimeCalendarComponentProps } from "./TimeCalendar.js";
 import styles from "./Calendar.module.css";
 
 // -----------------------------------------------------------------------
 // Types publics
 
-export type CalendarAppearance = "date" | "week" | "month" | "year";
+export type CalendarAppearance = "date" | "week" | "month" | "year" | "time";
 
 /** Props communes à toutes les apparences. */
 interface CalendarBaseProps {
@@ -127,13 +129,24 @@ export interface YearCalendarDualProps extends CalendarBaseProps {
   isDisabled?: boolean;
 }
 
+/** Props pour appearance="time" (liste scrollable de créneaux horaires). */
+export interface TimeCalendarCalendarProps extends CalendarBaseProps {
+  appearance: "time";
+  value?: TimeCalendarComponentProps["value"];
+  onChange?: TimeCalendarComponentProps["onChange"];
+  /** Intervalle en minutes. @default 15 */
+  step?: number;
+  isDisabled?: boolean;
+}
+
 export type CalendarProps =
   | DateCalendarProps
   | WeekCalendarProps
   | MonthCalendarProps
   | MonthCalendarDualProps
   | YearCalendarProps
-  | YearCalendarDualProps;
+  | YearCalendarDualProps
+  | TimeCalendarCalendarProps;
 
 // -----------------------------------------------------------------------
 // Composant unifié
@@ -162,6 +175,11 @@ export type CalendarProps =
 export function Calendar(props: CalendarProps): ReactElement {
   // NOTE: isOpen est accepté sans être utilisé ici — le rendu est délégué
   // au composant DatePicker qui wrappera Calendar dans un popover.
+
+  if (props.appearance === "time") {
+    const { appearance: _a, isOpen: _o, calendars: _c, ...timeProps } = props;
+    return <TimeCalendar {...timeProps} />;
+  }
 
   if (props.appearance === "week") {
     if (props.calendars === 2) {

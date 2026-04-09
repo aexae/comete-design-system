@@ -7,11 +7,12 @@
 /* Root */
 .timePicker {
   position: relative;
-  width: 100%;
+  display: inline-flex;
+  width: fit-content;
 }
 
 /* ==========================================================================
-   Time input (segments)
+   Time input (segments) — mode saisie
    ========================================================================== */
 
 .timeInput {
@@ -52,9 +53,45 @@
 }
 
 /* ==========================================================================
-   Clock icon
+   Clock icon — mode saisie
    ========================================================================== */
 
 .clockIcon {
   flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Mode non-editable — heure formatée + bouton horloge
+   ========================================================================== */
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: var(--space100);
+}
+
+.timeDisplay {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  color: var(--text-primary);
+}
+
+.clockButton {
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Popover / Dialog
+   ========================================================================== */
+
+.popover {
+  min-width: auto;
+  overflow: hidden;
+}
+
+.dialog {
+  outline: none;
 }

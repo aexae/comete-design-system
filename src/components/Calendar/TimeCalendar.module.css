@@ -1,0 +1,53 @@
+/* ==========================================================================
+   TimeCalendar — Comète Design System
+   Liste scrollable de créneaux horaires.
+   ========================================================================== */
+
+.timeCalendar {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: var(--space050);
+}
+
+/* Option individuelle */
+.timeOption {
+  display: flex;
+  align-items: center;
+  min-height: 28px;
+  padding-inline: var(--space150);
+  padding-block: var(--space050);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  width: 100%;
+  text-align: start;
+
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xs);
+  color: var(--text-primary);
+  border-radius: var(--radius050);
+}
+
+.timeOption:hover:not(:disabled) {
+  background-color: var(--background-neutral-subtle-hover);
+}
+
+.timeOption[data-selected] {
+  background-color: var(--background-brand-bold-default);
+  color: var(--text-inverted);
+  font-weight: var(--font-weight-medium);
+}
+
+.timeOption[data-selected]:hover:not(:disabled) {
+  background-color: var(--background-brand-bold-hover);
+}
+
+.timeOption:disabled {
+  color: var(--text-disabled);
+  cursor: default;
+}

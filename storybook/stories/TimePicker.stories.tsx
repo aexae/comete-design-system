@@ -38,6 +38,7 @@ const meta = {
       description: "Format 12h (AM/PM) ou 24h",
     },
     showSeconds: { control: "boolean" },
+    isEditable: { control: "boolean" },
   },
   args: {
     "aria-label": "Heure",
@@ -85,6 +86,11 @@ export const Compact: Story = {
 /** Invalid. */
 export const Invalid: Story = {
   args: { isInvalid: true, defaultValue: new Time(9, 0) },
+};
+
+/** Mode non-editable — heure formatée + bouton horloge popover. */
+export const NonEditable: Story = {
+  args: { isEditable: false, defaultValue: new Time(14, 30) },
 };
 
 /** Disabled. */
