@@ -30,3 +30,4 @@
 *.7z
 stats.html
 coverage
+pnpm-lock.yaml
