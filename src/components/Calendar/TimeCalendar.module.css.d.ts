@@ -3,3 +3,4 @@ declare const styles: {
   readonly "timeOption": string;
 };
 export = styles;
+

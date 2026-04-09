@@ -1,12 +1,13 @@
 declare const styles: {
-  readonly root: string;
-  readonly content: string;
-  readonly monthValue: string;
-  readonly monthButton: string;
-  readonly monthInput: string;
-  readonly separator: string;
-  readonly calendarButton: string;
-  readonly popover: string;
-  readonly dialog: string;
+  readonly "calendarButton": string;
+  readonly "content": string;
+  readonly "dialog": string;
+  readonly "monthButton": string;
+  readonly "monthInput": string;
+  readonly "monthValue": string;
+  readonly "popover": string;
+  readonly "root": string;
+  readonly "separator": string;
 };
-export default styles;
+export = styles;
+
