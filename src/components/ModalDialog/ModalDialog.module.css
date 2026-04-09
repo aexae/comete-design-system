@@ -1,0 +1,188 @@
+/* ==========================================================================
+   ModalDialog — Comète Design System
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   ========================================================================== */
+
+/* ==========================================================================
+   Overlay (blanket)
+   ========================================================================== */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-index-overlay);
+  background-color: var(--blanket-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space100);
+
+  /* Enter/exit animation */
+  &[data-entering] {
+    animation: overlay-fade-in 200ms ease-out;
+  }
+
+  &[data-exiting] {
+    animation: overlay-fade-out 150ms ease-in;
+  }
+}
+
+@keyframes overlay-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes overlay-fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+/* ==========================================================================
+   Modal (centering wrapper)
+   ========================================================================== */
+
+.modal {
+  z-index: var(--z-index-modal);
+  outline: none;
+}
+
+/* ==========================================================================
+   Dialog (the card itself)
+   ========================================================================== */
+
+.dialog {
+  background-color: var(--background-surface-elevation-overlay-default);
+  border-radius: var(--radius050);
+  box-shadow: var(--elevation-xlarge);
+  overflow: hidden;
+  outline: none;
+  width: 100%;
+  max-height: calc(100vh - var(--space800) * 2);
+  display: flex;
+  flex-direction: column;
+
+  /* Enter animation */
+  &[data-entering] {
+    animation: dialog-slide-in 200ms ease-out;
+  }
+
+  &[data-exiting] {
+    animation: dialog-slide-out 150ms ease-in;
+  }
+}
+
+@keyframes dialog-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dialog-slide-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+/* ==========================================================================
+   Width variants
+   ========================================================================== */
+
+.xsmall {
+  max-width: 320px;
+}
+
+.small {
+  max-width: 376px;
+}
+
+.medium {
+  max-width: 600px;
+}
+
+.large {
+  max-width: 752px;
+}
+
+.xlarge {
+  max-width: 968px;
+}
+
+/* ==========================================================================
+   Header
+   ========================================================================== */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space100);
+  min-height: 72px;
+  padding: var(--space300) var(--space300) var(--space200);
+}
+
+.headerIcon {
+  flex-shrink: 0;
+}
+
+.closeButton {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.title {
+  flex: 1;
+  margin: 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-m);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui-m);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Body
+   ========================================================================== */
+
+.body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 var(--space300);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  line-height: var(--line-height-ui-s);
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space100);
+  padding: var(--space200) var(--space300) var(--space300);
+}

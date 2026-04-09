@@ -20,6 +20,7 @@ export * from "./InformativeState";
 export * from "./InputContainer";
 export * from "./Logo";
 export * from "./Menu";
+export * from "./ModalDialog";
 export * from "./MonthPicker";
 export * from "./MonthRangePicker";
 export * from "./Popover";
