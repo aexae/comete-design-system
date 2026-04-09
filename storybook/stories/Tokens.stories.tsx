@@ -267,35 +267,45 @@ function Tab({ label, active, onClick, badge }: TabProps): ReactElement {
 // -----------------------------------------------------------------------
 // Ligne de token thématique
 
+type CopiedField = { name: string; field: "var" | "value" };
+
 interface TokenRowProps {
   token: TokenEntry;
   computedValue: string;
-  isCopied: boolean;
-  onCopy: (name: string) => void;
+  copiedField: CopiedField | null;
+  onCopy: (name: string, field: "var" | "value", text: string) => void;
 }
 
-function TokenRow({ token, computedValue, isCopied, onCopy }: TokenRowProps): ReactElement {
+function TokenRow({ token, computedValue, copiedField, onCopy }: TokenRowProps): ReactElement {
   const isColor = isColorValue(computedValue) || isColorValue(token.light);
   const hasThemeVariant = token.dark !== null && token.dark !== token.light;
+  const resolvedValue = computedValue || token.light;
+  const isCopiedVar = copiedField?.name === token.name && copiedField.field === "var";
+  const isCopiedValue = copiedField?.name === token.name && copiedField.field === "value";
+  const isAnyCopied = isCopiedVar || isCopiedValue;
+
+  const clickableStyle: CSSProperties = {
+    background: "none",
+    border: "none",
+    padding: 0,
+    cursor: "pointer",
+    fontFamily: "monospace",
+    textAlign: "left",
+  };
 
   return (
-    <button
-      onClick={() => {
-        onCopy(token.name);
-      }}
-      title={`Copier var(${token.name})`}
+    <div
       style={{
         display: "grid",
         gridTemplateColumns: "32px 1fr auto",
         alignItems: "center",
         gap: 10,
         padding: "6px 10px",
-        border: `1px solid ${isCopied ? "var(--border-focus, #009bfe)" : "transparent"}`,
+        border: `1px solid ${isAnyCopied ? "var(--border-focus, #009bfe)" : "transparent"}`,
         borderRadius: 6,
-        background: isCopied
+        background: isAnyCopied
           ? "var(--background-selected-subtlest-default, #dceefd)"
           : "transparent",
-        cursor: "pointer",
         width: "100%",
         textAlign: "left",
         transition: "background 0.1s, border-color 0.1s",
@@ -333,13 +343,16 @@ function TokenRow({ token, computedValue, isCopied, onCopy }: TokenRowProps): Re
         </span>
       )}
 
-      {/* Nom + valeur */}
+      {/* Nom + valeur — chacun cliquable indépendamment */}
       <span style={{ display: "flex", flexDirection: "column", gap: 1, minWidth: 0 }}>
-        <span
+        <button
+          type="button"
+          onClick={() => { onCopy(token.name, "var", `var(${token.name})`); }}
+          title={`Copier var(${token.name})`}
           style={{
-            fontFamily: "monospace",
+            ...clickableStyle,
             fontSize: 12,
-            color: isCopied
+            color: isCopiedVar
               ? "var(--text-selected, #0076d8)"
               : "var(--text-primary, #252a2c)",
             overflow: "hidden",
@@ -347,17 +360,22 @@ function TokenRow({ token, computedValue, isCopied, onCopy }: TokenRowProps): Re
             whiteSpace: "nowrap",
           }}
         >
-          {isCopied ? "✓ var(" + token.name + ")" : "var(" + token.name + ")"}
-        </span>
-        <span
+          {isCopiedVar ? "✓ copié" : `var(${token.name})`}
+        </button>
+        <button
+          type="button"
+          onClick={() => { onCopy(token.name, "value", resolvedValue); }}
+          title={`Copier ${resolvedValue}`}
           style={{
+            ...clickableStyle,
             fontSize: 11,
-            color: "var(--text-subtlest, #6f8488)",
-            fontFamily: "monospace",
+            color: isCopiedValue
+              ? "var(--text-selected, #0076d8)"
+              : "var(--text-subtlest, #6f8488)",
           }}
         >
-          {computedValue || token.light}
-        </span>
+          {isCopiedValue ? "✓ copié" : resolvedValue}
+        </button>
       </span>
 
       {/* Badge "thème" si la valeur change en dark */}
@@ -378,7 +396,7 @@ function TokenRow({ token, computedValue, isCopied, onCopy }: TokenRowProps): Re
       ) : (
         <span style={{ width: 64 }} />
       )}
-    </button>
+    </div>
   );
 }
 
@@ -420,15 +438,15 @@ function SemanticExplorer({ search }: { search: string }): ReactElement {
     };
   }, []);
 
-  const [copied, setCopied] = useState<string | null>(null);
+  const [copiedField, setCopiedField] = useState<CopiedField | null>(null);
   const timerRef = useRef<number | null>(null);
 
-  function handleCopy(name: string): void {
-    void navigator.clipboard.writeText(`var(${name})`);
-    setCopied(name);
+  function handleCopy(_name: string, field: "var" | "value", text: string): void {
+    void navigator.clipboard.writeText(text);
+    setCopiedField({ name: _name, field });
     if (timerRef.current !== null) window.clearTimeout(timerRef.current);
     timerRef.current = window.setTimeout(() => {
-      setCopied(null);
+      setCopiedField(null);
     }, 1500);
   }
 
@@ -496,7 +514,7 @@ function SemanticExplorer({ search }: { search: string }): ReactElement {
                     key={t.name}
                     token={t}
                     computedValue={getComputedTokenValue(t.name)}
-                    isCopied={copied === t.name}
+                    copiedField={copiedField}
                     onCopy={handleCopy}
                   />
                 ))}
@@ -508,7 +526,7 @@ function SemanticExplorer({ search }: { search: string }): ReactElement {
               key={t.name}
               token={t}
               computedValue={getComputedTokenValue(t.name)}
-              isCopied={copied === t.name}
+              copiedField={copiedField}
               onCopy={handleCopy}
             />
           ))}
@@ -548,15 +566,15 @@ const PRIMITIVE_LABELS: Record<PrimitiveGroup, string> = {
 
 function PrimitiveExplorer({ search }: { search: string }): ReactElement {
   const [activeGroup, setActiveGroup] = useState<PrimitiveGroup>("color");
-  const [copied, setCopied] = useState<string | null>(null);
+  const [copiedField, setCopiedField] = useState<CopiedField | null>(null);
   const timerRef = useRef<number | null>(null);
 
-  function handleCopy(name: string): void {
-    void navigator.clipboard.writeText(`var(${name})`);
-    setCopied(name);
+  function handleCopy(_name: string, field: "var" | "value", text: string): void {
+    void navigator.clipboard.writeText(text);
+    setCopiedField({ name: _name, field });
     if (timerRef.current !== null) window.clearTimeout(timerRef.current);
     timerRef.current = window.setTimeout(() => {
-      setCopied(null);
+      setCopiedField(null);
     }, 1500);
   }
 
@@ -639,30 +657,27 @@ function PrimitiveExplorer({ search }: { search: string }): ReactElement {
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(60px, 1fr))",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))",
                     gap: 4,
                     marginBottom: 8,
                   }}
                 >
                   {tokens.map((t) => {
                     const shade = t.name.split("-").pop() ?? "";
+                    const isCopiedVar = copiedField?.name === t.name && copiedField.field === "var";
+                    const isCopiedValue = copiedField?.name === t.name && copiedField.field === "value";
+                    const isAnyCopied = isCopiedVar || isCopiedValue;
                     return (
-                      <button
+                      <div
                         key={t.name}
-                        onClick={() => {
-                          handleCopy(t.name);
-                        }}
-                        title={`${t.name}: ${t.light}`}
                         style={{
                           display: "flex",
                           flexDirection: "column",
                           alignItems: "center",
                           gap: 4,
                           padding: "6px 2px",
-                          border: `1.5px solid ${copied === t.name ? "var(--border-focus, #009bfe)" : "transparent"}`,
+                          border: `1.5px solid ${isAnyCopied ? "var(--border-focus, #009bfe)" : "transparent"}`,
                           borderRadius: 6,
-                          background: "transparent",
-                          cursor: "pointer",
                         }}
                       >
                         <span
@@ -675,18 +690,43 @@ function PrimitiveExplorer({ search }: { search: string }): ReactElement {
                             display: "block",
                           }}
                         />
-                        <span
+                        <button
+                          type="button"
+                          onClick={() => { handleCopy(t.name, "var", `var(${t.name})`); }}
+                          title={`Copier var(${t.name})`}
                           style={{
+                            background: "none",
+                            border: "none",
+                            padding: 0,
+                            cursor: "pointer",
                             fontSize: 10,
-                            color:
-                              copied === t.name
-                                ? "var(--text-selected, #0076d8)"
-                                : "var(--text-subtlest, #6f8488)",
+                            fontFamily: "monospace",
+                            color: isCopiedVar
+                              ? "var(--text-selected, #0076d8)"
+                              : "var(--text-subtlest, #6f8488)",
                           }}
                         >
-                          {copied === t.name ? "✓" : shade}
-                        </span>
-                      </button>
+                          {isCopiedVar ? "✓ var" : shade}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { handleCopy(t.name, "value", t.light); }}
+                          title={`Copier ${t.light}`}
+                          style={{
+                            background: "none",
+                            border: "none",
+                            padding: 0,
+                            cursor: "pointer",
+                            fontSize: 9,
+                            fontFamily: "monospace",
+                            color: isCopiedValue
+                              ? "var(--text-selected, #0076d8)"
+                              : "var(--text-subtlest, #9eaaac)",
+                          }}
+                        >
+                          {isCopiedValue ? "✓ hex" : t.light}
+                        </button>
+                      </div>
                     );
                   })}
                 </div>
@@ -699,7 +739,7 @@ function PrimitiveExplorer({ search }: { search: string }): ReactElement {
               key={t.name}
               token={t}
               computedValue={getComputedTokenValue(t.name)}
-              isCopied={copied === t.name}
+              copiedField={copiedField}
               onCopy={handleCopy}
             />
           ))}
@@ -766,7 +806,7 @@ function TokenExplorer(): ReactElement {
           }}
         />
         <span style={{ fontSize: 12, color: "var(--text-subtlest, #6f8488)" }}>
-          Cliquer sur un token pour copier{" "}
+          Cliquer sur la var pour copier{" "}
           <code
             style={{
               background: "var(--background-neutral-subtler-default, #eaedee)",
@@ -775,8 +815,8 @@ function TokenExplorer(): ReactElement {
             }}
           >
             var(--nom)
-          </code>{" "}
-          dans le presse-papier
+          </code>
+          , sur la valeur pour copier le hex/valeur brute
         </span>
       </div>
 
