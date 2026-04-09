@@ -10,6 +10,23 @@
   max-height: 240px;
   overflow-y: auto;
   padding: var(--space050);
+
+  /* Themed scrollbar — Firefox */
+  scrollbar-color: var(--background-neutral-bold-default) var(--background-surface-elevation-sunken-default);
+}
+
+/* Themed scrollbar — Chrome / Edge / Safari */
+.timeCalendar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.timeCalendar::-webkit-scrollbar-track {
+  background: var(--background-surface-elevation-sunken-default);
+}
+
+.timeCalendar::-webkit-scrollbar-thumb {
+  background-color: var(--background-neutral-bold-default);
+  border-radius: 100px;
 }
 
 /* Option individuelle */

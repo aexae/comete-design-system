@@ -173,6 +173,23 @@
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-s);
   color: var(--text-primary);
+
+  /* Themed scrollbar — Firefox */
+  scrollbar-color: var(--background-neutral-bold-default) var(--background-surface-elevation-sunken-default);
+}
+
+/* Themed scrollbar — Chrome / Edge / Safari */
+.body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.body::-webkit-scrollbar-track {
+  background: var(--background-surface-elevation-sunken-default);
+}
+
+.body::-webkit-scrollbar-thumb {
+  background-color: var(--background-neutral-bold-default);
+  border-radius: 100px;
 }
 
 /* ==========================================================================

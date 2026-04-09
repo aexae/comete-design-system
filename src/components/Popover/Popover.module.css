@@ -14,6 +14,9 @@
   overflow-y: auto;
   outline: none;
 
+  /* Themed scrollbar — Firefox */
+  scrollbar-color: var(--background-neutral-bold-default) var(--background-surface-elevation-sunken-default);
+
   /* React Aria popover enter/exit animation */
   &[data-entering] {
     animation: popover-fade-in 150ms ease-out;
@@ -22,6 +25,20 @@
   &[data-exiting] {
     animation: popover-fade-out 100ms ease-in;
   }
+}
+
+/* Themed scrollbar — Chrome / Edge / Safari */
+.popover::-webkit-scrollbar {
+  width: 8px;
+}
+
+.popover::-webkit-scrollbar-track {
+  background: var(--background-surface-elevation-sunken-default);
+}
+
+.popover::-webkit-scrollbar-thumb {
+  background-color: var(--background-neutral-bold-default);
+  border-radius: 100px;
 }
 
 @keyframes popover-fade-in {
