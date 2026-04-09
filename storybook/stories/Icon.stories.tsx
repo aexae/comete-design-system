@@ -5,7 +5,7 @@ import type { IconColor, IconName, IconProps, IconVariant } from "@naxit/comete-
 import { iconRegistry } from "@naxit/comete-icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { CSSProperties, ComponentType, ReactElement } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // ----------------------------------------------------------------------
 // Build icon name list from the registry (always in sync with the package)
@@ -94,27 +94,166 @@ export default meta;
 type Story = StoryObj<IconComponentProps>;
 
 // ----------------------------------------------------------------------
+// Helpers SVG / PNG
 
-export const Default: Story = {};
+function findVisibleSvg(container: HTMLElement): SVGSVGElement | null {
+  const svgs = Array.from(container.querySelectorAll<SVGSVGElement>("svg"));
+  return svgs.find((svg) => getComputedStyle(svg).display !== "none") ?? null;
+}
+
+function buildExportSvg(container: HTMLElement): SVGSVGElement | null {
+  const original = findVisibleSvg(container);
+  if (!original) return null;
+  const clone = original.cloneNode(true) as SVGSVGElement;
+  clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+
+  const origEls = Array.from(original.querySelectorAll<SVGElement>("*"));
+  const cloneEls = Array.from(clone.querySelectorAll<SVGElement>("*"));
+
+  for (let i = 0; i < origEls.length; i++) {
+    const cs = getComputedStyle(origEls[i]);
+    const ce = cloneEls[i];
+    const fill = cs.fill;
+    if (fill) ce.style.fill = fill;
+    const stroke = cs.stroke;
+    if (stroke && stroke !== "none") ce.style.stroke = stroke;
+  }
+  return clone;
+}
+
+function buildSvgString(container: HTMLElement): string | null {
+  const svgEl = buildExportSvg(container);
+  if (!svgEl) return null;
+  return new XMLSerializer().serializeToString(svgEl);
+}
+
+function buildSvgBlob(container: HTMLElement): Blob | null {
+  const str = buildSvgString(container);
+  if (!str) return null;
+  return new Blob([str], { type: "image/svg+xml;charset=utf-8" });
+}
+
+function downloadBlob(blob: Blob, filename: string): void {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+async function downloadPng(
+  container: HTMLElement,
+  filename: string,
+  targetHeight = 256,
+): Promise<void> {
+  const svgEl = buildExportSvg(container);
+  if (!svgEl) return;
+
+  const vbParts = (svgEl.getAttribute("viewBox") ?? "").split(" ").map(Number);
+  const vbW = vbParts[2] ?? 1;
+  const vbH = vbParts[3] ?? 1;
+  const targetWidth = Math.round((targetHeight * vbW) / vbH);
+
+  svgEl.setAttribute("width", String(targetWidth));
+  svgEl.setAttribute("height", String(targetHeight));
+
+  const svgString = new XMLSerializer().serializeToString(svgEl);
+  const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+
+  const img = new Image();
+  await new Promise<void>((resolve, reject) => {
+    img.onload = () => resolve();
+    img.onerror = reject;
+    img.src = url;
+  });
+
+  const canvas = document.createElement("canvas");
+  canvas.width = targetWidth;
+  canvas.height = targetHeight;
+  const ctx = canvas.getContext("2d");
+  if (ctx) ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+  URL.revokeObjectURL(url);
+
+  canvas.toBlob((pngBlob) => {
+    if (pngBlob) downloadBlob(pngBlob, filename);
+  }, "image/png");
+}
+
+// ----------------------------------------------------------------------
+// IconWithDownload — rendu d'une icône + boutons SVG / PNG
+
+function IconWithDownload(props: IconComponentProps): ReactElement {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const icon = props.icon ?? "AddBox";
+
+  const handleDownloadSvg = useCallback(() => {
+    if (!containerRef.current) return;
+    const blob = buildSvgBlob(containerRef.current);
+    if (!blob) return;
+    downloadBlob(blob, `${icon}.svg`);
+  }, [icon]);
+
+  const handleDownloadPng = useCallback(() => {
+    if (!containerRef.current) return;
+    void downloadPng(containerRef.current, `${icon}.png`);
+  }, [icon]);
+
+  const btnStyle: CSSProperties = {
+    fontSize: 11,
+    fontWeight: 600,
+    padding: "3px 10px",
+    border: "1px solid var(--border-default, #ddd)",
+    borderRadius: 5,
+    background: "var(--background-default, #fff)",
+    color: "var(--text-secondary, #888)",
+    cursor: "pointer",
+    letterSpacing: "0.03em",
+  };
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+      <div ref={containerRef}>
+        <Icon {...props} />
+      </div>
+      <div style={{ display: "flex", gap: 6 }}>
+        <button type="button" onClick={handleDownloadSvg} style={btnStyle}>SVG</button>
+        <button type="button" onClick={handleDownloadPng} style={btnStyle}>PNG</button>
+      </div>
+    </div>
+  );
+}
+
+// ----------------------------------------------------------------------
+
+export const Default: Story = {
+  render: (args) => <IconWithDownload {...args} />,
+};
 
 export const Filled: Story = {
   args: { icon: "AddBox", variant: "filled" },
+  render: (args) => <IconWithDownload {...args} />,
 };
 
 export const Duotone: Story = {
   args: { icon: "AddBox", variant: "duotone" },
+  render: (args) => <IconWithDownload {...args} />,
 };
 
 export const Size16: Story = {
   args: { icon: "AddBox", size: 16, spacing: "none" },
+  render: (args) => <IconWithDownload {...args} />,
 };
 
 export const Size48: Story = {
   args: { icon: "AddBox", size: 48 },
+  render: (args) => <IconWithDownload {...args} />,
 };
 
 export const WithLabel: Story = {
   args: { icon: "AddBox", label: "Erreur" },
+  render: (args) => <IconWithDownload {...args} />,
 };
 
 // ----------------------------------------------------------------------
@@ -200,7 +339,7 @@ interface IconCardProps {
   color: IconColor;
   size: number;
   isCopied: boolean;
-  onCopy: (name: string) => void;
+  onCopy: (name: string, container: HTMLElement) => void;
 }
 
 function IconCard({
@@ -212,46 +351,91 @@ function IconCard({
   isCopied,
   onCopy,
 }: IconCardProps): ReactElement {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const dlBtnStyle: CSSProperties = {
+    fontSize: 10,
+    fontWeight: 600,
+    padding: "2px 7px",
+    border: "1px solid var(--border-default, #ddd)",
+    borderRadius: 4,
+    background: "var(--background-default, #fff)",
+    color: "var(--text-secondary, #888)",
+    cursor: "pointer",
+    letterSpacing: "0.03em",
+  };
+
   return (
-    <button
-      onClick={() => {
-        onCopy(name);
-      }}
-      title={`Copier "${name}"`}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 6,
-        padding: "12px 4px 8px",
-        border: `1.5px solid ${isCopied ? "var(--border-focus, #4a90e2)" : "transparent"}`,
-        borderRadius: 8,
-        background: isCopied
-          ? "var(--background-selected-subtlest-default, rgba(74,144,226,0.08))"
-          : "transparent",
-        cursor: "pointer",
-        width: "100%",
-        transition: "background 0.1s, border-color 0.1s",
-      }}
-    >
-      <Component variant={variant} color={color} spacing="none" size={size} />
-      <span
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0 }}>
+      <button
+        type="button"
+        onClick={() => {
+          if (containerRef.current) onCopy(name, containerRef.current);
+        }}
+        title={`Copier le SVG de "${name}"`}
         style={{
-          fontSize: 10,
-          color: isCopied
-            ? "var(--text-selected, #4a90e2)"
-            : "var(--text-secondary, #888)",
-          textAlign: "center",
-          lineHeight: 1.2,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 6,
+          padding: "12px 4px 8px",
+          border: `1.5px solid ${isCopied ? "var(--border-focus, #4a90e2)" : "transparent"}`,
+          borderRadius: 8,
+          background: isCopied
+            ? "var(--background-selected-subtlest-default, rgba(74,144,226,0.08))"
+            : "transparent",
+          cursor: "pointer",
           width: "100%",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
+          transition: "background 0.1s, border-color 0.1s",
+          fontFamily: "inherit",
         }}
       >
-        {isCopied ? "✓ copié" : name}
-      </span>
-    </button>
+        <div ref={containerRef}>
+          <Component variant={variant} color={color} spacing="none" size={size} />
+        </div>
+        <span
+          style={{
+            fontSize: 10,
+            color: isCopied
+              ? "var(--text-selected, #4a90e2)"
+              : "var(--text-secondary, #888)",
+            textAlign: "center",
+            lineHeight: 1.2,
+            width: "100%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {isCopied ? "✓ SVG copié" : name}
+        </span>
+      </button>
+      <div style={{ display: "flex", gap: 4, marginTop: 2 }}>
+        <button
+          type="button"
+          title={`Télécharger ${name}.svg`}
+          onClick={() => {
+            if (!containerRef.current) return;
+            const blob = buildSvgBlob(containerRef.current);
+            if (blob) downloadBlob(blob, `${name}.svg`);
+          }}
+          style={dlBtnStyle}
+        >
+          SVG
+        </button>
+        <button
+          type="button"
+          title={`Télécharger ${name}.png`}
+          onClick={() => {
+            if (!containerRef.current) return;
+            void downloadPng(containerRef.current, `${name}.png`);
+          }}
+          style={dlBtnStyle}
+        >
+          PNG
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -274,8 +458,9 @@ function IconExplorer(): ReactElement {
     name.toLowerCase().includes(search.toLowerCase())
   );
 
-  function handleCopy(name: string): void {
-    void navigator.clipboard.writeText(name);
+  function handleCopy(name: string, container: HTMLElement): void {
+    const svgString = buildSvgString(container);
+    if (svgString) void navigator.clipboard.writeText(svgString);
     setCopied(name);
     if (timerRef.current !== null) window.clearTimeout(timerRef.current);
     timerRef.current = window.setTimeout(() => {
@@ -412,7 +597,7 @@ function IconExplorer(): ReactElement {
         {" / "}
         {ICON_ENTRIES.length} icônes
         {search !== "" && ` — "${search}"`}
-        {" · cliquer pour copier le nom"}
+        {" · cliquer pour copier le SVG"}
       </p>
 
       {/* Grille */}
