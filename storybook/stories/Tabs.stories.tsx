@@ -127,17 +127,17 @@ export const Content: Story = {
         <Tab id="settings">Paramètres</Tab>
       </TabList>
       <TabPanel id="details">
-        <div style={{ padding: "16px", backgroundColor: "#fafafa" }}>
+        <div style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}>
           <p>Contenu du panneau Détails.</p>
         </div>
       </TabPanel>
       <TabPanel id="activity">
-        <div style={{ padding: "16px", backgroundColor: "#fafafa" }}>
+        <div style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}>
           <p>Contenu du panneau Activité.</p>
         </div>
       </TabPanel>
       <TabPanel id="settings">
-        <div style={{ padding: "16px", backgroundColor: "#fafafa" }}>
+        <div style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}>
           <p>Contenu du panneau Paramètres.</p>
         </div>
       </TabPanel>

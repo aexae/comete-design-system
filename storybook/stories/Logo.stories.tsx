@@ -94,7 +94,7 @@ function LogoWithDownload({
     border: "1px solid var(--border-default, #ddd)",
     borderRadius: 5,
     background: "var(--background-default, #fff)",
-    color: "var(--text-secondary, #888)",
+    color: "var(--text-subtlest, #888)",
     cursor: "pointer",
     letterSpacing: "0.03em",
   };
@@ -411,7 +411,7 @@ function LogoCard({
       ? "var(--text-selected, #4a90e2)"
       : isInverse
         ? "var(--text-inverted, #fff)"
-        : "var(--text-secondary, #888)",
+        : "var(--text-subtlest, #888)",
     textAlign: "center",
     lineHeight: 1.2,
   };
@@ -429,7 +429,7 @@ function LogoCard({
     border: "1px solid var(--border-default, #ddd)",
     borderRadius: 4,
     background: "var(--background-default, #fff)",
-    color: "var(--text-secondary, #888)",
+    color: "var(--text-subtlest, #888)",
     cursor: "pointer",
     letterSpacing: "0.03em",
   };
@@ -522,7 +522,7 @@ function LogoExplorer(): ReactElement {
     fontSize: 11,
     fontWeight: 600,
     marginBottom: 4,
-    color: "var(--text-secondary, #888)",
+    color: "var(--text-subtlest, #888)",
     textTransform: "uppercase",
     letterSpacing: "0.05em",
   };
@@ -564,7 +564,7 @@ function LogoExplorer(): ReactElement {
           flexWrap: "wrap",
           marginBottom: 20,
           padding: 16,
-          background: "var(--background-neutral-subtler-default, #f7f7f7)",
+          background: "var(--background-surface-elevation-sunken-default, #f7f7f7)",
           borderRadius: 8,
           border: "1px solid var(--border-default, #eee)",
         }}
@@ -639,7 +639,7 @@ function LogoExplorer(): ReactElement {
       </div>
 
       {/* ── Compteur + hint ────────────────────────────────────────── */}
-      <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-secondary, #888)" }}>
+      <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-subtlest, #888)" }}>
         <strong style={{ color: "var(--text-primary, #111)" }}>{filtered.length}</strong>
         {" / "}
         {ALL_PRODUCTS.length} logos
@@ -653,7 +653,7 @@ function LogoExplorer(): ReactElement {
           style={{
             textAlign: "center",
             padding: 48,
-            color: "var(--text-secondary, #888)",
+            color: "var(--text-subtlest, #888)",
           }}
         >
           Aucun logo pour &ldquo;{search}&rdquo;

@@ -179,7 +179,7 @@ const S = {
     fontSize: 13,
     color: "var(--text-primary, #252a2c)",
     minHeight: "100vh",
-    background: "var(--background-default-default, #fff)",
+    background: "var(--background-surface-default, #fff)",
   },
   toolbar: {
     display: "flex",
@@ -188,7 +188,7 @@ const S = {
     flexWrap: "wrap" as const,
     marginBottom: 20,
     padding: "12px 16px",
-    background: "var(--background-neutral-subtlest-default, #f7f8f8)",
+    background: "var(--background-surface-elevation-sunken-default, #f7f8f8)",
     borderRadius: 10,
     border: "1px solid var(--border-default, #d8dedf)",
   },

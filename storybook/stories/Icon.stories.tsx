@@ -206,8 +206,8 @@ function IconWithDownload(props: IconComponentProps): ReactElement {
     padding: "3px 10px",
     border: "1px solid var(--border-default, #ddd)",
     borderRadius: 5,
-    background: "var(--background-default, #fff)",
-    color: "var(--text-secondary, #888)",
+    background: "var(--background-neutral-subtler-default, #fff)",
+    color: "var(--text-subtlest, #888)",
     cursor: "pointer",
     letterSpacing: "0.03em",
   };
@@ -279,7 +279,7 @@ export const AllColors: Story = {
           <span
             style={{
               fontSize: 10,
-              color:  c === "inverted" ? "var(--text-inverted, #fff)" : "var(--text-secondary, #888)",
+              color:  c === "inverted" ? "var(--text-inverted, #fff)" : "var(--text-subtlest, #888)",
             }}
           >
             {c}
@@ -309,7 +309,7 @@ export const AllVariants: Story = {
           <span
             style={{
               fontSize: 10,
-              color: "var(--text-secondary, #888)",
+              color: "var(--text-subtlest, #888)",
             }}
           >
             {v}
@@ -332,12 +332,15 @@ const ICON_ENTRIES: Array<[string, IconComponent]> = (
     typeof entry[1] === "function" && /^[A-Z]/.test(entry[0])
 );
 
+type IconSpacing = "default" | "none";
+
 interface IconCardProps {
   name: string;
   Component: IconComponent;
   variant: IconVariant;
   color: IconColor;
   size: number;
+  spacing: IconSpacing;
   isCopied: boolean;
   onCopy: (name: string, container: HTMLElement) => void;
 }
@@ -348,6 +351,7 @@ function IconCard({
   variant,
   color,
   size,
+  spacing,
   isCopied,
   onCopy,
 }: IconCardProps): ReactElement {
@@ -359,8 +363,8 @@ function IconCard({
     padding: "2px 7px",
     border: "1px solid var(--border-default, #ddd)",
     borderRadius: 4,
-    background: "var(--background-default, #fff)",
-    color: "var(--text-secondary, #888)",
+    background: "var(--background-neutral-subtler-default, #fff)",
+    color: "var(--text-subtlest, #888)",
     cursor: "pointer",
     letterSpacing: "0.03em",
   };
@@ -391,14 +395,14 @@ function IconCard({
         }}
       >
         <div ref={containerRef}>
-          <Component variant={variant} color={color} spacing="none" size={size} />
+          <Component variant={variant} color={color} spacing={spacing} size={size} />
         </div>
         <span
           style={{
             fontSize: 10,
             color: isCopied
               ? "var(--text-selected, #4a90e2)"
-              : "var(--text-secondary, #888)",
+              : "var(--text-subtlest, #888)",
             textAlign: "center",
             lineHeight: 1.2,
             width: "100%",
@@ -444,6 +448,7 @@ function IconExplorer(): ReactElement {
   const [variant, setVariant] = useState<IconVariant>("outlined");
   const [color, setColor] = useState<IconColor>("default");
   const [size, setSize] = useState(24);
+  const [spacing, setSpacing] = useState<IconSpacing>("default");
   const [copied, setCopied] = useState<string | null>(null);
   const timerRef = useRef<number | null>(null);
 
@@ -472,7 +477,7 @@ function IconExplorer(): ReactElement {
     fontSize: 11,
     fontWeight: 600,
     marginBottom: 4,
-    color: "var(--text-secondary, #888)",
+    color: "var(--text-subtlest, #888)",
     textTransform: "uppercase",
     letterSpacing: "0.05em",
   };
@@ -481,7 +486,7 @@ function IconExplorer(): ReactElement {
     padding: "5px 10px",
     border: "1px solid var(--border-default, #ddd)",
     borderRadius: 6,
-    background: "var(--background-default, #fff)",
+    background: "var(--background-neutral-subtler-default, #fff)",
     color: "var(--text-primary, #111)",
     fontSize: 13,
   };
@@ -503,7 +508,7 @@ function IconExplorer(): ReactElement {
           flexWrap: "wrap",
           marginBottom: 20,
           padding: 16,
-          background: "var(--background-neutral-subtler-default, #f7f7f7)",
+          background: "var(--background-surface-elevation-sunken-default, #f7f7f7)",
           borderRadius: 8,
           border: "1px solid var(--border-default, #eee)",
         }}
@@ -537,7 +542,7 @@ function IconExplorer(): ReactElement {
                   background:
                     variant === v
                       ? "var(--background-selected-subtlest-default, rgba(74,144,226,0.1))"
-                      : "var(--background-default, #fff)",
+                      : "var(--background-neutral-subtler-default, #fff)",
                   borderColor:
                     variant === v
                       ? "var(--border-focus, #4a90e2)"
@@ -589,10 +594,45 @@ function IconExplorer(): ReactElement {
             style={{ width: 100, cursor: "pointer" }}
           />
         </div>
+
+        {/* Spacing */}
+        <div>
+          <div style={label}>Spacing</div>
+          <div style={{ display: "flex", gap: 4 }}>
+            {(["default", "none"] as const).map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => {
+                  setSpacing(s);
+                }}
+                style={{
+                  ...control,
+                  background:
+                    spacing === s
+                      ? "var(--background-selected-subtlest-default, rgba(74,144,226,0.1))"
+                      : "var(--background-neutral-subtler-default, #fff)",
+                  borderColor:
+                    spacing === s
+                      ? "var(--border-focus, #4a90e2)"
+                      : "var(--border-default, #ddd)",
+                  color:
+                    spacing === s
+                      ? "var(--text-selected, #4a90e2)"
+                      : "var(--text-primary, #111)",
+                  fontWeight: spacing === s ? 600 : 400,
+                  cursor: "pointer",
+                }}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Compteur */}
-      <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-secondary, #888)" }}>
+      <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-subtlest, #888)" }}>
         <strong style={{ color: "var(--text-primary, #111)" }}>{filtered.length}</strong>
         {" / "}
         {ICON_ENTRIES.length} icônes
@@ -602,7 +642,7 @@ function IconExplorer(): ReactElement {
 
       {/* Grille */}
       {filtered.length === 0 ? (
-        <p style={{ textAlign: "center", padding: 48, color: "var(--text-secondary, #888)" }}>
+        <p style={{ textAlign: "center", padding: 48, color: "var(--text-subtlest, #888)" }}>
           Aucune icône pour &ldquo;{search}&rdquo;
         </p>
       ) : (
@@ -621,6 +661,7 @@ function IconExplorer(): ReactElement {
               variant={variant}
               color={color}
               size={size}
+              spacing={spacing}
               isCopied={copied === name}
               onCopy={handleCopy}
             />

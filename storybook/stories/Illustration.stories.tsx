@@ -80,7 +80,7 @@ export const AllSizes: Story = {
           }}
         >
           <Illustration {...args} size={s} illustration="Empty" />
-          <span style={{ fontSize: 12, color: "var(--text-secondary, #888)" }}>
+          <span style={{ fontSize: 12, color: "var(--text-subtlest, #888)" }}>
             {s}px
           </span>
         </div>
@@ -144,7 +144,7 @@ function IllustrationCard({
           fontSize: 11,
           color: isCopied
             ? "var(--text-selected, #4a90e2)"
-            : "var(--text-secondary, #888)",
+            : "var(--text-subtlest, #888)",
           textAlign: "center",
           lineHeight: 1.3,
           width: "100%",
@@ -189,7 +189,7 @@ function IllustrationExplorer(): ReactElement {
     fontSize: 11,
     fontWeight: 600,
     marginBottom: 4,
-    color: "var(--text-secondary, #888)",
+    color: "var(--text-subtlest, #888)",
     textTransform: "uppercase",
     letterSpacing: "0.05em",
   };
@@ -220,7 +220,7 @@ function IllustrationExplorer(): ReactElement {
           flexWrap: "wrap",
           marginBottom: 20,
           padding: 16,
-          background: "var(--background-neutral-subtler-default, #f7f7f7)",
+          background: "var(--background-surface-elevation-sunken-default, #f7f7f7)",
           borderRadius: 12,
           border: "1px solid var(--border-default, #eee)",
         }}
@@ -257,7 +257,7 @@ function IllustrationExplorer(): ReactElement {
       </div>
 
       {/* Compteur */}
-      <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-secondary, #888)" }}>
+      <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-subtlest, #888)" }}>
         <strong style={{ color: "var(--text-primary, #111)" }}>{filtered.length}</strong>
         {" / "}
         {ILLUSTRATION_ENTRIES.length} illustrations
@@ -267,7 +267,7 @@ function IllustrationExplorer(): ReactElement {
 
       {/* Grille */}
       {filtered.length === 0 ? (
-        <p style={{ textAlign: "center", padding: 48, color: "var(--text-secondary, #888)" }}>
+        <p style={{ textAlign: "center", padding: 48, color: "var(--text-subtlest, #888)" }}>
           Aucune illustration pour &ldquo;{search}&rdquo;
         </p>
       ) : (
