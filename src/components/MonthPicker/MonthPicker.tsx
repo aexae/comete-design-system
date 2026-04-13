@@ -1,6 +1,6 @@
 // MonthPicker — Comète Design System
 // Sélecteur de mois : deux modes (navigation / saisie) selon isEditable.
-import { useRef, useState, type ReactElement } from "react";
+import { useEffect, useRef, useState, type ReactElement } from "react";
 import {
   CalendarDate,
   today,
@@ -151,6 +151,25 @@ export function MonthPicker({
 
   const [isOpen, setIsOpen] = useState(false);
 
+  // Close dropdown on click outside or Escape (editable mode only)
+  useEffect(() => {
+    if (!isOpen || !isEditable) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!containerRef.current?.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [isOpen, isEditable]);
+
   // -- Handler calendar selection --
 
   const handleMonthSelect = (date: CalendarDate) => {
@@ -230,6 +249,7 @@ export function MonthPicker({
                   : String(resolvedMonth).padStart(2, "0")
               }
               onChange={(e) => setMonthInput(e.target.value)}
+              onClick={() => !isDisabled && setIsOpen(true)}
               onFocus={handleMonthInputFocus}
               onBlur={handleMonthInputBlur}
               onKeyDown={handleInputKeyDown}
@@ -247,6 +267,7 @@ export function MonthPicker({
               className={styles.yearInput}
               value={yearFocused ? yearInput : String(resolvedYear)}
               onChange={(e) => setYearInput(e.target.value)}
+              onClick={() => !isDisabled && setIsOpen(true)}
               onFocus={handleYearInputFocus}
               onBlur={handleYearInputBlur}
               onKeyDown={handleInputKeyDown}
@@ -254,30 +275,24 @@ export function MonthPicker({
               aria-label={`Année : ${resolvedYear}`}
             />
 
-            <DialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
-              <Button
-                variant="subtle"
-                iconBefore="CalendarMonth"
-                className={styles.calendarButton}
-                isDisabled={isDisabled}
-                aria-label="Ouvrir le sélecteur de mois"
-              />
-              <Popover
-                triggerRef={containerRef}
-                placement="bottom start"
-                shouldFlip={false}
-                className={styles.popover}
-              >
-                <AriaDialog className={styles.dialog}>
-                  <Calendar
-                    appearance="month"
-                    value={calendarValue}
-                    onChange={handleMonthSelect}
-                    isDisabled={isDisabled}
-                  />
-                </AriaDialog>
-              </Popover>
-            </DialogTrigger>
+            <Button
+              variant="subtle"
+              iconBefore="CalendarMonth"
+              className={styles.calendarButton}
+              isDisabled={isDisabled}
+              onPress={() => !isDisabled && setIsOpen((o) => !o)}
+              aria-label="Ouvrir le sélecteur de mois"
+            />
+            {isOpen && (
+              <div className={styles.calendarDropdown}>
+                <Calendar
+                  appearance="month"
+                  value={calendarValue}
+                  onChange={handleMonthSelect}
+                  isDisabled={isDisabled}
+                />
+              </div>
+            )}
           </div>
         ) : (
           /* ---- Mode navigation : chevrons + bouton mois/année ---- */

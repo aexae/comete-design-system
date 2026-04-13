@@ -1,6 +1,6 @@
 // WeekPicker — Comète Design System
 // Sélecteur de semaine : deux modes (navigation / saisie) selon isEditable.
-import { useRef, useState, type ReactElement } from "react";
+import { useEffect, useRef, useState, type ReactElement } from "react";
 import {
   CalendarDate,
   today,
@@ -263,6 +263,25 @@ export function WeekPicker({
 
   const [isOpen, setIsOpen] = useState(false);
 
+  // Close dropdown on click outside or Escape (editable mode only)
+  useEffect(() => {
+    if (!isOpen || !isEditable) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!containerRef.current?.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [isOpen, isEditable]);
+
   // -- Handler calendar selection --
 
   const handleWeekSelect = (range: RangeValue<CalendarDate>) => {
@@ -325,36 +344,31 @@ export function WeekPicker({
               className={styles.weekInput}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
+              onClick={() => !isDisabled && setIsOpen(true)}
               onBlur={commitInput}
               onKeyDown={handleInputKeyDown}
               disabled={isDisabled}
               aria-label={`Semaine ${resolvedWeek} : ${weekLabel}`}
             />
 
-            <DialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
-              <Button
-                variant="subtle"
-                iconBefore="CalendarMonth"
-                className={styles.calendarButton}
-                isDisabled={isDisabled}
-                aria-label="Ouvrir le sélecteur de semaine"
-              />
-              <Popover
-                triggerRef={containerRef}
-                placement="bottom start"
-                shouldFlip={false}
-                className={styles.popover}
-              >
-                <AriaDialog className={styles.dialog}>
-                  <Calendar
-                    appearance="week"
-                    value={calendarValue}
-                    onChange={handleWeekSelect}
-                    isDisabled={isDisabled}
-                  />
-                </AriaDialog>
-              </Popover>
-            </DialogTrigger>
+            <Button
+              variant="subtle"
+              iconBefore="CalendarMonth"
+              className={styles.calendarButton}
+              isDisabled={isDisabled}
+              onPress={() => !isDisabled && setIsOpen((o) => !o)}
+              aria-label="Ouvrir le sélecteur de semaine"
+            />
+            {isOpen && (
+              <div className={styles.calendarDropdown}>
+                <Calendar
+                  appearance="week"
+                  value={calendarValue}
+                  onChange={handleWeekSelect}
+                  isDisabled={isDisabled}
+                />
+              </div>
+            )}
           </div>
         ) : (
           /* ---- Mode navigation : chevrons + bouton semaine ---- */

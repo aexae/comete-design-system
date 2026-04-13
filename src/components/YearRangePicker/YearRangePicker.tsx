@@ -1,6 +1,6 @@
 // YearRangePicker — Comète Design System
 // Sélecteur de plage d'années : deux modes (navigation / saisie) selon isEditable.
-import { useRef, useState, type ReactElement } from "react";
+import { useEffect, useRef, useState, type ReactElement } from "react";
 import {
   CalendarDate,
   today,
@@ -104,6 +104,25 @@ export function YearRangePicker({
   const [openPopover, setOpenPopover] = useState<
     "start" | "end" | "range" | null
   >(null);
+
+  // Close dropdown on click outside or Escape (editable mode only)
+  useEffect(() => {
+    if (!openPopover || !isEditable) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!containerRef.current?.contains(e.target as Node)) {
+        setOpenPopover(null);
+      }
+    };
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpenPopover(null);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [openPopover, isEditable]);
 
   // -- Helper : commit new range (auto-swap if start > end) --
 
@@ -212,6 +231,7 @@ export function YearRangePicker({
               className={styles.yearInput}
               value={startFocused ? startInput : String(resolvedStart)}
               onChange={(e) => setStartInput(e.target.value)}
+              onClick={() => !isDisabled && setOpenPopover("range")}
               onFocus={handleStartInputFocus}
               onBlur={handleStartInputBlur}
               onKeyDown={handleInputKeyDown}
@@ -229,6 +249,7 @@ export function YearRangePicker({
               className={styles.yearInput}
               value={endFocused ? endInput : String(resolvedEnd)}
               onChange={(e) => setEndInput(e.target.value)}
+              onClick={() => !isDisabled && setOpenPopover("range")}
               onFocus={handleEndInputFocus}
               onBlur={handleEndInputBlur}
               onKeyDown={handleInputKeyDown}
@@ -236,37 +257,31 @@ export function YearRangePicker({
               aria-label={`Année de fin : ${resolvedEnd}`}
             />
 
-            <DialogTrigger
-              isOpen={openPopover === "range"}
-              onOpenChange={(open) => setOpenPopover(open ? "range" : null)}
-            >
-              <Button
-                variant="subtle"
-                iconBefore="CalendarMonth"
-                className={styles.calendarButton}
-                isDisabled={isDisabled}
-                aria-label="Ouvrir le sélecteur d'années"
-              />
-              <Popover
-                triggerRef={containerRef}
-                placement="bottom start"
-                shouldFlip={false}
-                className={styles.popover}
-              >
-                <AriaDialog className={styles.dialog}>
-                  {calendars === 2 ? (
-                    renderDualCalendar()
-                  ) : (
-                    <Calendar
-                      appearance="year"
-                      value={startValue}
-                      onChange={handleStartYearSelect}
-                      isDisabled={isDisabled}
-                    />
-                  )}
-                </AriaDialog>
-              </Popover>
-            </DialogTrigger>
+            <Button
+              variant="subtle"
+              iconBefore="CalendarMonth"
+              className={styles.calendarButton}
+              isDisabled={isDisabled}
+              onPress={() =>
+                !isDisabled &&
+                setOpenPopover((o) => (o === "range" ? null : "range"))
+              }
+              aria-label="Ouvrir le sélecteur d'années"
+            />
+            {openPopover === "range" && (
+              <div className={styles.calendarDropdown}>
+                {calendars === 2 ? (
+                  renderDualCalendar()
+                ) : (
+                  <Calendar
+                    appearance="year"
+                    value={startValue}
+                    onChange={handleStartYearSelect}
+                    isDisabled={isDisabled}
+                  />
+                )}
+              </div>
+            )}
           </div>
         ) : (
           /* ---- Mode navigation : boutons année + icône calendrier ---- */

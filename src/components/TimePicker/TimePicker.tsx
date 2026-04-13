@@ -13,7 +13,7 @@ import {
 } from "react-aria-components";
 import { Time } from "@internationalized/date";
 import { Button } from "../Button/Button.js";
-import { Calendar } from "../Calendar/Calendar.js";
+import { TimeDrumPicker } from "../Calendar/TimeDrumPicker.js";
 import { Icon } from "../Icon/Icon.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
@@ -235,8 +235,7 @@ function NonEditableTimePicker({
               className={styles.popover}
             >
               <AriaDialog className={styles.dialog}>
-                <Calendar
-                  appearance="time"
+                <TimeDrumPicker
                   value={resolvedValue}
                   onChange={handleTimeSelect}
                   isDisabled={isDisabled}

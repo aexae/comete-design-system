@@ -1,6 +1,6 @@
 // MonthRangePicker — Comète Design System
 // Sélecteur de plage de mois : champs texte "Mois Année" + calendrier.
-import { useRef, useState, type ReactElement } from "react";
+import { useEffect, useRef, useState, type ReactElement } from "react";
 import {
   CalendarDate,
   today,
@@ -170,6 +170,25 @@ export function MonthRangePicker({
     "start" | "end" | "range" | null
   >(null);
 
+  // Close dropdown on click outside or Escape (editable mode only)
+  useEffect(() => {
+    if (!openPopover || !isEditable) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!containerRef.current?.contains(e.target as Node)) {
+        setOpenPopover(null);
+      }
+    };
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpenPopover(null);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [openPopover, isEditable]);
+
   // -- Helper : commit range (auto-swap if start > end) --
 
   const commitRange = (
@@ -302,6 +321,7 @@ export function MonthRangePicker({
               className={styles.monthInput}
               value={startFocused ? startInput : startLabel}
               onChange={(e) => setStartInput(e.target.value)}
+              onClick={() => !isDisabled && setOpenPopover("range")}
               onFocus={handleStartFocus}
               onBlur={handleStartBlur}
               onKeyDown={handleInputKeyDown}
@@ -318,6 +338,7 @@ export function MonthRangePicker({
               className={styles.monthInput}
               value={endFocused ? endInput : endLabel}
               onChange={(e) => setEndInput(e.target.value)}
+              onClick={() => !isDisabled && setOpenPopover("range")}
               onFocus={handleEndFocus}
               onBlur={handleEndBlur}
               onKeyDown={handleInputKeyDown}
@@ -325,28 +346,22 @@ export function MonthRangePicker({
               aria-label={`Mois de fin : ${endLabel}`}
             />
 
-            <DialogTrigger
-              isOpen={openPopover === "range"}
-              onOpenChange={(open) => setOpenPopover(open ? "range" : null)}
-            >
-              <Button
-                variant="subtle"
-                iconBefore="CalendarMonth"
-                className={styles.calendarButton}
-                isDisabled={isDisabled}
-                aria-label="Ouvrir le sélecteur de mois"
-              />
-              <Popover
-                triggerRef={containerRef}
-                placement="bottom start"
-                shouldFlip={false}
-                className={styles.popover}
-              >
-                <AriaDialog className={styles.dialog}>
-                  {renderDualCalendar()}
-                </AriaDialog>
-              </Popover>
-            </DialogTrigger>
+            <Button
+              variant="subtle"
+              iconBefore="CalendarMonth"
+              className={styles.calendarButton}
+              isDisabled={isDisabled}
+              onPress={() =>
+                !isDisabled &&
+                setOpenPopover((o) => (o === "range" ? null : "range"))
+              }
+              aria-label="Ouvrir le sélecteur de mois"
+            />
+            {openPopover === "range" && (
+              <div className={styles.calendarDropdown}>
+                {renderDualCalendar()}
+              </div>
+            )}
           </div>
         ) : (
           /* ---- Mode navigation : boutons mois cliquables + icône calendrier ---- */

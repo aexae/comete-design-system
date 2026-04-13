@@ -71,7 +71,7 @@ describe("WeekPicker", () => {
     await user.click(
       screen.getByLabelText("Ouvrir le sélecteur de semaine"),
     );
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByRole("grid")).toBeInTheDocument();
   });
 
   it("should resolve week from typed week number on Enter", async () => {

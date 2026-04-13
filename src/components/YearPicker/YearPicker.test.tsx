@@ -55,7 +55,7 @@ describe("YearPicker", () => {
     const user = userEvent.setup();
     render(<YearPicker year={2025} />);
     await user.click(screen.getByLabelText("Ouvrir le sélecteur d'années"));
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByRole("grid")).toBeInTheDocument();
   });
 
   it("should call onChange when a year is selected in the calendar (editable)", async () => {
@@ -67,7 +67,7 @@ describe("YearPicker", () => {
     await user.click(cell2023);
     expect(onChange).toHaveBeenCalledWith(2023);
     // Popover should close after selection
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.queryByRole("grid")).not.toBeInTheDocument();
   });
 
   // -- Navigation mode (isEditable=false) --

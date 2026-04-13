@@ -86,7 +86,7 @@ describe("YearRangePicker", () => {
       <YearRangePicker startYear={2023} endYear={2025} />
     );
     await user.click(screen.getByLabelText("Ouvrir le sélecteur d'années"));
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getAllByRole("grid").length).toBeGreaterThan(0);
   });
 
   // -- Navigation mode (isEditable=false) with calendars=2 --

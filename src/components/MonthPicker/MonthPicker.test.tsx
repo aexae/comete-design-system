@@ -97,7 +97,7 @@ describe("MonthPicker", () => {
     const user = userEvent.setup();
     render(<MonthPicker month={6} year={2025} />);
     await user.click(screen.getByLabelText("Ouvrir le sélecteur de mois"));
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByRole("grid")).toBeInTheDocument();
   });
 
   // -- Navigation mode (isEditable=false) --

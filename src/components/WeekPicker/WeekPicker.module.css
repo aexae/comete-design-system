@@ -16,6 +16,7 @@
   display: flex;
   align-items: center;
   width: 100%;
+  gap: var(--space100);
 }
 
 /* Conteneur mode navigation — gap entre chevrons et bouton */
@@ -76,5 +77,18 @@
 
 /* Dialog — reset outline */
 .dialog {
+  outline: none;
+}
+
+/* Calendar dropdown (editable mode) — positioned div without focus management */
+.calendarDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  margin-top: 4px;
+  background-color: var(--background-surface-elevation-raise-default);
+  border-radius: var(--radius0375);
+  box-shadow: var(--elevation-large);
   outline: none;
 }

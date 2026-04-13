@@ -1,0 +1,109 @@
+/* ==========================================================================
+   TimeDrumPicker — Comète Design System
+   3 colonnes scrollables (heures, minutes, secondes) avec effet « drum ».
+   ========================================================================== */
+
+.timeDrumPicker {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: var(--space100);
+  user-select: none;
+}
+
+/* ==========================================================================
+   Colonne individuelle
+   ========================================================================== */
+
+.drumColumn {
+  position: relative;
+  flex: 1 1 0%;
+  overflow: hidden;
+}
+
+.drumScroll {
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+
+  /* Masquer la scrollbar */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.drumScroll::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+/* ==========================================================================
+   Item individuel
+   ========================================================================== */
+
+.drumItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  scroll-snap-align: start;
+
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-sm);
+  font-weight: var(--font-weight-regular);
+  line-height: 1;
+  color: var(--text-tertiary);
+
+  transition: color 100ms ease-out;
+}
+
+.drumItem[data-selected] {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-ui-lg);
+}
+
+.drumItem:hover:not(:disabled):not([data-selected]) {
+  color: var(--text-secondary);
+}
+
+.drumItem:disabled {
+  color: var(--text-disabled);
+  cursor: default;
+}
+
+/* ==========================================================================
+   Barre de surbrillance (ligne centrale)
+   ========================================================================== */
+
+.drumHighlight {
+  position: absolute;
+  left: var(--space050);
+  right: var(--space050);
+  border-radius: var(--radius050);
+  background-color: var(--background-neutral-subtle-hover);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* L'item sélectionné doit passer au-dessus du highlight */
+.drumItem {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   Séparateur « : » entre colonnes
+   ========================================================================== */
+
+.drumSeparator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--space200);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}

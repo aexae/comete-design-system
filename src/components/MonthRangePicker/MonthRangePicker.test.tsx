@@ -180,7 +180,7 @@ describe("MonthRangePicker", () => {
     await user.click(
       screen.getByLabelText("Ouvrir le sélecteur de mois"),
     );
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getAllByRole("grid").length).toBeGreaterThan(0);
   });
 
   it("should render the arrow separator", () => {

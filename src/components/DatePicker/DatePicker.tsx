@@ -1,6 +1,6 @@
 // DatePicker — Comète Design System
 // Sélecteur de date : deux modes (navigation / saisie) selon isEditable.
-import { useRef, useState, type ReactElement } from "react";
+import { useRef, useState, useCallback, type ReactElement } from "react";
 import {
   DatePicker as AriaDatePicker,
   DateInput as AriaDateInput,
@@ -126,9 +126,17 @@ function EditableDatePicker<T extends DateValue = DateValue>({
   isCompact: boolean;
   className?: string;
 } & Omit<AriaDatePickerProps<T>, "className" | "style" | "children">): ReactElement {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleInputClick = useCallback(() => {
+    setIsOpen(true);
+  }, []);
+
   return (
     <AriaDatePicker
       className={[styles.datePicker, className].filter(Boolean).join(" ")}
+      isOpen={isOpen}
+      onOpenChange={setIsOpen}
       {...ariaProps}
     >
       {({ isDisabled, isInvalid }) => (
@@ -140,11 +148,14 @@ function EditableDatePicker<T extends DateValue = DateValue>({
               isDisabled={isDisabled}
               isInvalid={isInvalid}
             >
-              <AriaDateInput className={styles.dateInput}>
-                {(segment) => (
-                  <AriaDateSegment className={styles.segment} segment={segment} />
-                )}
-              </AriaDateInput>
+              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+              <div onClick={isDisabled ? undefined : handleInputClick}>
+                <AriaDateInput className={styles.dateInput}>
+                  {(segment) => (
+                    <AriaDateSegment className={styles.segment} segment={segment} />
+                  )}
+                </AriaDateInput>
+              </div>
               <Button
                 variant="subtle"
                 iconBefore="CalendarMonth"
