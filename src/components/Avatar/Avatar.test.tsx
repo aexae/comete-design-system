@@ -22,7 +22,7 @@ describe("Avatar", () => {
   describe("classes CSS par défaut", () => {
     it("should apply default appearance and size classes when no props given", () => {
       const { container } = render(<Avatar />);
-      expect(container.firstElementChild).toHaveClass("avatar", "square", "medium");
+      expect(container.firstElementChild).toHaveClass("avatar", "rounded", "medium");
     });
   });
 

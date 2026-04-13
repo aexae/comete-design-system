@@ -21,7 +21,7 @@ export type AvatarSize =
   | "xxlarge";
 
 export interface AvatarProps {
-  /** Visual shape. @default "square" */
+  /** Visual shape. @default "rounded" */
   appearance?: AvatarAppearance;
   /** Size. @default "medium" */
   size?: AvatarSize;
@@ -107,14 +107,14 @@ function resolveContent(
  *
  * ```tsx
  * // Display-only
- * <Avatar initials="AB" size="medium" />
- * <Avatar src="/photo.jpg" alt="Alice" appearance="rounded" size="large" />
+ * <Avatar initials="AB" />
+ * <Avatar src="/photo.jpg" alt="Alice" appearance="square" size="large" />
  *
  * // Interactive
  * <Avatar initials="AB" onPress={() => openProfile()} isSelected={active} />
  * ```
  *
- * @param appearance - Shape: "square" | "rounded". @default "square"
+ * @param appearance - Shape: "square" | "rounded". @default "rounded"
  * @param size       - Avatar size. @default "medium"
  * @param src        - Photo URL (takes priority over initials/icon).
  * @param alt        - Alt text / accessible label.
@@ -125,7 +125,7 @@ function resolveContent(
  * @param onPress    - Press handler — enables interactive mode.
  */
 export function Avatar({
-  appearance = "square",
+  appearance = "rounded",
   size = "medium",
   src,
   alt,
