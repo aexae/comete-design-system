@@ -36,7 +36,7 @@ const meta: Meta<AvatarProps> = {
     icon: { control: "select", options: ["none", "Person", "Home", "Star"] },
   },
   args: {
-    appearance: "square",
+    appearance: "rounded",
     size: "medium",
     initials: "AB",
   },

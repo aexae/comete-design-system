@@ -33,6 +33,7 @@
 /* Selected ----------------------------------------------------------------- */
 
 .avatar[data-selected] {
+  color: var(--text-selected);
   background-color: var(--background-selected-subtlest-default);
 }
 
