@@ -15,6 +15,8 @@
   gap: var(--space050);
   padding: var(--space100);
   width: max-content;
+  min-width: 280px;
+  min-height: var(--size3200);
   outline: none;
 }
 
