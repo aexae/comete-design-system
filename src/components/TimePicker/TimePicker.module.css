@@ -52,6 +52,10 @@
   padding-inline: 0;
 }
 
+.timePicker[data-disabled] .segment[data-type="literal"] {
+  color: var(--text-disabled);
+}
+
 /* ==========================================================================
    Editable content — champ + icône cliquables
    ========================================================================== */

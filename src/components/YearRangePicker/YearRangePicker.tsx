@@ -215,6 +215,7 @@ export function YearRangePicker({
       aria-label={
         ariaLabel ?? `Plage d'années : ${resolvedStart} à ${resolvedEnd}`
       }
+      data-disabled={isDisabled || undefined}
       data-invalid={isInvalid || undefined}
     >
       <InputContainer

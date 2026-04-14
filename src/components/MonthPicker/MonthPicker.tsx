@@ -229,6 +229,7 @@ export function MonthPicker({
       className={rootClassNames}
       ref={containerRef}
       aria-label={ariaLabel ?? `Sélecteur de mois : ${formattedLabel}`}
+      data-disabled={isDisabled || undefined}
       data-invalid={isInvalid || undefined}
     >
       <InputContainer

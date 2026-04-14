@@ -77,6 +77,10 @@
   padding-inline: 0;
 }
 
+.datePicker[data-disabled] .segment[data-type="literal"] {
+  color: var(--text-disabled);
+}
+
 /* ==========================================================================
    Calendar button — override Button DS pour intégration dans le champ
    ========================================================================== */

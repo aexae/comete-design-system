@@ -306,6 +306,7 @@ export function MonthRangePicker({
         ariaLabel ??
         `Plage de mois : ${startLabel} à ${endLabel}`
       }
+      data-disabled={isDisabled || undefined}
       data-invalid={isInvalid || undefined}
     >
       <InputContainer

@@ -68,6 +68,10 @@
   flex-shrink: 0;
 }
 
+.root[data-disabled] .separator {
+  color: var(--text-disabled);
+}
+
 /* Input année (mode saisie) */
 .yearInput {
   width: 4ch;

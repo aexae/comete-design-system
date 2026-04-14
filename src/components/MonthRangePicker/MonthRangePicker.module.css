@@ -66,6 +66,10 @@
   flex-shrink: 0;
 }
 
+.root[data-disabled] .separator {
+  color: var(--text-disabled);
+}
+
 
 /* Bouton calendrier */
 .calendarButton {
