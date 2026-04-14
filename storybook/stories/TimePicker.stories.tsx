@@ -88,10 +88,6 @@ export const Invalid: Story = {
   args: { isInvalid: true, defaultValue: new Time(9, 0) },
 };
 
-/** Mode non-editable — heure formatée + bouton horloge popover. */
-export const NonEditable: Story = {
-  args: { isEditable: false, defaultValue: new Time(14, 30) },
-};
 
 /** Disabled. */
 export const Disabled: Story = {

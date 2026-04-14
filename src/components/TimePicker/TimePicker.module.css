@@ -53,11 +53,13 @@
 }
 
 /* ==========================================================================
-   Clock icon — mode saisie
+   Editable content — champ + icône cliquables
    ========================================================================== */
 
-.clockIcon {
-  flex-shrink: 0;
+.editableContent {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 
 /* ==========================================================================
@@ -94,4 +96,20 @@
 
 .dialog {
   outline: none;
+}
+
+/* ==========================================================================
+   Drum popover — mode éditable (sans React Aria focus management)
+   ========================================================================== */
+
+.drumPopover {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1;
+  margin-top: var(--space050);
+  background-color: var(--background-default);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius100);
+  box-shadow: var(--shadow-lg);
 }

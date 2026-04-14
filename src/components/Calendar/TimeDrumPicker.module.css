@@ -6,9 +6,26 @@
 .timeDrumPicker {
   display: flex;
   align-items: center;
-  gap: 0;
+  gap: var(--space100);
   padding: var(--space100);
   user-select: none;
+  position: relative;
+}
+
+/* ==========================================================================
+   Bande de sélection — traverse toutes les colonnes
+   ========================================================================== */
+
+.highlightBand {
+  position: absolute;
+  left: var(--space050);
+  right: var(--space050);
+  border-radius: var(--radius050);
+  background-color: var(--background-selected-subtlest-default);
+  border-top: 1px solid var(--border-selected);
+  border-bottom: 1px solid var(--border-selected);
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* ==========================================================================
@@ -19,11 +36,21 @@
   position: relative;
   flex: 1 1 0%;
   overflow: hidden;
+  z-index: 1;
 }
 
 .drumScroll {
   overflow-y: auto;
   scroll-snap-type: y mandatory;
+
+  /* Effet de profondeur — fade vers les extrémités */
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 35%,
+    black 65%,
+    transparent 100%
+  );
 
   /* Masquer la scrollbar */
   scrollbar-width: none; /* Firefox */
@@ -46,64 +73,32 @@
   border: none;
   background: transparent;
   cursor: pointer;
-  scroll-snap-align: start;
+  scroll-snap-align: center;
+  position: relative;
 
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-sm);
   font-weight: var(--font-weight-regular);
   line-height: 1;
-  color: var(--text-tertiary);
+  color: var(--text-subtlest);
 
-  transition: color 100ms ease-out;
+  transition:
+    color 100ms ease-out,
+    font-size 100ms ease-out;
 }
 
+/* Item sélectionné */
 .drumItem[data-selected] {
   color: var(--text-primary);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-ui-lg);
 }
 
 .drumItem:hover:not(:disabled):not([data-selected]) {
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
 }
 
 .drumItem:disabled {
   color: var(--text-disabled);
   cursor: default;
-}
-
-/* ==========================================================================
-   Barre de surbrillance (ligne centrale)
-   ========================================================================== */
-
-.drumHighlight {
-  position: absolute;
-  left: var(--space050);
-  right: var(--space050);
-  border-radius: var(--radius050);
-  background-color: var(--background-neutral-subtle-hover);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* L'item sélectionné doit passer au-dessus du highlight */
-.drumItem {
-  position: relative;
-  z-index: 1;
-}
-
-/* ==========================================================================
-   Séparateur « : » entre colonnes
-   ========================================================================== */
-
-.drumSeparator {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: var(--space200);
-  font-family: var(--font-family-primary);
-  font-size: var(--font-size-ui-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--text-primary);
 }

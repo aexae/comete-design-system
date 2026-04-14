@@ -1,5 +1,5 @@
 // TimeDrumPicker — Comète Design System
-// 3 colonnes scrollables (heures, minutes, secondes) pour la sélection d'heure.
+// Colonnes scrollables (heures, minutes, secondes, AM/PM) pour la sélection d'heure.
 import { useEffect, useRef, useState, type ReactElement } from "react";
 import type { TimeValue } from "react-aria-components";
 import { Time } from "@internationalized/date";
@@ -15,6 +15,8 @@ export interface TimeDrumPickerProps {
   onChange?: (time: Time) => void;
   /** Désactive le sélecteur. */
   isDisabled?: boolean;
+  /** Format 12h (AM/PM) ou 24h. @default 24 */
+  hourCycle?: 12 | 24;
   /** Classe CSS additionnelle. */
   className?: string;
 }
@@ -22,7 +24,8 @@ export interface TimeDrumPickerProps {
 // -----------------------------------------------------------------------
 // Constantes
 
-const HOURS = Array.from({ length: 24 }, (_, i) => i);
+const HOURS_24 = Array.from({ length: 24 }, (_, i) => i);
+const HOURS_12 = Array.from({ length: 12 }, (_, i) => i + 1); // 1–12
 const MINUTES = Array.from({ length: 60 }, (_, i) => i);
 const SECONDS = Array.from({ length: 60 }, (_, i) => i);
 
@@ -36,8 +39,20 @@ function pad(n: number): string {
   return String(n).padStart(2, "0");
 }
 
+/** Convertit heure 24h → heure 12h (1-12). */
+function to12Hour(h24: number): number {
+  const h = h24 % 12;
+  return h === 0 ? 12 : h;
+}
+
+/** Convertit heure 12h + période → heure 24h. */
+function to24Hour(h12: number, period: "AM" | "PM"): number {
+  if (period === "AM") return h12 === 12 ? 0 : h12;
+  return h12 === 12 ? 12 : h12 + 12;
+}
+
 // -----------------------------------------------------------------------
-// DrumColumn — une seule colonne scrollable
+// DrumColumn — une seule colonne scrollable (valeurs numériques)
 
 interface DrumColumnProps {
   values: number[];
@@ -45,6 +60,8 @@ interface DrumColumnProps {
   onSelect: (value: number) => void;
   isDisabled: boolean;
   label: string;
+  /** Formatage personnalisé de l'affichage. Par défaut : pad(n). */
+  format?: (n: number) => string;
 }
 
 function DrumColumn({
@@ -53,6 +70,7 @@ function DrumColumn({
   onSelect,
   isDisabled,
   label,
+  format = pad,
 }: DrumColumnProps): ReactElement {
   const listRef = useRef<HTMLDivElement>(null);
   const isScrollingRef = useRef(false);
@@ -77,7 +95,11 @@ function DrumColumn({
     if (targetIndex >= 0) {
       const targetScroll = targetIndex * ITEM_HEIGHT;
       if (Math.abs(el.scrollTop - targetScroll) > 1) {
-        el.scrollTo({ top: targetScroll, behavior: "smooth" });
+        if (typeof el.scrollTo === "function") {
+          el.scrollTo({ top: targetScroll, behavior: "smooth" });
+        } else {
+          el.scrollTop = targetScroll;
+        }
       }
     }
   }, [selected, values]);
@@ -98,7 +120,11 @@ function DrumColumn({
       const clampedIndex = Math.max(0, Math.min(index, values.length - 1));
       const snappedScroll = clampedIndex * ITEM_HEIGHT;
 
-      el.scrollTo({ top: snappedScroll, behavior: "smooth" });
+      if (typeof el.scrollTo === "function") {
+        el.scrollTo({ top: snappedScroll, behavior: "smooth" });
+      } else {
+        el.scrollTop = snappedScroll;
+      }
       onSelect(values[clampedIndex]);
 
       isScrollingRef.current = false;
@@ -145,7 +171,7 @@ function DrumColumn({
               onClick={() => handleClick(v)}
               style={{ height: ITEM_HEIGHT }}
             >
-              {pad(v)}
+              {format(v)}
             </button>
           );
         })}
@@ -153,16 +179,98 @@ function DrumColumn({
         {/* Padding bottom */}
         <div style={{ height: paddingItems * ITEM_HEIGHT }} />
       </div>
+    </div>
+  );
+}
 
-      {/* Highlight bar sur l'élément central */}
+// -----------------------------------------------------------------------
+// PeriodColumn — colonne AM/PM (2 valeurs texte)
+
+interface PeriodColumnProps {
+  selected: "AM" | "PM";
+  onSelect: (value: "AM" | "PM") => void;
+  isDisabled: boolean;
+}
+
+function PeriodColumn({
+  selected,
+  onSelect,
+  isDisabled,
+}: PeriodColumnProps): ReactElement {
+  const listRef = useRef<HTMLDivElement>(null);
+  const paddingItems = Math.floor(VISIBLE_ITEMS / 2);
+  const periods: ("AM" | "PM")[] = ["AM", "PM"];
+
+  // Scroll vers la période sélectionnée au montage
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+    const targetIndex = periods.indexOf(selected);
+    if (targetIndex >= 0) {
+      el.scrollTop = targetIndex * ITEM_HEIGHT;
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Scroll vers la nouvelle période quand elle change
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+    const targetIndex = periods.indexOf(selected);
+    if (targetIndex >= 0) {
+      const targetScroll = targetIndex * ITEM_HEIGHT;
+      if (Math.abs(el.scrollTop - targetScroll) > 1) {
+        if (typeof el.scrollTo === "function") {
+          el.scrollTo({ top: targetScroll, behavior: "smooth" });
+        } else {
+          el.scrollTop = targetScroll;
+        }
+      }
+    }
+  }, [selected]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleClick = (p: "AM" | "PM") => {
+    if (!isDisabled) onSelect(p);
+  };
+
+  return (
+    <div
+      className={styles.drumColumn}
+      role="listbox"
+      aria-label="Période"
+      aria-disabled={isDisabled || undefined}
+    >
       <div
-        className={styles.drumHighlight}
+        className={styles.drumScroll}
+        ref={listRef}
         style={{
-          top: paddingItems * ITEM_HEIGHT,
-          height: ITEM_HEIGHT,
+          height: VISIBLE_ITEMS * ITEM_HEIGHT,
         }}
-        aria-hidden="true"
-      />
+      >
+        {/* Padding top */}
+        <div style={{ height: paddingItems * ITEM_HEIGHT }} />
+
+        {periods.map((p) => {
+          const isSelected = p === selected;
+          return (
+            <button
+              key={p}
+              type="button"
+              role="option"
+              className={styles.drumItem}
+              aria-selected={isSelected}
+              data-selected={isSelected || undefined}
+              disabled={isDisabled}
+              onClick={() => handleClick(p)}
+              style={{ height: ITEM_HEIGHT }}
+            >
+              {p}
+            </button>
+          );
+        })}
+
+        {/* Padding bottom */}
+        <div style={{ height: paddingItems * ITEM_HEIGHT }} />
+      </div>
     </div>
   );
 }
@@ -173,35 +281,60 @@ function DrumColumn({
 /**
  * TimeDrumPicker — Comète Design System
  *
- * 3 colonnes scrollables (heures 0-23, minutes 0-59, secondes 0-59)
- * avec effet « drum picker ». L'élément sélectionné est centré et surligné.
+ * Colonnes scrollables pour la sélection d'heure.
+ * En mode 24h : heures 0-23, minutes 0-59, secondes 0-59.
+ * En mode 12h : heures 1-12, minutes 0-59, secondes 0-59, AM/PM.
  *
  * ```tsx
  * <TimeDrumPicker value={new Time(14, 30, 0)} onChange={(t) => console.log(t)} />
+ * <TimeDrumPicker value={new Time(14, 30, 0)} hourCycle={12} onChange={(t) => console.log(t)} />
  * ```
  */
 export function TimeDrumPicker({
   value,
   onChange,
   isDisabled = false,
+  hourCycle = 24,
   className,
 }: TimeDrumPickerProps): ReactElement {
   const resolvedValue = value ?? new Time(0, 0, 0);
+  const is12h = hourCycle === 12;
 
   const [hour, setHour] = useState(resolvedValue.hour);
   const [minute, setMinute] = useState(resolvedValue.minute);
   const [second, setSecond] = useState(resolvedValue.second);
+  const [period, setPeriod] = useState<"AM" | "PM">(
+    resolvedValue.hour >= 12 ? "PM" : "AM",
+  );
 
   // Synchroniser si la valeur contrôlée change
   useEffect(() => {
     setHour(resolvedValue.hour);
     setMinute(resolvedValue.minute);
     setSecond(resolvedValue.second);
+    setPeriod(resolvedValue.hour >= 12 ? "PM" : "AM");
   }, [resolvedValue.hour, resolvedValue.minute, resolvedValue.second]);
 
   const handleChange = (h: number, m: number, s: number) => {
     onChange?.(new Time(h, m, s));
   };
+
+  // Handlers 12h : convertissent 12h+période → 24h avant d'appeler handleChange
+  const handleHour12Select = (h12: number) => {
+    const h24 = to24Hour(h12, period);
+    setHour(h24);
+    handleChange(h24, minute, second);
+  };
+
+  const handlePeriodSelect = (p: "AM" | "PM") => {
+    setPeriod(p);
+    const h12 = to12Hour(hour);
+    const h24 = to24Hour(h12, p);
+    setHour(h24);
+    handleChange(h24, minute, second);
+  };
+
+  const paddingItems = Math.floor(VISIBLE_ITEMS / 2);
 
   return (
     <div
@@ -209,20 +342,38 @@ export function TimeDrumPicker({
       data-disabled={isDisabled || undefined}
       aria-label="Sélecteur d'heure"
     >
-      <DrumColumn
-        values={HOURS}
-        selected={hour}
-        onSelect={(h) => {
-          setHour(h);
-          handleChange(h, minute, second);
+      {/* Bande de sélection traversant toutes les colonnes */}
+      <div
+        className={styles.highlightBand}
+        style={{
+          top: `calc(${String(paddingItems * ITEM_HEIGHT)}px + var(--space100))`,
+          height: ITEM_HEIGHT,
         }}
-        isDisabled={isDisabled}
-        label="Heures"
+        aria-hidden="true"
       />
 
-      <div className={styles.drumSeparator} aria-hidden="true">
-        :
-      </div>
+      {/* Colonne heures */}
+      {is12h ? (
+        <DrumColumn
+          values={HOURS_12}
+          selected={to12Hour(hour)}
+          onSelect={handleHour12Select}
+          isDisabled={isDisabled}
+          label="Heures"
+          format={(n) => String(n)}
+        />
+      ) : (
+        <DrumColumn
+          values={HOURS_24}
+          selected={hour}
+          onSelect={(h) => {
+            setHour(h);
+            handleChange(h, minute, second);
+          }}
+          isDisabled={isDisabled}
+          label="Heures"
+        />
+      )}
 
       <DrumColumn
         values={MINUTES}
@@ -235,10 +386,6 @@ export function TimeDrumPicker({
         label="Minutes"
       />
 
-      <div className={styles.drumSeparator} aria-hidden="true">
-        :
-      </div>
-
       <DrumColumn
         values={SECONDS}
         selected={second}
@@ -249,6 +396,15 @@ export function TimeDrumPicker({
         isDisabled={isDisabled}
         label="Secondes"
       />
+
+      {/* Colonne AM/PM en mode 12h */}
+      {is12h && (
+        <PeriodColumn
+          selected={period}
+          onSelect={handlePeriodSelect}
+          isDisabled={isDisabled}
+        />
+      )}
     </div>
   );
 }
