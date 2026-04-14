@@ -7,8 +7,7 @@
 /* Root */
 .root {
   position: relative;
-  display: inline-flex;
-  width: fit-content;
+  width: 100%;
 }
 
 /* Conteneur des inputs / séparateur / bouton (mode saisie) */
@@ -16,6 +15,7 @@
   display: flex;
   align-items: center;
   gap: var(--space100);
+  width: 100%;
 }
 
 /* Conteneur des deux boutons/inputs mois + séparateur (mode navigation) */
@@ -33,6 +33,7 @@
 
 /* Input mois (mode saisie) — "Août 2025" */
 .monthInput {
+  flex: 1 1 0%;
   field-sizing: content;
   border: none;
   outline: none;

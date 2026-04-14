@@ -7,8 +7,7 @@
 /* Root */
 .root {
   position: relative;
-  display: inline-flex;
-  width: max-content;
+  width: 100%;
 }
 
 /* Conteneur des boutons / inputs */
@@ -74,6 +73,7 @@
 
 /* Input année (mode saisie) */
 .yearInput {
+  flex: 1 1 0%;
   width: 4ch;
   border: none;
   outline: none;
