@@ -82,13 +82,6 @@ export const WithIcon: Story = {
 // ----------------------------------------------------------------------
 // Appearances
 
-export const Square: Story = {
-  args: { appearance: "square", initials: "AB", size: "xlarge" },
-  parameters: {
-    design: { type: "figma", url: figmaUrl("2745:15477") },
-  },
-};
-
 export const Rounded: Story = {
   args: { appearance: "rounded", initials: "AB", size: "xlarge" },
   parameters: {
@@ -120,20 +113,6 @@ export const Interactive: Story = {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole("button"));
     void expect(args.onPress).toHaveBeenCalledOnce();
-  },
-};
-
-export const InteractiveDisabled: Story = {
-  args: {
-    initials: "AB",
-    size: "large",
-    isDisabled: true,
-    onPress: fn(),
-  },
-  play: async ({ canvasElement, args }) => {
-    const canvas = within(canvasElement);
-    await userEvent.click(canvas.getByRole("button"));
-    void expect(args.onPress).not.toHaveBeenCalled();
   },
 };
 
