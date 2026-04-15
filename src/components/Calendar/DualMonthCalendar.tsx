@@ -268,6 +268,131 @@ export function MonthRangeCalendar({
  * @param locale       - Locale BCP 47 pour les noms de mois
  * @param isDisabled   - Désactive le composant
  */
+// -----------------------------------------------------------------------
+// DualMonthSingleCalendar — calendars=2, sélection simple (pas de plage)
+
+/**
+ * DualMonthSingleCalendar — Comète Design System (interne)
+ *
+ * Deux années consécutives côte à côte avec sélection d'un mois unique.
+ * Réutilise MonthPanel avec un faux range mono-point pour l'affichage.
+ */
+export function DualMonthSingleCalendar({
+  value,
+  defaultValue,
+  onChange,
+  locale = "fr-FR",
+  isDisabled = false,
+  className,
+}: {
+  value?: CalendarDate;
+  defaultValue?: CalendarDate;
+  onChange?: (date: CalendarDate) => void;
+  locale?: string;
+  isDisabled?: boolean;
+  className?: string;
+}): ReactElement {
+  const todayDate = today(getLocalTimeZone());
+  const initialYear = (value ?? defaultValue)?.year ?? todayDate.year;
+
+  const [leftYear, setLeftYear] = useState(initialYear);
+  const rightYear = leftYear + 1;
+
+  const [drillLevel, setDrillLevel] = useState<"month" | "year">("month");
+  const [drilledPanel, setDrilledPanel] = useState<"left" | "right">("left");
+
+  const [internalValue, setInternalValue] = useState<CalendarDate | undefined>(
+    defaultValue
+  );
+
+  const controlled = value !== undefined;
+  const resolvedValue = controlled ? value : internalValue;
+
+  // Faux range mono-point pour réutiliser MonthPanel (isSelected quand start===end).
+  const displayRange = resolvedValue
+    ? {
+        start: new CalendarDate(resolvedValue.year, resolvedValue.month, 1),
+        end: new CalendarDate(resolvedValue.year, resolvedValue.month, 1),
+      }
+    : undefined;
+
+  const handleSelect = (date: CalendarDate) => {
+    if (isDisabled) return;
+    if (!controlled) setInternalValue(date);
+    onChange?.(date);
+  };
+
+  const handleDrillUp = (panel: "left" | "right") => {
+    setDrilledPanel(panel);
+    setDrillLevel("year");
+  };
+
+  const handleYearSelect = (date: CalendarDate) => {
+    if (drilledPanel === "right") {
+      setLeftYear(date.year - 1);
+    } else {
+      setLeftYear(date.year);
+    }
+    setDrillLevel("month");
+  };
+
+  const monthLabels = getMonthLabels(locale);
+
+  const sharedPanel = {
+    monthLabels,
+    displayRange,
+    todayYear: todayDate.year,
+    todayMonth: todayDate.month,
+    isDisabled,
+    onSelect: handleSelect,
+    onHover: () => {},
+    onHoverLeave: () => {},
+  };
+
+  if (drillLevel === "year") {
+    const pivotYear = drilledPanel === "right" ? rightYear : leftYear;
+    return (
+      <YearCalendar
+        defaultValue={new CalendarDate(pivotYear, 1, 1)}
+        isDisabled={isDisabled}
+        className={className}
+        onChange={handleYearSelect}
+      />
+    );
+  }
+
+  return (
+    <div
+      className={[calStyles.dualCalendar, className].filter(Boolean).join(" ")}
+      data-disabled={isDisabled || undefined}
+    >
+      <div className={[calStyles.calendar, styles.monthCalendar].join(" ")}>
+        <MainHeader
+          label={String(leftYear)}
+          onPrev={() => setLeftYear((y) => y - 1)}
+          hideNext
+          onHeadingPress={() => handleDrillUp("left")}
+          isDisabled={isDisabled}
+        />
+        <MonthPanel year={leftYear} {...sharedPanel} />
+      </div>
+      <div className={[calStyles.calendar, styles.monthCalendar].join(" ")}>
+        <MainHeader
+          label={String(rightYear)}
+          hidePrev
+          onNext={() => setLeftYear((y) => y + 1)}
+          onHeadingPress={() => handleDrillUp("right")}
+          isDisabled={isDisabled}
+        />
+        <MonthPanel year={rightYear} {...sharedPanel} />
+      </div>
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------
+// Composant principal
+
 export function DualMonthCalendar({
   value,
   defaultValue,

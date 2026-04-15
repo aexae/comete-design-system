@@ -109,6 +109,97 @@ function YearPanel({
 }
 
 // -----------------------------------------------------------------------
+// DualYearSingleCalendar — calendars=2, sélection simple (pas de plage)
+
+/**
+ * DualYearSingleCalendar — Comète Design System (interne)
+ *
+ * Deux plages de 20 ans consécutives côte à côte avec sélection d'une année unique.
+ * Réutilise YearPanel avec un faux range mono-point pour l'affichage.
+ */
+export function DualYearSingleCalendar({
+  value,
+  defaultValue,
+  onChange,
+  isDisabled = false,
+  className,
+}: {
+  value?: CalendarDate;
+  defaultValue?: CalendarDate;
+  onChange?: (date: CalendarDate) => void;
+  isDisabled?: boolean;
+  className?: string;
+}): ReactElement {
+  const todayDate = today(getLocalTimeZone());
+  const initialYear = (value ?? defaultValue)?.year ?? todayDate.year;
+
+  const [leftRangeStart, setLeftRangeStart] = useState(() =>
+    decadeStart(initialYear)
+  );
+  const rightRangeStart = leftRangeStart + GRID_SIZE;
+
+  const [internalValue, setInternalValue] = useState<CalendarDate | undefined>(
+    defaultValue
+  );
+
+  const controlled = value !== undefined;
+  const resolvedValue = controlled ? value : internalValue;
+
+  // Faux range mono-point pour réutiliser YearPanel (isSelected quand start===end).
+  const displayRange = resolvedValue
+    ? {
+        start: new CalendarDate(resolvedValue.year, 1, 1),
+        end: new CalendarDate(resolvedValue.year, 1, 1),
+      }
+    : undefined;
+
+  const handleSelect = (year: number) => {
+    if (isDisabled) return;
+    const date = new CalendarDate(year, 1, 1);
+    if (!controlled) setInternalValue(date);
+    onChange?.(date);
+  };
+
+  const leftEnd = leftRangeStart + GRID_SIZE - 1;
+  const rightEnd = rightRangeStart + GRID_SIZE - 1;
+
+  const sharedPanel = {
+    todayYear: todayDate.year,
+    displayRange,
+    isDisabled,
+    onSelect: handleSelect,
+    onHover: () => {},
+    onHoverLeave: () => {},
+  };
+
+  return (
+    <div
+      className={[calStyles.dualCalendar, className].filter(Boolean).join(" ")}
+      data-disabled={isDisabled || undefined}
+    >
+      <div className={[calStyles.calendar, styles.yearCalendar].join(" ")}>
+        <MainHeader
+          label={`${leftRangeStart}–${leftEnd}`}
+          onPrev={() => setLeftRangeStart((s) => s - GRID_SIZE)}
+          hideNext
+          isDisabled={isDisabled}
+        />
+        <YearPanel rangeStart={leftRangeStart} {...sharedPanel} />
+      </div>
+      <div className={[calStyles.calendar, styles.yearCalendar].join(" ")}>
+        <MainHeader
+          label={`${rightRangeStart}–${rightEnd}`}
+          hidePrev
+          onNext={() => setLeftRangeStart((s) => s + GRID_SIZE)}
+          isDisabled={isDisabled}
+        />
+        <YearPanel rangeStart={rightRangeStart} {...sharedPanel} />
+      </div>
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------
 // YearRangeCalendar — single calendar, range selection (isRange=true, calendars=1)
 
 export interface YearRangeCalendarProps {

@@ -291,6 +291,7 @@ export function MonthRangePicker({
   const renderDualCalendar = () => (
     <Calendar
       appearance="month"
+      isRange
       calendars={2}
       value={rangeValue}
       onChange={handleRangeSelect}

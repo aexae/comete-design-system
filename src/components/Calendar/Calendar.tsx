@@ -24,9 +24,9 @@ import { CalendarCell as CometeCalendarCell } from "./CalendarCell.js";
 import { MainHeader } from "./MainHeader.js";
 import { WeekGrid, DualWeekGrid } from "./WeekGrid.js";
 import { MonthCalendar } from "./MonthCalendar.js";
-import { DualMonthCalendar, MonthRangeCalendar } from "./DualMonthCalendar.js";
+import { DualMonthCalendar, DualMonthSingleCalendar, MonthRangeCalendar } from "./DualMonthCalendar.js";
 import { YearCalendar } from "./YearCalendar.js";
-import { DualYearCalendar, YearRangeCalendar } from "./DualYearCalendar.js";
+import { DualYearCalendar, DualYearSingleCalendar, YearRangeCalendar } from "./DualYearCalendar.js";
 import { TimeCalendar } from "./TimeCalendar.js";
 import type { TimeCalendarProps as TimeCalendarComponentProps } from "./TimeCalendar.js";
 import styles from "./Calendar.module.css";
@@ -222,7 +222,10 @@ export function Calendar(props: CalendarProps): ReactElement {
       }
       return <MonthRangeCalendar {...rangeProps} />;
     }
-    const { appearance: _a, isOpen: _o, calendars: _c, isRange: _r, ...monthProps } = props;
+    const { appearance: _a, isOpen: _o, calendars = 1, isRange: _r, ...monthProps } = props;
+    if (calendars === 2) {
+      return <DualMonthSingleCalendar {...monthProps} />;
+    }
     return <MonthCalendar {...monthProps} />;
   }
 
@@ -234,7 +237,10 @@ export function Calendar(props: CalendarProps): ReactElement {
       }
       return <YearRangeCalendar {...rangeProps} />;
     }
-    const { appearance: _a, isOpen: _o, calendars: _c, isRange: _r, ...yearProps } = props;
+    const { appearance: _a, isOpen: _o, calendars = 1, isRange: _r, ...yearProps } = props;
+    if (calendars === 2) {
+      return <DualYearSingleCalendar {...yearProps} />;
+    }
     return <YearCalendar {...yearProps} />;
   }
 

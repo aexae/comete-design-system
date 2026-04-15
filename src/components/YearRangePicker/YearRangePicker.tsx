@@ -201,6 +201,7 @@ export function YearRangePicker({
   const renderDualCalendar = () => (
     <Calendar
       appearance="year"
+      isRange
       calendars={2}
       value={rangeValue}
       onChange={handleRangeSelect}

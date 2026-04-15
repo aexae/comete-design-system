@@ -189,6 +189,13 @@
   pointer-events: none;
 }
 
+/* Divider — états sélectionnés avec fond bleu : blanc pour le contraste */
+.weekRow[data-state="selected"] .weekDivider,
+.weekRow[data-state="range-start"] .weekDivider,
+.weekRow[data-state="range-end"] .weekDivider {
+  background-color: var(--text-inverted);
+}
+
 /* ==========================================================================
    Cellule de jour
    ========================================================================== */
@@ -244,8 +251,26 @@
   background-color: var(--text-inverted);
 }
 
-/* Indicateur vertical — inversé quand semaine en cours est sélectionnée */
-.weekRow[data-state="selected"][data-current-week] .weekNumberCell::before,
+/* Semaine en cours sélectionnée : seul le background de la ligne change.
+   Le texte, l'indicateur vertical et le divider conservent leur style "semaine en cours". */
+.weekRow[data-state="selected"][data-current-week] .weekNumberCell {
+  color: var(--text-information);
+  font-weight: var(--font-weight-semibold);
+}
+
+.weekRow[data-state="selected"][data-current-week] .weekDivider {
+  background-color: var(--border-subtle);
+}
+
+.weekRow[data-state="selected"][data-current-week] .weekDayCell[data-today] .weekDayText {
+  color: var(--text-information);
+}
+
+.weekRow[data-state="selected"][data-current-week] .todayIndicator {
+  background-color: var(--border-focused);
+}
+
+/* Indicateur vertical — inversé uniquement pour range-start/end (fond bleu foncé) */
 .weekRow[data-state="range-start"][data-current-week] .weekNumberCell::before,
 .weekRow[data-state="range-end"][data-current-week] .weekNumberCell::before {
   background-color: var(--text-inverted);
