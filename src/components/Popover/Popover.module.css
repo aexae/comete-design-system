@@ -33,7 +33,7 @@
 
 /* Themed scrollbar — Chrome / Edge / Safari */
 .popover::-webkit-scrollbar {
-  width: 8px;
+  width: var(--size100);
 }
 
 .popover::-webkit-scrollbar-track {
@@ -42,7 +42,7 @@
 
 .popover::-webkit-scrollbar-thumb {
   background-color: var(--background-neutral-bold-default);
-  border-radius: 100px;
+  border-radius: var(--radius-round);
 }
 
 @keyframes popover-fade-in {

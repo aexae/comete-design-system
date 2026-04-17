@@ -17,7 +17,7 @@
 
 /* Themed scrollbar — Chrome / Edge / Safari */
 .timeCalendar::-webkit-scrollbar {
-  width: 8px;
+  width: var(--size100);
 }
 
 .timeCalendar::-webkit-scrollbar-track {
@@ -26,14 +26,14 @@
 
 .timeCalendar::-webkit-scrollbar-thumb {
   background-color: var(--background-neutral-bold-default);
-  border-radius: 100px;
+  border-radius: var(--radius-round);
 }
 
 /* Option individuelle */
 .timeOption {
   display: flex;
   align-items: center;
-  min-height: 28px;
+  min-height: var(--size350);
   padding-inline: var(--space150);
   padding-block: var(--space050);
   border: none;

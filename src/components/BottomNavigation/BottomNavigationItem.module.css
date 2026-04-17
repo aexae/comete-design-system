@@ -35,8 +35,8 @@
 
 .iconWrapper {
   position: relative;
-  width: 24px;
-  height: 24px;
+  width: var(--size300);
+  height: var(--size300);
   flex-shrink: 0;
 }
 
@@ -44,8 +44,8 @@
 
 .badge {
   position: absolute;
-  top: -8px;
-  left: 16px;
+  top: calc(-1 * var(--space100));
+  left: var(--space200);
   /* Anneau du badge = couleur de fond de l'item non sélectionné */
   --badge-cutout-color: var(--background-surface-default);
 }

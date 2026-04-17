@@ -16,7 +16,7 @@
 .input {
   flex: 1 1 0%;
   min-width: 0;
-  min-height: 24px;
+  min-height: var(--size300);
   border: none;
   outline: none;
   background: transparent;
@@ -58,8 +58,8 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 24px;
-  height: 24px;
+  width: var(--size300);
+  height: var(--size300);
   padding: 0;
   border: none;
   border-radius: var(--radius0375);
@@ -86,8 +86,8 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 16px;
-  height: 16px;
+  width: var(--size200);
+  height: var(--size200);
   color: var(--icon-subtle);
   animation: spinner-rotate 800ms linear infinite;
 }
