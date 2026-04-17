@@ -3,6 +3,8 @@ declare const styles: {
   readonly "content": string;
   readonly "description": string;
   readonly "divider": string;
+  readonly "elemAfter": string;
+  readonly "elemBefore": string;
   readonly "iconAfter": string;
   readonly "iconBefore": string;
   readonly "item": string;
@@ -12,8 +14,6 @@ declare const styles: {
   readonly "section": string;
   readonly "sectionHeading": string;
   readonly "sectionNoSeparator": string;
-  readonly "elemAfter": string;
-  readonly "elemBefore": string;
   readonly "title": string;
   readonly "withDescription": string;
 };

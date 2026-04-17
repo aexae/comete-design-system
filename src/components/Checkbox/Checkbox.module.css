@@ -4,11 +4,18 @@
    Toutes les valeurs proviennent de @naxit/comete-design-tokens.
    ========================================================================== */
 
+/* CheckboxGroup */
+.group {
+  display: flex;
+  flex-direction: column;
+}
+
 /* Base */
 .checkbox {
   display: flex;
   align-items: flex-start;
   column-gap: var(--space025);
+  color: var(--text-default);
   cursor: pointer;
   user-select: none;
 }
@@ -30,21 +37,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: var(--size300);
+  height: var(--size300);
   color: var(--border-default);
 }
 
 .iconWrapper {
   position: relative;
   display: flex;
-  width: 16px;
-  height: 16px;
+  width: var(--size200);
+  height: var(--size200);
 }
 
-/* Inner mark (check / dash) — always light on bold backgrounds */
+/* Inner mark (tick / dash) — couleur du fond parent, même pattern que
+   borderColor dans AvatarGroup ou --radio-surface dans Radio. */
 .innerMark {
-  fill: var(--icon-on-bold);
+  fill: var(--checkbox-surface, var(--background-surface-default));
 }
 
 /* Checked / Indeterminate — brand */

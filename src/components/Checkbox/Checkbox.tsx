@@ -1,9 +1,12 @@
 // Checkbox — Comète Design System
 // Case à cocher accessible avec label et description optionnels.
+import React from "react";
 import type { ReactElement } from "react";
 import {
   Checkbox as AriaCheckbox,
+  CheckboxGroup as AriaCheckboxGroup,
   type CheckboxProps as AriaCheckboxProps,
+  type CheckboxGroupProps as AriaCheckboxGroupProps,
 } from "react-aria-components";
 import { FocusRing } from "../FocusRing/FocusRing.js";
 import styles from "./Checkbox.module.css";
@@ -24,6 +27,14 @@ export interface CheckboxProps
   label?: string;
   /** Texte d'aide affiché sous le label. */
   description?: string;
+  /** Classe CSS additionnelle. */
+  className?: string;
+}
+
+export interface CheckboxGroupProps
+  extends Omit<AriaCheckboxGroupProps, "className" | "style" | "children"> {
+  /** Checkbox items. */
+  children: React.ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
 }
@@ -155,3 +166,32 @@ export function Checkbox({
 }
 
 Checkbox.displayName = "Checkbox";
+
+/**
+ * CheckboxGroup — Comète Design System
+ *
+ * Groupe de cases à cocher permettant la sélection multiple.
+ *
+ * ```tsx
+ * <CheckboxGroup aria-label="Préférences" value={value} onChange={setValue}>
+ *   <Checkbox value="a" label="Option A" />
+ *   <Checkbox value="b" label="Option B" />
+ * </CheckboxGroup>
+ * ```
+ */
+export function CheckboxGroup({
+  children,
+  className,
+  ...ariaProps
+}: CheckboxGroupProps): ReactElement {
+  return (
+    <AriaCheckboxGroup
+      className={[styles.group, className].filter(Boolean).join(" ")}
+      {...ariaProps}
+    >
+      {children}
+    </AriaCheckboxGroup>
+  );
+}
+
+CheckboxGroup.displayName = "CheckboxGroup";

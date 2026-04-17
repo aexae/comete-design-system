@@ -87,9 +87,11 @@ export function Radio({
       {({ isFocusVisible }) => (
         <>
           <span className={styles.indicator}>
-            {isFocusVisible && (
-              <FocusRing borderRadius="round" position="inside" />
-            )}
+            <span className={styles.iconWrapper}>
+              {isFocusVisible && (
+                <FocusRing borderRadius="round" position="inside" />
+              )}
+            </span>
           </span>
           {(label !== undefined || description !== undefined) && (
             <span className={styles.labelGroup}>

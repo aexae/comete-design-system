@@ -22,6 +22,7 @@
   display: flex;
   align-items: flex-start;
   column-gap: var(--space025);
+  color: var(--text-default);
   cursor: pointer;
   user-select: none;
 }
@@ -43,7 +44,6 @@
    ========================================================================== */
 
 .indicator {
-  position: relative;
   flex-shrink: 0;
   width: var(--size300);
   height: var(--size300);
@@ -53,8 +53,17 @@
   color: var(--border-default);
 }
 
+.iconWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size200);
+  height: var(--size200);
+}
+
 /* Outer ring — cercle plein */
-.indicator::before {
+.iconWrapper::before {
   content: "";
   position: absolute;
   width: var(--size175);
@@ -63,8 +72,8 @@
   background: currentColor;
 }
 
-/* Inner surface — "trou" qui laisse voir le fond parent (anneau de --size025) */
-.indicator::after {
+/* Inner surface — "trou" qui laisse voir le fond parent */
+.iconWrapper::after {
   content: "";
   position: absolute;
   width: var(--size125);
@@ -73,8 +82,10 @@
   background: var(--radio-surface, var(--background-surface-default));
 }
 
-/* Dot — quand sélectionné, ajoute un dot central via box-shadow inset */
-.radio[data-selected] .indicator::after {
+/* Selected — le trou se réduit pour laisser apparaître un anneau + dot central */
+.radio[data-selected] .iconWrapper::after {
+  width: var(--size100);
+  height: var(--size100);
   box-shadow: inset 0 0 0 var(--size025) currentColor;
 }
 

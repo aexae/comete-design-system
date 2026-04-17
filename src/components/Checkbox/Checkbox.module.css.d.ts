@@ -1,6 +1,7 @@
 declare const styles: {
   readonly "checkbox": string;
   readonly "description": string;
+  readonly "group": string;
   readonly "iconWrapper": string;
   readonly "indicator": string;
   readonly "innerMark": string;

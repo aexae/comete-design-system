@@ -1,23 +1,24 @@
-import { useState } from "react";
-import { Radio, RadioGroup } from "@naxit/comete-design-system";
-import type { RadioGroupProps } from "@naxit/comete-design-system";
+// Radio — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { userEvent, within } from "storybook/test";
-
-// ----------------------------------------------------------------------
-// Figma
+import { Radio, RadioGroup } from "@naxit/comete-design-system/components";
+import { expect, fn, userEvent, within } from "storybook/test";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
-// ----------------------------------------------------------------------
+// -----------------------------------------------------------------------
+// Meta
 
-const meta: Meta<RadioGroupProps> = {
+const meta = {
   title: "Components/Radio",
   component: RadioGroup,
   tags: ["autodocs"],
+  parameters: {
+    layout: "centered",
+    design: { type: "figma", url: figmaUrl("3704:73901") },
+  },
   argTypes: {
     isDisabled: { control: "boolean" },
     isInvalid: { control: "boolean" },
@@ -25,25 +26,20 @@ const meta: Meta<RadioGroupProps> = {
   },
   args: {
     "aria-label": "Choix",
+    onChange: fn(),
   },
-  parameters: {
-    layout: "centered",
-    design: {
-      type: "figma",
-      url: figmaUrl("3704:73901"),
-    },
-  },
-};
+} satisfies Meta<typeof RadioGroup>;
 
 export default meta;
-type Story = StoryObj<RadioGroupProps>;
+type Story = StoryObj<typeof RadioGroup>;
 
-// ----------------------------------------------------------------------
+// -----------------------------------------------------------------------
+// Stories — état par état (miroir du Checkbox)
 
-/** Groupe de radios par défaut. */
+/** Radio par défaut (unselected). */
 export const Default: Story = {
   render: (args) => (
-    <RadioGroup {...args} defaultValue="a">
+    <RadioGroup {...args}>
       <Radio value="a" label="Option A" />
       <Radio value="b" label="Option B" />
       <Radio value="c" label="Option C" />
@@ -51,8 +47,61 @@ export const Default: Story = {
   ),
 };
 
-/** Avec description sur chaque option. */
+/** Radio sélectionné. */
+export const Selected: Story = {
+  render: (args) => (
+    <RadioGroup {...args} defaultValue="a">
+      <Radio value="a" label="Option A" />
+      <Radio value="b" label="Option B" />
+    </RadioGroup>
+  ),
+};
+
+/** Radio invalide. */
+export const Invalid: Story = {
+  render: (args) => (
+    <RadioGroup {...args} isInvalid>
+      <Radio value="a" label="Option A" />
+      <Radio value="b" label="Option B" />
+    </RadioGroup>
+  ),
+};
+
+/** Radio invalide sélectionné. */
+export const InvalidSelected: Story = {
+  name: "Invalid selected",
+  render: (args) => (
+    <RadioGroup {...args} isInvalid defaultValue="a">
+      <Radio value="a" label="Option A" />
+      <Radio value="b" label="Option B" />
+    </RadioGroup>
+  ),
+};
+
+/** Groupe désactivé. */
+export const Disabled: Story = {
+  render: (args) => (
+    <RadioGroup {...args} isDisabled>
+      <Radio value="a" label="Option A" />
+      <Radio value="b" label="Option B" />
+    </RadioGroup>
+  ),
+};
+
+/** Groupe désactivé avec sélection. */
+export const DisabledSelected: Story = {
+  name: "Disabled selected",
+  render: (args) => (
+    <RadioGroup {...args} isDisabled defaultValue="a">
+      <Radio value="a" label="Option A" />
+      <Radio value="b" label="Option B" />
+    </RadioGroup>
+  ),
+};
+
+/** Avec description. */
 export const WithDescription: Story = {
+  name: "With description",
   render: (args) => (
     <RadioGroup {...args} defaultValue="monthly">
       <Radio value="monthly" label="Mensuel" description="Facturé chaque mois" />
@@ -61,30 +110,9 @@ export const WithDescription: Story = {
   ),
 };
 
-/** État invalide. */
-export const Invalid: Story = {
-  render: (args) => (
-    <RadioGroup {...args} isInvalid>
-      <Radio value="a" label="Option A" />
-      <Radio value="b" label="Option B" />
-      <Radio value="c" label="Option C" />
-    </RadioGroup>
-  ),
-};
-
-/** Groupe désactivé. */
-export const Disabled: Story = {
-  render: (args) => (
-    <RadioGroup {...args} isDisabled defaultValue="b">
-      <Radio value="a" label="Option A" />
-      <Radio value="b" label="Option B" />
-      <Radio value="c" label="Option C" />
-    </RadioGroup>
-  ),
-};
-
 /** Option individuelle désactivée. */
 export const IndividualDisabled: Story = {
+  name: "Individual disabled",
   render: (args) => (
     <RadioGroup {...args} defaultValue="a">
       <Radio value="a" label="Option A" />
@@ -94,81 +122,124 @@ export const IndividualDisabled: Story = {
   ),
 };
 
-/** Sélection contrôlée. */
-function ControlledDemo() {
-  const [value, setValue] = useState("a");
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <RadioGroup aria-label="Choix" value={value} onChange={setValue}>
-        <Radio value="a" label="Option A" />
-        <Radio value="b" label="Option B" />
-        <Radio value="c" label="Option C" />
-      </RadioGroup>
-      <p style={{ margin: 0, fontSize: 12, color: "var(--text-subtle)" }}>
-        Valeur : {value}
-      </p>
-    </div>
-  );
-}
+// -----------------------------------------------------------------------
+// Play functions — tests d'interaction
 
-export const Controlled: Story = {
-  render: () => <ControlledDemo />,
-  parameters: { controls: { disable: true } },
+/** Vérifie que onChange est appelé au clic. */
+export const ClickInteraction: Story = {
+  name: "Click interaction",
+  render: (args) => (
+    <RadioGroup {...args}>
+      <Radio value="a" label="Option A" />
+      <Radio value="b" label="Option B" />
+    </RadioGroup>
+  ),
+  play: async ({
+    canvasElement,
+    args,
+  }: {
+    canvasElement: HTMLElement;
+    args: { onChange?: (value: string) => void };
+  }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getAllByRole("radio")[1]);
+    await expect(args.onChange).toHaveBeenCalledOnce();
+  },
 };
 
-/** Focus visible — le FocusRing s'affiche autour de l'indicateur. */
-export const Focused: Story = {
+/** Vérifie que le groupe disabled ne réagit pas. */
+export const DisabledInteraction: Story = {
+  name: "Disabled interaction",
+  args: { isDisabled: true },
+  render: (args) => (
+    <RadioGroup {...args}>
+      <Radio value="a" label="Option A" />
+      <Radio value="b" label="Option B" />
+    </RadioGroup>
+  ),
+  play: async ({
+    canvasElement,
+    args,
+  }: {
+    canvasElement: HTMLElement;
+    args: { onChange?: (value: string) => void };
+  }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getAllByRole("radio")[0]);
+    await expect(args.onChange).not.toHaveBeenCalled();
+  },
+};
+
+/** Vérifie la navigation clavier (ArrowDown). */
+export const KeyboardNavigation: Story = {
+  name: "Keyboard navigation",
+  render: (args) => (
+    <RadioGroup {...args} defaultValue="a">
+      <Radio value="a" label="Option A" />
+      <Radio value="b" label="Option B" />
+    </RadioGroup>
+  ),
+  play: async ({
+    canvasElement,
+    args,
+  }: {
+    canvasElement: HTMLElement;
+    args: { onChange?: (value: string) => void };
+  }) => {
+    const canvas = within(canvasElement);
+    const radios = canvas.getAllByRole("radio");
+    radios[0].focus();
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(args.onChange).toHaveBeenCalled();
+  },
+};
+
+/** Focus visible — le FocusRing s'affiche via Tab. */
+export const FocusVisible: Story = {
+  name: "Focus visible",
   render: (args) => (
     <RadioGroup {...args} defaultValue="a">
       <Radio value="a" label="Focused (selected)" />
       <Radio value="b" label="Option B" />
     </RadioGroup>
   ),
-  play: async ({
+  play: ({
     canvasElement,
   }: {
     canvasElement: HTMLElement;
   }) => {
     const canvas = within(canvasElement);
     const radios = canvas.getAllByRole("radio");
-    await userEvent.tab();
-    radios[0]?.focus();
+    radios[0].focus();
   },
 };
 
-/** Toutes les combinaisons d'états. */
+// -----------------------------------------------------------------------
+
+/** Toutes les combinaisons. */
 export const AllStates: Story = {
-  render: () => {
-    const labelStyle = {
-      fontFamily: "monospace",
-      fontSize: 12,
-      color: "var(--text-subtlest)",
-      width: 140,
-    };
-    return (
-      <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "16px 24px", alignItems: "start" }}>
-        <span style={labelStyle}>default</span>
-        <RadioGroup aria-label="default" defaultValue="a">
-          <Radio value="a" label="Selected" />
-          <Radio value="b" label="Unselected" />
-        </RadioGroup>
+  name: "All states",
+  parameters: { design: { type: "figma", url: figmaUrl("3704:73886") } },
+  render: () => (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <RadioGroup aria-label="Default" defaultValue="a">
+        <Radio value="a" label="Selected" />
+        <Radio value="b" label="Unselected" />
+      </RadioGroup>
 
-        <span style={labelStyle}>invalid</span>
-        <RadioGroup aria-label="invalid" isInvalid defaultValue="a">
-          <Radio value="a" label="Selected" />
-          <Radio value="b" label="Unselected" />
-        </RadioGroup>
+      <RadioGroup aria-label="Invalid" isInvalid defaultValue="a">
+        <Radio value="a" label="Invalid selected" />
+        <Radio value="b" label="Invalid unselected" />
+      </RadioGroup>
 
-        <span style={labelStyle}>disabled</span>
-        <RadioGroup aria-label="disabled" isDisabled defaultValue="a">
-          <Radio value="a" label="Selected" />
-          <Radio value="b" label="Unselected" />
-        </RadioGroup>
-      </div>
-    );
-  },
-  parameters: {
-    controls: { disable: true },
-    design: { type: "figma", url: figmaUrl("3704:73886") },
-  },
+      <RadioGroup aria-label="Disabled" isDisabled defaultValue="a">
+        <Radio value="a" label="Disabled selected" />
+        <Radio value="b" label="Disabled unselected" />
+      </RadioGroup>
+
+      <RadioGroup aria-label="Description" defaultValue="a">
+        <Radio value="a" label="With description" description="Helper text" />
+      </RadioGroup>
+    </div>
+  ),
 };
