@@ -18,8 +18,8 @@ describe("Logo", () => {
     expect(container.firstElementChild).toHaveAttribute("aria-hidden", "true");
   });
 
-  it("should have role img and aria-label when label is provided", () => {
-    render(<Logo label="Logo Comète" />);
+  it("should have role img and aria-label when aria-label is provided", () => {
+    render(<Logo aria-label="Logo Comète" />);
     expect(screen.getByRole("img")).toHaveAttribute("aria-label", "Logo Comète");
   });
 

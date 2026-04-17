@@ -33,7 +33,7 @@ const meta: Meta<IllustrationComponentProps> = {
       control: "select",
       options: SIZES,
     },
-    label: {
+    "aria-label": {
       control: "text",
       description: "Accessible label (makes the illustration non-decorative)",
     },
@@ -60,7 +60,7 @@ export const Size512: Story = {
 };
 
 export const WithLabel: Story = {
-  args: { illustration: "ForbiddenAccess", label: "Accès refusé" },
+  args: { illustration: "ForbiddenAccess", "aria-label": "Accès refusé" },
 };
 
 // ----------------------------------------------------------------------
@@ -80,7 +80,7 @@ export const AllSizes: Story = {
           }}
         >
           <Illustration {...args} size={s} illustration="Empty" />
-          <span style={{ fontSize: 12, color: "var(--text-subtlest, #888)" }}>
+          <span style={{ fontSize: 12, color: "var(--text-subtlest)" }}>
             {s}px
           </span>
         </div>
@@ -128,10 +128,10 @@ function IllustrationCard({
         alignItems: "center",
         gap: 8,
         padding: 16,
-        border: `1.5px solid ${isCopied ? "var(--border-focus, #4a90e2)" : "transparent"}`,
+        border: `1.5px solid ${isCopied ? "var(--border-focus)" : "transparent"}`,
         borderRadius: 12,
         background: isCopied
-          ? "var(--background-selected-subtlest-default, rgba(74,144,226,0.08))"
+          ? "var(--background-selected-subtlest-default)"
           : "transparent",
         cursor: "pointer",
         width: "100%",
@@ -143,8 +143,8 @@ function IllustrationCard({
         style={{
           fontSize: 11,
           color: isCopied
-            ? "var(--text-selected, #4a90e2)"
-            : "var(--text-subtlest, #888)",
+            ? "var(--text-selected)"
+            : "var(--text-subtlest)",
           textAlign: "center",
           lineHeight: 1.3,
           width: "100%",
@@ -189,17 +189,17 @@ function IllustrationExplorer(): ReactElement {
     fontSize: 11,
     fontWeight: 600,
     marginBottom: 4,
-    color: "var(--text-subtlest, #888)",
+    color: "var(--text-subtlest)",
     textTransform: "uppercase",
     letterSpacing: "0.05em",
   };
 
   const control: CSSProperties = {
     padding: "5px 10px",
-    border: "1px solid var(--border-default, #ddd)",
+    border: "1px solid var(--border-default)",
     borderRadius: 6,
-    background: "var(--background-default, #fff)",
-    color: "var(--text-default, #111)",
+    background: "var(--background-default-default)",
+    color: "var(--text-default)",
     fontSize: 13,
   };
 
@@ -220,9 +220,9 @@ function IllustrationExplorer(): ReactElement {
           flexWrap: "wrap",
           marginBottom: 20,
           padding: 16,
-          background: "var(--background-surface-elevation-sunken-default, #f7f7f7)",
+          background: "var(--background-surface-elevation-sunken-default)",
           borderRadius: 12,
-          border: "1px solid var(--border-default, #eee)",
+          border: "1px solid var(--border-default)",
         }}
       >
         {/* Recherche */}
@@ -257,8 +257,8 @@ function IllustrationExplorer(): ReactElement {
       </div>
 
       {/* Compteur */}
-      <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-subtlest, #888)" }}>
-        <strong style={{ color: "var(--text-default, #111)" }}>{filtered.length}</strong>
+      <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-subtlest)" }}>
+        <strong style={{ color: "var(--text-default)" }}>{filtered.length}</strong>
         {" / "}
         {ILLUSTRATION_ENTRIES.length} illustrations
         {search !== "" && ` — "${search}"`}
@@ -267,7 +267,7 @@ function IllustrationExplorer(): ReactElement {
 
       {/* Grille */}
       {filtered.length === 0 ? (
-        <p style={{ textAlign: "center", padding: 48, color: "var(--text-subtlest, #888)" }}>
+        <p style={{ textAlign: "center", padding: 48, color: "var(--text-subtlest)" }}>
           Aucune illustration pour &ldquo;{search}&rdquo;
         </p>
       ) : (

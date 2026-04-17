@@ -8,6 +8,8 @@ import styles from "./BottomNavigation.module.css";
 export interface BottomNavigationProps {
   /** Items de navigation — utiliser des composants <BottomNavigationItem>. */
   children: ReactNode;
+  /** Classe CSS additionnelle. */
+  className?: string;
 }
 
 // -----------------------------------------------------------------------
@@ -19,6 +21,6 @@ export interface BottomNavigationProps {
  *
  * @param children - Items de navigation (BottomNavigationItem)
  */
-export function BottomNavigation({ children }: BottomNavigationProps): ReactElement {
-  return <nav className={styles.nav}>{children}</nav>;
+export function BottomNavigation({ children, className }: BottomNavigationProps): ReactElement {
+  return <nav className={[styles.nav, className].filter(Boolean).join(" ")}>{children}</nav>;
 }

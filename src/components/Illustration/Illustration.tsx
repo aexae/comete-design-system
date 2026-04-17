@@ -19,7 +19,7 @@ export interface IllustrationComponentProps {
    * technologies via `aria-label`; otherwise it is treated as decorative
    * (`aria-hidden="true"`).
    */
-  label?: string;
+  "aria-label"?: string;
   /** Additional CSS class applied to the wrapper `<span>`. */
   className?: string;
 }
@@ -36,13 +36,13 @@ export interface IllustrationComponentProps {
  * import { Illustration } from "@naxit/comete-design-system";
  *
  * <Illustration illustration="Empty" />
- * <Illustration illustration="ForbiddenAccess" size={128} label="Accès refusé" />
+ * <Illustration illustration="ForbiddenAccess" size={128} aria-label="Accès refusé" />
  * ```
  */
 export function Illustration({
   illustration,
   size = 256,
-  label,
+  "aria-label": ariaLabel,
   className,
 }: IllustrationComponentProps): ReactElement | null {
   const IllustrationComponent = illustrationRegistry[illustration];
@@ -51,8 +51,8 @@ export function Illustration({
 
   const classNames = [styles.illustration, className].filter(Boolean).join(" ");
 
-  const ariaProps: Record<string, string | boolean> = label
-    ? { "aria-label": label, role: "img" }
+  const ariaProps: Record<string, string | boolean> = ariaLabel
+    ? { "aria-label": ariaLabel, role: "img" }
     : { "aria-hidden": true };
 
   return (

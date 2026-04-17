@@ -134,7 +134,7 @@ export function ToggleButton({
               <Icon
                 icon={iconBefore}
                 size={20}
-                variant="outlined"
+                appearance="outlined"
                 color={iconColor}
               />
             )}
@@ -151,7 +151,7 @@ export function ToggleButton({
               <Icon
                 icon={iconAfter}
                 size={20}
-                variant="outlined"
+                appearance="outlined"
                 color={iconColor}
               />
             )}

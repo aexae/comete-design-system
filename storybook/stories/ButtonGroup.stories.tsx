@@ -66,17 +66,17 @@ export const MixedVariants: Story = {
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       <ButtonGroup>
-        <Button variant="outlined">Annuler</Button>
-        <Button variant="contained" color="brand">Confirmer</Button>
+        <Button appearance="outlined">Annuler</Button>
+        <Button appearance="contained" color="brand">Confirmer</Button>
       </ButtonGroup>
       <ButtonGroup>
-        <Button variant="contained" color="default">Exporter</Button>
-        <Button variant="contained" color="critical">Supprimer</Button>
+        <Button appearance="contained" color="default">Exporter</Button>
+        <Button appearance="contained" color="critical">Supprimer</Button>
       </ButtonGroup>
       <ButtonGroup>
-        <Button variant="subtle">Ignorer</Button>
-        <Button variant="subtle" color="brand">Enregistrer</Button>
-        <Button variant="subtle" color="critical">Rejeter</Button>
+        <Button appearance="subtle">Ignorer</Button>
+        <Button appearance="subtle" color="brand">Enregistrer</Button>
+        <Button appearance="subtle" color="critical">Rejeter</Button>
       </ButtonGroup>
     </div>
   ),

@@ -2,7 +2,7 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type {
-  CardVariant,
+  CardDrag,
   CardAppearance,
 } from "@naxit/comete-design-system/components";
 import { Card } from "@naxit/comete-design-system/components";
@@ -54,14 +54,9 @@ const meta = {
     design: { type: "figma", url: figmaUrl("5467:27892") },
   },
   argTypes: {
-    variant: {
+    drag: {
       control: "select",
-      options: [
-        "default",
-        "drag-top",
-        "drag-left",
-        "actionable",
-      ] satisfies CardVariant[],
+      options: ["none", "top", "left"] satisfies CardDrag[],
     },
     appearance: {
       control: "select",
@@ -73,7 +68,7 @@ const meta = {
     onDragEnd: { action: "onDragEnd" },
   },
   args: {
-    variant: "default",
+    drag: "none",
     appearance: "outlined",
     children: <CardContent />,
   },
@@ -99,7 +94,7 @@ export const Neutral: Story = {
 /** Carte cliquable avec hover, press et focus ring. */
 export const Actionable: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("5467:28780") } },
-  args: { variant: "actionable", onPress: fn() },
+  args: { onPress: fn() },
 };
 
 /** Poignée de drag en haut. */
@@ -107,7 +102,7 @@ export const DragTop: Story = {
   name: "Drag top",
   parameters: { design: { type: "figma", url: figmaUrl("5467:27893") } },
   args: {
-    variant: "drag-top",
+    drag: "top",
     appearance: "neutral",
     onDrag: fn(),
     onDragEnd: fn(),
@@ -119,7 +114,7 @@ export const DragLeft: Story = {
   name: "Drag left",
   parameters: { design: { type: "figma", url: figmaUrl("5467:28754") } },
   args: {
-    variant: "drag-left",
+    drag: "left",
     appearance: "neutral",
     onDrag: fn(),
     onDragEnd: fn(),
@@ -132,7 +127,7 @@ export const DragLeft: Story = {
 /** Vérifie que onPress est appelé au clic. */
 export const PressInteraction: Story = {
   name: "Press interaction",
-  args: { variant: "actionable", onPress: fn() },
+  args: { onPress: fn() },
   play: async ({
     canvasElement,
     args,
@@ -149,7 +144,7 @@ export const PressInteraction: Story = {
 /** Vérifie la navigation clavier (Enter). */
 export const KeyboardNavigation: Story = {
   name: "Keyboard navigation",
-  args: { variant: "actionable", onPress: fn() },
+  args: { onPress: fn() },
   play: async ({
     canvasElement,
     args,
@@ -167,33 +162,33 @@ export const KeyboardNavigation: Story = {
 
 // -----------------------------------------------------------------------
 
-/** Toutes les combinaisons appearance × variant. */
+/** Toutes les combinaisons appearance × drag/actionable. */
 export const AllVariants: Story = {
   name: "All variants",
   parameters: { design: { type: "figma", url: figmaUrl("5467:27892") } },
   render: () => {
     const appearances: CardAppearance[] = ["outlined", "neutral"];
-    const variants: CardVariant[] = [
-      "default",
-      "actionable",
-      "drag-top",
-      "drag-left",
+    const columns: { label: string; drag: CardDrag; actionable: boolean }[] = [
+      { label: "default", drag: "none", actionable: false },
+      { label: "actionable", drag: "none", actionable: true },
+      { label: "drag top", drag: "top", actionable: false },
+      { label: "drag left", drag: "left", actionable: false },
     ];
 
     return (
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: `auto repeat(${String(variants.length)}, 1fr)`,
+          gridTemplateColumns: `auto repeat(${String(columns.length)}, 1fr)`,
           gap: 24,
           alignItems: "center",
         }}
       >
         {/* Header row */}
         <div />
-        {variants.map((v) => (
+        {columns.map((col) => (
           <span
-            key={v}
+            key={col.label}
             style={{
               fontSize: 12,
               color: "var(--text-subtlest)",
@@ -201,7 +196,7 @@ export const AllVariants: Story = {
               textAlign: "center",
             }}
           >
-            {v}
+            {col.label}
           </span>
         ))}
 
@@ -217,14 +212,14 @@ export const AllVariants: Story = {
             >
               {a}
             </span>
-            {variants.map((v) => (
+            {columns.map((col) => (
               <Card
-                key={`${a}-${v}`}
+                key={`${a}-${col.label}`}
                 appearance={a}
-                variant={v}
-                onPress={v === "actionable" ? () => {} : undefined}
+                drag={col.drag}
+                onPress={col.actionable ? () => {} : undefined}
               >
-                <CardContent label={v} />
+                <CardContent label={col.label} />
               </Card>
             ))}
           </React.Fragment>

@@ -1,2 +1,2 @@
 export { Icon } from "./Icon";
-export type { IconComponentProps, IconName } from "./Icon";
+export type { IconComponentProps, IconAppearance, IconName } from "./Icon";

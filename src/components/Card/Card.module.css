@@ -16,11 +16,10 @@
    Variantes
    ========================================================================== */
 
-/* Fond blanc + bordure standard */
+/* Fond transparent + bordure visible */
 .outlined {
-  background-color: var(--background-surface-elevation-raise-default);
-  border: 1px solid var(--border-default);
-  /* border-radius: var(--radius050); */
+  background-color: transparent;
+  border: 1px solid var(--border-bold);
 }
 
 /* Fond grisé, sans bordure */
@@ -108,7 +107,7 @@
 }
 
 .outlined[data-interactive]:not([data-dragging]):hover {
-  background-color: var(--background-surface-elevation-sunken-default);
+  background-color: var(--background-neutral-subtlest-hovered);
 }
 
 /* Pressed */
@@ -118,7 +117,7 @@
 }
 
 .outlined[data-interactive]:not([data-dragging]):active {
-  background-color: var(--background-surface-elevation-sunken-hovered);
+  background-color: var(--background-neutral-subtlest-pressed);
   box-shadow: none;
 }
 
@@ -147,8 +146,8 @@
 }
 
 .dragPreview.outlined {
-  background-color: var(--background-surface-elevation-raise-default);
-  border: 1px solid var(--border-default);
+  background-color: transparent;
+  border: 1px solid var(--border-bold);
 }
 
 .dragPreview.neutral {

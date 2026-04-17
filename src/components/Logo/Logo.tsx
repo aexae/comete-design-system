@@ -19,7 +19,7 @@ export interface LogoProps {
   /** Hauteur en pixels. La largeur s'adapte proportionnellement. @default 32 */
   size?: number;
   /** Label accessible. Quand fourni, le logo est exposé aux technologies d'assistance. */
-  label?: string;
+  "aria-label"?: string;
   /** Classe CSS additionnelle. */
   className?: string;
 }
@@ -48,13 +48,13 @@ export function Logo({
   appearance = "brand",
   type = "logo",
   size = 32,
-  label,
+  "aria-label": ariaLabel,
   className,
 }: LogoProps): ReactElement | null {
   const LogoComponent = logoRegistry[product];
 
-  const ariaProps: Record<string, string | boolean> = label
-    ? { "aria-label": label, role: "img" }
+  const ariaProps: Record<string, string | boolean> = ariaLabel
+    ? { "aria-label": ariaLabel, role: "img" }
     : { "aria-hidden": true };
 
   return (

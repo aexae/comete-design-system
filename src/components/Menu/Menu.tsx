@@ -232,7 +232,7 @@ export function MenuItem({
                 <Icon
                   icon={iconBefore}
                   size={24}
-                  variant="outlined"
+                  appearance="outlined"
                   color={isDisabled ? "disabled" : isSelected ? "selected" : "default"}
                   className={styles.iconBefore}
                 />
@@ -253,7 +253,7 @@ export function MenuItem({
                 <Icon
                   icon={trailingIcon}
                   size={24}
-                  variant="outlined"
+                  appearance="outlined"
                   color={isDisabled ? "disabled" : isSelected ? "selected" : "default"}
                   className={styles.iconAfter}
                 />

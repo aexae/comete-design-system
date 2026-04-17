@@ -18,7 +18,7 @@ const meta: Meta<ButtonProps> = {
   component: Button,
   tags: ["autodocs"],
   argTypes: {
-    variant: {
+    appearance: {
       control: "select",
       options: ["contained", "outlined", "subtle", "link", "link-subtle"],
     },
@@ -51,7 +51,7 @@ const meta: Meta<ButtonProps> = {
   },
   args: {
     children: "Button",
-    variant: "contained",
+    appearance: "contained",
     color: "default",
     size: "medium",
     onPress: fn(),
@@ -136,7 +136,7 @@ export const Information: Story = {
 // ----------------------------------------------------------------------
 
 export const Outlined: Story = {
-  args: { variant: "outlined", color: "brand", children: "Annuler" },
+  args: { appearance: "outlined", color: "brand", children: "Annuler" },
   parameters: {
     design: {
       type: "figma",
@@ -146,7 +146,7 @@ export const Outlined: Story = {
 };
 
 export const Subtle: Story = {
-  args: { variant: "subtle", color: "brand", children: "Voir plus" },
+  args: { appearance: "subtle", color: "brand", children: "Voir plus" },
   parameters: {
     design: {
       type: "figma",
@@ -156,7 +156,7 @@ export const Subtle: Story = {
 };
 
 export const Link: Story = {
-  args: { variant: "link", color: "brand", children: "En savoir plus" },
+  args: { appearance: "link", color: "brand", children: "En savoir plus" },
   parameters: {
     design: {
       type: "figma",
@@ -166,7 +166,7 @@ export const Link: Story = {
 };
 
 export const LinkSubtle: Story = {
-  args: { variant: "link-subtle", color: "default", children: "Voir les détails" },
+  args: { appearance: "link-subtle", color: "default", children: "Voir les détails" },
   parameters: {
     design: {
       type: "figma",
@@ -251,7 +251,7 @@ export const IconAllColors: Story = {
         <Button
           key={color}
           color={color}
-          variant={args.variant}
+          appearance={args.appearance}
           iconBefore="Image"
         >
           {color}
@@ -270,8 +270,8 @@ export const IconOnly: Story = {
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
       <Button iconBefore="Image" color="default" size="small" />
       <Button iconBefore="Lock" color="brand" />
-      <Button iconBefore="Check" color="success" variant="outlined" />
-      <Button iconBefore="Image" color="critical" variant="subtle" />
+      <Button iconBefore="Check" color="success" appearance="outlined" />
+      <Button iconBefore="Image" color="critical" appearance="subtle" />
     </div>
   ),
 };
@@ -283,8 +283,8 @@ export const Loading: Story = {
       <Button color="default" isLoading>Default</Button>
       <Button color="brand" isLoading>Brand</Button>
       <Button color="success" isLoading>Success</Button>
-      <Button variant="outlined" color="brand" isLoading>Outlined</Button>
-      <Button variant="subtle" color="default" isLoading>Subtle</Button>
+      <Button appearance="outlined" color="brand" isLoading>Outlined</Button>
+      <Button appearance="subtle" color="default" isLoading>Subtle</Button>
     </div>
   ),
 };
@@ -295,12 +295,12 @@ export const Loading: Story = {
 export const AllColors: Story = {
   render: (args) => (
     <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-      <Button color="default" variant={args.variant}>Default</Button>
-      <Button color="brand" variant={args.variant}>Brand</Button>
-      <Button color="success" variant={args.variant}>Success</Button>
-      <Button color="critical" variant={args.variant}>Critical</Button>
-      <Button color="warning" variant={args.variant}>Warning</Button>
-      <Button color="information" variant={args.variant}>Information</Button>
+      <Button color="default" appearance={args.appearance}>Default</Button>
+      <Button color="brand" appearance={args.appearance}>Brand</Button>
+      <Button color="success" appearance={args.appearance}>Success</Button>
+      <Button color="critical" appearance={args.appearance}>Critical</Button>
+      <Button color="warning" appearance={args.appearance}>Warning</Button>
+      <Button color="information" appearance={args.appearance}>Information</Button>
     </div>
   ),
 };
@@ -309,11 +309,11 @@ export const AllColors: Story = {
 export const AllVariants: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Button variant="contained" color="default">Contained-</Button>
-      <Button variant="outlined" color="default">Outlined</Button>
-      <Button variant="link" color="information">Link</Button>
-      <Button variant="subtle" color="default">Subtle</Button>
-      <Button variant="link-subtle" color="default">Link Subtle</Button>
+      <Button appearance="contained" color="default">Contained-</Button>
+      <Button appearance="outlined" color="default">Outlined</Button>
+      <Button appearance="link" color="information">Link</Button>
+      <Button appearance="subtle" color="default">Subtle</Button>
+      <Button appearance="link-subtle" color="default">Link Subtle</Button>
     </div>
   ),
 };

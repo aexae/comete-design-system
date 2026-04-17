@@ -50,10 +50,10 @@ describe("Card", () => {
     });
   });
 
-  describe('variant="actionable"', () => {
-    it("should set role=button and tabIndex=0", () => {
+  describe("actionable (onPress defined)", () => {
+    it("should set role=button and tabIndex=0 when onPress is provided", () => {
       render(
-        <Card variant="actionable" onPress={() => {}}>
+        <Card onPress={() => {}}>
           x
         </Card>,
       );
@@ -61,9 +61,9 @@ describe("Card", () => {
       expect(card).toHaveAttribute("tabindex", "0");
     });
 
-    it("should set data-interactive attribute", () => {
+    it("should set data-interactive attribute when onPress is provided", () => {
       const { container } = render(
-        <Card variant="actionable" onPress={() => {}}>
+        <Card onPress={() => {}}>
           x
         </Card>,
       );
@@ -73,7 +73,7 @@ describe("Card", () => {
     it("should call onPress on click", () => {
       const handlePress = vi.fn();
       render(
-        <Card variant="actionable" onPress={handlePress}>
+        <Card onPress={handlePress}>
           x
         </Card>,
       );
@@ -84,7 +84,7 @@ describe("Card", () => {
     it("should call onPress on Enter key", () => {
       const handlePress = vi.fn();
       render(
-        <Card variant="actionable" onPress={handlePress}>
+        <Card onPress={handlePress}>
           x
         </Card>,
       );
@@ -95,7 +95,7 @@ describe("Card", () => {
     it("should call onPress on Space key", () => {
       const handlePress = vi.fn();
       render(
-        <Card variant="actionable" onPress={handlePress}>
+        <Card onPress={handlePress}>
           x
         </Card>,
       );
@@ -106,7 +106,7 @@ describe("Card", () => {
     it("should not call onPress on other keys", () => {
       const handlePress = vi.fn();
       render(
-        <Card variant="actionable" onPress={handlePress}>
+        <Card onPress={handlePress}>
           x
         </Card>,
       );
@@ -116,7 +116,7 @@ describe("Card", () => {
 
     it("should not render FocusRing by default", () => {
       const { container } = render(
-        <Card variant="actionable" onPress={() => {}}>
+        <Card onPress={() => {}}>
           x
         </Card>,
       );
@@ -124,7 +124,7 @@ describe("Card", () => {
     });
   });
 
-  describe('variant="default"', () => {
+  describe("default (no drag, no onPress)", () => {
     it("should not set role or tabIndex", () => {
       const { container } = render(<Card>x</Card>);
       expect(container.firstElementChild).not.toHaveAttribute("role");
@@ -137,54 +137,54 @@ describe("Card", () => {
     });
   });
 
-  describe('variant="drag-top"', () => {
+  describe('drag="top"', () => {
     it("should render drag area", () => {
-      const { container } = render(<Card variant="drag-top">x</Card>);
+      const { container } = render(<Card drag="top">x</Card>);
       expect(container.querySelector(".dragArea")).toBeInTheDocument();
     });
 
     it("should apply dragTop class", () => {
-      const { container } = render(<Card variant="drag-top">x</Card>);
+      const { container } = render(<Card drag="top">x</Card>);
       expect(container.firstElementChild).toHaveClass("dragTop");
     });
 
     it("should apply dragIconRotated class on icon", () => {
-      const { container } = render(<Card variant="drag-top">x</Card>);
+      const { container } = render(<Card drag="top">x</Card>);
       const icon = container.querySelector(".dragArea svg");
       expect(icon).toHaveClass("dragIconRotated");
     });
 
     it("should wrap children in content container", () => {
-      const { container } = render(<Card variant="drag-top">x</Card>);
+      const { container } = render(<Card drag="top">x</Card>);
       expect(container.querySelector(".content")).toBeInTheDocument();
     });
 
     it("should not set role or tabIndex", () => {
-      const { container } = render(<Card variant="drag-top">x</Card>);
+      const { container } = render(<Card drag="top">x</Card>);
       expect(container.firstElementChild).not.toHaveAttribute("role");
       expect(container.firstElementChild).not.toHaveAttribute("tabindex");
     });
   });
 
-  describe('variant="drag-left"', () => {
+  describe('drag="left"', () => {
     it("should render drag area", () => {
-      const { container } = render(<Card variant="drag-left">x</Card>);
+      const { container } = render(<Card drag="left">x</Card>);
       expect(container.querySelector(".dragArea")).toBeInTheDocument();
     });
 
     it("should apply dragLeft class", () => {
-      const { container } = render(<Card variant="drag-left">x</Card>);
+      const { container } = render(<Card drag="left">x</Card>);
       expect(container.firstElementChild).toHaveClass("dragLeft");
     });
 
     it("should not apply dragIconRotated class on icon", () => {
-      const { container } = render(<Card variant="drag-left">x</Card>);
+      const { container } = render(<Card drag="left">x</Card>);
       const icon = container.querySelector(".dragArea svg");
       expect(icon).not.toHaveClass("dragIconRotated");
     });
 
     it("should wrap children in content container", () => {
-      const { container } = render(<Card variant="drag-left">x</Card>);
+      const { container } = render(<Card drag="left">x</Card>);
       expect(container.querySelector(".content")).toBeInTheDocument();
     });
   });
@@ -193,7 +193,7 @@ describe("Card", () => {
     it("should call onDrag when drag starts on drag area", () => {
       const handleDrag = vi.fn();
       const { container } = render(
-        <Card variant="drag-top" onDrag={handleDrag}>
+        <Card drag="top" onDrag={handleDrag}>
           x
         </Card>,
       );
@@ -204,7 +204,7 @@ describe("Card", () => {
 
     it("should set data-dragging during drag", () => {
       const { container } = render(
-        <Card variant="drag-top" onDrag={() => {}}>
+        <Card drag="top" onDrag={() => {}}>
           x
         </Card>,
       );
@@ -221,7 +221,7 @@ describe("Card", () => {
     it("should call onDragEnd when drag ends", () => {
       const handleDragEnd = vi.fn();
       const { container } = render(
-        <Card variant="drag-top" onDragEnd={handleDragEnd}>
+        <Card drag="top" onDragEnd={handleDragEnd}>
           x
         </Card>,
       );
@@ -233,7 +233,7 @@ describe("Card", () => {
 
     it("should remove data-dragging after drag ends", () => {
       const { container } = render(
-        <Card variant="drag-top" onDrag={() => {}}>
+        <Card drag="top" onDrag={() => {}}>
           x
         </Card>,
       );

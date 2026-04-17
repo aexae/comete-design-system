@@ -151,7 +151,7 @@ export const WithSlotAfterButton: Story = {
         <MenuItem
           id="invite"
           iconBefore="PersonAdd"
-          slotAfter={<Button size="small" variant="outlined">Inviter</Button>}
+          slotAfter={<Button size="small" appearance="outlined">Inviter</Button>}
         >
           Membres
         </MenuItem>

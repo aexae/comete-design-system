@@ -91,10 +91,10 @@ function LogoWithDownload({
     fontSize: 11,
     fontWeight: 600,
     padding: "3px 10px",
-    border: "1px solid var(--border-default, #ddd)",
+    border: "1px solid var(--border-default)",
     borderRadius: 5,
-    background: "var(--background-default, #fff)",
-    color: "var(--text-subtlest, #888)",
+    background: "var(--background-default-default)",
+    color: "var(--text-subtlest)",
     cursor: "pointer",
     letterSpacing: "0.03em",
   };
@@ -395,11 +395,11 @@ function LogoCard({
     gap: 8,
     padding: "16px 8px 10px",
     borderRadius: 10,
-    border: `1.5px solid ${isCopied ? "var(--border-focus, #4a90e2)" : "transparent"}`,
+    border: `1.5px solid ${isCopied ? "var(--border-focus)" : "transparent"}`,
     background: isInverse
-      ? "var(--background-default-inverted, #1e2d45)"
+      ? "var(--background-default-inverted)"
       : isCopied
-        ? "var(--background-selected-subtlest-default, rgba(74,144,226,0.08))"
+        ? "var(--background-selected-subtlest-default)"
         : "transparent",
     transition: "background 0.12s, border-color 0.12s",
   };
@@ -408,10 +408,10 @@ function LogoCard({
     fontSize: 11,
     fontWeight: 500,
     color: isCopied
-      ? "var(--text-selected, #4a90e2)"
+      ? "var(--text-selected)"
       : isInverse
-        ? "var(--text-inverted, #fff)"
-        : "var(--text-subtlest, #888)",
+        ? "var(--text-inverted)"
+        : "var(--text-subtlest)",
     textAlign: "center",
     lineHeight: 1.2,
   };
@@ -426,10 +426,10 @@ function LogoCard({
     fontSize: 10,
     fontWeight: 600,
     padding: "2px 7px",
-    border: "1px solid var(--border-default, #ddd)",
+    border: "1px solid var(--border-default)",
     borderRadius: 4,
-    background: "var(--background-default, #fff)",
-    color: "var(--text-subtlest, #888)",
+    background: "var(--background-default-default)",
+    color: "var(--text-subtlest)",
     cursor: "pointer",
     letterSpacing: "0.03em",
   };
@@ -522,27 +522,27 @@ function LogoExplorer(): ReactElement {
     fontSize: 11,
     fontWeight: 600,
     marginBottom: 4,
-    color: "var(--text-subtlest, #888)",
+    color: "var(--text-subtlest)",
     textTransform: "uppercase",
     letterSpacing: "0.05em",
   };
 
   const controlStyle: CSSProperties = {
     padding: "5px 10px",
-    border: "1px solid var(--border-default, #ddd)",
+    border: "1px solid var(--border-default)",
     borderRadius: 6,
-    background: "var(--background-default, #fff)",
-    color: "var(--text-default, #111)",
+    background: "var(--background-default-default)",
+    color: "var(--text-default)",
     fontSize: 13,
   };
 
   const tabBtnStyle = (active: boolean): CSSProperties => ({
     ...controlStyle,
     background: active
-      ? "var(--background-selected-subtlest-default, rgba(74,144,226,0.1))"
-      : "var(--background-default, #fff)",
-    borderColor: active ? "var(--border-focus, #4a90e2)" : "var(--border-default, #ddd)",
-    color: active ? "var(--text-selected, #4a90e2)" : "var(--text-default, #111)",
+      ? "var(--background-selected-subtlest-default)"
+      : "var(--background-default-default)",
+    borderColor: active ? "var(--border-focus)" : "var(--border-default)",
+    color: active ? "var(--text-selected)" : "var(--text-default)",
     fontWeight: active ? 600 : 400,
     cursor: "pointer",
   });
@@ -564,9 +564,9 @@ function LogoExplorer(): ReactElement {
           flexWrap: "wrap",
           marginBottom: 20,
           padding: 16,
-          background: "var(--background-surface-elevation-sunken-default, #f7f7f7)",
+          background: "var(--background-surface-elevation-sunken-default)",
           borderRadius: 8,
-          border: "1px solid var(--border-default, #eee)",
+          border: "1px solid var(--border-default)",
         }}
       >
         {/* Recherche */}
@@ -639,8 +639,8 @@ function LogoExplorer(): ReactElement {
       </div>
 
       {/* ── Compteur + hint ────────────────────────────────────────── */}
-      <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-subtlest, #888)" }}>
-        <strong style={{ color: "var(--text-default, #111)" }}>{filtered.length}</strong>
+      <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-subtlest)" }}>
+        <strong style={{ color: "var(--text-default)" }}>{filtered.length}</strong>
         {" / "}
         {ALL_PRODUCTS.length} logos
         {search !== "" && ` — "${search}"`}
@@ -653,7 +653,7 @@ function LogoExplorer(): ReactElement {
           style={{
             textAlign: "center",
             padding: 48,
-            color: "var(--text-subtlest, #888)",
+            color: "var(--text-subtlest)",
           }}
         >
           Aucun logo pour &ldquo;{search}&rdquo;
@@ -667,7 +667,7 @@ function LogoExplorer(): ReactElement {
             padding: appearance === "inverse" ? 16 : 0,
             background:
               appearance === "inverse"
-                ? "var(--background-default-inverted, #1e2d45)"
+                ? "var(--background-default-inverted)"
                 : "transparent",
             borderRadius: appearance === "inverse" ? 12 : 0,
           }}

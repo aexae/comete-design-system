@@ -80,7 +80,7 @@ function ModalStory({
         onClose={showClose ? () => { setIsOpen(false); } : undefined}
         footer={
           <ButtonGroup>
-            <Button variant="subtle" onPress={() => { setIsOpen(false); }}>
+            <Button appearance="subtle" onPress={() => { setIsOpen(false); }}>
               Annuler
             </Button>
             <Button color={confirmColor} onPress={() => { setIsOpen(false); }}>

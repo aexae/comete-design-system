@@ -190,7 +190,7 @@ function TokenRow({ token, computedValue, copiedField, onCopy }: {
   const isCopiedVar = copiedField?.name === token.name && copiedField.field === "var";
   const isCopiedValue = copiedField?.name === token.name && copiedField.field === "value";
   const isAnyCopied = isCopiedVar || isCopiedValue;
-  const btn: CSSProperties = { background: "none", border: "none", padding: 0, cursor: "pointer", fontFamily: "monospace", textAlign: "left" };
+  const btn: CSSProperties = { background: "none", border: "none", padding: 0, cursor: "pointer", fontFamily: "monospace", textAlign: "left", color: "inherit" };
 
   return (
     <div style={{

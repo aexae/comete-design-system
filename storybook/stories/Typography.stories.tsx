@@ -353,7 +353,7 @@ const SAMPLES: Record<string, string> = {
   hero: "Donnez vie à vos données.",
   heading: "Titre de section",
   body: "Le texte de corps structure le contenu et guide l'utilisateur à travers l'interface. Lisible, clair, sans fioritures.",
-  code: "const theme = useTheme();\nreturn <Button variant=\"contained\">{label}</Button>;",
+  code: "const theme = useTheme();\nreturn <Button appearance=\"contained\">{label}</Button>;",
 };
 
 // -----------------------------------------------------------------------
@@ -363,8 +363,8 @@ const css = {
   page: {
     padding: 32,
     fontFamily: "var(--font-family-primary, system-ui, sans-serif)",
-    color: "var(--text-default, #252a2c)",
-    background: "var(--background-default-default, #fff)",
+    color: "var(--text-default)",
+    background: "var(--background-default-default)",
     minHeight: "100vh",
     maxWidth: 900,
     margin: "0 auto",
@@ -373,7 +373,7 @@ const css = {
     marginBottom: 56,
   },
   groupHeader: {
-    borderBottom: "2px solid var(--border-default, #d8dedf)",
+    borderBottom: "2px solid var(--border-default)",
     paddingBottom: 16,
     marginBottom: 24,
   },
@@ -382,19 +382,19 @@ const css = {
     fontWeight: 700,
     letterSpacing: "0.08em",
     textTransform: "uppercase" as const,
-    color: "var(--text-subtlest, #6f8488)",
+    color: "var(--text-subtlest)",
     marginBottom: 8,
   },
   groupTitle: {
     fontSize: 22,
     fontWeight: 600,
-    color: "var(--text-default, #252a2c)",
+    color: "var(--text-default)",
     margin: "0 0 8px",
   },
   groupDesc: {
     fontSize: 14,
     lineHeight: "20px",
-    color: "var(--text-subtle, #49585b)",
+    color: "var(--text-subtle)",
     margin: "0 0 16px",
     maxWidth: 620,
   },
@@ -408,7 +408,7 @@ const css = {
   guidanceItem: {
     fontSize: 13,
     lineHeight: "18px",
-    color: "var(--text-subtle, #49585b)",
+    color: "var(--text-subtle)",
   },
   styleRow: {
     display: "grid",
@@ -416,7 +416,7 @@ const css = {
     gap: 16,
     alignItems: "start",
     padding: "20px 0",
-    borderBottom: "1px solid var(--border-subtle, #eaedee)",
+    borderBottom: "1px solid var(--border-subtle)",
   },
   metaCol: {
     display: "flex",
@@ -426,13 +426,13 @@ const css = {
   styleName: {
     fontSize: 13,
     fontWeight: 600,
-    color: "var(--text-default, #252a2c)",
+    color: "var(--text-default)",
   },
   styleTag: {
     fontSize: 11,
     fontFamily: "monospace",
-    color: "var(--text-subtlest, #6f8488)",
-    background: "var(--background-neutral-subtler-default, #eaedee)",
+    color: "var(--text-subtlest)",
+    background: "var(--background-neutral-subtler-default)",
     borderRadius: 4,
     padding: "1px 5px",
     display: "inline-block",
@@ -441,12 +441,12 @@ const css = {
   tokenPill: {
     fontSize: 10,
     fontFamily: "monospace",
-    color: "var(--text-subtle, #49585b)",
+    color: "var(--text-subtle)",
     lineHeight: 1.4,
   },
   usageText: {
     fontSize: 11,
-    color: "var(--text-subtlest, #6f8488)",
+    color: "var(--text-subtlest)",
     fontStyle: "italic",
     marginTop: 4,
   },
@@ -459,8 +459,8 @@ function TokenTag({ name }: { name: string }): ReactElement {
         ...css.tokenPill,
         display: "block",
         padding: "2px 5px",
-        background: "var(--background-neutral-subtlest-default, #f7f8f8)",
-        border: "1px solid var(--border-subtle, #eaedee)",
+        background: "var(--background-neutral-subtlest-default)",
+        border: "1px solid var(--border-subtle)",
         borderRadius: 4,
         marginTop: 2,
         width: "fit-content",
@@ -482,7 +482,7 @@ function StyleRow({ style, sample, isCode }: { style: TypeStyle; sample: string;
     fontFamily: style.fontFamilyToken
       ? `var(${style.fontFamilyToken}, monospace)`
       : "var(--font-family-primary, system-ui, sans-serif)",
-    color: "var(--text-default, #252a2c)",
+    color: "var(--text-default)",
     margin: 0,
     wordBreak: "break-word" as const,
   };
@@ -507,8 +507,8 @@ function StyleRow({ style, sample, isCode }: { style: TypeStyle; sample: string;
           <pre
             style={{
               ...textStyle,
-              background: "var(--background-surface-elevation-sunken-default, #f7f8f8)",
-              border: "1px solid var(--border-subtle, #eaedee)",
+              background: "var(--background-surface-elevation-sunken-default)",
+              border: "1px solid var(--border-subtle)",
               borderRadius: 8,
               padding: "12px 16px",
               overflowX: "auto",
@@ -524,7 +524,7 @@ function StyleRow({ style, sample, isCode }: { style: TypeStyle; sample: string;
           style={{
             margin: "8px 0 0",
             fontSize: 11,
-            color: "var(--text-subtlest, #6f8488)",
+            color: "var(--text-subtlest)",
             fontFamily: "monospace",
           }}
         >
@@ -589,9 +589,9 @@ function FontFamilySection(): ReactElement {
             key={f.token}
             style={{
               padding: 20,
-              border: "1px solid var(--border-default, #d8dedf)",
+              border: "1px solid var(--border-default)",
               borderRadius: 10,
-              background: "var(--background-neutral-subtlest-default, #f7f8f8)",
+              background: "var(--background-neutral-subtlest-default)",
             }}
           >
             <p
@@ -599,7 +599,7 @@ function FontFamilySection(): ReactElement {
                 margin: "0 0 4px",
                 fontSize: 11,
                 fontWeight: 600,
-                color: "var(--text-subtlest, #6f8488)",
+                color: "var(--text-subtlest)",
                 textTransform: "uppercase",
                 letterSpacing: "0.07em",
               }}
@@ -612,7 +612,7 @@ function FontFamilySection(): ReactElement {
                 fontSize: 28,
                 fontFamily: f.token === "--font-family-code" ? "var(--font-family-code, monospace)" : "var(--font-family-primary, system-ui)",
                 fontWeight: 500,
-                color: "var(--text-default, #252a2c)",
+                color: "var(--text-default)",
                 lineHeight: 1.3,
               }}
             >
@@ -622,15 +622,15 @@ function FontFamilySection(): ReactElement {
               style={{
                 fontSize: 11,
                 fontFamily: "monospace",
-                color: "var(--text-subtle, #49585b)",
-                background: "var(--background-neutral-subtler-default, #eaedee)",
+                color: "var(--text-subtle)",
+                background: "var(--background-neutral-subtler-default)",
                 padding: "2px 6px",
                 borderRadius: 4,
               }}
             >
               var({f.token})
             </code>
-            <p style={{ margin: "8px 0 0", fontSize: 12, color: "var(--text-subtlest, #6f8488)" }}>
+            <p style={{ margin: "8px 0 0", fontSize: 12, color: "var(--text-subtlest)" }}>
               {f.usage}
             </p>
           </div>
@@ -641,11 +641,11 @@ function FontFamilySection(): ReactElement {
       <div
         style={{
           padding: 20,
-          border: "1px solid var(--border-default, #d8dedf)",
+          border: "1px solid var(--border-default)",
           borderRadius: 10,
         }}
       >
-        <p style={{ margin: "0 0 16px", fontSize: 12, fontWeight: 600, color: "var(--text-subtlest, #6f8488)", textTransform: "uppercase", letterSpacing: "0.07em" }}>
+        <p style={{ margin: "0 0 16px", fontSize: 12, fontWeight: 600, color: "var(--text-subtlest)", textTransform: "uppercase", letterSpacing: "0.07em" }}>
           Graisses disponibles
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
@@ -657,16 +657,16 @@ function FontFamilySection(): ReactElement {
                   fontSize: 22,
                   fontWeight: Number(w.value),
                   fontFamily: "var(--font-family-primary, system-ui)",
-                  color: "var(--text-default, #252a2c)",
+                  color: "var(--text-default)",
                   lineHeight: 1.2,
                 }}
               >
                 {w.label}
               </p>
-              <code style={{ fontSize: 10, fontFamily: "monospace", color: "var(--text-subtlest, #6f8488)" }}>
+              <code style={{ fontSize: 10, fontFamily: "monospace", color: "var(--text-subtlest)" }}>
                 var({w.token})
               </code>
-              <span style={{ fontSize: 11, color: "var(--text-subtle, #49585b)" }}>
+              <span style={{ fontSize: 11, color: "var(--text-subtle)" }}>
                 font-weight: {w.value}
               </span>
             </div>
@@ -692,7 +692,7 @@ function TypographyPage(): ReactElement {
             fontSize: 36,
             fontWeight: 700,
             letterSpacing: "-0.5px",
-            color: "var(--text-default, #252a2c)",
+            color: "var(--text-default)",
           }}
         >
           Typographie
@@ -702,7 +702,7 @@ function TypographyPage(): ReactElement {
             margin: 0,
             fontSize: 16,
             lineHeight: "24px",
-            color: "var(--text-subtle, #49585b)",
+            color: "var(--text-subtle)",
             maxWidth: 600,
           }}
         >
@@ -724,8 +724,8 @@ function TypographyPage(): ReactElement {
             <div
               style={{
                 padding: "12px 16px",
-                background: "var(--background-information-subtlest-default, #ddf1ff)",
-                border: "1px solid var(--border-information, #0076d8)",
+                background: "var(--background-information-subtlest-default)",
+                border: "1px solid var(--border-information)",
                 borderRadius: 8,
                 display: "flex",
                 gap: 10,

@@ -7,20 +7,20 @@ import styles from "./Button.module.css";
 
 // ----------------------------------------------------------------------
 
-export type ButtonVariant = "contained" | "outlined" | "subtle" | "link" | "link-subtle";
+export type ButtonAppearance = "contained" | "outlined" | "subtle" | "link" | "link-subtle";
 export type ButtonColor = "default" | "brand" | "success" | "critical" | "warning" | "information";
 export type ButtonSize = "small" | "medium" | "large";
 
 export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"> {
-  /** Visual variant. @default "contained" */
-  variant?: ButtonVariant;
+  /** Visual appearance. @default "contained" */
+  appearance?: ButtonAppearance;
   /** Color scheme. @default "default" */
   color?: ButtonColor;
   /** Size. @default "medium" */
   size?: ButtonSize;
-  /** Icon name displayed before the label. Color is automatically resolved from variant + color. */
+  /** Icon name displayed before the label. Color is automatically resolved from appearance + color. */
   iconBefore?: IconName;
-  /** Icon name displayed after the label. Color is automatically resolved from variant + color. */
+  /** Icon name displayed after the label. Color is automatically resolved from appearance + color. */
   iconAfter?: IconName;
   /** Affiche un spinner et désactive les interactions. @default false */
   isLoading?: boolean;
@@ -33,18 +33,18 @@ export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"
 // ----------------------------------------------------------------------
 
 /**
- * Resolves the icon color token appropriate for a given button variant + color.
+ * Resolves the icon color token appropriate for a given button appearance + color.
  * Mirrors the Button CSS: bold backgrounds (contained.brand, .success, .critical,
  * .information) use inverted text; all other combinations use semantic colors.
  *
- * @param variant - Button visual variant
- * @param color   - Button color scheme
+ * @param appearance - Button visual appearance
+ * @param color      - Button color scheme
  * @returns The matching IconColor token
  */
-function resolveIconColor(variant: ButtonVariant, color: ButtonColor): IconColor {
-  if (variant === "link-subtle") return "subtle";
+function resolveIconColor(appearance: ButtonAppearance, color: ButtonColor): IconColor {
+  if (appearance === "link-subtle") return "subtle";
 
-  if (variant === "contained") {
+  if (appearance === "contained") {
     // NOTE: warning bold background is light/yellow — needs dark icons, not white
     if (color === "warning") return "on-warning";
     // brand, success, critical, information render bold backgrounds with inverted (white) text
@@ -71,14 +71,14 @@ function resolveIconColor(variant: ButtonVariant, color: ButtonColor): IconColor
  *
  * Built on React Aria for accessibility (keyboard, focus, ARIA).
  * Styled with CSS Modules consuming @naxit/comete-design-tokens.
- * Icon color is automatically resolved from the button variant + color.
+ * Icon color is automatically resolved from the button appearance + color.
  *
  * ```tsx
  * import { Button } from "@naxit/comete-design-system";
  * import { Check } from "@naxit/comete-icons";
  *
  * <Button color="brand">Enregistrer</Button>
- * <Button variant="outlined" color="critical" iconBefore={<TrashIcon spacing="default" variant="filled" />}>
+ * <Button appearance="outlined" color="critical" iconBefore={<TrashIcon spacing="default" variant="filled" />}>
  *   Supprimer
  * </Button>
  * ```
@@ -86,7 +86,7 @@ function resolveIconColor(variant: ButtonVariant, color: ButtonColor): IconColor
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
-      variant = "contained",
+      appearance = "contained",
       color = "default",
       size = "medium",
       iconBefore,
@@ -98,15 +98,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    // Map variant to CSS class (handles kebab-case "link-subtle")
-    const variantClassMap: Record<ButtonVariant, string> = {
+    // Map appearance to CSS class (handles kebab-case "link-subtle")
+    const appearanceClassMap: Record<ButtonAppearance, string> = {
       contained: styles.contained,
       outlined: styles.outlined,
       subtle: styles.subtle,
       link: styles.link,
       "link-subtle": styles["link-subtle"],
     };
-    const variantClass = variantClassMap[variant];
+    const appearanceClass = appearanceClassMap[appearance];
 
     // Map color to CSS class
     const colorClassMap: Record<ButtonColor, string> = {
@@ -134,7 +134,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const classNames = [
       styles.button,
-      variantClass,
+      appearanceClass,
       colorClass,
       sizeClass,
       isIconOnly ? styles.iconOnly : undefined,
@@ -144,7 +144,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       .filter(Boolean)
       .join(" ");
 
-    const iconColor = resolveIconColor(variant, color);
+    const iconColor = resolveIconColor(appearance, color);
 
     return (
       <AriaButton

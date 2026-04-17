@@ -127,11 +127,11 @@ function InformativeStateStory(args: InformativeStateStoryArgs) {
   const actionsSlot = args.actions ? (
     <ButtonGroup>
       {args.secondaryAction && (
-        <Button variant="outlined" color="default">
+        <Button appearance="outlined" color="default">
           {args.secondaryAction}
         </Button>
       )}
-      <Button variant="contained" color="brand">
+      <Button appearance="contained" color="brand">
         {args.primaryAction}
       </Button>
     </ButtonGroup>
@@ -281,7 +281,7 @@ export const AllVariants: Story = {
         actions={
           <ButtonGroup>
             <Button color="brand">Créer</Button>
-            <Button variant="subtle">Annuler</Button>
+            <Button appearance="subtle">Annuler</Button>
           </ButtonGroup>
         }
       />

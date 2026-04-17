@@ -22,6 +22,8 @@ export interface AvatarGroupProps {
   onOverflowPress?: AvatarProps["onPress"];
   /** Press handler forwarded to each avatar. */
   onItemPress?: (item: AvatarGroupItem, index: number) => void;
+  /** Accessible label for the group. @default "Avatar group" */
+  "aria-label"?: string;
   /** Additional CSS class names on the root element. */
   className?: string;
 }
@@ -71,6 +73,7 @@ export function AvatarGroup({
   size = "medium",
   borderColor = "var(--background-surface-default)",
   onOverflowPress,
+  "aria-label": ariaLabel = "Avatar group",
   onItemPress,
   className,
 }: AvatarGroupProps): React.ReactElement {
@@ -81,7 +84,7 @@ export function AvatarGroup({
     <div
       className={[styles.group, className].filter(Boolean).join(" ")}
       role="group"
-      aria-label="Avatar group"
+      aria-label={ariaLabel}
     >
       {items.map((item, i) => (
         <div

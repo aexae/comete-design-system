@@ -15,20 +15,19 @@ import styles from "./Card.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
-export type CardVariant = "default" | "drag-top" | "drag-left" | "actionable";
+export type CardDrag = "top" | "left" | "none";
 
 export type CardAppearance = "outlined" | "neutral";
 
 export interface CardProps {
   /**
-   * Comportement de la carte.
-   * - "default"    — carte statique, aucune interaction
-   * - "drag-top"   — poignée de drag horizontale en haut
-   * - "drag-left"  — poignée de drag verticale à gauche
-   * - "actionable" — carte cliquable (hover, press, focus ring)
-   * @default "default"
+   * Position de la poignée de drag.
+   * - "none" — pas de drag
+   * - "top"  — poignée de drag horizontale en haut
+   * - "left" — poignée de drag verticale à gauche
+   * @default "none"
    */
-  variant?: CardVariant;
+  drag?: CardDrag;
   /**
    * Apparence visuelle de la carte.
    * - "outlined" — fond blanc, bordure standard
@@ -40,11 +39,11 @@ export interface CardProps {
   children: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
-  /** Callback déclenché au clic ou à la pression clavier (Enter/Space). Requiert variant "actionable". */
+  /** Callback déclenché au clic ou à la pression clavier (Enter/Space). Rend la carte actionnable (hover, press, focus ring). */
   onPress?: () => void;
-  /** Callback déclenché au début du drag. Requiert variant "drag-top" ou "drag-left". */
+  /** Callback déclenché au début du drag. Requiert drag "top" ou "left". */
   onDrag?: () => void;
-  /** Callback déclenché à la fin du drag. Requiert variant "drag-top" ou "drag-left". */
+  /** Callback déclenché à la fin du drag. Requiert drag "top" ou "left". */
   onDragEnd?: () => void;
 }
 
@@ -60,13 +59,13 @@ export interface CardProps {
  * ```tsx
  * import { Card } from "@naxit/comete-design-system";
  *
- * <Card variant="actionable" appearance="neutral" onPress={() => {}}>
+ * <Card appearance="neutral" onPress={() => {}}>
  *   <p>Contenu de la carte</p>
  * </Card>
  * ```
  */
 export function Card({
-  variant = "default",
+  drag = "none",
   appearance = "outlined",
   children,
   className,
@@ -80,8 +79,8 @@ export function Card({
   const dragPreviewRef = useRef<HTMLDivElement | null>(null);
   const hadKeyboardEvent = useRef(false);
 
-  const isActionable = variant === "actionable";
-  const isDraggable = variant === "drag-top" || variant === "drag-left";
+  const isActionable = onPress !== undefined;
+  const isDraggable = drag === "top" || drag === "left";
 
   // NOTE: Track keyboard vs pointer to determine focus-visible reliably
   // on div[tabIndex], where matches(":focus-visible") can be unreliable.
@@ -149,7 +148,7 @@ export function Card({
     styles.card,
     styles[appearance],
     isDraggable
-      ? variant === "drag-top"
+      ? drag === "top"
         ? styles.dragTop
         : styles.dragLeft
       : undefined,
@@ -185,7 +184,7 @@ export function Card({
             size={16}
             color="subtlest"
             className={
-              variant === "drag-top" ? styles.dragIconRotated : undefined
+              drag === "top" ? styles.dragIconRotated : undefined
             }
           />
         </div>

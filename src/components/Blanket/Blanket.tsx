@@ -8,6 +8,8 @@ import styles from "./Blanket.module.css";
 export interface BlanketProps {
   /** Callback déclenché lors d'un clic sur l'overlay (ex : fermer la modale). */
   onClick?: () => void;
+  /** Classe CSS additionnelle. */
+  className?: string;
 }
 
 // -----------------------------------------------------------------------
@@ -19,10 +21,10 @@ export interface BlanketProps {
  *
  * @param onClick - Appelé quand l'utilisateur clique sur l'overlay
  */
-export function Blanket({ onClick }: BlanketProps): ReactElement {
+export function Blanket({ onClick, className }: BlanketProps): ReactElement {
   return (
     <div
-      className={styles.blanket}
+      className={[styles.blanket, className].filter(Boolean).join(" ")}
       role="presentation"
       onClick={onClick}
     />

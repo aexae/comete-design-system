@@ -13,6 +13,8 @@ export interface ButtonGroupProps {
   "aria-label"?: string;
   /** Éléments Button à regrouper. */
   children: ReactNode;
+  /** Classe CSS additionnelle. */
+  className?: string;
 }
 
 // -----------------------------------------------------------------------
@@ -26,8 +28,8 @@ export interface ButtonGroupProps {
  *
  * ```tsx
  * <ButtonGroup aria-label="Actions">
- *   <Button variant="contained" color="default">Annuler</Button>
- *   <Button variant="contained" color="brand">Confirmer</Button>
+ *   <Button appearance="contained" color="default">Annuler</Button>
+ *   <Button appearance="contained" color="brand">Confirmer</Button>
  * </ButtonGroup>
  * ```
  *
@@ -37,9 +39,10 @@ export interface ButtonGroupProps {
 export function ButtonGroup({
   "aria-label": ariaLabel,
   children,
+  className,
 }: ButtonGroupProps): ReactElement {
   return (
-    <div role="group" aria-label={ariaLabel} className={styles.group}>
+    <div role="group" aria-label={ariaLabel} className={[styles.group, className].filter(Boolean).join(" ")}>
       {children}
     </div>
   );
