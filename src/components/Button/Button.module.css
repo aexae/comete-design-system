@@ -101,7 +101,7 @@
 /* — default (neutral) — */
 .contained.default {
   background-color: var(--background-neutral-subtler-default);
-  color: var(--text-primary);
+  color: var(--text-default);
 }
 .contained.default:not([data-disabled])[data-hovered] {
   background-color: var(--background-neutral-subtler-hovered);
@@ -149,7 +149,7 @@
 /* — warning — */
 .contained.warning {
   background-color: var(--background-warning-bold-default);
-  /* NOTE: porcelain-950 instead of --text-primary — the warning bold background
+  /* NOTE: porcelain-950 instead of --text-default — the warning bold background
      is light/yellow in both themes, requiring dark text regardless of theme. */
   color: var(--porcelain-950);
 }
@@ -182,7 +182,7 @@
 
 .outlined.default {
   border-color: var(--border-bold);
-  color: var(--text-primary);
+  color: var(--text-default);
 }
 .outlined.default:not([data-disabled])[data-hovered] {
   background-color: var(--background-neutral-subtlest-hovered);
@@ -256,7 +256,7 @@
 }
 
 .subtle.default {
-  color: var(--text-primary);
+  color: var(--text-default);
 }
 .subtle.default:not([data-disabled])[data-hovered] {
   background-color: var(--background-neutral-subtlest-hovered);
@@ -328,10 +328,10 @@
 }
 
 .link.default {
-  color: var(--text-primary);
+  color: var(--text-default);
 }
 .link.default:not([data-disabled])[data-hovered] {
-  color: var(--text-secondary);
+  color: var(--text-subtle);
 }
 
 .link.brand {
@@ -394,15 +394,15 @@
   text-decoration: underline dotted;
   text-decoration-thickness: 8%;
   text-underline-offset: 16%;
-  color: var(--text-secondary);
+  color: var(--text-subtle);
 }
 
 .link-subtle:not([data-disabled])[data-hovered] {
-  color: var(--text-primary);
+  color: var(--text-default);
 }
 
 .link-subtle:not([data-disabled])[data-pressed] {
-  color: var(--text-primary);
+  color: var(--text-default);
   background-color: var(--background-neutral-subtlest-pressed);
 }
 

@@ -199,7 +199,7 @@ function IllustrationExplorer(): ReactElement {
     border: "1px solid var(--border-default, #ddd)",
     borderRadius: 6,
     background: "var(--background-default, #fff)",
-    color: "var(--text-primary, #111)",
+    color: "var(--text-default, #111)",
     fontSize: 13,
   };
 
@@ -258,7 +258,7 @@ function IllustrationExplorer(): ReactElement {
 
       {/* Compteur */}
       <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-subtlest, #888)" }}>
-        <strong style={{ color: "var(--text-primary, #111)" }}>{filtered.length}</strong>
+        <strong style={{ color: "var(--text-default, #111)" }}>{filtered.length}</strong>
         {" / "}
         {ILLUSTRATION_ENTRIES.length} illustrations
         {search !== "" && ` — "${search}"`}

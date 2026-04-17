@@ -64,7 +64,7 @@ export const Default: Story = {
           margin: 0,
           fontFamily: "var(--font-family-primary)",
           fontSize: "var(--font-size-ui-xs)",
-          color: "var(--text-primary)",
+          color: "var(--text-default)",
         }}
       >
         Contenu du popup

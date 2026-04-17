@@ -130,7 +130,7 @@
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-primary);
+  color: var(--text-default);
 }
 
 .checkbox[data-disabled] .label {

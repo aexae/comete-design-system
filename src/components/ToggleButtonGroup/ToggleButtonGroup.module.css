@@ -59,12 +59,12 @@
 
 /* Hover */
 .item[data-hovered]:not([data-selected]):not([data-disabled]) {
-  background: var(--background-neutral-subtle-hovered);
+  background: var(--background-neutral-subtler-hovered);
 }
 
 /* Pressed */
 .item[data-pressed]:not([data-selected]):not([data-disabled]) {
-  background: var(--background-neutral-subtle-pressed);
+  background: var(--background-neutral-subtler-pressed);
 }
 
 /* --------------------------------------------------------------------------
@@ -116,7 +116,7 @@
   letter-spacing: var(--letter-spacing-negative-tight);
   text-align: center;
   white-space: nowrap;
-  color: var(--text-primary);
+  color: var(--text-default);
 }
 
 /* Selected label */

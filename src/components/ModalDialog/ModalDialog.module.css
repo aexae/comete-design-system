@@ -158,7 +158,7 @@
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-ui-m);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-primary);
+  color: var(--text-default);
 }
 
 /* ==========================================================================
@@ -172,7 +172,7 @@
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-s);
-  color: var(--text-primary);
+  color: var(--text-default);
 
   /* Themed scrollbar — Firefox */
   scrollbar-color: var(--background-neutral-bold-default) var(--background-surface-elevation-sunken-default);

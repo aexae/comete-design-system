@@ -202,7 +202,7 @@ export const AllStates: StoryObj = {
         label="Plage — milieu"
         background="var(--background-client-subtlest-hovered)"
         borderRadius="0"
-        color="var(--text-primary)"
+        color="var(--text-default)"
       />
 
       <CellPreview

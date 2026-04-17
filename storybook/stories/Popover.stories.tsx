@@ -45,7 +45,7 @@ export const Default: Story = {
               fontFamily: "var(--font-family-primary)",
               fontSize: "var(--font-size-ui-xs)",
               lineHeight: "var(--line-height-ui-xs)",
-              color: "var(--text-primary)",
+              color: "var(--text-default)",
             }}
           >
             Contenu du popover
@@ -70,7 +70,7 @@ export const RichContent: Story = {
           <div
             style={{
               fontFamily: "var(--font-family-primary)",
-              color: "var(--text-primary)",
+              color: "var(--text-default)",
             }}
           >
             <p

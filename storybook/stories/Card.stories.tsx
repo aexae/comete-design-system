@@ -22,7 +22,7 @@ function CardContent({ label = "Contenu" }: { label?: string }) {
       <p
         style={{
           margin: 0,
-          color: "var(--text-primary)",
+          color: "var(--text-default)",
           fontSize: 14,
           fontWeight: 600,
         }}

@@ -1,4 +1,5 @@
-import { Avatar } from "@naxit/comete-design-system";
+import { useState, useCallback } from "react";
+import { Avatar, Button } from "@naxit/comete-design-system";
 import type { AvatarProps } from "@naxit/comete-design-system";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, userEvent, within } from "storybook/test";
@@ -25,7 +26,17 @@ const meta: Meta<AvatarProps> = {
       options: ["square", "rounded"],
     },
     size: {
-      control: "select",
+      control: {
+        type: "select",
+        labels: {
+          xsmall: "xsmall (16px)",
+          small: "small (24px)",
+          medium: "medium (32px)",
+          large: "large (40px)",
+          xlarge: "xlarge (96px)",
+          xxlarge: "xxlarge (128px)",
+        },
+      },
       options: ["xsmall", "small", "medium", "large", "xlarge", "xxlarge"],
     },
     isDisabled: { control: "boolean" },
@@ -80,16 +91,6 @@ export const WithIcon: Story = {
 };
 
 // ----------------------------------------------------------------------
-// Appearances
-
-export const Rounded: Story = {
-  args: { appearance: "rounded", initials: "AB", size: "xlarge" },
-  parameters: {
-    design: { type: "figma", url: figmaUrl("2745:15627") },
-  },
-};
-
-// ----------------------------------------------------------------------
 // States
 
 export const Selected: Story = {
@@ -114,6 +115,71 @@ export const Interactive: Story = {
     await userEvent.click(canvas.getByRole("button"));
     void expect(args.onPress).toHaveBeenCalledOnce();
   },
+};
+
+// ----------------------------------------------------------------------
+// Loading flow demo
+
+type FlowStep = "icon" | "initials" | "image";
+
+const FLOW_STEPS: { key: FlowStep; label: string }[] = [
+  { key: "icon", label: "Icône (fallback)" },
+  { key: "initials", label: "Initiales" },
+  { key: "image", label: "Image" },
+];
+
+function LoadingFlowDemo() {
+  const [step, setStep] = useState<FlowStep>("icon");
+  const [photoUrl, setPhotoUrl] = useState<string | undefined>(undefined);
+  const [initials, setInitials] = useState<string | undefined>(undefined);
+
+  const runFlow = useCallback(() => {
+    setStep("icon");
+    setPhotoUrl(undefined);
+    setInitials(undefined);
+
+    setTimeout(() => {
+      setStep("initials");
+      setInitials("AB");
+    }, 1500);
+
+    setTimeout(() => {
+      setStep("image");
+      setPhotoUrl(`https://i.pravatar.cc/128?t=${Date.now()}`);
+    }, 3000);
+  }, []);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 24 }}>
+      <Avatar size="xxlarge" initials={initials} src={photoUrl} alt="Demo" />
+      <div style={{ display: "flex", gap: 8, fontSize: 14 }}>
+        {FLOW_STEPS.map(({ key, label }, i) => (
+          <span key={key} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span
+              style={{
+                color: step === key ? "var(--text-selected)" : "var(--text-subtle)",
+                fontWeight: step === key ? "var(--font-weight-semibold)" : "var(--font-weight-regular)",
+              }}
+            >
+              {label}
+            </span>
+            {i < FLOW_STEPS.length - 1 && (
+              <span style={{ color: "var(--text-subtlest)" }}>→</span>
+            )}
+          </span>
+        ))}
+      </div>
+      <Button onPress={runFlow} variant="outlined" size="medium">
+        Relancer le flow
+      </Button>
+    </div>
+  );
+}
+
+/** Démonstration du flow de chargement : Icône (fallback) → Initiales → Image (1.5s entre chaque étape). */
+export const LoadingFlow: Story = {
+  render: () => <LoadingFlowDemo />,
+  parameters: { controls: { disable: true } },
 };
 
 // ----------------------------------------------------------------------

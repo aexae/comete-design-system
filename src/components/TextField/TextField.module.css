@@ -22,7 +22,7 @@
   background: transparent;
   font: inherit;
   letter-spacing: inherit;
-  color: var(--text-primary);
+  color: var(--text-default);
 }
 
 .input::placeholder {

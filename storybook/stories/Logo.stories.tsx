@@ -532,7 +532,7 @@ function LogoExplorer(): ReactElement {
     border: "1px solid var(--border-default, #ddd)",
     borderRadius: 6,
     background: "var(--background-default, #fff)",
-    color: "var(--text-primary, #111)",
+    color: "var(--text-default, #111)",
     fontSize: 13,
   };
 
@@ -542,7 +542,7 @@ function LogoExplorer(): ReactElement {
       ? "var(--background-selected-subtlest-default, rgba(74,144,226,0.1))"
       : "var(--background-default, #fff)",
     borderColor: active ? "var(--border-focus, #4a90e2)" : "var(--border-default, #ddd)",
-    color: active ? "var(--text-selected, #4a90e2)" : "var(--text-primary, #111)",
+    color: active ? "var(--text-selected, #4a90e2)" : "var(--text-default, #111)",
     fontWeight: active ? 600 : 400,
     cursor: "pointer",
   });
@@ -640,7 +640,7 @@ function LogoExplorer(): ReactElement {
 
       {/* ── Compteur + hint ────────────────────────────────────────── */}
       <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-subtlest, #888)" }}>
-        <strong style={{ color: "var(--text-primary, #111)" }}>{filtered.length}</strong>
+        <strong style={{ color: "var(--text-default, #111)" }}>{filtered.length}</strong>
         {" / "}
         {ALL_PRODUCTS.length} logos
         {search !== "" && ` — "${search}"`}

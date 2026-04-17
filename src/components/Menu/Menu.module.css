@@ -102,11 +102,11 @@
 }
 
 .title {
-  font-family: var(--font-family-ui);
+  font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-s);
-  color: var(--text-primary);
+  color: var(--text-default);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -123,7 +123,7 @@
 }
 
 .description {
-  font-family: var(--font-family-ui);
+  font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xxs);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xxs);
@@ -153,7 +153,7 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  font-family: var(--font-family-ui);
+  font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xxs);
   color: var(--text-subtle);
 
@@ -182,7 +182,7 @@
 
 .sectionHeading {
   padding: var(--space200) var(--space200) var(--space075);
-  font-family: var(--font-family-ui);
+  font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xxs);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-ui-xxs);

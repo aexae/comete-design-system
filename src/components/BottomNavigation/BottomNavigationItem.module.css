@@ -57,7 +57,7 @@
   font-size: var(--font-size-ui-xxxs);    /* 10px */
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xxs); /* 16px */
-  color: var(--text-primary);
+  color: var(--text-default);
   white-space: nowrap;
 }
 

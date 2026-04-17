@@ -43,7 +43,7 @@
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-primary);
+  color: var(--text-default);
   padding: 0;
 }
 
@@ -58,7 +58,7 @@
 
 /* Séparateur "→" entre début et fin */
 .separator {
-  color: var(--text-primary);
+  color: var(--text-default);
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-xs);

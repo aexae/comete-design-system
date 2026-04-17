@@ -68,7 +68,7 @@
 
   /* Pressed — unselected */
   [data-pressed]:not([data-selected]) & {
-    color: var(--text-primary);
+    color: var(--text-default);
   }
 
   /* Selected */

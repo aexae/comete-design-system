@@ -45,7 +45,7 @@
   align-items: center;
   flex: 1 1 0%;
   min-width: 0;
-  color: var(--text-primary);
+  color: var(--text-default);
 }
 
 .datePicker[data-disabled] .dateInput {
@@ -111,8 +111,8 @@
   left: 0;
   z-index: 1;
   margin-top: var(--space050);
-  background-color: var(--background-default);
+  background-color: var(--background-default-default);
   border: 1px solid var(--border-default);
   border-radius: var(--radius100);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--elevation-large);
 }

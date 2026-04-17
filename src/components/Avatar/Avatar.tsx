@@ -48,6 +48,16 @@ export interface AvatarProps {
 
 // ----------------------------------------------------------------------
 
+/** Maps each avatar size to its Icon size in pixels. */
+const SIZE_ICON_MAP: Record<AvatarSize, number> = {
+  xsmall: 10,
+  small: 14,
+  medium: 18,
+  large: 22,
+  xlarge: 48,
+  xxlarge: 64,
+};
+
 /** Maps each avatar size to its matching FocusRingBorderRadius token. */
 const SIZE_RADIUS_MAP: Record<AvatarSize, FocusRingBorderRadius> = {
   xsmall: 2,
@@ -61,47 +71,11 @@ const SIZE_RADIUS_MAP: Record<AvatarSize, FocusRingBorderRadius> = {
 // ----------------------------------------------------------------------
 
 /**
- * Resolves the inner content of the avatar.
- * Priority order: photo > initials > icon > empty.
- *
- * @param src      - Photo URL
- * @param alt      - Alt text for the photo
- * @param initials - Fallback text (1–2 chars)
- * @param icon     - Fallback icon node
- * @returns The React node to render inside the avatar container
- */
-function resolveContent(
-  src: string | undefined,
-  alt: string | undefined,
-  initials: string | undefined,
-  icon: IconName | undefined
-): React.ReactNode {
-  if (src) {
-    return <img src={src} alt={alt ?? ""} className={styles.photo} />;
-  }
-  if (initials) {
-    return (
-      <span className={styles.initials} aria-hidden="true">
-        {initials.slice(0, 2).toUpperCase()}
-      </span>
-    );
-  }
-  if (icon) {
-    return (
-      <span className={styles.iconSlot}>
-        <Icon icon={icon} variant="filled" />
-      </span>
-    );
-  }
-  return null;
-}
-
-// ----------------------------------------------------------------------
-
-/**
  * Avatar — Comète Design System
  *
  * Displays a user avatar with photo, initials, or icon fallback.
+ * Default fallback (no initials, no photo) is the Person icon.
+ * When a photo is loading: initials are shown if available, otherwise the Person icon.
  * Interactive when `onPress` is provided (renders as `<button>` via React Aria).
  * Display-only otherwise (renders as `<div role="img">`).
  *
@@ -113,16 +87,6 @@ function resolveContent(
  * // Interactive
  * <Avatar initials="AB" onPress={() => openProfile()} isSelected={active} />
  * ```
- *
- * @param appearance - Shape: "square" | "rounded". @default "rounded"
- * @param size       - Avatar size. @default "medium"
- * @param src        - Photo URL (takes priority over initials/icon).
- * @param alt        - Alt text / accessible label.
- * @param initials   - 1–2 letter fallback when no photo.
- * @param icon       - Icon fallback when no photo and no initials.
- * @param isDisabled - Disabled state.
- * @param isSelected - Selected/highlighted state.
- * @param onPress    - Press handler — enables interactive mode.
  */
 export function Avatar({
   appearance = "rounded",
@@ -136,11 +100,59 @@ export function Avatar({
   onPress,
   className,
 }: AvatarProps): React.ReactElement {
+  const [imageLoaded, setImageLoaded] = React.useState(false);
+
+  React.useEffect(() => {
+    setImageLoaded(false);
+  }, [src]);
+
   const classNames = [styles.avatar, styles[appearance], styles[size], className]
     .filter(Boolean)
     .join(" ");
 
-  const content = resolveContent(src, alt, initials, icon);
+  // --- Content resolution ---
+  // Default fallback is always the Person icon (or custom icon prop).
+  // Photo loading: initials (if available) or icon while image loads.
+  const defaultIcon = (
+    <span className={styles.iconSlot}>
+      <Icon icon={icon ?? "Person"} variant="filled" size={SIZE_ICON_MAP[size]} />
+    </span>
+  );
+
+  let content: React.ReactNode;
+  if (src) {
+    const placeholder = initials ? (
+      <span className={styles.initials} aria-hidden="true">
+        {initials.slice(0, 2).toUpperCase()}
+      </span>
+    ) : (
+      defaultIcon
+    );
+    content = (
+      <>
+        {!imageLoaded && placeholder}
+        <img
+          src={src}
+          alt={alt ?? ""}
+          className={[styles.photo, !imageLoaded ? styles.photoLoading : undefined]
+            .filter(Boolean)
+            .join(" ")}
+          onLoad={() => setImageLoaded(true)}
+        />
+      </>
+    );
+  } else if (initials) {
+    content = (
+      <span className={styles.initials} aria-hidden="true">
+        {initials.slice(0, 2).toUpperCase()}
+      </span>
+    );
+  } else {
+    content = defaultIcon;
+  }
+
+  // Selected ring only shown when a photo is loaded
+  const showSelectedRing = isSelected && src && imageLoaded;
 
   // Accessible label for the container (only needed when there's no <img> with alt)
   const ariaLabel = src ? undefined : (alt ?? initials);
@@ -162,7 +174,9 @@ export function Avatar({
         {({ isFocusVisible }) => (
           <>
             {content}
-            {isFocusVisible && <FocusRing borderRadius={focusRadius} position="inside" />}
+            {(isFocusVisible || showSelectedRing) && (
+              <FocusRing borderRadius={focusRadius} position="inside" />
+            )}
           </>
         )}
       </AriaButton>
@@ -179,6 +193,7 @@ export function Avatar({
       aria-label={ariaLabel}
     >
       {content}
+      {showSelectedRing && <FocusRing borderRadius={focusRadius} position="inside" />}
     </div>
   );
 }

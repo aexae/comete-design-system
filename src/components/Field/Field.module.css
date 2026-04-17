@@ -21,7 +21,7 @@
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-ui-xxs);
   line-height: var(--line-height-ui-xxs);
-  color: var(--text-primary);
+  color: var(--text-default);
   white-space: nowrap;
 }
 
@@ -41,7 +41,7 @@
 }
 
 .neutral {
-  color: var(--text-primary);
+  color: var(--text-default);
 }
 
 .critical {

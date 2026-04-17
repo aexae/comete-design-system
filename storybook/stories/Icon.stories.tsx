@@ -487,7 +487,7 @@ function IconExplorer(): ReactElement {
     border: "1px solid var(--border-default, #ddd)",
     borderRadius: 6,
     background: "var(--background-neutral-subtler-default, #fff)",
-    color: "var(--text-primary, #111)",
+    color: "var(--text-default, #111)",
     fontSize: 13,
   };
 
@@ -550,7 +550,7 @@ function IconExplorer(): ReactElement {
                   color:
                     variant === v
                       ? "var(--text-selected, #4a90e2)"
-                      : "var(--text-primary, #111)",
+                      : "var(--text-default, #111)",
                   fontWeight: variant === v ? 600 : 400,
                   cursor: "pointer",
                 }}
@@ -619,7 +619,7 @@ function IconExplorer(): ReactElement {
                   color:
                     spacing === s
                       ? "var(--text-selected, #4a90e2)"
-                      : "var(--text-primary, #111)",
+                      : "var(--text-default, #111)",
                   fontWeight: spacing === s ? 600 : 400,
                   cursor: "pointer",
                 }}
@@ -633,7 +633,7 @@ function IconExplorer(): ReactElement {
 
       {/* Compteur */}
       <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-subtlest, #888)" }}>
-        <strong style={{ color: "var(--text-primary, #111)" }}>{filtered.length}</strong>
+        <strong style={{ color: "var(--text-default, #111)" }}>{filtered.length}</strong>
         {" / "}
         {ICON_ENTRIES.length} icônes
         {search !== "" && ` — "${search}"`}

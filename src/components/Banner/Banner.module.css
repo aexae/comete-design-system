@@ -33,7 +33,7 @@
 /* warning : fond jaune, texte sombre */
 .warning {
   background-color: var(--background-warning-bold-default);
-  color: var(--on-warning);
+  color: var(--text-warning);
 }
 
 /* critical : fond rouge, texte inversé (blanc) */

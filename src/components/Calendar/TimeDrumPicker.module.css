@@ -77,7 +77,7 @@
   position: relative;
 
   font-family: var(--font-family-primary);
-  font-size: var(--font-size-ui-sm);
+  font-size: var(--font-size-ui-s);
   font-weight: var(--font-weight-regular);
   line-height: 1;
   color: var(--text-subtlest);
@@ -89,13 +89,13 @@
 
 /* Item sélectionné */
 .drumItem[data-selected] {
-  color: var(--text-primary);
+  color: var(--text-default);
   font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-ui-lg);
+  font-size: var(--font-size-ui-l);
 }
 
 .drumItem:hover:not(:disabled):not([data-selected]) {
-  color: var(--text-tertiary);
+  color: var(--text-subtlest);
 }
 
 .drumItem:disabled {

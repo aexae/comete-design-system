@@ -128,7 +128,7 @@
 
 .weekRow[data-state="range-part"] .weekDayText,
 .weekRow[data-state="range-part"] .weekNumberCell {
-  color: var(--text-primary);
+  color: var(--text-default);
 }
 
 /* Supprime le border-radius adjacent pour une continuité visuelle */

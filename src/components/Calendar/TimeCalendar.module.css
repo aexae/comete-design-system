@@ -46,12 +46,12 @@
   font-size: var(--font-size-ui-xs);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xs);
-  color: var(--text-primary);
+  color: var(--text-default);
   border-radius: var(--radius050);
 }
 
 .timeOption:hover:not(:disabled) {
-  background-color: var(--background-neutral-subtle-hover);
+  background-color: var(--background-neutral-subtler-hovered);
 }
 
 .timeOption[data-selected] {
@@ -61,7 +61,7 @@
 }
 
 .timeOption[data-selected]:hover:not(:disabled) {
-  background-color: var(--background-brand-bold-hover);
+  background-color: var(--background-brand-bold-hovered);
 }
 
 .timeOption:disabled {

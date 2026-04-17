@@ -55,7 +55,7 @@
 
 /* — neutral — */
 .neutral.high   { background-color: var(--background-neutral-bold-default);     color: var(--text-inverted); }
-.neutral.medium { background-color: var(--background-neutral-subtler-default);   color: var(--text-primary); }
+.neutral.medium { background-color: var(--background-neutral-subtler-default);   color: var(--text-default); }
 .neutral.low    { background-color: var(--background-neutral-bold-default); }
 
 /* — primary — */
@@ -80,8 +80,8 @@
 .success.low    { background-color: var(--background-success-bold-default); }
 
 /* — warning (fond clair/jaune : texte sombre dans les deux niveaux) — */
-.warning.high   { background-color: var(--background-warning-bold-default);     color: var(--text-primary); }
-.warning.medium { background-color: var(--background-warning-subtlest-default); color: var(--text-primary); }
+.warning.high   { background-color: var(--background-warning-bold-default);     color: var(--text-default); }
+.warning.medium { background-color: var(--background-warning-subtlest-default); color: var(--text-default); }
 .warning.low    { background-color: var(--background-warning-bold-default); }
 
 /* — accent — */

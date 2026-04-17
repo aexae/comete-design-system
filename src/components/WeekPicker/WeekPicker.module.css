@@ -52,7 +52,7 @@
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-primary);
+  color: var(--text-default);
   padding: 0;
 }
 
@@ -62,7 +62,7 @@
 }
 
 .weekInput::placeholder {
-  color: var(--text-tertiary);
+  color: var(--text-subtlest);
 }
 
 /* Bouton calendrier (mode saisie) */

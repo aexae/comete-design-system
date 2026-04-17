@@ -315,7 +315,7 @@ const TYPE_GROUPS: TypeGroup[] = [
       "Toujours afficher les valeurs de code dans un contexte à fond contrasté (surface sunken).",
       "Ne pas appliquer d'italic — la lisibilité du code nécessite un style droit.",
       "Utiliser Code M pour les blocs de code, Code S pour les valeurs inline.",
-      "La couleur de texte doit rester --text-primary, jamais tronquée par ellipsis.",
+      "La couleur de texte doit rester --text-default, jamais tronquée par ellipsis.",
     ],
     styles: [
       {
@@ -363,7 +363,7 @@ const css = {
   page: {
     padding: 32,
     fontFamily: "var(--font-family-primary, system-ui, sans-serif)",
-    color: "var(--text-primary, #252a2c)",
+    color: "var(--text-default, #252a2c)",
     background: "var(--background-default-default, #fff)",
     minHeight: "100vh",
     maxWidth: 900,
@@ -388,7 +388,7 @@ const css = {
   groupTitle: {
     fontSize: 22,
     fontWeight: 600,
-    color: "var(--text-primary, #252a2c)",
+    color: "var(--text-default, #252a2c)",
     margin: "0 0 8px",
   },
   groupDesc: {
@@ -426,7 +426,7 @@ const css = {
   styleName: {
     fontSize: 13,
     fontWeight: 600,
-    color: "var(--text-primary, #252a2c)",
+    color: "var(--text-default, #252a2c)",
   },
   styleTag: {
     fontSize: 11,
@@ -482,7 +482,7 @@ function StyleRow({ style, sample, isCode }: { style: TypeStyle; sample: string;
     fontFamily: style.fontFamilyToken
       ? `var(${style.fontFamilyToken}, monospace)`
       : "var(--font-family-primary, system-ui, sans-serif)",
-    color: "var(--text-primary, #252a2c)",
+    color: "var(--text-default, #252a2c)",
     margin: 0,
     wordBreak: "break-word" as const,
   };
@@ -612,7 +612,7 @@ function FontFamilySection(): ReactElement {
                 fontSize: 28,
                 fontFamily: f.token === "--font-family-code" ? "var(--font-family-code, monospace)" : "var(--font-family-primary, system-ui)",
                 fontWeight: 500,
-                color: "var(--text-primary, #252a2c)",
+                color: "var(--text-default, #252a2c)",
                 lineHeight: 1.3,
               }}
             >
@@ -657,7 +657,7 @@ function FontFamilySection(): ReactElement {
                   fontSize: 22,
                   fontWeight: Number(w.value),
                   fontFamily: "var(--font-family-primary, system-ui)",
-                  color: "var(--text-primary, #252a2c)",
+                  color: "var(--text-default, #252a2c)",
                   lineHeight: 1.2,
                 }}
               >
@@ -692,7 +692,7 @@ function TypographyPage(): ReactElement {
             fontSize: 36,
             fontWeight: 700,
             letterSpacing: "-0.5px",
-            color: "var(--text-primary, #252a2c)",
+            color: "var(--text-default, #252a2c)",
           }}
         >
           Typographie

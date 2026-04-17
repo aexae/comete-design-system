@@ -42,7 +42,7 @@
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-primary);
+  color: var(--text-default);
   text-align: center;
   padding: 0;
 }
@@ -83,7 +83,7 @@
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-primary);
+  color: var(--text-default);
   text-align: center;
   padding: 0;
 }

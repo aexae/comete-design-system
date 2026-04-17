@@ -1,5 +1,6 @@
 declare const styles: {
   readonly "calendarButton": string;
+  readonly "calendarPopover": string;
   readonly "chevronButton": string;
   readonly "dateButton": string;
   readonly "dateInput": string;

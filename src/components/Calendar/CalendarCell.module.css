@@ -149,7 +149,7 @@ button.cell:active:not([data-disabled]) {
 }
 
 .cell[data-range-part] .cellText {
-  color: var(--text-primary);
+  color: var(--text-default);
 }
 
 /* ==========================================================================
