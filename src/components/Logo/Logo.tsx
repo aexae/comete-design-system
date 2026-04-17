@@ -1,13 +1,13 @@
 // Logo — Comète Design System
 // Affiche un logo produit depuis @naxit/comete-logos avec support thème.
 import type { ReactElement } from "react";
-import type { LogoProduct, LogoAppearance, LogoType } from "@naxit/comete-logos";
+import type { LogoProduct, LogoAppearance, LogoType, LogoAlign } from "@naxit/comete-logos";
 import { logoRegistry } from "@naxit/comete-logos";
 
 // -----------------------------------------------------------------------
 // Types publics
 
-export type { LogoProduct, LogoAppearance, LogoType };
+export type { LogoProduct, LogoAppearance, LogoType, LogoAlign };
 
 export interface LogoProps {
   /** Nom du produit. @default "comete" */
@@ -16,6 +16,8 @@ export interface LogoProps {
   appearance?: LogoAppearance;
   /** Type d'affichage : icône seule ou logo complet. @default "logo" */
   type?: LogoType;
+  /** Direction du layout pour les logos produit. @default "row" */
+  align?: LogoAlign;
   /** Hauteur en pixels. La largeur s'adapte proportionnellement. @default 32 */
   size?: number;
   /** Label accessible. Quand fourni, le logo est exposé aux technologies d'assistance. */
@@ -47,6 +49,7 @@ export function Logo({
   product = "comete",
   appearance = "brand",
   type = "logo",
+  align = "row",
   size = 32,
   "aria-label": ariaLabel,
   className,
@@ -59,7 +62,7 @@ export function Logo({
 
   return (
     <span className={className} {...ariaProps}>
-      <LogoComponent appearance={appearance} type={type} size={size} />
+      <LogoComponent appearance={appearance} type={type} align={align} size={size} />
     </span>
   );
 }
