@@ -1,11 +1,23 @@
 /* ==========================================================================
-   Checkbox — Comète Design System
-   Case à cocher accessible.
+   Radio — Comète Design System
+   Bouton radio accessible.
    Toutes les valeurs proviennent de @naxit/comete-design-tokens.
    ========================================================================== */
 
-/* Base */
-.checkbox {
+/* ==========================================================================
+   RadioGroup
+   ========================================================================== */
+
+.group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   Radio — Base
+   ========================================================================== */
+
+.radio {
   display: flex;
   align-items: flex-start;
   column-gap: var(--space025);
@@ -13,16 +25,16 @@
   user-select: none;
 }
 
-.checkbox:focus-visible {
+.radio:focus-visible {
   outline: none;
 }
 
-.checkbox[data-disabled] {
+.radio[data-disabled] {
   cursor: not-allowed;
 }
 
 /* ==========================================================================
-   Indicator (icône checkbox)
+   Indicator (icône radio)
    ========================================================================== */
 
 .indicator {
@@ -40,56 +52,55 @@
   display: flex;
   width: 16px;
   height: 16px;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Inner mark (check / dash) — always light on bold backgrounds */
-.innerMark {
+/* Inner dot — always light on bold backgrounds */
+.innerDot {
   fill: var(--icon-on-bold);
 }
 
-/* Checked / Indeterminate — brand */
-.checkbox[data-selected] .indicator,
-.checkbox[data-indeterminate] .indicator {
+/* Selected — brand */
+.radio[data-selected] .indicator {
   color: var(--background-brand-bold-default);
 }
 
-/* Hover — unchecked */
-.checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-hovered] .indicator {
+/* Hover — unselected */
+.radio:not([data-disabled]):not([data-selected])[data-hovered] .indicator {
   color: var(--border-bold);
 }
 
-/* Hover — checked / indeterminate */
-.checkbox[data-selected]:not([data-disabled])[data-hovered] .indicator,
-.checkbox[data-indeterminate]:not([data-disabled])[data-hovered] .indicator {
+/* Hover — selected */
+.radio[data-selected]:not([data-disabled])[data-hovered] .indicator {
   color: var(--background-brand-bold-hovered);
 }
 
-/* Pressed — unchecked */
-.checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-pressed] .indicator {
+/* Pressed — unselected */
+.radio:not([data-disabled]):not([data-selected])[data-pressed] .indicator {
   color: var(--border-bold);
 }
 
-/* Pressed — checked / indeterminate */
-.checkbox[data-selected]:not([data-disabled])[data-pressed] .indicator,
-.checkbox[data-indeterminate]:not([data-disabled])[data-pressed] .indicator {
+/* Pressed — selected */
+.radio[data-selected]:not([data-disabled])[data-pressed] .indicator {
   color: var(--background-brand-bold-pressed);
 }
 
 /* ==========================================================================
-   Invalid — icône rouge pour tous les états (unchecked, checked, indeterminate)
+   Invalid — cercle rouge pour tous les états
    ========================================================================== */
 
-.checkbox[data-invalid] .indicator {
+.radio[data-invalid] .indicator {
   color: var(--background-critical-bold-default);
 }
 
 /* Invalid + hover */
-.checkbox[data-invalid]:not([data-disabled])[data-hovered] .indicator {
+.radio[data-invalid]:not([data-disabled])[data-hovered] .indicator {
   color: var(--background-critical-bold-hovered);
 }
 
 /* Invalid + pressed */
-.checkbox[data-invalid]:not([data-disabled])[data-pressed] .indicator {
+.radio[data-invalid]:not([data-disabled])[data-pressed] .indicator {
   color: var(--background-critical-bold-pressed);
 }
 
@@ -97,12 +108,11 @@
    Focus visible — override tout en brand (même si invalid)
    ========================================================================== */
 
-.checkbox[data-focus-visible] .indicator {
+.radio[data-focus-visible] .indicator {
   color: var(--border-brand);
 }
 
-.checkbox[data-focus-visible][data-selected] .indicator,
-.checkbox[data-focus-visible][data-indeterminate] .indicator {
+.radio[data-focus-visible][data-selected] .indicator {
   color: var(--background-brand-bold-default);
 }
 
@@ -110,7 +120,7 @@
    Disabled — priorité maximale, déclaré en dernier
    ========================================================================== */
 
-.checkbox[data-disabled] .indicator {
+.radio[data-disabled] .indicator {
   color: var(--icon-disabled);
 }
 
@@ -123,11 +133,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding-top: var(--space025);
-}
-
-.labelRow {
-  display: flex;
-  align-items: flex-start;
+  padding-right: var(--space100);
 }
 
 .label {
@@ -138,19 +144,7 @@
   color: var(--text-default);
 }
 
-.checkbox[data-disabled] .label {
-  color: var(--text-disabled);
-}
-
-.required {
-  font-family: var(--font-family-primary);
-  font-size: var(--font-size-ui-xs);
-  line-height: var(--line-height-ui-xs);
-  letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-critical);
-}
-
-.checkbox[data-disabled] .required {
+.radio[data-disabled] .label {
   color: var(--text-disabled);
 }
 
@@ -161,6 +155,6 @@
   color: var(--text-subtle);
 }
 
-.checkbox[data-disabled] .description {
+.radio[data-disabled] .description {
   color: var(--text-disabled);
 }
