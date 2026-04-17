@@ -6,12 +6,12 @@ import {
 } from "react-aria-components";
 import type { IconName } from "@naxit/comete-icons";
 import { Icon } from "../Icon/index.js";
+import { Badge } from "../Badge/index.js";
 import { FocusRing, type FocusRingBorderRadius } from "../FocusRing/index.js";
 import styles from "./Avatar.module.css";
 
 // ----------------------------------------------------------------------
 
-export type AvatarAppearance = "square" | "rounded";
 export type AvatarSize =
   | "xsmall"
   | "small"
@@ -21,8 +21,6 @@ export type AvatarSize =
   | "xxlarge";
 
 export interface AvatarProps {
-  /** Visual shape. @default "rounded" */
-  appearance?: AvatarAppearance;
   /** Size. @default "medium" */
   size?: AvatarSize;
   /** Photo URL — renders an <img>. Takes priority over initials and icon. */
@@ -37,6 +35,10 @@ export interface AvatarProps {
   isDisabled?: boolean;
   /** Selected/highlighted state. */
   isSelected?: boolean;
+  /** Notification count — shows a critical badge at the top-right when > 0. */
+  notification?: number;
+  /** Presence indicator — shows a success dot at the bottom-right. */
+  presence?: boolean;
   /**
    * Press handler — makes the avatar interactive (renders as <button>).
    * When omitted the avatar renders as a display-only <div>.
@@ -48,24 +50,14 @@ export interface AvatarProps {
 
 // ----------------------------------------------------------------------
 
-/** Maps each avatar size to its Icon size in pixels. */
+/** Maps each avatar size to the icon size in pixels. */
 const SIZE_ICON_MAP: Record<AvatarSize, number> = {
   xsmall: 10,
   small: 14,
-  medium: 18,
-  large: 22,
+  medium: 16,
+  large: 20,
   xlarge: 48,
   xxlarge: 64,
-};
-
-/** Maps each avatar size to its matching FocusRingBorderRadius token. */
-const SIZE_RADIUS_MAP: Record<AvatarSize, FocusRingBorderRadius> = {
-  xsmall: 2,
-  small: 3,
-  medium: 4,
-  large: 6,
-  xlarge: 8,
-  xxlarge: 12,
 };
 
 // ----------------------------------------------------------------------
@@ -82,14 +74,13 @@ const SIZE_RADIUS_MAP: Record<AvatarSize, FocusRingBorderRadius> = {
  * ```tsx
  * // Display-only
  * <Avatar initials="AB" />
- * <Avatar src="/photo.jpg" alt="Alice" appearance="square" size="large" />
+ * <Avatar src="/photo.jpg" alt="Alice" size="large" />
  *
  * // Interactive
  * <Avatar initials="AB" onPress={() => openProfile()} isSelected={active} />
  * ```
  */
 export function Avatar({
-  appearance = "rounded",
   size = "medium",
   src,
   alt,
@@ -97,6 +88,8 @@ export function Avatar({
   icon,
   isDisabled = false,
   isSelected = false,
+  notification,
+  presence,
   onPress,
   className,
 }: AvatarProps): React.ReactElement {
@@ -106,13 +99,16 @@ export function Avatar({
     setImageLoaded(false);
   }, [src]);
 
-  const classNames = [styles.avatar, styles[appearance], styles[size], className]
+  const classNames = [styles.avatar, styles.rounded, styles[size], className]
     .filter(Boolean)
     .join(" ");
 
   // --- Content resolution ---
   // Default fallback is always the Person icon (or custom icon prop).
   // Photo loading: initials (if available) or icon while image loads.
+  // XS avatars display a single letter.
+  const maxInitialsChars = size === "xsmall" ? 1 : 2;
+
   const defaultIcon = (
     <span className={styles.iconSlot}>
       <Icon icon={icon ?? "Person"} variant="filled" size={SIZE_ICON_MAP[size]} />
@@ -123,7 +119,7 @@ export function Avatar({
   if (src) {
     const placeholder = initials ? (
       <span className={styles.initials} aria-hidden="true">
-        {initials.slice(0, 2).toUpperCase()}
+        {initials.slice(0, maxInitialsChars).toUpperCase()}
       </span>
     ) : (
       defaultIcon
@@ -144,7 +140,7 @@ export function Avatar({
   } else if (initials) {
     content = (
       <span className={styles.initials} aria-hidden="true">
-        {initials.slice(0, 2).toUpperCase()}
+        {initials.slice(0, maxInitialsChars).toUpperCase()}
       </span>
     );
   } else {
@@ -157,13 +153,17 @@ export function Avatar({
   // Accessible label for the container (only needed when there's no <img> with alt)
   const ariaLabel = src ? undefined : (alt ?? initials);
 
-  // Radius token matching the current size/appearance — used by FocusRing
-  const focusRadius: FocusRingBorderRadius =
-    appearance === "rounded" ? "round" : SIZE_RADIUS_MAP[size];
+  // Radius token — avatars are always round
+  const focusRadius: FocusRingBorderRadius = "round";
 
-  // Interactive mode — React Aria Button handles hover/pressed/focus/disabled states
+  const hasBadge = (notification != null && notification > 0) || presence;
+
+  // Build the core avatar element
+  let avatarElement: React.ReactElement;
+
   if (onPress !== undefined) {
-    return (
+    // Interactive mode — React Aria Button handles hover/pressed/focus/disabled states
+    avatarElement = (
       <AriaButton
         className={classNames}
         onPress={onPress}
@@ -181,19 +181,48 @@ export function Avatar({
         )}
       </AriaButton>
     );
+  } else {
+    // Display-only mode
+    avatarElement = (
+      <div
+        className={classNames}
+        data-disabled={isDisabled || undefined}
+        data-selected={isSelected || undefined}
+        role={ariaLabel ? "img" : undefined}
+        aria-label={ariaLabel}
+      >
+        {content}
+        {showSelectedRing && <FocusRing borderRadius={focusRadius} position="inside" />}
+      </div>
+    );
   }
 
-  // Display-only mode
+  if (!hasBadge) return avatarElement;
+
   return (
-    <div
-      className={classNames}
-      data-disabled={isDisabled || undefined}
-      data-selected={isSelected || undefined}
-      role={ariaLabel ? "img" : undefined}
-      aria-label={ariaLabel}
-    >
-      {content}
-      {showSelectedRing && <FocusRing borderRadius={focusRadius} position="inside" />}
+    <div className={styles.badgeWrapper}>
+      {avatarElement}
+      {notification != null && notification > 0 && (
+        <span className={styles.notificationSlot}>
+          <Badge
+            appearance="critical"
+            importance="high"
+            label={String(notification)}
+            cutoutBorder
+            isDisabled={isDisabled}
+          />
+        </span>
+      )}
+      {presence && (
+        <span className={styles.presenceSlot}>
+          <Badge
+            appearance="success"
+            importance="low"
+            cutoutBorder
+            isDisabled={isDisabled}
+          />
+        </span>
+      )}
     </div>
   );
 }

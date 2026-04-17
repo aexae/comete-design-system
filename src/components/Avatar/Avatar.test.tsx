@@ -22,20 +22,10 @@ describe("Avatar", () => {
   });
 
   describe("classes CSS par défaut", () => {
-    it("should apply default appearance and size classes when no props given", () => {
+    it("should apply default rounded and size classes when no props given", () => {
       const { container } = render(<Avatar />);
       expect(container.firstElementChild).toHaveClass("avatar", "rounded", "medium");
     });
-  });
-
-  describe("prop appearance", () => {
-    it.each([["square"], ["rounded"]] as const)(
-      "should apply class %s when appearance=%s",
-      (appearance) => {
-        const { container } = render(<Avatar appearance={appearance} />);
-        expect(container.firstElementChild).toHaveClass(appearance);
-      }
-    );
   });
 
   describe("prop size", () => {
@@ -95,9 +85,14 @@ describe("Avatar", () => {
       expect(span).toHaveTextContent("AB");
     });
 
-    it("should truncate initials to 2 characters", () => {
+    it("should truncate initials to 2 characters by default", () => {
       const { container } = render(<Avatar initials="abc" />);
       expect(container.querySelector(`.initials`)).toHaveTextContent("AB");
+    });
+
+    it("should truncate initials to 1 character when size is xsmall", () => {
+      const { container } = render(<Avatar initials="abc" size="xsmall" />);
+      expect(container.querySelector(`.initials`)).toHaveTextContent("A");
     });
 
     it("should set aria-label to initials on the container when no src", () => {
@@ -153,6 +148,33 @@ describe("Avatar", () => {
     it("should not render FocusRing when isSelected without photo in interactive mode", () => {
       const { container } = render(<Avatar onPress={() => undefined} isSelected initials="AB" />);
       expect(container.querySelector(".ring")).not.toBeInTheDocument();
+    });
+  });
+
+  describe("badges", () => {
+    it("should render notification badge when notification > 0", () => {
+      const { container } = render(<Avatar initials="AB" notification={3} />);
+      expect(container.querySelector(".notificationSlot")).toBeInTheDocument();
+    });
+
+    it("should not render notification badge when notification is 0", () => {
+      const { container } = render(<Avatar initials="AB" notification={0} />);
+      expect(container.querySelector(".notificationSlot")).not.toBeInTheDocument();
+    });
+
+    it("should render presence badge when presence is true", () => {
+      const { container } = render(<Avatar initials="AB" presence />);
+      expect(container.querySelector(".presenceSlot")).toBeInTheDocument();
+    });
+
+    it("should wrap avatar in badgeWrapper when any badge is present", () => {
+      const { container } = render(<Avatar initials="AB" presence />);
+      expect(container.querySelector(".badgeWrapper")).toBeInTheDocument();
+    });
+
+    it("should not wrap avatar when no badge is present", () => {
+      const { container } = render(<Avatar initials="AB" />);
+      expect(container.querySelector(".badgeWrapper")).not.toBeInTheDocument();
     });
   });
 
