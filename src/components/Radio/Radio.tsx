@@ -32,38 +32,6 @@ export interface RadioGroupProps
 }
 
 // -----------------------------------------------------------------------
-// Icônes inline — cercle 14×14 dans un conteneur 24×24
-
-function IconUnchecked() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 14 14"
-      fill="none"
-      aria-hidden="true"
-    >
-      <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="2" />
-    </svg>
-  );
-}
-
-function IconChecked() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 14 14"
-      fill="none"
-      aria-hidden="true"
-    >
-      <circle cx="7" cy="7" r="7" fill="currentColor" />
-      <circle className={styles.innerDot} cx="7" cy="7" r="3" />
-    </svg>
-  );
-}
-
-// -----------------------------------------------------------------------
 // Composants
 
 /**
@@ -116,15 +84,12 @@ export function Radio({
       className={[styles.radio, className].filter(Boolean).join(" ")}
       {...ariaProps}
     >
-      {({ isSelected, isFocusVisible }) => (
+      {({ isFocusVisible }) => (
         <>
           <span className={styles.indicator}>
-            <span className={styles.iconWrapper}>
-              {isFocusVisible && (
-                <FocusRing borderRadius="round" position="inside" />
-              )}
-              {isSelected ? <IconChecked /> : <IconUnchecked />}
-            </span>
+            {isFocusVisible && (
+              <FocusRing borderRadius="round" position="inside" />
+            )}
           </span>
           {(label !== undefined || description !== undefined) && (
             <span className={styles.labelGroup}>

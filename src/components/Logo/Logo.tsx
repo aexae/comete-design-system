@@ -1,21 +1,21 @@
 // Logo — Comète Design System
 // Affiche un logo produit depuis @naxit/comete-logos avec support thème.
 import type { ReactElement } from "react";
-import type { LogoProduct, LogoAppearance, LogoType, LogoSuffix } from "@naxit/comete-logos";
+import type { LogoProduct, LogoAppearance, LogoFormat, LogoSuffix } from "@naxit/comete-logos";
 import { logoRegistry } from "@naxit/comete-logos";
 
 // -----------------------------------------------------------------------
 // Types publics
 
-export type { LogoProduct, LogoAppearance, LogoType, LogoSuffix };
+export type { LogoProduct, LogoAppearance, LogoFormat, LogoSuffix };
 
 export interface LogoProps {
   /** Nom du produit. @default "comete" */
   product?: LogoProduct;
   /** Apparence visuelle. @default "brand" */
   appearance?: LogoAppearance;
-  /** Type d'affichage : icône seule ou logo complet. @default "logo" */
-  type?: LogoType;
+  /** Format d'affichage : icône seule ou logo complet. @default "logo" */
+  format?: LogoFormat;
   /** Mode d'affichage du suffix (nom produit ou tagline). @default "right" */
   suffix?: LogoSuffix;
   /** Hauteur en pixels. La largeur s'adapte proportionnellement. @default 32 */
@@ -48,7 +48,7 @@ export interface LogoProps {
 export function Logo({
   product = "comete",
   appearance = "brand",
-  type = "logo",
+  format = "logo",
   suffix = "right",
   size = 32,
   "aria-label": ariaLabel,
@@ -62,7 +62,7 @@ export function Logo({
 
   return (
     <span className={className} {...ariaProps}>
-      <LogoComponent appearance={appearance} type={type} suffix={suffix} size={size} />
+      <LogoComponent appearance={appearance} format={format} suffix={suffix} size={size} />
     </span>
   );
 }

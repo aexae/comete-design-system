@@ -29,14 +29,14 @@ describe("Logo", () => {
   });
 
   it("should render icon type", () => {
-    const { container } = render(<Logo type="icon" />);
+    const { container } = render(<Logo format="icon" />);
     const svg = container.querySelector("svg");
     expect(svg).toBeInTheDocument();
     expect(svg?.getAttribute("viewBox")).toBe("0 0 32 32");
   });
 
   it("should render logo type with wider viewBox", () => {
-    const { container } = render(<Logo type="logo" />);
+    const { container } = render(<Logo format="logo" />);
     const svg = container.querySelector("svg");
     expect(svg).toBeInTheDocument();
     // Logo viewBox is wider than icon
@@ -46,7 +46,7 @@ describe("Logo", () => {
   });
 
   it("should scale size", () => {
-    const { container } = render(<Logo type="icon" size={48} />);
+    const { container } = render(<Logo format="icon" size={48} />);
     const svg = container.querySelector("svg");
     expect(svg?.getAttribute("width")).toBe("48");
     expect(svg?.getAttribute("height")).toBe("48");

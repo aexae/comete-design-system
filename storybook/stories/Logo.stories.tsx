@@ -5,7 +5,7 @@ import {
   type LogoSuffix,
   type LogoAppearance,
   type LogoProduct,
-  type LogoType,
+  type LogoFormat,
 } from "@naxit/comete-design-system/components";
 import type { CSSProperties, ReactElement } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -31,9 +31,9 @@ const meta = {
       control: "select",
       options: ["brand", "neutral", "inverse"] satisfies LogoAppearance[],
     },
-    type: {
+    format: {
       control: { type: "inline-radio" },
-      options: ["icon", "logo"] satisfies LogoType[],
+      options: ["icon", "logo"] satisfies LogoFormat[],
     },
     suffix: {
       control: "select",
@@ -47,7 +47,7 @@ const meta = {
   args: {
     product: "comete",
     appearance: "brand",
-    type: "logo",
+    format: "logo",
     suffix: "right",
     size: 32,
   },
@@ -69,7 +69,7 @@ type Story = StoryObj<typeof Logo>;
 interface LogoWithDownloadProps {
   product?: LogoProduct;
   appearance?: LogoAppearance;
-  type?: LogoType;
+  format?: LogoFormat;
   suffix?: LogoSuffix;
   size?: number;
 }
@@ -77,7 +77,7 @@ interface LogoWithDownloadProps {
 function LogoWithDownload({
   product = "comete",
   appearance = "brand",
-  type = "logo",
+  format = "logo",
   suffix = "right",
   size = 32,
 }: LogoWithDownloadProps): ReactElement {
@@ -117,7 +117,7 @@ function LogoWithDownload({
       }}
     >
       <div ref={containerRef}>
-        <Logo product={product} appearance={appearance} type={type} suffix={suffix} size={size} />
+        <Logo product={product} appearance={appearance} format={format} suffix={suffix} size={size} />
       </div>
       <div style={{ display: "flex", gap: 6 }}>
         <button type="button" onClick={handleDownloadSvg} style={btnStyle}>
@@ -142,7 +142,7 @@ export const Default: Story = {
 /** Icône seule. */
 export const IconOnly: Story = {
   name: "Icon only",
-  args: { type: "icon" },
+  args: { format: "icon" },
   render: (args) => <LogoWithDownload {...args} />,
 };
 
@@ -426,7 +426,7 @@ async function downloadPng(
 interface LogoCardProps {
   product: LogoProduct;
   appearance: LogoAppearance;
-  type: LogoType;
+  format: LogoFormat;
   suffix: LogoSuffix;
   size: number;
   isCopied: boolean;
@@ -436,7 +436,7 @@ interface LogoCardProps {
 function LogoCard({
   product,
   appearance,
-  type,
+  format,
   suffix,
   size,
   isCopied,
@@ -512,7 +512,7 @@ function LogoCard({
         onClick={() => {
           onCopy(product);
         }}
-        title={`Copier <Logo product="${product}" appearance="${appearance}"${type !== "logo" ? ` type="${type}"` : ""} size={${size}} />`}
+        title={`Copier <Logo product="${product}" appearance="${appearance}"${format !== "logo" ? ` format="${format}"` : ""} size={${size}} />`}
         style={{
           ...cardStyle,
           cursor: "pointer",
@@ -523,7 +523,7 @@ function LogoCard({
       >
         {/* Conteneur du SVG — utilisé pour l'export */}
         <div ref={containerRef}>
-          <Logo product={product} appearance={appearance} type={type} suffix={suffix} size={size} />
+          <Logo product={product} appearance={appearance} format={format} suffix={suffix} size={size} />
         </div>
         <span style={nameLabelStyle}>
           {isCopied ? "✓ copié" : product}
@@ -559,7 +559,7 @@ function LogoCard({
 function LogoExplorer(): ReactElement {
   const [search, setSearch] = useState("");
   const [appearance, setAppearance] = useState<LogoAppearance>("brand");
-  const [type, setType] = useState<LogoType>("logo");
+  const [format, setFormat] = useState<LogoFormat>("logo");
   const [suffix, setSuffix] = useState<LogoSuffix>("right");
   const [size, setSize] = useState(28);
   const [copied, setCopied] = useState<string | null>(null);
@@ -577,9 +577,9 @@ function LogoExplorer(): ReactElement {
   );
 
   function handleCopy(product: LogoProduct): void {
-    const typeAttr = type !== "logo" ? ` type="${type}"` : "";
+    const formatAttr = format !== "logo" ? ` format="${format}"` : "";
     const suffixAttr = suffix !== "right" ? ` suffix="${suffix}"` : "";
-    const jsx = `<Logo product="${product}" appearance="${appearance}"${typeAttr}${suffixAttr} size={${size}} />`;
+    const jsx = `<Logo product="${product}" appearance="${appearance}"${formatAttr}${suffixAttr} size={${size}} />`;
     void navigator.clipboard.writeText(jsx);
     setCopied(product);
     if (timerRef.current !== null) window.clearTimeout(timerRef.current);
@@ -678,14 +678,14 @@ function LogoExplorer(): ReactElement {
         <div>
           <div style={labelStyle}>Type</div>
           <div style={{ display: "flex", gap: 4 }}>
-            {(["logo", "icon"] satisfies LogoType[]).map((t) => (
+            {(["logo", "icon"] satisfies LogoFormat[]).map((t) => (
               <button
                 key={t}
                 type="button"
                 onClick={() => {
-                  setType(t);
+                  setFormat(t);
                 }}
-                style={tabBtnStyle(type === t)}
+                style={tabBtnStyle(format === t)}
               >
                 {t}
               </button>
@@ -768,7 +768,7 @@ function LogoExplorer(): ReactElement {
               key={product}
               product={product}
               appearance={appearance}
-              type={type}
+              format={format}
               suffix={suffix}
               size={size}
               isCopied={copied === product}

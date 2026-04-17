@@ -2,6 +2,7 @@
    Radio — Comète Design System
    Bouton radio accessible.
    Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   L'indicateur est 100 % CSS (pseudo-éléments, zéro SVG).
    ========================================================================== */
 
 /* ==========================================================================
@@ -34,32 +35,52 @@
 }
 
 /* ==========================================================================
-   Indicator (icône radio)
+   Indicator — anneau + trou + dot, entièrement en CSS.
+   Le cercle extérieur est `background: currentColor`.
+   Le trou est `::before` en `--radio-surface` (couleur du fond parent,
+   même pattern que borderColor dans AvatarGroup).
+   Le dot checked est `::after` en `currentColor`.
    ========================================================================== */
 
 .indicator {
+  position: relative;
   flex-shrink: 0;
+  width: var(--size300);
+  height: var(--size300);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
   color: var(--border-default);
 }
 
-.iconWrapper {
-  position: relative;
-  display: flex;
-  width: 16px;
-  height: 16px;
-  align-items: center;
-  justify-content: center;
+/* Outer ring — cercle plein */
+.indicator::before {
+  content: "";
+  position: absolute;
+  width: var(--size175);
+  height: var(--size175);
+  border-radius: var(--radius-round);
+  background: currentColor;
 }
 
-/* Inner dot — always light on bold backgrounds */
-.innerDot {
-  fill: var(--icon-on-bold);
+/* Inner surface — "trou" qui laisse voir le fond parent (anneau de --size025) */
+.indicator::after {
+  content: "";
+  position: absolute;
+  width: var(--size125);
+  height: var(--size125);
+  border-radius: var(--radius-round);
+  background: var(--radio-surface, var(--background-surface-default));
 }
+
+/* Dot — quand sélectionné, ajoute un dot central via box-shadow inset */
+.radio[data-selected] .indicator::after {
+  box-shadow: inset 0 0 0 var(--size025) currentColor;
+}
+
+/* ==========================================================================
+   Couleurs par état — pilotées par `color` sur .indicator
+   ========================================================================== */
 
 /* Selected — brand */
 .radio[data-selected] .indicator {
@@ -94,12 +115,10 @@
   color: var(--background-critical-bold-default);
 }
 
-/* Invalid + hover */
 .radio[data-invalid]:not([data-disabled])[data-hovered] .indicator {
   color: var(--background-critical-bold-hovered);
 }
 
-/* Invalid + pressed */
 .radio[data-invalid]:not([data-disabled])[data-pressed] .indicator {
   color: var(--background-critical-bold-pressed);
 }
