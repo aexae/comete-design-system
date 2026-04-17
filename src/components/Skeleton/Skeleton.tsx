@@ -24,7 +24,7 @@ export interface SkeletonProps {
   /** Border-radius personnalisé (rectangle uniquement). */
   radius?: number | string;
   /** Label accessible pour les lecteurs d'écran. @default "Chargement…" */
-  label?: string;
+  "aria-label"?: string;
   /** Classe CSS additionnelle. */
   className?: string;
 }
@@ -52,7 +52,7 @@ export function Skeleton({
   width = "100%",
   height = 20,
   radius,
-  label = "Chargement…",
+  "aria-label": ariaLabel = "Chargement…",
   className,
 }: SkeletonProps): ReactElement {
   const isCircle = shape === "circle";
@@ -84,7 +84,7 @@ export function Skeleton({
       role="status"
       aria-busy="true"
       aria-live="polite"
-      aria-label={label}
+      aria-label={ariaLabel}
     />
   );
 }

@@ -75,26 +75,26 @@ describe("Illustration", () => {
     expect(span.className).toContain("illustration");
   });
 
-  // Prop label (accessibilité) ---------------------------------------------
+  // Prop aria-label (accessibilité) -----------------------------------------
 
-  it("should set aria-label and role='img' when label is provided", () => {
+  it("should set aria-label and role='img' when aria-label is provided", () => {
     const { container } = render(
-      <Illustration illustration="ForbiddenAccess" label="Accès refusé" />,
+      <Illustration illustration="ForbiddenAccess" aria-label="Accès refusé" />,
     );
     const span = container.firstChild as HTMLElement;
     expect(span).toHaveAttribute("aria-label", "Accès refusé");
     expect(span).toHaveAttribute("role", "img");
   });
 
-  it("should not have aria-hidden when label is provided", () => {
+  it("should not have aria-hidden when aria-label is provided", () => {
     const { container } = render(
-      <Illustration illustration="ForbiddenAccess" label="Accès refusé" />,
+      <Illustration illustration="ForbiddenAccess" aria-label="Accès refusé" />,
     );
     const span = container.firstChild as HTMLElement;
     expect(span).not.toHaveAttribute("aria-hidden");
   });
 
-  it("should have aria-hidden when no label is provided", () => {
+  it("should have aria-hidden when no aria-label is provided", () => {
     const { container } = render(<Illustration illustration="Empty" />);
     const span = container.firstChild as HTMLElement;
     expect(span).toHaveAttribute("aria-hidden", "true");

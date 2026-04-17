@@ -1,6 +1,6 @@
 export { Card } from "./Card.js";
 export type {
   CardProps,
-  CardVariant,
+  CardDrag,
   CardAppearance,
 } from "./Card.js";

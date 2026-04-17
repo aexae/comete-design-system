@@ -60,6 +60,7 @@
    ========================================================================== */
 
 .xsmall {
+  --avatar-border-width: var(--size0125);
   width: var(--size200);
   height: var(--size200);
   border-radius: var(--radius025);
@@ -67,6 +68,7 @@
 }
 
 .small {
+  --avatar-border-width: var(--size0125);
   width: var(--size300);
   height: var(--size300);
   border-radius: var(--radius0375);
@@ -74,6 +76,7 @@
 }
 
 .medium {
+  --avatar-border-width: var(--size025);
   width: var(--size400);
   height: var(--size400);
   border-radius: var(--radius050);
@@ -81,6 +84,7 @@
 }
 
 .large {
+  --avatar-border-width: var(--size025);
   width: var(--size500);
   height: var(--size500);
   border-radius: var(--radius075);
@@ -88,6 +92,7 @@
 }
 
 .xlarge {
+  --avatar-border-width: var(--size025);
   width: var(--size800);
   height: var(--size800);
   border-radius: var(--radius100);
@@ -95,6 +100,7 @@
 }
 
 .xxlarge {
+  --avatar-border-width: var(--size0375);
   width: var(--size1200);
   height: var(--size1200);
   border-radius: var(--radius125);
@@ -102,6 +108,7 @@
 }
 
 .xxxlarge {
+  --avatar-border-width: var(--size050);
   width: var(--size1600);
   height: var(--size1600);
   border-radius: var(--radius150);

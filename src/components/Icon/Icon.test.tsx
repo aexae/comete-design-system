@@ -78,22 +78,22 @@ describe("Icon", () => {
     expect(span.className).toContain("icon");
   });
 
-  // Prop label (accessibilité) ---------------------------------------------
+  // Prop aria-label (accessibilité) -----------------------------------------
 
-  it("should set aria-label and role='img' when label is provided", () => {
-    const { container } = render(<Icon icon="Warning" label="Attention" />);
+  it("should set aria-label and role='img' when aria-label is provided", () => {
+    const { container } = render(<Icon icon="Warning" aria-label="Attention" />);
     const span = container.firstChild as HTMLElement;
     expect(span).toHaveAttribute("aria-label", "Attention");
     expect(span).toHaveAttribute("role", "img");
   });
 
-  it("should not have aria-hidden when label is provided", () => {
-    const { container } = render(<Icon icon="Warning" label="Attention" />);
+  it("should not have aria-hidden when aria-label is provided", () => {
+    const { container } = render(<Icon icon="Warning" aria-label="Attention" />);
     const span = container.firstChild as HTMLElement;
     expect(span).not.toHaveAttribute("aria-hidden");
   });
 
-  it("should have aria-hidden when no label is provided", () => {
+  it("should have aria-hidden when no aria-label is provided", () => {
     const { container } = render(<Icon icon="Warning" />);
     const span = container.firstChild as HTMLElement;
     expect(span).toHaveAttribute("aria-hidden", "true");

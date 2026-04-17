@@ -23,7 +23,7 @@ const meta = {
     width: { control: "text" },
     height: { control: "text" },
     radius: { control: "text" },
-    label: { control: "text" },
+    "aria-label": { control: "text" },
   },
   args: {
     shape: "rectangle",

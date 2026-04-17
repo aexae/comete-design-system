@@ -55,7 +55,7 @@ const meta: Meta<IconComponentProps> = {
       options: ICON_NAMES,
       description: "Name of the icon to render",
     },
-    variant: {
+    appearance: {
       control: "select",
       options: VARIANTS,
     },
@@ -70,14 +70,14 @@ const meta: Meta<IconComponentProps> = {
       control: "select",
       options: ["default", "none"],
     },
-    label: {
+    "aria-label": {
       control: "text",
       description: "Accessible label (makes the icon non-decorative)",
     },
   },
   args: {
     icon: "AddBox",
-    variant: "outlined",
+    appearance: "outlined",
     color: "default",
     size: 24,
     spacing: "default",
@@ -204,10 +204,10 @@ function IconWithDownload(props: IconComponentProps): ReactElement {
     fontSize: 11,
     fontWeight: 600,
     padding: "3px 10px",
-    border: "1px solid var(--border-default, #ddd)",
+    border: "1px solid var(--border-default)",
     borderRadius: 5,
-    background: "var(--background-neutral-subtler-default, #fff)",
-    color: "var(--text-subtlest, #888)",
+    background: "var(--background-neutral-subtler-default)",
+    color: "var(--text-subtlest)",
     cursor: "pointer",
     letterSpacing: "0.03em",
   };
@@ -232,12 +232,12 @@ export const Default: Story = {
 };
 
 export const Filled: Story = {
-  args: { icon: "AddBox", variant: "filled" },
+  args: { icon: "AddBox", appearance: "filled" },
   render: (args) => <IconWithDownload {...args} />,
 };
 
 export const Duotone: Story = {
-  args: { icon: "AddBox", variant: "duotone" },
+  args: { icon: "AddBox", appearance: "duotone" },
   render: (args) => <IconWithDownload {...args} />,
 };
 
@@ -252,7 +252,7 @@ export const Size48: Story = {
 };
 
 export const WithLabel: Story = {
-  args: { icon: "AddBox", label: "Erreur" },
+  args: { icon: "AddBox", "aria-label": "Erreur" },
   render: (args) => <IconWithDownload {...args} />,
 };
 
@@ -271,7 +271,7 @@ export const AllColors: Story = {
             alignItems: "center",
             gap: 4,
             padding: c === "inverted" ? "8px" : undefined,
-            background: c === "inverted" ? "var(--background-brand-bold-default, #22427c)" : undefined,
+            background: c === "inverted" ? "var(--background-brand-bold-default)" : undefined,
             borderRadius: c === "inverted" ? 8 : undefined,
           }}
         >
@@ -279,7 +279,7 @@ export const AllColors: Story = {
           <span
             style={{
               fontSize: 10,
-              color:  c === "inverted" ? "var(--text-inverted, #fff)" : "var(--text-subtlest, #888)",
+              color:  c === "inverted" ? "var(--text-inverted)" : "var(--text-subtlest)",
             }}
           >
             {c}
@@ -305,11 +305,11 @@ export const AllVariants: Story = {
             gap: 4,
           }}
         >
-          <Icon {...args} variant={v} icon="AddBox" />
+          <Icon {...args} appearance={v} icon="AddBox" />
           <span
             style={{
               fontSize: 10,
-              color: "var(--text-subtlest, #888)",
+              color: "var(--text-subtlest)",
             }}
           >
             {v}
@@ -361,10 +361,10 @@ function IconCard({
     fontSize: 10,
     fontWeight: 600,
     padding: "2px 7px",
-    border: "1px solid var(--border-default, #ddd)",
+    border: "1px solid var(--border-default)",
     borderRadius: 4,
-    background: "var(--background-neutral-subtler-default, #fff)",
-    color: "var(--text-subtlest, #888)",
+    background: "var(--background-neutral-subtler-default)",
+    color: "var(--text-subtlest)",
     cursor: "pointer",
     letterSpacing: "0.03em",
   };
@@ -383,10 +383,10 @@ function IconCard({
           alignItems: "center",
           gap: 6,
           padding: "12px 4px 8px",
-          border: `1.5px solid ${isCopied ? "var(--border-focus, #4a90e2)" : "transparent"}`,
+          border: `1.5px solid ${isCopied ? "var(--border-focus)" : "transparent"}`,
           borderRadius: 8,
           background: isCopied
-            ? "var(--background-selected-subtlest-default, rgba(74,144,226,0.08))"
+            ? "var(--background-selected-subtlest-default)"
             : "transparent",
           cursor: "pointer",
           width: "100%",
@@ -401,8 +401,8 @@ function IconCard({
           style={{
             fontSize: 10,
             color: isCopied
-              ? "var(--text-selected, #4a90e2)"
-              : "var(--text-subtlest, #888)",
+              ? "var(--text-selected)"
+              : "var(--text-subtlest)",
             textAlign: "center",
             lineHeight: 1.2,
             width: "100%",
@@ -477,17 +477,17 @@ function IconExplorer(): ReactElement {
     fontSize: 11,
     fontWeight: 600,
     marginBottom: 4,
-    color: "var(--text-subtlest, #888)",
+    color: "var(--text-subtlest)",
     textTransform: "uppercase",
     letterSpacing: "0.05em",
   };
 
   const control: CSSProperties = {
     padding: "5px 10px",
-    border: "1px solid var(--border-default, #ddd)",
+    border: "1px solid var(--border-default)",
     borderRadius: 6,
-    background: "var(--background-neutral-subtler-default, #fff)",
-    color: "var(--text-default, #111)",
+    background: "var(--background-neutral-subtler-default)",
+    color: "var(--text-default)",
     fontSize: 13,
   };
 
@@ -508,9 +508,9 @@ function IconExplorer(): ReactElement {
           flexWrap: "wrap",
           marginBottom: 20,
           padding: 16,
-          background: "var(--background-surface-elevation-sunken-default, #f7f7f7)",
+          background: "var(--background-surface-elevation-sunken-default)",
           borderRadius: 8,
-          border: "1px solid var(--border-default, #eee)",
+          border: "1px solid var(--border-default)",
         }}
       >
         {/* Recherche */}
@@ -541,16 +541,16 @@ function IconExplorer(): ReactElement {
                   ...control,
                   background:
                     variant === v
-                      ? "var(--background-selected-subtlest-default, rgba(74,144,226,0.1))"
-                      : "var(--background-neutral-subtler-default, #fff)",
+                      ? "var(--background-selected-subtlest-default)"
+                      : "var(--background-neutral-subtler-default)",
                   borderColor:
                     variant === v
-                      ? "var(--border-focus, #4a90e2)"
-                      : "var(--border-default, #ddd)",
+                      ? "var(--border-focus)"
+                      : "var(--border-default)",
                   color:
                     variant === v
-                      ? "var(--text-selected, #4a90e2)"
-                      : "var(--text-default, #111)",
+                      ? "var(--text-selected)"
+                      : "var(--text-default)",
                   fontWeight: variant === v ? 600 : 400,
                   cursor: "pointer",
                 }}
@@ -610,16 +610,16 @@ function IconExplorer(): ReactElement {
                   ...control,
                   background:
                     spacing === s
-                      ? "var(--background-selected-subtlest-default, rgba(74,144,226,0.1))"
-                      : "var(--background-neutral-subtler-default, #fff)",
+                      ? "var(--background-selected-subtlest-default)"
+                      : "var(--background-neutral-subtler-default)",
                   borderColor:
                     spacing === s
-                      ? "var(--border-focus, #4a90e2)"
-                      : "var(--border-default, #ddd)",
+                      ? "var(--border-focus)"
+                      : "var(--border-default)",
                   color:
                     spacing === s
-                      ? "var(--text-selected, #4a90e2)"
-                      : "var(--text-default, #111)",
+                      ? "var(--text-selected)"
+                      : "var(--text-default)",
                   fontWeight: spacing === s ? 600 : 400,
                   cursor: "pointer",
                 }}
@@ -632,8 +632,8 @@ function IconExplorer(): ReactElement {
       </div>
 
       {/* Compteur */}
-      <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-subtlest, #888)" }}>
-        <strong style={{ color: "var(--text-default, #111)" }}>{filtered.length}</strong>
+      <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-subtlest)" }}>
+        <strong style={{ color: "var(--text-default)" }}>{filtered.length}</strong>
         {" / "}
         {ICON_ENTRIES.length} icônes
         {search !== "" && ` — "${search}"`}
@@ -642,7 +642,7 @@ function IconExplorer(): ReactElement {
 
       {/* Grille */}
       {filtered.length === 0 ? (
-        <p style={{ textAlign: "center", padding: 48, color: "var(--text-subtlest, #888)" }}>
+        <p style={{ textAlign: "center", padding: 48, color: "var(--text-subtlest)" }}>
           Aucune icône pour &ldquo;{search}&rdquo;
         </p>
       ) : (

@@ -10,6 +10,8 @@ export interface BreadcrumbsProps {
   children: ReactNode;
   /** Label accessible de la navigation. Par défaut : "Fil d'Ariane". */
   "aria-label"?: string;
+  /** Classe CSS additionnelle. */
+  className?: string;
 }
 
 // -----------------------------------------------------------------------
@@ -25,9 +27,10 @@ export interface BreadcrumbsProps {
 export function Breadcrumbs({
   children,
   "aria-label": ariaLabel = "Fil d'Ariane",
+  className,
 }: BreadcrumbsProps): ReactElement {
   return (
-    <nav aria-label={ariaLabel}>
+    <nav aria-label={ariaLabel} className={className}>
       <ol className={styles.list}>{children}</ol>
     </nav>
   );

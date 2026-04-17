@@ -182,7 +182,7 @@ export const WithNavigationButtons: Story = {
         }}
       >
         <Button
-          variant="outlined"
+          appearance="outlined"
           color="default"
           onPress={() => setSelected((prev) => Math.max(0, prev - 1))}
           isDisabled={selected === 0}
@@ -195,7 +195,7 @@ export const WithNavigationButtons: Story = {
           onChange={setSelected}
         />
         <Button
-          variant="contained"
+          appearance="contained"
           color="brand"
           onPress={() =>
             setSelected((prev) => Math.min(total - 1, prev + 1))

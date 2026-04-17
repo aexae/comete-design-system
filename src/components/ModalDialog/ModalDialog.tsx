@@ -69,7 +69,7 @@ const APPEARANCE_ICON: Record<string, IconName | undefined> = {
  *   onOpenChange={setIsOpen}
  *   footer={
  *     <ButtonGroup>
- *       <Button variant="subtle" onPress={() => setIsOpen(false)}>Annuler</Button>
+ *       <Button appearance="subtle" onPress={() => setIsOpen(false)}>Annuler</Button>
  *       <Button color="critical" onPress={handleDelete}>Supprimer</Button>
  *     </ButtonGroup>
  *   }
@@ -116,7 +116,7 @@ export function ModalDialog({
                 icon={icon}
                 size={24}
                 color={appearance === "warning" ? "warning" : "critical"}
-                variant="filled"
+                appearance="filled"
                 className={styles.headerIcon}
               />
             )}

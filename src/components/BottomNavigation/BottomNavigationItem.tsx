@@ -53,7 +53,7 @@ export function BottomNavigationItem({
           <Icon
             icon={icon}
             size={24}
-            variant={isSelected ? "filled" : "outlined"}
+            appearance={isSelected ? "filled" : "outlined"}
             color={isSelected ? "selected" : "subtle"}
           />
           {badge !== undefined && (

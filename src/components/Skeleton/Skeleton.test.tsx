@@ -34,8 +34,8 @@ describe("Skeleton", () => {
       expect(container.firstElementChild).toHaveAttribute("aria-label", "Chargement…");
     });
 
-    it("should override aria-label when label prop is provided", () => {
-      const { container } = render(<Skeleton label="Chargement de l'avatar" />);
+    it("should override aria-label when aria-label prop is provided", () => {
+      const { container } = render(<Skeleton aria-label="Chargement de l'avatar" />);
       expect(container.firstElementChild).toHaveAttribute(
         "aria-label",
         "Chargement de l'avatar"

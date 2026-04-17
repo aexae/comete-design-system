@@ -20,24 +20,24 @@ describe("Button", () => {
   });
 
   describe("classes CSS par défaut", () => {
-    it("should apply default variant, color and size classes when no props given", () => {
+    it("should apply default appearance, color and size classes when no props given", () => {
       render(<Button>Label</Button>);
       const button = screen.getByRole("button");
       expect(button).toHaveClass("button", "contained", "default", "medium");
     });
   });
 
-  describe("prop variant", () => {
+  describe("prop appearance", () => {
     it.each([["contained"], ["outlined"], ["subtle"], ["link"]] as const)(
-      "should apply class %s when variant=%s",
-      (variant) => {
-        render(<Button variant={variant}>Label</Button>);
-        expect(screen.getByRole("button")).toHaveClass(variant);
+      "should apply class %s when appearance=%s",
+      (appearance) => {
+        render(<Button appearance={appearance}>Label</Button>);
+        expect(screen.getByRole("button")).toHaveClass(appearance);
       }
     );
 
-    it("should apply class link-subtle when variant=link-subtle", () => {
-      render(<Button variant="link-subtle">Label</Button>);
+    it("should apply class link-subtle when appearance=link-subtle", () => {
+      render(<Button appearance="link-subtle">Label</Button>);
       expect(screen.getByRole("button")).toHaveClass("link-subtle");
     });
   });

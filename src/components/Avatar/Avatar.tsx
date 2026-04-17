@@ -113,7 +113,7 @@ export function Avatar({
     .join(" ");
 
   const borderStyle: React.CSSProperties | undefined = borderColor
-    ? { boxShadow: `0 0 0 2px ${borderColor}` }
+    ? { boxShadow: `0 0 0 var(--avatar-border-width) ${borderColor}` }
     : undefined;
 
   // --- Content resolution ---
@@ -124,7 +124,7 @@ export function Avatar({
 
   const defaultIcon = (
     <span className={styles.iconSlot}>
-      <Icon icon={icon ?? "Person"} variant="filled" size={SIZE_ICON_MAP[size]} />
+      <Icon icon={icon ?? "Person"} appearance="filled" size={SIZE_ICON_MAP[size]} />
     </span>
   );
 
