@@ -30,10 +30,10 @@
    Apparences — définissent le fond et la couleur héritée par les enfants
    ========================================================================== */
 
-/* warning : fond jaune, texte sombre */
+/* warning : fond jaune, texte toujours sombre (contraste sur jaune) */
 .warning {
   background-color: var(--background-warning-bold-default);
-  color: var(--text-warning);
+  color: var(--text-on-warning);
 }
 
 /* critical : fond rouge, texte inversé (blanc) */

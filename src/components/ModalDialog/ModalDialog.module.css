@@ -61,6 +61,7 @@
    ========================================================================== */
 
 .dialog {
+  --badge-cutout-color: var(--background-surface-elevation-overlay-default);
   background-color: var(--background-surface-elevation-overlay-default);
   border-radius: var(--radius050);
   box-shadow: var(--elevation-xlarge);

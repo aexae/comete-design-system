@@ -43,9 +43,11 @@
    ========================================================================== */
 
 .cutoutBorder {
-  /* NOTE: --badge-cutout-color peut être surchargé par le composant parent
-     pour que l'anneau corresponde à la couleur de fond du conteneur. */
-  box-shadow: 0 0 0 1px var(--badge-cutout-color, var(--background-default-default));
+  /* NOTE: --badge-cutout-color est hérité du parent le plus proche qui le
+     définit. Chaque surface (Card, Popup, etc.) le positionne sur son propre
+     background pour que l'anneau se fonde visuellement dans le fond.
+     Fallback = fond de page courant (adaptatif light/dark). */
+  box-shadow: 0 0 0 var(--size025) var(--badge-cutout-color, var(--background-surface-default));
 }
 
 /* ==========================================================================
@@ -79,9 +81,9 @@
 .success.medium { background-color: var(--background-success-subtlest-default); color: var(--text-success); }
 .success.low    { background-color: var(--background-success-bold-default); }
 
-/* — warning (fond clair/jaune : texte sombre dans les deux niveaux) — */
-.warning.high   { background-color: var(--background-warning-bold-default);     color: var(--text-default); }
-.warning.medium { background-color: var(--background-warning-subtlest-default); color: var(--text-default); }
+/* — warning (fond clair/jaune : texte toujours sombre pour le contraste) — */
+.warning.high   { background-color: var(--background-warning-bold-default);     color: var(--text-on-warning); }
+.warning.medium { background-color: var(--background-warning-subtlest-default); color: var(--text-on-warning); }
 .warning.low    { background-color: var(--background-warning-bold-default); }
 
 /* — accent — */

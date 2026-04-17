@@ -149,9 +149,7 @@
 /* — warning — */
 .contained.warning {
   background-color: var(--background-warning-bold-default);
-  /* NOTE: porcelain-950 instead of --text-default — the warning bold background
-     is light/yellow in both themes, requiring dark text regardless of theme. */
-  color: var(--porcelain-950);
+  color: var(--text-on-warning);
 }
 .contained.warning:not([data-disabled])[data-hovered] {
   background-color: var(--background-warning-bold-hovered);

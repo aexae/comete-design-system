@@ -5,11 +5,15 @@
    ========================================================================== */
 
 .popover {
+  --badge-cutout-color: var(--background-surface-elevation-raise-default);
   background-color: var(--background-surface-elevation-raise-default);
   border-radius: var(--radius0375);
   box-shadow: var(--elevation-large);
   min-width: 240px;
-  max-height: 80vh;
+
+  /* Viewport containment — max dimensions prevent content overflow */
+  max-height: min(80vh, calc(100vh - var(--space200)));
+  max-width: calc(100vw - var(--space200));
   overflow-x: hidden;
   overflow-y: auto;
   outline: none;

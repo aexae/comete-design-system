@@ -18,12 +18,14 @@
 
 /* Fond transparent + bordure visible */
 .outlined {
+  --badge-cutout-color: var(--background-surface-elevation-raise-default);
   background-color: transparent;
   border: 1px solid var(--border-bold);
 }
 
 /* Fond grisé, sans bordure */
 .neutral {
+  --badge-cutout-color: var(--background-surface-elevation-sunken-default);
   background-color: var(--background-surface-elevation-sunken-default);
   /* border-radius: var(--radius100); */
 }

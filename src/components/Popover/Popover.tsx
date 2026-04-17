@@ -54,6 +54,10 @@ export function Popover({
       style={style}
       offset={offset}
       shouldFlip
+      // NOTE: containerPadding ensures the popover stays within the viewport
+      // with an 8px margin. This prevents cascading submenus from going
+      // off-screen when space is tight (e.g. Storybook panel open).
+      containerPadding={8}
       {...ariaProps}
     >
       {children}
