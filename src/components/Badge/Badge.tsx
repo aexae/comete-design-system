@@ -44,13 +44,29 @@ export interface BadgeProps {
 // Composant
 
 /**
- * Badge compact affichant un statut, une étiquette ou un point indicateur.
+ * Badge — Comète Design System
  *
- * @param appearance  - Schéma coloré
- * @param importance  - Niveau de contraste (high / medium / low)
- * @param label       - Texte affiché (ignoré pour importance="low")
+ * Indicateur compact pour afficher un statut, un compteur ou un point indicateur.
+ * Trois niveaux d'importance : `high` (fond saturé), `medium` (fond subtil),
+ * `low` (simple point coloré sans texte).
+ *
+ * ```tsx
+ * // High / Medium — étiquettes avec texte
+ * <Badge appearance="critical" importance="high" label="3" />
+ * <Badge appearance="primary" importance="medium" label="Beta" />
+ *
+ * // Low — point coloré sans texte
+ * <Badge appearance="success" importance="low" />
+ *
+ * // Cutout border — anneau blanc pour superposition sur fond coloré (avatar, etc.)
+ * <Badge appearance="warning" importance="high" label="99" cutoutBorder />
+ * ```
+ *
+ * @param appearance   - Schéma coloré
+ * @param importance   - Niveau de contraste (high / medium / low)
+ * @param label        - Texte affiché (ignoré pour importance="low")
  * @param cutoutBorder - Anneau blanc pour séparation visuelle sur fond coloré
- * @param isDisabled  - État désactivé
+ * @param isDisabled   - État désactivé
  */
 export function Badge({
   appearance = "neutral",

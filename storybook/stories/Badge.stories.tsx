@@ -59,7 +59,19 @@ export const Default: Story = {
 
 export const LowImportance: Story = {
   name: "Low importance (dot)",
-  parameters: { design: { type: "figma", url: figmaUrl("2952-14713") } },
+  parameters: {
+    design: { type: "figma", url: figmaUrl("2952-14713") },
+    docs: {
+      source: {
+        code: `<Badge appearance="neutral" importance="low" />
+<Badge appearance="primary" importance="low" />
+<Badge appearance="critical" importance="low" />
+<Badge appearance="success" importance="low" />
+<Badge appearance="warning" importance="low" />
+<Badge appearance="accent" importance="low" />`,
+      },
+    },
+  },
   render: () => (
     <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
       {(["neutral", "primary", "critical", "success", "warning", "accent"] as BadgeAppearance[]).map(
@@ -85,7 +97,16 @@ export const HighImportance: Story = {
 
 export const WithCutoutBorder: Story = {
   name: "Cutout border",
-  parameters: { design: { type: "figma", url: figmaUrl("2953-6891") } },
+  parameters: {
+    design: { type: "figma", url: figmaUrl("2953-6891") },
+    docs: {
+      source: {
+        code: `// Le cutoutBorder ajoute un anneau blanc autour du badge
+// → utile quand le badge est superposé à un avatar ou un fond coloré.
+<Badge appearance="critical" importance="high" label="99" cutoutBorder />`,
+      },
+    },
+  },
   render: () => (
     <div
       style={{
@@ -107,7 +128,16 @@ export const WithCutoutBorder: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { design: { type: "figma", url: figmaUrl("2953-7040") } },
+  parameters: {
+    design: { type: "figma", url: figmaUrl("2953-7040") },
+    docs: {
+      source: {
+        code: `<Badge appearance="neutral" importance="high" label="Disabled" isDisabled />
+<Badge appearance="primary" importance="medium" label="Disabled" isDisabled />
+<Badge appearance="critical" importance="low" isDisabled />`,
+      },
+    },
+  },
   render: () => (
     <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
       <Badge appearance="neutral" importance="high" label="Disabled" isDisabled />
@@ -119,7 +149,20 @@ export const Disabled: Story = {
 
 export const AllAppearances: Story = {
   name: "All appearances",
-  parameters: { design: { type: "figma", url: figmaUrl("341-2448") } },
+  parameters: {
+    design: { type: "figma", url: figmaUrl("341-2448") },
+    docs: {
+      source: {
+        code: `// Chaque appearance décline les 3 niveaux d'importance (high / medium / low).
+<Badge appearance="neutral" importance="high" label="High" />
+<Badge appearance="neutral" importance="medium" label="Medium" />
+<Badge appearance="neutral" importance="low" />
+
+// Autres appearances disponibles :
+// "primary" | "primary-inverted" | "critical" | "success" | "warning" | "accent"`,
+      },
+    },
+  },
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       {(
