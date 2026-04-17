@@ -135,9 +135,9 @@ describe("Avatar", () => {
       expect(container.querySelector(".ring")).toBeInTheDocument();
     });
 
-    it("should not render FocusRing when isSelected without photo", () => {
+    it("should render FocusRing when isSelected with initials", () => {
       const { container } = render(<Avatar isSelected initials="AB" />);
-      expect(container.querySelector(".ring")).not.toBeInTheDocument();
+      expect(container.querySelector(".ring")).toBeInTheDocument();
     });
 
     it("should render FocusRing when isSelected with loaded photo in interactive mode", () => {
@@ -146,9 +146,9 @@ describe("Avatar", () => {
       expect(container.querySelector(".ring")).toBeInTheDocument();
     });
 
-    it("should not render FocusRing when isSelected without photo in interactive mode", () => {
+    it("should render FocusRing when isSelected with initials in interactive mode", () => {
       const { container } = render(<Avatar onPress={() => undefined} isSelected initials="AB" />);
-      expect(container.querySelector(".ring")).not.toBeInTheDocument();
+      expect(container.querySelector(".ring")).toBeInTheDocument();
     });
   });
 

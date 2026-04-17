@@ -160,8 +160,7 @@ export function Avatar({
     content = defaultIcon;
   }
 
-  // Selected ring only shown when a photo is loaded
-  const showSelectedRing = isSelected && src && imageLoaded;
+  const showSelectedRing = isSelected;
 
   // Accessible label for the container (only needed when there's no <img> with alt)
   const ariaLabel = src ? undefined : (alt ?? initials);

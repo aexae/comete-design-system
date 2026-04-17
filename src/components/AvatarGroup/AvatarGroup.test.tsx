@@ -10,6 +10,11 @@ const ITEMS = [
   { key: "c", initials: "EF" },
 ];
 
+const OVERFLOW_ITEMS = [
+  { key: "d", initials: "GH", name: "Guillaume" },
+  { key: "e", initials: "IJ", name: "Isabelle" },
+];
+
 describe("AvatarGroup", () => {
   describe("rendu de base", () => {
     it("should render all items", () => {
@@ -32,44 +37,87 @@ describe("AvatarGroup", () => {
     });
   });
 
-  describe("overflow", () => {
-    it("should render overflow indicator when overflow > 0", () => {
-      const { container } = render(<AvatarGroup items={ITEMS} overflow={5} />);
-      expect(container.querySelector(".overflow")).toBeInTheDocument();
+  describe("mode display (default)", () => {
+    it("should render avatars as display-only", () => {
+      render(<AvatarGroup items={ITEMS} />);
+      expect(screen.queryAllByRole("button")).toHaveLength(0);
     });
 
-    it("should not render overflow indicator when overflow is 0", () => {
-      const { container } = render(<AvatarGroup items={ITEMS} overflow={0} />);
-      expect(container.querySelector(".overflow")).not.toBeInTheDocument();
-    });
-
-    it("should not render overflow indicator when overflow is omitted", () => {
+    it("should not apply interactive class", () => {
       const { container } = render(<AvatarGroup items={ITEMS} />);
-      expect(container.querySelector(".overflow")).not.toBeInTheDocument();
+      expect(container.querySelector(".interactive")).not.toBeInTheDocument();
     });
   });
 
-  describe("interactivité", () => {
-    it("should call onItemPress with item and index when an avatar is clicked", async () => {
+  describe("mode navigate", () => {
+    it("should render avatars as buttons", () => {
+      render(<AvatarGroup items={ITEMS} mode="navigate" onItemPress={() => {}} />);
+      expect(screen.getAllByRole("button")).toHaveLength(3);
+    });
+
+    it("should apply interactive class", () => {
+      const { container } = render(<AvatarGroup items={ITEMS} mode="navigate" />);
+      expect(container.querySelector(".interactive")).toBeInTheDocument();
+    });
+
+    it("should call onItemPress with item and index when clicked", async () => {
       const handlePress = vi.fn();
-      render(<AvatarGroup items={ITEMS} onItemPress={handlePress} />);
+      render(<AvatarGroup items={ITEMS} mode="navigate" onItemPress={handlePress} />);
       const buttons = screen.getAllByRole("button");
       await userEvent.click(buttons[1]!);
       expect(handlePress).toHaveBeenCalledWith(ITEMS[1], 1);
     });
+  });
 
-    it("should call onOverflowPress when overflow avatar is clicked", async () => {
-      const handleOverflow = vi.fn();
-      render(<AvatarGroup items={ITEMS} overflow={2} onOverflowPress={handleOverflow} />);
-      const buttons = screen.getAllByRole("button");
-      // Overflow is the last button
-      await userEvent.click(buttons[buttons.length - 1]!);
-      expect(handleOverflow).toHaveBeenCalledOnce();
+  describe("mode select", () => {
+    it("should render avatars as buttons", () => {
+      render(<AvatarGroup items={ITEMS} mode="select" selectedKeys={[]} onSelectionChange={() => {}} />);
+      expect(screen.getAllByRole("button")).toHaveLength(3);
     });
 
-    it("should render avatars as display-only when no onItemPress", () => {
-      render(<AvatarGroup items={ITEMS} />);
-      expect(screen.queryAllByRole("button")).toHaveLength(0);
+    it("should call onSelectionChange when avatar is clicked", async () => {
+      const handleChange = vi.fn();
+      render(
+        <AvatarGroup items={ITEMS} mode="select" selectedKeys={[]} onSelectionChange={handleChange} />,
+      );
+      const buttons = screen.getAllByRole("button");
+      await userEvent.click(buttons[0]!);
+      expect(handleChange).toHaveBeenCalledWith(["a"]);
+    });
+
+    it("should deselect when clicking a selected avatar", async () => {
+      const handleChange = vi.fn();
+      render(
+        <AvatarGroup items={ITEMS} mode="select" selectedKeys={["a"]} onSelectionChange={handleChange} />,
+      );
+      const buttons = screen.getAllByRole("button");
+      await userEvent.click(buttons[0]!);
+      expect(handleChange).toHaveBeenCalledWith([]);
+    });
+  });
+
+  describe("overflow", () => {
+    it("should render overflow indicator when overflowItems provided", () => {
+      const { container } = render(
+        <AvatarGroup items={ITEMS} overflowItems={OVERFLOW_ITEMS} />,
+      );
+      expect(container.querySelector(".overflow")).toBeInTheDocument();
+    });
+
+    it("should not render overflow indicator without overflowItems", () => {
+      const { container } = render(<AvatarGroup items={ITEMS} />);
+      expect(container.querySelector(".overflow")).not.toBeInTheDocument();
+    });
+
+    it("should open menu with overflow items when +N is clicked", async () => {
+      render(
+        <AvatarGroup items={ITEMS} overflowItems={OVERFLOW_ITEMS} mode="navigate" />,
+      );
+      const buttons = screen.getAllByRole("button");
+      // +N trigger is the last button
+      await userEvent.click(buttons[buttons.length - 1]!);
+      expect(screen.getByText("Guillaume")).toBeInTheDocument();
+      expect(screen.getByText("Isabelle")).toBeInTheDocument();
     });
   });
 

@@ -11,10 +11,14 @@
 .item {
   position: relative;
   line-height: 0;
+}
+
+/* Hover only on interactive avatars (navigate / select) */
+.interactive {
   transition: transform var(--duration-fast) var(--easing-default);
 }
 
-.item:hover {
+.interactive:hover {
   z-index: 999 !important;
   transform: scale(1.1);
 }
@@ -23,4 +27,54 @@
   position: relative;
   z-index: 0;
   line-height: 0;
+}
+
+/* ==========================================================================
+   Overflow trigger — reset button styles around the Avatar
+   ========================================================================== */
+
+.overflowTrigger {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  line-height: 0;
+  outline: none;
+  border-radius: var(--radius-round);
+}
+
+/* ==========================================================================
+   Overflow popup — list of selectable users
+   ========================================================================== */
+
+.popupList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space100);
+}
+
+.popupRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space150);
+  padding: var(--space075) var(--space050);
+  border-radius: var(--radius050);
+  transition: background-color var(--duration-fast) var(--easing-default);
+}
+
+.popupRow:hover {
+  background-color: var(--background-neutral-subtlest-hovered);
+}
+
+.popupName {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-s);
+  font-weight: var(--font-weight-regular);
+  color: var(--text-default);
+  white-space: nowrap;
 }
