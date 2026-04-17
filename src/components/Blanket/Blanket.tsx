@@ -16,8 +16,18 @@ export interface BlanketProps {
 // Composant
 
 /**
+ * Blanket — Comète Design System
+ *
  * Overlay plein écran semi-transparent affiché derrière les composants modaux
  * (modales, drawers…). Bloque l'interaction avec le contenu sous-jacent.
+ *
+ * ```tsx
+ * // Overlay simple
+ * <Blanket />
+ *
+ * // Overlay cliquable (ex : fermer une modale au clic)
+ * <Blanket onClick={() => setOpen(false)} />
+ * ```
  *
  * @param onClick - Appelé quand l'utilisateur clique sur l'overlay
  */

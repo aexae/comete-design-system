@@ -25,8 +25,18 @@ export interface BottomNavigationItemProps {
 // Composant
 
 /**
+ * BottomNavigationItem — Comète Design System
+ *
  * Item individuel de la BottomNavigation.
  * Affiche une icône et un libellé, avec un indicateur visuel lorsqu'il est sélectionné.
+ *
+ * ```tsx
+ * // Item sélectionné (page courante)
+ * <BottomNavigationItem label="Accueil" icon="Home" isSelected onClick={() => nav("/")} />
+ *
+ * // Item avec badge de notification
+ * <BottomNavigationItem label="Messages" icon="Chat" badge="3" onClick={handleOpen} />
+ * ```
  *
  * @param label      - Texte affiché sous l'icône
  * @param icon       - Composant icône de @naxit/comete-icons

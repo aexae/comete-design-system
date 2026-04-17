@@ -45,9 +45,22 @@ const RADIUS_MAP: Record<FocusRingBorderRadius, string> = {
 // Composant
 
 /**
+ * FocusRing — Comète Design System
+ *
  * Overlay visuel indiquant le focus clavier sur un élément interactif.
  * Doit être rendu à l'intérieur d'un conteneur `position: relative`.
  * Le parent est responsable de n'afficher ce composant que lors d'un focus clavier.
+ *
+ * ```tsx
+ * // Anneau extérieur (par défaut) avec coins arrondis de 4px
+ * {isFocusVisible && <FocusRing borderRadius={4} />}
+ *
+ * // Anneau intérieur (ex : à l'intérieur d'un bouton)
+ * {isFocusVisible && <FocusRing borderRadius={4} position="inside" />}
+ *
+ * // Anneau circulaire (ex : autour d'un Avatar rond)
+ * {isFocusVisible && <FocusRing borderRadius="round" />}
+ * ```
  *
  * @param borderRadius - Rayon des coins, à faire correspondre au composant ciblé
  * @param position     - "outside" (par défaut) ou "inside"

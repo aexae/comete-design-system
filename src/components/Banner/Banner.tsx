@@ -22,8 +22,16 @@ export interface BannerProps {
 // Composant
 
 /**
+ * Banner — Comète Design System
+ *
  * Barre de notification pleine largeur affichant un message d'avertissement
  * ou critique avec une icône contextuelle.
+ *
+ * ```tsx
+ * <Banner appearance="warning">Mise à jour programmée ce soir à 22h.</Banner>
+ * <Banner appearance="critical">Impossible de se connecter au service.</Banner>
+ * <Banner appearance="announcement">Nouvelle fonctionnalité disponible.</Banner>
+ * ```
  *
  * @param appearance - Nature : "warning" (jaune), "critical" (rouge), "announcement" (neutre sombre)
  * @param children   - Contenu du message

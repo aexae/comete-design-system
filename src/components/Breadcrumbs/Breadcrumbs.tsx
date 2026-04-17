@@ -18,8 +18,18 @@ export interface BreadcrumbsProps {
 // Composant
 
 /**
+ * Breadcrumbs — Comète Design System
+ *
  * Fil d'Ariane indiquant la hiérarchie de navigation jusqu'à la page courante.
- * Contient des éléments <BreadcrumbItem>.
+ * Contient des éléments `<BreadcrumbItem>`.
+ *
+ * ```tsx
+ * <Breadcrumbs>
+ *   <BreadcrumbItem label="Accueil" href="/" iconBefore="Home" />
+ *   <BreadcrumbItem label="Catalogue" href="/catalogue" />
+ *   <BreadcrumbItem label="Produit" isCurrent />
+ * </Breadcrumbs>
+ * ```
  *
  * @param children   - Items de navigation (BreadcrumbItem)
  * @param aria-label - Nom accessible de la nav (défaut : "Fil d'Ariane")

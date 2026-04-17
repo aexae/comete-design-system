@@ -55,6 +55,28 @@ export interface TabPanelProps
 // -----------------------------------------------------------------------
 // Tabs — root container
 
+/**
+ * Tabs — Comète Design System
+ *
+ * Composant d'onglets accessible basé sur React Aria.
+ * Composé de quatre sous-composants : `Tabs` (racine), `TabList` (liste des onglets),
+ * `Tab` (onglet individuel) et `TabPanel` (contenu associé).
+ *
+ * ```tsx
+ * <Tabs defaultSelectedKey="details">
+ *   <TabList>
+ *     <Tab id="details" iconBefore="Info">Détails</Tab>
+ *     <Tab id="activity" iconBefore="Activity">Activité</Tab>
+ *     <Tab id="settings" iconBefore="Settings">Paramètres</Tab>
+ *   </TabList>
+ *   <TabPanel id="details">Contenu des détails…</TabPanel>
+ *   <TabPanel id="activity">Contenu de l'activité…</TabPanel>
+ *   <TabPanel id="settings">Contenu des paramètres…</TabPanel>
+ * </Tabs>
+ * ```
+ *
+ * @param children - TabList + TabPanels
+ */
 export function Tabs({
   className,
   children,

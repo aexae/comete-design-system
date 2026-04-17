@@ -79,8 +79,21 @@ function InteractiveItem({
 // Composant
 
 /**
+ * BreadcrumbItem — Comète Design System
+ *
  * Élément individuel du fil d'Ariane.
  * Le séparateur "/" est masqué sur le premier item via CSS (`:first-child`).
+ *
+ * ```tsx
+ * // Lien navigable
+ * <BreadcrumbItem label="Accueil" href="/" iconBefore="Home" />
+ *
+ * // Navigation programmatique (onClick sans href)
+ * <BreadcrumbItem label="Catalogue" onClick={() => nav("/catalogue")} />
+ *
+ * // Page courante (non cliquable)
+ * <BreadcrumbItem label="Produit" isCurrent />
+ * ```
  *
  * @param label      - Libellé de l'item
  * @param href       - URL de destination (rend un lien)
