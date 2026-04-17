@@ -144,7 +144,8 @@ function EditableDatePicker<T extends DateValue = DateValue>({
 
   // Intercepte onChange pour tracker la valeur locale
   const handleFieldChange = useCallback(
-    (newValue: DateValue) => {
+    (newValue: DateValue | null) => {
+      if (!newValue) return;
       setCurrentValue(newValue);
       const onChangeProp = ariaProps.onChange as
         | ((value: DateValue) => void)

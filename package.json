@@ -2,7 +2,7 @@
   "name": "@naxit/comete-design-system",
   "description": "Comète Design System — React Aria + CSS Modules + Design Tokens",
   "author": "naxit",
-  "version": "1.0.0-alpha.71",
+  "version": "1.0.0-alpha.72",
   "license": "MIT",
   "private": false,
   "type": "module",

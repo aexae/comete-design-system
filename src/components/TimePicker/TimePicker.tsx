@@ -188,7 +188,8 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
 
   // Intercepte onChange de AriaTimeField pour tracker la valeur locale
   const handleFieldChange = useCallback(
-    (newValue: TimeValue) => {
+    (newValue: TimeValue | null) => {
+      if (!newValue) return;
       setCurrentValue(newValue);
       const onChangeProp = ariaProps.onChange as
         | ((value: TimeValue) => void)
