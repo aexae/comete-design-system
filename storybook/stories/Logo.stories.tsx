@@ -70,6 +70,7 @@ interface LogoWithDownloadProps {
   product?: LogoProduct;
   appearance?: LogoAppearance;
   type?: LogoType;
+  suffix?: LogoSuffix;
   size?: number;
 }
 
@@ -77,6 +78,7 @@ function LogoWithDownload({
   product = "comete",
   appearance = "brand",
   type = "logo",
+  suffix = "right",
   size = 32,
 }: LogoWithDownloadProps): ReactElement {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -115,7 +117,7 @@ function LogoWithDownload({
       }}
     >
       <div ref={containerRef}>
-        <Logo product={product} appearance={appearance} type={type} size={size} />
+        <Logo product={product} appearance={appearance} type={type} suffix={suffix} size={size} />
       </div>
       <div style={{ display: "flex", gap: 6 }}>
         <button type="button" onClick={handleDownloadSvg} style={btnStyle}>
@@ -519,7 +521,7 @@ function LogoCard({
       >
         {/* Conteneur du SVG — utilisé pour l'export */}
         <div ref={containerRef}>
-          <Logo product={product} appearance={appearance} type={type} size={size} />
+          <Logo product={product} appearance={appearance} type={type} suffix={suffix} size={size} />
         </div>
         <span style={nameLabelStyle}>
           {isCopied ? "✓ copié" : product}
