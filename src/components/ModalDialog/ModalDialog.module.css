@@ -181,7 +181,7 @@
 
 /* Themed scrollbar — Chrome / Edge / Safari */
 .body::-webkit-scrollbar {
-  width: 8px;
+  width: var(--size100);
 }
 
 .body::-webkit-scrollbar-track {
@@ -190,7 +190,7 @@
 
 .body::-webkit-scrollbar-thumb {
   background-color: var(--background-neutral-bold-default);
-  border-radius: 100px;
+  border-radius: var(--radius-round);
 }
 
 /* ==========================================================================

@@ -13,7 +13,7 @@
 
 /* outside : anneau 2px en dehors du composant ciblé */
 .outside {
-  inset: -4px;
+  inset: calc(-1 * var(--space050));
   box-shadow: 0 0 0 2px var(--border-focused);
 }
 
