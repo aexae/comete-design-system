@@ -56,15 +56,7 @@
 }
 
 /* ==========================================================================
-   Appearance: square (corner radii defined per size below)
-   ========================================================================== */
-
-.square {
-  /* border-radius set per size */
-}
-
-/* ==========================================================================
-   Sizes (square & rounded)
+   Sizes
    ========================================================================== */
 
 .xsmall {
@@ -78,28 +70,28 @@
   width: var(--size300);
   height: var(--size300);
   border-radius: var(--radius0375);
-  font-size: var(--font-size-ui-xxs);
+  font-size: var(--font-size-ui-xs);
 }
 
 .medium {
   width: var(--size400);
   height: var(--size400);
   border-radius: var(--radius050);
-  font-size: var(--font-size-ui-xs);
+  font-size: var(--font-size-ui-s);
 }
 
 .large {
   width: var(--size500);
   height: var(--size500);
   border-radius: var(--radius075);
-  font-size: var(--font-size-ui-s);
+  font-size: var(--font-size-ui-m);
 }
 
 .xlarge {
   width: var(--size1200);
   height: var(--size1200);
   border-radius: var(--radius100);
-  font-size: var(--font-size-ui-xl);
+  font-size: var(--font-size-ui-xxl);
 }
 
 .xxlarge {
@@ -162,4 +154,76 @@
   width: 50%;
   height: 50%;
   pointer-events: none;
+}
+
+/* ==========================================================================
+   Badge wrapper — positionne les badges autour de l'avatar
+   ========================================================================== */
+
+.badgeWrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+/* Notification badge — top-right
+   Figma : centre du badge à 45° hors du cercle.
+   Sur 32 px : left calc(50%+14px) = 93.75 %, top calc(50%−14px) = 6.25 %. */
+.notificationSlot {
+  position: absolute;
+  top: 6.25%;
+  left: 93.75%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  line-height: 0;
+  pointer-events: none;
+}
+
+/* Presence badge — bottom-right, sur la courbe du cercle (point à 315°).
+   50 % + 50 % × cos(45°) ≈ 85 % sur chaque axe. */
+.presenceSlot {
+  position: absolute;
+  top: 85%;
+  left: 85%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  line-height: 0;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Badge scaling — adapte la taille des badges à la taille de l'avatar.
+   Base = medium (scale 1). Le combinateur ~ cible les slots frères de l'avatar.
+   ========================================================================== */
+
+.xsmall ~ .notificationSlot,
+.xsmall ~ .presenceSlot {
+  transform: translate(-50%, -50%) scale(0.5);
+}
+
+.small ~ .notificationSlot,
+.small ~ .presenceSlot {
+  transform: translate(-50%, -50%) scale(0.75);
+}
+
+/* medium = base (scale 1) — pas d'override nécessaire */
+
+.large ~ .notificationSlot,
+.large ~ .presenceSlot {
+  transform: translate(-50%, -50%) scale(1.25);
+}
+
+.xlarge ~ .notificationSlot {
+  left: calc(93.75% - 3px);
+  transform: translate(-50%, -50%) scale(1.5);
+}
+.xlarge ~ .presenceSlot {
+  transform: translate(-50%, -50%) scale(1.5);
+}
+
+.xxlarge ~ .notificationSlot {
+  left: calc(93.75% - 3px);
+  transform: translate(-50%, -50%) scale(1.75);
+}
+.xxlarge ~ .presenceSlot {
+  transform: translate(-50%, -50%) scale(1.75);
 }
