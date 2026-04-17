@@ -26,10 +26,10 @@ import styles from "./Menu.module.css";
 /**
  * Mode du menu.
  * - "default"        — menu classique sans sélection
- * - "selectSingle"   — sélection unique (radios visuels)
- * - "selectMultiple" — sélection multiple (checkboxes visuels)
+ * - "select-single"   — sélection unique (radios visuels)
+ * - "select-multiple" — sélection multiple (checkboxes visuels)
  */
-export type MenuMode = "default" | "selectSingle" | "selectMultiple";
+export type MenuMode = "default" | "select-single" | "select-multiple";
 
 export interface MenuProps<T extends object = object>
   extends Omit<AriaMenuProps<T>, "className" | "style" | "selectionMode"> {
@@ -93,8 +93,8 @@ export interface MenuPopoverProps {
 
 const MODE_TO_SELECTION: Record<MenuMode, "none" | "single" | "multiple"> = {
   default: "none",
-  selectSingle: "single",
-  selectMultiple: "multiple",
+  "select-single": "single",
+  "select-multiple": "multiple",
 };
 
 // -----------------------------------------------------------------------
@@ -183,13 +183,13 @@ MenuPopover.displayName = "MenuPopover";
  * </Menu>
  *
  * // Sélection unique (radios)
- * <Menu mode="selectSingle" selectedKeys={new Set(["date"])} onSelectionChange={setKeys}>
+ * <Menu mode="select-single" selectedKeys={new Set(["date"])} onSelectionChange={setKeys}>
  *   <MenuItem id="date">Par date</MenuItem>
  *   <MenuItem id="name">Par nom</MenuItem>
  * </Menu>
  *
  * // Sélection multiple (checkboxes)
- * <Menu mode="selectMultiple" selectedKeys={selected} onSelectionChange={setSelected}>
+ * <Menu mode="select-multiple" selectedKeys={selected} onSelectionChange={setSelected}>
  *   <MenuItem id="active">Actifs</MenuItem>
  *   <MenuItem id="archived">Archivés</MenuItem>
  * </Menu>
@@ -223,7 +223,7 @@ Menu.displayName = "Menu";
  * `[slotBefore] [iconBefore] [content] [slotAfter] [iconAfter]`
  *
  * En mode sélection, le slotBefore est automatiquement remplacé par
- * un indicateur radio (selectSingle) ou checkbox (selectMultiple).
+ * un indicateur radio (select-single) ou checkbox (select-multiple).
  *
  * @param children    - Label principal
  * @param description - Texte secondaire sous le label

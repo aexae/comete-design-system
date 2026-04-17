@@ -97,7 +97,7 @@ const meta = {
     },
     mode: {
       control: "select",
-      options: ["default", "selectSingle", "selectMultiple"],
+      options: ["default", "select-single", "select-multiple"],
     },
   },
   args: {
@@ -202,7 +202,7 @@ export const SingleSelection: Story = {
     <div style={{ width: 360 }}>
       <Menu
         aria-label="Tri"
-        mode="selectSingle"
+        mode="select-single"
         defaultSelectedKeys={new Set(["date"])}
       >
         <MenuItem id="date" iconBefore="CalendarToday">Par date</MenuItem>
@@ -219,7 +219,7 @@ export const MultipleSelection: Story = {
     <div style={{ width: 360 }}>
       <Menu
         aria-label="Filtres"
-        mode="selectMultiple"
+        mode="select-multiple"
         defaultSelectedKeys={new Set(["active", "recent"])}
       >
         <MenuItem id="active">Actifs</MenuItem>
@@ -237,7 +237,7 @@ export const MultipleWithIcons: Story = {
     <div style={{ width: 360 }}>
       <Menu
         aria-label="Colonnes visibles"
-        mode="selectMultiple"
+        mode="select-multiple"
         defaultSelectedKeys={new Set(["name", "date"])}
       >
         <MenuItem id="name" iconBefore="Person" description="Nom complet">Nom</MenuItem>

@@ -195,7 +195,7 @@ export function AvatarGroup({
             <MenuPopover>
               <Menu
                 aria-label="Autres membres"
-                mode={mode === "select" ? "selectMultiple" : "default"}
+                mode={mode === "select" ? "select-multiple" : "default"}
                 selectedKeys={mode === "select" ? selectedSet : undefined}
                 onSelectionChange={mode === "select" ? handleOverflowSelectionChange : undefined}
               >

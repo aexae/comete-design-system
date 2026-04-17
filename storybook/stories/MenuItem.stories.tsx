@@ -110,7 +110,7 @@ function MenuItemStory(args: MenuItemStoryArgs) {
     <div style={{ width: 360 }}>
       <Menu
         aria-label="Menu"
-        mode={args.isSelected ? "selectMultiple" : "default"}
+        mode={args.isSelected ? "select-multiple" : "default"}
         selectedKeys={args.isSelected ? new Set(["item"]) : undefined}
       >
         <MenuItem
@@ -182,7 +182,7 @@ export const AllStates: Story = {
           </span>
           <Menu
             aria-label={label}
-            mode={selected ? "selectMultiple" : "default"}
+            mode={selected ? "select-multiple" : "default"}
             selectedKeys={selected ? new Set(["item"]) : undefined}
           >
             <MenuItem

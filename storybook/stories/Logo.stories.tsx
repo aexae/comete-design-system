@@ -32,7 +32,7 @@ const meta = {
       options: ["brand", "neutral", "inverse"] satisfies LogoAppearance[],
     },
     type: {
-      control: "select",
+      control: { type: "inline-radio" },
       options: ["icon", "logo"] satisfies LogoType[],
     },
     suffix: {
