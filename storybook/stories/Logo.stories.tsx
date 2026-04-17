@@ -2,6 +2,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Logo,
+  type LogoAlign,
   type LogoAppearance,
   type LogoProduct,
   type LogoType,
@@ -34,6 +35,10 @@ const meta = {
       control: "select",
       options: ["icon", "logo"] satisfies LogoType[],
     },
+    align: {
+      control: "select",
+      options: ["default", "inline", "column"] satisfies LogoAlign[],
+    },
     size: {
       // ── Slider, identique à l'Icon Explorer ──────────────────────────
       control: { type: "range", min: 16, max: 96, step: 4 },
@@ -43,6 +48,7 @@ const meta = {
     product: "comete",
     appearance: "brand",
     type: "logo",
+    align: "default",
     size: 32,
   },
   parameters: {
@@ -165,6 +171,66 @@ export const Inverse: Story = {
 /** Taille large. */
 export const Large: Story = {
   args: { size: 48 },
+};
+
+/** Layout column : nom produit sous le wordmark. */
+export const AlignColumn: Story = {
+  name: "Align column",
+  args: { align: "column", product: "ontime", size: 48 },
+  render: () => {
+    const products: LogoProduct[] = ["comete", "ontime", "link", "bi", "academie", "club", "mce"];
+    const appearances: LogoAppearance[] = ["brand", "neutral", "inverse"];
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+        {appearances.map((a) => (
+          <div
+            key={a}
+            style={{
+              background: a === "inverse" ? "var(--background-default-inverted)" : undefined,
+              padding: 24,
+              borderRadius: 8,
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 24,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "monospace",
+                fontSize: 11,
+                width: "100%",
+                color: a === "inverse" ? "var(--text-inverted)" : "var(--text-subtlest)",
+              }}
+            >
+              appearance={a} align=&quot;column&quot;
+            </span>
+            {products.map((p) => (
+              <div
+                key={p}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 8,
+                }}
+              >
+                <Logo product={p} appearance={a} align="column" size={48} />
+                <span
+                  style={{
+                    fontFamily: "monospace",
+                    fontSize: 10,
+                    color: a === "inverse" ? "var(--text-inverted)" : "var(--text-subtlest)",
+                  }}
+                >
+                  {p}
+                </span>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    );
+  },
 };
 
 /** Tous les produits. */

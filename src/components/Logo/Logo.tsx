@@ -16,7 +16,7 @@ export interface LogoProps {
   appearance?: LogoAppearance;
   /** Type d'affichage : icône seule ou logo complet. @default "logo" */
   type?: LogoType;
-  /** Direction du layout pour les logos produit. @default "row" */
+  /** Direction du layout pour les logos produit. @default "default" */
   align?: LogoAlign;
   /** Hauteur en pixels. La largeur s'adapte proportionnellement. @default 32 */
   size?: number;
@@ -49,7 +49,7 @@ export function Logo({
   product = "comete",
   appearance = "brand",
   type = "logo",
-  align = "row",
+  align = "default",
   size = 32,
   "aria-label": ariaLabel,
   className,
