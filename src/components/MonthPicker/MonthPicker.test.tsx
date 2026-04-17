@@ -197,7 +197,7 @@ describe("MonthPicker", () => {
     // Click on a month cell in the calendar grid
     const cells = screen.getAllByRole("gridcell");
     // Click the first cell (January)
-    await user.click(cells[0]);
+    await user.click(cells[0]!);
     expect(onChange).toHaveBeenCalled();
     // Popover should close after selection
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();

@@ -74,7 +74,7 @@ function DrumColumn({
 }: DrumColumnProps): ReactElement {
   const listRef = useRef<HTMLDivElement>(null);
   const isScrollingRef = useRef(false);
-  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // Scroll vers la valeur sélectionnée au montage
   useEffect(() => {
@@ -125,7 +125,8 @@ function DrumColumn({
       } else {
         el.scrollTop = snappedScroll;
       }
-      onSelect(values[clampedIndex]);
+      const snappedValue = values[clampedIndex];
+      if (snappedValue !== undefined) onSelect(snappedValue);
 
       isScrollingRef.current = false;
     }, 80);
