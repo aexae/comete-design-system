@@ -64,8 +64,8 @@ function IconChecked() {
     >
       <rect width="16" height="16" rx="2.5" fill="currentColor" />
       <path
+        className={styles.innerMark}
         d="M6.5 11.5L3.5 8.5L4.75 7.25L6.5 9L11.25 4.25L12.5 5.5L6.5 11.5Z"
-        fill="white"
       />
     </svg>
   );
@@ -81,7 +81,7 @@ function IconIndeterminate() {
       aria-hidden="true"
     >
       <rect width="16" height="16" rx="2.5" fill="currentColor" />
-      <rect x="4" y="7" width="8" height="2" rx="0.5" fill="white" />
+      <rect className={styles.innerMark} x="4" y="7" width="8" height="2" rx="0.5" />
     </svg>
   );
 }
