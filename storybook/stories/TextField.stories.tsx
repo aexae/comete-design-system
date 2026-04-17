@@ -34,11 +34,15 @@ const meta = {
     isRequired: { control: "boolean" },
     placeholder: { control: "text" },
     className: { control: "text" },
+    isClearable: { control: "boolean" },
+    isLoading: { control: "boolean" },
   },
   args: {
     "aria-label": "Champ texte",
     placeholder: "Placeholder",
     onChange: fn(),
+    isClearable: true,
+    isLoading: false,
   },
 } satisfies Meta<typeof TextField>;
 

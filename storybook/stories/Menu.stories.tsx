@@ -95,11 +95,16 @@ const meta = {
       control: "text",
       description: "Titre du heading item (section)",
     },
+    mode: {
+      control: "select",
+      options: ["default", "selectSingle", "selectMultiple"],
+    },
   },
   args: {
     menus: 1,
     hasSeparator: true,
     title: "HEADING ITEM",
+    mode: "default",
   },
 } satisfies Meta<MenuStoryArgs>;
 
