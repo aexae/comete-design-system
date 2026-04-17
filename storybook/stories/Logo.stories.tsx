@@ -572,9 +572,12 @@ function LogoExplorer(): ReactElement {
     []
   );
 
-  const filtered = ALL_PRODUCTS.filter((p) =>
-    p.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = ALL_PRODUCTS.filter((p) => {
+    if (!p.toLowerCase().includes(search.toLowerCase())) return false;
+    // Only "comete" supports format="icon" — hide others when icon is selected
+    if (format === "icon" && p !== "comete") return false;
+    return true;
+  });
 
   function handleCopy(product: LogoProduct): void {
     const formatAttr = format !== "logo" ? ` format="${format}"` : "";
@@ -674,9 +677,9 @@ function LogoExplorer(): ReactElement {
           </div>
         </div>
 
-        {/* Type */}
+        {/* Format (Comète only — other products don't have icon-only mode) */}
         <div>
-          <div style={labelStyle}>Type</div>
+          <div style={labelStyle}>Format</div>
           <div style={{ display: "flex", gap: 4 }}>
             {(["logo", "icon"] satisfies LogoFormat[]).map((t) => (
               <button
