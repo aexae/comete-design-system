@@ -237,44 +237,72 @@ export const WithStructure: Story = {
   render: () => <DrawerStory placement="right" size="wide" />,
 };
 
-/** Deux drawers stackés en mode overlay. */
+/** Drawers stackés en mode overlay — chaque drawer peut en ouvrir un autre. */
 export const StackedOverlay: Story = {
   name: "Stacked (overlay)",
   render: () => {
-    const [first, setFirst] = useState(false);
-    const [second, setSecond] = useState(false);
     return (
       <div style={{ padding: 24 }}>
-        <Button onPress={() => setFirst(true)}>Ouvrir 1er drawer</Button>
-        <Drawer
-          isOpen={first}
-          onOpenChange={setFirst}
-          placement="left"
-          size="medium"
-          aria-label="Premier drawer"
-        >
-          <DrawerHeader onClose={() => setFirst(false)}>Drawer 1</DrawerHeader>
-          <DrawerBody>
-            <p>Premier drawer ouvert.</p>
-            <Button onPress={() => setSecond(true)}>Ouvrir 2ème drawer</Button>
-          </DrawerBody>
-        </Drawer>
-        <Drawer
-          isOpen={second}
-          onOpenChange={setSecond}
-          placement="left"
-          size="narrow"
-          aria-label="Second drawer"
-        >
-          <DrawerHeader onClose={() => setSecond(false)}>Drawer 2</DrawerHeader>
-          <DrawerBody>
-            <p>Second drawer empilé (overlay).</p>
-          </DrawerBody>
-        </Drawer>
+        <RecursiveDrawerTrigger depth={1} placement="left" />
       </div>
     );
   },
 };
+
+function RecursiveDrawerTrigger({
+  depth,
+  placement,
+}: {
+  depth: number;
+  placement: DrawerPlacement;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [childOpen, setChildOpen] = useState(false);
+
+  return (
+    <>
+      <Button onPress={() => setIsOpen(true)}>
+        {depth === 1 ? "Ouvrir le drawer" : `Empiler drawer ${depth}`}
+      </Button>
+      <Drawer
+        isOpen={isOpen}
+        onOpenChange={setIsOpen}
+        placement={placement}
+        size="medium"
+        aria-label={`Drawer ${depth}`}
+      >
+        <DrawerHeader onClose={() => setIsOpen(false)}>
+          Drawer {depth}
+        </DrawerHeader>
+        <DrawerBody>
+          <p>Drawer de niveau {depth}.</p>
+          <div style={{ marginTop: 16 }}>
+            <Button onPress={() => setChildOpen(true)}>
+              Empiler drawer {depth + 1}
+            </Button>
+          </div>
+        </DrawerBody>
+      </Drawer>
+      <Drawer
+        isOpen={childOpen}
+        onOpenChange={setChildOpen}
+        placement={placement}
+        size="medium"
+        aria-label={`Drawer ${depth + 1}`}
+      >
+        <DrawerHeader onClose={() => setChildOpen(false)}>
+          Drawer {depth + 1}
+        </DrawerHeader>
+        <DrawerBody>
+          <p>Drawer de niveau {depth + 1}.</p>
+          <div style={{ marginTop: 16 }}>
+            <RecursiveDrawerTrigger depth={depth + 2} placement={placement} />
+          </div>
+        </DrawerBody>
+      </Drawer>
+    </>
+  );
+}
 
 /** Deux drawers stackés en mode push. */
 export const StackedPush: Story = {

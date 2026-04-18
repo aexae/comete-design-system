@@ -46,10 +46,8 @@ export interface DrawerProps {
 
 const SIZE_PRESETS = new Set<string>(["narrow", "medium", "wide", "extended", "full"]);
 
-/** Pixel offset per stack depth for the overlay card-stack effect. */
-const STACK_OFFSET = 8;
-/** Scale reduction per stack depth. */
-const STACK_SCALE_STEP = 0.02;
+/** Inset (px) applied to the free edges of stacked drawers behind the topmost. */
+const STACK_INSET = 10;
 
 // -----------------------------------------------------------------------
 // Swipe helpers
@@ -331,26 +329,34 @@ function buildPushTransform(
 
 /**
  * Card-stack depth effect for overlay stacking.
- * Drawers behind the topmost are offset toward the edge and scaled down.
+ *
+ * Drawers behind the topmost are slightly inset on their free edges
+ * so that ~10px of their edge peeks out behind the front drawer,
+ * creating a subtle stacked-card look.
  *
  * For a left drawer with depth=1:
- *   → translateX(-12px) scale(0.97) — pushed left, slightly smaller
- * For a right drawer with depth=1:
- *   → translateX(12px) scale(0.97)
+ *   → top/bottom inset by 10px, making it slightly shorter
+ * For a top drawer with depth=1:
+ *   → left/right inset by 10px, making it slightly narrower
+ *
+ * The anchored edge (the one stuck to the viewport edge) does NOT move.
  */
 function buildOverlayDepthStyle(
   placement: DrawerPlacement,
   depth: number,
 ): CSSProperties {
-  const offset = depth * STACK_OFFSET;
-  const scale = 1 - depth * STACK_SCALE_STEP;
-  const isHorizontal = placement === "left" || placement === "right";
-  const sign = placement === "left" || placement === "top" ? -1 : 1;
-  const prop = isHorizontal ? "translateX" : "translateY";
+  const inset = depth * STACK_INSET;
+  const px = `${inset}px`;
 
-  return {
-    transform: `${prop}(${sign * offset}px) scale(${scale})`,
-    transition: "transform 200ms ease-out, scale 200ms ease-out",
-    transformOrigin: placement,
-  };
+  // Inset the free edges (the ones perpendicular to the placement axis)
+  switch (placement) {
+    case "left":
+    case "right":
+      // Horizontal drawer: shrink vertically
+      return { top: px, bottom: px, transition: "top 200ms ease-out, bottom 200ms ease-out" };
+    case "top":
+    case "bottom":
+      // Vertical drawer: shrink horizontally
+      return { left: px, right: px, transition: "left 200ms ease-out, right 200ms ease-out" };
+  }
 }
