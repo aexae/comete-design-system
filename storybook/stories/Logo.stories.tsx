@@ -306,52 +306,44 @@ const ALL_APPEARANCES: LogoAppearance[] = ["brand", "neutral", "inverse"];
 // -----------------------------------------------------------------------
 // Helpers SVG/PNG
 
+const SVG_NS = "http://www.w3.org/2000/svg";
+
 /**
- * Retourne le premier SVG visible (display !== none) à l'intérieur du
- * conteneur. Les logos rendent deux SVGs simultanément (LightBody /
- * DarkBody) dont l'un est masqué via CSS.
+ * Retourne la liste des SVGs visibles (display !== none) à l'intérieur du
+ * conteneur. Les logos peuvent contenir plusieurs SVGs :
+ *   - Light/Dark bodies (dont un seul est affiché à un instant donné)
+ *   - Composition ProductRootName + ProductIcon (+ ProductSuffix ou tagline)
  */
-function findVisibleSvg(container: HTMLElement): SVGSVGElement | null {
+function findVisibleSvgs(container: HTMLElement): SVGSVGElement[] {
   const svgs = Array.from(container.querySelectorAll<SVGSVGElement>("svg"));
-  return svgs.find((svg) => getComputedStyle(svg).display !== "none") ?? null;
+  return svgs.filter((svg) => getComputedStyle(svg).display !== "none");
 }
 
 /**
- * Clone le SVG visible et résout les CSS custom properties (fill, stop-color)
- * en valeurs concrètes via getComputedStyle, afin que le fichier exporté
- * soit autonome (sans dépendance aux tokens CSS de la page).
+ * Clone un SVG et résout les CSS custom properties (fill, stop-color,
+ * stop-opacity) en valeurs concrètes via getComputedStyle, afin que le
+ * SVG exporté soit autonome (sans dépendance aux tokens CSS de la page).
  */
-function buildExportSvg(container: HTMLElement): SVGSVGElement | null {
-  const original = findVisibleSvg(container);
-  if (!original) return null;
-
+function cloneAndResolveVars(original: SVGSVGElement): SVGSVGElement {
   const clone = original.cloneNode(true) as SVGSVGElement;
+  clone.setAttribute("xmlns", SVG_NS);
 
-  // Assure que l'attribut xmlns est présent pour un SVG standalone
-  clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-
-  // Résout les CSS vars sur chaque élément qui a un attribut style
   const origEls = Array.from(original.querySelectorAll<SVGElement>("[style]"));
   const cloneEls = Array.from(clone.querySelectorAll<SVGElement>("[style]"));
 
   for (let i = 0; i < origEls.length; i++) {
     const origEl = origEls[i];
     const cloneEl = cloneEls[i];
+    if (!origEl || !cloneEl) continue;
     const cs = getComputedStyle(origEl);
 
-    // fill (paths)
     const fill = cs.fill;
-    if (fill && fill !== "") {
-      cloneEl.style.fill = fill;
-    }
+    if (fill && fill !== "") cloneEl.style.fill = fill;
 
-    // stop-color (gradient stops)
     const stopColor = cs.getPropertyValue("stop-color");
     if (stopColor && stopColor !== "") {
       cloneEl.style.setProperty("stop-color", stopColor);
     }
-
-    // stop-opacity (gradient stops)
     const stopOpacity = cs.getPropertyValue("stop-opacity");
     if (stopOpacity && stopOpacity !== "") {
       cloneEl.style.setProperty("stop-opacity", stopOpacity);
@@ -359,6 +351,90 @@ function buildExportSvg(container: HTMLElement): SVGSVGElement | null {
   }
 
   return clone;
+}
+
+/**
+ * Compose un ou plusieurs SVG enfants en un SVG standalone unique en
+ * utilisant leur position/taille réelles dans le DOM. Pour chaque enfant,
+ * on applique un `<g transform>` qui traduit et met à l'échelle son
+ * viewBox interne vers la position absolue dans le wrapper.
+ *
+ * Cette approche fonctionne pour les logos refactorés qui composent
+ * plusieurs SVGs via inline-flex + position:absolute, et reste correcte
+ * pour les cas single-SVG (MyComete, icon-only).
+ */
+function buildExportSvg(container: HTMLElement): SVGSVGElement | null {
+  const svgs = findVisibleSvgs(container);
+  if (svgs.length === 0) return null;
+
+  // Cas simple : un seul SVG — on clone tel quel.
+  if (svgs.length === 1) {
+    const only = svgs[0];
+    if (!only) return null;
+    return cloneAndResolveVars(only);
+  }
+
+  // Cas composé : on mesure chaque SVG par rapport au conteneur et on
+  // construit un SVG englobant avec des <g transform> par enfant.
+  const containerRect = container.getBoundingClientRect();
+  // On se base sur le plus grand rectangle englobant tous les SVG visibles
+  // (et non sur le conteneur lui-même : le <span> wrapper peut avoir du
+  // padding/marge qui ne reflète pas l'encombrement réel des SVGs).
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (const svg of svgs) {
+    const r = svg.getBoundingClientRect();
+    minX = Math.min(minX, r.left - containerRect.left);
+    minY = Math.min(minY, r.top - containerRect.top);
+    maxX = Math.max(maxX, r.right - containerRect.left);
+    maxY = Math.max(maxY, r.bottom - containerRect.top);
+  }
+  const width = maxX - minX;
+  const height = maxY - minY;
+  if (!Number.isFinite(width) || !Number.isFinite(height)) return null;
+
+  const outer = document.createElementNS(SVG_NS, "svg");
+  outer.setAttribute("xmlns", SVG_NS);
+  outer.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  outer.setAttribute("width", String(width));
+  outer.setAttribute("height", String(height));
+  outer.setAttribute("fill", "none");
+
+  for (const svg of svgs) {
+    const rect = svg.getBoundingClientRect();
+    const offsetX = rect.left - containerRect.left - minX;
+    const offsetY = rect.top - containerRect.top - minY;
+    const renderW = rect.width;
+    const renderH = rect.height;
+    const vbAttr = svg.getAttribute("viewBox") ?? "0 0 1 1";
+    const vbParts = vbAttr.split(/\s+/).map(Number);
+    const vbX = vbParts[0] ?? 0;
+    const vbY = vbParts[1] ?? 0;
+    const vbW = vbParts[2] ?? 1;
+    const vbH = vbParts[3] ?? 1;
+    const sx = vbW === 0 ? 1 : renderW / vbW;
+    const sy = vbH === 0 ? 1 : renderH / vbH;
+
+    const g = document.createElementNS(SVG_NS, "g");
+    // translate(offset) scale(sx sy) translate(-vbX -vbY)
+    // → place le coin (vbX,vbY) du viewBox au point (offsetX, offsetY).
+    g.setAttribute(
+      "transform",
+      `translate(${offsetX} ${offsetY}) scale(${sx} ${sy}) translate(${-vbX} ${-vbY})`,
+    );
+
+    const resolved = cloneAndResolveVars(svg);
+    // Transvase les enfants du <svg> cloné dans le <g> (on ne garde pas
+    // le nœud <svg> intérieur pour rester sur un SVG 1.1 valide).
+    for (const child of Array.from(resolved.childNodes)) {
+      g.appendChild(child);
+    }
+    outer.appendChild(g);
+  }
+
+  return outer;
 }
 
 function buildSvgBlob(container: HTMLElement): Blob | null {
