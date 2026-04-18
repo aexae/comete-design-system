@@ -1,0 +1,102 @@
+/* TopNav — barre de navigation principale responsive */
+
+/* Base */
+.topNav {
+  display: flex;
+  align-items: center;
+  gap: var(--space100);
+  min-height: 56px;
+  background: var(--background-surface-default);
+  padding: var(--space100);
+}
+
+/* Desktop & tablet: border bottom */
+@media (min-width: 600px) {
+  .topNav {
+    border-bottom: 1px solid var(--border-default);
+    padding: var(--space100) var(--space200);
+  }
+}
+
+.start {
+  display: flex;
+  align-items: center;
+  gap: var(--space100);
+}
+
+.end {
+  display: flex;
+  align-items: center;
+  gap: var(--space100);
+  margin-left: auto;
+}
+
+/* Back button — only visible on mobile */
+.backButton {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space050);
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: var(--radius0375);
+  min-width: 32px;
+  min-height: 32px;
+  color: var(--icon-default);
+}
+
+@media (max-width: 599px) {
+  .backButton {
+    display: flex;
+  }
+}
+
+/* Logo — hidden on mobile */
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 599px) {
+  .logo {
+    display: none;
+  }
+}
+
+/* App name — hidden on mobile */
+.appName {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-s);
+  color: var(--text-default);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  white-space: nowrap;
+}
+
+@media (max-width: 599px) {
+  .appName {
+    display: none;
+  }
+}
+
+/* Title — only on mobile */
+.title {
+  display: none;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-m);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui-m);
+  color: var(--text-default);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 599px) {
+  .title {
+    display: block;
+  }
+}
