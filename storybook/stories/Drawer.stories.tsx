@@ -72,7 +72,7 @@ function DrawerStory({
   swipeable = false,
 }: {
   placement?: DrawerPlacement;
-  size?: DrawerSize | string;
+  size?: DrawerSize | (string & {});
   stacking?: DrawerStacking;
   swipeable?: boolean;
 }) {
@@ -260,7 +260,7 @@ function StackableDrawer({
 }: {
   depth: number;
   placement: DrawerPlacement;
-  size: DrawerSize | string;
+  size: DrawerSize | (string & {});
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -313,7 +313,7 @@ function PushableDrawer({
 }: {
   depth: number;
   placement: DrawerPlacement;
-  size: DrawerSize | string;
+  size: DrawerSize | (string & {});
 }) {
   const [isOpen, setIsOpen] = useState(false);
   // First drawer uses its own size; subsequent pushers use "narrow" to make room
