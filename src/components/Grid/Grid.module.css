@@ -1,0 +1,92 @@
+/* ==========================================================================
+   Grid — Comète Design System
+   CSS Grid responsive avec breakpoints mobile / tablet / desktop.
+   Les variables `--_grid-cols-{bp}` / `--_col-span-{bp}` / `--_col-start-{bp}`
+   sont injectées par le composant. Cascade : chaque breakpoint hérite
+   du précédent si non défini.
+   ========================================================================== */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--_grid-cols-mobile, 12), minmax(0, 1fr));
+  row-gap: var(--_grid-row-gap, 0);
+  column-gap: var(--_grid-column-gap, 0);
+  min-width: 0;
+}
+
+@media (min-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(
+      var(--_grid-cols-tablet, var(--_grid-cols-mobile, 12)),
+      minmax(0, 1fr)
+    );
+  }
+}
+
+@media (min-width: 1200px) {
+  .grid {
+    grid-template-columns: repeat(
+      var(
+        --_grid-cols-desktop,
+        var(--_grid-cols-tablet, var(--_grid-cols-mobile, 12))
+      ),
+      minmax(0, 1fr)
+    );
+  }
+}
+
+/* ==========================================================================
+   Grid.Col — span et start responsive
+   ========================================================================== */
+
+.col {
+  min-width: 0;
+  grid-column: span var(--_col-span-mobile, 1) / span var(--_col-span-mobile, 1);
+}
+
+.col.hasStart {
+  grid-column-start: var(--_col-start-mobile, auto);
+  grid-column-end: span var(--_col-span-mobile, 1);
+}
+
+@media (min-width: 600px) {
+  .col {
+    grid-column:
+      span var(--_col-span-tablet, var(--_col-span-mobile, 1))
+      / span var(--_col-span-tablet, var(--_col-span-mobile, 1));
+  }
+  .col.hasStart {
+    grid-column-start: var(
+      --_col-start-tablet,
+      var(--_col-start-mobile, auto)
+    );
+    grid-column-end: span var(--_col-span-tablet, var(--_col-span-mobile, 1));
+  }
+}
+
+@media (min-width: 1200px) {
+  .col {
+    grid-column:
+      span
+      var(
+        --_col-span-desktop,
+        var(--_col-span-tablet, var(--_col-span-mobile, 1))
+      )
+      / span
+      var(
+        --_col-span-desktop,
+        var(--_col-span-tablet, var(--_col-span-mobile, 1))
+      );
+  }
+  .col.hasStart {
+    grid-column-start: var(
+      --_col-start-desktop,
+      var(--_col-start-tablet, var(--_col-start-mobile, auto))
+    );
+    grid-column-end: span
+      var(
+        --_col-span-desktop,
+        var(--_col-span-tablet, var(--_col-span-mobile, 1))
+      );
+  }
+}
