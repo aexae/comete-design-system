@@ -24,6 +24,7 @@ interface MenuStoryArgs {
   menus: 1 | 2 | 3;
   hasSeparator: boolean;
   title: string;
+  mode: "default" | "select-single" | "select-multiple";
 }
 
 // -----------------------------------------------------------------------
