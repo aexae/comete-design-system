@@ -196,14 +196,18 @@ export function Drawer({
     drawerRef.current.style.transform = "";
   }, [swipeable, placement, onOpenChange]);
 
+  // z-index increases per stack position so newer drawers appear on top
+  const stackZIndex = myIndex >= 0 ? myIndex : 0;
+
   return (
     <AriaModalOverlay
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       isDismissable
       className={showBlanket ? styles.overlay : undefined}
+      style={showBlanket ? undefined : { background: "none" }}
     >
-      <AriaModal className={styles.modal}>
+      <AriaModal className={styles.modal} style={{ zIndex: `calc(var(--z-index-modal) + ${stackZIndex})` }}>
         <AriaDialog
           ref={drawerRef}
           className={drawerClasses}

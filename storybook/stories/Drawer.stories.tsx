@@ -262,7 +262,7 @@ export const StackedOverlay: Story = {
         <Drawer
           isOpen={second}
           onOpenChange={setSecond}
-          placement="right"
+          placement="left"
           size="narrow"
           aria-label="Second drawer"
         >
