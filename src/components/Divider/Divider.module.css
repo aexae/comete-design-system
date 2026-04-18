@@ -1,0 +1,29 @@
+/* ==========================================================================
+   Divider — Comète Design System
+   Séparateur visuel horizontal ou vertical.
+   Aucune valeur hardcodée : tokens uniquement.
+   ========================================================================== */
+
+.divider {
+  background-color: var(--border-subtle);
+  border: none;
+  margin: 0;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Horizontal : ligne 1px sur toute la largeur disponible,
+   avec espacement vertical de 4px de part et d'autre (spec Figma). */
+.horizontal {
+  block-size: var(--size0125);
+  inline-size: 100%;
+  margin-block: var(--size050);
+}
+
+/* Vertical : ligne 1px sur toute la hauteur disponible,
+   avec espacement horizontal de 4px de part et d'autre (spec Figma). */
+.vertical {
+  inline-size: var(--size0125);
+  block-size: 100%;
+  margin-inline: var(--size050);
+}
