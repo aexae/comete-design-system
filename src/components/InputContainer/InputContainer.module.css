@@ -24,14 +24,14 @@
    ========================================================================== */
 
 .bordered {
-  background-color: var(--background-surface-elevation-raise-default);
+  background-color: var(--background-default-default);
   border: 2px solid var(--border-default);
   border-radius: var(--radius050);
   padding: var(--space100);
 }
 
 .bordered:not(:focus-within):not(.disabled):hover {
-  background-color: var(--background-surface-elevation-sunken-default);
+  background-color: var(--background-surface-elevation-sunken-hovered);
   border-color: var(--border-bold);
 }
 
