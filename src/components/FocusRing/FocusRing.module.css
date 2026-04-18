@@ -11,9 +11,10 @@
   /* Le border-radius est injecté via style inline pour suivre le rayon du parent */
 }
 
-/* outside : anneau 2px en dehors du composant ciblé */
+/* outside : anneau 2px en dehors du composant ciblé.
+   L'écart parent→anneau est piloté par --focus-ring-offset (défaut 4px). */
 .outside {
-  inset: calc(-1 * var(--space050));
+  inset: calc(-1 * var(--focus-ring-offset, var(--size050)));
   box-shadow: 0 0 0 2px var(--border-focused);
 }
 

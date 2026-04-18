@@ -134,7 +134,7 @@ export function Checkbox({
         <>
           <span className={styles.indicator}>
             <span className={styles.iconWrapper}>
-              {isFocusVisible && <FocusRing borderRadius={2} position="inside" />}
+              {isFocusVisible && <FocusRing borderRadius={3} position="outside" offset={1} />}
               {isIndeterminate ? (
                 <IconIndeterminate />
               ) : isSelected ? (

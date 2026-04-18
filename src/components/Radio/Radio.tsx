@@ -89,7 +89,7 @@ export function Radio({
           <span className={styles.indicator}>
             <span className={styles.iconWrapper}>
               {isFocusVisible && (
-                <FocusRing borderRadius="round" position="inside" />
+                <FocusRing borderRadius="round" position="outside" offset={1} />
               )}
             </span>
           </span>
