@@ -290,47 +290,62 @@ function StackableDrawer({
   );
 }
 
-/** Drawers stackés en mode push. */
+/** Drawers stackés en mode push — chaque drawer peut en empiler un autre qui pousse tous les précédents. */
 export const StackedPush: Story = {
   name: "Stacked (push)",
   render: (args) => {
-    const [first, setFirst] = useState(false);
-    const [second, setSecond] = useState(false);
-    const p = args.placement ?? "left";
-    const s = args.size ?? "medium";
     return (
       <div style={{ padding: 24 }}>
-        <Button onPress={() => setFirst(true)}>Ouvrir 1er drawer</Button>
-        <Drawer
-          isOpen={first}
-          onOpenChange={setFirst}
-          placement={p}
-          size={s}
-          aria-label="Premier drawer"
-        >
-          <DrawerHeader onClose={() => setFirst(false)}>Drawer 1</DrawerHeader>
-          <DrawerBody>
-            <p>Premier drawer.</p>
-            <Button onPress={() => setSecond(true)}>Ouvrir 2ème (push)</Button>
-          </DrawerBody>
-        </Drawer>
-        <Drawer
-          isOpen={second}
-          onOpenChange={setSecond}
-          placement={p}
-          size="narrow"
-          stacking="push"
-          aria-label="Second drawer"
-        >
-          <DrawerHeader onClose={() => setSecond(false)}>Drawer 2 (push)</DrawerHeader>
-          <DrawerBody>
-            <p>Ce drawer pousse le premier.</p>
-          </DrawerBody>
-        </Drawer>
+        <PushableDrawer
+          depth={1}
+          placement={args.placement ?? "left"}
+          size={args.size ?? "medium"}
+        />
       </div>
     );
   },
 };
+
+function PushableDrawer({
+  depth,
+  placement,
+  size,
+}: {
+  depth: number;
+  placement: DrawerPlacement;
+  size: DrawerSize | string;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  // First drawer uses its own size; subsequent pushers use "narrow" to make room
+  const thisSize = depth === 1 ? size : "narrow";
+  const stacking = depth === 1 ? "overlay" : "push";
+
+  return (
+    <>
+      <Button onPress={() => setIsOpen(true)}>
+        {depth === 1 ? "Ouvrir le drawer" : `Empiler drawer ${depth} (push)`}
+      </Button>
+      <Drawer
+        isOpen={isOpen}
+        onOpenChange={setIsOpen}
+        placement={placement}
+        size={thisSize}
+        stacking={stacking}
+        aria-label={`Drawer ${depth}`}
+      >
+        <DrawerHeader onClose={() => setIsOpen(false)}>
+          Drawer {depth}{depth > 1 ? " (push)" : ""}
+        </DrawerHeader>
+        <DrawerBody>
+          <p>Drawer de niveau {depth}.</p>
+          <div style={{ marginTop: 16 }}>
+            <PushableDrawer depth={depth + 1} placement={placement} size={size} />
+          </div>
+        </DrawerBody>
+      </Drawer>
+    </>
+  );
+}
 
 /** Swipeable (mobile). */
 export const Swipeable: Story = {

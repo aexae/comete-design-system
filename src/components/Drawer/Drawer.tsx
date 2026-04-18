@@ -49,6 +49,9 @@ const SIZE_PRESETS = new Set<string>(["narrow", "medium", "wide", "extended", "f
 /** Inset (px) applied to the free edges of stacked drawers behind the topmost. */
 const STACK_INSET = 10;
 
+/** Brightness reduction per stack depth (0.06 = 6% darker per level behind). */
+const STACK_SHADE = 0.06;
+
 // -----------------------------------------------------------------------
 // Swipe helpers
 
@@ -112,22 +115,34 @@ export function Drawer({
 
   // Stacking: compute visual offset for this drawer
   const myIndex = stack.findIndex((e) => e.id === uid);
+
+  // Push mode: every push-stacked drawer above me contributes its size to my offset.
+  // We sum them so a chain of pushes stacks side-by-side correctly.
+  const pushersAboveMe = myIndex >= 0
+    ? stack.slice(myIndex + 1).filter((e) => e.stacking === "push")
+    : [];
+  const hasPusher = pushersAboveMe.length > 0;
+
+  const pushStyle: CSSProperties | undefined = hasPusher
+    ? buildPushStyle(placement, pushersAboveMe.map((p) => p.size))
+    : undefined;
+
+  // Overlay mode: card-stack effect — drawers behind the topmost are shorter
+  // (inset on perpendicular edges) and extend past it on the free axis so a
+  // strip peeks out from behind.
   const drawersAboveMe = myIndex >= 0 ? stack.length - 1 - myIndex : 0;
-
-  // Push mode: offset if a newer drawer pushes this one
-  const pusher = myIndex >= 0 && myIndex < stack.length - 1
-    ? stack.find((e, i) => i > myIndex && e.stacking === "push")
-    : undefined;
-
-  const pushStyle: CSSProperties | undefined = pusher
-    ? buildPushTransform(placement, pusher.size)
-    : undefined;
-
-  // Overlay mode: card-stack effect — drawers behind the topmost are
-  // inset on their free edges so a subtle strip peeks out.
-  const depthInset = drawersAboveMe > 0 && !pusher
+  const depthInset = !hasPusher && drawersAboveMe > 0
     ? drawersAboveMe * STACK_INSET
     : 0;
+  const depthShade = !hasPusher && drawersAboveMe > 0
+    ? drawersAboveMe * STACK_SHADE
+    : 0;
+
+  // Push chain: drawer is either being pushed or is itself pushing others.
+  // We remove the border-radius so adjacent push drawers look like a single
+  // seamless multi-pane surface.
+  const isPushingSomething = stacking === "push" && myIndex > 0;
+  const isInPushChain = hasPusher || isPushingSomething;
 
   // Size: preset class or custom CSS value
   const isPreset = SIZE_PRESETS.has(size);
@@ -140,6 +155,7 @@ export function Drawer({
     styles.drawer,
     styles[placement],
     sizeClass,
+    isInPushChain ? styles.inPushChain : undefined,
     className,
   ].filter(Boolean).join(" ");
 
@@ -212,6 +228,7 @@ export function Drawer({
             ...customSizeStyle,
             ...pushStyle,
             "--_depth-inset": depthInset > 0 ? `${depthInset}px` : undefined,
+            "--_depth-shade": depthShade > 0 ? depthShade : undefined,
           } as CSSProperties}
           aria-label={ariaLabel}
           onTouchStart={handleTouchStart}
@@ -314,19 +331,36 @@ function buildCustomSizeStyle(
   size: string,
 ): CSSProperties {
   const isHorizontal = placement === "left" || placement === "right";
-  return isHorizontal ? { width: size } : { height: size };
+  const value = `calc(${size} + var(--_depth-inset))`;
+  return isHorizontal ? { width: value } : { height: value };
 }
 
-function buildPushTransform(
+/** Preset name → CSS length. % values resolve against the viewport for fixed-positioned drawers. */
+const PRESET_TO_CSS: Record<DrawerSize, string> = {
+  narrow: "30%",
+  medium: "50%",
+  wide: "75%",
+  extended: "90%",
+  full: "100%",
+};
+
+function resolveSizeValue(size: string): string {
+  return (PRESET_TO_CSS as Record<string, string>)[size] ?? size;
+}
+
+/**
+ * Push mode: the previous drawer is pushed aside by overriding its anchor
+ * edge (left/right/top/bottom) with the pusher's resolved size. Using
+ * position (not transform) because translateX(%) is relative to the element's
+ * own size, whereas position % is relative to the viewport (what we want).
+ */
+function buildPushStyle(
   placement: DrawerPlacement,
-  pusherSize: string,
+  pusherSizes: string[],
 ): CSSProperties {
-  const sign = placement === "left" || placement === "top" ? "" : "-";
-  const isHorizontal = placement === "left" || placement === "right";
-  const prop = isHorizontal ? "translateX" : "translateY";
-  return {
-    transform: `${prop}(${sign}${pusherSize})`,
-    transition: "transform 200ms ease-out",
-  };
+  const values = pusherSizes.map(resolveSizeValue);
+  const offset = values.length === 1 ? values[0] : `calc(${values.join(" + ")})`;
+  // Shift the anchored edge inward by the cumulative pusher size(s)
+  return { [placement]: offset } as CSSProperties;
 }
 

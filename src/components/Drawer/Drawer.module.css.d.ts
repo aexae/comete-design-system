@@ -7,6 +7,7 @@ declare const styles: {
   readonly "footer": string;
   readonly "full": string;
   readonly "header": string;
+  readonly "inPushChain": string;
   readonly "left": string;
   readonly "medium": string;
   readonly "modal": string;

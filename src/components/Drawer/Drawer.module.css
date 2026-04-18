@@ -55,8 +55,9 @@
 
 .drawer {
   --badge-cutout-color: var(--background-surface-elevation-overlay-default);
-  /* Depth inset — set by the component for stacked drawers */
+  /* Depth inset & shade — set by the component for stacked drawers */
   --_depth-inset: 0px;
+  --_depth-shade: 0;
   position: fixed;
   background-color: var(--background-surface-elevation-overlay-default);
   box-shadow: var(--elevation-xlarge);
@@ -64,7 +65,20 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  isolation: isolate;
   transition: top 200ms ease-out, bottom 200ms ease-out, left 200ms ease-out, right 200ms ease-out;
+}
+
+/* Depth shade overlay — darkens drawers that sit behind the topmost */
+.drawer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgb(0 0 0 / var(--_depth-shade));
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  transition: background-color 200ms ease-out;
 }
 
 /* ==========================================================================
@@ -99,23 +113,31 @@
   border-radius: var(--radius050) var(--radius050) 0 0;
 }
 
+/* Push chain: adjacent side-by-side drawers — radius removed so they look
+   like a single seamless multi-pane surface. */
+.drawer.inPushChain {
+  border-radius: 0;
+}
+
 /* ==========================================================================
-   Size presets — width for left/right, height for top/bottom
+   Size presets — width for left/right, height for top/bottom.
+   The `--_depth-inset` is subtracted so stacked drawers are smaller than
+   those behind them (card-stack peek effect).
    ========================================================================== */
 
 /* Horizontal (left/right) */
-.left.narrow, .right.narrow { width: 30%; }
-.left.medium, .right.medium { width: 50%; }
-.left.wide, .right.wide { width: 75%; }
-.left.extended, .right.extended { width: 90%; }
-.left.full, .right.full { width: 100%; border-radius: 0; }
+.left.narrow, .right.narrow     { width: calc(30% + var(--_depth-inset)); }
+.left.medium, .right.medium     { width: calc(50% + var(--_depth-inset)); }
+.left.wide, .right.wide         { width: calc(75% + var(--_depth-inset)); }
+.left.extended, .right.extended { width: calc(90% + var(--_depth-inset)); }
+.left.full, .right.full         { width: 100%; border-radius: 0; }
 
 /* Vertical (top/bottom) */
-.top.narrow, .bottom.narrow { height: 30%; }
-.top.medium, .bottom.medium { height: 50%; }
-.top.wide, .bottom.wide { height: 75%; }
-.top.extended, .bottom.extended { height: 90%; }
-.top.full, .bottom.full { height: 100%; border-radius: 0; }
+.top.narrow, .bottom.narrow     { height: calc(30% + var(--_depth-inset)); }
+.top.medium, .bottom.medium     { height: calc(50% + var(--_depth-inset)); }
+.top.wide, .bottom.wide         { height: calc(75% + var(--_depth-inset)); }
+.top.extended, .bottom.extended { height: calc(90% + var(--_depth-inset)); }
+.top.full, .bottom.full         { height: 100%; border-radius: 0; }
 
 /* ==========================================================================
    Slide animations — per placement
