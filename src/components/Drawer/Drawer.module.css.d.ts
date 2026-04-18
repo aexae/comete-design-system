@@ -14,6 +14,7 @@ declare const styles: {
   readonly "overlay": string;
   readonly "overlay-fade-in": string;
   readonly "overlay-fade-out": string;
+  readonly "overlayTransparent": string;
   readonly "right": string;
   readonly "slide-in-bottom": string;
   readonly "slide-in-left": string;

@@ -23,6 +23,13 @@
   }
 }
 
+/* Transparent overlay for stacked drawers (no blanket, but still captures events) */
+.overlayTransparent {
+  position: fixed;
+  inset: 0;
+  background: none;
+}
+
 @keyframes overlay-fade-in {
   from { opacity: 0; }
   to { opacity: 1; }

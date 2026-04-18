@@ -47,9 +47,9 @@ export interface DrawerProps {
 const SIZE_PRESETS = new Set<string>(["narrow", "medium", "wide", "extended", "full"]);
 
 /** Pixel offset per stack depth for the overlay card-stack effect. */
-const STACK_OFFSET = 12;
+const STACK_OFFSET = 8;
 /** Scale reduction per stack depth. */
-const STACK_SCALE_STEP = 0.03;
+const STACK_SCALE_STEP = 0.02;
 
 // -----------------------------------------------------------------------
 // Swipe helpers
@@ -204,10 +204,10 @@ export function Drawer({
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       isDismissable
-      className={showBlanket ? styles.overlay : undefined}
-      style={showBlanket ? undefined : { background: "none" }}
+      className={showBlanket ? styles.overlay : styles.overlayTransparent}
+      style={{ zIndex: `calc(var(--z-index-overlay) + ${stackZIndex * 2})` }}
     >
-      <AriaModal className={styles.modal} style={{ zIndex: `calc(var(--z-index-modal) + ${stackZIndex})` }}>
+      <AriaModal className={styles.modal} style={{ zIndex: `calc(var(--z-index-modal) + ${stackZIndex * 2})` }}>
         <AriaDialog
           ref={drawerRef}
           className={drawerClasses}
