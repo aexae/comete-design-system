@@ -1,12 +1,9 @@
 export { Text } from "./Text";
 export type {
   TextProps,
-  TextType,
-  TextVariant,
-  HeroVariant,
-  HeadingVariant,
-  BodyVariant,
-  CodeVariant,
+  TextSize,
+  TextWeight,
   TextColor,
   TextAlign,
+  TextAs,
 } from "./Text";

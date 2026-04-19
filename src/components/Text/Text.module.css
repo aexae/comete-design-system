@@ -1,4 +1,4 @@
-/* Text.module.css — Couleurs, alignement et décoration pour le composant Text */
+/* Text.module.css — Styles propres au composant Text */
 
 .text {
   margin: 0;
@@ -8,78 +8,40 @@
  * Color
  * --------------------------------------------------------------------- */
 
-.color-default {
-  color: var(--text-default);
-}
-
-.color-subtle {
-  color: var(--text-subtle);
-}
-
-.color-subtlest {
-  color: var(--text-subtlest);
-}
-
-.color-disabled {
-  color: var(--text-disabled);
-}
-
-.color-inverted {
-  color: var(--text-inverted);
-}
-
-.color-brand {
-  color: var(--text-brand);
-}
-
-.color-accent {
-  color: var(--text-accent);
-}
-
-.color-success {
-  color: var(--text-success);
-}
-
-.color-information {
-  color: var(--text-information);
-}
-
-.color-warning {
-  color: var(--text-warning);
-}
-
-.color-critical {
-  color: var(--text-critical);
-}
-
-.color-link {
-  color: var(--text-link-default);
-}
+.color-default { color: var(--text-default); }
+.color-subtle { color: var(--text-subtle); }
+.color-subtlest { color: var(--text-subtlest); }
+.color-disabled { color: var(--text-disabled); }
+.color-inverted { color: var(--text-inverted); }
+.color-brand { color: var(--text-brand); }
+.color-accent { color: var(--text-accent); }
+.color-success { color: var(--text-success); }
+.color-information { color: var(--text-information); }
+.color-warning { color: var(--text-warning); }
+.color-critical { color: var(--text-critical); }
+.color-link { color: var(--text-link-default); }
 
 /* -----------------------------------------------------------------------
  * Align
  * --------------------------------------------------------------------- */
 
-.align-left {
-  text-align: left;
-}
-
-.align-center {
-  text-align: center;
-}
-
-.align-right {
-  text-align: right;
-}
+.align-start { text-align: start; }
+.align-center { text-align: center; }
+.align-end { text-align: end; }
 
 /* -----------------------------------------------------------------------
  * Decoration
  * --------------------------------------------------------------------- */
 
-.underline {
-  text-decoration: underline;
-}
+.underline { text-decoration: underline; }
+.italic { font-style: italic; }
 
-.italic {
-  font-style: italic;
+/* -----------------------------------------------------------------------
+ * Truncation (maxLines)
+ * --------------------------------------------------------------------- */
+
+.truncate {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
