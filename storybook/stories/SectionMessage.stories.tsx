@@ -29,7 +29,7 @@ const meta = {
   component: SectionMessage,
   tags: ["autodocs"],
   parameters: {
-    layout: "padded",
+    layout: "centered",
     design: { type: "figma", url: figmaUrl("2867-18456") },
   },
   argTypes: {

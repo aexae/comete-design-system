@@ -30,6 +30,24 @@ const config: StorybookConfig = {
         },
         dedupe: ["react", "react-dom"],
       },
+      optimizeDeps: {
+        exclude: ["@naxit/comete-design-system"],
+        include: [
+          "react-aria-components",
+          "@naxit/comete-icons",
+          "@naxit/comete-logos",
+          "@naxit/comete-illustrations",
+        ],
+      },
+      server: {
+        watch: {
+          usePolling: true,
+          interval: 500,
+        },
+        fs: {
+          allow: [resolve(__dirname, "../.."), resolve(__dirname, "..")],
+        },
+      },
     });
   },
 };
