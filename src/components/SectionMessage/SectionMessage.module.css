@@ -1,0 +1,82 @@
+.sectionMessage {
+  display: flex;
+  gap: var(--space200);
+  align-items: flex-start;
+  padding: var(--space200);
+  border-radius: var(--radius050);
+  width: 100%;
+}
+
+/* Icon ----------------------------------------------------------------- */
+
+.icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Container ------------------------------------------------------------- */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space100);
+  align-items: flex-start;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Title ----------------------------------------------------------------- */
+
+.title {
+  font-size: var(--font-size-ui-s);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui-s);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--text-primary);
+  width: 100%;
+}
+
+/* Content --------------------------------------------------------------- */
+
+.content {
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  color: var(--text-primary);
+  width: 100%;
+}
+
+/* Actions --------------------------------------------------------------- */
+
+.actions {
+  display: flex;
+  gap: var(--space150);
+  align-items: center;
+  width: 100%;
+}
+
+/* Appearances ----------------------------------------------------------- */
+
+.information {
+  background-color: var(--background-information-subtlest-default);
+}
+
+.success {
+  background-color: var(--background-success-subtlest-default);
+}
+
+.warning {
+  background-color: var(--background-warning-subtlest-default);
+}
+
+.critical {
+  background-color: var(--background-critical-subtlest-default);
+}
+
+.discovery {
+  background-color: var(--background-accent-subtlest-default);
+}
