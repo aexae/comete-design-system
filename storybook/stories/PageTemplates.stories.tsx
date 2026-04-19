@@ -124,10 +124,10 @@ function CC({ children, padding = "var(--space200)" }: { children: React.ReactNo
 function FilterPanel({ showHeader = true }: { showHeader?: boolean }) {
   return (
     <Stack gap="200">
-      {showHeader && <><Text variant="heading-s" as="span">Filtres</Text><Divider /></>}
+      {showHeader && <><Text type="heading" variant="s" as="span">Filtres</Text><Divider /></>}
       {["Société / Agence", "Secteur", "Habilitations", "Formalités", "Équipements"].map((label) => (
         <Stack key={label} gap="075">
-          <Text variant="label" as="span" color="subtlest">{label.toUpperCase()}</Text>
+          <Text type="body" variant="label" as="span" color="subtlest">{label.toUpperCase()}</Text>
           <div className={css["placeholder"]} style={{ height: 36 }}>Tous</div>
         </Stack>
       ))}
@@ -145,16 +145,16 @@ function AgentCard({ initials, name, contrat, heures, delta, status }: {
         <Stack gap="100">
           <Cluster gap="100" align="center">
             <Avatar size="small" initials={initials} />
-            <Text variant="heading-xs" as="span">{name}</Text>
+            <Text type="heading" variant="xs" as="span">{name}</Text>
           </Cluster>
           {(contrat || heures || delta) && (
             <div className={css["siteStats"]}>
-              {contrat && <Stack gap="0"><Text variant="body-s" as="span" color="subtlest">Contrat</Text><Text variant="heading-xs" as="span">{contrat}</Text></Stack>}
-              {heures && <Stack gap="0"><Text variant="body-s" as="span" color="subtlest">Heures</Text><Text variant="heading-xs" as="span">{heures}</Text></Stack>}
+              {contrat && <Stack gap="0"><Text type="body" variant="s" as="span" color="subtlest">Contrat</Text><Text type="heading" variant="xs" as="span">{contrat}</Text></Stack>}
+              {heures && <Stack gap="0"><Text type="body" variant="s" as="span" color="subtlest">Heures</Text><Text type="heading" variant="xs" as="span">{heures}</Text></Stack>}
               {delta && (
                 <Stack gap="0">
-                  <Text variant="body-s" as="span" color="subtlest">Delta</Text>
-                  <Text variant="heading-xs" as="span" color={status === "success" ? "success" : "critical"}>{delta}</Text>
+                  <Text type="body" variant="s" as="span" color="subtlest">Delta</Text>
+                  <Text type="heading" variant="xs" as="span" color={status === "success" ? "success" : "critical"}>{delta}</Text>
                 </Stack>
               )}
             </div>
@@ -170,8 +170,8 @@ function PropRow({ icon, label, value }: { icon: IconName; label: string; value:
     <Stack direction="row" gap="100" align="start">
       <Icon icon={icon} />
       <Stack gap="0">
-        <Text variant="body-s" as="span" color="subtlest">{label}</Text>
-        <Text variant="body-m" as="span">{value}</Text>
+        <Text type="body" variant="s" as="span" color="subtlest">{label}</Text>
+        <Text type="body" variant="m" as="span">{value}</Text>
       </Stack>
     </Stack>
   );
@@ -181,10 +181,10 @@ function MetricTile({ label, value, unit, highlight }: { label: string; value: s
   return (
     <div className={css["metricTile"]}>
       <Stack gap="025">
-        <Text variant="body-s" as="span" color="subtlest">{label}</Text>
-        <Text variant="heading-l" as="span" color={highlight}>
+        <Text type="body" variant="s" as="span" color="subtlest">{label}</Text>
+        <Text type="heading" variant="l" as="span" color={highlight}>
           {value}
-          {unit && <Text variant="body-s" as="span" color="subtlest"> {unit}</Text>}
+          {unit && <Text type="body" variant="s" as="span" color="subtlest"> {unit}</Text>}
         </Text>
       </Stack>
     </div>
@@ -202,14 +202,14 @@ function KpiTile({ icon, iconColor = "default", value, label, trend, trendUp }: 
           <Cluster justify="between" align="center">
             <div className={css["iconPuck"]}><Icon icon={icon} color={iconColor} /></div>
             {trend != null && (
-              <Text variant="body-s-medium" as="span" color={trendUp === true ? "success" : trendUp === false ? "critical" : "subtlest"}>
+              <Text type="body" variant="s-medium" as="span" color={trendUp === true ? "success" : trendUp === false ? "critical" : "subtlest"}>
                 {trend}
               </Text>
             )}
           </Cluster>
           <Stack gap="0">
-            <Text variant="heading-xl" as="span">{value}</Text>
-            <Text variant="body-s" as="span" color="subtlest">{label}</Text>
+            <Text type="heading" variant="xl" as="span">{value}</Text>
+            <Text type="body" variant="s" as="span" color="subtlest">{label}</Text>
           </Stack>
         </Stack>
       </CC>
@@ -224,9 +224,9 @@ function ProgressRow({ icon, label, current, total }: { icon: IconName; label: s
       <Cluster justify="between" align="center">
         <Stack direction="row" gap="075" align="center">
           <Icon icon={icon} />
-          <Text variant="body-m" as="span">{label}</Text>
+          <Text type="body" variant="m" as="span">{label}</Text>
         </Stack>
-        <Text variant="heading-xs" as="span">{current}/{total}</Text>
+        <Text type="heading" variant="xs" as="span">{current}/{total}</Text>
       </Cluster>
       <div className={css["progressTrack"]}>
         <div className={css["progressFill"]} style={{
@@ -300,7 +300,7 @@ export const Collection: Story = {
             <Grid gap="300">
               <Grid.Col span={{ mobile: 12, desktop: 9 }}>
                 <Stack gap="150">
-                  <Text variant="body-s" as="span" color="subtlest">140 agents</Text>
+                  <Text type="body" variant="s" as="span" color="subtlest">140 agents</Text>
 
                   {/* Desktop: table */}
                   <div className={css["tableDesktopOnly"]}>
@@ -311,7 +311,7 @@ export const Collection: Story = {
                           <TableRow key={a.mat} cells={[
                             <><Avatar size="xsmall" initials={a.initials} /><span>{a.name}</span></>,
                             a.mat, a.contrat, a.heures,
-                            a.delta ? <Text key="d" variant="heading-xs" as="span" color={a.status === "success" ? "success" : "critical"}>{a.delta}</Text> : null,
+                            a.delta ? <Text key="d" type="heading" variant="xs" as="span" color={a.status === "success" ? "success" : "critical"}>{a.delta}</Text> : null,
                           ]} />
                         ))}
                       </div>
@@ -326,7 +326,7 @@ export const Collection: Story = {
                   </div>
 
                   <div style={{ textAlign: "center", padding: "var(--space200)" }}>
-                    <Text variant="body-s" as="span" color="subtlest">Scroll pour charger plus</Text>
+                    <Text type="body" variant="s" as="span" color="subtlest">Scroll pour charger plus</Text>
                   </div>
                 </Stack>
               </Grid.Col>
@@ -389,7 +389,7 @@ export const Entity: Story = {
                       <Stack gap="200" align="center">
                         <Avatar size="xlarge" initials="DM" />
                         <Stack gap="050" align="center">
-                          <Text variant="heading-m" as="span">DUPONT Marie</Text>
+                          <Text type="heading" variant="m" as="span">DUPONT Marie</Text>
                           <Cluster gap="075">
                             <Tag label="CDI" appearance="success" tagStyle="subtle" />
                             <Tag label="Agent" tagStyle="subtle" />
@@ -420,7 +420,7 @@ export const Entity: Story = {
                 <Card appearance="outlined">
                   <CC>
                     <Stack gap="200">
-                      <Text variant="heading-s" as="span">Chiffres clés — Avril 2026</Text>
+                      <Text type="heading" variant="s" as="span">Chiffres clés — Avril 2026</Text>
                       <div className={css["metricsGrid"]}>
                         <MetricTile label="Contrat" value="151.67" unit="h" />
                         <MetricTile label="Heures pay." value="151.67" unit="h" />
@@ -463,7 +463,7 @@ export const Entity: Story = {
                           <Cluster justify="between" align="center">
                             <Stack direction="row" gap="100" align="center">
                               <Button appearance="subtle" size="small" iconBefore="ChevronLeft" aria-label="Précédent" />
-                              <Text variant="heading-xs" as="span">Avril 2026</Text>
+                              <Text type="heading" variant="xs" as="span">Avril 2026</Text>
                               <Button appearance="subtle" size="small" iconBefore="ChevronRight" aria-label="Suivant" />
                             </Stack>
                             <Button appearance="subtle" iconBefore="Download">Exporter</Button>
@@ -488,7 +488,7 @@ export const Entity: Story = {
                             <CC padding="var(--space300)">
                               <Stack gap="100" align="center">
                                 <Icon icon="Newspaper" />
-                                <Text variant="body-m" color="subtlest" align="center">Aucun document pour cet agent.</Text>
+                                <Text type="body" variant="m" color="subtlest" align="center">Aucun document pour cet agent.</Text>
                                 <Button appearance="subtle" iconBefore="UploadFile">Importer un document</Button>
                               </Stack>
                             </CC>
@@ -506,10 +506,10 @@ export const Entity: Story = {
                             { date: "28/03/2026", action: "Fiche agent mise à jour", user: "A. Cremont" },
                           ].map((e, i) => (
                             <Stack key={i} direction="row" gap="200" align="start">
-                              <Text variant="body-s" as="span" color="subtlest">{e.date}</Text>
+                              <Text type="body" variant="s" as="span" color="subtlest">{e.date}</Text>
                               <Stack gap="0">
-                                <Text variant="body-m" as="span">{e.action}</Text>
-                                <Text variant="body-s" as="span" color="subtlest">{e.user}</Text>
+                                <Text type="body" variant="m" as="span">{e.action}</Text>
+                                <Text type="body" variant="s" as="span" color="subtlest">{e.user}</Text>
                               </Stack>
                             </Stack>
                           ))}
@@ -549,7 +549,7 @@ export const Dashboard: Story = {
           trailing={
             <Stack direction="row" gap="150" align="center">
               <Button appearance="subtle" size="small" iconBefore="ChevronLeft" aria-label="Précédent" />
-              <Text variant="body-m-medium" as="span">Avril 2026</Text>
+              <Text type="body" variant="m-medium" as="span">Avril 2026</Text>
               <Button appearance="subtle" size="small" iconBefore="ChevronRight" aria-label="Suivant" />
               <Avatar size="medium" initials="AC" />
             </Stack>
@@ -562,8 +562,8 @@ export const Dashboard: Story = {
               <CC padding="var(--space300)">
                 <Stack gap="200">
                   <Stack gap="050">
-                    <Text variant="heading-xl" as="span">Bonjour Axel</Text>
-                    <Text variant="body-m" as="span" color="subtle">{"Vous avez 3 alertes et 30 vacations non affectées ce mois-ci."}</Text>
+                    <Text type="heading" variant="xl" as="span">Bonjour Axel</Text>
+                    <Text type="body" variant="m" as="span" color="subtle">{"Vous avez 3 alertes et 30 vacations non affectées ce mois-ci."}</Text>
                   </Stack>
                   <Cluster gap="100">
                     <Button color="brand" iconBefore="CalendarMonth">Planifier</Button>
@@ -589,7 +589,7 @@ export const Dashboard: Story = {
                   <CC>
                     <Stack gap="200">
                       <Cluster justify="between" align="center">
-                        <Text variant="heading-s" as="span">Activité récente</Text>
+                        <Text type="heading" variant="s" as="span">Activité récente</Text>
                         <Button appearance="link" size="small">Tout voir</Button>
                       </Cluster>
                       <Divider />
@@ -602,11 +602,11 @@ export const Dashboard: Story = {
                         <Stack key={i} direction="row" gap="150" align="start">
                           <div className={css["activityIcon"]}><Icon icon={item.icon} /></div>
                           <Stack gap="0">
-                            <Text variant={item.bold ? "body-m-medium" : "body-m"} as="span">{item.title}</Text>
-                            <Text variant="body-s" as="span" color="subtlest">{item.sub}</Text>
+                            <Text type="body" variant={item.bold ? "m-medium" : "m"} as="span">{item.title}</Text>
+                            <Text type="body" variant="s" as="span" color="subtlest">{item.sub}</Text>
                           </Stack>
                           <span style={{ marginLeft: "auto", flexShrink: 0 }}>
-                            <Text variant="body-s" as="span" color="subtlest">{item.date}</Text>
+                            <Text type="body" variant="s" as="span" color="subtlest">{item.date}</Text>
                           </span>
                         </Stack>
                       ))}
@@ -619,8 +619,8 @@ export const Dashboard: Story = {
                   <CC>
                     <Stack gap="200">
                       <Cluster justify="between" align="center">
-                        <Text variant="heading-s" as="span">Couverture</Text>
-                        <Text variant="body-s" as="span" color="subtlest">Avril 2026</Text>
+                        <Text type="heading" variant="s" as="span">Couverture</Text>
+                        <Text type="body" variant="s" as="span" color="subtlest">Avril 2026</Text>
                       </Cluster>
                       <Divider />
                       <ProgressRow icon="Group" label="Agents" current={1} total={140} />
@@ -635,7 +635,7 @@ export const Dashboard: Story = {
             {/* Sites */}
             <Stack gap="200">
               <Cluster justify="between" align="center">
-                <Text variant="heading-s" as="span">Sites actifs</Text>
+                <Text type="heading" variant="s" as="span">Sites actifs</Text>
                 <Button appearance="link" size="small">Voir tous</Button>
               </Cluster>
               <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
@@ -649,15 +649,15 @@ export const Dashboard: Story = {
                       <CC>
                         <Stack gap="150">
                           <Stack gap="025">
-                            <Text variant="heading-xs" as="span">{s.site}</Text>
-                            <Text variant="body-s" as="span" color="subtlest">{s.client}</Text>
+                            <Text type="heading" variant="xs" as="span">{s.site}</Text>
+                            <Text type="body" variant="s" as="span" color="subtlest">{s.client}</Text>
                           </Stack>
                           <Tag label={s.secteur} tagStyle="subtle" />
                           <Divider />
                           <div className={css["siteStats"]}>
-                            <Stack gap="0"><Text variant="body-s" as="span" color="subtlest">Vacations</Text><Text variant="heading-s" as="span">{String(s.vac)}</Text></Stack>
-                            <Stack gap="0"><Text variant="body-s" as="span" color="subtlest">Non affect.</Text><Text variant="heading-s" as="span" color={s.nonAff > 0 ? "warning" : undefined}>{String(s.nonAff)}</Text></Stack>
-                            <Stack gap="0"><Text variant="body-s" as="span" color="subtlest">Couverture</Text><Text variant="heading-s" as="span">{s.couv}</Text></Stack>
+                            <Stack gap="0"><Text type="body" variant="s" as="span" color="subtlest">Vacations</Text><Text type="heading" variant="s" as="span">{String(s.vac)}</Text></Stack>
+                            <Stack gap="0"><Text type="body" variant="s" as="span" color="subtlest">Non affect.</Text><Text type="heading" variant="s" as="span" color={s.nonAff > 0 ? "warning" : undefined}>{String(s.nonAff)}</Text></Stack>
+                            <Stack gap="0"><Text type="body" variant="s" as="span" color="subtlest">Couverture</Text><Text type="heading" variant="s" as="span">{s.couv}</Text></Stack>
                           </div>
                         </Stack>
                       </CC>
@@ -720,8 +720,8 @@ export const Settings: Story = {
                                 <Badge label={`${r.count}`} appearance="neutral" importance="medium" />
                               </Cluster>
                               <Stack gap="050">
-                                <Text variant="heading-s" as="span">{r.role}</Text>
-                                <Text variant="body-s" as="span" color="subtle">{r.desc}</Text>
+                                <Text type="heading" variant="s" as="span">{r.role}</Text>
+                                <Text type="body" variant="s" as="span" color="subtle">{r.desc}</Text>
                               </Stack>
                             </Stack>
                           </CC>
@@ -738,8 +738,8 @@ export const Settings: Story = {
                 <Stack gap="300">
                   <Cluster justify="between" align="center">
                     <Stack gap="050">
-                      <Text variant="heading-s" as="span">Fonctions</Text>
-                      <Text variant="body-m" as="span" color="subtle">Affinez les permissions au-delà des rôles.</Text>
+                      <Text type="heading" variant="s" as="span">Fonctions</Text>
+                      <Text type="body" variant="m" as="span" color="subtle">Affinez les permissions au-delà des rôles.</Text>
                     </Stack>
                     <Button color="brand" iconBefore="Add">Nouvelle fonction</Button>
                   </Cluster>
@@ -754,7 +754,7 @@ export const Settings: Story = {
                           { fn: "Gestionnaire RH", role: "Admin.", users: "3", date: "01/04/2026" },
                         ].map((fn, i) => (
                           <TableRow key={i} cells={[
-                            <Text key="fn" variant="body-m-medium" as="span">{fn.fn}</Text>,
+                            <Text key="fn" type="body" variant="m-medium" as="span">{fn.fn}</Text>,
                             <Tag key="r" label={fn.role} tagStyle="subtle" />,
                             fn.users,
                             fn.date,
@@ -775,12 +775,12 @@ export const Settings: Story = {
                           <CC>
                             <Stack gap="100">
                               <Cluster justify="between" align="center">
-                                <Text variant="heading-xs" as="span">{fn.fn}</Text>
+                                <Text type="heading" variant="xs" as="span">{fn.fn}</Text>
                                 <Tag label={fn.role} tagStyle="subtle" />
                               </Cluster>
                               <Cluster gap="200">
-                                <Text variant="body-s" as="span" color="subtlest">{fn.users} utilisateurs</Text>
-                                <Text variant="body-s" as="span" color="subtlest">Modifié le {fn.date}</Text>
+                                <Text type="body" variant="s" as="span" color="subtlest">{fn.users} utilisateurs</Text>
+                                <Text type="body" variant="s" as="span" color="subtlest">Modifié le {fn.date}</Text>
                               </Cluster>
                             </Stack>
                           </CC>
@@ -795,7 +795,7 @@ export const Settings: Story = {
             <TabPanel id="explorateur">
               <div style={{ paddingTop: "var(--space300)" }}>
                 <Stack gap="300">
-                  <Text variant="body-m" color="subtle">{"Vérifiez les permissions effectives d'un utilisateur."}</Text>
+                  <Text type="body" variant="m" color="subtle">{"Vérifiez les permissions effectives d'un utilisateur."}</Text>
                   <Card appearance="outlined">
                     <CC>
                       <Stack gap="200">
@@ -819,7 +819,7 @@ export const Settings: Story = {
                         <Divider />
                         <Stack gap="100" align="center">
                           <Icon icon="Search" />
-                          <Text variant="body-m" color="subtlest" align="center">Sélectionnez un utilisateur et une ressource.</Text>
+                          <Text type="body" variant="m" color="subtlest" align="center">Sélectionnez un utilisateur et une ressource.</Text>
                         </Stack>
                       </Stack>
                     </CC>

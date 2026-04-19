@@ -7,57 +7,36 @@ import styles from "./Text.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
-export type TextVariant =
-  // Hero — Bold (default)
-  | "hero-xxl"
-  | "hero-xl"
-  | "hero-l"
-  | "hero-m"
-  | "hero-s"
-  | "hero-xs"
-  | "hero-xxs"
-  // Hero — Semibold / Bold alternés
-  | "hero-xxl-semibold"
-  | "hero-xl-semibold"
-  | "hero-l-semibold"
-  | "hero-m-bold"
-  | "hero-s-bold"
-  | "hero-xs-bold"
-  | "hero-xxs-bold"
-  // Heading — Semibold (default)
-  | "heading-xxl"
-  | "heading-xl"
-  | "heading-l"
-  | "heading-m"
-  | "heading-s"
-  | "heading-xs"
-  | "heading-xxs"
-  // Heading — Bold
-  | "heading-xxl-bold"
-  | "heading-xl-bold"
-  | "heading-l-bold"
-  | "heading-m-bold"
-  | "heading-s-bold"
-  | "heading-xs-bold"
-  | "heading-xxs-bold"
-  // Body
-  | "body-l"
-  | "body-l-medium"
-  | "body-l-bold"
-  | "body-m"
-  | "body-m-medium"
-  | "body-m-bold"
-  | "body-s"
-  | "body-s-medium"
-  | "body-s-bold"
-  | "body-xs"
-  | "body-xs-bold"
-  // Label
-  | "label"
-  // Code
-  | "code-value"
-  | "code-operator"
-  | "code-label";
+export type TextType = "hero" | "heading" | "body" | "code";
+
+export type HeroVariant =
+  | "xxl" | "xxl-semibold"
+  | "xl" | "xl-semibold"
+  | "l" | "l-semibold"
+  | "m" | "m-bold"
+  | "s" | "s-bold"
+  | "xs" | "xs-bold"
+  | "xxs" | "xxs-bold";
+
+export type HeadingVariant =
+  | "xxl" | "xxl-bold"
+  | "xl" | "xl-bold"
+  | "l" | "l-bold"
+  | "m" | "m-bold"
+  | "s" | "s-bold"
+  | "xs" | "xs-bold"
+  | "xxs" | "xxs-bold";
+
+export type BodyVariant =
+  | "l" | "l-medium" | "l-bold"
+  | "m" | "m-medium" | "m-bold"
+  | "s" | "s-medium" | "s-bold"
+  | "xs" | "xs-bold"
+  | "label";
+
+export type CodeVariant = "value" | "operator" | "label";
+
+export type TextVariant = HeroVariant | HeadingVariant | BodyVariant | CodeVariant;
 
 export type TextColor =
   | "default"
@@ -75,9 +54,10 @@ export type TextColor =
 
 export type TextAlign = "left" | "center" | "right";
 
-export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, "color"> {
-  /** Style typographique à appliquer. Détermine aussi la balise HTML par défaut. */
-  variant: TextVariant;
+// -----------------------------------------------------------------------
+// Props — union discriminée par type
+
+interface TextPropsBase extends Omit<HTMLAttributes<HTMLElement>, "color"> {
   /** Couleur du texte. @default "default" */
   color?: TextColor;
   /** Alignement du texte. */
@@ -86,7 +66,7 @@ export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, "color"> {
   underline?: boolean;
   /** Applique une mise en italique. @default false */
   italic?: boolean;
-  /** Override la balise HTML par défaut déduite de la variante. */
+  /** Override la balise HTML par défaut déduite du type + variante. */
   as?: ElementType;
   /** Contenu textuel. */
   children?: ReactNode;
@@ -94,59 +74,79 @@ export interface TextProps extends Omit<HTMLAttributes<HTMLElement>, "color"> {
   className?: string;
 }
 
-// -----------------------------------------------------------------------
-// Mapping variante → balise HTML par défaut
+interface HeroTextProps extends TextPropsBase {
+  /** Famille typographique. */
+  type: "hero";
+  /** Variante de taille/poids. */
+  variant: HeroVariant;
+}
 
-const DEFAULT_ELEMENT_MAP: Record<TextVariant, ElementType> = {
-  // Hero
-  "hero-xxl": "h1",
-  "hero-xl": "h1",
-  "hero-l": "h1",
-  "hero-m": "h1",
-  "hero-s": "h2",
-  "hero-xs": "h2",
-  "hero-xxs": "h2",
-  "hero-xxl-semibold": "h1",
-  "hero-xl-semibold": "h1",
-  "hero-l-semibold": "h1",
-  "hero-m-bold": "h1",
-  "hero-s-bold": "h2",
-  "hero-xs-bold": "h2",
-  "hero-xxs-bold": "h2",
-  // Heading
-  "heading-xxl": "h1",
-  "heading-xl": "h2",
-  "heading-l": "h3",
-  "heading-m": "h4",
-  "heading-s": "h5",
-  "heading-xs": "h6",
-  "heading-xxs": "h6",
-  "heading-xxl-bold": "h1",
-  "heading-xl-bold": "h2",
-  "heading-l-bold": "h3",
-  "heading-m-bold": "h4",
-  "heading-s-bold": "h5",
-  "heading-xs-bold": "h6",
-  "heading-xxs-bold": "h6",
-  // Body
-  "body-l": "p",
-  "body-l-medium": "p",
-  "body-l-bold": "p",
-  "body-m": "p",
-  "body-m-medium": "p",
-  "body-m-bold": "p",
-  "body-s": "p",
-  "body-s-medium": "p",
-  "body-s-bold": "p",
-  "body-xs": "p",
-  "body-xs-bold": "p",
-  // Label
-  label: "span",
-  // Code
-  "code-value": "code",
-  "code-operator": "code",
-  "code-label": "code",
+interface HeadingTextProps extends TextPropsBase {
+  /** Famille typographique. */
+  type: "heading";
+  /** Variante de taille/poids. */
+  variant: HeadingVariant;
+}
+
+interface BodyTextProps extends TextPropsBase {
+  /** Famille typographique. */
+  type: "body";
+  /** Variante de taille/poids. */
+  variant: BodyVariant;
+}
+
+interface CodeTextProps extends TextPropsBase {
+  /** Famille typographique. */
+  type: "code";
+  /** Variante de taille/poids. */
+  variant: CodeVariant;
+}
+
+export type TextProps = HeroTextProps | HeadingTextProps | BodyTextProps | CodeTextProps;
+
+// -----------------------------------------------------------------------
+// Mapping (type, variant) → balise HTML par défaut
+
+const DEFAULT_ELEMENT_MAP: Record<string, Record<string, ElementType>> = {
+  hero: {
+    xxl: "h1", "xxl-semibold": "h1",
+    xl: "h1", "xl-semibold": "h1",
+    l: "h1", "l-semibold": "h1",
+    m: "h1", "m-bold": "h1",
+    s: "h2", "s-bold": "h2",
+    xs: "h2", "xs-bold": "h2",
+    xxs: "h2", "xxs-bold": "h2",
+  },
+  heading: {
+    xxl: "h1", "xxl-bold": "h1",
+    xl: "h2", "xl-bold": "h2",
+    l: "h3", "l-bold": "h3",
+    m: "h4", "m-bold": "h4",
+    s: "h5", "s-bold": "h5",
+    xs: "h6", "xs-bold": "h6",
+    xxs: "h6", "xxs-bold": "h6",
+  },
+  body: {
+    l: "p", "l-medium": "p", "l-bold": "p",
+    m: "p", "m-medium": "p", "m-bold": "p",
+    s: "p", "s-medium": "p", "s-bold": "p",
+    xs: "p", "xs-bold": "p",
+    label: "span",
+  },
+  code: {
+    value: "code",
+    operator: "code",
+    label: "code",
+  },
 };
+
+// -----------------------------------------------------------------------
+// Résolution clé CSS
+
+function resolveCssKey(type: TextType, variant: string): string {
+  if (type === "body" && variant === "label") return "label";
+  return `${type}-${variant}`;
+}
 
 // -----------------------------------------------------------------------
 // Composant
@@ -155,18 +155,19 @@ const DEFAULT_ELEMENT_MAP: Record<TextVariant, ElementType> = {
  * Text — Comète Design System
  *
  * Composant typographique unifié. Applique automatiquement le style de texte
- * et la balise HTML sémantique correspondant à la variante choisie.
+ * et la balise HTML sémantique correspondant au type + variante.
  *
  * ```tsx
  * import { Text } from "@naxit/comete-design-system";
  *
- * <Text variant="heading-xxl">Titre de page</Text>
- * <Text variant="body-m" color="subtle">Description secondaire</Text>
- * <Text variant="body-m" underline>Lien souligné</Text>
- * <Text variant="body-m" italic>Texte en italique</Text>
+ * <Text type="heading" variant="xxl">Titre de page</Text>
+ * <Text type="body" variant="m" color="subtle">Description</Text>
+ * <Text type="body" variant="m" underline>Lien souligné</Text>
+ * <Text type="code" variant="value">const x = 1</Text>
  * ```
  */
 export function Text({
+  type,
   variant,
   color = "default",
   align,
@@ -177,11 +178,12 @@ export function Text({
   className,
   ...rest
 }: TextProps): ReactElement {
-  const Component = as ?? DEFAULT_ELEMENT_MAP[variant];
+  const Component: ElementType = as ?? DEFAULT_ELEMENT_MAP[type]?.[variant] ?? "span";
+  const cssKey = resolveCssKey(type, variant);
 
   const classNames = [
     styles.text,
-    typographyStyles[variant],
+    typographyStyles[cssKey as keyof typeof typographyStyles],
     styles[`color-${color}` as keyof typeof styles],
     align ? styles[`align-${align}` as keyof typeof styles] : undefined,
     underline ? styles.underline : undefined,

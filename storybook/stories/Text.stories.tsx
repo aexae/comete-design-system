@@ -1,7 +1,15 @@
 // Text — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Text, Stack } from "@naxit/comete-design-system/components";
-import type { TextVariant, TextColor, TextAlign } from "@naxit/comete-design-system/components";
+import type {
+  TextType,
+  HeroVariant,
+  HeadingVariant,
+  BodyVariant,
+  CodeVariant,
+  TextColor,
+  TextAlign,
+} from "@naxit/comete-design-system/components";
 import type { CSSProperties, ReactElement } from "react";
 
 const FIGMA_FILE =
@@ -10,48 +18,69 @@ const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
-// Variant lists
+// Variant lists per type — with default HTML tag label
 
-const ALL_VARIANTS: TextVariant[] = [
-  "hero-xxl", "hero-xxl-semibold", "hero-xl", "hero-xl-semibold",
-  "hero-l", "hero-l-semibold", "hero-m", "hero-m-bold",
-  "hero-s", "hero-s-bold", "hero-xs", "hero-xs-bold",
-  "hero-xxs", "hero-xxs-bold",
-  "heading-xxl", "heading-xxl-bold", "heading-xl", "heading-xl-bold",
-  "heading-l", "heading-l-bold", "heading-m", "heading-m-bold",
-  "heading-s", "heading-s-bold", "heading-xs", "heading-xs-bold",
-  "heading-xxs", "heading-xxs-bold",
-  "body-l", "body-l-medium", "body-l-bold",
-  "body-m", "body-m-medium", "body-m-bold",
-  "body-s", "body-s-medium", "body-s-bold",
-  "body-xs", "body-xs-bold",
-  "label",
-  "code-value", "code-operator", "code-label",
+const HERO_VARIANTS: { value: HeroVariant; label: string }[] = [
+  { value: "xxl", label: "xxl (h1)" },
+  { value: "xxl-semibold", label: "xxl-semibold (h1)" },
+  { value: "xl", label: "xl (h1)" },
+  { value: "xl-semibold", label: "xl-semibold (h1)" },
+  { value: "l", label: "l (h1)" },
+  { value: "l-semibold", label: "l-semibold (h1)" },
+  { value: "m", label: "m (h1)" },
+  { value: "m-bold", label: "m-bold (h1)" },
+  { value: "s", label: "s (h2)" },
+  { value: "s-bold", label: "s-bold (h2)" },
+  { value: "xs", label: "xs (h2)" },
+  { value: "xs-bold", label: "xs-bold (h2)" },
+  { value: "xxs", label: "xxs (h2)" },
+  { value: "xxs-bold", label: "xxs-bold (h2)" },
 ];
 
-const HERO_VARIANTS: TextVariant[] = [
-  "hero-xxl", "hero-xxl-semibold", "hero-xl", "hero-xl-semibold",
-  "hero-l", "hero-l-semibold", "hero-m", "hero-m-bold",
-  "hero-s", "hero-s-bold", "hero-xs", "hero-xs-bold",
-  "hero-xxs", "hero-xxs-bold",
+const HEADING_VARIANTS: { value: HeadingVariant; label: string }[] = [
+  { value: "xxl", label: "xxl (h1)" },
+  { value: "xxl-bold", label: "xxl-bold (h1)" },
+  { value: "xl", label: "xl (h2)" },
+  { value: "xl-bold", label: "xl-bold (h2)" },
+  { value: "l", label: "l (h3)" },
+  { value: "l-bold", label: "l-bold (h3)" },
+  { value: "m", label: "m (h4)" },
+  { value: "m-bold", label: "m-bold (h4)" },
+  { value: "s", label: "s (h5)" },
+  { value: "s-bold", label: "s-bold (h5)" },
+  { value: "xs", label: "xs (h6)" },
+  { value: "xs-bold", label: "xs-bold (h6)" },
+  { value: "xxs", label: "xxs (h6)" },
+  { value: "xxs-bold", label: "xxs-bold (h6)" },
 ];
 
-const HEADING_VARIANTS: TextVariant[] = [
-  "heading-xxl", "heading-xxl-bold", "heading-xl", "heading-xl-bold",
-  "heading-l", "heading-l-bold", "heading-m", "heading-m-bold",
-  "heading-s", "heading-s-bold", "heading-xs", "heading-xs-bold",
-  "heading-xxs", "heading-xxs-bold",
+const BODY_VARIANTS: { value: BodyVariant; label: string }[] = [
+  { value: "l", label: "l (p)" },
+  { value: "l-medium", label: "l-medium (p)" },
+  { value: "l-bold", label: "l-bold (p)" },
+  { value: "m", label: "m (p)" },
+  { value: "m-medium", label: "m-medium (p)" },
+  { value: "m-bold", label: "m-bold (p)" },
+  { value: "s", label: "s (p)" },
+  { value: "s-medium", label: "s-medium (p)" },
+  { value: "s-bold", label: "s-bold (p)" },
+  { value: "xs", label: "xs (p)" },
+  { value: "xs-bold", label: "xs-bold (p)" },
+  { value: "label", label: "label (span)" },
 ];
 
-const BODY_VARIANTS: TextVariant[] = [
-  "body-l", "body-l-medium", "body-l-bold",
-  "body-m", "body-m-medium", "body-m-bold",
-  "body-s", "body-s-medium", "body-s-bold",
-  "body-xs", "body-xs-bold",
-  "label",
+const CODE_VARIANTS: { value: CodeVariant; label: string }[] = [
+  { value: "value", label: "value (code)" },
+  { value: "operator", label: "operator (code)" },
+  { value: "label", label: "label (code)" },
 ];
 
-const CODE_VARIANTS: TextVariant[] = ["code-value", "code-operator", "code-label"];
+const VARIANT_MAP: Record<TextType, { value: string; label: string }[]> = {
+  hero: HERO_VARIANTS,
+  heading: HEADING_VARIANTS,
+  body: BODY_VARIANTS,
+  code: CODE_VARIANTS,
+};
 
 // -----------------------------------------------------------------------
 // Meta
@@ -66,14 +95,23 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composant typographique unifié. Applique automatiquement le style de texte et la balise HTML sémantique correspondant à la variante choisie. Couvre les 44 styles Comète : Hero, Heading, Body, Label et Code.",
+          "Composant typographique unifié. Applique automatiquement le style de texte et la balise HTML sémantique correspondant au type + variante. Couvre les 44 styles Comète : Hero, Heading, Body, Label et Code.",
       },
     },
   },
   argTypes: {
+    type: {
+      control: "select",
+      options: ["hero", "heading", "body", "code"] satisfies TextType[],
+    },
     variant: {
       control: "select",
-      options: ALL_VARIANTS,
+      options: BODY_VARIANTS.map((v) => v.value),
+      mapping: Object.fromEntries(BODY_VARIANTS.map((v) => [v.label, v.value])),
+      labels: Object.fromEntries(
+        [...HERO_VARIANTS, ...HEADING_VARIANTS, ...BODY_VARIANTS, ...CODE_VARIANTS]
+          .map((v) => [v.value, v.label]),
+      ),
     },
     color: {
       control: "select",
@@ -92,7 +130,8 @@ const meta = {
     children: { control: "text" },
   },
   args: {
-    variant: "body-m",
+    type: "body",
+    variant: "m",
     color: "default",
     underline: false,
     italic: false,
@@ -115,8 +154,8 @@ export const Hero: Story = {
   render: () => (
     <Stack gap="300">
       {HERO_VARIANTS.map((v) => (
-        <Text key={v} variant={v}>
-          {v}
+        <Text key={v.value} type="hero" variant={v.value}>
+          {v.label}
         </Text>
       ))}
     </Stack>
@@ -130,8 +169,8 @@ export const Heading: Story = {
   render: () => (
     <Stack gap="200">
       {HEADING_VARIANTS.map((v) => (
-        <Text key={v} variant={v}>
-          {v} — Titre de section
+        <Text key={v.value} type="heading" variant={v.value}>
+          {v.label} — Titre de section
         </Text>
       ))}
     </Stack>
@@ -145,8 +184,8 @@ export const Body: Story = {
   render: () => (
     <Stack gap="200">
       {BODY_VARIANTS.map((v) => (
-        <Text key={v} variant={v}>
-          {v} — Le texte de corps structure le contenu et guide l&apos;utilisateur.
+        <Text key={v.value} type="body" variant={v.value}>
+          {v.label} — Le texte de corps structure le contenu et guide l&apos;utilisateur.
         </Text>
       ))}
     </Stack>
@@ -159,9 +198,9 @@ export const Body: Story = {
 export const Code: Story = {
   render: () => (
     <Stack gap="200">
-      <Text variant="code-value">code-value — const theme = useTheme();</Text>
-      <Text variant="code-operator">code-operator — =&gt; &#123;&#125; [] ()</Text>
-      <Text variant="code-label">code-label — function Component()</Text>
+      <Text type="code" variant="value">value (code) — const theme = useTheme();</Text>
+      <Text type="code" variant="operator">operator (code) — =&gt; &#123;&#125; [] ()</Text>
+      <Text type="code" variant="label">label (code) — function Component()</Text>
     </Stack>
   ),
 };
@@ -172,12 +211,12 @@ export const Code: Story = {
 export const UnderlineAndItalic: Story = {
   render: () => (
     <Stack gap="200">
-      <Text variant="body-m">Normal</Text>
-      <Text variant="body-m" underline>Underline</Text>
-      <Text variant="body-m" italic>Italic</Text>
-      <Text variant="body-m" underline italic>Underline + Italic</Text>
-      <Text variant="body-m-medium" underline>Medium Underline</Text>
-      <Text variant="body-m-medium" underline color="subtle">Medium Underline Subtle</Text>
+      <Text type="body" variant="m">Normal</Text>
+      <Text type="body" variant="m" underline>Underline</Text>
+      <Text type="body" variant="m" italic>Italic</Text>
+      <Text type="body" variant="m" underline italic>Underline + Italic</Text>
+      <Text type="body" variant="m-medium" underline>Medium Underline</Text>
+      <Text type="body" variant="m-medium" underline color="subtle">Medium Underline Subtle</Text>
     </Stack>
   ),
 };
@@ -194,12 +233,12 @@ export const Colors: Story = {
   render: () => (
     <Stack gap="100">
       {COLOR_OPTIONS.map((c) => (
-        <Text key={c} variant="body-m" color={c}>
+        <Text key={c} type="body" variant="m" color={c}>
           color=&quot;{c}&quot; — Exemple de texte avec cette couleur.
         </Text>
       ))}
       <div style={{ background: "var(--background-neutral-bold-default)", padding: 12, borderRadius: 8 }}>
-        <Text variant="body-m" color="inverted">
+        <Text type="body" variant="m" color="inverted">
           color=&quot;inverted&quot; — Texte inversé sur fond sombre.
         </Text>
       </div>
@@ -214,13 +253,13 @@ export const Alignment: Story = {
   render: () => (
     <div style={{ width: 400 }}>
       <Stack gap="200">
-        <Text variant="body-m" align="left">
+        <Text type="body" variant="m" align="left">
           align=&quot;left&quot;
         </Text>
-        <Text variant="body-m" align="center">
+        <Text type="body" variant="m" align="center">
           align=&quot;center&quot;
         </Text>
-        <Text variant="body-m" align="right">
+        <Text type="body" variant="m" align="right">
           align=&quot;right&quot;
         </Text>
       </Stack>
@@ -234,14 +273,14 @@ export const Alignment: Story = {
 export const AsOverride: Story = {
   render: () => (
     <Stack gap="200">
-      <Text variant="heading-xxl" as="h2">
-        heading-xxl rendu en &lt;h2&gt;
+      <Text type="heading" variant="xxl" as="h2">
+        heading xxl rendu en &lt;h2&gt;
       </Text>
-      <Text variant="body-m" as="span">
-        body-m rendu en &lt;span&gt; (inline)
+      <Text type="body" variant="m" as="span">
+        body m rendu en &lt;span&gt; (inline)
       </Text>
-      <Text variant="heading-l" as="label">
-        heading-l rendu en &lt;label&gt;
+      <Text type="heading" variant="l" as="label">
+        heading l rendu en &lt;label&gt;
       </Text>
     </Stack>
   ),
@@ -277,11 +316,18 @@ const css = {
   } satisfies CSSProperties,
 };
 
-function VariantRow({ variant, sample }: { variant: TextVariant; sample: string }): ReactElement {
+function TypeSection({ type, sample }: { type: TextType; sample: string }): ReactElement {
+  const variants = VARIANT_MAP[type];
   return (
-    <div style={css.row}>
-      <span style={css.variantLabel}>{variant}</span>
-      <Text variant={variant}>{sample}</Text>
+    <div style={css.section}>
+      <div style={css.sectionTitle}>{type}</div>
+      {variants.map((v) => (
+        <div key={v.value} style={css.row}>
+          <span style={css.variantLabel}>{v.label}</span>
+          {/* @ts-expect-error — variant is correctly constrained per type at runtime */}
+          <Text type={type} variant={v.value}>{sample}</Text>
+        </div>
+      ))}
     </div>
   );
 }
@@ -289,30 +335,10 @@ function VariantRow({ variant, sample }: { variant: TextVariant; sample: string 
 export const AllVariants: Story = {
   render: () => (
     <div style={{ maxWidth: 900 }}>
-      <div style={css.section}>
-        <div style={css.sectionTitle}>Hero</div>
-        {HERO_VARIANTS.map((v) => (
-          <VariantRow key={v} variant={v} sample="Donnez vie à vos données." />
-        ))}
-      </div>
-      <div style={css.section}>
-        <div style={css.sectionTitle}>Heading</div>
-        {HEADING_VARIANTS.map((v) => (
-          <VariantRow key={v} variant={v} sample="Titre de section" />
-        ))}
-      </div>
-      <div style={css.section}>
-        <div style={css.sectionTitle}>Body</div>
-        {BODY_VARIANTS.map((v) => (
-          <VariantRow key={v} variant={v} sample="Le texte de corps structure le contenu et guide l'utilisateur à travers l'interface." />
-        ))}
-      </div>
-      <div style={css.section}>
-        <div style={css.sectionTitle}>Code</div>
-        {CODE_VARIANTS.map((v) => (
-          <VariantRow key={v} variant={v} sample="const theme = useTheme();" />
-        ))}
-      </div>
+      <TypeSection type="hero" sample="Donnez vie à vos données." />
+      <TypeSection type="heading" sample="Titre de section" />
+      <TypeSection type="body" sample="Le texte de corps structure le contenu et guide l'utilisateur à travers l'interface." />
+      <TypeSection type="code" sample="const theme = useTheme();" />
     </div>
   ),
 };
