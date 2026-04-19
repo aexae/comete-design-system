@@ -40,33 +40,33 @@ describe("Text", () => {
   // Balise HTML par défaut — Heading
   // -------------------------------------------------------------------
 
-  it("should render an h1 for heading-h1", () => {
-    render(<Text variant="heading-h1">Title</Text>);
+  it("should render an h1 for heading-xxl", () => {
+    render(<Text variant="heading-xxl">Title</Text>);
     expect(screen.getByText("Title").tagName).toBe("H1");
   });
 
-  it("should render an h1 for heading-h1-bold", () => {
-    render(<Text variant="heading-h1-bold">Title</Text>);
+  it("should render an h1 for heading-xxl-bold", () => {
+    render(<Text variant="heading-xxl-bold">Title</Text>);
     expect(screen.getByText("Title").tagName).toBe("H1");
   });
 
-  it("should render an h2 for heading-h2", () => {
-    render(<Text variant="heading-h2">Title</Text>);
+  it("should render an h2 for heading-xl", () => {
+    render(<Text variant="heading-xl">Title</Text>);
     expect(screen.getByText("Title").tagName).toBe("H2");
   });
 
-  it("should render an h3 for heading-h3", () => {
-    render(<Text variant="heading-h3">Title</Text>);
+  it("should render an h3 for heading-l", () => {
+    render(<Text variant="heading-l">Title</Text>);
     expect(screen.getByText("Title").tagName).toBe("H3");
   });
 
-  it("should render an h4 for heading-h4", () => {
-    render(<Text variant="heading-h4">Title</Text>);
+  it("should render an h4 for heading-m", () => {
+    render(<Text variant="heading-m">Title</Text>);
     expect(screen.getByText("Title").tagName).toBe("H4");
   });
 
-  it("should render an h5 for heading-h5", () => {
-    render(<Text variant="heading-h5">Title</Text>);
+  it("should render an h5 for heading-s", () => {
+    render(<Text variant="heading-s">Title</Text>);
     expect(screen.getByText("Title").tagName).toBe("H5");
   });
 
@@ -134,7 +134,7 @@ describe("Text", () => {
 
   it("should override the default element with as", () => {
     render(
-      <Text variant="heading-h1" as="h2">
+      <Text variant="heading-xxl" as="h2">
         Title
       </Text>,
     );
@@ -331,13 +331,13 @@ describe("Text", () => {
 
   it("should combine variant, color, align, underline, italic and className", () => {
     render(
-      <Text variant="heading-h2" color="brand" align="center" underline italic className="extra">
+      <Text variant="heading-xl" color="brand" align="center" underline italic className="extra">
         Combined
       </Text>,
     );
     const el = screen.getByText("Combined");
     expect(el.tagName).toBe("H2");
-    expect(el.className).toContain("heading-h2");
+    expect(el.className).toContain("heading-xl");
     expect(el.className).toContain("color-brand");
     expect(el.className).toContain("align-center");
     expect(el.className).toContain("underline");
@@ -347,13 +347,13 @@ describe("Text", () => {
 
   it("should combine as override with variant styling", () => {
     render(
-      <Text variant="heading-h1" as="span" color="subtle">
+      <Text variant="heading-xxl" as="span" color="subtle">
         Span styled as H1
       </Text>,
     );
     const el = screen.getByText("Span styled as H1");
     expect(el.tagName).toBe("SPAN");
-    expect(el.className).toContain("heading-h1");
+    expect(el.className).toContain("heading-xxl");
     expect(el.className).toContain("color-subtle");
   });
 
@@ -362,7 +362,7 @@ describe("Text", () => {
   // -------------------------------------------------------------------
 
   it("should apply the base text class for margin reset", () => {
-    render(<Text variant="heading-h1">Title</Text>);
+    render(<Text variant="heading-xxl">Title</Text>);
     expect(screen.getByText("Title").className).toContain("text");
   });
 });

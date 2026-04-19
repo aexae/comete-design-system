@@ -17,9 +17,9 @@ const ALL_VARIANTS: TextVariant[] = [
   "hero-l", "hero-l-semibold", "hero-m", "hero-m-bold",
   "hero-s", "hero-s-bold", "hero-xs", "hero-xs-bold",
   "hero-xxs", "hero-xxs-bold",
-  "heading-h1", "heading-h1-bold", "heading-h2", "heading-h2-bold",
-  "heading-h3", "heading-h3-bold", "heading-h4", "heading-h4-bold",
-  "heading-h5", "heading-h5-bold", "heading-xs", "heading-xs-bold",
+  "heading-xxl", "heading-xxl-bold", "heading-xl", "heading-xl-bold",
+  "heading-l", "heading-l-bold", "heading-m", "heading-m-bold",
+  "heading-s", "heading-s-bold", "heading-xs", "heading-xs-bold",
   "heading-xxs", "heading-xxs-bold",
   "body-l", "body-l-medium", "body-l-bold",
   "body-m", "body-m-medium", "body-m-bold",
@@ -37,9 +37,9 @@ const HERO_VARIANTS: TextVariant[] = [
 ];
 
 const HEADING_VARIANTS: TextVariant[] = [
-  "heading-h1", "heading-h1-bold", "heading-h2", "heading-h2-bold",
-  "heading-h3", "heading-h3-bold", "heading-h4", "heading-h4-bold",
-  "heading-h5", "heading-h5-bold", "heading-xs", "heading-xs-bold",
+  "heading-xxl", "heading-xxl-bold", "heading-xl", "heading-xl-bold",
+  "heading-l", "heading-l-bold", "heading-m", "heading-m-bold",
+  "heading-s", "heading-s-bold", "heading-xs", "heading-xs-bold",
   "heading-xxs", "heading-xxs-bold",
 ];
 
@@ -234,14 +234,14 @@ export const Alignment: Story = {
 export const AsOverride: Story = {
   render: () => (
     <Stack gap="200">
-      <Text variant="heading-h1" as="h2">
-        heading-h1 rendu en &lt;h2&gt;
+      <Text variant="heading-xxl" as="h2">
+        heading-xxl rendu en &lt;h2&gt;
       </Text>
       <Text variant="body-m" as="span">
         body-m rendu en &lt;span&gt; (inline)
       </Text>
-      <Text variant="heading-h3" as="label">
-        heading-h3 rendu en &lt;label&gt;
+      <Text variant="heading-l" as="label">
+        heading-l rendu en &lt;label&gt;
       </Text>
     </Stack>
   ),

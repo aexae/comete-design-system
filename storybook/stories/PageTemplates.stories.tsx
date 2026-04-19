@@ -124,7 +124,7 @@ function CC({ children, padding = "var(--space200)" }: { children: React.ReactNo
 function FilterPanel({ showHeader = true }: { showHeader?: boolean }) {
   return (
     <Stack gap="200">
-      {showHeader && <><Text variant="heading-h5" as="span">Filtres</Text><Divider /></>}
+      {showHeader && <><Text variant="heading-s" as="span">Filtres</Text><Divider /></>}
       {["Société / Agence", "Secteur", "Habilitations", "Formalités", "Équipements"].map((label) => (
         <Stack key={label} gap="075">
           <Text variant="label" as="span" color="subtlest">{label.toUpperCase()}</Text>
@@ -182,7 +182,7 @@ function MetricTile({ label, value, unit, highlight }: { label: string; value: s
     <div className={css["metricTile"]}>
       <Stack gap="025">
         <Text variant="body-s" as="span" color="subtlest">{label}</Text>
-        <Text variant="heading-h3" as="span" color={highlight}>
+        <Text variant="heading-l" as="span" color={highlight}>
           {value}
           {unit && <Text variant="body-s" as="span" color="subtlest"> {unit}</Text>}
         </Text>
@@ -208,7 +208,7 @@ function KpiTile({ icon, iconColor = "default", value, label, trend, trendUp }: 
             )}
           </Cluster>
           <Stack gap="0">
-            <Text variant="heading-h2" as="span">{value}</Text>
+            <Text variant="heading-xl" as="span">{value}</Text>
             <Text variant="body-s" as="span" color="subtlest">{label}</Text>
           </Stack>
         </Stack>
@@ -389,7 +389,7 @@ export const Entity: Story = {
                       <Stack gap="200" align="center">
                         <Avatar size="xlarge" initials="DM" />
                         <Stack gap="050" align="center">
-                          <Text variant="heading-h4" as="span">DUPONT Marie</Text>
+                          <Text variant="heading-m" as="span">DUPONT Marie</Text>
                           <Cluster gap="075">
                             <Tag label="CDI" appearance="success" tagStyle="subtle" />
                             <Tag label="Agent" tagStyle="subtle" />
@@ -420,7 +420,7 @@ export const Entity: Story = {
                 <Card appearance="outlined">
                   <CC>
                     <Stack gap="200">
-                      <Text variant="heading-h5" as="span">Chiffres clés — Avril 2026</Text>
+                      <Text variant="heading-s" as="span">Chiffres clés — Avril 2026</Text>
                       <div className={css["metricsGrid"]}>
                         <MetricTile label="Contrat" value="151.67" unit="h" />
                         <MetricTile label="Heures pay." value="151.67" unit="h" />
@@ -562,7 +562,7 @@ export const Dashboard: Story = {
               <CC padding="var(--space300)">
                 <Stack gap="200">
                   <Stack gap="050">
-                    <Text variant="heading-h2" as="span">Bonjour Axel</Text>
+                    <Text variant="heading-xl" as="span">Bonjour Axel</Text>
                     <Text variant="body-m" as="span" color="subtle">{"Vous avez 3 alertes et 30 vacations non affectées ce mois-ci."}</Text>
                   </Stack>
                   <Cluster gap="100">
@@ -589,7 +589,7 @@ export const Dashboard: Story = {
                   <CC>
                     <Stack gap="200">
                       <Cluster justify="between" align="center">
-                        <Text variant="heading-h5" as="span">Activité récente</Text>
+                        <Text variant="heading-s" as="span">Activité récente</Text>
                         <Button appearance="link" size="small">Tout voir</Button>
                       </Cluster>
                       <Divider />
@@ -619,7 +619,7 @@ export const Dashboard: Story = {
                   <CC>
                     <Stack gap="200">
                       <Cluster justify="between" align="center">
-                        <Text variant="heading-h5" as="span">Couverture</Text>
+                        <Text variant="heading-s" as="span">Couverture</Text>
                         <Text variant="body-s" as="span" color="subtlest">Avril 2026</Text>
                       </Cluster>
                       <Divider />
@@ -635,7 +635,7 @@ export const Dashboard: Story = {
             {/* Sites */}
             <Stack gap="200">
               <Cluster justify="between" align="center">
-                <Text variant="heading-h5" as="span">Sites actifs</Text>
+                <Text variant="heading-s" as="span">Sites actifs</Text>
                 <Button appearance="link" size="small">Voir tous</Button>
               </Cluster>
               <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
@@ -655,9 +655,9 @@ export const Dashboard: Story = {
                           <Tag label={s.secteur} tagStyle="subtle" />
                           <Divider />
                           <div className={css["siteStats"]}>
-                            <Stack gap="0"><Text variant="body-s" as="span" color="subtlest">Vacations</Text><Text variant="heading-h5" as="span">{String(s.vac)}</Text></Stack>
-                            <Stack gap="0"><Text variant="body-s" as="span" color="subtlest">Non affect.</Text><Text variant="heading-h5" as="span" color={s.nonAff > 0 ? "warning" : undefined}>{String(s.nonAff)}</Text></Stack>
-                            <Stack gap="0"><Text variant="body-s" as="span" color="subtlest">Couverture</Text><Text variant="heading-h5" as="span">{s.couv}</Text></Stack>
+                            <Stack gap="0"><Text variant="body-s" as="span" color="subtlest">Vacations</Text><Text variant="heading-s" as="span">{String(s.vac)}</Text></Stack>
+                            <Stack gap="0"><Text variant="body-s" as="span" color="subtlest">Non affect.</Text><Text variant="heading-s" as="span" color={s.nonAff > 0 ? "warning" : undefined}>{String(s.nonAff)}</Text></Stack>
+                            <Stack gap="0"><Text variant="body-s" as="span" color="subtlest">Couverture</Text><Text variant="heading-s" as="span">{s.couv}</Text></Stack>
                           </div>
                         </Stack>
                       </CC>
@@ -720,7 +720,7 @@ export const Settings: Story = {
                                 <Badge label={`${r.count}`} appearance="neutral" importance="medium" />
                               </Cluster>
                               <Stack gap="050">
-                                <Text variant="heading-h5" as="span">{r.role}</Text>
+                                <Text variant="heading-s" as="span">{r.role}</Text>
                                 <Text variant="body-s" as="span" color="subtle">{r.desc}</Text>
                               </Stack>
                             </Stack>
@@ -738,7 +738,7 @@ export const Settings: Story = {
                 <Stack gap="300">
                   <Cluster justify="between" align="center">
                     <Stack gap="050">
-                      <Text variant="heading-h5" as="span">Fonctions</Text>
+                      <Text variant="heading-s" as="span">Fonctions</Text>
                       <Text variant="body-m" as="span" color="subtle">Affinez les permissions au-delà des rôles.</Text>
                     </Stack>
                     <Button color="brand" iconBefore="Add">Nouvelle fonction</Button>

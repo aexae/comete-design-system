@@ -25,19 +25,19 @@ export type TextVariant =
   | "hero-xs-bold"
   | "hero-xxs-bold"
   // Heading — Semibold (default)
-  | "heading-h1"
-  | "heading-h2"
-  | "heading-h3"
-  | "heading-h4"
-  | "heading-h5"
+  | "heading-xxl"
+  | "heading-xl"
+  | "heading-l"
+  | "heading-m"
+  | "heading-s"
   | "heading-xs"
   | "heading-xxs"
   // Heading — Bold
-  | "heading-h1-bold"
-  | "heading-h2-bold"
-  | "heading-h3-bold"
-  | "heading-h4-bold"
-  | "heading-h5-bold"
+  | "heading-xxl-bold"
+  | "heading-xl-bold"
+  | "heading-l-bold"
+  | "heading-m-bold"
+  | "heading-s-bold"
   | "heading-xs-bold"
   | "heading-xxs-bold"
   // Body
@@ -114,18 +114,18 @@ const DEFAULT_ELEMENT_MAP: Record<TextVariant, ElementType> = {
   "hero-xs-bold": "h2",
   "hero-xxs-bold": "h2",
   // Heading
-  "heading-h1": "h1",
-  "heading-h2": "h2",
-  "heading-h3": "h3",
-  "heading-h4": "h4",
-  "heading-h5": "h5",
+  "heading-xxl": "h1",
+  "heading-xl": "h2",
+  "heading-l": "h3",
+  "heading-m": "h4",
+  "heading-s": "h5",
   "heading-xs": "h6",
   "heading-xxs": "h6",
-  "heading-h1-bold": "h1",
-  "heading-h2-bold": "h2",
-  "heading-h3-bold": "h3",
-  "heading-h4-bold": "h4",
-  "heading-h5-bold": "h5",
+  "heading-xxl-bold": "h1",
+  "heading-xl-bold": "h2",
+  "heading-l-bold": "h3",
+  "heading-m-bold": "h4",
+  "heading-s-bold": "h5",
   "heading-xs-bold": "h6",
   "heading-xxs-bold": "h6",
   // Body
@@ -160,7 +160,7 @@ const DEFAULT_ELEMENT_MAP: Record<TextVariant, ElementType> = {
  * ```tsx
  * import { Text } from "@naxit/comete-design-system";
  *
- * <Text variant="heading-h1">Titre de page</Text>
+ * <Text variant="heading-xxl">Titre de page</Text>
  * <Text variant="body-m" color="subtle">Description secondaire</Text>
  * <Text variant="body-m" underline>Lien souligné</Text>
  * <Text variant="body-m" italic>Texte en italique</Text>

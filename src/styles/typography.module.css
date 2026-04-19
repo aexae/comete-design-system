@@ -140,9 +140,9 @@
  * HEADING
  * ===================================================================== */
 
-/* --- Heading H1 / XXL (32px) ----------------------------------------- */
+/* --- Heading XXL (32px) ---------------------------------------------- */
 
-.heading-h1 {
+.heading-xxl {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xxl);
   font-weight: var(--font-weight-semibold);
@@ -150,7 +150,7 @@
   letter-spacing: var(--letter-spacing-negative-extra-tight);
 }
 
-.heading-h1-bold {
+.heading-xxl-bold {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xxl);
   font-weight: var(--font-weight-bold);
@@ -158,9 +158,9 @@
   letter-spacing: var(--letter-spacing-negative-extra-tight);
 }
 
-/* --- Heading H2 / XL (28px) ----------------------------------------- */
+/* --- Heading XL (28px) ----------------------------------------------- */
 
-.heading-h2 {
+.heading-xl {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xl);
   font-weight: var(--font-weight-semibold);
@@ -168,7 +168,7 @@
   letter-spacing: var(--letter-spacing-negative-extra-tight);
 }
 
-.heading-h2-bold {
+.heading-xl-bold {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xl);
   font-weight: var(--font-weight-bold);
@@ -176,9 +176,9 @@
   letter-spacing: var(--letter-spacing-negative-extra-tight);
 }
 
-/* --- Heading H3 / L (24px) ------------------------------------------ */
+/* --- Heading L (24px) ------------------------------------------------ */
 
-.heading-h3 {
+.heading-l {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-l);
   font-weight: var(--font-weight-semibold);
@@ -186,7 +186,7 @@
   letter-spacing: var(--letter-spacing-negative-tight);
 }
 
-.heading-h3-bold {
+.heading-l-bold {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-l);
   font-weight: var(--font-weight-bold);
@@ -194,9 +194,9 @@
   letter-spacing: var(--letter-spacing-negative-tight);
 }
 
-/* --- Heading H4 / M (20px) ------------------------------------------ */
+/* --- Heading M (20px) ------------------------------------------------ */
 
-.heading-h4 {
+.heading-m {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-m);
   font-weight: var(--font-weight-semibold);
@@ -204,7 +204,7 @@
   letter-spacing: var(--letter-spacing-negative-tight);
 }
 
-.heading-h4-bold {
+.heading-m-bold {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-m);
   font-weight: var(--font-weight-bold);
@@ -212,16 +212,16 @@
   letter-spacing: var(--letter-spacing-negative-tight);
 }
 
-/* --- Heading H5 / S (16px) ------------------------------------------ */
+/* --- Heading S (16px) ------------------------------------------------ */
 
-.heading-h5 {
+.heading-s {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-s);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-ui-s);
 }
 
-.heading-h5-bold {
+.heading-s-bold {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-s);
   font-weight: var(--font-weight-bold);
