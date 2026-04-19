@@ -32,6 +32,7 @@ export * from "./Page";
 export * from "./SideNav";
 export * from "./TopNav";
 export * from "./Popover";
+export * from "./ProgressBar";
 export * from "./ProgressIndicator";
 export * from "./Popup";
 export * from "./Radio";
