@@ -19,6 +19,8 @@ import {
   Field,
   Avatar,
   Badge,
+  Tag,
+  Text,
   Breadcrumbs,
   BreadcrumbItem,
   Divider,
@@ -43,9 +45,6 @@ const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
-
-// -----------------------------------------------------------------------
-// Meta
 
 // -----------------------------------------------------------------------
 // Layout grid overlay (like Figma "Show layout grid")
@@ -76,9 +75,7 @@ const meta = {
       table: { category: "Debug" },
     },
   },
-  args: {
-    showGrid: false,
-  },
+  args: { showGrid: false },
   decorators: [
     (Story, context) => (
       <DrawerProvider>
@@ -96,8 +93,7 @@ const meta = {
           "Gabarits de pages composés à partir des primitives du DS.",
           "Chaque template est **responsive** (mobile → tablet → desktop).",
           "",
-          "Activez **Show grid** dans les contrôles pour afficher la grille",
-          "12 colonnes (comme Figma Layout Grid).",
+          "Activez **Show grid** dans les contrôles pour afficher la grille 12 colonnes.",
           "",
           "| Template | Usage |",
           "|---|---|",
@@ -119,39 +115,19 @@ export default meta;
 type Story = StoryObj;
 
 // -----------------------------------------------------------------------
-// Tokens
-
-const f = {
-  family: "var(--font-family-primary)",
-  xxs: "var(--font-size-ui-xxs)",
-  xs: "var(--font-size-ui-xs)",
-  s: "var(--font-size-ui-s)",
-  m: "var(--font-size-ui-m)",
-  l: "var(--font-size-ui-l)",
-  xl: "var(--font-size-ui-xl)",
-};
-const c = { default: "var(--text-default)", subtle: "var(--text-subtle)", subtlest: "var(--text-subtlest)" };
-
-// -----------------------------------------------------------------------
 // Helpers
-
-function T({ size = "s", weight = 600, color = c.default, children }: {
-  size?: "xxs" | "xs" | "s" | "m" | "l" | "xl"; weight?: number; color?: string; children: React.ReactNode;
-}) {
-  return <span style={{ fontFamily: f.family, fontSize: f[size], fontWeight: weight, color, lineHeight: `var(--line-height-ui-${size})`, wordBreak: "break-word" }}>{children}</span>;
-}
 
 function CC({ children, padding = "var(--space200)" }: { children: React.ReactNode; padding?: string }) {
   return <div style={{ padding, flex: 1, minWidth: 0 }}>{children}</div>;
 }
 
-function FilterPanel({ showHeader = true }: { showHeader?: boolean; onReset?: () => void }) {
+function FilterPanel({ showHeader = true }: { showHeader?: boolean }) {
   return (
     <Stack gap="200">
-      {showHeader && <><T>Filtres</T><Divider /></>}
+      {showHeader && <><Text variant="heading-h5" as="span">Filtres</Text><Divider /></>}
       {["Société / Agence", "Secteur", "Habilitations", "Formalités", "Équipements"].map((label) => (
         <Stack key={label} gap="075">
-          <T size="xxs" weight={600} color={c.subtlest}>{label.toUpperCase()}</T>
+          <Text variant="label" as="span" color="subtlest">{label.toUpperCase()}</Text>
           <div className={css["placeholder"]} style={{ height: 36 }}>Tous</div>
         </Stack>
       ))}
@@ -159,7 +135,6 @@ function FilterPanel({ showHeader = true }: { showHeader?: boolean; onReset?: ()
   );
 }
 
-/** Agent card for mobile view (replaces truncated table rows). */
 function AgentCard({ initials, name, contrat, heures, delta, status }: {
   initials: string; name: string; contrat: string; heures: string; delta: string;
   status: "success" | "critical" | "warning" | "neutral";
@@ -170,16 +145,16 @@ function AgentCard({ initials, name, contrat, heures, delta, status }: {
         <Stack gap="100">
           <Cluster gap="100" align="center">
             <Avatar size="small" initials={initials} />
-            <T size="xs" weight={600}>{name}</T>
+            <Text variant="heading-xs" as="span">{name}</Text>
           </Cluster>
           {(contrat || heures || delta) && (
             <div className={css["siteStats"]}>
-              {contrat && <Stack gap="0"><T size="xxs" weight={400} color={c.subtlest}>Contrat</T><T size="xs">{contrat}</T></Stack>}
-              {heures && <Stack gap="0"><T size="xxs" weight={400} color={c.subtlest}>Heures</T><T size="xs">{heures}</T></Stack>}
+              {contrat && <Stack gap="0"><Text variant="body-s" as="span" color="subtlest">Contrat</Text><Text variant="heading-xs" as="span">{contrat}</Text></Stack>}
+              {heures && <Stack gap="0"><Text variant="body-s" as="span" color="subtlest">Heures</Text><Text variant="heading-xs" as="span">{heures}</Text></Stack>}
               {delta && (
                 <Stack gap="0">
-                  <T size="xxs" weight={400} color={c.subtlest}>Delta</T>
-                  <T size="xs" weight={600} color={status === "success" ? "var(--text-success)" : "var(--text-critical)"}>{delta}</T>
+                  <Text variant="body-s" as="span" color="subtlest">Delta</Text>
+                  <Text variant="heading-xs" as="span" color={status === "success" ? "success" : "critical"}>{delta}</Text>
                 </Stack>
               )}
             </div>
@@ -187,6 +162,91 @@ function AgentCard({ initials, name, contrat, heures, delta, status }: {
         </Stack>
       </CC>
     </Card>
+  );
+}
+
+function PropRow({ icon, label, value }: { icon: IconName; label: string; value: string }) {
+  return (
+    <Stack direction="row" gap="100" align="start">
+      <Icon icon={icon} />
+      <Stack gap="0">
+        <Text variant="body-s" as="span" color="subtlest">{label}</Text>
+        <Text variant="body-m" as="span">{value}</Text>
+      </Stack>
+    </Stack>
+  );
+}
+
+function MetricTile({ label, value, unit, highlight }: { label: string; value: string; unit?: string; highlight?: "success" | "critical" | "warning" }) {
+  return (
+    <div className={css["metricTile"]}>
+      <Stack gap="025">
+        <Text variant="body-s" as="span" color="subtlest">{label}</Text>
+        <Text variant="heading-h3" as="span" color={highlight}>
+          {value}
+          {unit && <Text variant="body-s" as="span" color="subtlest"> {unit}</Text>}
+        </Text>
+      </Stack>
+    </div>
+  );
+}
+
+function KpiTile({ icon, iconColor = "default", value, label, trend, trendUp }: {
+  icon: IconName; iconColor?: "default" | "success" | "critical" | "warning" | "information";
+  value: string; label: string; trend?: string; trendUp?: boolean;
+}) {
+  return (
+    <Card appearance="outlined">
+      <CC>
+        <Stack gap="150">
+          <Cluster justify="between" align="center">
+            <div className={css["iconPuck"]}><Icon icon={icon} color={iconColor} /></div>
+            {trend != null && (
+              <Text variant="body-s-medium" as="span" color={trendUp === true ? "success" : trendUp === false ? "critical" : "subtlest"}>
+                {trend}
+              </Text>
+            )}
+          </Cluster>
+          <Stack gap="0">
+            <Text variant="heading-h2" as="span">{value}</Text>
+            <Text variant="body-s" as="span" color="subtlest">{label}</Text>
+          </Stack>
+        </Stack>
+      </CC>
+    </Card>
+  );
+}
+
+function ProgressRow({ icon, label, current, total }: { icon: IconName; label: string; current: number; total: number }) {
+  const pct = Math.round((current / total) * 100);
+  return (
+    <Stack gap="075">
+      <Cluster justify="between" align="center">
+        <Stack direction="row" gap="075" align="center">
+          <Icon icon={icon} />
+          <Text variant="body-m" as="span">{label}</Text>
+        </Stack>
+        <Text variant="heading-xs" as="span">{current}/{total}</Text>
+      </Cluster>
+      <div className={css["progressTrack"]}>
+        <div className={css["progressFill"]} style={{
+          width: `${Math.max(pct, 2)}%`,
+          background: pct < 25 ? "var(--background-critical-bold-default)" : pct < 75 ? "var(--background-warning-bold-default)" : "var(--background-success-bold-default)",
+        }} />
+      </div>
+    </Stack>
+  );
+}
+
+function TableRow({ cells, isHeader }: { cells: React.ReactNode[]; isHeader?: boolean }) {
+  return (
+    <div
+      className={css["tableRow"]}
+      data-header={isHeader ? "" : undefined}
+      style={{ display: "grid", gridTemplateColumns: `2fr repeat(${cells.length - 1}, 1fr)` }}
+    >
+      {cells.map((cell, i) => <span key={i} className={css["tableCell"]}>{cell}</span>)}
+    </div>
   );
 }
 
@@ -208,7 +268,6 @@ const AGENTS = [
  *
  * - **Desktop** : tableau + sidebar filtres (Grid 9+3)
  * - **Mobile** : tableau bascule en **cards**, filtres dans un **Drawer**
- * - Toolbar : `Search` + `Filtres` côte à côte, actions à droite
  * - Infinite scroll
  */
 export const Collection: Story = {
@@ -241,7 +300,7 @@ export const Collection: Story = {
             <Grid gap="300">
               <Grid.Col span={{ mobile: 12, desktop: 9 }}>
                 <Stack gap="150">
-                  <T size="xxs" weight={400} color={c.subtlest}>140 agents</T>
+                  <Text variant="body-s" as="span" color="subtlest">140 agents</Text>
 
                   {/* Desktop: table */}
                   <div className={css["tableDesktopOnly"]}>
@@ -252,7 +311,7 @@ export const Collection: Story = {
                           <TableRow key={a.mat} cells={[
                             <><Avatar size="xsmall" initials={a.initials} /><span>{a.name}</span></>,
                             a.mat, a.contrat, a.heures,
-                            a.delta ? <T key="d" size="xs" weight={600} color={a.status === "success" ? "var(--text-success)" : "var(--text-critical)"}>{a.delta}</T> : null,
+                            a.delta ? <Text key="d" variant="heading-xs" as="span" color={a.status === "success" ? "success" : "critical"}>{a.delta}</Text> : null,
                           ]} />
                         ))}
                       </div>
@@ -267,7 +326,7 @@ export const Collection: Story = {
                   </div>
 
                   <div style={{ textAlign: "center", padding: "var(--space200)" }}>
-                    <T size="xxs" weight={400} color={c.subtlest}>Scroll pour charger plus</T>
+                    <Text variant="body-s" as="span" color="subtlest">Scroll pour charger plus</Text>
                   </div>
                 </Stack>
               </Grid.Col>
@@ -294,28 +353,14 @@ export const Collection: Story = {
   },
 };
 
-function TableRow({ cells, isHeader }: { cells: React.ReactNode[]; isHeader?: boolean }) {
-  return (
-    <div
-      className={css["tableRow"]}
-      data-header={isHeader ? "" : undefined}
-      style={{ display: "grid", gridTemplateColumns: `2fr repeat(${cells.length - 1}, 1fr)` }}
-    >
-      {cells.map((cell, i) => <span key={i} className={css["tableCell"]}>{cell}</span>)}
-    </div>
-  );
-}
-
 // -----------------------------------------------------------------------
 // 2. ENTITY
 
 /**
  * **Entity** — Fiche détail avec sidebar profil + contenu tabs.
  *
- * - Actions (Modifier, Archiver) intégrées **sous le profil** dans la sidebar
- *   (pas dans le header qui tronque sur mobile)
+ * - Actions (Modifier, Archiver) dans la sidebar, sous le profil
  * - `SectionMessage` pour les messages contextuels (pas Banner)
- * - Sidebar 5 cols tablet, 4 desktop / Contenu 7+8
  */
 export const Entity: Story = {
   name: "Entity (fiche détail)",
@@ -336,20 +381,18 @@ export const Entity: Story = {
         />
         <Page.Body>
           <Grid gap="300">
-            {/* ---- Profile sidebar ---- */}
             <Grid.Col span={{ mobile: 12, tablet: 5, desktop: 4 }}>
               <Stack gap="200">
-                {/* Identity */}
                 <Card appearance="outlined">
                   <div className={css["cardColumn"]}>
                     <CC padding="var(--space300)">
                       <Stack gap="200" align="center">
                         <Avatar size="xlarge" initials="DM" />
                         <Stack gap="050" align="center">
-                          <T size="m">DUPONT Marie</T>
+                          <Text variant="heading-h4" as="span">DUPONT Marie</Text>
                           <Cluster gap="075">
-                            <Badge label="CDI" appearance="success" importance="medium" />
-                            <Badge label="Agent" appearance="neutral" importance="medium" />
+                            <Tag label="CDI" appearance="success" tagStyle="subtle" />
+                            <Tag label="Agent" tagStyle="subtle" />
                           </Cluster>
                         </Stack>
                       </Stack>
@@ -365,7 +408,6 @@ export const Entity: Story = {
                       </Stack>
                     </CC>
                     <Divider />
-                    {/* Actions — visible and accessible, not buried in header */}
                     <CC>
                       <Cluster gap="100">
                         <Button appearance="subtle" iconBefore="Edit">Modifier</Button>
@@ -375,11 +417,10 @@ export const Entity: Story = {
                   </div>
                 </Card>
 
-                {/* Chiffres clés */}
                 <Card appearance="outlined">
                   <CC>
                     <Stack gap="200">
-                      <T>Chiffres clés — Avril 2026</T>
+                      <Text variant="heading-h5" as="span">Chiffres clés — Avril 2026</Text>
                       <div className={css["metricsGrid"]}>
                         <MetricTile label="Contrat" value="151.67" unit="h" />
                         <MetricTile label="Heures pay." value="151.67" unit="h" />
@@ -393,7 +434,6 @@ export const Entity: Story = {
                   </CC>
                 </Card>
 
-                {/* Quick links */}
                 <Card appearance="outlined">
                   <CC>
                     <Stack gap="100">
@@ -406,7 +446,6 @@ export const Entity: Story = {
               </Stack>
             </Grid.Col>
 
-            {/* ---- Tabs content ---- */}
             <Grid.Col span={{ mobile: 12, tablet: 7, desktop: 8 }}>
               <Card appearance="outlined">
                 <div className={css["cardColumn"]}>
@@ -424,7 +463,7 @@ export const Entity: Story = {
                           <Cluster justify="between" align="center">
                             <Stack direction="row" gap="100" align="center">
                               <Button appearance="subtle" size="small" iconBefore="ChevronLeft" aria-label="Précédent" />
-                              <T size="xs">Avril 2026</T>
+                              <Text variant="heading-xs" as="span">Avril 2026</Text>
                               <Button appearance="subtle" size="small" iconBefore="ChevronRight" aria-label="Suivant" />
                             </Stack>
                             <Button appearance="subtle" iconBefore="Download">Exporter</Button>
@@ -449,7 +488,7 @@ export const Entity: Story = {
                             <CC padding="var(--space300)">
                               <Stack gap="100" align="center">
                                 <Icon icon="Newspaper" />
-                                <T size="xs" weight={400} color={c.subtlest}>Aucun document pour cet agent.</T>
+                                <Text variant="body-m" color="subtlest" align="center">Aucun document pour cet agent.</Text>
                                 <Button appearance="subtle" iconBefore="UploadFile">Importer un document</Button>
                               </Stack>
                             </CC>
@@ -467,10 +506,10 @@ export const Entity: Story = {
                             { date: "28/03/2026", action: "Fiche agent mise à jour", user: "A. Cremont" },
                           ].map((e, i) => (
                             <Stack key={i} direction="row" gap="200" align="start">
-                              <T size="xxs" weight={400} color={c.subtlest}>{e.date}</T>
+                              <Text variant="body-s" as="span" color="subtlest">{e.date}</Text>
                               <Stack gap="0">
-                                <T size="xs" weight={400}>{e.action}</T>
-                                <T size="xxs" weight={400} color={c.subtlest}>{e.user}</T>
+                                <Text variant="body-m" as="span">{e.action}</Text>
+                                <Text variant="body-s" as="span" color="subtlest">{e.user}</Text>
                               </Stack>
                             </Stack>
                           ))}
@@ -488,41 +527,15 @@ export const Entity: Story = {
   ),
 };
 
-function PropRow({ icon, label, value }: { icon: IconName; label: string; value: string }) {
-  return (
-    <Stack direction="row" gap="100" align="start">
-      <Icon icon={icon} size={16} color="default" />
-      <Stack gap="0">
-        <T size="xxs" weight={400} color={c.subtlest}>{label}</T>
-        <T size="xs" weight={400}>{value}</T>
-      </Stack>
-    </Stack>
-  );
-}
-
-function MetricTile({ label, value, unit, highlight }: { label: string; value: string; unit?: string; highlight?: "success" | "critical" | "warning" }) {
-  return (
-    <div className={css["metricTile"]}>
-      <Stack gap="025">
-        <T size="xxs" weight={400} color={c.subtlest}>{label}</T>
-        <T size="l" color={highlight ? `var(--text-${highlight})` : c.default}>
-          {value}
-          {unit && <span style={{ fontSize: f.xxs, fontWeight: 400, color: c.subtlest, marginLeft: 2 }}>{unit}</span>}
-        </T>
-      </Stack>
-    </div>
-  );
-}
-
 // -----------------------------------------------------------------------
 // 3. DASHBOARD
 
 /**
  * **Dashboard** — Vue d'ensemble avec KPIs, activité et résumés.
  *
- * - Greeting card avec actions rapides intégrées
+ * - Greeting card avec actions rapides
  * - KPI tiles avec trends
- * - Activité (feed) + Couverture (progress bars) — 2 colonnes dès tablet
+ * - Activité + Couverture — 2 colonnes dès tablet
  * - Sites en cards responsives
  */
 export const Dashboard: Story = {
@@ -536,7 +549,7 @@ export const Dashboard: Story = {
           trailing={
             <Stack direction="row" gap="150" align="center">
               <Button appearance="subtle" size="small" iconBefore="ChevronLeft" aria-label="Précédent" />
-              <T size="xs" weight={500}>Avril 2026</T>
+              <Text variant="body-m-medium" as="span">Avril 2026</Text>
               <Button appearance="subtle" size="small" iconBefore="ChevronRight" aria-label="Suivant" />
               <Avatar size="medium" initials="AC" />
             </Stack>
@@ -544,13 +557,13 @@ export const Dashboard: Story = {
         />
         <Page.Body>
           <Stack gap="400">
-            {/* Greeting + actions */}
+            {/* Greeting */}
             <Card appearance="neutral">
               <CC padding="var(--space300)">
                 <Stack gap="200">
                   <Stack gap="050">
-                    <T size="xl">Bonjour Axel</T>
-                    <T size="xs" weight={400} color={c.subtle}>{"Vous avez 3 alertes et 30 vacations non affectées ce mois-ci."}</T>
+                    <Text variant="heading-h2" as="span">Bonjour Axel</Text>
+                    <Text variant="body-m" as="span" color="subtle">{"Vous avez 3 alertes et 30 vacations non affectées ce mois-ci."}</Text>
                   </Stack>
                   <Cluster gap="100">
                     <Button color="brand" iconBefore="CalendarMonth">Planifier</Button>
@@ -576,7 +589,7 @@ export const Dashboard: Story = {
                   <CC>
                     <Stack gap="200">
                       <Cluster justify="between" align="center">
-                        <T>Activité récente</T>
+                        <Text variant="heading-h5" as="span">Activité récente</Text>
                         <Button appearance="link" size="small">Tout voir</Button>
                       </Cluster>
                       <Divider />
@@ -587,12 +600,14 @@ export const Dashboard: Story = {
                         { icon: "Group" as IconName, title: "3 agents ajoutés", sub: "LEROY, GARNIER, SIMON", date: "22/03", bold: false },
                       ].map((item, i) => (
                         <Stack key={i} direction="row" gap="150" align="start">
-                          <div className={css["activityIcon"]}><Icon icon={item.icon} size={20} color="default" /></div>
+                          <div className={css["activityIcon"]}><Icon icon={item.icon} /></div>
                           <Stack gap="0">
-                            <T size="xs" weight={item.bold ? 600 : 400}>{item.title}</T>
-                            <T size="xxs" weight={400} color={c.subtlest}>{item.sub}</T>
+                            <Text variant={item.bold ? "body-m-medium" : "body-m"} as="span">{item.title}</Text>
+                            <Text variant="body-s" as="span" color="subtlest">{item.sub}</Text>
                           </Stack>
-                          <span style={{ marginLeft: "auto", flexShrink: 0 }}><T size="xxs" weight={400} color={c.subtlest}>{item.date}</T></span>
+                          <span style={{ marginLeft: "auto", flexShrink: 0 }}>
+                            <Text variant="body-s" as="span" color="subtlest">{item.date}</Text>
+                          </span>
                         </Stack>
                       ))}
                     </Stack>
@@ -604,8 +619,8 @@ export const Dashboard: Story = {
                   <CC>
                     <Stack gap="200">
                       <Cluster justify="between" align="center">
-                        <T>Couverture</T>
-                        <T size="xxs" weight={400} color={c.subtlest}>Avril 2026</T>
+                        <Text variant="heading-h5" as="span">Couverture</Text>
+                        <Text variant="body-s" as="span" color="subtlest">Avril 2026</Text>
                       </Cluster>
                       <Divider />
                       <ProgressRow icon="Group" label="Agents" current={1} total={140} />
@@ -620,7 +635,7 @@ export const Dashboard: Story = {
             {/* Sites */}
             <Stack gap="200">
               <Cluster justify="between" align="center">
-                <T>Sites actifs</T>
+                <Text variant="heading-h5" as="span">Sites actifs</Text>
                 <Button appearance="link" size="small">Voir tous</Button>
               </Cluster>
               <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
@@ -634,15 +649,15 @@ export const Dashboard: Story = {
                       <CC>
                         <Stack gap="150">
                           <Stack gap="025">
-                            <T size="xs">{s.site}</T>
-                            <T size="xxs" weight={400} color={c.subtlest}>{s.client}</T>
+                            <Text variant="heading-xs" as="span">{s.site}</Text>
+                            <Text variant="body-s" as="span" color="subtlest">{s.client}</Text>
                           </Stack>
-                          <Badge label={s.secteur} appearance="neutral" importance="medium" />
+                          <Tag label={s.secteur} tagStyle="subtle" />
                           <Divider />
                           <div className={css["siteStats"]}>
-                            <Stack gap="0"><T size="xxs" weight={400} color={c.subtlest}>Vacations</T><T size="s">{String(s.vac)}</T></Stack>
-                            <Stack gap="0"><T size="xxs" weight={400} color={c.subtlest}>Non affect.</T><T size="s" color={s.nonAff > 0 ? "var(--text-warning)" : c.default}>{String(s.nonAff)}</T></Stack>
-                            <Stack gap="0"><T size="xxs" weight={400} color={c.subtlest}>Couverture</T><T size="s">{s.couv}</T></Stack>
+                            <Stack gap="0"><Text variant="body-s" as="span" color="subtlest">Vacations</Text><Text variant="heading-h5" as="span">{String(s.vac)}</Text></Stack>
+                            <Stack gap="0"><Text variant="body-s" as="span" color="subtlest">Non affect.</Text><Text variant="heading-h5" as="span" color={s.nonAff > 0 ? "warning" : undefined}>{String(s.nonAff)}</Text></Stack>
+                            <Stack gap="0"><Text variant="body-s" as="span" color="subtlest">Couverture</Text><Text variant="heading-h5" as="span">{s.couv}</Text></Stack>
                           </div>
                         </Stack>
                       </CC>
@@ -658,58 +673,15 @@ export const Dashboard: Story = {
   ),
 };
 
-function KpiTile({ icon, iconColor = "default", value, label, trend, trendUp }: {
-  icon: IconName; iconColor?: "default" | "success" | "critical" | "warning" | "information";
-  value: string; label: string; trend?: string; trendUp?: boolean;
-}) {
-  return (
-    <Card appearance="outlined">
-      <CC>
-        <Stack gap="150">
-          <Cluster justify="between" align="center">
-            <div className={css["iconPuck"]}><Icon icon={icon} color={iconColor} size={24} /></div>
-            {trend != null && <T size="xxs" weight={500} color={trendUp === true ? "var(--text-success)" : trendUp === false ? "var(--text-critical)" : c.subtlest}>{trend}</T>}
-          </Cluster>
-          <Stack gap="0">
-            <T size="xl" weight={700}>{value}</T>
-            <T size="xxs" weight={400} color={c.subtlest}>{label}</T>
-          </Stack>
-        </Stack>
-      </CC>
-    </Card>
-  );
-}
-
-function ProgressRow({ icon, label, current, total }: { icon: IconName; label: string; current: number; total: number }) {
-  const pct = Math.round((current / total) * 100);
-  return (
-    <Stack gap="075">
-      <Cluster justify="between" align="center">
-        <Stack direction="row" gap="075" align="center">
-          <Icon icon={icon} size={16} color="default" />
-          <T size="xs" weight={400}>{label}</T>
-        </Stack>
-        <T size="xs">{current}/{total}</T>
-      </Cluster>
-      <div className={css["progressTrack"]}>
-        <div className={css["progressFill"]} style={{
-          width: `${Math.max(pct, 2)}%`,
-          background: pct < 25 ? "var(--background-critical-bold-default)" : pct < 75 ? "var(--background-warning-bold-default)" : "var(--background-success-bold-default)",
-        }} />
-      </div>
-    </Stack>
-  );
-}
-
 // -----------------------------------------------------------------------
 // 4. SETTINGS
 
 /**
  * **Settings** — Page de paramètres avec tabs.
  *
- * - `SectionMessage` pour les messages informatifs (pas Banner)
+ * - `SectionMessage` pour les messages informatifs
  * - `Field` + `TextField` pour les formulaires
- * - Grille de cards pour les rôles
+ * - Grille de cards pour les rôles, Tag pour les étiquettes
  */
 export const Settings: Story = {
   name: "Settings (paramètres)",
@@ -744,12 +716,12 @@ export const Settings: Story = {
                           <CC>
                             <Stack gap="150">
                               <Cluster justify="between" align="start">
-                                <div className={css["iconPuck"]}><Icon icon={r.icon} size={24} color="default" /></div>
+                                <div className={css["iconPuck"]}><Icon icon={r.icon} /></div>
                                 <Badge label={`${r.count}`} appearance="neutral" importance="medium" />
                               </Cluster>
                               <Stack gap="050">
-                                <T>{r.role}</T>
-                                <T size="xxs" weight={400} color={c.subtle}>{r.desc}</T>
+                                <Text variant="heading-h5" as="span">{r.role}</Text>
+                                <Text variant="body-s" as="span" color="subtle">{r.desc}</Text>
                               </Stack>
                             </Stack>
                           </CC>
@@ -766,13 +738,12 @@ export const Settings: Story = {
                 <Stack gap="300">
                   <Cluster justify="between" align="center">
                     <Stack gap="050">
-                      <T>Fonctions</T>
-                      <T size="xs" weight={400} color={c.subtle}>Affinez les permissions au-delà des rôles.</T>
+                      <Text variant="heading-h5" as="span">Fonctions</Text>
+                      <Text variant="body-m" as="span" color="subtle">Affinez les permissions au-delà des rôles.</Text>
                     </Stack>
                     <Button color="brand" iconBefore="Add">Nouvelle fonction</Button>
                   </Cluster>
 
-                  {/* Desktop: table */}
                   <div className={css["tableDesktopOnly"]}>
                     <Card appearance="outlined">
                       <div className={css["cardColumn"]}>
@@ -783,8 +754,8 @@ export const Settings: Story = {
                           { fn: "Gestionnaire RH", role: "Admin.", users: "3", date: "01/04/2026" },
                         ].map((fn, i) => (
                           <TableRow key={i} cells={[
-                            <span key="fn" style={{ fontWeight: 500 }}>{fn.fn}</span>,
-                            <Badge key="r" label={fn.role} appearance="neutral" importance="medium" />,
+                            <Text key="fn" variant="body-m-medium" as="span">{fn.fn}</Text>,
+                            <Tag key="r" label={fn.role} tagStyle="subtle" />,
                             fn.users,
                             fn.date,
                           ]} />
@@ -793,7 +764,6 @@ export const Settings: Story = {
                     </Card>
                   </div>
 
-                  {/* Mobile: cards */}
                   <div className={css["cardsMobileOnly"]}>
                     <Stack gap="100">
                       {[
@@ -805,12 +775,12 @@ export const Settings: Story = {
                           <CC>
                             <Stack gap="100">
                               <Cluster justify="between" align="center">
-                                <T size="xs">{fn.fn}</T>
-                                <Badge label={fn.role} appearance="neutral" importance="medium" />
+                                <Text variant="heading-xs" as="span">{fn.fn}</Text>
+                                <Tag label={fn.role} tagStyle="subtle" />
                               </Cluster>
                               <Cluster gap="200">
-                                <T size="xxs" weight={400} color={c.subtlest}>{fn.users} utilisateurs</T>
-                                <T size="xxs" weight={400} color={c.subtlest}>Modifié le {fn.date}</T>
+                                <Text variant="body-s" as="span" color="subtlest">{fn.users} utilisateurs</Text>
+                                <Text variant="body-s" as="span" color="subtlest">Modifié le {fn.date}</Text>
                               </Cluster>
                             </Stack>
                           </CC>
@@ -825,7 +795,7 @@ export const Settings: Story = {
             <TabPanel id="explorateur">
               <div style={{ paddingTop: "var(--space300)" }}>
                 <Stack gap="300">
-                  <T size="xs" weight={400} color={c.subtle}>{"Vérifiez les permissions effectives d'un utilisateur."}</T>
+                  <Text variant="body-m" color="subtle">{"Vérifiez les permissions effectives d'un utilisateur."}</Text>
                   <Card appearance="outlined">
                     <CC>
                       <Stack gap="200">
@@ -849,7 +819,7 @@ export const Settings: Story = {
                         <Divider />
                         <Stack gap="100" align="center">
                           <Icon icon="Search" />
-                          <T size="xs" weight={400} color={c.subtlest}>Sélectionnez un utilisateur et une ressource.</T>
+                          <Text variant="body-m" color="subtlest" align="center">Sélectionnez un utilisateur et une ressource.</Text>
                         </Stack>
                       </Stack>
                     </CC>
