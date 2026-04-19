@@ -104,15 +104,7 @@ const meta = {
       control: "select",
       options: ["hero", "heading", "body", "code"] satisfies TextType[],
     },
-    variant: {
-      control: "select",
-      options: BODY_VARIANTS.map((v) => v.value),
-      mapping: Object.fromEntries(BODY_VARIANTS.map((v) => [v.label, v.value])),
-      labels: Object.fromEntries(
-        [...HERO_VARIANTS, ...HEADING_VARIANTS, ...BODY_VARIANTS, ...CODE_VARIANTS]
-          .map((v) => [v.value, v.label]),
-      ),
-    },
+    variant: { control: "text" },
     color: {
       control: "select",
       options: [
@@ -143,9 +135,37 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // -----------------------------------------------------------------------
-// Playground
+// Playground per type — variant select is scoped to the active type
 
-export const Playground: Story = {};
+function makeVariantArgType(variants: { value: string; label: string }[]) {
+  return {
+    control: "select" as const,
+    options: variants.map((v) => v.value),
+    labels: Object.fromEntries(variants.map((v) => [v.value, v.label])),
+  };
+}
+
+export const Playground: Story = {
+  argTypes: { variant: makeVariantArgType(BODY_VARIANTS) },
+};
+
+export const PlaygroundHero: Story = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  args: { type: "hero", variant: "xxl" as any, children: "Donnez vie à vos données." },
+  argTypes: { variant: makeVariantArgType(HERO_VARIANTS) },
+};
+
+export const PlaygroundHeading: Story = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  args: { type: "heading", variant: "xxl" as any, children: "Titre de section" },
+  argTypes: { variant: makeVariantArgType(HEADING_VARIANTS) },
+};
+
+export const PlaygroundCode: Story = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  args: { type: "code", variant: "value" as any, children: "const theme = useTheme();" },
+  argTypes: { variant: makeVariantArgType(CODE_VARIANTS) },
+};
 
 // -----------------------------------------------------------------------
 // Hero
