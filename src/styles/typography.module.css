@@ -1,0 +1,392 @@
+/* typography.module.css — Styles typographiques Comète Design System
+ * Classes utilitaires consommables via composes ou directement par le composant Text.
+ * 100 % design tokens — zéro valeur hardcodée.
+ *
+ * Line-height rule: font-size × 1.25, arrondi au token LH supérieur.
+ * Headings gardent les LH Figma (plus serrés par design).
+ */
+
+/* =======================================================================
+ * HERO
+ * ===================================================================== */
+
+/* --- Hero XXL (96px) ------------------------------------------------- */
+
+.hero-xxl {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-xxl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-hero-xxl);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+.hero-xxl-semibold {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-xxl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-hero-xxl);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+/* --- Hero XL (80px) -------------------------------------------------- */
+
+.hero-xl {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-hero-xl);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+.hero-xl-semibold {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-hero-xl);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+/* --- Hero L (72px) --------------------------------------------------- */
+
+.hero-l {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-l);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-hero-l);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+.hero-l-semibold {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-l);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-hero-l);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+/* --- Hero M (64px) --------------------------------------------------- */
+
+.hero-m {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-m);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-hero-m);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+.hero-m-bold {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-m);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-hero-m);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+/* --- Hero S (56px) --------------------------------------------------- */
+
+.hero-s {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-s);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-hero-s);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+.hero-s-bold {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-s);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-hero-s);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+/* --- Hero XS (48px) -------------------------------------------------- */
+
+.hero-xs {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-xs);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-hero-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+.hero-xs-bold {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-xs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-hero-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+/* --- Hero XXS (40px) ------------------------------------------------- */
+
+.hero-xxs {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-xxs);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-hero-xxs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+.hero-xxs-bold {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-xxs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-hero-xxs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+/* =======================================================================
+ * HEADING
+ * ===================================================================== */
+
+/* --- Heading H1 / XXL (32px) ----------------------------------------- */
+
+.heading-h1 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui-xxl);
+  letter-spacing: var(--letter-spacing-negative-extra-tight);
+}
+
+.heading-h1-bold {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-ui-xxl);
+  letter-spacing: var(--letter-spacing-negative-extra-tight);
+}
+
+/* --- Heading H2 / XL (28px) ----------------------------------------- */
+
+.heading-h2 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui-xl);
+  letter-spacing: var(--letter-spacing-negative-extra-tight);
+}
+
+.heading-h2-bold {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-ui-xl);
+  letter-spacing: var(--letter-spacing-negative-extra-tight);
+}
+
+/* --- Heading H3 / L (24px) ------------------------------------------ */
+
+.heading-h3 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-l);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui-l);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+.heading-h3-bold {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-l);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-ui-l);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+/* --- Heading H4 / M (20px) ------------------------------------------ */
+
+.heading-h4 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-m);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui-m);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+.heading-h4-bold {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-m);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-ui-m);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+/* --- Heading H5 / S (16px) ------------------------------------------ */
+
+.heading-h5 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-s);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui-s);
+}
+
+.heading-h5-bold {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-s);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-ui-s);
+}
+
+/* --- Heading XS (14px) ----------------------------------------------- */
+
+.heading-xs {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui-xs);
+}
+
+.heading-xs-bold {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-ui-xs);
+}
+
+/* --- Heading XXS (12px) ---------------------------------------------- */
+
+.heading-xxs {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxs);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui-xxs);
+}
+
+.heading-xxs-bold {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-ui-xxs);
+}
+
+/* =======================================================================
+ * BODY
+ * ===================================================================== */
+
+/* --- Body L (16px) — LH rule: 16×1.25=20 → --line-height-ui-s ------- */
+
+.body-l {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-s);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-s);
+}
+
+.body-l-medium {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-s);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-s);
+}
+
+.body-l-bold {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-s);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-ui-s);
+}
+
+/* --- Body M (14px) — LH rule: 14×1.25=17.5 → --line-height-ui-xs ---- */
+
+.body-m {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xs);
+}
+
+.body-m-medium {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xs);
+}
+
+.body-m-bold {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-ui-xs);
+}
+
+/* --- Body S (12px) — LH rule: 12×1.25=15 → --line-height-ui-xxs ----- */
+
+.body-s {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xxs);
+}
+
+.body-s-medium {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xxs);
+}
+
+.body-s-bold {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-ui-xxs);
+}
+
+/* --- Body XS (10px) — LH rule: 10×1.25=12.5 → --line-height-ui-xxxs - */
+
+.body-xs {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxxs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xxxs);
+}
+
+.body-xs-bold {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxxs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-ui-xxxs);
+}
+
+/* --- Label (10px, uppercase) ----------------------------------------- */
+
+.label {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxxs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-positive-extra-wide);
+  text-transform: uppercase;
+}
+
+/* =======================================================================
+ * CODE
+ * ===================================================================== */
+
+/* --- Code Value (14px/regular) — Figma: Code/Value ------------------- */
+
+.code-value {
+  font-family: var(--font-family-code);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xs);
+}
+
+/* --- Code Operator (14px/semibold) — Figma: Code/Operator ------------ */
+
+.code-operator {
+  font-family: var(--font-family-code);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui-xs);
+}
+
+/* --- Code Label (16px/semibold) — Figma: Code/Label, LH=S (20px) ---- */
+
+.code-label {
+  font-family: var(--font-family-code);
+  font-size: var(--font-size-ui-s);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui-s);
+}
