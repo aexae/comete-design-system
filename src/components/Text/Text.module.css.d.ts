@@ -1,7 +1,7 @@
 declare const styles: {
   readonly "align-center": string;
-  readonly "align-left": string;
-  readonly "align-right": string;
+  readonly "align-end": string;
+  readonly "align-start": string;
   readonly "color-accent": string;
   readonly "color-brand": string;
   readonly "color-critical": string;
@@ -16,6 +16,7 @@ declare const styles: {
   readonly "color-warning": string;
   readonly "italic": string;
   readonly "text": string;
+  readonly "truncate": string;
   readonly "underline": string;
 };
 export = styles;

@@ -17,6 +17,8 @@ export * from "./DropIndicator";
 export * from "./Field";
 export * from "./FocusRing";
 export * from "./Grid";
+export * from "./Heading";
+export * from "./Hero";
 export * from "./ButtonGroup";
 export * from "./Calendar";
 export * from "./Icon";
