@@ -1,0 +1,270 @@
+/* ==========================================================================
+   Tag — Comète Design System
+   Étiquette compacte : 7 apparences × 3 styles × 2 formes.
+   Spec Figma : node 2984:15878.
+   ========================================================================== */
+
+/* Base */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space075);
+  min-width: 16px;
+  padding: 2px var(--space050);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xxs);
+  letter-spacing: var(--letter-spacing-normal);
+  white-space: nowrap;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  transition: background 100ms ease, border-color 100ms ease;
+}
+
+/* ==========================================================================
+   Shapes
+   ========================================================================== */
+
+.square {
+  border-radius: var(--radius025);
+}
+
+.rounded {
+  border-radius: var(--radiusround);
+}
+
+/* ==========================================================================
+   Disabled
+   ========================================================================== */
+
+.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Interactive (onPress)
+   ========================================================================== */
+
+.interactive {
+  cursor: pointer;
+}
+
+.interactive:focus-visible {
+  outline: 2px solid var(--border-focused);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Style: bold — fond opaque, texte inversé
+   ========================================================================== */
+
+.bold.neutral {
+  background: var(--background-neutral-bold-default);
+  color: var(--text-inverted);
+}
+.bold.neutral.interactive:hover { background: var(--background-neutral-bold-hovered); }
+.bold.neutral.interactive:active { background: var(--background-neutral-bold-pressed); }
+
+.bold.brand {
+  background: var(--background-brand-bold-default);
+  color: var(--text-inverted);
+}
+.bold.brand.interactive:hover { background: var(--background-brand-bold-hovered); }
+.bold.brand.interactive:active { background: var(--background-brand-bold-pressed); }
+
+.bold.success {
+  background: var(--background-success-bold-default);
+  color: var(--text-inverted);
+}
+.bold.success.interactive:hover { background: var(--background-success-bold-hovered); }
+.bold.success.interactive:active { background: var(--background-success-bold-pressed); }
+
+.bold.warning {
+  background: var(--background-warning-bold-default);
+  color: var(--text-warning-inverted);
+}
+.bold.warning.interactive:hover { background: var(--background-warning-bold-hovered); }
+.bold.warning.interactive:active { background: var(--background-warning-bold-pressed); }
+
+.bold.critical {
+  background: var(--background-critical-bold-default);
+  color: var(--text-inverted);
+}
+.bold.critical.interactive:hover { background: var(--background-critical-bold-hovered); }
+.bold.critical.interactive:active { background: var(--background-critical-bold-pressed); }
+
+.bold.information {
+  background: var(--background-information-bold-default);
+  color: var(--text-inverted);
+}
+.bold.information.interactive:hover { background: var(--background-information-bold-hovered); }
+.bold.information.interactive:active { background: var(--background-information-bold-pressed); }
+
+.bold.accent {
+  background: var(--background-accent-bold-default);
+  color: var(--text-inverted);
+}
+.bold.accent.interactive:hover { background: var(--background-accent-bold-hovered); }
+.bold.accent.interactive:active { background: var(--background-accent-bold-pressed); }
+
+/* ==========================================================================
+   Style: subtle — fond léger, texte coloré
+   ========================================================================== */
+
+.subtle.neutral {
+  background: var(--background-neutral-subtler-default);
+  color: var(--text-default);
+}
+.subtle.neutral.interactive:hover { background: var(--background-neutral-subtler-hovered); }
+.subtle.neutral.interactive:active { background: var(--background-neutral-subtler-pressed); }
+
+.subtle.brand {
+  background: var(--background-brand-subtler-default);
+  color: var(--text-brand);
+}
+.subtle.brand.interactive:hover { background: var(--background-brand-subtler-hovered); }
+.subtle.brand.interactive:active { background: var(--background-brand-subtler-pressed); }
+
+.subtle.success {
+  background: var(--background-success-subtler-default);
+  color: var(--text-success);
+}
+.subtle.success.interactive:hover { background: var(--background-success-subtler-hovered); }
+.subtle.success.interactive:active { background: var(--background-success-subtler-pressed); }
+
+.subtle.warning {
+  background: var(--background-warning-subtler-default);
+  color: var(--text-warning);
+}
+.subtle.warning.interactive:hover { background: var(--background-warning-subtler-hovered); }
+.subtle.warning.interactive:active { background: var(--background-warning-subtler-pressed); }
+
+.subtle.critical {
+  background: var(--background-critical-subtler-default);
+  color: var(--text-critical);
+}
+.subtle.critical.interactive:hover { background: var(--background-critical-subtler-hovered); }
+.subtle.critical.interactive:active { background: var(--background-critical-subtler-pressed); }
+
+.subtle.information {
+  background: var(--background-information-subtler-default);
+  color: var(--text-information);
+}
+.subtle.information.interactive:hover { background: var(--background-information-subtler-hovered); }
+.subtle.information.interactive:active { background: var(--background-information-subtler-pressed); }
+
+.subtle.accent {
+  background: var(--background-accent-subtler-default);
+  color: var(--text-accent);
+}
+.subtle.accent.interactive:hover { background: var(--background-accent-subtler-hovered); }
+.subtle.accent.interactive:active { background: var(--background-accent-subtler-pressed); }
+
+/* ==========================================================================
+   Style: outlined — fond transparent, bordure colorée
+   ========================================================================== */
+
+.outlined.neutral {
+  background: transparent;
+  border-color: var(--border-default);
+  color: var(--text-default);
+}
+.outlined.neutral.interactive:hover { background: var(--background-neutral-subtlest-hovered); }
+.outlined.neutral.interactive:active { background: var(--background-neutral-subtlest-pressed); }
+
+.outlined.brand {
+  background: transparent;
+  border-color: var(--border-brand);
+  color: var(--text-brand);
+}
+.outlined.brand.interactive:hover { background: var(--background-brand-subtlest-hovered); }
+.outlined.brand.interactive:active { background: var(--background-brand-subtlest-pressed); }
+
+.outlined.success {
+  background: transparent;
+  border-color: var(--border-success);
+  color: var(--text-success);
+}
+.outlined.success.interactive:hover { background: var(--background-success-subtlest-hovered); }
+.outlined.success.interactive:active { background: var(--background-success-subtlest-pressed); }
+
+.outlined.warning {
+  background: transparent;
+  border-color: var(--border-warning);
+  color: var(--text-warning);
+}
+.outlined.warning.interactive:hover { background: var(--background-warning-subtlest-hovered); }
+.outlined.warning.interactive:active { background: var(--background-warning-subtlest-pressed); }
+
+.outlined.critical {
+  background: transparent;
+  border-color: var(--border-critical);
+  color: var(--text-critical);
+}
+.outlined.critical.interactive:hover { background: var(--background-critical-subtlest-hovered); }
+.outlined.critical.interactive:active { background: var(--background-critical-subtlest-pressed); }
+
+.outlined.information {
+  background: transparent;
+  border-color: var(--border-information);
+  color: var(--text-information);
+}
+.outlined.information.interactive:hover { background: var(--background-information-subtlest-hovered); }
+.outlined.information.interactive:active { background: var(--background-information-subtlest-pressed); }
+
+.outlined.accent {
+  background: transparent;
+  border-color: var(--border-accent);
+  color: var(--text-accent);
+}
+.outlined.accent.interactive:hover { background: var(--background-accent-subtlest-hovered); }
+.outlined.accent.interactive:active { background: var(--background-accent-subtlest-pressed); }
+
+/* ==========================================================================
+   Slots: elemBefore, elemAfter, label, removeButton
+   ========================================================================== */
+
+.elemBefore {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+}
+
+.label {
+  padding-inline: 2px;
+}
+
+.elemAfter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+}
+
+.removeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  border-radius: var(--radiusround);
+  opacity: 0.7;
+  transition: opacity 100ms ease;
+}
+
+.removeButton:hover {
+  opacity: 1;
+}
