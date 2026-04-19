@@ -16,7 +16,7 @@
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xxs);
   font-weight: var(--font-weight-regular);
-  line-height: var(--line-height-ui-xxs);
+  line-height: 1;
   white-space: nowrap;
 }
 
@@ -27,9 +27,11 @@
 /* high et medium : pill avec texte */
 .high,
 .medium {
+  min-height: var(--size150);  /* 12px — Figma min-height */
   height: var(--size200);      /* 16px */
   min-width: var(--size150);   /* 12px */
   padding: 0 var(--space075);  /* 0 6px */
+  box-sizing: border-box;
 }
 
 /* low : point coloré sans texte */
