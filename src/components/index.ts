@@ -40,6 +40,7 @@ export * from "./Skeleton";
 export * from "./Stack";
 export * from "./Tabs";
 export * from "./Tag";
+export * from "./Text";
 export * from "./TextField";
 export * from "./TimePicker";
 export * from "./ToggleButtonGroup";

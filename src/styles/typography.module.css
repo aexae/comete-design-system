@@ -1,0 +1,178 @@
+/* typography.module.css — Styles typographiques Comète Design System
+ * Classes utilitaires consommables via composes ou directement par le composant Text.
+ * 100 % design tokens — zéro valeur hardcodée.
+ */
+
+/* -----------------------------------------------------------------------
+ * Hero
+ * --------------------------------------------------------------------- */
+
+.hero-xxl {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-xxl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-hero-xxl);
+  letter-spacing: var(--letter-spacing-negative-extra-tight);
+}
+
+.hero-xl {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-hero-xl);
+  letter-spacing: var(--letter-spacing-negative-extra-tight);
+}
+
+.hero-l {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-l);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-hero-l);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+.hero-m {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-m);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-hero-m);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+.hero-s {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-s);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-hero-s);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+.hero-xs {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-xs);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-hero-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+.hero-xxs {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-hero-xxs);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-hero-xxs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+/* -----------------------------------------------------------------------
+ * Heading
+ * --------------------------------------------------------------------- */
+
+.heading-h1 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui-xxl);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+.heading-h2 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui-xl);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+.heading-h3 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-l);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui-l);
+}
+
+.heading-h4 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-m);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-m);
+}
+
+.heading-h5 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-s);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-s);
+}
+
+/* -----------------------------------------------------------------------
+ * Body
+ * --------------------------------------------------------------------- */
+
+.body-l {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-s);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-s);
+}
+
+.body-l-medium {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-s);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-s);
+}
+
+.body-m {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xs);
+}
+
+.body-m-medium {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xs);
+}
+
+.body-s {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xxs);
+}
+
+.body-s-medium {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xxs);
+}
+
+.label {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxxs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-positive-extra-wide);
+  text-transform: uppercase;
+}
+
+/* -----------------------------------------------------------------------
+ * Code
+ * --------------------------------------------------------------------- */
+
+.code-m {
+  font-family: var(--font-family-code);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xs);
+}
+
+.code-s {
+  font-family: var(--font-family-code);
+  font-size: var(--font-size-ui-xxs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xxs);
+}
