@@ -40,7 +40,7 @@ export function Breadcrumbs({
   className,
 }: BreadcrumbsProps): ReactElement {
   return (
-    <nav aria-label={ariaLabel} className={className}>
+    <nav aria-label={ariaLabel} className={[styles.nav, className].filter(Boolean).join(" ")}>
       <ol className={styles.list}>{children}</ol>
     </nav>
   );

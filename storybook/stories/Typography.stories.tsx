@@ -761,6 +761,7 @@ function TypographyPage(): ReactElement {
 
 const meta = {
   title: "Foundation/Typography",
+  tags: ["autodocs"],
   parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

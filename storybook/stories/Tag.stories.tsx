@@ -17,12 +17,6 @@ const meta = {
   parameters: {
     layout: "centered",
     design: { type: "figma", url: figmaUrl("2984:15878") },
-    docs: {
-      description: {
-        component:
-          "Étiquette compacte pour catégoriser, filtrer ou identifier du contenu. Supporte 7 apparences × 3 styles × 2 formes, avec des slots optionnels avant/après le label et un bouton de suppression.",
-      },
-    },
   },
   argTypes: {
     appearance: {
