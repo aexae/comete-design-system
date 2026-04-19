@@ -579,7 +579,10 @@ function TokenExplorer(): ReactElement {
 
 const meta = {
   title: "Foundation/Tokens",
-  parameters: { layout: "fullscreen" },
+  tags: ["autodocs"],
+  parameters: {
+    layout: "fullscreen",
+  },
 } satisfies Meta;
 
 export default meta;

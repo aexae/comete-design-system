@@ -54,12 +54,6 @@ const meta = {
   parameters: {
     layout: "centered",
     design: { type: "figma", url: figmaUrl("3499:51688") },
-    docs: {
-      description: {
-        component:
-          "Sélecteur déroulant accessible basé sur React Aria. Intègre Field (label + message) et InputContainer (bordure + états). Supporte les options plates ou groupées, clearable, loading et compact.",
-      },
-    },
   },
   argTypes: {
     appearance: {

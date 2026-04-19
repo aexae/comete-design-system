@@ -17,12 +17,6 @@ const meta = {
   parameters: {
     layout: "centered",
     design: { type: "figma", url: figmaUrl("4726:54750") },
-    docs: {
-      description: {
-        component:
-          "Texte courant pour les paragraphes, descriptions, libellés. 4 tailles × 3 graisses = 12 combinaisons. Balise `<p>` par défaut.",
-      },
-    },
   },
   argTypes: {
     size: {

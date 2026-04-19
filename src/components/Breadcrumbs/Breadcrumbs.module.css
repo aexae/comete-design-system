@@ -4,6 +4,17 @@
    Aucune valeur hardcodée.
    ========================================================================== */
 
+/* Masqué sur mobile — les breadcrumbs n'apportent rien sur petit écran */
+.nav {
+  display: none;
+}
+
+@media (min-width: 600px) {
+  .nav {
+    display: block;
+  }
+}
+
 .list {
   display: flex;
   align-items: center;

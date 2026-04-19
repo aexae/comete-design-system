@@ -31,12 +31,6 @@ const meta = {
   parameters: {
     layout: "fullscreen",
     design: { type: "figma", url: figmaUrl("4559:6656") },
-    docs: {
-      description: {
-        component:
-          "Gabarit de page : wrapper flex vertical avec sous-composants `Page.Header` (titre + breadcrumbs + trailing), `Page.Toolbar` (start + end) et `Page.Body` (contenu scrollable).",
-      },
-    },
   },
 } satisfies Meta<typeof Page>;
 

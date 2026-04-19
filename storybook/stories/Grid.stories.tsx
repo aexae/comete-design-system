@@ -11,12 +11,6 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     layout: "padded",
-    docs: {
-      description: {
-        component:
-          "Primitive de layout CSS Grid. Par défaut, une grille 12 colonnes qui s'adapte aux breakpoints `mobile` (<600px), `tablet` (≥600px) et `desktop` (≥1200px). Les props `columns`, `span` et `start` acceptent soit un scalaire, soit un objet `{ mobile, tablet, desktop }`.",
-      },
-    },
   },
   argTypes: {
     gap: {

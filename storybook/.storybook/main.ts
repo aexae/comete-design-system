@@ -37,6 +37,7 @@ const config: StorybookConfig = {
           "@naxit/comete-icons",
           "@naxit/comete-logos",
           "@naxit/comete-illustrations",
+          "@mdx-js/react",
         ],
       },
       server: {

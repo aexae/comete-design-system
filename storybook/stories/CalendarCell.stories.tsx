@@ -141,6 +141,7 @@ const FIGMA_FILE =
 
 const meta = {
   title: "Components/Calendar/Cellule",
+  tags: ["autodocs"],
   parameters: {
     layout: "padded",
     design: {

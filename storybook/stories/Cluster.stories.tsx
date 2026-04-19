@@ -11,12 +11,6 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     layout: "padded",
-    docs: {
-      description: {
-        component:
-          "Primitive de layout flex-wrap horizontal. Idéal pour grouper des éléments hétérogènes qui doivent wrapper sur plusieurs lignes : tags, chips, actions, filtres, breadcrumbs.",
-      },
-    },
   },
   argTypes: {
     gap: {

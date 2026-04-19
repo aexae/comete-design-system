@@ -11,12 +11,6 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     layout: "padded",
-    docs: {
-      description: {
-        component:
-          "Primitive de layout flex 1D. Empile des éléments verticalement (par défaut) ou horizontalement avec un espacement uniforme issu des tokens `--space*`.",
-      },
-    },
   },
   argTypes: {
     direction: {

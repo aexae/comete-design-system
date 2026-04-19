@@ -33,12 +33,6 @@ const meta = {
   parameters: {
     layout: "padded",
     design: { type: "figma", url: figmaUrl("4726:54750") },
-    docs: {
-      description: {
-        component:
-          "Titre sémantique pour structurer le contenu. Chaque `size` mappe automatiquement vers une balise h1–h6. 7 tailles, 1 poids fixe (semibold) par taille.",
-      },
-    },
   },
   argTypes: {
     size: {

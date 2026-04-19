@@ -42,6 +42,12 @@ const meta: Meta<IllustrationComponentProps> = {
     illustration: "Empty",
     size: 256,
   },
+  parameters: {
+    design: {
+      type: "figma",
+      url: "https://www.figma.com/design/3rYV3P1VzRh0q22HNhgCZv/Com%C3%A8te-icons?node-id=723-3562",
+    },
+  },
 };
 
 export default meta;

@@ -33,12 +33,6 @@ const meta = {
   parameters: {
     layout: "padded",
     design: { type: "figma", url: figmaUrl("4726:54750") },
-    docs: {
-      description: {
-        component:
-          "Texte d'accroche à très grande échelle. Réservé aux pages marketing, dashboards de métriques clés ou écrans de bienvenue. 7 tailles, 1 poids fixe par taille.",
-      },
-    },
   },
   argTypes: {
     size: {

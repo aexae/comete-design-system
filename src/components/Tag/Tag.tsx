@@ -25,9 +25,9 @@ export interface TagProps {
   label: string;
   /** Couleur sémantique du tag. @default "neutral" */
   appearance?: TagAppearance;
-  /** Style visuel : rempli (bold), léger (subtle) ou bordé (outlined). @default "bold" */
+  /** Style visuel : rempli (bold), léger (subtle) ou bordé (outlined). @default "subtle" */
   tagStyle?: TagStyle;
-  /** Forme : coins droits (square) ou arrondis (rounded). @default "rounded" */
+  /** Forme : coins droits (square) ou arrondis (rounded). @default "square" */
   shape?: TagShape;
   /** Désactive le tag (opacité réduite, pas d'interaction). @default false */
   isDisabled?: boolean;
@@ -61,8 +61,8 @@ export interface TagProps {
 export function Tag({
   label,
   appearance = "neutral",
-  tagStyle = "bold",
-  shape = "rounded",
+  tagStyle = "subtle",
+  shape = "square",
   isDisabled = false,
   elemBefore,
   elemAfter,

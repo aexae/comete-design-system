@@ -89,27 +89,6 @@ const meta = {
   parameters: {
     layout: "fullscreen",
     design: { type: "figma", url: figmaUrl("4319:15827") },
-    docs: {
-      description: {
-        component: [
-          "Gabarits de pages composés à partir des primitives du DS.",
-          "Chaque template est **responsive** (mobile → tablet → desktop).",
-          "",
-          "Activez **Show grid** dans les contrôles pour afficher la grille 12 colonnes.",
-          "",
-          "| Template | Usage |",
-          "|---|---|",
-          "| **Collection** | Liste avec filtres et toolbar |",
-          "| **Entity** | Fiche détail avec sidebar + contenu tabs |",
-          "| **Dashboard** | KPIs, activité et résumés |",
-          "| **Settings** | Paramètres avec navigation tabs |",
-          "",
-          "### Banner vs SectionMessage",
-          "- `Banner` : alerte globale, **au-dessus** du layout",
-          "- `SectionMessage` : message contextuel **dans** le contenu",
-        ].join("\n"),
-      },
-    },
   },
 } satisfies Meta;
 
@@ -405,10 +384,18 @@ export const Entity: Story = {
                         <Stack gap="050" align="center">
                           <Heading size="medium" as="span">DUPONT Marie</Heading>
                           <Cluster gap="075">
-                            <Tag label="CDI" appearance="information"  />
-                            <Tag label="Documents à jour" appearance="success"  />
+                            <Text>CDI</Text>
+                            <Text color="subtlest">•</Text>
+                            <Text>7 documents à jour</Text>
+                            {/* <Tag label="CDI" appearance="information"  />
+                            <Tag label="Documents à jour" appearance="success"  /> */}
                           </Cluster>
                         </Stack>
+                        <Cluster gap="100" justify="center">
+                          <Button appearance="contained" iconBefore="CalendarMonth" color="brand" >Planning</Button>
+                          <Button appearance="contained" iconBefore="Newspaper">Documents</Button>
+                          <Button appearance="contained" iconBefore="History">Rapports</Button>
+                        </Cluster>
                       </Stack>
                     </CC>
                     <Divider />
@@ -448,15 +435,6 @@ export const Entity: Story = {
                   </CC>
                 </Card>
 
-                <Card appearance="outlined">
-                  <CC>
-                    <Stack gap="100">
-                      <Button appearance="subtle" iconBefore="Newspaper">Documents</Button>
-                      <Button appearance="subtle" iconBefore="CalendarMonth">Planning site</Button>
-                      <Button appearance="subtle" iconBefore="History">Main courante</Button>
-                    </Stack>
-                  </CC>
-                </Card>
               </Stack>
             </Grid.Col>
 

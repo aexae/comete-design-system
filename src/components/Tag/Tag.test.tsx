@@ -9,12 +9,12 @@ describe("Tag", () => {
     expect(screen.getByText("CDI")).toBeInTheDocument();
   });
 
-  it("should apply default classes (neutral, bold, rounded)", () => {
+  it("should apply default classes (neutral, subtle, square)", () => {
     const { container } = render(<Tag label="Test" />);
     const tag = container.firstElementChild!;
     expect(tag.className).toContain("neutral");
-    expect(tag.className).toContain("bold");
-    expect(tag.className).toContain("rounded");
+    expect(tag.className).toContain("subtle");
+    expect(tag.className).toContain("square");
   });
 
   it("should apply appearance class", () => {
