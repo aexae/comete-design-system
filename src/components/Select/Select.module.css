@@ -1,0 +1,271 @@
+/* ==========================================================================
+   Select — Comète Design System
+   Sélecteur déroulant accessible.
+   Le conteneur visuel (bordure, radius, états) est géré par InputContainer.
+   Le label + message sont gérés par Field.
+   ========================================================================== */
+
+/* Root — AriaSelect */
+.select {
+  width: 100%;
+}
+
+/* ==========================================================================
+   Trigger button — transparent, remplit tout l'InputContainer
+   ========================================================================== */
+
+.triggerButton {
+  display: flex;
+  align-items: center;
+  gap: var(--space075);
+  flex: 1 1 0%;
+  min-width: 0;
+  min-height: var(--size300);
+  border: none;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  cursor: pointer;
+  outline: none;
+}
+
+.select[data-disabled] .triggerButton {
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Value — hauteur fixe pour ne pas grandir quand une valeur est sélectionnée
+   ========================================================================== */
+
+.value {
+  flex: 1 1 0%;
+  min-width: 0;
+  height: var(--line-height-ui-xs);
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-default);
+}
+
+.value[data-placeholder] {
+  color: var(--text-subtlest);
+}
+
+.select[data-disabled] .value {
+  color: var(--text-disabled);
+}
+
+/* ==========================================================================
+   Indicators (clear, chevron, spinner) — à droite de la valeur
+   ========================================================================== */
+
+.indicators {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Clear button — identique au pattern TextField
+   ========================================================================== */
+
+.clearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--size300);
+  height: var(--size300);
+  padding: 0;
+  border: none;
+  border-radius: var(--radius0375);
+  background: transparent;
+  color: var(--icon-default);
+  cursor: pointer;
+  outline: none;
+}
+
+.clearButton[data-hovered] {
+  background-color: var(--background-neutral-subtlest-hovered);
+}
+
+.clearButton[data-pressed] {
+  background-color: var(--background-neutral-subtlest-pressed);
+}
+
+/* ==========================================================================
+   Chevron — rotation à l'ouverture
+   ========================================================================== */
+
+.chevronOpen {
+  transition: transform 200ms ease;
+  transform: rotate(180deg);
+}
+
+/* ==========================================================================
+   Spinner
+   ========================================================================== */
+
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--size200);
+  height: var(--size200);
+  color: var(--icon-subtle);
+  animation: spinner-rotate 800ms linear infinite;
+}
+
+@keyframes spinner-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   Popover & ListBox
+   ========================================================================== */
+
+.popover {
+  width: var(--trigger-width);
+  min-width: 200px;
+}
+
+.listBox {
+  outline: none;
+  padding: var(--space075) 0;
+  max-height: 300px;
+  overflow-y: auto;
+  scrollbar-color: var(--background-neutral-bold-default) var(--background-surface-elevation-sunken-default);
+}
+
+.listBox::-webkit-scrollbar {
+  width: var(--size100);
+}
+
+.listBox::-webkit-scrollbar-track {
+  background: var(--background-surface-elevation-sunken-default);
+}
+
+.listBox::-webkit-scrollbar-thumb {
+  background-color: var(--background-neutral-bold-default);
+  border-radius: var(--radius-round);
+}
+
+/* ==========================================================================
+   Option
+   ========================================================================== */
+
+.option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  outline: none;
+  cursor: pointer;
+}
+
+.option[data-disabled] {
+  cursor: default;
+}
+
+.optionContent {
+  display: flex;
+  align-items: center;
+  gap: var(--space075);
+  width: 100%;
+  min-height: var(--size400);
+  padding: var(--space075) var(--space150);
+  transition: background-color 100ms ease;
+}
+
+.option[data-hovered] .optionContent {
+  background-color: var(--background-neutral-subtler-hovered);
+}
+
+.option[data-pressed] .optionContent {
+  background-color: var(--background-neutral-subtler-pressed);
+}
+
+.option[data-selected] .optionContent {
+  background-color: var(--background-selected-subtlest-default);
+  box-shadow: inset var(--size025) 0 0 0 var(--border-selected);
+}
+
+.option[data-selected][data-hovered] .optionContent {
+  background-color: var(--background-selected-subtlest-hovered);
+}
+
+.option[data-selected][data-pressed] .optionContent {
+  background-color: var(--background-selected-subtlest-pressed);
+}
+
+.option[data-disabled] .optionContent {
+  background-color: transparent;
+}
+
+.optionLabel {
+  flex: 1 1 0%;
+  min-width: 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  color: var(--text-default);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.option[data-selected] .optionLabel {
+  color: var(--text-selected);
+}
+
+.option[data-disabled] .optionLabel {
+  color: var(--text-disabled);
+}
+
+/* ==========================================================================
+   Group
+   ========================================================================== */
+
+.group:not(:first-child)::before {
+  content: "";
+  display: block;
+  height: var(--size0125);
+  margin: var(--space075) 0;
+  background: var(--border-default);
+}
+
+.groupLabel {
+  padding: var(--space100) var(--space150) var(--space025);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxxs);
+  line-height: var(--line-height-ui-xxs);
+  color: var(--text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ==========================================================================
+   Empty / Loading state
+   ========================================================================== */
+
+.stateItem {
+  cursor: default;
+  outline: none;
+}
+
+.emptyState,
+.loadingState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space075) var(--space150);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  line-height: var(--line-height-ui-xs);
+  color: var(--text-disabled);
+}
