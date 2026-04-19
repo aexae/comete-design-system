@@ -1,7 +1,7 @@
 // Select — Comète Design System
 // Sélecteur déroulant accessible basé sur React Aria.
 // Intègre Field (label + message) comme wrapper obligatoire.
-import { type ReactElement, type ReactNode, type Key } from "react";
+import { type ReactElement, type ReactNode, type Key, useRef } from "react";
 import {
   Select as AriaSelect,
   ListBox as AriaListBox,
@@ -174,6 +174,7 @@ export function Select({
   "aria-label": ariaLabel,
   className,
 }: SelectProps): ReactElement {
+  const containerRef = useRef<HTMLDivElement>(null);
   const allOptions = flattenOptions(items);
   const hasValue = value !== undefined ? value !== null : undefined;
   const disabled = isDisabled ?? false;
@@ -206,35 +207,54 @@ export function Select({
       >
         {({ isOpen }) => (
           <>
-            <InputContainer
-              appearance={appearance}
-              isCompact={isCompact}
-              isDisabled={disabled}
-              isInvalid={isInvalid ?? false}
-            >
-              <AriaButton className={styles.triggerButton}>
-                <AriaSelectValue className={styles.value} />
-                <span className={styles.indicators}>
-                  {isLoading && <Spinner />}
-                  {isClearable && hasValue && !disabled && (
-                    <AriaButton
-                      className={styles.clearButton}
-                      aria-label="Effacer la sélection"
-                      excludeFromTabOrder
-                      onPress={handleClear}
-                    >
-                      <Icon icon="CloseSmallFaded" size={16} spacing="none" />
-                    </AriaButton>
-                  )}
-                  <Icon
-                    icon="KeyboardArrowDown"
-                    color={disabled ? "disabled" : "default"}
-                    className={isOpen ? styles.chevronOpen : undefined}
-                  />
-                </span>
-              </AriaButton>
-            </InputContainer>
-            <Popover placement="bottom start" className={styles.popover}>
+            <div ref={containerRef}>
+              <InputContainer
+                appearance={appearance}
+                isCompact={isCompact}
+                isDisabled={disabled}
+                isInvalid={isInvalid ?? false}
+              >
+                <AriaButton className={styles.triggerButton}>
+                  <AriaSelectValue className={styles.value}>
+                    {({ selectedText, isPlaceholder }) =>
+                      isPlaceholder ? placeholder : (selectedText ?? "")
+                    }
+                  </AriaSelectValue>
+                </AriaButton>
+                {isLoading && <Spinner />}
+                {isClearable && hasValue && !disabled && (
+                  <span
+                    role="button"
+                    tabIndex={-1}
+                    className={styles.clearButton}
+                    aria-label="Effacer la sélection"
+                    onPointerDown={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleClear();
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleClear();
+                      }
+                    }}
+                  >
+                    <Icon icon="CloseSmallFaded" size={16} spacing="none" />
+                  </span>
+                )}
+                <Icon
+                  icon="KeyboardArrowDown"
+                  color={disabled ? "disabled" : "default"}
+                  className={isOpen ? styles.chevronOpen : undefined}
+                />
+              </InputContainer>
+            </div>
+            <Popover placement="bottom start" triggerRef={containerRef} className={styles.popover}>
               <AriaListBox className={styles.listBox}>
                 {allOptions.length === 0 && !isLoading ? (
                   <AriaListBoxItem id="__empty__" isDisabled textValue={emptyMessage} className={styles.stateItem}>

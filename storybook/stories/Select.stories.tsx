@@ -1,4 +1,5 @@
 // Select — stories Storybook
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Select, Stack } from "@naxit/comete-design-system/components";
 import type { SelectItems } from "@naxit/comete-design-system/components";
@@ -51,8 +52,8 @@ const meta = {
   component: Select,
   tags: ["autodocs"],
   parameters: {
-    layout: "padded",
-    design: { type: "figma", url: figmaUrl("5436:4670") },
+    layout: "centered",
+    design: { type: "figma", url: figmaUrl("3499:51688") },
     docs: {
       description: {
         component:
@@ -91,6 +92,13 @@ const meta = {
     isInvalid: false,
     isRequired: false,
   },
+  decorators: [
+    (Story) => (
+      <div style={{ width: 280 }}>
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof Select>;
 
 export default meta;
@@ -110,7 +118,10 @@ export const Grouped: Story = {
 };
 
 export const Clearable: Story = {
-  args: { value: "fr", isClearable: true },
+  render: (args) => {
+    const [value, setValue] = useState<string | null>("fr");
+    return <Select {...args} value={value} onChange={setValue} isClearable />;
+  },
 };
 
 export const Compact: Story = {

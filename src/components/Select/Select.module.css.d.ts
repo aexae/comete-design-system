@@ -4,7 +4,6 @@ declare const styles: {
   readonly "emptyState": string;
   readonly "group": string;
   readonly "groupLabel": string;
-  readonly "indicators": string;
   readonly "listBox": string;
   readonly "loadingState": string;
   readonly "option": string;

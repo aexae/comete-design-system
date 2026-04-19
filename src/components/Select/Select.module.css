@@ -43,6 +43,10 @@
   flex: 1 1 0%;
   min-width: 0;
   height: var(--line-height-ui-xs);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
   text-align: left;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -59,17 +63,7 @@
 }
 
 /* ==========================================================================
-   Indicators (clear, chevron, spinner) — à droite de la valeur
-   ========================================================================== */
-
-.indicators {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-/* ==========================================================================
-   Clear button — identique au pattern TextField
+   Clear button — <span role="button"> pour éviter button imbriqué
    ========================================================================== */
 
 .clearButton {
@@ -88,11 +82,11 @@
   outline: none;
 }
 
-.clearButton[data-hovered] {
+.clearButton:hover {
   background-color: var(--background-neutral-subtlest-hovered);
 }
 
-.clearButton[data-pressed] {
+.clearButton:active {
   background-color: var(--background-neutral-subtlest-pressed);
 }
 
