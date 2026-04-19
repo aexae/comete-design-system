@@ -268,3 +268,9 @@
 .removeButton:hover {
   opacity: 1;
 }
+
+.removeButton:focus-visible {
+  opacity: 1;
+  outline: 2px solid var(--border-focused);
+  outline-offset: 1px;
+}

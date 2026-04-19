@@ -59,6 +59,12 @@ describe("Tag", () => {
     expect(screen.queryByRole("button", { name: "Supprimer Tag" })).not.toBeInTheDocument();
   });
 
+  it("should make remove button focusable with Tab", () => {
+    render(<Tag label="Tag" onRemove={() => undefined} />);
+    const removeBtn = screen.getByRole("button", { name: "Supprimer Tag" });
+    expect(removeBtn).toHaveAttribute("tabindex", "0");
+  });
+
   it("should call onRemove when remove button is clicked", async () => {
     const user = userEvent.setup();
     const onRemove = vi.fn();

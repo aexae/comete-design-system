@@ -163,6 +163,20 @@ export const Interactive: Story = {
   ),
 };
 
+/** Tag removable avec focus ring sur le bouton ×. Tabulez pour voir le focus. */
+export const RemovableFocusRing: Story = {
+  name: "Removable — focus ring",
+  parameters: { design: { type: "figma", url: figmaUrl("2991:38494") } },
+  render: () => (
+    <Cluster gap="100">
+      <Tag label="Neutral" onRemove={() => undefined} />
+      <Tag label="Brand" appearance="brand" onRemove={() => undefined} />
+      <Tag label="Success" appearance="success" tagStyle="subtle" onRemove={() => undefined} />
+      <Tag label="Outlined" tagStyle="outlined" onRemove={() => undefined} />
+    </Cluster>
+  ),
+};
+
 /** Tags désactivés. */
 export const Disabled: Story = {
   render: () => (
@@ -175,25 +189,33 @@ export const Disabled: Story = {
   ),
 };
 
-/** Matrice complète : 7 apparences × 3 styles en rounded. */
+/** Matrice complète : 7 apparences × 3 styles × 2 shapes. */
 export const FullMatrix: Story = {
   name: "Full matrix",
   parameters: { design: { type: "figma", url: figmaUrl("2984:15878") } },
   render: () => {
     const appearances = ["neutral", "brand", "success", "warning", "critical", "information", "accent"] as const;
     const tagStyles = ["bold", "subtle", "outlined"] as const;
+    const shapes = ["square", "rounded"] as const;
     return (
-      <Stack gap="200">
-        {tagStyles.map((s) => (
-          <Stack key={s} gap="075">
-            <span style={{ fontFamily: "var(--font-family-primary)", fontSize: "var(--font-size-ui-xxs)", color: "var(--text-subtlest)", textTransform: "uppercase" }}>
-              {s}
+      <Stack gap="400">
+        {shapes.map((shape) => (
+          <Stack key={shape} gap="200">
+            <span style={{ fontFamily: "var(--font-family-primary)", fontSize: "var(--font-size-ui-xs)", fontWeight: 600, color: "var(--text-default)" }}>
+              {shape}
             </span>
-            <Cluster gap="100">
-              {appearances.map((a) => (
-                <Tag key={`${s}-${a}`} label={a} appearance={a} tagStyle={s} />
-              ))}
-            </Cluster>
+            {tagStyles.map((s) => (
+              <Stack key={s} gap="075">
+                <span style={{ fontFamily: "var(--font-family-primary)", fontSize: "var(--font-size-ui-xxs)", color: "var(--text-subtlest)", textTransform: "uppercase" }}>
+                  {s}
+                </span>
+                <Cluster gap="100">
+                  {appearances.map((a) => (
+                    <Tag key={`${shape}-${s}-${a}`} label={a} appearance={a} tagStyle={s} shape={shape} />
+                  ))}
+                </Cluster>
+              </Stack>
+            ))}
           </Stack>
         ))}
       </Stack>

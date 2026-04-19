@@ -120,7 +120,7 @@ export function Tag({
             onRemove();
           }}
           aria-label={`Supprimer ${label}`}
-          tabIndex={-1}
+          tabIndex={0}
         >
           <svg
             width="12"
