@@ -47,6 +47,50 @@
   min-width: 0;
 }
 
+/* ---- Search field: grow on mobile, fixed on desktop ---- */
+
+.searchWrapper {
+  flex: 0 1 240px;
+  min-width: 100px;
+}
+
+@media (max-width: 599px) {
+  .searchWrapper {
+    flex: 1;
+  }
+}
+
+/* ---- Hide elements on mobile ---- */
+
+.hideOnMobile {
+  display: inline-flex;
+}
+
+@media (max-width: 599px) {
+  .hideOnMobile {
+    display: none;
+  }
+}
+
+/* ---- Show only on desktop (>= 600px) ---- */
+
+.showOnDesktop {
+  display: inline-flex;
+}
+
+.showOnMobileOnly {
+  display: none;
+}
+
+@media (max-width: 599px) {
+  .showOnDesktop {
+    display: none;
+  }
+  .showOnMobileOnly {
+    display: inline-flex;
+  }
+}
+
 /* ---- Collection: desktop-only filter sidebar ---- */
 
 .filterSidebar {
