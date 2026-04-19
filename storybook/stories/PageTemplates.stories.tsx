@@ -36,6 +36,7 @@ import {
   DrawerBody,
   DrawerFooter,
   DrawerProvider,
+  MonthPicker,
 } from "@naxit/comete-design-system/components";
 import css from "./PageTemplates.module.css";
 
@@ -169,7 +170,7 @@ function AgentCard({ initials, name, contrat, heures, delta, status }: {
 function PropRow({ icon, label, value }: { icon: IconName; label: string; value: string }) {
   return (
     <Stack direction="row" gap="100" align="start">
-      <Icon icon={icon} />
+      <Icon icon={icon} size={20}  />
       <Stack gap="0">
         <Text size="small" as="span" color="subtlest">{label}</Text>
         <Text as="span">{value}</Text>
@@ -382,12 +383,12 @@ export const Entity: Story = {
     <div className={css["gutters"]}>
       <Page>
         <Page.Header
-          title="Fiche agent"
+          title="Entité"
           breadcrumbs={
             <Breadcrumbs>
               <BreadcrumbItem label="Espace manager" href="#" />
-              <BreadcrumbItem label="Agents" href="#" />
-              <BreadcrumbItem label="Fiche agent" isCurrent />
+              <BreadcrumbItem label="Contacts" href="#" />
+              <BreadcrumbItem label="Profil" isCurrent />
             </Breadcrumbs>
           }
           trailing={<Avatar size="medium" initials="AC" />}
@@ -404,8 +405,8 @@ export const Entity: Story = {
                         <Stack gap="050" align="center">
                           <Heading size="medium" as="span">DUPONT Marie</Heading>
                           <Cluster gap="075">
-                            <Tag label="CDI" appearance="success" tagStyle="subtle" />
-                            <Tag label="Agent" tagStyle="subtle" />
+                            <Tag label="CDI" appearance="information"  />
+                            <Tag label="Documents à jour" appearance="success"  />
                           </Cluster>
                         </Stack>
                       </Stack>
@@ -474,11 +475,7 @@ export const Entity: Story = {
                       <CC>
                         <Stack gap="200">
                           <Cluster justify="between" align="center">
-                            <Stack direction="row" gap="100" align="center">
-                              <Button appearance="subtle" size="small" iconBefore="ChevronLeft" aria-label="Précédent" />
-                              <Heading size="xsmall" as="span">Avril 2026</Heading>
-                              <Button appearance="subtle" size="small" iconBefore="ChevronRight" aria-label="Suivant" />
-                            </Stack>
+                            <MonthPicker month={4} year={2026} isEditable={false} aria-label="Mois du planning" />
                             <Button appearance="subtle" iconBefore="Download">Exporter</Button>
                           </Cluster>
                           <SectionMessage appearance="warning" title="Aucune planification">
