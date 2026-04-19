@@ -69,7 +69,6 @@
 .toolbar {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   gap: var(--space100);
   padding-block: var(--space100);
   flex-shrink: 0;
@@ -78,8 +77,8 @@
 .toolbarStart {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   gap: var(--space100);
+  flex: 1;
   min-width: 0;
 }
 
@@ -88,11 +87,11 @@
 .toolbarEnd {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   justify-content: flex-end;
   gap: var(--space100);
   margin-left: auto;
   min-width: 0;
+  flex-shrink: 0;
 }
 
 /* ==========================================================================
