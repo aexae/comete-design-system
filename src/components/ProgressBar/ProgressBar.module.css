@@ -1,0 +1,62 @@
+/* ==========================================================================
+   ProgressBar — Comète Design System
+   Barre de progression linéaire.
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   ========================================================================== */
+
+/* Root — layout flex horizontal (barre + label) */
+.root {
+  display: flex;
+  align-items: center;
+  gap: var(--space100);
+  width: 100%;
+}
+
+/* Track — fond gris arrondi pill */
+.track {
+  flex: 1 1 0%;
+  min-width: 0;
+  height: var(--size100);
+  background-color: var(--background-neutral-subtler-default);
+  border-radius: var(--radius-round);
+  overflow: hidden;
+}
+
+/* Fill — barre de progression colorée */
+.fill {
+  height: 100%;
+  border-radius: var(--radius-round);
+  transition: width 200ms ease-out, background-color 200ms ease-out;
+}
+
+/* Apparences */
+.critical {
+  background-color: var(--background-critical-bold-default);
+}
+
+.warning {
+  background-color: var(--background-warning-bold-default);
+}
+
+.information {
+  background-color: var(--background-information-bold-default);
+}
+
+.brand {
+  background-color: var(--background-brand-bold-default);
+}
+
+.success {
+  background-color: var(--background-success-bold-default);
+}
+
+/* Label — pourcentage affiché à droite */
+.label {
+  flex-shrink: 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxxs);
+  line-height: var(--line-height-ui-xxs);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--text-subtlest);
+  white-space: nowrap;
+}
