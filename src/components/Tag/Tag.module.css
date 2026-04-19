@@ -31,7 +31,7 @@
 }
 
 .rounded {
-  border-radius: var(--radiusround);
+  border-radius: var(--radius-round);
 }
 
 /* ==========================================================================
@@ -83,7 +83,7 @@
 
 .bold.warning {
   background: var(--background-warning-bold-default);
-  color: var(--text-warning-inverted);
+  color: var(--text-on-warning);
 }
 .bold.warning.interactive:hover { background: var(--background-warning-bold-hovered); }
 .bold.warning.interactive:active { background: var(--background-warning-bold-pressed); }
@@ -121,46 +121,46 @@
 .subtle.neutral.interactive:active { background: var(--background-neutral-subtler-pressed); }
 
 .subtle.brand {
-  background: var(--background-brand-subtler-default);
+  background: var(--background-brand-subtlest-default);
   color: var(--text-brand);
 }
-.subtle.brand.interactive:hover { background: var(--background-brand-subtler-hovered); }
-.subtle.brand.interactive:active { background: var(--background-brand-subtler-pressed); }
+.subtle.brand.interactive:hover { background: var(--background-brand-subtlest-hovered); }
+.subtle.brand.interactive:active { background: var(--background-brand-subtlest-pressed); }
 
 .subtle.success {
-  background: var(--background-success-subtler-default);
+  background: var(--background-success-subtlest-default);
   color: var(--text-success);
 }
-.subtle.success.interactive:hover { background: var(--background-success-subtler-hovered); }
-.subtle.success.interactive:active { background: var(--background-success-subtler-pressed); }
+.subtle.success.interactive:hover { background: var(--background-success-subtlest-hovered); }
+.subtle.success.interactive:active { background: var(--background-success-subtlest-pressed); }
 
 .subtle.warning {
-  background: var(--background-warning-subtler-default);
+  background: var(--background-warning-subtlest-default);
   color: var(--text-warning);
 }
-.subtle.warning.interactive:hover { background: var(--background-warning-subtler-hovered); }
-.subtle.warning.interactive:active { background: var(--background-warning-subtler-pressed); }
+.subtle.warning.interactive:hover { background: var(--background-warning-subtlest-hovered); }
+.subtle.warning.interactive:active { background: var(--background-warning-subtlest-pressed); }
 
 .subtle.critical {
-  background: var(--background-critical-subtler-default);
+  background: var(--background-critical-subtlest-default);
   color: var(--text-critical);
 }
-.subtle.critical.interactive:hover { background: var(--background-critical-subtler-hovered); }
-.subtle.critical.interactive:active { background: var(--background-critical-subtler-pressed); }
+.subtle.critical.interactive:hover { background: var(--background-critical-subtlest-hovered); }
+.subtle.critical.interactive:active { background: var(--background-critical-subtlest-pressed); }
 
 .subtle.information {
-  background: var(--background-information-subtler-default);
+  background: var(--background-information-subtlest-default);
   color: var(--text-information);
 }
-.subtle.information.interactive:hover { background: var(--background-information-subtler-hovered); }
-.subtle.information.interactive:active { background: var(--background-information-subtler-pressed); }
+.subtle.information.interactive:hover { background: var(--background-information-subtlest-hovered); }
+.subtle.information.interactive:active { background: var(--background-information-subtlest-pressed); }
 
 .subtle.accent {
-  background: var(--background-accent-subtler-default);
+  background: var(--background-accent-subtlest-default);
   color: var(--text-accent);
 }
-.subtle.accent.interactive:hover { background: var(--background-accent-subtler-hovered); }
-.subtle.accent.interactive:active { background: var(--background-accent-subtler-pressed); }
+.subtle.accent.interactive:hover { background: var(--background-accent-subtlest-hovered); }
+.subtle.accent.interactive:active { background: var(--background-accent-subtlest-pressed); }
 
 /* ==========================================================================
    Style: outlined — fond transparent, bordure colorée
@@ -260,7 +260,7 @@
   background: none;
   color: inherit;
   cursor: pointer;
-  border-radius: var(--radiusround);
+  border-radius: var(--radius-round);
   opacity: 0.7;
   transition: opacity 100ms ease;
 }
