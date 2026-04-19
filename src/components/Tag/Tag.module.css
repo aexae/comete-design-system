@@ -27,7 +27,7 @@
    ========================================================================== */
 
 .square {
-  border-radius: var(--radius025);
+  border-radius: var(--radius0375);
 }
 
 .rounded {
