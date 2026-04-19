@@ -51,6 +51,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  /* Prevent descenders (g, y, p…) from being clipped by overflow:hidden */
+  padding-block: 2px;
 }
 
 .trailing {
