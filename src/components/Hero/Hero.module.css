@@ -1,0 +1,8 @@
+/* Hero.module.css */
+
+.hero {
+  margin: 0;
+}
+
+.color-default { color: var(--text-default); }
+.color-inverse { color: var(--text-inverted); }
