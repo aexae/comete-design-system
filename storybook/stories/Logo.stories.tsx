@@ -9,6 +9,10 @@ import {
 } from "@naxit/comete-design-system/components";
 import type { CSSProperties, ReactElement } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { logoRegistry } from "@naxit/comete-logos";
+
+/** All products from the registry — always up to date. */
+const ALL_PRODUCTS = Object.keys(logoRegistry).sort() as LogoProduct[];
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -25,7 +29,7 @@ const meta = {
   argTypes: {
     product: {
       control: "select",
-      options: ["comete", "ontime", "link", "bi", "academie", "club", "mce", "cafe", "mycomete"] satisfies LogoProduct[],
+      options: ALL_PRODUCTS,
     },
     appearance: {
       control: "select",
@@ -180,7 +184,7 @@ export const TaglineAlignColumn: Story = {
   name: "TaglineAlign column",
   args: { taglineAlign: "column", product: "ontime", size: 48 },
   render: (args) => {
-    const products: LogoProduct[] = ["comete", "ontime", "link", "bi", "academie", "club", "mce", "cafe"];
+    const products = ALL_PRODUCTS;
     const appearances: LogoAppearance[] = ["brand", "neutral", "inverse"];
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
@@ -239,7 +243,7 @@ export const TaglineAlignColumn: Story = {
 export const AllProducts: Story = {
   name: "All products",
   render: () => {
-    const products: LogoProduct[] = ["comete", "ontime", "link", "bi", "academie", "club", "mce", "cafe", "mycomete"];
+    const products = ALL_PRODUCTS;
     const appearances: LogoAppearance[] = ["brand", "neutral", "inverse"];
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
@@ -290,16 +294,6 @@ export const AllProducts: Story = {
 // Logo Explorer — parcourir, copier et télécharger tous les logos
 // -----------------------------------------------------------------------
 
-const ALL_PRODUCTS: LogoProduct[] = [
-  "comete",
-  "ontime",
-  "link",
-  "bi",
-  "academie",
-  "club",
-  "mce",
-  "mycomete",
-];
 
 const ALL_APPEARANCES: LogoAppearance[] = ["brand", "neutral", "inverse"];
 
