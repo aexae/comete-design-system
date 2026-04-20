@@ -16,9 +16,11 @@ import {
   Button,
   ButtonGroup,
   TextField,
+  SearchField,
   Field,
   Avatar,
   Badge,
+  IconTile,
   Tag,
   Text,
   Heading,
@@ -257,14 +259,13 @@ export const Collection: Story = {
   render: function CollectionStory() {
     const [filtersOpen, setFiltersOpen] = useState(false);
     return (
-      <div className={css["gutters"]}>
-        <Page>
+      <Page>
           <Page.Header title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
           <Page.Toolbar
             start={
               <>
                 <div className={css["searchWrapper"]}>
-                  <TextField aria-label="Rechercher" placeholder="Rechercher…" isCompact elemBefore={<Icon icon="EditorSearch" />} />
+                  <SearchField placeholder="Rechercher…" isCompact />
                 </div>
                 <span className={css["showOnDesktop"]}>
                   <Button appearance="subtle" iconBefore="FilterList" onPress={() => setFiltersOpen(true)}>Filtres</Button>
@@ -341,7 +342,6 @@ export const Collection: Story = {
             </DrawerFooter>
           </Drawer>
         </Page>
-      </div>
     );
   },
 };
@@ -359,7 +359,6 @@ export const Entity: Story = {
   name: "Entity (fiche détail)",
   parameters: { design: { type: "figma", url: figmaUrl("4577:13694") } },
   render: () => (
-    <div className={css["gutters"]}>
       <Page>
         <Page.Header
           title="Entité"
@@ -376,30 +375,80 @@ export const Entity: Story = {
           <Grid gap="300">
             <Grid.Col span={{ mobile: 12, tablet: 5, desktop: 4 }}>
               <Stack gap="200">
-                <Card appearance="outlined">
-                  <div className={css["cardColumn"]}>
-                    <CC padding="var(--space300)">
-                      <Stack gap="200" align="center">
-                        <Avatar size="xlarge" initials="DM" />
-                        <Stack gap="050" align="center">
-                          <Heading size="medium" as="span">DUPONT Marie</Heading>
-                          <Cluster gap="075">
-                            <Text>CDI</Text>
-                            <Text color="subtlest">•</Text>
-                            <Text>7 documents à jour</Text>
-                            {/* <Tag label="CDI" appearance="information"  />
-                            <Tag label="Documents à jour" appearance="success"  /> */}
-                          </Cluster>
+                      <Stack gap="200">
+
+                        <Stack direction="row" gap="200" align="center">
+                          <Avatar size="xlarge" initials="DM" />
+                          <Stack align="start" gap="050">
+                              <Stack>
+                                <Heading size="medium" as="span">DUPONT Marie</Heading>
+                              </Stack>
+                              <Tag elemBefore={<Icon icon="AwardStar" size={16} color="success" />} label="Conforme" color="success"  />
+                          </Stack>
                         </Stack>
+
+                        <Text size="large">Agent de sureté</Text>
+
+                        <Stack gap="050">
+                          <Stack direction="row" gap="100" align="center">
+                            <Icon icon="LabelImportant" size={20} color="subtlest" />
+                            <Text as="span" weight="medium">MAT0001</Text>
+                          </Stack>
+                          <Stack direction="row" gap="100" align="center">
+                            <Icon icon="CorporateFlare" size={20} color="subtlest" />
+                            <Text as="span">Pro sécurité</Text>
+                          </Stack>
+                          <Stack direction="row" gap="100" align="center">
+                            <Icon icon="Email" size={20} color="subtlest" />
+                            <Text as="span">marie.dupont@mail.com</Text>
+                          </Stack>
+                          <Stack direction="row" gap="100" align="center">
+                            <Icon icon="LocationOn" size={20} color="subtlest" />
+                            <Text as="span">Ile de France</Text>
+                          </Stack>
+                          <Stack direction="row" gap="100" align="center">
+                            <Icon icon="School" size={20} color="subtlest" />
+                            <Text as="span">Niveau 3, Échelon 3</Text>
+                          </Stack>
+                        </Stack>
+
+                        <Card appearance="default" color="sunken">
+                          <Stack padding="200" gap="150">
+                            <Stack direction="row" gap="100" align="center">
+                              <IconTile icon="CalendarClock" appearance="success" size="small" />
+                              <Text as="span">WWWW1</Text>
+                            </Stack>
+                            <Divider />
+                            <Stack direction="row" gap="100" align="center">
+                              <IconTile icon="School" appearance="information" size="small" />
+                              <Text as="span">WWWW</Text>
+                            </Stack>
+                          </Stack>
+                        </Card>
+
+                        {/* <CC>
+                          <Stack gap="150">
+                            <Stack direction="row" gap="100" align="start">
+                              <Icon icon="Email" size={20} color="subtlest" />
+                              <Text as="span">marie.dupont@mail.com</Text>
+                            </Stack>
+                            <PropRow icon="Mail" label="E-mail" value="marie.dupont@mail.com" />
+                            <PropRow icon="Badge" label="Matricule" value="150" />
+                            <PropRow icon="BusinessCenter" label="Société" value="AEXAE" />
+                            <PropRow icon="LocationOn" label="Secteur" value="Ile de France" />
+                            <PropRow icon="School" label="Qualification" value="Agent N3E3" />
+                          </Stack>
+                        </CC> */}
+                        
                         <Cluster gap="100" justify="center">
                           <Button appearance="contained" iconBefore="CalendarMonth" color="brand" >Planning</Button>
                           <Button appearance="contained" iconBefore="Newspaper">Documents</Button>
                           <Button appearance="contained" iconBefore="History">Rapports</Button>
                         </Cluster>
                       </Stack>
-                    </CC>
+                    {/* </CC> */}
                     <Divider />
-                    <CC>
+                    {/* <CC> */}
                       <Stack gap="150">
                         <PropRow icon="Mail" label="E-mail" value="marie.dupont@mail.com" />
                         <PropRow icon="Badge" label="Matricule" value="150" />
@@ -407,16 +456,16 @@ export const Entity: Story = {
                         <PropRow icon="LocationOn" label="Secteur" value="Ile de France" />
                         <PropRow icon="School" label="Qualification" value="Agent N3E3" />
                       </Stack>
-                    </CC>
+                    {/* </CC> */}
                     <Divider />
-                    <CC>
+                    {/* <CC> */}
                       <Cluster gap="100">
                         <Button appearance="subtle" iconBefore="Edit">Modifier</Button>
                         <Button appearance="subtle" color="critical" iconBefore="Archive">Archiver</Button>
                       </Cluster>
-                    </CC>
-                  </div>
-                </Card>
+                    {/* </CC>
+                  </div> */}
+                {/* </Card> */}
 
                 <Card appearance="outlined">
                   <CC>
@@ -468,11 +517,11 @@ export const Entity: Story = {
                         <Stack gap="200">
                           <Cluster justify="between" align="center">
                             <div style={{ flex: "1 1 auto", minWidth: 0, maxWidth: 300 }}>
-                              <TextField aria-label="Rechercher" placeholder="Rechercher…" />
+                              <SearchField placeholder="Rechercher un document…" />
                             </div>
                             <Button appearance="subtle" iconBefore="UploadFile">Importer</Button>
                           </Cluster>
-                          <Card appearance="neutral">
+                          <Card appearance="default">
                             <CC padding="var(--space300)">
                               <Stack gap="100" align="center">
                                 <Icon icon="Newspaper" />
@@ -511,7 +560,6 @@ export const Entity: Story = {
           </Grid>
         </Page.Body>
       </Page>
-    </div>
   ),
 };
 
@@ -530,7 +578,6 @@ export const Dashboard: Story = {
   name: "Dashboard (tableau de bord)",
   parameters: { design: { type: "figma", url: figmaUrl("4587:24160") } },
   render: () => (
-    <div className={css["gutters"]}>
       <Page>
         <Page.Header
           title="Tableau de bord"
@@ -640,7 +687,7 @@ export const Dashboard: Story = {
                             <Heading size="xsmall" as="span">{s.site}</Heading>
                             <Text size="small" as="span" color="subtlest">{s.client}</Text>
                           </Stack>
-                          <Tag label={s.secteur} tagStyle="subtle" />
+                          <Tag label={s.secteur} />
                           <Divider />
                           <div className={css["siteStats"]}>
                             <Stack gap="0"><Text size="small" as="span" color="subtlest">Vacations</Text><Heading size="small" as="span">{String(s.vac)}</Heading></Stack>
@@ -657,7 +704,6 @@ export const Dashboard: Story = {
           </Stack>
         </Page.Body>
       </Page>
-    </div>
   ),
 };
 
@@ -675,7 +721,6 @@ export const Settings: Story = {
   name: "Settings (paramètres)",
   parameters: { design: { type: "figma", url: figmaUrl("4577:13694") } },
   render: () => (
-    <div className={css["gutters"]}>
       <Page>
         <Page.Header title="Permissions" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Body>
@@ -743,7 +788,7 @@ export const Settings: Story = {
                         ].map((fn, i) => (
                           <TableRow key={i} cells={[
                             <Text key="fn" weight="medium" as="span">{fn.fn}</Text>,
-                            <Tag key="r" label={fn.role} tagStyle="subtle" />,
+                            <Tag key="r" label={fn.role} />,
                             fn.users,
                             fn.date,
                           ]} />
@@ -764,7 +809,7 @@ export const Settings: Story = {
                             <Stack gap="100">
                               <Cluster justify="between" align="center">
                                 <Heading size="xsmall" as="span">{fn.fn}</Heading>
-                                <Tag label={fn.role} tagStyle="subtle" />
+                                <Tag label={fn.role} />
                               </Cluster>
                               <Cluster gap="200">
                                 <Text size="small" as="span" color="subtlest">{fn.users} utilisateurs</Text>
@@ -818,6 +863,5 @@ export const Settings: Story = {
           </Tabs>
         </Page.Body>
       </Page>
-    </div>
   ),
 };
