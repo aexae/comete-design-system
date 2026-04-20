@@ -388,7 +388,6 @@ export function MonthRangePicker({
                   triggerRef={containerRef}
                   placement="bottom start"
                   shouldFlip={false}
-                  className={styles.popover}
                 >
                   <AriaDialog className={styles.dialog}>
                     {renderDualCalendar()}
@@ -419,7 +418,6 @@ export function MonthRangePicker({
                   triggerRef={containerRef}
                   placement="bottom start"
                   shouldFlip={false}
-                  className={styles.popover}
                 >
                   <AriaDialog className={styles.dialog}>
                     {renderDualCalendar()}
@@ -444,7 +442,6 @@ export function MonthRangePicker({
                 triggerRef={containerRef}
                 placement="bottom start"
                 shouldFlip={false}
-                className={styles.popover}
               >
                 <AriaDialog className={styles.dialog}>
                   {renderDualCalendar()}

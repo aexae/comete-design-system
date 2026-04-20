@@ -308,7 +308,6 @@ export function YearRangePicker({
                   triggerRef={containerRef}
                   placement="bottom start"
                   shouldFlip={false}
-                  className={styles.popover}
                 >
                   <AriaDialog className={styles.dialog}>
                     {calendars === 2 ? (
@@ -348,7 +347,6 @@ export function YearRangePicker({
                   triggerRef={containerRef}
                   placement="bottom start"
                   shouldFlip={false}
-                  className={styles.popover}
                 >
                   <AriaDialog className={styles.dialog}>
                     {calendars === 2 ? (
@@ -382,7 +380,6 @@ export function YearRangePicker({
                 triggerRef={containerRef}
                 placement="bottom start"
                 shouldFlip={false}
-                className={styles.popover}
               >
                 <AriaDialog className={styles.dialog}>
                   {calendars === 2 ? (

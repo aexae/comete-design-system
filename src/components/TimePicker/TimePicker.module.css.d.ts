@@ -4,7 +4,6 @@ declare const styles: {
   readonly "dialog": string;
   readonly "drumPopover": string;
   readonly "editableContent": string;
-  readonly "popover": string;
   readonly "segment": string;
   readonly "timeDisplay": string;
   readonly "timeInput": string;

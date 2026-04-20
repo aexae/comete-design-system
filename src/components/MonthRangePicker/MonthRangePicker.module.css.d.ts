@@ -6,7 +6,6 @@ declare const styles: {
   readonly "monthButton": string;
   readonly "monthInput": string;
   readonly "monthValue": string;
-  readonly "popover": string;
   readonly "root": string;
   readonly "separator": string;
 };

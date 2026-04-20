@@ -90,12 +90,8 @@
 }
 
 /* ==========================================================================
-   Popover / Dialog
+   Dialog — reset outline
    ========================================================================== */
-
-.popover {
-  /* Hérite intégralement du DS Popover — aucune surcharge */
-}
 
 .dialog {
   outline: none;

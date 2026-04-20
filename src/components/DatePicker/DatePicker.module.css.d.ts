@@ -7,7 +7,6 @@ declare const styles: {
   readonly "datePicker": string;
   readonly "dialog": string;
   readonly "navigationContent": string;
-  readonly "popover": string;
   readonly "segment": string;
 };
 export = styles;

@@ -373,7 +373,6 @@ function NonEditableTimePicker({
               triggerRef={containerRef}
               placement="bottom start"
               shouldFlip={false}
-              className={styles.popover}
             >
               <AriaDialog className={styles.dialog}>
                 <TimeDrumPicker

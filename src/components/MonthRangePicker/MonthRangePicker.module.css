@@ -77,11 +77,6 @@
   flex-shrink: 0;
 }
 
-/* Popover */
-.popover {
-  /* Hérite intégralement du DS Popover — aucune surcharge */
-}
-
 /* Dialog — reset outline */
 .dialog {
   outline: none;

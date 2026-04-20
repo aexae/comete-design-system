@@ -396,7 +396,6 @@ export function WeekPicker({
                 triggerRef={containerRef}
                 placement="bottom start"
                 shouldFlip={false}
-                className={styles.popover}
               >
                 <AriaDialog className={styles.dialog}>
                   <Calendar

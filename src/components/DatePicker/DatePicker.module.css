@@ -90,12 +90,8 @@
 }
 
 /* ==========================================================================
-   Popover / Dialog — mode navigation (React Aria)
+   Dialog — reset outline
    ========================================================================== */
-
-.popover {
-  /* Hérite intégralement du DS Popover — aucune surcharge */
-}
 
 .dialog {
   outline: none;
