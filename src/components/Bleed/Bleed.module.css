@@ -1,0 +1,41 @@
+/* ==========================================================================
+   Bleed — Comète Design System
+   Fait déborder un enfant au-delà de son conteneur.
+   Deux modes :
+   - Relatif (inline/block) : compense le padding du parent direct.
+   - Full (isFull) : traverse les gouttières de Page via --page-gutter.
+   ========================================================================== */
+
+.bleed {
+  min-width: 0;
+}
+
+/* ---- Mode relatif : compense le padding du parent ---- */
+
+.inline {
+  margin-inline: calc(-1 * var(--_bleed-inline));
+  width: calc(100% + 2 * var(--_bleed-inline));
+}
+
+/* ---- Mode full : traverse les page gutters ---- */
+
+.full {
+  margin-inline: calc(-1 * var(--page-gutter, 0px));
+  width: calc(100% + 2 * var(--page-gutter, 0px));
+  box-sizing: border-box;
+}
+
+/* ---- Enfants directs : pleine largeur, sans coins arrondis ---- */
+
+.inline > *,
+.full > * {
+  width: 100%;
+  border-radius: 0;
+  box-sizing: border-box;
+}
+
+/* ---- Mode block : débordement vertical ---- */
+
+.block {
+  margin-block: calc(-1 * var(--_bleed-block));
+}

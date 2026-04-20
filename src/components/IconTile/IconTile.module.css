@@ -1,0 +1,81 @@
+/* IconTile — Comète Design System */
+
+/* -----------------------------------------------------------------------
+   Base
+   ----------------------------------------------------------------------- */
+
+.iconTile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+/* -----------------------------------------------------------------------
+   Sizes
+   ----------------------------------------------------------------------- */
+
+.xsmall {
+  width: var(--size300);
+  height: var(--size300);
+}
+
+.small {
+  width: var(--size400);
+  height: var(--size400);
+}
+
+.medium {
+  width: var(--size500);
+  height: var(--size500);
+}
+
+.large {
+  width: var(--size600);
+  height: var(--size600);
+}
+
+/* -----------------------------------------------------------------------
+   Shapes
+   ----------------------------------------------------------------------- */
+
+.square {
+  border-radius: var(--radius075);
+}
+
+.circle {
+  border-radius: var(--radius-round);
+}
+
+/* -----------------------------------------------------------------------
+   Appearances
+   ----------------------------------------------------------------------- */
+
+.neutral {
+  background-color: var(--background-neutral-subtlest-default);
+}
+
+.brand {
+  background-color: var(--background-brand-subtlest-default);
+}
+
+.information {
+  background-color: var(--background-information-subtlest-default);
+}
+
+.success {
+  background-color: var(--background-success-subtlest-default);
+}
+
+.warning {
+  background-color: var(--background-warning-subtlest-default);
+}
+
+.critical {
+  background-color: var(--background-critical-subtlest-default);
+}
+
+.accent {
+  background-color: var(--background-accent-subtlest-default);
+}
