@@ -9,7 +9,7 @@ import styles from "./Button.module.css";
 
 export type ButtonAppearance = "contained" | "outlined" | "subtle" | "link" | "link-subtle";
 export type ButtonColor = "default" | "brand" | "success" | "critical" | "warning" | "information";
-export type ButtonSize = "small" | "medium" | "large";
+export type ButtonSize = "xsmall" | "small" | "medium" | "large" | "xlarge";
 
 export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"> {
   /** Visual appearance. @default "contained" */
@@ -24,6 +24,8 @@ export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"
   iconAfter?: IconName;
   /** Affiche un spinner et désactive les interactions. @default false */
   isLoading?: boolean;
+  /** État sélectionné/actif — applique un style visuel persistant. @default false */
+  isSelected?: boolean;
   /** Additional CSS class names. */
   className?: string;
   /** Label du bouton. Optionnel pour un bouton icon-only. */
@@ -92,6 +94,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       iconBefore,
       iconAfter,
       isLoading = false,
+      isSelected = false,
       className,
       children,
       ...ariaProps
@@ -121,9 +124,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     // Map size to CSS class
     const sizeClassMap: Record<ButtonSize, string> = {
+      xsmall: styles.xsmall,
       small: styles.small,
       medium: styles.medium,
       large: styles.large,
+      xlarge: styles.xlarge,
     };
     const sizeClass = sizeClassMap[size];
 
@@ -151,6 +156,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         className={classNames}
         isDisabled={isLoading || ariaProps.isDisabled}
+        data-selected={isSelected || undefined}
         {...ariaProps}
       >
         {isLoading ? (

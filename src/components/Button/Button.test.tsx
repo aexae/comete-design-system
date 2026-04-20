@@ -57,13 +57,28 @@ describe("Button", () => {
   });
 
   describe("prop size", () => {
-    it.each([["small"], ["medium"], ["large"]] as const)(
-      "should apply class %s when size=%s",
-      (size) => {
-        render(<Button size={size}>Label</Button>);
-        expect(screen.getByRole("button")).toHaveClass(size);
-      }
-    );
+    it.each([
+      ["xsmall"],
+      ["small"],
+      ["medium"],
+      ["large"],
+      ["xlarge"],
+    ] as const)("should apply class %s when size=%s", (size) => {
+      render(<Button size={size}>Label</Button>);
+      expect(screen.getByRole("button")).toHaveClass(size);
+    });
+  });
+
+  describe("prop isSelected", () => {
+    it("should set data-selected attribute when isSelected is true", () => {
+      render(<Button isSelected>Label</Button>);
+      expect(screen.getByRole("button")).toHaveAttribute("data-selected");
+    });
+
+    it("should not set data-selected attribute when isSelected is false or missing", () => {
+      render(<Button>Label</Button>);
+      expect(screen.getByRole("button")).not.toHaveAttribute("data-selected");
+    });
   });
 
   describe("prop className", () => {
