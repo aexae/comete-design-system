@@ -3,6 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Field,
   TextField,
+  Icon,
+  Stack,
   type TextFieldAppearance,
 } from "@naxit/comete-design-system/components";
 import { fn } from "storybook/test";
@@ -149,6 +151,43 @@ export const Clearable: Story = {
 /** Avec spinner de chargement. */
 export const Loading: Story = {
   args: { isLoading: true, isClearable: true, defaultValue: "Field value" },
+};
+
+/**
+ * Avec icône elemBefore. L'icône hérite automatiquement de l'état disabled
+ * via InputContext (color="disabled" quand le champ est disabled).
+ */
+export const WithElemBefore: Story = {
+  name: "With elemBefore",
+  render: (args) => (
+    <div style={{ width: 280 }}>
+      <Stack gap="200">
+        <Field label="Enabled">
+          <TextField
+            {...args}
+            placeholder="Rechercher…"
+            elemBefore={<Icon icon="EditorSearch" />}
+          />
+        </Field>
+        <Field label="Disabled">
+          <TextField
+            {...args}
+            placeholder="Rechercher…"
+            elemBefore={<Icon icon="EditorSearch" />}
+            isDisabled
+          />
+        </Field>
+        <Field label="Disabled — color explicite (opt-out)">
+          <TextField
+            {...args}
+            placeholder="Rechercher…"
+            elemBefore={<Icon icon="EditorSearch" color="brand" />}
+            isDisabled
+          />
+        </Field>
+      </Stack>
+    </div>
+  ),
 };
 
 /** Toutes les apparences × états. */

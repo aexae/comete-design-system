@@ -3,6 +3,7 @@ import { Button as AriaButton, type ButtonProps as AriaButtonProps } from "react
 import { forwardRef } from "react";
 import type { IconColor, IconName } from "@naxit/comete-icons";
 import { Icon } from "../Icon/index.js";
+import { useInputContext } from "../../contexts/InputContext.js";
 import styles from "./Button.module.css";
 
 // ----------------------------------------------------------------------
@@ -101,6 +102,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
+    // Hériter isDisabled du InputContext si pas passé explicitement
+    const inputCtx = useInputContext();
+    const effectiveDisabled =
+      ariaProps.isDisabled ?? inputCtx?.isDisabled ?? false;
+
     // Map appearance to CSS class (handles kebab-case "link-subtle")
     const appearanceClassMap: Record<ButtonAppearance, string> = {
       contained: styles.contained,
@@ -155,7 +161,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <AriaButton
         ref={ref}
         className={classNames}
-        isDisabled={isLoading || ariaProps.isDisabled}
+        isDisabled={isLoading || effectiveDisabled}
         data-selected={isSelected || undefined}
         {...ariaProps}
       >

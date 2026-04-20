@@ -47,12 +47,6 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  color: var(--text-subtle);
-}
-
-.textField[data-disabled] .elemBefore,
-.textField[data-disabled] .elemAfter {
-  color: var(--text-disabled);
 }
 
 /* ==========================================================================

@@ -1,6 +1,7 @@
 // InputContainer — Comète Design System
 // Conteneur visuel partagé pour tous les champs de saisie.
 import type { ReactElement, ReactNode } from "react";
+import { InputContextProvider } from "../../contexts/InputContext.js";
 import styles from "./InputContainer.module.css";
 
 // -----------------------------------------------------------------------
@@ -69,7 +70,13 @@ export function InputContainer({
     .filter(Boolean)
     .join(" ");
 
-  return <div className={classNames}>{children}</div>;
+  return (
+    <div className={classNames}>
+      <InputContextProvider isDisabled={isDisabled} isInvalid={isInvalid}>
+        {children}
+      </InputContextProvider>
+    </div>
+  );
 }
 
 InputContainer.displayName = "InputContainer";

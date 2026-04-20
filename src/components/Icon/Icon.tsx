@@ -1,6 +1,7 @@
 import type { ReactElement } from "react";
 import type { IconColor, IconName, IconProps, IconSpacing, IconVariant } from "@naxit/comete-icons";
 import { iconRegistry } from "@naxit/comete-icons";
+import { useInputContext } from "../../contexts/InputContext.js";
 import styles from "./Icon.module.css";
 
 // ----------------------------------------------------------------------
@@ -53,15 +54,20 @@ export interface IconComponentProps {
 export function Icon({
   icon,
   appearance = "outlined",
-  color = "default",
+  color,
   size = 24,
   spacing = "default",
   "aria-label": ariaLabel,
   className,
 }: IconComponentProps): ReactElement | null {
   const IconComponent = iconRegistry[icon];
+  const inputCtx = useInputContext();
 
-  const iconProps: IconProps = { variant: appearance, color, size, spacing };
+  // Si color n'est pas passée explicitement, hériter du contexte InputContext
+  const resolvedColor: IconColor =
+    color ?? (inputCtx?.isDisabled ? "disabled" : "default");
+
+  const iconProps: IconProps = { variant: appearance, color: resolvedColor, size, spacing };
 
   const classNames = [styles.icon, className].filter(Boolean).join(" ");
 
