@@ -52,10 +52,10 @@ export const ThreeButtons: Story = {
   name: "3 boutons",
   parameters: { design: { type: "figma", url: figmaUrl("4608:17280") } },
   render: () => (
-    <ButtonGroup aria-label="Actions">
-      <Button>Option 1</Button>
-      <Button>Option 2</Button>
-      <Button>Option 3</Button>
+    <ButtonGroup aria-label="Actions du formulaire">
+      <Button appearance="subtle">Annuler</Button>
+      <Button appearance="outlined" color="brand">Enregistrer en brouillon</Button>
+      <Button color="brand">Publier</Button>
     </ButtonGroup>
   ),
 };
@@ -77,6 +77,53 @@ export const MixedVariants: Story = {
         <Button appearance="subtle">Ignorer</Button>
         <Button appearance="subtle" color="brand">Enregistrer</Button>
         <Button appearance="subtle" color="critical">Rejeter</Button>
+      </ButtonGroup>
+    </div>
+  ),
+};
+
+/** Toutes les tailles de bouton supportées dans un groupe. */
+export const AllSizes: Story = {
+  name: "Toutes les tailles",
+  render: () => (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "flex-start" }}>
+      <ButtonGroup aria-label="Actions xsmall">
+        <Button size="xsmall">Annuler</Button>
+        <Button size="xsmall" color="brand">Confirmer</Button>
+      </ButtonGroup>
+      <ButtonGroup aria-label="Actions small">
+        <Button size="small">Annuler</Button>
+        <Button size="small" color="brand">Confirmer</Button>
+      </ButtonGroup>
+      <ButtonGroup aria-label="Actions medium">
+        <Button size="medium">Annuler</Button>
+        <Button size="medium" color="brand">Confirmer</Button>
+      </ButtonGroup>
+      <ButtonGroup aria-label="Actions large">
+        <Button size="large">Annuler</Button>
+        <Button size="large" color="brand">Confirmer</Button>
+      </ButtonGroup>
+      <ButtonGroup aria-label="Actions xlarge">
+        <Button size="xlarge">Annuler</Button>
+        <Button size="xlarge" color="brand">Confirmer</Button>
+      </ButtonGroup>
+    </div>
+  ),
+};
+
+/** Groupe avec icônes avant/après le label. */
+export const WithIcons: Story = {
+  name: "Avec icônes",
+  render: () => (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "flex-start" }}>
+      <ButtonGroup aria-label="Navigation">
+        <Button appearance="outlined" iconBefore="ChevronLeft">Précédent</Button>
+        <Button color="brand" iconAfter="ChevronRight">Suivant</Button>
+      </ButtonGroup>
+      <ButtonGroup aria-label="Actions">
+        <Button appearance="subtle" iconBefore="Download">Télécharger</Button>
+        <Button appearance="subtle" iconBefore="IosShare">Partager</Button>
+        <Button appearance="subtle" color="critical" iconBefore="Delete">Supprimer</Button>
       </ButtonGroup>
     </div>
   ),
