@@ -28,14 +28,14 @@ describe("Logo", () => {
     expect(container.firstElementChild).toHaveClass("custom");
   });
 
-  it("should render icon type", () => {
+  it("should render icon format", () => {
     const { container } = render(<Logo format="icon" />);
     const svg = container.querySelector("svg");
     expect(svg).toBeInTheDocument();
     expect(svg?.getAttribute("viewBox")).toBe("0 0 32 32");
   });
 
-  it("should render logo type with wider viewBox", () => {
+  it("should render logo format with wider viewBox", () => {
     const { container } = render(<Logo format="logo" />);
     const svg = container.querySelector("svg");
     expect(svg).toBeInTheDocument();
@@ -50,5 +50,15 @@ describe("Logo", () => {
     const svg = container.querySelector("svg");
     expect(svg?.getAttribute("width")).toBe("48");
     expect(svg?.getAttribute("height")).toBe("48");
+  });
+
+  it("should render cafe product", () => {
+    const { container } = render(<Logo product="cafe" />);
+    expect(container.querySelector("svg")).toBeInTheDocument();
+  });
+
+  it("should support taglineAlign=column", () => {
+    const { container } = render(<Logo product="ontime" taglineAlign="column" />);
+    expect(container.querySelector("svg")).toBeInTheDocument();
   });
 });

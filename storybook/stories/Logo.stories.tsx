@@ -2,7 +2,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Logo,
-  type LogoSuffix,
+  type LogoTaglineAlign,
   type LogoAppearance,
   type LogoProduct,
   type LogoFormat,
@@ -25,7 +25,7 @@ const meta = {
   argTypes: {
     product: {
       control: "select",
-      options: ["comete", "ontime", "link", "bi", "academie", "club", "mce", "mycomete"] satisfies LogoProduct[],
+      options: ["comete", "ontime", "link", "bi", "academie", "club", "mce", "cafe", "mycomete"] satisfies LogoProduct[],
     },
     appearance: {
       control: "select",
@@ -35,9 +35,9 @@ const meta = {
       control: { type: "inline-radio" },
       options: ["icon", "logo"] satisfies LogoFormat[],
     },
-    suffix: {
+    taglineAlign: {
       control: "select",
-      options: ["none", "right", "bottom"] satisfies LogoSuffix[],
+      options: ["none", "inline", "column"] satisfies LogoTaglineAlign[],
     },
     size: {
       // ── Slider, identique à l'Icon Explorer ──────────────────────────
@@ -48,7 +48,7 @@ const meta = {
     product: "comete",
     appearance: "brand",
     format: "logo",
-    suffix: "right",
+    taglineAlign: "inline",
     size: 32,
   },
   parameters: {
@@ -70,7 +70,7 @@ interface LogoWithDownloadProps {
   product?: LogoProduct;
   appearance?: LogoAppearance;
   format?: LogoFormat;
-  suffix?: LogoSuffix;
+  taglineAlign?: LogoTaglineAlign;
   size?: number;
 }
 
@@ -78,7 +78,7 @@ function LogoWithDownload({
   product = "comete",
   appearance = "brand",
   format = "logo",
-  suffix = "right",
+  taglineAlign = "inline",
   size = 32,
 }: LogoWithDownloadProps): ReactElement {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -117,7 +117,7 @@ function LogoWithDownload({
       }}
     >
       <div ref={containerRef}>
-        <Logo product={product} appearance={appearance} format={format} suffix={suffix} size={size} />
+        <Logo product={product} appearance={appearance} format={format} taglineAlign={taglineAlign} size={size} />
       </div>
       <div style={{ display: "flex", gap: 6 }}>
         <button type="button" onClick={handleDownloadSvg} style={btnStyle}>
@@ -175,12 +175,12 @@ export const Large: Story = {
   args: { size: 48 },
 };
 
-/** Suffix bottom : nom produit sous le wordmark. */
-export const SuffixBottom: Story = {
-  name: "Suffix bottom",
-  args: { suffix: "bottom", product: "ontime", size: 48 },
+/** TaglineAlign column : nom produit sous le wordmark (ou au-dessus pour Café). */
+export const TaglineAlignColumn: Story = {
+  name: "TaglineAlign column",
+  args: { taglineAlign: "column", product: "ontime", size: 48 },
   render: (args) => {
-    const products: LogoProduct[] = ["comete", "ontime", "link", "bi", "academie", "club", "mce"];
+    const products: LogoProduct[] = ["comete", "ontime", "link", "bi", "academie", "club", "mce", "cafe"];
     const appearances: LogoAppearance[] = ["brand", "neutral", "inverse"];
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
@@ -204,7 +204,7 @@ export const SuffixBottom: Story = {
                 color: a === "inverse" ? "var(--text-inverted)" : "var(--text-subtlest)",
               }}
             >
-              appearance={a} suffix=&quot;bottom&quot;
+              appearance={a} taglineAlign=&quot;column&quot;
             </span>
             {products.map((p) => (
               <div
@@ -216,7 +216,7 @@ export const SuffixBottom: Story = {
                   gap: 8,
                 }}
               >
-                <Logo product={p} appearance={a} suffix={args.suffix} size={args.size} />
+                <Logo product={p} appearance={a} taglineAlign={args.taglineAlign} size={args.size} />
                 <span
                   style={{
                     fontFamily: "monospace",
@@ -239,7 +239,7 @@ export const SuffixBottom: Story = {
 export const AllProducts: Story = {
   name: "All products",
   render: () => {
-    const products: LogoProduct[] = ["comete", "ontime", "link", "bi", "academie", "club", "mce", "mycomete"];
+    const products: LogoProduct[] = ["comete", "ontime", "link", "bi", "academie", "club", "mce", "cafe", "mycomete"];
     const appearances: LogoAppearance[] = ["brand", "neutral", "inverse"];
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
@@ -276,7 +276,7 @@ export const AllProducts: Story = {
                 >
                   {p}
                 </span>
-                <Logo product={p} appearance={a} suffix="right" size={32} />
+                <Logo product={p} appearance={a} taglineAlign="inline" size={32} />
               </div>
             ))}
           </div>
@@ -503,7 +503,7 @@ interface LogoCardProps {
   product: LogoProduct;
   appearance: LogoAppearance;
   format: LogoFormat;
-  suffix: LogoSuffix;
+  taglineAlign: LogoTaglineAlign;
   size: number;
   isCopied: boolean;
   onCopy: (product: LogoProduct) => void;
@@ -513,7 +513,7 @@ function LogoCard({
   product,
   appearance,
   format,
-  suffix,
+  taglineAlign,
   size,
   isCopied,
   onCopy,
@@ -599,7 +599,7 @@ function LogoCard({
       >
         {/* Conteneur du SVG — utilisé pour l'export */}
         <div ref={containerRef}>
-          <Logo product={product} appearance={appearance} format={format} suffix={suffix} size={size} />
+          <Logo product={product} appearance={appearance} format={format} taglineAlign={taglineAlign} size={size} />
         </div>
         <span style={nameLabelStyle}>
           {isCopied ? "✓ copié" : product}
@@ -636,7 +636,7 @@ function LogoExplorer(): ReactElement {
   const [search, setSearch] = useState("");
   const [appearance, setAppearance] = useState<LogoAppearance>("brand");
   const [format, setFormat] = useState<LogoFormat>("logo");
-  const [suffix, setSuffix] = useState<LogoSuffix>("right");
+  const [taglineAlign, setTaglineAlign] = useState<LogoTaglineAlign>("inline");
   const [size, setSize] = useState(28);
   const [copied, setCopied] = useState<string | null>(null);
   const timerRef = useRef<number | null>(null);
@@ -654,8 +654,8 @@ function LogoExplorer(): ReactElement {
 
   function handleCopy(product: LogoProduct): void {
     const formatAttr = format !== "logo" ? ` format="${format}"` : "";
-    const suffixAttr = suffix !== "right" ? ` suffix="${suffix}"` : "";
-    const jsx = `<Logo product="${product}" appearance="${appearance}"${formatAttr}${suffixAttr} size={${size}} />`;
+    const taglineAlignAttr = taglineAlign !== "inline" ? ` taglineAlign="${taglineAlign}"` : "";
+    const jsx = `<Logo product="${product}" appearance="${appearance}"${formatAttr}${taglineAlignAttr} size={${size}} />`;
     void navigator.clipboard.writeText(jsx);
     setCopied(product);
     if (timerRef.current !== null) window.clearTimeout(timerRef.current);
@@ -769,18 +769,18 @@ function LogoExplorer(): ReactElement {
           </div>
         </div>
 
-        {/* Suffix */}
+        {/* TaglineAlign */}
         <div>
-          <div style={labelStyle}>Suffix</div>
+          <div style={labelStyle}>TaglineAlign</div>
           <div style={{ display: "flex", gap: 4 }}>
-            {(["none", "right", "bottom"] satisfies LogoSuffix[]).map((s) => (
+            {(["none", "inline", "column"] satisfies LogoTaglineAlign[]).map((s) => (
               <button
                 key={s}
                 type="button"
                 onClick={() => {
-                  setSuffix(s);
+                  setTaglineAlign(s);
                 }}
-                style={tabBtnStyle(suffix === s)}
+                style={tabBtnStyle(taglineAlign === s)}
               >
                 {s}
               </button>
@@ -845,7 +845,7 @@ function LogoExplorer(): ReactElement {
               product={product}
               appearance={appearance}
               format={format}
-              suffix={suffix}
+              taglineAlign={taglineAlign}
               size={size}
               isCopied={copied === product}
               onCopy={handleCopy}
