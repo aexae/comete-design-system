@@ -17,14 +17,14 @@ describe("Tag", () => {
     expect(tag.className).toContain("square");
   });
 
-  it("should apply appearance class", () => {
-    const { container } = render(<Tag label="OK" appearance="success" />);
+  it("should apply color class", () => {
+    const { container } = render(<Tag label="OK" color="success" />);
     expect(container.firstElementChild!.className).toContain("success");
   });
 
-  it("should apply tagStyle class", () => {
-    const { container } = render(<Tag label="OK" tagStyle="subtle" />);
-    expect(container.firstElementChild!.className).toContain("subtle");
+  it("should apply appearance class", () => {
+    const { container } = render(<Tag label="OK" appearance="bold" />);
+    expect(container.firstElementChild!.className).toContain("bold");
   });
 
   it("should apply shape class", () => {
@@ -96,20 +96,20 @@ describe("Tag", () => {
     expect(tag.className).not.toContain("interactive");
   });
 
-  it("should support all 7 appearances", () => {
-    const appearances = ["neutral", "brand", "success", "warning", "critical", "information", "accent"] as const;
-    for (const appearance of appearances) {
-      const { container, unmount } = render(<Tag label="X" appearance={appearance} />);
-      expect(container.firstElementChild!.className).toContain(appearance);
+  it("should support all 7 colors", () => {
+    const colors = ["neutral", "brand", "success", "warning", "critical", "information", "accent"] as const;
+    for (const color of colors) {
+      const { container, unmount } = render(<Tag label="X" color={color} />);
+      expect(container.firstElementChild!.className).toContain(color);
       unmount();
     }
   });
 
-  it("should support all 3 styles", () => {
-    const tagStyles = ["bold", "subtle", "outlined"] as const;
-    for (const s of tagStyles) {
-      const { container, unmount } = render(<Tag label="X" tagStyle={s} />);
-      expect(container.firstElementChild!.className).toContain(s);
+  it("should support all 3 appearances", () => {
+    const appearances = ["bold", "subtle", "outlined"] as const;
+    for (const a of appearances) {
+      const { container, unmount } = render(<Tag label="X" appearance={a} />);
+      expect(container.firstElementChild!.className).toContain(a);
       unmount();
     }
   });

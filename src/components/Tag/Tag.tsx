@@ -7,7 +7,7 @@ import styles from "./Tag.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
-export type TagAppearance =
+export type TagColor =
   | "neutral"
   | "brand"
   | "success"
@@ -16,7 +16,7 @@ export type TagAppearance =
   | "information"
   | "accent";
 
-export type TagStyle = "bold" | "subtle" | "outlined";
+export type TagAppearance = "bold" | "subtle" | "outlined";
 
 export type TagShape = "square" | "rounded";
 
@@ -24,9 +24,9 @@ export interface TagProps {
   /** Texte affiché dans le tag. */
   label: string;
   /** Couleur sémantique du tag. @default "neutral" */
-  appearance?: TagAppearance;
+  color?: TagColor;
   /** Style visuel : rempli (bold), léger (subtle) ou bordé (outlined). @default "subtle" */
-  tagStyle?: TagStyle;
+  appearance?: TagAppearance;
   /** Forme : coins droits (square) ou arrondis (rounded). @default "square" */
   shape?: TagShape;
   /** Désactive le tag (opacité réduite, pas d'interaction). @default false */
@@ -50,18 +50,18 @@ export interface TagProps {
  * Tag — Comète Design System
  *
  * Étiquette compacte pour catégoriser, filtrer ou identifier du contenu.
- * Supporte 7 apparences × 3 styles × 2 formes.
+ * Supporte 7 couleurs × 3 apparences × 2 formes.
  *
  * ```tsx
- * <Tag label="CDI" appearance="success" />
- * <Tag label="Agent" appearance="neutral" tagStyle="subtle" />
- * <Tag label="Urgent" appearance="critical" onRemove={() => remove()} />
+ * <Tag label="CDI" color="success" />
+ * <Tag label="Agent" color="neutral" appearance="bold" />
+ * <Tag label="Urgent" color="critical" onRemove={() => remove()} />
  * ```
  */
 export function Tag({
   label,
-  appearance = "neutral",
-  tagStyle = "subtle",
+  color = "neutral",
+  appearance = "subtle",
   shape = "square",
   isDisabled = false,
   elemBefore,
@@ -72,8 +72,8 @@ export function Tag({
 }: TagProps): ReactElement {
   const classNames = [
     styles["tag"],
+    styles[color],
     styles[appearance],
-    styles[tagStyle],
     styles[shape],
     isDisabled ? styles["disabled"] : undefined,
     onPress && !isDisabled ? styles["interactive"] : undefined,
