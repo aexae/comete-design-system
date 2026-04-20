@@ -4,8 +4,9 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import type {
   CardDrag,
   CardAppearance,
+  CardColor,
 } from "@naxit/comete-design-system/components";
-import { Card } from "@naxit/comete-design-system/components";
+import { Card, Stack, Text, Heading, Divider, Icon, Bleed } from "@naxit/comete-design-system/components";
 import { expect, fn, userEvent, within } from "storybook/test";
 
 const FIGMA_FILE =
@@ -18,7 +19,7 @@ const figmaUrl = (nodeId: string) =>
 
 function CardContent({ label = "Contenu" }: { label?: string }) {
   return (
-    <div style={{ padding: 16, width: 200 }}>
+    <div style={{ padding: 16, width: 200, maxWidth: "100%", boxSizing: "border-box" }}>
       <p
         style={{
           margin: 0,
@@ -42,6 +43,18 @@ function CardContent({ label = "Contenu" }: { label?: string }) {
   );
 }
 
+function Row({ icon, label, value }: { icon: string; label: string; value?: string }) {
+  return (
+    <Stack direction="row" gap="150" align="center">
+      <Icon icon={icon as never} color="subtlest" />
+      <Stack gap="0">
+        <Text size="small" weight="medium" as="span">{label}</Text>
+        {value && <Text size="small" color="subtle" as="span">{value}</Text>}
+      </Stack>
+    </Stack>
+  );
+}
+
 // -----------------------------------------------------------------------
 // Meta
 
@@ -60,7 +73,11 @@ const meta = {
     },
     appearance: {
       control: "select",
-      options: ["outlined", "neutral"] satisfies CardAppearance[],
+      options: ["outlined", "default"] satisfies CardAppearance[],
+    },
+    color: {
+      control: "select",
+      options: ["neutral", "brand", "success", "warning", "critical", "information", "accent", "sunken", "raised"] satisfies CardColor[],
     },
     className: { control: "text" },
     onPress: { action: "onPress" },
@@ -160,6 +177,46 @@ export const KeyboardNavigation: Story = {
   },
 };
 
+/** Bleed — cartes débordant du padding parent (pattern mobile). */
+export const BleedExample: Story = {
+  name: "Bleed",
+  parameters: { layout: "fullscreen" },
+  render: () => (
+    <div style={{ maxWidth: 375, margin: "0 auto", background: "var(--background-surface-elevation-sunken-default)", minHeight: "100vh" }}>
+      <Stack padding="200" gap="200">
+        <Heading size="medium" as="span">Profil</Heading>
+        <Text color="subtle">Les cartes débordent du padding via le composant Bleed.</Text>
+
+        <Bleed inline="200">
+          <Card appearance="outlined">
+            <Stack padding="200" gap="150">
+              <Row icon="Person" label="Nom" value="DUPONT Marie" />
+              <Divider />
+              <Row icon="Mail" label="E-mail" value="marie.dupont@mail.com" />
+              <Divider />
+              <Row icon="LocationOn" label="Secteur" value="Ile de France" />
+            </Stack>
+          </Card>
+        </Bleed>
+
+        <Text size="xsmall" weight="medium" color="subtlest">ACTIONS</Text>
+
+        <Bleed inline="200">
+          <Card appearance="outlined">
+            <Stack padding="200" gap="150">
+              <Row icon="Newspaper" label="Documents" />
+              <Divider />
+              <Row icon="CalendarMonth" label="Planning site" />
+              <Divider />
+              <Row icon="History" label="Main courante" />
+            </Stack>
+          </Card>
+        </Bleed>
+      </Stack>
+    </div>
+  ),
+};
+
 // -----------------------------------------------------------------------
 
 /** Toutes les combinaisons appearance × drag/actionable. */
@@ -167,7 +224,7 @@ export const AllVariants: Story = {
   name: "All variants",
   parameters: { design: { type: "figma", url: figmaUrl("5467:27892") } },
   render: () => {
-    const appearances: CardAppearance[] = ["outlined", "neutral"];
+    const appearances: CardAppearance[] = ["outlined", "default"];
     const columns: { label: string; drag: CardDrag; actionable: boolean }[] = [
       { label: "default", drag: "none", actionable: false },
       { label: "actionable", drag: "none", actionable: true },

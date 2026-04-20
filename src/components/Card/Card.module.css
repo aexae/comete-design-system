@@ -7,27 +7,72 @@
 /* Base */
 .card {
   display: flex;
-  overflow: hidden;
+  flex-direction: column;
   position: relative;
   border-radius: var(--radius050);
 }
 
 /* ==========================================================================
-   Variantes
+   Apparence
    ========================================================================== */
 
-/* Fond transparent + bordure visible */
+/* Bordure visible */
 .outlined {
-  --badge-cutout-color: var(--background-surface-elevation-raise-default);
-  background-color: transparent;
-  border: 1px solid var(--border-bold);
+  border: var(--size0125) solid var(--border-bold);
 }
 
-/* Fond grisé, sans bordure */
-.neutral {
+/* Sans bordure */
+.default {
+  border: none;
+}
+
+/* ==========================================================================
+   Couleur de fond
+   ========================================================================== */
+
+.color-neutral {
+  --badge-cutout-color: var(--background-neutral-subtlest-default);
+  background-color: var(--background-neutral-subtlest-default);
+}
+
+.color-brand {
+  --badge-cutout-color: var(--background-brand-subtlest-default);
+  background-color: var(--background-brand-subtlest-default);
+}
+
+.color-success {
+  --badge-cutout-color: var(--background-success-subtlest-default);
+  background-color: var(--background-success-subtlest-default);
+}
+
+.color-warning {
+  --badge-cutout-color: var(--background-warning-subtlest-default);
+  background-color: var(--background-warning-subtlest-default);
+}
+
+.color-critical {
+  --badge-cutout-color: var(--background-critical-subtlest-default);
+  background-color: var(--background-critical-subtlest-default);
+}
+
+.color-information {
+  --badge-cutout-color: var(--background-information-subtlest-default);
+  background-color: var(--background-information-subtlest-default);
+}
+
+.color-accent {
+  --badge-cutout-color: var(--background-accent-subtlest-default);
+  background-color: var(--background-accent-subtlest-default);
+}
+
+.color-sunken {
   --badge-cutout-color: var(--background-surface-elevation-sunken-default);
   background-color: var(--background-surface-elevation-sunken-default);
-  /* border-radius: var(--radius100); */
+}
+
+.color-raised {
+  --badge-cutout-color: var(--background-surface-elevation-raise-default);
+  background-color: var(--background-surface-elevation-raise-default);
 }
 
 /* ==========================================================================
@@ -104,21 +149,21 @@
   box-shadow: var(--elevation-medium);
 }
 
-.neutral[data-interactive]:not([data-dragging]):hover {
+.color-sunken[data-interactive]:not([data-dragging]):hover {
   background-color: var(--background-surface-elevation-sunken-hovered);
 }
 
-.outlined[data-interactive]:not([data-dragging]):hover {
+.color-neutral[data-interactive]:not([data-dragging]):hover {
   background-color: var(--background-neutral-subtlest-hovered);
 }
 
 /* Pressed */
-.neutral[data-interactive]:not([data-dragging]):active {
+.color-sunken[data-interactive]:not([data-dragging]):active {
   background-color: var(--background-surface-elevation-sunken-pressed);
   box-shadow: none;
 }
 
-.outlined[data-interactive]:not([data-dragging]):active {
+.color-neutral[data-interactive]:not([data-dragging]):active {
   background-color: var(--background-neutral-subtlest-pressed);
   box-shadow: none;
 }
@@ -149,9 +194,9 @@
 
 .dragPreview.outlined {
   background-color: transparent;
-  border: 1px solid var(--border-bold);
+  border: var(--size0125) solid var(--border-bold);
 }
 
-.dragPreview.neutral {
-  background-color: var(--background-surface-elevation-sunken-default);
+.dragPreview.default {
+  background-color: var(--background-neutral-subtlest-default);
 }

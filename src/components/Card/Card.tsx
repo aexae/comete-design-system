@@ -17,7 +17,18 @@ import styles from "./Card.module.css";
 
 export type CardDrag = "top" | "left" | "none";
 
-export type CardAppearance = "outlined" | "neutral";
+export type CardAppearance = "outlined" | "default";
+
+export type CardColor =
+  | "neutral"
+  | "brand"
+  | "success"
+  | "warning"
+  | "critical"
+  | "information"
+  | "accent"
+  | "sunken"
+  | "raised";
 
 export interface CardProps {
   /**
@@ -30,11 +41,16 @@ export interface CardProps {
   drag?: CardDrag;
   /**
    * Apparence visuelle de la carte.
-   * - "outlined" — fond blanc, bordure standard
-   * - "neutral"  — fond grisé, sans bordure
+   * - "outlined" — bordure standard
+   * - "default"  — sans bordure
    * @default "outlined"
    */
   appearance?: CardAppearance;
+  /**
+   * Couleur de fond de la carte.
+   * @default "neutral"
+   */
+  color?: CardColor;
   /** Contenu affiché à l'intérieur de la carte. */
   children: ReactNode;
   /** Classe CSS additionnelle. */
@@ -59,14 +75,18 @@ export interface CardProps {
  * ```tsx
  * import { Card } from "@naxit/comete-design-system";
  *
- * <Card appearance="neutral" onPress={() => {}}>
+ * <Card appearance="outlined">
  *   <p>Contenu de la carte</p>
+ * </Card>
+ * <Card appearance="default" color="sunken">
+ *   <p>Fond sunken sans bordure</p>
  * </Card>
  * ```
  */
 export function Card({
   drag = "none",
   appearance = "outlined",
+  color = "neutral",
   children,
   className,
   onPress,
@@ -82,8 +102,6 @@ export function Card({
   const isActionable = onPress !== undefined;
   const isDraggable = drag === "top" || drag === "left";
 
-  // NOTE: Track keyboard vs pointer to determine focus-visible reliably
-  // on div[tabIndex], where matches(":focus-visible") can be unreliable.
   useEffect(() => {
     if (!isActionable) return;
     function onKey() {
@@ -109,7 +127,6 @@ export function Card({
   }
 
   function handleClick(e: MouseEvent<HTMLDivElement>) {
-    // NOTE: Ignore clicks originating from the drag area
     if (dragAreaRef.current?.contains(e.target as Node)) return;
     onPress?.();
   }
@@ -122,7 +139,6 @@ export function Card({
   }
 
   function handleDragStart(e: DragEvent<HTMLDivElement>) {
-    // NOTE: Create a temporary mini-card as drag preview (ghost image)
     const preview = document.createElement("div");
     preview.className = `${styles.dragPreview} ${styles[appearance]}`;
     document.body.appendChild(preview);
@@ -134,7 +150,6 @@ export function Card({
   }
 
   function handleDragEnd() {
-    // NOTE: Clean up the temporary drag preview element
     if (dragPreviewRef.current) {
       document.body.removeChild(dragPreviewRef.current);
       dragPreviewRef.current = null;
@@ -147,6 +162,7 @@ export function Card({
   const classNames = [
     styles.card,
     styles[appearance],
+    styles[`color-${color}`],
     isDraggable
       ? drag === "top"
         ? styles.dragTop

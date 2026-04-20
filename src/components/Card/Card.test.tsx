@@ -34,11 +34,26 @@ describe("Card", () => {
   });
 
   describe("prop appearance", () => {
-    it.each([["outlined"], ["neutral"]] as const)(
+    it.each([["outlined"], ["default"]] as const)(
       "should apply class %s when appearance=%s",
       (appearance) => {
         const { container } = render(<Card appearance={appearance}>x</Card>);
         expect(container.firstElementChild).toHaveClass(appearance);
+      },
+    );
+  });
+
+  describe("prop color", () => {
+    it("should apply neutral color class by default", () => {
+      const { container } = render(<Card>x</Card>);
+      expect(container.firstElementChild).toHaveClass("color-neutral");
+    });
+
+    it.each(["neutral", "brand", "success", "warning", "critical", "information", "accent", "sunken", "raised"] as const)(
+      "should apply color-%s class",
+      (color) => {
+        const { container } = render(<Card color={color}>x</Card>);
+        expect(container.firstElementChild).toHaveClass(`color-${color}`);
       },
     );
   });
