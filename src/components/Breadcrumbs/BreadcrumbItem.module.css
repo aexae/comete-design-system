@@ -41,16 +41,23 @@
   color: var(--text-subtle);
   text-decoration: none;
   outline: none;
+  /* Button reset — nécessaire quand BreadcrumbItem est rendu comme <button> via onClick */
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 
-/* Lien interactif : soulignement au survol */
-a.link:hover {
+/* Lien interactif : soulignement au survol (ne s'applique pas à la page courante) */
+a.link:hover,
+button.link:hover {
   text-decoration: underline;
 }
 
-/* Page courante : non cliquable, style identique */
+/* Page courante : non cliquable, couleur primary (poids regular conservé) */
 .current {
   cursor: default;
+  color: var(--text-primary);
 }
 
 /* Icônes avant / après -------------------------------------------------- */
