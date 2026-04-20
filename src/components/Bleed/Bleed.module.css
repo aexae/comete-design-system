@@ -39,3 +39,32 @@
 .block {
   margin-block: calc(-1 * var(--_bleed-block));
 }
+
+/* ==========================================================================
+   Color — fond subtlest du token sémantique
+   ========================================================================== */
+
+.neutral     { background-color: var(--background-neutral-subtlest-default); }
+.brand       { background-color: var(--background-brand-subtlest-default); }
+.success     { background-color: var(--background-success-subtlest-default); }
+.warning     { background-color: var(--background-warning-subtlest-default); }
+.critical    { background-color: var(--background-critical-subtlest-default); }
+.information { background-color: var(--background-information-subtlest-default); }
+.accent      { background-color: var(--background-accent-subtlest-default); }
+
+/* ==========================================================================
+   Bordered — bordure top + bottom avec le token de couleur associé
+   ========================================================================== */
+
+.bordered {
+  border-top: 1px solid var(--border-default);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.bordered.neutral     { border-color: var(--border-neutral); }
+.bordered.brand       { border-color: var(--border-brand); }
+.bordered.success     { border-color: var(--border-success); }
+.bordered.warning     { border-color: var(--border-warning); }
+.bordered.critical    { border-color: var(--border-critical); }
+.bordered.information { border-color: var(--border-information); }
+.bordered.accent      { border-color: var(--border-accent); }

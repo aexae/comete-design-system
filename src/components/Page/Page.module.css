@@ -3,6 +3,13 @@
    Gabarit de page : container flex vertical + sous-sections Header /
    Toolbar / Body. Tokens uniquement, aucune valeur hardcodée.
    Spec Figma : node 4559:6656 (❖ Page header).
+
+   Layout global :
+   - `--page-gutter` — CSS custom property héritée par tous les descendants.
+   - Header, Toolbar et Body utilisent `padding-inline: var(--page-gutter)`.
+   - Body utilise `overflow-x: clip` (pas `hidden`) pour que
+     `overflow-y: auto` ne force pas `overflow-x: auto` par la spec.
+     Les margins négatives de Bleed restent donc visibles.
    ========================================================================== */
 
 .page {
@@ -12,13 +19,17 @@
   min-height: 100%;
   width: 100%;
   min-width: 0;
-  padding-inline: var(--page-gutter);
-  box-sizing: border-box;
 }
 
-@media (max-width: 1199px) {
+@media (min-width: 600px) and (max-width: 1199px) {
   .page {
     --page-gutter: var(--space200);
+  }
+}
+
+@media (max-width: 599px) {
+  .page {
+    --page-gutter: var(--space100);
   }
 }
 
@@ -31,6 +42,7 @@
   flex-direction: column;
   gap: var(--space050);
   padding-block: var(--space200);
+  padding-inline: var(--page-gutter);
   flex-shrink: 0;
 }
 
@@ -80,6 +92,7 @@
   align-items: center;
   gap: var(--space100);
   padding-block: var(--space100);
+  padding-inline: var(--page-gutter);
   flex-shrink: 0;
 }
 
@@ -104,12 +117,19 @@
 }
 
 /* ==========================================================================
-   Page.Body — prend le reste de la hauteur, scrollable si besoin
+   Page.Body — zone de contenu scrollable avec gouttières intégrées.
+
+   `overflow-x: clip` est essentiel :
+   Contrairement à `hidden`, `clip` ne force PAS `overflow-y` en `auto`
+   (et vice-versa). Les margins négatives de Bleed restent donc visibles
+   tout en permettant le scroll vertical.
    ========================================================================== */
 
 .body {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
+  overflow-x: clip;
   padding-block: var(--space100);
+  padding-inline: var(--page-gutter);
 }

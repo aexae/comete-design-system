@@ -2,7 +2,7 @@
 // Gabarit de page : wrapper structurel + sous-composants pour le header,
 // la toolbar et le body. S'appuie sur le Figma "❖ Page header" et sur la
 // décomposition de la vue Page layout (node 4319:15827).
-import type { ReactElement, ReactNode } from "react";
+import type { CSSProperties, ReactElement, ReactNode } from "react";
 import styles from "./Page.module.css";
 
 // -----------------------------------------------------------------------
@@ -13,6 +13,8 @@ export interface PageProps {
   children: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Style inline additionnel. */
+  style?: CSSProperties;
 }
 
 export interface PageHeaderProps {
@@ -89,9 +91,9 @@ export interface PageBodyProps {
  * </Page>
  * ```
  */
-export function Page({ children, className }: PageProps): ReactElement {
+export function Page({ children, className, style }: PageProps): ReactElement {
   const classNames = [styles.page, className].filter(Boolean).join(" ");
-  return <div className={classNames}>{children}</div>;
+  return <div className={classNames} style={style}>{children}</div>;
 }
 
 Page.displayName = "Page";

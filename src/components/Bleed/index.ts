@@ -1,2 +1,2 @@
 export { Bleed } from "./Bleed";
-export type { BleedProps } from "./Bleed";
+export type { BleedProps, BleedColor } from "./Bleed";

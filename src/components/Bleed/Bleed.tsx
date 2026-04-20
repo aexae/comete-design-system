@@ -7,6 +7,15 @@ import styles from "./Bleed.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
+export type BleedColor =
+  | "neutral"
+  | "brand"
+  | "success"
+  | "warning"
+  | "critical"
+  | "information"
+  | "accent";
+
 export interface BleedProps {
   /** Débordement horizontal relatif (compense le padding inline du parent). */
   inline?: StackGap;
@@ -19,6 +28,10 @@ export interface BleedProps {
    * @default false
    */
   isFull?: boolean;
+  /** Couleur de fond (background subtlest du token sémantique). */
+  color?: BleedColor;
+  /** Ajoute une bordure top + bottom avec le token de couleur associé. @default false */
+  isBordered?: boolean;
   /** Contenu à faire déborder. */
   children: ReactNode;
   /** Classe CSS additionnelle. */
@@ -62,6 +75,8 @@ export function Bleed({
   inline,
   block,
   isFull = false,
+  color,
+  isBordered = false,
   children,
   className,
 }: BleedProps): ReactElement {
@@ -80,6 +95,8 @@ export function Bleed({
     isFull ? styles.full : undefined,
     !isFull && inline !== undefined ? styles.inline : undefined,
     block !== undefined ? styles.block : undefined,
+    color !== undefined ? styles[color] : undefined,
+    isBordered ? styles.bordered : undefined,
     className,
   ]
     .filter(Boolean)

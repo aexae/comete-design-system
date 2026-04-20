@@ -65,4 +65,30 @@ describe("Bleed", () => {
     const { container } = render(<Bleed className="custom">x</Bleed>);
     expect(container.firstElementChild?.classList.contains("custom")).toBe(true);
   });
+
+  it("should apply color class", () => {
+    const { container } = render(<Bleed color="success">x</Bleed>);
+    expect(container.firstElementChild?.classList.contains("success")).toBe(true);
+  });
+
+  it("should apply bordered class", () => {
+    const { container } = render(<Bleed isBordered>x</Bleed>);
+    expect(container.firstElementChild?.classList.contains("bordered")).toBe(true);
+  });
+
+  it("should apply both color and bordered", () => {
+    const { container } = render(<Bleed color="critical" isBordered>x</Bleed>);
+    const el = container.firstElementChild!;
+    expect(el.classList.contains("critical")).toBe(true);
+    expect(el.classList.contains("bordered")).toBe(true);
+  });
+
+  it("should support all 7 colors", () => {
+    const colors = ["neutral", "brand", "success", "warning", "critical", "information", "accent"] as const;
+    for (const c of colors) {
+      const { container, unmount } = render(<Bleed color={c}>x</Bleed>);
+      expect(container.firstElementChild?.classList.contains(c)).toBe(true);
+      unmount();
+    }
+  });
 });
