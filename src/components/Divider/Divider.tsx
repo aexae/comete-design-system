@@ -8,10 +8,13 @@ import styles from "./Divider.module.css";
 // Types publics
 
 export type DividerOrientation = "horizontal" | "vertical";
+export type DividerAppearance = "subtle" | "bold";
 
 export interface DividerProps {
   /** Orientation du séparateur. Par défaut : "horizontal". */
   orientation?: DividerOrientation;
+  /** Apparence visuelle. Par défaut : "subtle". */
+  appearance?: DividerAppearance;
   /** Classe CSS additionnelle. */
   className?: string;
 }
@@ -38,12 +41,13 @@ export interface DividerProps {
  */
 export function Divider({
   orientation = "horizontal",
+  appearance = "subtle",
   className,
 }: DividerProps): ReactElement {
   return (
     <Separator
       orientation={orientation}
-      className={[styles.divider, styles[orientation], className]
+      className={[styles.divider, styles[orientation], styles[appearance], className]
         .filter(Boolean)
         .join(" ")}
     />

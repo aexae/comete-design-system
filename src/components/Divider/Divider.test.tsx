@@ -31,4 +31,18 @@ describe("Divider", () => {
     const { getByRole } = render(<Divider />);
     expect(getByRole("separator").className).toContain("divider");
   });
+
+  it("should default to subtle appearance", () => {
+    const { getByRole } = render(<Divider />);
+    const sep = getByRole("separator");
+    expect(sep.className).toContain("subtle");
+    expect(sep.className).not.toContain("bold");
+  });
+
+  it("should apply bold appearance when specified", () => {
+    const { getByRole } = render(<Divider appearance="bold" />);
+    const sep = getByRole("separator");
+    expect(sep.className).toContain("bold");
+    expect(sep.className).not.toContain("subtle");
+  });
 });

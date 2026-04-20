@@ -5,11 +5,20 @@
    ========================================================================== */
 
 .divider {
-  background-color: var(--border-subtle);
   border: none;
   margin: 0;
   display: block;
   flex-shrink: 0;
+}
+
+/* --- Appearances --- */
+
+.subtle {
+  background-color: var(--border-subtle);
+}
+
+.bold {
+  background-color: var(--border-bold);
 }
 
 /* Horizontal : ligne 1px sur toute la largeur disponible,
