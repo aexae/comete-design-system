@@ -14,7 +14,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  padding: 0;
+  padding: var(--space100) 0;
   background: none;
   border: none;
   cursor: pointer;
@@ -28,11 +28,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   gap: var(--space025);          /* 2px entre icône et label */
-  padding: var(--space200) var(--space050); /* 16px 4px */
+  padding: var(--space100) var(--space050); /* 16px 4px */
   flex-grow: 1;
-  border-radius: var(--radius-round);
+  border-radius: var(--radius150);
   transition: background-color var(--duration-fast) var(--easing-default);
 }
 
@@ -45,12 +45,13 @@
   flex-shrink: 0;
 }
 
-/* Badge en haut à droite de l'icône */
+/* Badge en haut à droite de l'icône
+   Figma : top -5 px (→ --space075 = 6 px, au plus proche), left 12 px (--space150). */
 
 .badge {
   position: absolute;
-  top: calc(-1 * var(--space100));
-  left: var(--space200);
+  top: calc(-1 * var(--space075));
+  left: var(--space150);
   /* Anneau du badge = couleur de fond de l'item (variable override par état) */
   --badge-cutout-color: var(--background-surface-default);
 }
@@ -64,9 +65,8 @@
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xxs); /* 16px */
   color: var(--text-default);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: wrap;
+  text-wrap: balance;
   transition: color var(--duration-fast) var(--easing-default);
 }
 
@@ -128,6 +128,8 @@
 
 .item[aria-expanded="true"] .content {
   background-color: var(--background-selected-subtlest-default);
+  /* Icône seule (label masqué) : centrée verticalement dans le pill */
+  justify-content: center;
 }
 
 .item[aria-expanded="true"] .iconWrapper {
