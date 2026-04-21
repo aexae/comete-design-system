@@ -486,3 +486,27 @@
   color: var(--text-selected);
   text-decoration-style: solid;
 }
+
+/* ==========================================================================
+   Selected + hovered/pressed — fond bold + texte inversé pour contraste maximum
+   lors de l'interaction sur un bouton déjà sélectionné. Déclaré après les
+   règles `hovered/pressed` variant (spécificité égale, ordre de source gagne).
+   ========================================================================== */
+
+.contained[data-selected]:not([data-disabled])[data-hovered],
+.contained[data-selected]:not([data-disabled])[data-pressed],
+.outlined[data-selected]:not([data-disabled])[data-hovered],
+.outlined[data-selected]:not([data-disabled])[data-pressed],
+.subtle[data-selected]:not([data-disabled])[data-hovered],
+.subtle[data-selected]:not([data-disabled])[data-pressed],
+.link-subtle[data-selected]:not([data-disabled])[data-hovered],
+.link-subtle[data-selected]:not([data-disabled])[data-pressed] {
+  background-color: var(--background-selected-bold-default);
+  color: var(--text-inverted);
+}
+
+/* Outlined : align la bordure sur le fond bold */
+.outlined[data-selected]:not([data-disabled])[data-hovered],
+.outlined[data-selected]:not([data-disabled])[data-pressed] {
+  border-color: var(--background-selected-bold-default);
+}
