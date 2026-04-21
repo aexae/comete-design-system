@@ -157,7 +157,7 @@ export const WithElemAfterButton: Story = {
         <MenuItem
           id="invite"
           iconBefore="PersonAdd"
-          elemAfter={<Button size="small" appearance="outlined">Inviter</Button>}
+          elemAfter={<Button spacing="compact" appearance="outlined">Inviter</Button>}
         >
           Membres
         </MenuItem>

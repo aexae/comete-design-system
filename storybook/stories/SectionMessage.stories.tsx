@@ -90,10 +90,10 @@ export const WithActions: Story = {
       {...args}
       actions={
         <>
-          <Button appearance="link" size="small">
+          <Button appearance="link" spacing="compact">
             Action link
           </Button>
-          <Button appearance="link" size="small">
+          <Button appearance="link" spacing="compact">
             Action link
           </Button>
         </>
@@ -158,10 +158,10 @@ export const AllAppearancesWithActions: Story = {
           title="Titre"
           actions={
             <>
-              <Button appearance="link" size="small">
+              <Button appearance="link" spacing="compact">
                 Action link
               </Button>
-              <Button appearance="link" size="small">
+              <Button appearance="link" spacing="compact">
                 Action link
               </Button>
             </>

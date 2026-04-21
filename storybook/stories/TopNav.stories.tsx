@@ -36,7 +36,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <TopNav logo={<Logo />} appName="Pro Sécurité" title="Tableau de bord">
-      <Button iconBefore="Search" appearance="subtle" size="small" />
+      <Button iconBefore="Search" appearance="subtle" spacing="compact" />
       <Avatar initials="AC" size="small" />
     </TopNav>
   ),
@@ -51,7 +51,7 @@ export const WithBack: Story = {
       title="Détail agent"
       onBack={() => window.history.back()}
     >
-      <Button iconBefore="Search" appearance="subtle" size="small" />
+      <Button iconBefore="Search" appearance="subtle" spacing="compact" />
       <Avatar initials="AC" size="small" />
     </TopNav>
   ),
@@ -61,8 +61,8 @@ export const WithBack: Story = {
 export const ActionsOnly: Story = {
   render: () => (
     <TopNav>
-      <Button iconBefore="Search" appearance="subtle" size="small" />
-      <Button iconBefore="Notifications" appearance="subtle" size="small" />
+      <Button iconBefore="Search" appearance="subtle" spacing="compact" />
+      <Button iconBefore="Notifications" appearance="subtle" spacing="compact" />
       <Avatar initials="JD" size="small" />
     </TopNav>
   ),
@@ -73,7 +73,7 @@ export const FullLayout: Story = {
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <TopNav logo={<Logo />} appName="Pro Sécurité" title="Accueil">
-        <Button iconBefore="Search" appearance="subtle" size="small" />
+        <Button iconBefore="Search" appearance="subtle" spacing="compact" />
         <Avatar initials="AC" size="small" />
       </TopNav>
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>

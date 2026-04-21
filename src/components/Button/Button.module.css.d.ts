@@ -8,19 +8,17 @@ declare const styles: {
   readonly "icon": string;
   readonly "iconOnly": string;
   readonly "information": string;
-  readonly "large": string;
   readonly "link": string;
   readonly "link-subtle": string;
   readonly "loading": string;
-  readonly "medium": string;
   readonly "outlined": string;
-  readonly "small": string;
+  readonly "spacingCompact": string;
+  readonly "spacingDefault": string;
+  readonly "spacingNone": string;
   readonly "spinner": string;
   readonly "subtle": string;
   readonly "success": string;
   readonly "warning": string;
-  readonly "xlarge": string;
-  readonly "xsmall": string;
 };
 export = styles;
 

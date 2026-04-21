@@ -10,15 +10,21 @@ import styles from "./Button.module.css";
 
 export type ButtonAppearance = "contained" | "outlined" | "subtle" | "link" | "link-subtle";
 export type ButtonColor = "default" | "brand" | "success" | "critical" | "warning" | "information";
-export type ButtonSize = "xsmall" | "small" | "medium" | "large" | "xlarge";
+/**
+ * Densité — dimension + padding, alignée sur les variantes Figma.
+ * - `default` — hauteur 32 px, padding 4/12, icône 24 px
+ * - `compact` — hauteur 24 px, padding 0/8, icône 20 px
+ * - `none`    — hauteur 20 px, aucun padding (pour link-subtle ou composition serrée)
+ */
+export type ButtonSpacing = "default" | "compact" | "none";
 
 export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"> {
   /** Visual appearance. @default "contained" */
   appearance?: ButtonAppearance;
   /** Color scheme. @default "default" */
   color?: ButtonColor;
-  /** Size. @default "medium" */
-  size?: ButtonSize;
+  /** Densité — dimension + padding. @default "default" */
+  spacing?: ButtonSpacing;
   /** Icon name displayed before the label. Color is automatically resolved from appearance + color. */
   iconBefore?: IconName;
   /** Icon name displayed after the label. Color is automatically resolved from appearance + color. */
@@ -91,7 +97,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     {
       appearance = "contained",
       color = "default",
-      size = "medium",
+      spacing = "default",
       iconBefore,
       iconAfter,
       isLoading = false,
@@ -128,15 +134,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     };
     const colorClass = colorClassMap[color];
 
-    // Map size to CSS class
-    const sizeClassMap: Record<ButtonSize, string> = {
-      xsmall: styles.xsmall,
-      small: styles.small,
-      medium: styles.medium,
-      large: styles.large,
-      xlarge: styles.xlarge,
+    // Map spacing (densité) to CSS class — contrôle height, padding et icon size
+    const spacingClassMap: Record<ButtonSpacing, string> = {
+      default: styles.spacingDefault,
+      compact: styles.spacingCompact,
+      none: styles.spacingNone,
     };
-    const sizeClass = sizeClassMap[size];
+    const spacingClass = spacingClassMap[spacing];
 
     // NOTE: icon-only when icon is present but children is empty/null/undefined
     const isIconOnly =
@@ -147,7 +151,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       styles.button,
       appearanceClass,
       colorClass,
-      sizeClass,
+      spacingClass,
       isIconOnly ? styles.iconOnly : undefined,
       isLoading ? styles.loading : undefined,
       className,

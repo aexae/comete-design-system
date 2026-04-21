@@ -82,30 +82,18 @@ export const MixedVariants: Story = {
   ),
 };
 
-/** Toutes les tailles de bouton supportées dans un groupe. */
-export const AllSizes: Story = {
-  name: "Toutes les tailles",
+/** Toutes les densités de bouton supportées dans un groupe. */
+export const AllSpacings: Story = {
+  name: "Toutes les densités",
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "flex-start" }}>
-      <ButtonGroup aria-label="Actions xsmall">
-        <Button size="xsmall">Annuler</Button>
-        <Button size="xsmall" color="brand">Confirmer</Button>
+      <ButtonGroup aria-label="Actions default">
+        <Button>Annuler</Button>
+        <Button color="brand">Confirmer</Button>
       </ButtonGroup>
-      <ButtonGroup aria-label="Actions small">
-        <Button size="small">Annuler</Button>
-        <Button size="small" color="brand">Confirmer</Button>
-      </ButtonGroup>
-      <ButtonGroup aria-label="Actions medium">
-        <Button size="medium">Annuler</Button>
-        <Button size="medium" color="brand">Confirmer</Button>
-      </ButtonGroup>
-      <ButtonGroup aria-label="Actions large">
-        <Button size="large">Annuler</Button>
-        <Button size="large" color="brand">Confirmer</Button>
-      </ButtonGroup>
-      <ButtonGroup aria-label="Actions xlarge">
-        <Button size="xlarge">Annuler</Button>
-        <Button size="xlarge" color="brand">Confirmer</Button>
+      <ButtonGroup aria-label="Actions compact">
+        <Button spacing="compact">Annuler</Button>
+        <Button spacing="compact" color="brand">Confirmer</Button>
       </ButtonGroup>
     </div>
   ),

@@ -213,7 +213,7 @@ function LoadingFlowDemo() {
           </span>
         ))}
       </div>
-      <Button onPress={runFlow} appearance="outlined" size="medium">
+      <Button onPress={runFlow} appearance="outlined">
         Relancer le flow
       </Button>
     </div>

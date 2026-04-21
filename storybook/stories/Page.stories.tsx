@@ -232,11 +232,11 @@ export const HeaderWithActions: Story = {
           title="Tableau de bord"
           trailing={
             <Stack direction="row" gap="100" align="center">
-              <Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Mois précédent" />
+              <Button appearance="subtle" spacing="compact" iconBefore="ChevronLeft" aria-label="Mois précédent" />
               <span style={{ fontFamily: "var(--font-family-primary)", fontSize: "var(--font-size-ui-xs)", fontWeight: 500, color: "var(--text-default)", whiteSpace: "nowrap" }}>
                 Avril 2026
               </span>
-              <Button appearance="subtle" iconBefore="ChevronRight" aria-label="Mois suivant" />
+              <Button appearance="subtle" spacing="compact" iconBefore="ChevronRight" aria-label="Mois suivant" />
               <Avatar size="medium" initials="AC" />
             </Stack>
           }
@@ -402,7 +402,7 @@ export const ToolbarWithActiveFilters: Story = {
             <Badge label="CDI" appearance="neutral" importance="medium" />
             <Badge label="Agent N3E3" appearance="neutral" importance="medium" />
           </Cluster>
-          <Button appearance="link" size="small">Réinitialiser</Button>
+          <Button appearance="link" spacing="compact">Réinitialiser</Button>
         </Stack>
         <Divider />
       </Page>

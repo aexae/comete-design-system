@@ -20,10 +20,10 @@ describe("Button", () => {
   });
 
   describe("classes CSS par défaut", () => {
-    it("should apply default appearance, color and size classes when no props given", () => {
+    it("should apply default appearance, color and spacing classes when no props given", () => {
       render(<Button>Label</Button>);
       const button = screen.getByRole("button");
-      expect(button).toHaveClass("button", "contained", "default", "medium");
+      expect(button).toHaveClass("button", "contained", "default", "spacingDefault");
     });
   });
 
@@ -56,16 +56,19 @@ describe("Button", () => {
     });
   });
 
-  describe("prop size", () => {
+  describe("prop spacing", () => {
+    it("should apply class spacingDefault when spacing is omitted", () => {
+      render(<Button>Label</Button>);
+      expect(screen.getByRole("button")).toHaveClass("spacingDefault");
+    });
+
     it.each([
-      ["xsmall"],
-      ["small"],
-      ["medium"],
-      ["large"],
-      ["xlarge"],
-    ] as const)("should apply class %s when size=%s", (size) => {
-      render(<Button size={size}>Label</Button>);
-      expect(screen.getByRole("button")).toHaveClass(size);
+      ["default", "spacingDefault"],
+      ["compact", "spacingCompact"],
+      ["none", "spacingNone"],
+    ] as const)("should apply class %s when spacing=%s", (spacing, cssClass) => {
+      render(<Button spacing={spacing}>Label</Button>);
+      expect(screen.getByRole("button")).toHaveClass(cssClass);
     });
   });
 

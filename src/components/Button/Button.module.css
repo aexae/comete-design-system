@@ -49,48 +49,36 @@
 }
 
 /* ==========================================================================
-   Sizes — height, padding, font-size et icon scalent ensemble.
+   Spacing — densité (hauteur, padding, icône) alignée sur les variantes Figma.
    --button-icon-size : consommée par .icon pour adapter la taille des icônes.
+   Font-size et line-height partagent le même token quelle que soit la densité.
    ========================================================================== */
 
-.xsmall {
-  --button-icon-size: var(--size175);
-  height: var(--size250);
-  padding: var(--space025) var(--space075);
-  font-size: var(--font-size-ui-xxxs);
-  line-height: var(--line-height-ui-xxs);
-}
-
-.small {
-  --button-icon-size: var(--size200);
-  height: var(--size300);
-  padding: var(--space050) var(--space100);
-  font-size: var(--font-size-ui-xxs);
-  line-height: var(--line-height-ui-xxs);
-}
-
-.medium {
-  --button-icon-size: var(--size250);
-  height: var(--size400);
+/* Default : bouton standard — 32 px, padding 4/12, icône 24 px */
+.spacingDefault {
+  --button-icon-size: var(--size300);
+  min-height: var(--size400);
   padding: var(--space050) var(--space150);
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-s);
 }
 
-.large {
-  --button-icon-size: var(--size300);
-  height: var(--size500);
-  padding: var(--space075) var(--space200);
-  font-size: var(--font-size-ui-s);
-  line-height: var(--line-height-ui-m);
+/* Compact : bouton dense — 24 px, padding 0/8, icône 20 px */
+.spacingCompact {
+  --button-icon-size: var(--size250);
+  min-height: var(--size300);
+  padding: 0 var(--space100);
+  font-size: var(--font-size-ui-xs);
+  line-height: var(--line-height-ui-s);
 }
 
-.xlarge {
-  --button-icon-size: var(--size350);
-  height: var(--size600);
-  padding: var(--space100) var(--space300);
-  font-size: var(--font-size-ui-m);
-  line-height: var(--line-height-ui-l);
+/* None : sans padding — 20 px, icône 16 px (pour link-subtle / composition serrée) */
+.spacingNone {
+  --button-icon-size: var(--size200);
+  min-height: var(--size250);
+  padding: 0;
+  font-size: var(--font-size-ui-xs);
+  line-height: var(--line-height-ui-s);
 }
 
 /* Icon-only — padding horizontal réduit pour un bouton carré */
@@ -447,79 +435,54 @@
 }
 
 /* ==========================================================================
-   Selected state — déclaré en dernier pour passer outre les règles de couleur
-   (spécificité identique à .variant.color, l'ordre de source gagne).
+   Selected state — aligné Figma : fond `--background-selected-subtlest-default`
+   et couleur texte `--text-selected` pour toutes les apparences/couleurs.
+   Déclaré en dernier pour passer outre les règles de couleur (ordre de source).
    ========================================================================== */
 
-/* — contained — fond au niveau pressed */
-.contained.default[data-selected] {
-  background-color: var(--background-neutral-subtler-pressed);
-}
-.contained.brand[data-selected] {
-  background-color: var(--background-brand-bold-pressed);
-}
-.contained.success[data-selected] {
-  background-color: var(--background-success-bold-pressed);
-}
-.contained.critical[data-selected] {
-  background-color: var(--background-critical-bold-pressed);
-}
-.contained.warning[data-selected] {
-  background-color: var(--background-warning-bold-pressed);
-}
+/* — contained — fond subtlest + border transparent + texte selected */
+.contained.default[data-selected],
+.contained.brand[data-selected],
+.contained.success[data-selected],
+.contained.critical[data-selected],
+.contained.warning[data-selected],
 .contained.information[data-selected] {
-  background-color: var(--background-information-bold-pressed);
+  background-color: var(--background-selected-subtlest-default);
+  color: var(--text-selected);
 }
 
-/* — outlined — fond coloré sémantique subtle */
-.outlined.default[data-selected] {
-  background-color: var(--background-neutral-subtlest-pressed);
-}
-.outlined.brand[data-selected] {
-  background-color: var(--background-brand-subtlest-pressed);
-}
-.outlined.success[data-selected] {
-  background-color: var(--background-success-subtlest-pressed);
-}
-.outlined.critical[data-selected] {
-  background-color: var(--background-critical-subtlest-pressed);
-}
-.outlined.warning[data-selected] {
-  background-color: var(--background-warning-subtlest-pressed);
-}
+/* — outlined — fond subtlest + bordure selected + texte selected */
+.outlined.default[data-selected],
+.outlined.brand[data-selected],
+.outlined.success[data-selected],
+.outlined.critical[data-selected],
+.outlined.warning[data-selected],
 .outlined.information[data-selected] {
-  background-color: var(--background-information-subtlest-pressed);
+  background-color: var(--background-selected-subtlest-default);
+  border-color: var(--border-selected);
+  color: var(--text-selected);
 }
 
-/* — subtle — fond sémantique subtle (équivalent hovered persistant) */
-.subtle.default[data-selected] {
-  background-color: var(--background-neutral-subtlest-pressed);
-}
-.subtle.brand[data-selected] {
-  background-color: var(--background-brand-subtlest-pressed);
-}
-.subtle.success[data-selected] {
-  background-color: var(--background-success-subtlest-pressed);
-}
-.subtle.critical[data-selected] {
-  background-color: var(--background-critical-subtlest-pressed);
-}
-.subtle.warning[data-selected] {
-  background-color: var(--background-warning-subtlest-pressed);
-}
+/* — subtle — fond subtlest + texte selected */
+.subtle.default[data-selected],
+.subtle.brand[data-selected],
+.subtle.success[data-selected],
+.subtle.critical[data-selected],
+.subtle.warning[data-selected],
 .subtle.information[data-selected] {
-  background-color: var(--background-information-subtlest-pressed);
+  background-color: var(--background-selected-subtlest-default);
+  color: var(--text-selected);
 }
 
-/* — link — texte par défaut + soulignement plus dense */
+/* — link — texte selected + soulignement dense */
 .link[data-selected] {
-  color: var(--text-default);
+  color: var(--text-selected);
   text-decoration-thickness: 12%;
 }
 
-/* — link-subtle — fond subtlest + texte par défaut + soulignement solide */
+/* — link-subtle — fond subtlest + texte selected + soulignement solide */
 .link-subtle[data-selected] {
-  color: var(--text-default);
-  background-color: var(--background-neutral-subtlest-pressed);
+  background-color: var(--background-selected-subtlest-default);
+  color: var(--text-selected);
   text-decoration-style: solid;
 }

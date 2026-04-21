@@ -26,9 +26,9 @@ const meta: Meta<ButtonProps> = {
       control: "select",
       options: ["default", "brand", "success", "critical", "warning", "information"],
     },
-    size: {
+    spacing: {
       control: "select",
-      options: ["xsmall", "small", "medium", "large", "xlarge"],
+      options: ["default", "compact", "none"],
     },
     isDisabled: {
       control: "boolean",
@@ -56,7 +56,7 @@ const meta: Meta<ButtonProps> = {
     children: "Button",
     appearance: "contained",
     color: "default",
-    size: "medium",
+    spacing: "default",
     onPress: fn(),
   },
   parameters: {
@@ -180,20 +180,12 @@ export const LinkSubtle: Story = {
 
 // ----------------------------------------------------------------------
 
-export const Xsmall: Story = {
-  args: { size: "xsmall", color: "brand", children: "Très petit" },
+export const Compact: Story = {
+  args: { spacing: "compact", color: "brand", children: "Compact" },
 };
 
-export const Small: Story = {
-  args: { size: "small", color: "brand", children: "Petit" },
-};
-
-export const Large: Story = {
-  args: { size: "large", color: "brand", children: "Grand" },
-};
-
-export const Xlarge: Story = {
-  args: { size: "xlarge", color: "brand", children: "Très grand" },
+export const None: Story = {
+  args: { spacing: "none", appearance: "link-subtle", children: "None" },
 };
 
 // ----------------------------------------------------------------------
@@ -207,6 +199,11 @@ export const Disabled: Story = {
     void expect(args.onPress).not.toHaveBeenCalled();
     void expect(button).toBeDisabled();
   },
+};
+
+/** Bouton en état sélectionné — style visuel persistant (ex : toggle actif) */
+export const Selected: Story = {
+  args: { isSelected: true, color: "brand", children: "Sélectionné" },
 };
 
 // ----------------------------------------------------------------------
@@ -279,7 +276,7 @@ export const IconOnly: Story = {
   name: "Icon only",
   render: () => (
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Button iconBefore="Image" color="default" size="small" />
+      <Button iconBefore="Image" color="default" spacing="compact" />
       <Button iconBefore="Lock" color="brand" />
       <Button iconBefore="Check" color="success" appearance="outlined" />
       <Button iconBefore="Image" color="critical" appearance="subtle" />
@@ -329,20 +326,17 @@ export const AllVariants: Story = {
   ),
 };
 
-/** All sizes */
-export const AllSizes: Story = {
+/**
+ * Toutes les densités du bouton. Même contenu et même appearance pour
+ * mettre en évidence la différence de hauteur/padding/icône.
+ */
+export const AllSpacings: Story = {
+  name: "All spacings",
   render: () => (
-    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Button size="xsmall" color="brand" iconBefore="Check">XSmall</Button>
-      <Button size="small" color="brand" iconBefore="Check">Small</Button>
-      <Button size="medium" color="brand" iconBefore="Check">Medium</Button>
-      <Button size="large" color="brand" iconBefore="Check">Large</Button>
-      <Button size="xlarge" color="brand" iconBefore="Check">XLarge</Button>
+    <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+      <Button spacing="default">Button</Button>
+      <Button spacing="compact">Button</Button>
+      <Button spacing="none">Button</Button>
     </div>
   ),
-};
-
-/** Bouton en état sélectionné — style visuel persistant (ex : toggle actif) */
-export const Selected: Story = {
-  args: { isSelected: true, color: "brand", children: "Sélectionné" },
 };

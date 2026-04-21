@@ -583,9 +583,9 @@ export const Dashboard: Story = {
           title="Tableau de bord"
           trailing={
             <Stack direction="row" gap="150" align="center">
-              <Button appearance="subtle" size="small" iconBefore="ChevronLeft" aria-label="Précédent" />
+              <Button appearance="subtle" spacing="compact" iconBefore="ChevronLeft" aria-label="Précédent" />
               <Text weight="medium" as="span">Avril 2026</Text>
-              <Button appearance="subtle" size="small" iconBefore="ChevronRight" aria-label="Suivant" />
+              <Button appearance="subtle" spacing="compact" iconBefore="ChevronRight" aria-label="Suivant" />
               <Avatar size="medium" initials="AC" />
             </Stack>
           }
@@ -625,7 +625,7 @@ export const Dashboard: Story = {
                     <Stack gap="200">
                       <Cluster justify="between" align="center">
                         <Heading size="small" as="span">Activité récente</Heading>
-                        <Button appearance="link" size="small">Tout voir</Button>
+                        <Button appearance="link" spacing="compact">Tout voir</Button>
                       </Cluster>
                       <Divider />
                       {[
@@ -671,7 +671,7 @@ export const Dashboard: Story = {
             <Stack gap="200">
               <Cluster justify="between" align="center">
                 <Heading size="small" as="span">Sites actifs</Heading>
-                <Button appearance="link" size="small">Voir tous</Button>
+                <Button appearance="link" spacing="compact">Voir tous</Button>
               </Cluster>
               <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
                 {[

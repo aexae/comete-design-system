@@ -24,7 +24,7 @@ export interface SectionMessageProps {
   children?: ReactNode;
   /**
    * Actions rendered below the content (typically link-style buttons).
-   * Use `<Button appearance="link" size="small">` for each action.
+   * Use `<Button appearance="link" spacing="compact">` for each action.
    */
   actions?: ReactNode;
   /**
