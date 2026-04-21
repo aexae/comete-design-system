@@ -7,7 +7,11 @@
 /* Base ------------------------------------------------------------------ */
 
 .item {
-  flex: 1;
+  position: relative; /* pour le FocusRing en overlay */
+  flex: 1 1 0;
+  /* min-width: 0 permet aux items de shrink sous leur min-content
+     (utile quand beaucoup d'items ou labels longs dans un container étroit) */
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -15,6 +19,7 @@
   background: none;
   border: none;
   cursor: pointer;
+  outline: none;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -25,10 +30,10 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space025);          /* 2px entre icône et label */
-  padding: var(--space200) var(--space050); /* 16px 4px — état non sélectionné */
+  padding: var(--space200) var(--space050); /* 16px 4px */
   width: 100%;
   border-radius: var(--radius-round);
-  transition: background-color 0.15s ease-out;
+  transition: background-color var(--duration-fast) var(--easing-default);
 }
 
 /* Wrapper icône — positionné relativement pour le badge en surimpression */
@@ -46,37 +51,112 @@
   position: absolute;
   top: calc(-1 * var(--space100));
   left: var(--space200);
-  /* Anneau du badge = couleur de fond de l'item non sélectionné */
+  /* Anneau du badge = couleur de fond de l'item (variable override par état) */
   --badge-cutout-color: var(--background-surface-default);
 }
 
-/* Label */
+/* Label — tronque avec ellipsis si trop long pour la largeur disponible */
 
 .label {
+  max-width: 100%;
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xxxs);    /* 10px */
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xxs); /* 16px */
   color: var(--text-default);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color var(--duration-fast) var(--easing-default);
+}
+
+/* ==========================================================================
+   États — unselected (non sélectionné)
+   Priorité : disabled > open > selected > pressed > hovered > default
+   ========================================================================== */
+
+/* Hover — fond neutre subtler */
+.item[data-hovered]:not([data-selected]):not([aria-expanded="true"]) .content {
+  background-color: var(--background-neutral-subtler-hovered);
+}
+
+/* Pressed — fond neutre subtler plus foncé */
+.item[data-pressed]:not([data-selected]):not([aria-expanded="true"]) .content {
+  background-color: var(--background-neutral-subtler-pressed);
 }
 
 /* ==========================================================================
    État sélectionné
    ========================================================================== */
 
-/* Fond coloré autour du contenu + padding réduit */
-.selected .content {
+.item[data-selected] .content {
   background-color: var(--background-selected-subtlest-default);
 }
 
-/* Anneau du badge = couleur de fond de l'item sélectionné */
-.selected .badge {
+.item[data-selected] .label {
+  color: var(--text-selected);
+}
+
+.item[data-selected] .badge {
   --badge-cutout-color: var(--background-selected-subtlest-default);
 }
 
-/* Label en gras et coloré */
-.selected .label {
-  /* font-weight: var(--font-weight-bold); */
-  color: var(--text-selected);
+/* Selected hover — subtlest-hovered */
+.item[data-selected][data-hovered]:not([aria-expanded="true"]) .content {
+  background-color: var(--background-selected-subtlest-hovered);
+}
+
+.item[data-selected][data-hovered]:not([aria-expanded="true"]) .badge {
+  --badge-cutout-color: var(--background-selected-subtlest-hovered);
+}
+
+/* Selected pressed — subtlest-pressed */
+.item[data-selected][data-pressed]:not([aria-expanded="true"]) .content {
+  background-color: var(--background-selected-subtlest-pressed);
+}
+
+.item[data-selected][data-pressed]:not([aria-expanded="true"]) .badge {
+  --badge-cutout-color: var(--background-selected-subtlest-pressed);
+}
+
+/* ==========================================================================
+   État open (aria-expanded) — ouvre un popup
+   Même fond que `selected` (subtlest-default) — la distinction entre les
+   deux états est gérée au niveau du parent (un seul item actif à la fois).
+   Le label est masqué pour laisser place à l'icône (pattern FAB).
+   ========================================================================== */
+
+.item[aria-expanded="true"] .content {
+  background-color: var(--background-selected-subtlest-default);
+}
+
+.item[aria-expanded="true"] .iconWrapper {
+  /* Icône agrandie à 32 px quand ouvert */
+  width: var(--size400);
+  height: var(--size400);
+}
+
+.item[aria-expanded="true"] .label {
+  display: none;
+}
+
+.item[aria-expanded="true"] .badge {
+  --badge-cutout-color: var(--background-selected-subtlest-default);
+}
+
+/* ==========================================================================
+   État disabled — déclaré en dernier pour passer outre les autres états
+   ========================================================================== */
+
+.item[data-disabled] {
+  cursor: not-allowed;
+  opacity: var(--opacity-disabled);
+}
+
+.item[data-disabled] .content {
+  background-color: transparent;
+}
+
+.item[data-disabled] .label {
+  color: var(--text-disabled);
 }

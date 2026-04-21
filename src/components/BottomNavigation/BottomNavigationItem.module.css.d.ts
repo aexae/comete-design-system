@@ -4,7 +4,6 @@ declare const styles: {
   readonly "iconWrapper": string;
   readonly "item": string;
   readonly "label": string;
-  readonly "selected": string;
 };
 export = styles;
 

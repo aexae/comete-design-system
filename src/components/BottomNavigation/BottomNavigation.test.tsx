@@ -48,14 +48,14 @@ describe("BottomNavigationItem", () => {
     expect(screen.getByRole("button")).toHaveClass("item");
   });
 
-  it("should not have selected class when isSelected is false", () => {
+  it("should not have data-selected when isSelected is false", () => {
     render(<BottomNavigationItem label="Accueil" icon="Home" isSelected={false} />);
-    expect(screen.getByRole("button")).not.toHaveClass("selected");
+    expect(screen.getByRole("button")).not.toHaveAttribute("data-selected");
   });
 
-  it("should apply selected class when isSelected is true", () => {
+  it("should set data-selected when isSelected is true", () => {
     render(<BottomNavigationItem label="Accueil" icon="Home" isSelected />);
-    expect(screen.getByRole("button")).toHaveClass("selected");
+    expect(screen.getByRole("button")).toHaveAttribute("data-selected");
   });
 
   it("should set aria-current=page when selected", () => {
@@ -66,6 +66,25 @@ describe("BottomNavigationItem", () => {
   it("should not set aria-current when not selected", () => {
     render(<BottomNavigationItem label="Accueil" icon="Home" />);
     expect(screen.getByRole("button")).not.toHaveAttribute("aria-current");
+  });
+
+  it("should set aria-expanded=true when isOpen", () => {
+    render(<BottomNavigationItem label="Créer" icon="Home" isOpen />);
+    expect(screen.getByRole("button")).toHaveAttribute("aria-expanded", "true");
+  });
+
+  it("should not set aria-expanded when not open", () => {
+    render(<BottomNavigationItem label="Créer" icon="Home" />);
+    expect(screen.getByRole("button")).not.toHaveAttribute("aria-expanded");
+  });
+
+  it("should disable the button when isDisabled", async () => {
+    const handleClick = vi.fn();
+    render(<BottomNavigationItem label="Accueil" icon="Home" isDisabled onClick={handleClick} />);
+    const button = screen.getByRole("button");
+    expect(button).toBeDisabled();
+    await userEvent.click(button);
+    expect(handleClick).not.toHaveBeenCalled();
   });
 
   it("should call onClick when clicked", async () => {
