@@ -174,13 +174,13 @@ export const FullNav: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("2524:18591") } },
   render: () => {
     const items = [
-      { label: "Accueil", icon: "Home" as const },
+      { label: "Tableau de bord", icon: "Home" as const },
       { label: "Agenda", icon: "CalendarMonth" as const },
       { label: "Notifications", icon: "Notifications" as const, badge: "5" },
       { label: "Profil", icon: "Person" as const },
       { label: "Missions", icon: "Star" as const },
     ];
-    const [selected, setSelected] = useState("Accueil");
+    const [selected, setSelected] = useState("Tableau de bord");
     return (
       <BottomNavigation>
         {items.map((item) => (
@@ -297,4 +297,102 @@ export const WithPopup: Story = {
   name: "With popup",
   parameters: { design: { type: "figma", url: figmaUrl("2524:18591") } },
   render: () => <BottomNavWithPopup />,
+};
+
+// -----------------------------------------------------------------------
+// Popup example — item "Plus" à droite qui ouvre un menu d'actions secondaires
+
+function BottomNavWithPopupRight() {
+  const [selected, setSelected] = useState("Accueil");
+  const [popupOpen, setPopupOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!popupOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        setPopupOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [popupOpen]);
+
+  const activeItem = popupOpen ? null : selected;
+
+  return (
+    <div ref={wrapperRef} style={{ position: "relative", display: "flex", width: "100%" }}>
+      {popupOpen && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "calc(100% + var(--space200))",
+            right: 0,
+            minWidth: 240,
+            background: "var(--background-default-default)",
+            borderRadius: "var(--radius100)",
+            boxShadow: "var(--elevation-medium)",
+            zIndex: 10,
+            overflow: "hidden",
+          }}
+        >
+          <Menu
+            aria-label="Plus"
+            onAction={() => { setPopupOpen(false); }}
+          >
+            <MenuSection title="Plus">
+              <MenuItem id="settings" iconBefore="Settings">Paramètres</MenuItem>
+              <MenuItem id="help" iconBefore="Home">Aide</MenuItem>
+              <MenuItem id="logout" iconBefore="Person">Déconnexion</MenuItem>
+            </MenuSection>
+          </Menu>
+        </div>
+      )}
+      <BottomNavigation>
+        <BottomNavigationItem
+          label="Accueil"
+          icon="Home"
+          isSelected={activeItem === "Accueil"}
+          onClick={() => { setSelected("Accueil"); setPopupOpen(false); }}
+        />
+        <BottomNavigationItem
+          label="Agenda"
+          icon="CalendarMonth"
+          isSelected={activeItem === "Agenda"}
+          onClick={() => { setSelected("Agenda"); setPopupOpen(false); }}
+        />
+        <BottomNavigationItem
+          label="Notifications"
+          icon="Notifications"
+          badge="5"
+          isSelected={activeItem === "Notifications"}
+          onClick={() => { setSelected("Notifications"); setPopupOpen(false); }}
+        />
+        <BottomNavigationItem
+          label="Profil"
+          icon="Person"
+          isSelected={activeItem === "Profil"}
+          onClick={() => { setSelected("Profil"); setPopupOpen(false); }}
+        />
+        <BottomNavigationItem
+          label="Plus"
+          icon="Menu"
+          isOpen={popupOpen}
+          onClick={() => { setPopupOpen((o) => !o); }}
+        />
+      </BottomNavigation>
+    </div>
+  );
+}
+
+/**
+ * Un item "Plus" à droite ouvre un menu d'actions secondaires.
+ * Le popup s'aligne sur le bord droit du container (right: 0).
+ */
+export const WithPopupRight: Story = {
+  name: "With popup (right item)",
+  parameters: { design: { type: "figma", url: figmaUrl("2524:18591") } },
+  render: () => <BottomNavWithPopupRight />,
 };
