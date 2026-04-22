@@ -299,13 +299,13 @@ const meta = {
   },
   argTypes: {
     appearance: {
-      control: "select",
+      control: { type: "inline-radio" },
       options: ["date", "week", "month", "year"] satisfies CalendarAppearance[],
       description: "Mode de sélection du calendrier.",
       table: { defaultValue: { summary: "date" } },
     },
     calendars: {
-      control: "select",
+      control: { type: "inline-radio" },
       options: [1, 2],
       description: "Nombre de calendriers affichés côte à côte.",
       table: { defaultValue: { summary: "1" } },

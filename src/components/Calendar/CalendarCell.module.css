@@ -113,6 +113,20 @@ button.cell:active:not([data-disabled]) {
   color: var(--text-information);
 }
 
+/* ==========================================================================
+   Mode plage (range) — les cellules `sm` (date) remplissent horizontalement
+   leur <td> pour supprimer le gap visuel et afficher une bande continue de
+   la sélection. La hauteur reste var(--size400) (base .cell[data-size="sm"]) :
+   `height: 100%` dans un <td> (display: table-cell) ne se résout pas
+   correctement et ferait collapser la cellule.
+   ========================================================================== */
+
+.cell[data-size="sm"][data-selection-start],
+.cell[data-size="sm"][data-selection-end],
+.cell[data-size="sm"][data-range-part] {
+  width: 100%;
+}
+
 /* Plage — début */
 .cell[data-selection-start]:not([data-selection-end]) {
   background-color: var(--border-brand);

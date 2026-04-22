@@ -44,7 +44,8 @@
 .weekGrid {
   display: flex;
   flex-direction: column;
-  gap: var(--space025);
+  /* Pas de gap entre les lignes : une sélection de plage sur plusieurs semaines
+     reste visuellement continue (cohérent avec la grille de dates isRange). */
 }
 
 /* ==========================================================================
@@ -178,13 +179,16 @@
 
 /* ==========================================================================
    Séparateur semaine / jours
+   Centré dans sa colonne (grid item) pour un espacement visuel symétrique
+   entre le numéro de semaine et les jours.
    ========================================================================== */
 
 .weekDivider {
   display: block;
+  justify-self: center;
   width: var(--size050);
   height: 60%;
-  background-color: var(--border-subtle);
+  background-color: var(--border-default);
   border-radius: var(--radius-round);
   pointer-events: none;
 }
@@ -194,6 +198,12 @@
 .weekRow[data-state="range-start"] .weekDivider,
 .weekRow[data-state="range-end"] .weekDivider {
   background-color: var(--text-inverted);
+}
+
+/* Semaine en cours — divider en border-focused, indépendamment de l'état
+   de sélection. Déclaré après pour gagner par ordre de source. */
+.weekRow[data-current-week] .weekDivider {
+  background-color: var(--border-focused);
 }
 
 /* ==========================================================================
@@ -259,7 +269,7 @@
 }
 
 .weekRow[data-state="selected"][data-current-week] .weekDivider {
-  background-color: var(--border-subtle);
+  background-color: var(--border-focused);
 }
 
 .weekRow[data-state="selected"][data-current-week] .weekDayCell[data-today] .weekDayText {
