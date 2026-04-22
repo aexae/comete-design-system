@@ -14,7 +14,10 @@ export type BleedColor =
   | "warning"
   | "critical"
   | "information"
-  | "accent";
+  | "accent"
+  | "subtlest"
+  | "subtler"
+  | "bold";
 
 export interface BleedProps {
   /** Débordement horizontal relatif (compense le padding inline du parent). */
