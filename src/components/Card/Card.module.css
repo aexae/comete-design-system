@@ -64,7 +64,16 @@
 /* ---- warning ---- */
 .outlined.color-warning { border-color: var(--border-warning); }
 .subtle.color-warning   { background-color: var(--background-warning-subtlest-default); }
-.bold.color-warning     { background-color: var(--background-warning-bold-default); }
+.bold.color-warning {
+  background-color: var(--background-warning-bold-default);
+  color: var(--text-on-warning);
+  --text-default: var(--text-on-warning);
+  --text-subtle: var(--text-on-warning);
+  --text-subtlest: var(--text-on-warning);
+  --icon-default: var(--icon-on-warning);
+  --icon-subtle: var(--icon-on-warning);
+  --icon-subtlest: var(--icon-on-warning);
+}
 
 /* ---- critical ---- */
 .outlined.color-critical { border-color: var(--border-critical); }
