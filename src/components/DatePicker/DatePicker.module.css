@@ -65,6 +65,7 @@
 
 .segment[data-placeholder] {
   color: var(--text-subtlest);
+  text-transform: uppercase;
 }
 
 .segment[data-focused] {
