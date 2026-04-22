@@ -2,6 +2,7 @@ declare const styles: {
   readonly "accent": string;
   readonly "bleed": string;
   readonly "block": string;
+  readonly "bold": string;
   readonly "bordered": string;
   readonly "brand": string;
   readonly "critical": string;
@@ -9,6 +10,8 @@ declare const styles: {
   readonly "information": string;
   readonly "inline": string;
   readonly "neutral": string;
+  readonly "subtler": string;
+  readonly "subtlest": string;
   readonly "success": string;
   readonly "warning": string;
 };

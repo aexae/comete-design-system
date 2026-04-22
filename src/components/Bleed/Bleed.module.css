@@ -44,6 +44,12 @@
    Color — fond subtlest du token sémantique
    ========================================================================== */
 
+/* Raccourcis neutral (intensités) */
+.subtlest    { background-color: var(--background-neutral-subtlest-default); }
+.subtler     { background-color: var(--background-neutral-subtler-default); }
+.bold        { background-color: var(--background-neutral-bold-default); }
+
+/* Couleurs sémantiques (subtlest par défaut) */
 .neutral     { background-color: var(--background-neutral-subtlest-default); }
 .brand       { background-color: var(--background-brand-subtlest-default); }
 .success     { background-color: var(--background-success-subtlest-default); }
@@ -61,6 +67,9 @@
   border-bottom: 1px solid var(--border-default);
 }
 
+.bordered.subtlest    { border-color: var(--border-neutral); }
+.bordered.subtler     { border-color: var(--border-neutral); }
+.bordered.bold        { border-color: var(--border-neutral); }
 .bordered.neutral     { border-color: var(--border-neutral); }
 .bordered.brand       { border-color: var(--border-brand); }
 .bordered.success     { border-color: var(--border-success); }

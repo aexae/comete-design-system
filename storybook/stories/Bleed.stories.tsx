@@ -203,7 +203,7 @@ export const BleedDesktop: Story = {
           title="Tableau de bord"
           trailing={
             <Stack direction="row" gap="100" align="center">
-              <Button appearance="subtle" size="small" iconBefore="Notifications" aria-label="Notifications" />
+              <Button appearance="subtle" spacing="compact" iconBefore="Notifications" aria-label="Notifications" />
               <Avatar size="medium" initials="AC" />
             </Stack>
           }
@@ -309,7 +309,7 @@ export const Relative: Story = {
           <Text as="span">Contenu normal (dans le padding)</Text>
 
           <Bleed inline="300">
-            <Card appearance="outlined" color="sunken">
+            <Card appearance="outlined" color="neutral">
               <Stack padding="200" align="center">
                 <Text weight="medium" as="span">
                   Bleed inline=&quot;300&quot; — compense le padding parent
@@ -321,7 +321,7 @@ export const Relative: Story = {
           <Text as="span">Contenu normal (dans le padding)</Text>
 
           <Bleed inline="300" block="300">
-            <Card appearance="default" color="sunken">
+            <Card appearance="subtle" color="neutral">
               <Stack padding="200" align="center">
                 <Text weight="medium" as="span">
                   Bleed inline=&quot;300&quot; block=&quot;300&quot; — compense les deux axes
