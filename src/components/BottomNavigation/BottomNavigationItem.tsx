@@ -4,8 +4,8 @@ import {
   Button as AriaButton,
   type ButtonProps as AriaButtonProps,
 } from "react-aria-components";
-import type { IconName, IconColor, IconAppearance } from "@naxit/comete-icons";
-import { Icon } from "../Icon/index.js";
+import type { IconName, IconColor } from "@naxit/comete-icons";
+import { Icon, type IconAppearance } from "../Icon/index.js";
 import { Badge } from "../Badge/index.js";
 import { FocusRing } from "../FocusRing/index.js";
 import styles from "./BottomNavigationItem.module.css";
