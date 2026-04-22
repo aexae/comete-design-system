@@ -21,9 +21,9 @@ describe("Card", () => {
   });
 
   describe("classes CSS par défaut", () => {
-    it("should apply card and outlined classes when no props given", () => {
+    it("should apply card, outlined, and color-neutral classes by default", () => {
       const { container } = render(<Card>x</Card>);
-      expect(container.firstElementChild).toHaveClass("card", "outlined");
+      expect(container.firstElementChild).toHaveClass("card", "outlined", "color-neutral");
     });
 
     it("should not have role or tabIndex by default", () => {
@@ -34,7 +34,7 @@ describe("Card", () => {
   });
 
   describe("prop appearance", () => {
-    it.each([["outlined"], ["default"]] as const)(
+    it.each([["outlined"], ["subtle"], ["bold"]] as const)(
       "should apply class %s when appearance=%s",
       (appearance) => {
         const { container } = render(<Card appearance={appearance}>x</Card>);
@@ -49,7 +49,7 @@ describe("Card", () => {
       expect(container.firstElementChild).toHaveClass("color-neutral");
     });
 
-    it.each(["neutral", "brand", "success", "warning", "critical", "information", "accent", "sunken", "raised"] as const)(
+    it.each(["neutral", "brand", "success", "warning", "critical", "information", "accent", "client"] as const)(
       "should apply color-%s class",
       (color) => {
         const { container } = render(<Card color={color}>x</Card>);
@@ -128,14 +128,35 @@ describe("Card", () => {
       fireEvent.keyDown(screen.getByRole("button"), { key: "Escape" });
       expect(handlePress).not.toHaveBeenCalled();
     });
+  });
 
-    it("should not render FocusRing by default", () => {
-      const { container } = render(
-        <Card onPress={() => {}}>
-          x
-        </Card>,
-      );
-      expect(container.querySelector(".ring")).not.toBeInTheDocument();
+  describe("isDisabled", () => {
+    it("should apply disabled class", () => {
+      const { container } = render(<Card isDisabled>x</Card>);
+      expect(container.firstElementChild).toHaveClass("disabled");
+    });
+
+    it("should set aria-disabled", () => {
+      const { container } = render(<Card isDisabled>x</Card>);
+      expect(container.firstElementChild).toHaveAttribute("aria-disabled", "true");
+    });
+
+    it("should not be actionable when disabled with onPress", () => {
+      const { container } = render(<Card isDisabled onPress={() => {}}>x</Card>);
+      expect(container.firstElementChild).not.toHaveAttribute("role");
+      expect(container.firstElementChild).not.toHaveAttribute("data-interactive");
+    });
+  });
+
+  describe("isSelected", () => {
+    it("should set data-selected attribute", () => {
+      const { container } = render(<Card isSelected>x</Card>);
+      expect(container.firstElementChild).toHaveAttribute("data-selected");
+    });
+
+    it("should render FocusRing when selected", () => {
+      const { container } = render(<Card isSelected>x</Card>);
+      expect(container.querySelector("[class*='ring']")).toBeInTheDocument();
     });
   });
 

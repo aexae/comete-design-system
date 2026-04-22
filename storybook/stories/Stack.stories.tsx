@@ -57,7 +57,7 @@ type Story = StoryObj<typeof Stack>;
 // Helpers
 
 function Item({ children }: { children: React.ReactNode }) {
-  return <Card appearance="default">{children}</Card>;
+  return <Card appearance="subtle">{children}</Card>;
 }
 
 // -----------------------------------------------------------------------

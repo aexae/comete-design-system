@@ -37,7 +37,7 @@ type Story = StoryObj<typeof Grid>;
 
 function Cell({ children }: { children: React.ReactNode }) {
   return (
-    <Card appearance="default">
+    <Card appearance="subtle">
       <div
         style={{
           padding: "var(--space200)",

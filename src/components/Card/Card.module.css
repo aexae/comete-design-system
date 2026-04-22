@@ -16,76 +16,85 @@
    Apparence
    ========================================================================== */
 
-/* Bordure visible */
+/* Outlined — bordure colorée, fond transparent */
 .outlined {
-  border: var(--size0125) solid var(--border-bold);
+  background-color: transparent;
+  border: var(--size0125) solid;
 }
 
-/* Sans bordure */
-.default {
+/* Subtle — fond subtlest, élévation xsmall */
+.subtle {
   border: none;
+  box-shadow: var(--elevation-xsmall);
+}
+
+/* Bold — fond bold, élévation xsmall, texte inversé */
+.bold {
+  border: none;
+  box-shadow: var(--elevation-xsmall);
+  color: var(--text-inverted);
+  --text-default: var(--text-inverted);
+  --text-subtle: var(--text-inverted);
+  --text-subtlest: var(--text-inverted);
+  --icon-default: var(--icon-inverted);
+  --icon-subtle: var(--icon-inverted);
+  --icon-subtlest: var(--icon-inverted);
+  --border-default: var(--border-inverted);
 }
 
 /* ==========================================================================
-   Couleur de fond
+   Couleurs — outlined : bordure / subtle : fond subtlest / bold : fond bold
    ========================================================================== */
 
-.color-neutral {
-  --badge-cutout-color: var(--background-neutral-subtlest-default);
-  background-color: var(--background-neutral-subtlest-default);
-}
+/* ---- neutral ---- */
+.outlined.color-neutral { border-color: var(--border-default); }
+.subtle.color-neutral   { background-color: var(--background-neutral-subtler-default); }
+.bold.color-neutral     { background-color: var(--background-neutral-bold-default); }
 
-.color-brand {
-  --badge-cutout-color: var(--background-brand-subtlest-default);
-  background-color: var(--background-brand-subtlest-default);
-}
+/* ---- brand ---- */
+.outlined.color-brand { border-color: var(--border-brand); }
+.subtle.color-brand   { background-color: var(--background-brand-subtlest-default); }
+.bold.color-brand     { background-color: var(--background-brand-bold-default); }
 
-.color-success {
-  --badge-cutout-color: var(--background-success-subtlest-default);
-  background-color: var(--background-success-subtlest-default);
-}
+/* ---- success ---- */
+.outlined.color-success { border-color: var(--border-success); }
+.subtle.color-success   { background-color: var(--background-success-subtlest-default); }
+.bold.color-success     { background-color: var(--background-success-bold-default); }
 
-.color-warning {
-  --badge-cutout-color: var(--background-warning-subtlest-default);
-  background-color: var(--background-warning-subtlest-default);
-}
+/* ---- warning ---- */
+.outlined.color-warning { border-color: var(--border-warning); }
+.subtle.color-warning   { background-color: var(--background-warning-subtlest-default); }
+.bold.color-warning     { background-color: var(--background-warning-bold-default); }
 
-.color-critical {
-  --badge-cutout-color: var(--background-critical-subtlest-default);
-  background-color: var(--background-critical-subtlest-default);
-}
+/* ---- critical ---- */
+.outlined.color-critical { border-color: var(--border-critical); }
+.subtle.color-critical   { background-color: var(--background-critical-subtlest-default); }
+.bold.color-critical     { background-color: var(--background-critical-bold-default); }
 
-.color-information {
-  --badge-cutout-color: var(--background-information-subtlest-default);
-  background-color: var(--background-information-subtlest-default);
-}
+/* ---- information ---- */
+.outlined.color-information { border-color: var(--border-information); }
+.subtle.color-information   { background-color: var(--background-information-subtlest-default); }
+.bold.color-information     { background-color: var(--background-information-bold-default); }
 
-.color-accent {
-  --badge-cutout-color: var(--background-accent-subtlest-default);
-  background-color: var(--background-accent-subtlest-default);
-}
+/* ---- accent ---- */
+.outlined.color-accent { border-color: var(--border-accent); }
+.subtle.color-accent   { background-color: var(--background-accent-subtlest-default); }
+.bold.color-accent     { background-color: var(--background-accent-bold-default); }
 
-.color-sunken {
-  --badge-cutout-color: var(--background-surface-elevation-sunken-default);
-  background-color: var(--background-surface-elevation-sunken-default);
-}
-
-.color-raised {
-  --badge-cutout-color: var(--background-surface-elevation-raise-default);
-  background-color: var(--background-surface-elevation-raise-default);
-}
+/* ---- client (pas de border-client token → on utilise le bold background) ---- */
+.outlined.color-client { border-color: var(--background-client-bold-default); }
+.subtle.color-client   { background-color: var(--background-client-subtlest-default); }
+.bold.color-client     { background-color: var(--background-client-bold-default); }
 
 /* ==========================================================================
    Layout drag
    ========================================================================== */
 
-/* Poignée en haut → colonne */
 .dragTop {
   flex-direction: column;
   align-items: center;
 }
 
-/* Poignée à gauche → ligne */
 .dragLeft {
   flex-direction: row;
   align-items: center;
@@ -107,17 +116,14 @@
   cursor: grabbing;
 }
 
-/* Poignée horizontale (top) */
 .dragTop > .dragArea {
   width: 100%;
 }
 
-/* Poignée verticale (left) */
 .dragLeft > .dragArea {
   align-self: stretch;
 }
 
-/* Rotation de l'icône pour le placement top */
 .dragIconRotated {
   transform: rotate(-90deg);
 }
@@ -133,44 +139,110 @@
 }
 
 /* ==========================================================================
-   Interactive states (quand onPress est fourni)
+   Interactive states (quand onPress est fourni et pas disabled)
    ========================================================================== */
 
 .card[data-interactive] {
   cursor: pointer;
   user-select: none;
-  transition-property: background-color, box-shadow, opacity;
+  transition-property: background-color, box-shadow, border-color;
   transition-duration: 150ms;
   transition-timing-function: ease-in-out;
 }
 
-/* Hover */
-.card[data-interactive]:not([data-dragging]):hover {
-  box-shadow: var(--elevation-medium);
+/* ---- Hover : outlined → elevation-xsmall + border-bold ---- */
+
+.outlined[data-interactive]:not([data-dragging]):hover {
+  box-shadow: var(--elevation-small);
 }
 
-.color-sunken[data-interactive]:not([data-dragging]):hover {
-  background-color: var(--background-surface-elevation-sunken-hovered);
+/* ---- Hover : subtle / bold → elevation-small ---- */
+
+.subtle[data-interactive]:not([data-dragging]):hover,
+.bold[data-interactive]:not([data-dragging]):hover {
+  box-shadow: var(--elevation-small);
 }
 
-.color-neutral[data-interactive]:not([data-dragging]):hover {
-  background-color: var(--background-neutral-subtlest-hovered);
-}
+/* ---- Hover background : subtle ---- */
 
-/* Pressed */
-.color-sunken[data-interactive]:not([data-dragging]):active {
-  background-color: var(--background-surface-elevation-sunken-pressed);
+.subtle.color-neutral[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-neutral-subtler-hovered); }
+.subtle.color-brand[data-interactive]:not([data-dragging]):hover       { background-color: var(--background-brand-subtlest-hovered); }
+.subtle.color-success[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-success-subtlest-hovered); }
+.subtle.color-warning[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-warning-subtlest-hovered); }
+.subtle.color-critical[data-interactive]:not([data-dragging]):hover    { background-color: var(--background-critical-subtlest-hovered); }
+.subtle.color-information[data-interactive]:not([data-dragging]):hover { background-color: var(--background-information-subtlest-hovered); }
+.subtle.color-accent[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-accent-subtlest-hovered); }
+.subtle.color-client[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-client-subtlest-hovered); }
+
+/* ---- Hover background : bold ---- */
+
+.bold.color-neutral[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-neutral-bold-hovered); }
+.bold.color-brand[data-interactive]:not([data-dragging]):hover       { background-color: var(--background-brand-bold-hovered); }
+.bold.color-success[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-success-bold-hovered); }
+.bold.color-warning[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-warning-bold-hovered); }
+.bold.color-critical[data-interactive]:not([data-dragging]):hover    { background-color: var(--background-critical-bold-hovered); }
+.bold.color-information[data-interactive]:not([data-dragging]):hover { background-color: var(--background-information-bold-hovered); }
+.bold.color-accent[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-accent-bold-hovered); }
+.bold.color-client[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-client-bold-hovered); }
+
+/* ---- Pressed ---- */
+
+.outlined[data-interactive]:not([data-dragging]):active {
   box-shadow: none;
 }
 
-.color-neutral[data-interactive]:not([data-dragging]):active {
-  background-color: var(--background-neutral-subtlest-pressed);
+.subtle[data-interactive]:not([data-dragging]):active,
+.bold[data-interactive]:not([data-dragging]):active {
   box-shadow: none;
 }
+
+.subtle.color-neutral[data-interactive]:not([data-dragging]):active     { background-color: var(--background-neutral-subtler-pressed); }
+.subtle.color-brand[data-interactive]:not([data-dragging]):active       { background-color: var(--background-brand-subtlest-pressed); }
+.subtle.color-success[data-interactive]:not([data-dragging]):active     { background-color: var(--background-success-subtlest-pressed); }
+.subtle.color-warning[data-interactive]:not([data-dragging]):active     { background-color: var(--background-warning-subtlest-pressed); }
+.subtle.color-critical[data-interactive]:not([data-dragging]):active    { background-color: var(--background-critical-subtlest-pressed); }
+.subtle.color-information[data-interactive]:not([data-dragging]):active { background-color: var(--background-information-subtlest-pressed); }
+.subtle.color-accent[data-interactive]:not([data-dragging]):active      { background-color: var(--background-accent-subtlest-pressed); }
+.subtle.color-client[data-interactive]:not([data-dragging]):active      { background-color: var(--background-client-subtlest-pressed); }
+
+.bold.color-neutral[data-interactive]:not([data-dragging]):active     { background-color: var(--background-neutral-bold-pressed); }
+.bold.color-brand[data-interactive]:not([data-dragging]):active       { background-color: var(--background-brand-bold-pressed); }
+.bold.color-success[data-interactive]:not([data-dragging]):active     { background-color: var(--background-success-bold-pressed); }
+.bold.color-warning[data-interactive]:not([data-dragging]):active     { background-color: var(--background-warning-bold-pressed); }
+.bold.color-critical[data-interactive]:not([data-dragging]):active    { background-color: var(--background-critical-bold-pressed); }
+.bold.color-information[data-interactive]:not([data-dragging]):active { background-color: var(--background-information-bold-pressed); }
+.bold.color-accent[data-interactive]:not([data-dragging]):active      { background-color: var(--background-accent-bold-pressed); }
+.bold.color-client[data-interactive]:not([data-dragging]):active      { background-color: var(--background-client-bold-pressed); }
 
 /* Focus visible — géré par le composant FocusRing */
 .card[data-interactive]:focus-visible {
   outline: none;
+}
+
+/* ==========================================================================
+   Disabled — tokens disabled propagés à tout le contenu
+   ========================================================================== */
+
+.disabled {
+  pointer-events: none;
+  --text-default: var(--text-disabled);
+  --text-subtle: var(--text-disabled);
+  --text-subtlest: var(--text-disabled);
+  --icon-default: var(--icon-disabled);
+  --icon-subtle: var(--icon-disabled);
+  --icon-subtlest: var(--icon-disabled);
+  color: var(--text-disabled);
+}
+
+.outlined.disabled {
+  border-color: var(--border-disabled);
+  background-color: transparent;
+}
+
+.subtle.disabled,
+.bold.disabled {
+  background-color: var(--background-disabled-default);
+  box-shadow: none;
 }
 
 /* ==========================================================================
@@ -197,6 +269,7 @@
   border: var(--size0125) solid var(--border-bold);
 }
 
-.dragPreview.default {
+.dragPreview.subtle,
+.dragPreview.bold {
   background-color: var(--background-neutral-subtlest-default);
 }

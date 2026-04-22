@@ -17,7 +17,7 @@ import styles from "./Card.module.css";
 
 export type CardDrag = "top" | "left" | "none";
 
-export type CardAppearance = "outlined" | "default";
+export type CardAppearance = "outlined" | "subtle" | "bold";
 
 export type CardColor =
   | "neutral"
@@ -27,8 +27,7 @@ export type CardColor =
   | "critical"
   | "information"
   | "accent"
-  | "sunken"
-  | "raised";
+  | "client";
 
 export interface CardProps {
   /**
@@ -41,13 +40,14 @@ export interface CardProps {
   drag?: CardDrag;
   /**
    * Apparence visuelle de la carte.
-   * - "outlined" — bordure standard
-   * - "default"  — sans bordure
+   * - "outlined" — bordure colorée, fond transparent
+   * - "subtle"   — fond subtlest, sans bordure, élévation xsmall
+   * - "bold"     — fond bold, sans bordure, élévation xsmall
    * @default "outlined"
    */
   appearance?: CardAppearance;
   /**
-   * Couleur de fond de la carte.
+   * Couleur sémantique de la carte. Colore la bordure (outlined) ou le fond (subtle/bold).
    * @default "neutral"
    */
   color?: CardColor;
@@ -61,6 +61,10 @@ export interface CardProps {
   onDrag?: () => void;
   /** Callback déclenché à la fin du drag. Requiert drag "top" ou "left". */
   onDragEnd?: () => void;
+  /** Désactive toute interaction et applique un style atténué. @default false */
+  isDisabled?: boolean;
+  /** Affiche un anneau de sélection autour de la carte. @default false */
+  isSelected?: boolean;
 }
 
 // -----------------------------------------------------------------------
@@ -75,11 +79,14 @@ export interface CardProps {
  * ```tsx
  * import { Card } from "@naxit/comete-design-system";
  *
- * <Card appearance="outlined">
- *   <p>Contenu de la carte</p>
+ * <Card appearance="outlined" color="neutral">
+ *   <p>Carte avec bordure</p>
  * </Card>
- * <Card appearance="default" color="sunken">
- *   <p>Fond sunken sans bordure</p>
+ * <Card appearance="subtle" color="success">
+ *   <p>Fond subtlest success</p>
+ * </Card>
+ * <Card appearance="bold" color="brand">
+ *   <p>Fond bold brand</p>
  * </Card>
  * ```
  */
@@ -92,6 +99,8 @@ export function Card({
   onPress,
   onDrag,
   onDragEnd: onDragEndProp,
+  isDisabled = false,
+  isSelected = false,
 }: CardProps): ReactElement {
   const [isDragging, setIsDragging] = useState(false);
   const [isFocusVisible, setIsFocusVisible] = useState(false);
@@ -99,8 +108,8 @@ export function Card({
   const dragPreviewRef = useRef<HTMLDivElement | null>(null);
   const hadKeyboardEvent = useRef(false);
 
-  const isActionable = onPress !== undefined;
-  const isDraggable = drag === "top" || drag === "left";
+  const isActionable = onPress !== undefined && !isDisabled;
+  const isDraggable = (drag === "top" || drag === "left") && !isDisabled;
 
   useEffect(() => {
     if (!isActionable) return;
@@ -159,6 +168,8 @@ export function Card({
     onDragEndProp?.();
   }
 
+  const showRing = isFocusVisible || isSelected;
+
   const classNames = [
     styles.card,
     styles[appearance],
@@ -168,6 +179,7 @@ export function Card({
         ? styles.dragTop
         : styles.dragLeft
       : undefined,
+    isDisabled ? styles.disabled : undefined,
     className,
   ]
     .filter(Boolean)
@@ -182,11 +194,13 @@ export function Card({
       onKeyDown={isActionable ? handleKeyDown : undefined}
       onFocus={isActionable ? handleFocus : undefined}
       onBlur={isActionable ? handleBlur : undefined}
+      aria-disabled={isDisabled || undefined}
       data-interactive={isActionable || undefined}
       data-dragging={isDragging || undefined}
+      data-selected={isSelected || undefined}
     >
-      {isActionable && isFocusVisible && (
-        <FocusRing borderRadius={4} position="inside" />
+      {showRing && (
+        <FocusRing borderRadius={4} position="outside" offset={2} />
       )}
       {isDraggable && (
         <div

@@ -412,7 +412,7 @@ export const Entity: Story = {
                           </Stack>
                         </Stack>
 
-                        <Card appearance="default" color="sunken">
+                        <Card appearance="subtle" color="neutral">
                           <Stack padding="200" gap="150">
                             <Stack direction="row" gap="100" align="center">
                               <IconTile icon="CalendarClock" appearance="success" size="small" />
@@ -521,7 +521,7 @@ export const Entity: Story = {
                             </div>
                             <Button appearance="subtle" iconBefore="UploadFile">Importer</Button>
                           </Cluster>
-                          <Card appearance="default">
+                          <Card appearance="subtle">
                             <CC padding="var(--space300)">
                               <Stack gap="100" align="center">
                                 <Icon icon="Newspaper" />
@@ -593,7 +593,7 @@ export const Dashboard: Story = {
         <Page.Body>
           <Stack gap="400">
             {/* Greeting */}
-            <Card appearance="default">
+            <Card appearance="subtle">
               <CC padding="var(--space300)">
                 <Stack gap="200">
                   <Stack gap="050">

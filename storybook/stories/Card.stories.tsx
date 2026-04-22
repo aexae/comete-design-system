@@ -6,7 +6,16 @@ import type {
   CardAppearance,
   CardColor,
 } from "@naxit/comete-design-system/components";
-import { Card, Stack, Text, Heading, Divider, Icon, Bleed } from "@naxit/comete-design-system/components";
+import {
+  Card,
+  Stack,
+  Heading,
+  Text,
+  Icon,
+  Tag,
+  Cluster,
+  Divider,
+} from "@naxit/comete-design-system/components";
 import { expect, fn, userEvent, within } from "storybook/test";
 
 const FIGMA_FILE =
@@ -15,44 +24,16 @@ const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
+// Constants
+
+const ALL_COLORS: CardColor[] = ["neutral", "brand", "success", "warning", "critical", "information", "accent", "client"];
+const ALL_APPEARANCES: CardAppearance[] = ["outlined", "subtle", "bold"];
+
+// -----------------------------------------------------------------------
 // Helpers
 
-function CardContent({ label = "Contenu" }: { label?: string }) {
-  return (
-    <div style={{ padding: 16, width: 200, maxWidth: "100%", boxSizing: "border-box" }}>
-      <p
-        style={{
-          margin: 0,
-          color: "var(--text-default)",
-          fontSize: 14,
-          fontWeight: 600,
-        }}
-      >
-        {label}
-      </p>
-      <p
-        style={{
-          margin: "4px 0 0",
-          color: "var(--text-subtlest)",
-          fontSize: 12,
-        }}
-      >
-        Description
-      </p>
-    </div>
-  );
-}
-
-function Row({ icon, label, value }: { icon: string; label: string; value?: string }) {
-  return (
-    <Stack direction="row" gap="150" align="center">
-      <Icon icon={icon as never} color="subtlest" />
-      <Stack gap="0">
-        <Text size="small" weight="medium" as="span">{label}</Text>
-        {value && <Text size="small" color="subtle" as="span">{value}</Text>}
-      </Stack>
-    </Stack>
-  );
+function CC({ children }: { children: React.ReactNode }) {
+  return <div style={{ padding: "var(--space200)", minWidth: 180 }}>{children}</div>;
 }
 
 // -----------------------------------------------------------------------
@@ -73,21 +54,31 @@ const meta = {
     },
     appearance: {
       control: "select",
-      options: ["outlined", "default"] satisfies CardAppearance[],
+      options: ALL_APPEARANCES,
     },
     color: {
       control: "select",
-      options: ["neutral", "brand", "success", "warning", "critical", "information", "accent", "sunken", "raised"] satisfies CardColor[],
+      options: ALL_COLORS,
     },
     className: { control: "text" },
     onPress: { action: "onPress" },
     onDrag: { action: "onDrag" },
     onDragEnd: { action: "onDragEnd" },
+    isDisabled: { control: "boolean" },
+    isSelected: { control: "boolean" },
   },
   args: {
     drag: "none",
     appearance: "outlined",
-    children: <CardContent />,
+    color: "neutral",
+    children: (
+      <CC>
+        <Stack gap="075">
+          <Heading size="xsmall" as="span">Titre de la carte</Heading>
+          <Text size="small" as="span" color="subtlest">Description secondaire</Text>
+        </Stack>
+      </CC>
+    ),
   },
 } satisfies Meta<typeof Card>;
 
@@ -97,53 +88,21 @@ type Story = StoryObj<typeof Card>;
 // -----------------------------------------------------------------------
 // Stories
 
-/** Carte statique par défaut. */
-export const Default: Story = {
-  parameters: { design: { type: "figma", url: figmaUrl("5760:6007") } },
+/** Carte outlined statique (non-actionnable). */
+export const Default: Story = {};
+
+/** Carte avec fond subtil. */
+export const Subtle: Story = {
+  args: { appearance: "subtle" },
 };
 
-/** Apparence neutral (fond grisé). */
-export const Neutral: Story = {
-  parameters: { design: { type: "figma", url: figmaUrl("5467:28520") } },
-  args: { appearance: "neutral" },
+/** Carte avec fond bold (texte inversé). */
+export const Bold: Story = {
+  args: { appearance: "bold", color: "brand" },
 };
 
-/** Carte cliquable avec hover, press et focus ring. */
+/** Carte cliquable avec hover, press et focus ring. Vérifie que onPress est appelé au clic. */
 export const Actionable: Story = {
-  parameters: { design: { type: "figma", url: figmaUrl("5467:28780") } },
-  args: { onPress: fn() },
-};
-
-/** Poignée de drag en haut. */
-export const DragTop: Story = {
-  name: "Drag top",
-  parameters: { design: { type: "figma", url: figmaUrl("5467:27893") } },
-  args: {
-    drag: "top",
-    appearance: "neutral",
-    onDrag: fn(),
-    onDragEnd: fn(),
-  },
-};
-
-/** Poignée de drag à gauche. */
-export const DragLeft: Story = {
-  name: "Drag left",
-  parameters: { design: { type: "figma", url: figmaUrl("5467:28754") } },
-  args: {
-    drag: "left",
-    appearance: "neutral",
-    onDrag: fn(),
-    onDragEnd: fn(),
-  },
-};
-
-// -----------------------------------------------------------------------
-// Play functions — tests d'interaction
-
-/** Vérifie que onPress est appelé au clic. */
-export const PressInteraction: Story = {
-  name: "Press interaction",
   args: { onPress: fn() },
   play: async ({
     canvasElement,
@@ -157,6 +116,143 @@ export const PressInteraction: Story = {
     await expect(args.onPress).toHaveBeenCalledOnce();
   },
 };
+
+/** Carte sélectionnée (anneau focus ring). */
+export const Selected: Story = {
+  args: { isSelected: true },
+};
+
+/** Carte désactivée (tokens disabled sur bordure/fond/texte/icônes). */
+export const Disabled: Story = {
+  args: { isDisabled: true },
+};
+
+/** Poignée de drag en haut. */
+export const DragTop: Story = {
+  name: "Drag top",
+  args: { drag: "top", appearance: "subtle", onDrag: fn(), onDragEnd: fn() },
+};
+
+/** Poignée de drag à gauche. */
+export const DragLeft: Story = {
+  name: "Drag left",
+  args: { drag: "left", appearance: "subtle", onDrag: fn(), onDragEnd: fn() },
+};
+
+// -----------------------------------------------------------------------
+// Couleurs × apparences
+
+/** Toutes les couleurs pour chaque apparence. */
+export const AllColors: Story = {
+  name: "All colors",
+  render: () => (
+    <Stack gap="400">
+      {ALL_APPEARANCES.map((a) => (
+        <Stack key={a} gap="200">
+          <Text size="small" weight="medium" as="span" color="subtlest">
+            appearance=&quot;{a}&quot;
+          </Text>
+          <Cluster gap="150">
+            {ALL_COLORS.map((c) => (
+              <Card key={`${a}-${c}`} appearance={a} color={c}>
+                <CC>
+                  <Stack gap="050">
+                    <Heading size="xsmall" as="span">{c}</Heading>
+                    <Text size="small" as="span" color="subtlest">{a}</Text>
+                  </Stack>
+                </CC>
+              </Card>
+            ))}
+          </Cluster>
+        </Stack>
+      ))}
+    </Stack>
+  ),
+};
+
+// -----------------------------------------------------------------------
+// États
+
+/** Tous les états (default, actionable, selected, disabled, drag) par apparence. */
+export const States: Story = {
+  name: "States",
+  render: () => {
+    const states: { label: string; props: Partial<React.ComponentProps<typeof Card>> }[] = [
+      { label: "Default", props: {} },
+      { label: "Actionable", props: { onPress: () => {} } },
+      { label: "Selected", props: { isSelected: true } },
+      { label: "Disabled", props: { isDisabled: true } },
+    ];
+
+    return (
+      <Stack gap="400">
+        {ALL_APPEARANCES.map((a) => (
+          <Stack key={a} gap="150">
+            <Text size="small" weight="medium" as="span" color="subtlest">
+              appearance=&quot;{a}&quot;
+            </Text>
+            <Cluster gap="150" align="start">
+              {states.map((s) => (
+                <Stack key={`${a}-${s.label}`} gap="075" align="center">
+                  <Card appearance={a} color="neutral" {...s.props}>
+                    <CC>
+                      <Stack gap="050">
+                        <Heading size="xsmall" as="span">{s.label}</Heading>
+                        <Text size="small" as="span" color="subtlest">{a}</Text>
+                      </Stack>
+                    </CC>
+                  </Card>
+                  <Text size="xsmall" as="span" color="subtlest">{s.label}</Text>
+                </Stack>
+              ))}
+            </Cluster>
+          </Stack>
+        ))}
+      </Stack>
+    );
+  },
+};
+
+// -----------------------------------------------------------------------
+// Composition réaliste
+
+/** Carte avec contenu riche (icône, tags, divider). */
+export const RichContent: Story = {
+  name: "Rich content",
+  render: () => (
+    <Cluster gap="200" align="start">
+      <Card appearance="outlined" color="neutral" onPress={() => {}}>
+        <CC>
+          <Stack gap="150">
+            <Cluster justify="between" align="center">
+              <Heading size="xsmall" as="span">Carrefour Market</Heading>
+              <Tag label="Actif" color="success" />
+            </Cluster>
+            <Text size="small" as="span" color="subtlest">Vindémia Distribution</Text>
+            <Divider />
+            <Stack direction="row" gap="075" align="center">
+              <Icon icon="LocationOn" size={16} color="subtlest" />
+              <Text size="small" as="span" color="subtlest">Ile de France</Text>
+            </Stack>
+          </Stack>
+        </CC>
+      </Card>
+
+      <Card appearance="bold" color="brand">
+        <CC>
+          <Stack gap="100" align="center">
+            <Icon icon="Star" size={24} />
+            <Heading size="small" as="span">Upgrade</Heading>
+            <Text size="small" as="span">Passez au plan Pro</Text>
+          </Stack>
+        </CC>
+      </Card>
+    </Cluster>
+  ),
+};
+
+// -----------------------------------------------------------------------
+// Play function — navigation clavier
 
 /** Vérifie la navigation clavier (Enter). */
 export const KeyboardNavigation: Story = {
@@ -174,114 +270,5 @@ export const KeyboardNavigation: Story = {
     card.focus();
     await userEvent.keyboard("{Enter}");
     await expect(args.onPress).toHaveBeenCalledOnce();
-  },
-};
-
-/** Bleed — cartes débordant du padding parent (pattern mobile). */
-export const BleedExample: Story = {
-  name: "Bleed",
-  parameters: { layout: "fullscreen" },
-  render: () => (
-    <div style={{ maxWidth: 375, margin: "0 auto", background: "var(--background-surface-elevation-sunken-default)", minHeight: "100vh" }}>
-      <Stack padding="200" gap="200">
-        <Heading size="medium" as="span">Profil</Heading>
-        <Text color="subtle">Les cartes débordent du padding via le composant Bleed.</Text>
-
-        <Bleed inline="200">
-          <Card appearance="outlined">
-            <Stack padding="200" gap="150">
-              <Row icon="Person" label="Nom" value="DUPONT Marie" />
-              <Divider />
-              <Row icon="Mail" label="E-mail" value="marie.dupont@mail.com" />
-              <Divider />
-              <Row icon="LocationOn" label="Secteur" value="Ile de France" />
-            </Stack>
-          </Card>
-        </Bleed>
-
-        <Text size="xsmall" weight="medium" color="subtlest">ACTIONS</Text>
-
-        <Bleed inline="200">
-          <Card appearance="outlined">
-            <Stack padding="200" gap="150">
-              <Row icon="Newspaper" label="Documents" />
-              <Divider />
-              <Row icon="CalendarMonth" label="Planning site" />
-              <Divider />
-              <Row icon="History" label="Main courante" />
-            </Stack>
-          </Card>
-        </Bleed>
-      </Stack>
-    </div>
-  ),
-};
-
-// -----------------------------------------------------------------------
-
-/** Toutes les combinaisons appearance × drag/actionable. */
-export const AllVariants: Story = {
-  name: "All variants",
-  parameters: { design: { type: "figma", url: figmaUrl("5467:27892") } },
-  render: () => {
-    const appearances: CardAppearance[] = ["outlined", "default"];
-    const columns: { label: string; drag: CardDrag; actionable: boolean }[] = [
-      { label: "default", drag: "none", actionable: false },
-      { label: "actionable", drag: "none", actionable: true },
-      { label: "drag top", drag: "top", actionable: false },
-      { label: "drag left", drag: "left", actionable: false },
-    ];
-
-    return (
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: `auto repeat(${String(columns.length)}, 1fr)`,
-          gap: 24,
-          alignItems: "center",
-        }}
-      >
-        {/* Header row */}
-        <div />
-        {columns.map((col) => (
-          <span
-            key={col.label}
-            style={{
-              fontSize: 12,
-              color: "var(--text-subtlest)",
-              fontFamily: "monospace",
-              textAlign: "center",
-            }}
-          >
-            {col.label}
-          </span>
-        ))}
-
-        {/* Data rows */}
-        {appearances.map((a) => (
-          <React.Fragment key={a}>
-            <span
-              style={{
-                fontSize: 12,
-                color: "var(--text-subtlest)",
-                fontFamily: "monospace",
-              }}
-            >
-              {a}
-            </span>
-            {columns.map((col) => (
-              <Card
-                key={`${a}-${col.label}`}
-                appearance={a}
-                drag={col.drag}
-                onPress={col.actionable ? () => {} : undefined}
-              >
-                <CardContent label={col.label} />
-              </Card>
-            ))}
-          </React.Fragment>
-        ))}
-      </div>
-    );
   },
 };
