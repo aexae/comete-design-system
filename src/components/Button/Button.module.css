@@ -459,7 +459,6 @@
 .outlined.warning[data-selected],
 .outlined.information[data-selected] {
   background-color: var(--background-selected-subtlest-default);
-  border-color: var(--border-selected);
   color: var(--text-selected);
 }
 
@@ -487,26 +486,14 @@
   text-decoration-style: solid;
 }
 
-/* ==========================================================================
-   Selected + hovered/pressed — fond bold + texte inversé pour contraste maximum
-   lors de l'interaction sur un bouton déjà sélectionné. Déclaré après les
-   règles `hovered/pressed` variant (spécificité égale, ordre de source gagne).
-   ========================================================================== */
-
-.contained[data-selected]:not([data-disabled])[data-hovered],
-.contained[data-selected]:not([data-disabled])[data-pressed],
-.outlined[data-selected]:not([data-disabled])[data-hovered],
-.outlined[data-selected]:not([data-disabled])[data-pressed],
-.subtle[data-selected]:not([data-disabled])[data-hovered],
-.subtle[data-selected]:not([data-disabled])[data-pressed],
-.link-subtle[data-selected]:not([data-disabled])[data-hovered],
-.link-subtle[data-selected]:not([data-disabled])[data-pressed] {
-  background-color: var(--background-selected-bold-default);
-  color: var(--text-inverted);
+/* — Selected hover/pressed — identique quelle que soit l'apparence/couleur.
+   Spécificité (0,4,0) pour passer devant les hover/pressed par couleur. — */
+.button[data-selected]:not([data-disabled])[data-hovered] {
+  background-color: var(--background-selected-subtlest-hovered);
+  color: var(--text-selected);
 }
 
-/* Outlined : align la bordure sur le fond bold */
-.outlined[data-selected]:not([data-disabled])[data-hovered],
-.outlined[data-selected]:not([data-disabled])[data-pressed] {
-  border-color: var(--background-selected-bold-default);
+.button[data-selected]:not([data-disabled])[data-pressed] {
+  background-color: var(--background-selected-subtlest-pressed);
+  color: var(--text-selected);
 }

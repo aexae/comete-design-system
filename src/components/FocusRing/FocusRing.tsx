@@ -88,7 +88,7 @@ const OFFSET_MAP: Record<FocusRingOffset, string> = {
 export function FocusRing({
   borderRadius = 2,
   position = "outside",
-  offset = 4,
+  offset = 2,
 }: FocusRingProps): ReactElement {
   const radius = RADIUS_MAP[borderRadius];
 
