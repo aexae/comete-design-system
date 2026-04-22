@@ -6,9 +6,6 @@
 
 .nav {
   display: flex;
-  /* flex: 1 — prend toute la largeur disponible quand inséré dans un parent flex.
-     Neutre sinon : le composant s'étale à son container comme une barre pleine largeur. */
-  flex: 0;
   width: 100%;
   background-color: var(--background-surface-default);
   /* padding-bottom: 24px — espace pour le home indicator iOS (safe area) */

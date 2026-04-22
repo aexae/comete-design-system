@@ -20,6 +20,8 @@
   cursor: pointer;
   outline: none;
   -webkit-tap-highlight-color: transparent;
+  border-radius: var(--radius150);
+  transition: background-color var(--duration-fast) var(--easing-default);
 }
 
 /* Zone contenu : icône + label, reçoit le fond de sélection */
@@ -32,8 +34,6 @@
   gap: var(--space025);          /* 2px entre icône et label */
   padding: var(--space100) var(--space050); /* 16px 4px */
   flex-grow: 1;
-  border-radius: var(--radius150);
-  transition: background-color var(--duration-fast) var(--easing-default);
 }
 
 /* Wrapper icône — positionné relativement pour le badge en surimpression */
@@ -64,59 +64,26 @@
   font-size: var(--font-size-ui-xxxs);    /* 10px */
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xxs); /* 16px */
-  color: var(--text-default);
-  white-space: wrap;
-  text-wrap: balance;
+  color: var(--text-subtlest);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transition: color var(--duration-fast) var(--easing-default);
-}
-
-/* ==========================================================================
-   États — unselected (non sélectionné)
-   Priorité : disabled > open > selected > pressed > hovered > default
-   ========================================================================== */
-
-/* Hover — fond neutre subtler */
-.item[data-hovered]:not([data-selected]):not([aria-expanded="true"]) .content {
-  background-color: var(--background-neutral-subtler-hovered);
-}
-
-/* Pressed — fond neutre subtler plus foncé */
-.item[data-pressed]:not([data-selected]):not([aria-expanded="true"]) .content {
-  background-color: var(--background-neutral-subtler-pressed);
 }
 
 /* ==========================================================================
    État sélectionné
    ========================================================================== */
 
-.item[data-selected] .content {
-  background-color: var(--background-selected-subtlest-default);
-}
-
 .item[data-selected] .label {
   color: var(--text-selected);
+}
+.item[data-selected] {
+  background-color: var(--background-selected-subtlest-default);
 }
 
 .item[data-selected] .badge {
   --badge-cutout-color: var(--background-selected-subtlest-default);
-}
-
-/* Selected hover — subtlest-hovered */
-.item[data-selected][data-hovered]:not([aria-expanded="true"]) .content {
-  background-color: var(--background-selected-subtlest-hovered);
-}
-
-.item[data-selected][data-hovered]:not([aria-expanded="true"]) .badge {
-  --badge-cutout-color: var(--background-selected-subtlest-hovered);
-}
-
-/* Selected pressed — subtlest-pressed */
-.item[data-selected][data-pressed]:not([aria-expanded="true"]) .content {
-  background-color: var(--background-selected-subtlest-pressed);
-}
-
-.item[data-selected][data-pressed]:not([aria-expanded="true"]) .badge {
-  --badge-cutout-color: var(--background-selected-subtlest-pressed);
 }
 
 /* ==========================================================================
@@ -127,7 +94,6 @@
    ========================================================================== */
 
 .item[aria-expanded="true"] .content {
-  background-color: var(--background-selected-subtlest-default);
   /* Icône seule (label masqué) : centrée verticalement dans le pill */
   justify-content: center;
 }
@@ -143,7 +109,7 @@
 }
 
 .item[aria-expanded="true"] .badge {
-  --badge-cutout-color: var(--background-selected-subtlest-default);
+  --badge-cutout-color: var(--background-surface-default);
 }
 
 /* ==========================================================================

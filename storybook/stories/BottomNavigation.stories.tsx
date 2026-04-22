@@ -174,11 +174,12 @@ export const FullNav: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("2524:18591") } },
   render: () => {
     const items = [
-      { label: "Tableau de bord", icon: "Home" as const },
+      { label: "Accueil", icon: "Home" as const },
       { label: "Agenda", icon: "CalendarMonth" as const },
       { label: "Notifications", icon: "Notifications" as const, badge: "5" },
       { label: "Profil", icon: "Person" as const },
       { label: "Missions", icon: "Star" as const },
+      { label: "Options", icon: "MoreHoriz" as const },
     ];
     const [selected, setSelected] = useState("Tableau de bord");
     return (

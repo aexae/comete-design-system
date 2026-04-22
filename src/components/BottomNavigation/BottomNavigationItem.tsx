@@ -82,7 +82,7 @@ export function BottomNavigationItem({
     ? "disabled"
     : isSelected || isOpen
       ? "selected"
-      : "subtle";
+      : "subtlest";
   const iconAppearance: IconAppearance = isSelected || isOpen ? "filled" : "outlined";
 
   // Quand l'item ouvre un popup (isOpen), l'icône se transforme en croix
