@@ -8,16 +8,15 @@
   /* Hérite des styles de .calendar (largeur, padding, gap, outline) */
 }
 
-/* Grille 3 colonnes */
+/* Grille 3 colonnes — pas de gap entre lignes/colonnes : une sélection de
+   plage sur plusieurs mois reste visuellement continue. */
 .monthGrid {
   display: flex;
   flex-direction: column;
-  gap: var(--space050);
 }
 
 .monthRow {
   display: flex;
-  gap: var(--space050);
 }
 
 /* Ligne sans espacement — utilisée dans DualMonthCalendar pour la continuité de la plage. */

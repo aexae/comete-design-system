@@ -775,6 +775,10 @@ function SingleCalendarGridBody({ calendarDisabled }: { calendarDisabled: boolea
  */
 function CalendarGridContent({ calendarDisabled }: { calendarDisabled: boolean }) {
   const state = useContext(RangeCalendarStateContext);
+  // Quand le calendrier entier est désactivé, React Aria ne marque plus les
+  // cellules intermédiaires comme isSelected → on calcule manuellement le
+  // range-part à partir de state.value pour garder le style continu.
+  const selectedRange = state?.value ?? null;
   return (
     <>
       <CalendarGridHeader>
@@ -799,13 +803,19 @@ function CalendarGridContent({ calendarDisabled }: { calendarDisabled: boolean }
                   </CometeCalendarCell>
                 );
               }
+              const isInRange = selectedRange
+                ? date.compare(selectedRange.start) >= 0 &&
+                  date.compare(selectedRange.end) <= 0
+                : false;
+              const isRangePart =
+                (isSelected || isInRange) && !isSelectionStart && !isSelectionEnd;
               return (
                 <CometeCalendarCell
                   interactive={false}
-                  isSelected={isSelected}
+                  isSelected={isSelected || isInRange}
                   isSelectionStart={isSelectionStart}
                   isSelectionEnd={isSelectionEnd}
-                  isRangePart={isSelected && !isSelectionStart && !isSelectionEnd}
+                  isRangePart={isRangePart}
                   isToday={isToday}
                   isHovered={isHovered}
                   isPressed={isPressed}

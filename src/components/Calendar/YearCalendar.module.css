@@ -8,16 +8,15 @@
   /* Hérite des styles de .calendar (largeur, padding, gap, outline) */
 }
 
-/* Grille 4 colonnes */
+/* Grille 4 colonnes — pas de gap entre lignes/colonnes : une sélection de
+   plage sur plusieurs années reste visuellement continue. */
 .yearGrid {
   display: flex;
   flex-direction: column;
-  gap: var(--space050);
 }
 
 .yearRow {
   display: flex;
-  gap: var(--space050);
 }
 
 /* Ligne sans espacement — utilisée dans DualYearCalendar pour la continuité de la plage. */
