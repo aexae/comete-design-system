@@ -175,7 +175,6 @@ export const AllColors: Story = {
 
 /** Tous les états (default, actionable, selected, disabled, drag) par apparence. */
 export const States: Story = {
-  name: "States",
   render: () => {
     const states: { label: string; props: Partial<React.ComponentProps<typeof Card>> }[] = [
       { label: "Default", props: {} },
