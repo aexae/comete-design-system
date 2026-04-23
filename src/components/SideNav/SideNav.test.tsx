@@ -33,19 +33,19 @@ describe("SideNav", () => {
 
   // SideNav.Header ------------------------------------------------------
 
-  it("should render appName in the header", () => {
+  it("should render companyName in the header", () => {
     render(
       <SideNav>
-        <SideNav.Header appName="My App" />
+        <SideNav.Header companyName="My App" />
       </SideNav>
     );
     expect(screen.getByText("My App")).toBeInTheDocument();
   });
 
-  it("should render subtitle in the header", () => {
+  it("should render description in the header", () => {
     render(
       <SideNav>
-        <SideNav.Header appName="My App" subtitle="v1.0" />
+        <SideNav.Header companyName="My App" description="v1.0" />
       </SideNav>
     );
     expect(screen.getByText("v1.0")).toBeInTheDocument();
@@ -54,7 +54,7 @@ describe("SideNav", () => {
   it("should render logo slot in the header", () => {
     render(
       <SideNav>
-        <SideNav.Header logo={<img alt="logo" src="/logo.png" />} appName="App" />
+        <SideNav.Header logo={<img alt="logo" src="/logo.png" />} companyName="App" />
       </SideNav>
     );
     expect(screen.getByAltText("logo")).toBeInTheDocument();
@@ -137,7 +137,7 @@ describe("SideNav", () => {
   it("should render icon as an svg", () => {
     render(
       <SideNav>
-        <SideNav.Item label="Home" icon="Home" />
+        <SideNav.Item label="Home" iconBefore="Home" />
       </SideNav>
     );
     const button = screen.getByRole("button", { name: "Home" });
@@ -160,7 +160,7 @@ describe("SideNav", () => {
   it("should render description when provided", () => {
     render(
       <SideNav>
-        <SideNav.Item label="Dashboard" description="View statistics" />
+        <SideNav.Item label="Home" description="View statistics" />
       </SideNav>
     );
     expect(screen.getByText("View statistics")).toBeInTheDocument();
@@ -239,16 +239,16 @@ describe("SideNav", () => {
       <SideNav>
         <SideNav.Header
           logo={<img alt="logo" src="/logo.png" />}
-          appName="My App"
-          subtitle="v2.0"
+          companyName="My App"
+          description="v2.0"
         />
         <SideNav.Section title="Main">
-          <SideNav.Item label="Home" icon="Home" isSelected href="/" />
-          <SideNav.Item label="Settings" icon="Settings" href="/settings" />
+          <SideNav.Item label="Home" iconBefore="Home" isSelected href="/" />
+          <SideNav.Item label="Settings" iconBefore="Settings" href="/settings" />
         </SideNav.Section>
         <SideNav.Divider />
         <SideNav.Section title="Admin">
-          <SideNav.Item label="Users" icon="Person" href="/users" isDisabled />
+          <SideNav.Item label="Users" iconBefore="Person" href="/users" isDisabled />
         </SideNav.Section>
         <SideNav.Footer>
           <span>Powered by Comete</span>

@@ -1,0 +1,29 @@
+/* ==========================================================================
+   BottomNav — Comète Design System
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   Aucune valeur hardcodée.
+   ========================================================================== */
+
+.nav {
+  position: relative;
+  display: flex;
+  width: 100%;
+  background-color: var(--background-surface-default);
+  /* padding-bottom: 24px — espace pour le home indicator iOS (safe area) */
+  padding: var(--space050) var(--space050) var(--space300);
+}
+
+/* Indicateur de sélection — glisse d'un item à l'autre */
+
+.indicator {
+  position: absolute;
+  background-color: var(--background-selected-subtlest-default);
+  border-radius: var(--radius150);
+  opacity: 0;
+  pointer-events: none;
+  transition: left var(--duration-normal) var(--easing-default),
+              top var(--duration-normal) var(--easing-default),
+              width var(--duration-normal) var(--easing-default),
+              height var(--duration-normal) var(--easing-default),
+              opacity var(--duration-fast) var(--easing-default);
+}

@@ -1,0 +1,148 @@
+/* ==========================================================================
+   Spotlight — Comète Design System
+   Overlay avec cutout et dialog flottant pour l'onboarding.
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   ========================================================================== */
+
+/* React Aria ModalOverlay — transparent, le blanket SVG gère le fond */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-index-overlay);
+  background: transparent;
+}
+
+/* React Aria Modal wrapper */
+.modal {
+  position: fixed;
+  inset: 0;
+}
+
+/* ==========================================================================
+   SVG Blanket — plein écran avec masque pour le cutout cible
+   ========================================================================== */
+
+.blanket {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.blanketFill {
+  fill: var(--blanket-default);
+}
+
+/* ==========================================================================
+   Pulse — animation d'attention autour de la cible
+   ========================================================================== */
+
+.pulse {
+  fill: none;
+  stroke: var(--border-focused);
+  stroke-width: 2;
+  animation: spotlight-pulse 2s ease-in-out infinite;
+}
+
+@keyframes spotlight-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    stroke-width: 2;
+  }
+
+  50% {
+    opacity: 0.3;
+    stroke-width: 4;
+  }
+}
+
+/* ==========================================================================
+   Dialog card — flottant, positionné par JS
+   ========================================================================== */
+
+.dialog {
+  position: fixed;
+  background-color: var(--background-surface-elevation-overlay-default);
+  border-radius: var(--radius0375);
+  box-shadow: var(--elevation-large);
+  max-width: calc(100vw - var(--space200));
+  outline: none;
+
+  &[data-entering] {
+    animation: spotlight-dialog-in 200ms ease-out;
+  }
+
+  &[data-exiting] {
+    animation: spotlight-dialog-out 150ms ease-in;
+  }
+}
+
+/* ==========================================================================
+   Title
+   ========================================================================== */
+
+.title {
+  margin: 0;
+  padding: var(--space200) var(--space200) 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-m);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui-m);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  color: var(--text-default);
+}
+
+/* ==========================================================================
+   Body
+   ========================================================================== */
+
+.body {
+  padding: var(--space150) var(--space200);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-s);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  color: var(--text-subtle);
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space100);
+  padding: 0 var(--space200) var(--space200);
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+
+@keyframes spotlight-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spotlight-dialog-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}

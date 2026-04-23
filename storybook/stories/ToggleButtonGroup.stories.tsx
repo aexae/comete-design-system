@@ -142,8 +142,8 @@ export const WithIconBefore: Story = {
       <ToggleButton id="table" iconBefore="DataTable">
         Table
       </ToggleButton>
-      <ToggleButton id="dashboard" iconBefore="Dashboard">
-        Dashboard
+      <ToggleButton id="Home" iconBefore="Home">
+        Home
       </ToggleButton>
     </ToggleButtonGroup>
   ),

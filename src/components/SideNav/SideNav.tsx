@@ -14,20 +14,31 @@ export interface SideNavProps {
 }
 
 export interface SideNavHeaderProps {
+  /** Logo affiché à gauche (Logo Comète par défaut, ou logo client custom). */
   logo?: ReactNode;
-  appName?: string;
-  subtitle?: string;
+  /** Nom de la société / application. */
+  companyName?: string;
+  /** Description courte sous le nom. */
+  description?: string;
   className?: string;
 }
 
 export interface SideNavItemProps {
+  /** Libellé principal de l'item. */
   label: string;
+  /** Texte secondaire sous le label. */
   description?: string;
-  icon?: IconName;
+  /** Icône avant le label. */
+  iconBefore?: IconName;
+  /** Icône après le label. */
   iconAfter?: IconName;
+  /** Item sélectionné (page courante). */
   isSelected?: boolean;
+  /** Item désactivé. */
   isDisabled?: boolean;
+  /** URL de navigation (rend un <a>). Sans href, rend un <button>. */
   href?: string;
+  /** Callback de clic. */
   onClick?: () => void;
   className?: string;
 }
@@ -50,20 +61,20 @@ export interface SideNavFooterProps {
 // -----------------------------------------------------------------------
 // SideNavHeader
 
-function SideNavHeader({
+export function SideNavHeader({
   logo,
-  appName,
-  subtitle,
+  companyName,
+  description,
   className,
 }: SideNavHeaderProps): ReactElement {
   return (
     <div className={[styles.header, className].filter(Boolean).join(" ")}>
       {logo}
-      {(appName || subtitle) && (
+      {(companyName || description) && (
         <div className={styles.headerContent}>
-          {appName && <span className={styles.headerAppName}>{appName}</span>}
-          {subtitle && (
-            <span className={styles.headerSubtitle}>{subtitle}</span>
+          {companyName && <span className={styles.headerAppName}>{companyName}</span>}
+          {description && (
+            <span className={styles.headerSubtitle}>{description}</span>
           )}
         </div>
       )}
@@ -71,15 +82,15 @@ function SideNavHeader({
   );
 }
 
-SideNavHeader.displayName = "SideNavHeader";
+SideNavHeader.displayName = "SideNav.Header";
 
 // -----------------------------------------------------------------------
 // SideNavItem
 
-function SideNavItem({
+export function SideNavItem({
   label,
   description,
-  icon,
+  iconBefore,
   iconAfter,
   isSelected = false,
   isDisabled = false,
@@ -101,9 +112,9 @@ function SideNavItem({
 
   const content = (
     <>
-      {icon && (
+      {iconBefore && (
         <Icon
-          icon={icon}
+          icon={iconBefore}
           size={24}
           appearance={iconAppearance}
           color={iconColor}
@@ -157,12 +168,12 @@ function SideNavItem({
   );
 }
 
-SideNavItem.displayName = "SideNavItem";
+SideNavItem.displayName = "SideNav.Item";
 
 // -----------------------------------------------------------------------
 // SideNavSection
 
-function SideNavSection({
+export function SideNavSection({
   title,
   children,
   className,
@@ -175,12 +186,12 @@ function SideNavSection({
   );
 }
 
-SideNavSection.displayName = "SideNavSection";
+SideNavSection.displayName = "SideNav.Section";
 
 // -----------------------------------------------------------------------
 // SideNavDivider
 
-function SideNavDivider({ className }: SideNavDividerProps): ReactElement {
+export function SideNavDivider({ className }: SideNavDividerProps): ReactElement {
   return (
     <hr
       className={[styles.divider, className].filter(Boolean).join(" ")}
@@ -188,12 +199,12 @@ function SideNavDivider({ className }: SideNavDividerProps): ReactElement {
   );
 }
 
-SideNavDivider.displayName = "SideNavDivider";
+SideNavDivider.displayName = "SideNav.Divider";
 
 // -----------------------------------------------------------------------
 // SideNavFooter
 
-function SideNavFooter({
+export function SideNavFooter({
   children,
   className,
 }: SideNavFooterProps): ReactElement {
@@ -204,7 +215,7 @@ function SideNavFooter({
   );
 }
 
-SideNavFooter.displayName = "SideNavFooter";
+SideNavFooter.displayName = "SideNav.Footer";
 
 // -----------------------------------------------------------------------
 // SideNav (main)
@@ -217,10 +228,10 @@ SideNavFooter.displayName = "SideNavFooter";
  *
  * ```tsx
  * <SideNav>
- *   <SideNav.Header appName="Mon App" subtitle="v1.0" />
+ *   <SideNav.Header companyName="Mon App" description="v1.0" />
  *   <SideNav.Section title="Navigation">
- *     <SideNav.Item label="Accueil" icon="Home" isSelected />
- *     <SideNav.Item label="Paramètres" icon="Settings" />
+ *     <SideNav.Item label="Accueil" iconBefore="Home" isSelected />
+ *     <SideNav.Item label="Paramètres" iconBefore="Settings" />
  *   </SideNav.Section>
  *   <SideNav.Divider />
  *   <SideNav.Footer>

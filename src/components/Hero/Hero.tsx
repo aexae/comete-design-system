@@ -1,5 +1,5 @@
 // Hero — Comète Design System
-// Texte d'accroche à très grande échelle (marketing, dashboards, landing).
+// Texte d'accroche à très grande échelle (marketing, Homes, landing).
 import type { ReactElement, ReactNode } from "react";
 import typographyStyles from "../../styles/typography.module.css";
 import styles from "./Hero.module.css";
@@ -49,7 +49,7 @@ const DEFAULT_AS: Record<HeroSize, HeroAs> = {
  * Hero — Comète Design System
  *
  * Texte d'accroche à très grande échelle. Réservé aux pages marketing,
- * dashboards de métriques clés ou écrans de bienvenue.
+ * Homes de métriques clés ou écrans de bienvenue.
  *
  * ```tsx
  * import { Hero } from "@naxit/comete-design-system";

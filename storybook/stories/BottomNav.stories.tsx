@@ -1,9 +1,9 @@
-// BottomNavigation — stories Storybook
+// BottomNav — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import {
-  BottomNavigation,
-  BottomNavigationItem,
+  BottomNav,
+  BottomNavItem,
   Menu,
   MenuItem,
   MenuSection,
@@ -19,8 +19,8 @@ const SMALL_WIDTH = 80;
 // Meta — on documente l'item individuel pour le contrôle interactif
 
 const meta = {
-  title: "Components/BottomNavigation",
-  component: BottomNavigationItem,
+  title: "Navigation/BottomNav",
+  component: BottomNavItem,
   tags: ["autodocs"],
   parameters: {
     layout: "centered",
@@ -51,10 +51,10 @@ const meta = {
     isOpen: false,
     isDisabled: false,
   },
-} satisfies Meta<typeof BottomNavigationItem>;
+} satisfies Meta<typeof BottomNavItem>;
 
 export default meta;
-type Story = StoryObj<typeof BottomNavigationItem>;
+type Story = StoryObj<typeof BottomNavItem>;
 
 // -----------------------------------------------------------------------
 // Stories
@@ -63,9 +63,9 @@ export const Default: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("14:1031") } },
   render: (args) => (
     <div style={{ width: SMALL_WIDTH }}>
-      <BottomNavigation>
-        <BottomNavigationItem {...args} />
-      </BottomNavigation>
+      <BottomNav>
+        <BottomNavItem {...args} />
+      </BottomNav>
     </div>
   ),
 };
@@ -75,9 +75,9 @@ export const Selected: Story = {
   args: { isSelected: true },
   render: (args) => (
     <div style={{ width: SMALL_WIDTH }}>
-      <BottomNavigation>
-        <BottomNavigationItem {...args} />
-      </BottomNavigation>
+      <BottomNav>
+        <BottomNavItem {...args} />
+      </BottomNav>
     </div>
   ),
 };
@@ -131,14 +131,14 @@ export const Open: Story = {
             </Menu>
           </div>
         )}
-        <BottomNavigation>
-          <BottomNavigationItem
+        <BottomNav>
+          <BottomNavItem
             label="Créer"
             icon="Add"
             isOpen={isOpen}
             onClick={() => { setIsOpen((o) => !o); }}
           />
-        </BottomNavigation>
+        </BottomNav>
       </div>
     );
   },
@@ -149,9 +149,9 @@ export const Disabled: Story = {
   args: { isDisabled: true },
   render: (args) => (
     <div style={{ width: SMALL_WIDTH }}>
-      <BottomNavigation>
-        <BottomNavigationItem {...args} />
-      </BottomNavigation>
+      <BottomNav>
+        <BottomNavItem {...args} />
+      </BottomNav>
     </div>
   ),
 };
@@ -162,9 +162,9 @@ export const WithBadge: Story = {
   args: { label: "Notifications", icon: "Notifications", badge: "3" },
   render: (args) => (
     <div style={{ width: SMALL_WIDTH }}>
-      <BottomNavigation>
-        <BottomNavigationItem {...args} />
-      </BottomNavigation>
+      <BottomNav>
+        <BottomNavItem {...args} />
+      </BottomNav>
     </div>
   ),
 };
@@ -181,18 +181,18 @@ export const FullNav: Story = {
       { label: "Missions", icon: "Star" as const },
       { label: "Options", icon: "MoreHoriz" as const },
     ];
-    const [selected, setSelected] = useState("Tableau de bord");
+    const [selected, setSelected] = useState("Accueil");
     return (
-      <BottomNavigation>
+      <BottomNav>
         {items.map((item) => (
-          <BottomNavigationItem
+          <BottomNavItem
             key={item.label}
             {...item}
             isSelected={selected === item.label}
             onClick={() => { setSelected(item.label); }}
           />
         ))}
-      </BottomNavigation>
+      </BottomNav>
     );
   },
 };
@@ -253,39 +253,39 @@ function BottomNavWithPopup() {
           </Menu>
         </div>
       )}
-      <BottomNavigation>
-        <BottomNavigationItem
+      <BottomNav>
+        <BottomNavItem
           label="Accueil"
           icon="Home"
           isSelected={activeItem === "Accueil"}
           onClick={() => { setSelected("Accueil"); setPopupOpen(false); }}
         />
-        <BottomNavigationItem
+        <BottomNavItem
           label="Agenda"
           icon="CalendarMonth"
           isSelected={activeItem === "Agenda"}
           onClick={() => { setSelected("Agenda"); setPopupOpen(false); }}
         />
-        <BottomNavigationItem
+        <BottomNavItem
           label="Créer"
           icon="Add"
           isOpen={popupOpen}
           onClick={() => { setPopupOpen((o) => !o); }}
         />
-        <BottomNavigationItem
+        <BottomNavItem
           label="Notifications"
           icon="Notifications"
           badge="5"
           isSelected={activeItem === "Notifications"}
           onClick={() => { setSelected("Notifications"); setPopupOpen(false); }}
         />
-        <BottomNavigationItem
+        <BottomNavItem
           label="Profil"
           icon="Person"
           isSelected={activeItem === "Profil"}
           onClick={() => { setSelected("Profil"); setPopupOpen(false); }}
         />
-      </BottomNavigation>
+      </BottomNav>
     </div>
   );
 }
@@ -351,39 +351,39 @@ function BottomNavWithPopupRight() {
           </Menu>
         </div>
       )}
-      <BottomNavigation>
-        <BottomNavigationItem
+      <BottomNav>
+        <BottomNavItem
           label="Accueil"
           icon="Home"
           isSelected={activeItem === "Accueil"}
           onClick={() => { setSelected("Accueil"); setPopupOpen(false); }}
         />
-        <BottomNavigationItem
+        <BottomNavItem
           label="Agenda"
           icon="CalendarMonth"
           isSelected={activeItem === "Agenda"}
           onClick={() => { setSelected("Agenda"); setPopupOpen(false); }}
         />
-        <BottomNavigationItem
+        <BottomNavItem
           label="Notifications"
           icon="Notifications"
           badge="5"
           isSelected={activeItem === "Notifications"}
           onClick={() => { setSelected("Notifications"); setPopupOpen(false); }}
         />
-        <BottomNavigationItem
+        <BottomNavItem
           label="Profil"
           icon="Person"
           isSelected={activeItem === "Profil"}
           onClick={() => { setSelected("Profil"); setPopupOpen(false); }}
         />
-        <BottomNavigationItem
+        <BottomNavItem
           label="Plus"
-          icon="Menu"
+          icon="MoreHoriz"
           isOpen={popupOpen}
           onClick={() => { setPopupOpen((o) => !o); }}
         />
-      </BottomNavigation>
+      </BottomNav>
     </div>
   );
 }

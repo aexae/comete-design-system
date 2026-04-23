@@ -1,4 +1,4 @@
-// SideNav — stories Storybook
+// SideNav — story principale (composition complète)
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
 import { SideNav, Logo } from "@naxit/comete-design-system/components";
@@ -7,28 +7,6 @@ const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
-
-// -----------------------------------------------------------------------
-// Meta
-
-const meta = {
-  title: "Navigation/SideNav",
-  component: SideNav,
-  tags: ["autodocs"],
-  parameters: {
-    layout: "fullscreen",
-    design: { type: "figma", url: figmaUrl("4319:15156") },
-  },
-  args: {
-    children: null as unknown as ReactNode,
-  },
-} satisfies Meta<typeof SideNav>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-// -----------------------------------------------------------------------
-// Helpers
 
 function Wrapper({ children }: { children: ReactNode }) {
   return (
@@ -41,95 +19,76 @@ function Wrapper({ children }: { children: ReactNode }) {
   );
 }
 
-// -----------------------------------------------------------------------
-// Stories
+const meta = {
+  title: "Navigation/SideNav",
+  component: SideNav,
+  tags: ["autodocs"],
+  parameters: {
+    layout: "fullscreen",
+    design: { type: "figma", url: figmaUrl("4319:15156") },
+  },
+  args: { children: null as unknown as ReactNode },
+} satisfies Meta<typeof SideNav>;
 
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+/** Composition complète : Header, Sections, Items, Dividers, Footer. */
 export const Default: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `<SideNav>
+          <SideNav.Header
+            logo={<Logo format="icon" />}
+            companyName="Pro Sécurité"
+            description="Main Courante"
+          />
+          <SideNav.Section title="Manager">
+            <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="/" />
+            <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
+            <SideNav.Item label="Sites" iconBefore="LocationOn" href="/sites" />
+          </SideNav.Section>
+          <SideNav.Divider />
+          <SideNav.Section title="Administration">
+            <SideNav.Item label="Utilisateurs" iconBefore="Group" href="/users" />
+            <SideNav.Item label="Permissions" iconBefore="ManageAccounts" href="/permissions" />
+          </SideNav.Section>
+          <SideNav.Footer>
+            <Logo />
+          </SideNav.Footer>
+        </SideNav>`,
+      },
+    },
+  },
   render: () => (
     <Wrapper>
       <SideNav>
         <SideNav.Header
-          logo={<Logo format="icon" />}
-          appName="Pro Sécurité"
-          subtitle="Main Courante"
+          logo={<Logo product="cafe" format="icon" />}
+          companyName="Pro Sécurité"
+          description="Main Courante"
         />
         <SideNav.Section title="Manager">
-          <SideNav.Item label="Tableau de bord" icon="Dashboard" isSelected href="/" />
-          <SideNav.Item label="Agents" icon="Agent" href="/agents" />
-          <SideNav.Item label="Sites" icon="LocationOn" href="/sites" />
-          <SideNav.Item label="Pointages" icon="Schedule" href="/pointages" />
+          <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="/" />
+          <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
+          <SideNav.Item label="Sites" iconBefore="LocationOn" href="/sites" />
+          <SideNav.Item label="Pointages" iconBefore="Schedule" href="/pointages" isDisabled />
         </SideNav.Section>
         <SideNav.Divider />
         <SideNav.Section title="MCE">
-          <SideNav.Item label="Main courante" icon="EditNote" href="/mce" />
-          <SideNav.Item label="Formulaires" icon="FormEdit" href="/forms" />
+          <SideNav.Item label="Main courante" iconBefore="EditNote" href="/mce" />
+          <SideNav.Item label="Formulaires" iconBefore="FormEdit" href="/forms" />
         </SideNav.Section>
         <SideNav.Divider />
         <SideNav.Section title="Administration">
-          <SideNav.Item label="Utilisateurs" icon="Group" href="/users" />
-          <SideNav.Item label="Droits & permissions" icon="ManageAccounts" href="/permissions" />
-          <SideNav.Item label="Licences" icon="Key" href="/licences" />
+          <SideNav.Item label="Utilisateurs" iconBefore="Group" href="/users" />
+          <SideNav.Item label="Droits & permissions" iconBefore="ManageAccounts" href="/permissions" />
+          <SideNav.Item label="Licences" iconBefore="Key" href="/licences" />
         </SideNav.Section>
         <SideNav.Footer>
-          <Logo />
+          <Logo size={14} product="link" appearance="neutral" />
         </SideNav.Footer>
-      </SideNav>
-    </Wrapper>
-  ),
-};
-
-export const WithDescriptions: Story = {
-  render: () => (
-    <Wrapper>
-      <SideNav>
-        <SideNav.Header appName="Mon Application" />
-        <SideNav.Item
-          label="Accueil"
-          description="Vue d'ensemble"
-          icon="Home"
-          iconAfter="ChevronRight"
-          isSelected
-          href="/"
-        />
-        <SideNav.Item
-          label="Documents"
-          description="Fichiers et dossiers"
-          icon="Docs"
-          iconAfter="ChevronRight"
-          href="/docs"
-        />
-        <SideNav.Item
-          label="Archives"
-          description="Éléments archivés"
-          icon="Archive"
-          iconAfter="ChevronRight"
-          href="/archives"
-        />
-      </SideNav>
-    </Wrapper>
-  ),
-};
-
-export const DisabledItems: Story = {
-  render: () => (
-    <Wrapper>
-      <SideNav>
-        <SideNav.Header appName="Config" />
-        <SideNav.Item label="Général" icon="Settings" isSelected href="/general" />
-        <SideNav.Item label="Avancé" icon="DisplaySettings" href="/advanced" />
-        <SideNav.Item label="Expérimental" icon="Extension" isDisabled href="/experimental" />
-      </SideNav>
-    </Wrapper>
-  ),
-};
-
-export const Minimal: Story = {
-  render: () => (
-    <Wrapper>
-      <SideNav>
-        <SideNav.Item label="Accueil" icon="Home" isSelected />
-        <SideNav.Item label="Recherche" icon="Search" />
-        <SideNav.Item label="Favoris" icon="Star" />
       </SideNav>
     </Wrapper>
   ),

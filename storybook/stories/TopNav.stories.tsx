@@ -35,7 +35,7 @@ type Story = StoryObj<typeof meta>;
 /** Desktop/tablet : logo + nom + actions. Réduire le viewport pour voir le mode mobile. */
 export const Default: Story = {
   render: () => (
-    <TopNav logo={<Logo />} appName="Pro Sécurité" title="Tableau de bord">
+    <TopNav logo={<Logo />} appName="Pro Sécurité" title="Accueil">
       <Button iconBefore="Search" appearance="subtle" spacing="compact" />
       <Avatar initials="AC" size="small" />
     </TopNav>
@@ -78,9 +78,9 @@ export const FullLayout: Story = {
       </TopNav>
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         <SideNav>
-          <SideNav.Item label="Tableau de bord" icon="Dashboard" isSelected href="/" />
-          <SideNav.Item label="Agents" icon="Agent" href="/agents" />
-          <SideNav.Item label="Sites" icon="LocationOn" href="/sites" />
+          <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="/" />
+          <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
+          <SideNav.Item label="Sites" iconBefore="LocationOn" href="/sites" />
         </SideNav>
         <main style={{ flex: 1, padding: "var(--space200)", overflowY: "auto" }}>
           <h1>Contenu principal</h1>

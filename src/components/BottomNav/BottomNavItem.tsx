@@ -1,4 +1,4 @@
-// BottomNavigationItem — item individuel de la BottomNavigation
+// BottomNavItem — item individuel de la BottomNav
 import type { ReactElement } from "react";
 import {
   Button as AriaButton,
@@ -8,12 +8,12 @@ import type { IconName, IconColor } from "@naxit/comete-icons";
 import { Icon, type IconAppearance } from "../Icon/index.js";
 import { Badge } from "../Badge/index.js";
 import { FocusRing } from "../FocusRing/index.js";
-import styles from "./BottomNavigationItem.module.css";
+import styles from "./BottomNavItem.module.css";
 
 // -----------------------------------------------------------------------
 // Types publics
 
-export interface BottomNavigationItemProps {
+export interface BottomNavItemProps {
   /** Libellé affiché sous l'icône. */
   label: string;
   /** Nom de l'icône issu de @naxit/comete-icons. La variante (filled/outlined) et la couleur sont gérées automatiquement. */
@@ -36,38 +36,35 @@ export interface BottomNavigationItemProps {
 }
 
 // -----------------------------------------------------------------------
+// Morph SVG — Add (+ → × par rotation 45°)
+// Path issu de @naxit/comete-icons svgData3 (outlined/default 24×24).
+
+function AddMorphSvg(): ReactElement {
+  return (
+    <svg
+      className={styles.morphIcon}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <g className={styles.addCross}>
+        <path d="M11 13H5v-2h6V5h2v6h6v2h-6v6h-2z" fill="currentColor" />
+      </g>
+    </svg>
+  );
+}
+
+// -----------------------------------------------------------------------
 // Composant
 
 /**
- * BottomNavigationItem — Comète Design System
+ * BottomNavItem — Comète Design System
  *
- * Item individuel de la BottomNavigation.
- * Affiche une icône et un libellé, avec un indicateur visuel lorsqu'il est sélectionné.
- * Gère les états hover, pressed, focus (via FocusRing) et disabled via React Aria.
- *
- * ```tsx
- * // Item sélectionné (page courante)
- * <BottomNavigationItem label="Accueil" icon="Home" isSelected onClick={() => nav("/")} />
- *
- * // Item avec badge de notification
- * <BottomNavigationItem label="Messages" icon="Chat" badge="3" onClick={handleOpen} />
- *
- * // Item qui ouvre un popup (état visuel distinct du selected)
- * <BottomNavigationItem label="Créer" icon="Add" isOpen={popupOpen} onClick={togglePopup} />
- *
- * // Item désactivé
- * <BottomNavigationItem label="Admin" icon="Settings" isDisabled />
- * ```
- *
- * @param label      - Texte affiché sous l'icône
- * @param icon       - Nom de l'icône issu de @naxit/comete-icons
- * @param isSelected - État actif de l'item (fond coloré subtlest, icône filled, texte coloré)
- * @param isOpen     - Item qui ouvre un popup (aria-expanded, fond bold, texte inversé)
- * @param isDisabled - État désactivé
- * @param badge      - Texte du badge de notification sur l'icône
- * @param onClick    - Handler de clic
+ * Item individuel de la BottomNav.
+ * Les icônes Add et MoreHoriz disposent d'une animation morph SVG qui
+ * transite visuellement vers le Cancel icon lorsque `isOpen` est true.
+ * Les autres icônes utilisent un cross-fade standard.
  */
-export function BottomNavigationItem({
+export function BottomNavItem({
   label,
   icon,
   isSelected = false,
@@ -75,22 +72,20 @@ export function BottomNavigationItem({
   isDisabled = false,
   badge,
   onClick,
-}: BottomNavigationItemProps): ReactElement {
-  // Icon color & variant selon l'état
-  // Priority : disabled > open/selected > default
-  const iconColor: IconColor = isDisabled
+}: BottomNavItemProps): ReactElement {
+  const isMorphIcon = icon === "Add" || icon === "MoreHoriz";
+
+  // Source icon: apparence au repos (fermé) — non-morph uniquement
+  const sourceColor: IconColor = isDisabled
     ? "disabled"
-    : isSelected || isOpen
+    : isSelected
       ? "selected"
       : "subtlest";
-  const iconAppearance: IconAppearance = isSelected || isOpen ? "filled" : "outlined";
+  const sourceAppearance: IconAppearance = isSelected ? "filled" : "outlined";
 
-  // Quand l'item ouvre un popup (isOpen), l'icône se transforme en croix
-  // (pattern FAB — Cancel = close universel), quelle que soit la prop `icon`.
-  const resolvedIcon: IconName = isOpen ? "Cancel" : icon;
+  // Close icon: apparence quand le popup est ouvert
+  const closeColor: IconColor = isDisabled ? "disabled" : "selected";
 
-  // Badge cutout color : doit correspondre au fond de l'item dans chaque état.
-  // Via variable CSS appliquée par le CSS module selon les data-attributes.
   const handlePress: AriaButtonProps["onPress"] = onClick ? () => { onClick(); } : undefined;
 
   return (
@@ -99,6 +94,7 @@ export function BottomNavigationItem({
       onPress={handlePress}
       isDisabled={isDisabled}
       data-selected={isSelected || undefined}
+      data-morph={isMorphIcon || undefined}
       aria-current={isSelected ? "page" : undefined}
       aria-expanded={isOpen ? true : undefined}
     >
@@ -106,12 +102,22 @@ export function BottomNavigationItem({
         <>
           <span className={styles.content}>
             <span className={styles.iconWrapper}>
-              <Icon
-                icon={resolvedIcon}
-                size={isOpen ? 32 : 24}
-                appearance={iconAppearance}
-                color={iconColor}
-              />
+              <span className={styles.iconSource}>
+                <Icon
+                  icon={icon}
+                  size={24}
+                  appearance={sourceAppearance}
+                  color={sourceColor}
+                />
+              </span>
+              <span className={styles.iconClose}>
+                <Icon
+                  icon="Cancel"
+                  size={32}
+                  appearance="filled"
+                  color={closeColor}
+                />
+              </span>
               {badge !== undefined && (
                 <span className={styles.badge}>
                   <Badge
@@ -133,4 +139,4 @@ export function BottomNavigationItem({
   );
 }
 
-BottomNavigationItem.displayName = "BottomNavigationItem";
+BottomNavItem.displayName = "BottomNavItem";

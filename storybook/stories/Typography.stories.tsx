@@ -38,7 +38,7 @@ const TYPE_GROUPS: TypeGroup[] = [
     id: "hero",
     label: "Hero",
     description:
-      "Texte d'accroche à très grande échelle, pour les pages marketing, les dashboards de métriques clés ou les écrans de bienvenue.",
+      "Texte d'accroche à très grande échelle, pour les pages marketing, les Homes de métriques clés ou les écrans de bienvenue.",
     guidance: [
       "Réserver aux titres principaux d'une page — un seul style Hero par écran.",
       "Combiner avec un tracking négatif pour améliorer la lisibilité à grande taille.",
@@ -96,7 +96,7 @@ const TYPE_GROUPS: TypeGroup[] = [
         lineHeight: "72px",
         fontWeight: "600",
         letterSpacing: "-0.5px",
-        usage: "Dashboard avec métrique centrale ou splash screen.",
+        usage: "Home avec métrique centrale ou splash screen.",
       },
       {
         name: "Hero S",

@@ -229,7 +229,7 @@ export const HeaderWithActions: Story = {
     <Gutters>
       <Page>
         <Page.Header
-          title="Tableau de bord"
+          title="Accueil"
           trailing={
             <Stack direction="row" gap="100" align="center">
               <Button appearance="subtle" spacing="compact" iconBefore="ChevronLeft" aria-label="Mois précédent" />
@@ -416,7 +416,7 @@ export const ToolbarWithActiveFilters: Story = {
 
 /**
  * **Body — Grid layout** : contenu organisé en grille responsive.
- * Pattern le plus courant pour les dashboards et les pages de listing cards.
+ * Pattern le plus courant pour les Homes et les pages de listing cards.
  */
 export const BodyGridLayout: Story = {
   name: "Body — grid layout",

@@ -564,23 +564,23 @@ export const Entity: Story = {
 };
 
 // -----------------------------------------------------------------------
-// 3. DASHBOARD
+// 3. Home
 
 /**
- * **Dashboard** — Vue d'ensemble avec KPIs, activité et résumés.
+ * **Home** — Vue d'ensemble avec KPIs, activité et résumés.
  *
  * - Greeting card avec actions rapides
  * - KPI tiles avec trends
  * - Activité + Couverture — 2 colonnes dès tablet
  * - Sites en cards responsives
  */
-export const Dashboard: Story = {
-  name: "Dashboard (tableau de bord)",
+export const Home: Story = {
+  name: "Home (Accueil)",
   parameters: { design: { type: "figma", url: figmaUrl("4587:24160") } },
   render: () => (
       <Page>
         <Page.Header
-          title="Tableau de bord"
+          title="Accueil"
           trailing={
             <Stack direction="row" gap="150" align="center">
               <Button appearance="subtle" spacing="compact" iconBefore="ChevronLeft" aria-label="Précédent" />

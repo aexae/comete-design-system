@@ -1,0 +1,265 @@
+/* ==========================================================================
+   BottomNavItem — Comète Design System
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   Aucune valeur hardcodée.
+   ========================================================================== */
+
+/* Base ------------------------------------------------------------------ */
+
+.item {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space100) 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  border-radius: var(--radius150);
+  transition: background-color var(--duration-fast) var(--easing-default);
+}
+
+/* Zone contenu : icône + label */
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  gap: var(--space025);
+  padding: var(--space100) var(--space050);
+  flex-grow: 1;
+}
+
+/* Wrapper icône */
+
+.iconWrapper {
+  position: relative;
+  width: var(--size300);
+  height: var(--size300);
+  flex-shrink: 0;
+  transition: width var(--duration-fast) var(--easing-default),
+              height var(--duration-fast) var(--easing-default);
+}
+
+/* ==========================================================================
+   Icon cross-fade (non-morph) — swap source ↔ close avec rotation
+   ========================================================================== */
+
+.iconSource,
+.iconClose {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity var(--duration-fast) var(--easing-default),
+              transform var(--duration-fast) var(--easing-default);
+}
+
+.iconSource {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+.iconClose {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0);
+}
+
+.item[aria-expanded="true"] .iconSource {
+  opacity: 0;
+  transform: rotate(90deg) scale(0);
+}
+
+.item[aria-expanded="true"] .iconClose {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+/* ==========================================================================
+   Morph icons — Add (+ → Cancel) et MoreHoriz (⋯ → Cancel)
+   Phase 1 : le SVG inline morph (rotate / translate+scale).
+   Phase 2 : le vrai Cancel Icon (morphTarget) fade-in par dessus.
+   ========================================================================== */
+
+/* SVG morph — positionné au centre du wrapper */
+
+.morphIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--size300);
+  height: var(--size300);
+  transform: translate(-50%, -50%);
+  color: var(--icon-subtlest);
+  /* Fermeture : fade-in immédiat (pas de delay) */
+  transition: opacity 100ms var(--easing-default) 0ms,
+              color var(--duration-fast) var(--easing-default);
+}
+
+.item[data-selected] .morphIcon {
+  color: var(--icon-selected);
+}
+
+.item[aria-expanded="true"] .morphIcon {
+  color: var(--icon-selected);
+  /* Ouverture : fade-out retardé (après l'animation morph) */
+  opacity: 0;
+  transition: opacity 100ms var(--easing-default) var(--duration-fast),
+              color var(--duration-fast) var(--easing-default);
+}
+
+.item[data-disabled] .morphIcon {
+  color: var(--icon-disabled);
+}
+
+/* Cancel Icon overlay — prend le relais à la fin du morph */
+
+.morphTarget {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  /* Fermeture : fade-out immédiat */
+  transition: opacity 100ms var(--easing-default) 0ms;
+}
+
+.item[aria-expanded="true"] .morphTarget {
+  opacity: 1;
+  /* Ouverture : fade-in retardé (après l'animation morph) */
+  transition: opacity 100ms var(--easing-default) var(--duration-fast);
+}
+
+/* --- Add : rotation 45° du plus → croix ------------------------------- */
+
+.addCross {
+  transform-origin: 12px 12px;
+  transition: transform var(--duration-fast) var(--easing-default);
+}
+
+.item[aria-expanded="true"] .addCross {
+  transform: rotate(45deg);
+}
+
+/* --- MoreHoriz : 3 dots → croix (translate + scale + rotate) ---------- */
+
+.moreDot1,
+.moreDot2,
+.moreDot3 {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform var(--duration-fast) var(--easing-default),
+              opacity var(--duration-fast) var(--easing-default);
+}
+
+.item[aria-expanded="true"] .moreDot1 {
+  transform: translateX(6px) rotate(45deg) scaleX(0.5) scaleY(3.5);
+}
+
+.item[aria-expanded="true"] .moreDot2 {
+  opacity: 0;
+  transform: scale(0);
+}
+
+.item[aria-expanded="true"] .moreDot3 {
+  transform: translateX(-6px) rotate(-45deg) scaleX(0.5) scaleY(3.5);
+}
+
+/* ==========================================================================
+   Badge
+   ========================================================================== */
+
+.badge {
+  position: absolute;
+  top: calc(-1 * var(--space075));
+  left: var(--space150);
+  --badge-cutout-color: var(--background-surface-default);
+}
+
+/* ==========================================================================
+   Label
+   ========================================================================== */
+
+.label {
+  max-width: 100%;
+  max-height: var(--line-height-ui-xxs);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxxs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xxs);
+  color: var(--text-subtlest);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color var(--duration-fast) var(--easing-default),
+              opacity var(--duration-fast) var(--easing-default),
+              max-height var(--duration-fast) var(--easing-default);
+}
+
+/* ==========================================================================
+   État sélectionné
+   ========================================================================== */
+
+.item[data-selected] .label {
+  color: var(--text-selected);
+}
+
+/* background-color géré par l'indicateur glissant du parent BottomNav */
+
+.item[data-selected] .badge {
+  --badge-cutout-color: var(--background-selected-subtlest-default);
+}
+
+/* ==========================================================================
+   État open (aria-expanded) — ouvre un popup
+   ========================================================================== */
+
+/* background-color géré par l'indicateur glissant du parent BottomNav */
+
+.item[aria-expanded="true"] .content {
+  justify-content: center;
+  gap: 0;
+}
+
+.item[aria-expanded="true"] .iconWrapper {
+  width: var(--size400);
+  height: var(--size400);
+}
+
+/* Non-morph : label masqué instantanément */
+.item[aria-expanded="true"]:not([data-morph]) .label {
+  display: none;
+}
+
+/* Morph : label collapse animé (zéro layout shift) */
+.item[aria-expanded="true"][data-morph] .label {
+  opacity: 0;
+  max-height: 0;
+}
+
+.item[aria-expanded="true"] .badge {
+  --badge-cutout-color: var(--background-surface-default);
+}
+
+/* ==========================================================================
+   État disabled — déclaré en dernier pour passer outre les autres états
+   ========================================================================== */
+
+.item[data-disabled] {
+  cursor: not-allowed;
+  opacity: var(--opacity-disabled);
+}
+
+.item[data-disabled] .content {
+  background-color: transparent;
+}
+
+.item[data-disabled] .label {
+  color: var(--text-disabled);
+}
