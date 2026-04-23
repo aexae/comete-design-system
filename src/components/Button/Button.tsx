@@ -9,7 +9,7 @@ import styles from "./Button.module.css";
 // ----------------------------------------------------------------------
 
 export type ButtonAppearance = "contained" | "outlined" | "subtle" | "link" | "link-subtle";
-export type ButtonColor = "default" | "brand" | "success" | "critical" | "warning" | "information";
+export type ButtonColor = "default" | "subtle" | "subtlest" | "brand" | "success" | "critical" | "warning" | "information";
 /**
  * Densité — dimension + padding, alignée sur les variantes Figma.
  * - `default` — hauteur 32 px, padding 4/12, icône 24 px
@@ -54,6 +54,7 @@ function resolveIconColor(appearance: ButtonAppearance, color: ButtonColor): Ico
   if (appearance === "link-subtle") return "subtle";
 
   if (appearance === "contained") {
+    if (color === "subtle" || color === "subtlest") return color;
     // NOTE: warning bold background is light/yellow — needs dark icons, not white
     if (color === "warning") return "on-warning";
     // brand, success, critical, information render bold backgrounds with inverted (white) text
@@ -64,6 +65,8 @@ function resolveIconColor(appearance: ButtonAppearance, color: ButtonColor): Ico
   // outlined, subtle, link: icon follows the semantic color of the button text
   const semanticColorMap: Record<ButtonColor, IconColor> = {
     default: "default",
+    subtle: "subtle",
+    subtlest: "subtlest",
     brand: "brand",
     success: "success",
     critical: "critical",
@@ -126,6 +129,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     // Map color to CSS class
     const colorClassMap: Record<ButtonColor, string> = {
       default: styles.default,
+      subtle: styles["color-subtle"],
+      subtlest: styles["color-subtlest"],
       brand: styles.brand,
       success: styles.success,
       critical: styles.critical,

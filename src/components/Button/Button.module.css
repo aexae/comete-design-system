@@ -124,6 +124,30 @@
   background-color: var(--background-neutral-subtler-pressed);
 }
 
+/* — subtle — */
+.contained.color-subtle {
+  background-color: var(--background-neutral-subtler-default);
+  color: var(--text-subtle);
+}
+.contained.color-subtle:not([data-disabled])[data-hovered] {
+  background-color: var(--background-neutral-subtler-hovered);
+}
+.contained.color-subtle:not([data-disabled])[data-pressed] {
+  background-color: var(--background-neutral-subtler-pressed);
+}
+
+/* — subtlest — */
+.contained.color-subtlest {
+  background-color: var(--background-neutral-subtler-default);
+  color: var(--text-subtlest);
+}
+.contained.color-subtlest:not([data-disabled])[data-hovered] {
+  background-color: var(--background-neutral-subtler-hovered);
+}
+.contained.color-subtlest:not([data-disabled])[data-pressed] {
+  background-color: var(--background-neutral-subtler-pressed);
+}
+
 /* — brand — */
 .contained.brand {
   background-color: var(--background-brand-bold-default);
@@ -203,6 +227,28 @@
   background-color: var(--background-neutral-subtlest-pressed);
 }
 
+.outlined.color-subtle {
+  border-color: var(--border-bold);
+  color: var(--text-subtle);
+}
+.outlined.color-subtle:not([data-disabled])[data-hovered] {
+  background-color: var(--background-neutral-subtlest-hovered);
+}
+.outlined.color-subtle:not([data-disabled])[data-pressed] {
+  background-color: var(--background-neutral-subtlest-pressed);
+}
+
+.outlined.color-subtlest {
+  border-color: var(--border-subtle);
+  color: var(--text-subtlest);
+}
+.outlined.color-subtlest:not([data-disabled])[data-hovered] {
+  background-color: var(--background-neutral-subtlest-hovered);
+}
+.outlined.color-subtlest:not([data-disabled])[data-pressed] {
+  background-color: var(--background-neutral-subtlest-pressed);
+}
+
 .outlined.brand {
   border-color: var(--border-brand);
   color: var(--text-brand);
@@ -277,6 +323,26 @@
   background-color: var(--background-neutral-subtlest-pressed);
 }
 
+.subtle.color-subtle {
+  color: var(--text-subtle);
+}
+.subtle.color-subtle:not([data-disabled])[data-hovered] {
+  background-color: var(--background-neutral-subtlest-hovered);
+}
+.subtle.color-subtle:not([data-disabled])[data-pressed] {
+  background-color: var(--background-neutral-subtlest-pressed);
+}
+
+.subtle.color-subtlest {
+  color: var(--text-subtlest);
+}
+.subtle.color-subtlest:not([data-disabled])[data-hovered] {
+  background-color: var(--background-neutral-subtlest-hovered);
+}
+.subtle.color-subtlest:not([data-disabled])[data-pressed] {
+  background-color: var(--background-neutral-subtlest-pressed);
+}
+
 .subtle.brand {
   color: var(--text-brand);
 }
@@ -343,6 +409,20 @@
   color: var(--text-default);
 }
 .link.default:not([data-disabled])[data-hovered] {
+  color: var(--text-subtle);
+}
+
+.link.color-subtle {
+  color: var(--text-subtle);
+}
+.link.color-subtle:not([data-disabled])[data-hovered] {
+  color: var(--text-subtlest);
+}
+
+.link.color-subtlest {
+  color: var(--text-subtlest);
+}
+.link.color-subtlest:not([data-disabled])[data-hovered] {
   color: var(--text-subtle);
 }
 
@@ -442,6 +522,8 @@
 
 /* — contained — fond subtlest + border transparent + texte selected */
 .contained.default[data-selected],
+.contained.color-subtle[data-selected],
+.contained.color-subtlest[data-selected],
 .contained.brand[data-selected],
 .contained.success[data-selected],
 .contained.critical[data-selected],
@@ -453,6 +535,8 @@
 
 /* — outlined — fond subtlest + bordure selected + texte selected */
 .outlined.default[data-selected],
+.outlined.color-subtle[data-selected],
+.outlined.color-subtlest[data-selected],
 .outlined.brand[data-selected],
 .outlined.success[data-selected],
 .outlined.critical[data-selected],
@@ -464,6 +548,8 @@
 
 /* — subtle — fond subtlest + texte selected */
 .subtle.default[data-selected],
+.subtle.color-subtle[data-selected],
+.subtle.color-subtlest[data-selected],
 .subtle.brand[data-selected],
 .subtle.success[data-selected],
 .subtle.critical[data-selected],
