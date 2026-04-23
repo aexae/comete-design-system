@@ -19,6 +19,10 @@ export interface DualYearCalendarProps {
   defaultValue?: RangeValue<CalendarDate>;
   /** Callback à chaque sélection de plage. */
   onChange?: (range: RangeValue<CalendarDate>) => void;
+  /**
+   * Callback appelé dès le premier clic de la plage (avant validation).
+   */
+  onIntermediateStart?: (date: CalendarDate) => void;
   /** Désactive le calendrier. */
   isDisabled?: boolean;
   /** Classe CSS additionnelle. */
@@ -209,6 +213,10 @@ export interface YearRangeCalendarProps {
   defaultValue?: RangeValue<CalendarDate>;
   /** Callback à chaque sélection de plage. */
   onChange?: (range: RangeValue<CalendarDate>) => void;
+  /**
+   * Callback appelé dès le premier clic de la plage (avant validation).
+   */
+  onIntermediateStart?: (date: CalendarDate) => void;
   /** Désactive le calendrier. */
   isDisabled?: boolean;
   /** Classe CSS additionnelle. */
@@ -226,6 +234,7 @@ export function YearRangeCalendar({
   value,
   defaultValue,
   onChange,
+  onIntermediateStart,
   isDisabled = false,
   className,
 }: YearRangeCalendarProps): ReactElement {
@@ -260,6 +269,7 @@ export function YearRangeCalendar({
     if (pending === undefined) {
       setPending(year);
       setHovered(undefined);
+      onIntermediateStart?.(new CalendarDate(year, 1, 1));
     } else {
       const startYear = Math.min(pending, year);
       const endYear = Math.max(pending, year);
@@ -333,6 +343,7 @@ export function DualYearCalendar({
   value,
   defaultValue,
   onChange,
+  onIntermediateStart,
   isDisabled = false,
   className,
 }: DualYearCalendarProps): ReactElement {
@@ -375,6 +386,7 @@ export function DualYearCalendar({
     if (pending === undefined) {
       setPending(year);
       setHovered(undefined);
+      onIntermediateStart?.(new CalendarDate(year, 1, 1));
     } else {
       const startYear = Math.min(pending, year);
       const endYear = Math.max(pending, year);

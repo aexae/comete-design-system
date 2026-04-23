@@ -1,5 +1,5 @@
 // MonthPicker — stories Storybook
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { MonthPicker, Field } from "@naxit/comete-design-system/components";
 import type {
@@ -31,13 +31,39 @@ const meta = {
     },
   },
   argTypes: {
+    isRange: {
+      control: "boolean",
+      description: "Mode plage (start/end) au lieu d'un mois unique",
+    },
     month: {
       control: { type: "number", min: 1, max: 12 },
       description: "Mois sélectionné (1-12) — mode single",
+      if: { arg: "isRange", truthy: false },
     },
     year: {
       control: { type: "number" },
       description: "Année sélectionnée — mode single",
+      if: { arg: "isRange", truthy: false },
+    },
+    startMonth: {
+      control: { type: "number", min: 1, max: 12 },
+      description: "Mois de début (1-12) — mode range",
+      if: { arg: "isRange", truthy: true },
+    },
+    startYear: {
+      control: { type: "number" },
+      description: "Année de début — mode range",
+      if: { arg: "isRange", truthy: true },
+    },
+    endMonth: {
+      control: { type: "number", min: 1, max: 12 },
+      description: "Mois de fin (1-12) — mode range",
+      if: { arg: "isRange", truthy: true },
+    },
+    endYear: {
+      control: { type: "number" },
+      description: "Année de fin — mode range",
+      if: { arg: "isRange", truthy: true },
     },
     isEditable: {
       control: "boolean",
@@ -65,12 +91,19 @@ type Story = StoryObj<typeof MonthPicker>;
 // -----------------------------------------------------------------------
 // Render helpers
 
-/** Render contrôlé pour le mode simple (single). */
-function ControlledRender(args: MonthPickerProps) {
-  const single = args as SingleMonthPickerProps;
+/** Sous-composant : hooks isolés pour le mode single. */
+function SingleRender({ args }: { args: SingleMonthPickerProps }) {
   const now = new Date();
-  const [month, setMonth] = useState(single.month ?? now.getMonth() + 1);
-  const [year, setYear] = useState(single.year ?? now.getFullYear());
+  const [month, setMonth] = useState(args.month ?? now.getMonth() + 1);
+  const [year, setYear] = useState(args.year ?? now.getFullYear());
+  // Sync depuis les controls Storybook quand args change (sans écraser les
+  // modifs utilisateur : onChange met à jour le state local, pas args).
+  useEffect(() => {
+    if (args.month !== undefined) setMonth(args.month);
+  }, [args.month]);
+  useEffect(() => {
+    if (args.year !== undefined) setYear(args.year);
+  }, [args.year]);
   return (
     <div
       style={{
@@ -81,7 +114,7 @@ function ControlledRender(args: MonthPickerProps) {
       }}
     >
       <MonthPicker
-        {...(args as Record<string, unknown>)}
+        {...args}
         isRange={false}
         month={month}
         year={year}
@@ -103,13 +136,25 @@ function ControlledRender(args: MonthPickerProps) {
   );
 }
 
-/** Render contrôlé pour le mode plage (range). */
-function ControlledRangeRender(args: MonthPickerProps) {
-  const range = args as RangeMonthPickerProps;
-  const [startMonth, setStartMonth] = useState(range.startMonth ?? 8);
-  const [startYear, setStartYear] = useState(range.startYear ?? 2025);
-  const [endMonth, setEndMonth] = useState(range.endMonth ?? 11);
-  const [endYear, setEndYear] = useState(range.endYear ?? 2025);
+/** Sous-composant : hooks isolés pour le mode range. */
+function RangeRender({ args }: { args: RangeMonthPickerProps }) {
+  const [startMonth, setStartMonth] = useState(args.startMonth ?? 8);
+  const [startYear, setStartYear] = useState(args.startYear ?? 2025);
+  const [endMonth, setEndMonth] = useState(args.endMonth ?? 11);
+  const [endYear, setEndYear] = useState(args.endYear ?? 2025);
+  // Sync depuis les controls Storybook quand args change.
+  useEffect(() => {
+    if (args.startMonth !== undefined) setStartMonth(args.startMonth);
+  }, [args.startMonth]);
+  useEffect(() => {
+    if (args.startYear !== undefined) setStartYear(args.startYear);
+  }, [args.startYear]);
+  useEffect(() => {
+    if (args.endMonth !== undefined) setEndMonth(args.endMonth);
+  }, [args.endMonth]);
+  useEffect(() => {
+    if (args.endYear !== undefined) setEndYear(args.endYear);
+  }, [args.endYear]);
   return (
     <div
       style={{
@@ -120,7 +165,7 @@ function ControlledRangeRender(args: MonthPickerProps) {
       }}
     >
       <MonthPicker
-        {...(args as Record<string, unknown>)}
+        {...args}
         isRange
         startMonth={startMonth}
         startYear={startYear}
@@ -144,6 +189,14 @@ function ControlledRangeRender(args: MonthPickerProps) {
       </p>
     </div>
   );
+}
+
+/** Dispatcher — switch single/range selon `args.isRange`. */
+function ControlledRender(args: MonthPickerProps) {
+  if (args.isRange) {
+    return <RangeRender args={args} />;
+  }
+  return <SingleRender args={args} />;
 }
 
 // -----------------------------------------------------------------------
@@ -212,78 +265,29 @@ export const Disabled: Story = {
 /** MonthPicker dans un Field avec label. */
 export const WithField: Story = {
   name: "With Field wrapper",
-  render: (args: MonthPickerProps) => {
-    const single = args as SingleMonthPickerProps;
-    const [month, setMonth] = useState(single.month ?? 6);
-    const [year, setYear] = useState(single.year ?? 2025);
-    return (
-      <Field label="Mois" isRequired>
-        <MonthPicker
-          {...(args as Record<string, unknown>)}
-          isRange={false}
-          month={month}
-          year={year}
-          onChange={(m, y) => {
-            setMonth(m);
-            setYear(y);
-          }}
-        />
-      </Field>
-    );
-  },
+  render: (args: MonthPickerProps) => (
+    <Field label="Mois" isRequired>
+      <ControlledRender {...args} />
+    </Field>
+  ),
 };
 
 /** MonthPicker avec message d'erreur. */
 export const FieldInvalid: Story = {
   name: "Field invalid",
-  render: (args: MonthPickerProps) => {
-    const single = args as SingleMonthPickerProps;
-    const [month, setMonth] = useState(single.month ?? 6);
-    const [year, setYear] = useState(single.year ?? 2025);
-    return (
-      <Field
-        label="Mois"
-        message="Le mois est invalide"
-        messageType="critical"
-      >
-        <MonthPicker
-          {...(args as Record<string, unknown>)}
-          isRange={false}
-          month={month}
-          year={year}
-          onChange={(m, y) => {
-            setMonth(m);
-            setYear(y);
-          }}
-          isInvalid
-        />
-      </Field>
-    );
-  },
+  args: { isInvalid: true },
+  render: (args: MonthPickerProps) => (
+    <Field label="Mois" message="Le mois est invalide" messageType="critical">
+      <ControlledRender {...args} />
+    </Field>
+  ),
 };
 
-/** Mode plage saisie — "Août 2025 → Novembre 2025" + icône calendrier. */
+/** Mode plage (range) — "Août 2025 → Novembre 2025" + icône calendrier. */
 export const Range: Story = {
-  render: ControlledRangeRender,
+  render: ControlledRender,
   args: {
     isRange: true,
-    startMonth: 8,
-    startYear: 2025,
-    endMonth: 11,
-    endYear: 2025,
-  } as never,
-  parameters: {
-    design: { type: "figma", url: figmaUrl("4189:17716") },
-  },
-};
-
-/** Mode plage navigation — deux boutons mois cliquables + icône calendrier. */
-export const RangeNonEditable: Story = {
-  name: "Range — non editable",
-  render: ControlledRangeRender,
-  args: {
-    isRange: true,
-    isEditable: false,
     startMonth: 8,
     startYear: 2025,
     endMonth: 11,
@@ -297,40 +301,14 @@ export const RangeNonEditable: Story = {
 /** Toutes les apparences. */
 export const AllAppearances: Story = {
   name: "All appearances",
-  render: (args: MonthPickerProps) => {
-    const single = args as SingleMonthPickerProps;
-    const [monthDef, setMonthDef] = useState(single.month ?? 6);
-    const [yearDef, setYearDef] = useState(single.year ?? 2025);
-    const [monthSub, setMonthSub] = useState(single.month ?? 6);
-    const [yearSub, setYearSub] = useState(single.year ?? 2025);
-    return (
-      <div style={{ display: "flex", gap: 32 }}>
-        <Field label="Default">
-          <MonthPicker
-            {...(args as Record<string, unknown>)}
-            isRange={false}
-            month={monthDef}
-            year={yearDef}
-            onChange={(m, y) => {
-              setMonthDef(m);
-              setYearDef(y);
-            }}
-          />
-        </Field>
-        <Field label="Subtle">
-          <MonthPicker
-            {...(args as Record<string, unknown>)}
-            isRange={false}
-            month={monthSub}
-            year={yearSub}
-            onChange={(m, y) => {
-              setMonthSub(m);
-              setYearSub(y);
-            }}
-            appearance="subtle"
-          />
-        </Field>
-      </div>
-    );
-  },
+  render: (args: MonthPickerProps) => (
+    <div style={{ display: "flex", gap: 32 }}>
+      <Field label="Default">
+        <ControlledRender {...args} />
+      </Field>
+      <Field label="Subtle">
+        <ControlledRender {...args} appearance="subtle" />
+      </Field>
+    </div>
+  ),
 };

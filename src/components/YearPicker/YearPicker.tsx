@@ -321,6 +321,10 @@ function RangeYearPicker({
   const resolvedStart = startYear ?? currentYear;
   const resolvedEnd = endYear ?? currentYear;
 
+  // Plage inversée (start > end) : force isInvalid.
+  const isInverted = resolvedStart > resolvedEnd;
+  const effectiveInvalid = isInvalid || isInverted;
+
   // Ref du conteneur pour positionner tous les popovers sous le champ entier
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -368,6 +372,13 @@ function RangeYearPicker({
 
   const handleRangeSelect = (range: RangeValue<CalendarDate>) => {
     commitRange(range.start.year, range.end.year);
+  };
+
+  // -- Handler : mise à jour immédiate au premier clic (start seul) --
+  // Pas de swap pour respecter l'année cliquée exactement (même si start > end
+  // temporairement). Le second clic committera la plage finale avec swap.
+  const handleIntermediateStart = (date: CalendarDate) => {
+    onChange?.(date.year, resolvedEnd);
   };
 
   // -- Editable input state --
@@ -429,6 +440,7 @@ function RangeYearPicker({
       calendars={2}
       value={rangeValue}
       onChange={handleRangeSelect}
+      onIntermediateStart={handleIntermediateStart}
       isDisabled={isDisabled}
     />
   );
@@ -459,12 +471,12 @@ function RangeYearPicker({
         ariaLabel ?? `Plage d'années : ${resolvedStart} à ${resolvedEnd}`
       }
       data-disabled={isDisabled || undefined}
-      data-invalid={isInvalid || undefined}
+      data-invalid={effectiveInvalid || undefined}
     >
       <InputContainer isBorderless={!isEditable}
         appearance={appearance}
         isDisabled={isDisabled}
-        isInvalid={isInvalid}
+        isInvalid={effectiveInvalid}
       >
         {isEditable ? (
           /* ---- Mode saisie : inputs + icône calendrier ---- */

@@ -128,7 +128,7 @@ function formatShortDate(date: CalendarDate, locale: string): string {
   }).format(new Date(date.year, date.month - 1, date.day));
 }
 
-/** Formate le label semaine : "Sem. 28 • 07/07/25 - 13/07/25". */
+/** Formate le label complet semaine : `Sem. 28 • 07/07/25 - 13/07/25`. */
 function formatWeekLabel(
   week: number,
   weekStart: CalendarDate,
@@ -138,6 +138,16 @@ function formatWeekLabel(
   const start = formatShortDate(weekStart, locale);
   const end = formatShortDate(weekEnd, locale);
   return `Sem. ${week} \u2022 ${start} - ${end}`;
+}
+
+/** Formate le label court (semaine + début) : `Sem. 28 • 07/07/25`. */
+function formatWeekLabelShort(
+  week: number,
+  weekStart: CalendarDate,
+  locale: string,
+): string {
+  const start = formatShortDate(weekStart, locale);
+  return `Sem. ${week} \u2022 ${start}`;
 }
 
 /**
@@ -503,6 +513,12 @@ function RangeWeekPicker({
   const resolvedEndWeek = endWeek ?? currentWeek;
   const resolvedEndYear = endYear ?? currentYear;
 
+  // Plage inversée (start > end) : force isInvalid.
+  const isInverted =
+    weekToOrdinal(resolvedStartWeek, resolvedStartYear) >
+    weekToOrdinal(resolvedEndWeek, resolvedEndYear);
+  const effectiveInvalid = isInvalid || isInverted;
+
   // Bornes dates (lundi début → dimanche fin)
   const startMonday = getMondayOfISOWeek(resolvedStartWeek, resolvedStartYear);
   const endMonday = getMondayOfISOWeek(resolvedEndWeek, resolvedEndYear);
@@ -566,20 +582,28 @@ function RangeWeekPicker({
     );
   };
 
+  // -- Handler : mise à jour immédiate au premier clic (start seul) --
+  // Pas de swap pour respecter la semaine cliquée exactement (même si start > end
+  // temporairement). Le second clic committera la plage finale avec swap.
+  const handleIntermediateStart = (weekStart: CalendarDate) => {
+    onChange?.(
+      getISOWeekNumber(weekStart),
+      getISOWeekYear(weekStart),
+      resolvedEndWeek,
+      resolvedEndYear,
+    );
+  };
+
   // -- Editable input state --
 
-  const startLabel = formatWeekLabel(
+  // Format range : toujours "Sem. X • date de début" (pas la plage complète,
+  // sinon le libellé devient trop long côte à côte).
+  const startLabel = formatWeekLabelShort(
     resolvedStartWeek,
     startMonday,
-    startMonday.add({ days: 6 }),
     locale,
   );
-  const endLabel = formatWeekLabel(
-    resolvedEndWeek,
-    endMonday,
-    endSunday,
-    locale,
-  );
+  const endLabel = formatWeekLabelShort(resolvedEndWeek, endMonday, locale);
 
   const [startInput, setStartInput] = useState(startLabel);
   const [endInput, setEndInput] = useState(endLabel);
@@ -656,6 +680,7 @@ function RangeWeekPicker({
       mode="period"
       value={calendarValue}
       onChange={handleRangeSelect}
+      onIntermediateStart={handleIntermediateStart}
       isDisabled={isDisabled}
     />
   );
@@ -668,12 +693,12 @@ function RangeWeekPicker({
         ariaLabel ?? `Plage de semaines : ${startLabel} à ${endLabel}`
       }
       data-disabled={isDisabled || undefined}
-      data-invalid={isInvalid || undefined}
+      data-invalid={effectiveInvalid || undefined}
     >
       <InputContainer isBorderless={!isEditable}
         appearance={appearance}
         isDisabled={isDisabled}
-        isInvalid={isInvalid}
+        isInvalid={effectiveInvalid}
       >
         {isEditable ? (
           /* ---- Mode saisie : inputs + icône calendrier ---- */

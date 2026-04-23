@@ -468,6 +468,14 @@ function RangeMonthPicker({
   const resolvedEndMonth = endMonth ?? todayDate.month;
   const resolvedEndYear = endYear ?? todayDate.year;
 
+  // Plage inversée (start > end) : force isInvalid pour signaler l'état.
+  // Cet état survient pendant l'intermédiaire (premier clic avant le second)
+  // ou si le consommateur passe des props incohérentes.
+  const isInverted =
+    monthToOrdinal(resolvedStartMonth, resolvedStartYear) >
+    monthToOrdinal(resolvedEndMonth, resolvedEndYear);
+  const effectiveInvalid = isInvalid || isInverted;
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Popover open state — un seul popover ouvert à la fois
@@ -517,6 +525,19 @@ function RangeMonthPicker({
       range.start.year,
       range.end.month,
       range.end.year,
+    );
+  };
+
+  // -- Handler : mise à jour immédiate au premier clic (start seul) --
+  // Pas de swap : on veut que le champ start reflète exactement le mois cliqué,
+  // même si temporairement start > end. Le second clic committera la plage
+  // finale avec swap si nécessaire.
+  const handleIntermediateStart = (date: CalendarDate) => {
+    onChange?.(
+      date.month,
+      date.year,
+      resolvedEndMonth,
+      resolvedEndYear,
     );
   };
 
@@ -601,6 +622,7 @@ function RangeMonthPicker({
         calendars={2}
         value={rangeValue}
         onChange={handleRangeSelect}
+        onIntermediateStart={handleIntermediateStart}
         isDisabled={isDisabled}
       />
     ) : (
@@ -609,6 +631,7 @@ function RangeMonthPicker({
         isRange
         value={rangeValue}
         onChange={handleRangeSelect}
+        onIntermediateStart={handleIntermediateStart}
         isDisabled={isDisabled}
       />
     );
@@ -621,13 +644,13 @@ function RangeMonthPicker({
         ariaLabel ?? `Plage de mois : ${startLabel} à ${endLabel}`
       }
       data-disabled={isDisabled || undefined}
-      data-invalid={isInvalid || undefined}
+      data-invalid={effectiveInvalid || undefined}
     >
       <InputContainer
         isBorderless={!isEditable}
         appearance={appearance}
         isDisabled={isDisabled}
-        isInvalid={isInvalid}
+        isInvalid={effectiveInvalid}
       >
         {isEditable ? (
           /* ---- Mode saisie : inputs + icône calendrier ---- */

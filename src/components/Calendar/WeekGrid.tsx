@@ -126,6 +126,11 @@ export interface WeekGridProps {
   defaultValue?: RangeValue<CalendarDate>;
   /** Callback à chaque sélection — la plage est toujours une semaine ISO complète. */
   onChange?: (range: RangeValue<CalendarDate>) => void;
+  /**
+   * Callback appelé dès le premier clic en mode `period` (avant validation).
+   * Reçoit le lundi de la semaine cliquée.
+   */
+  onIntermediateStart?: (weekStart: CalendarDate) => void;
   /** Locale BCP 47 pour le premier jour de semaine et les noms de jours. @default "fr-FR" */
   locale?: string;
   /** Désactive le composant. */
@@ -160,6 +165,7 @@ export function WeekGrid({
   value,
   defaultValue,
   onChange,
+  onIntermediateStart,
   locale = "fr-FR",
   isDisabled = false,
   mode = "week",
@@ -215,6 +221,7 @@ export function WeekGrid({
         // Premier clic — mémoriser la semaine de début.
         setPending({ start: weekStart, end: weekEnd });
         setHovered(undefined);
+        onIntermediateStart?.(weekStart);
       } else {
         // Deuxième clic — confirmer la plage finale.
         const start =
@@ -488,6 +495,7 @@ export function DualWeekGrid({
   value,
   defaultValue,
   onChange,
+  onIntermediateStart,
   locale = "fr-FR",
   isDisabled = false,
   className,
@@ -537,6 +545,7 @@ export function DualWeekGrid({
     if (!pending) {
       setPending({ start: weekStart, end: weekEnd });
       setHovered(undefined);
+      onIntermediateStart?.(weekStart);
     } else {
       const start =
         pending.start.compare(weekStart) <= 0 ? pending.start : weekStart;

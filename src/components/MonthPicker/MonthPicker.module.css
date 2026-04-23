@@ -106,12 +106,18 @@
    Mode range (isRange=true)
    ========================================================================== */
 
-/* Conteneur des deux boutons/inputs mois + séparateur (mode range navigation) */
+/* Conteneur des deux boutons mois + séparateur (mode range navigation) */
 .rangeValue {
   display: flex;
   align-items: center;
   gap: var(--space100);
-  flex: 1 1 0%;
+}
+
+/* En mode range, le bouton mois doit être content-sized (pas de flex-grow
+   contrairement au mode single-navigation où il centre entre les chevrons) */
+.rangeValue .monthButton {
+  flex: 0 0 auto;
+  justify-content: flex-start;
 }
 
 /* Input mois/année (mode range saisie) — "Août 2025" */

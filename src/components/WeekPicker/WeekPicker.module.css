@@ -82,6 +82,13 @@
   flex: 1 1 0%;
 }
 
+/* En mode range, le bouton semaine doit être content-sized (pas de flex-grow
+   contrairement au mode single-navigation où il centre entre les chevrons) */
+.rangeValue .weekButton {
+  flex: 0 0 auto;
+  justify-content: flex-start;
+}
+
 /* Séparateur "→" entre début et fin (mode range) */
 .rangeSeparator {
   font-family: var(--font-family-primary);
