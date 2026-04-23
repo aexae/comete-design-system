@@ -141,7 +141,24 @@ MenuTrigger.displayName = "MenuTrigger";
  * SubmenuTrigger — Comète Design System
  *
  * Wraps a MenuItem (trigger) and a Popover+Menu to create a cascading
- * submenu. The submenu opens on hover or ArrowRight.
+ * submenu. The submenu opens on hover or ArrowRight. Le popover enfant
+ * reste automatiquement dans le viewport (flip horizontal si pas de place
+ * à droite, clamp vertical via `containerPadding`).
+ *
+ * ```tsx
+ * <Menu aria-label="Menu">
+ *   <MenuItem id="edit" iconBefore="Edit">Modifier</MenuItem>
+ *   <SubmenuTrigger>
+ *     <MenuItem id="move" iconBefore="Folder">Déplacer vers</MenuItem>
+ *     <MenuPopover>
+ *       <Menu aria-label="Destinations">
+ *         <MenuItem id="drafts">Brouillons</MenuItem>
+ *         <MenuItem id="archive">Archives</MenuItem>
+ *       </Menu>
+ *     </MenuPopover>
+ *   </SubmenuTrigger>
+ * </Menu>
+ * ```
  */
 export function SubmenuTrigger(props: SubmenuTriggerProps): ReactElement {
   return <AriaSubmenuTrigger {...props} />;
@@ -292,6 +309,35 @@ Menu.displayName = "Menu";
  *
  * En mode sélection, le elemBefore est automatiquement remplacé par
  * un indicateur radio (select-single) ou checkbox (select-multiple).
+ *
+ * ```tsx
+ * // Item simple avec icône
+ * <MenuItem id="edit" iconBefore="Edit">Modifier</MenuItem>
+ *
+ * // Item avec description et icône trailing
+ * <MenuItem
+ *   id="share"
+ *   iconBefore="Share"
+ *   iconAfter="ChevronRight"
+ *   description="Partager avec d'autres membres"
+ * >
+ *   Partager
+ * </MenuItem>
+ *
+ * // Item avec raccourci clavier (elemAfter)
+ * <MenuItem
+ *   id="save"
+ *   iconBefore="Save"
+ *   elemAfter={<kbd>⌘S</kbd>}
+ * >
+ *   Enregistrer
+ * </MenuItem>
+ *
+ * // Item désactivé
+ * <MenuItem id="archive" iconBefore="Archive" isDisabled>
+ *   Archiver
+ * </MenuItem>
+ * ```
  *
  * @param children    - Label principal
  * @param description - Texte secondaire sous le label

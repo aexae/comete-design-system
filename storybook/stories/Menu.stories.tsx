@@ -74,6 +74,7 @@ function SampleSection({
 
 const meta = {
   title: "Components/Menu",
+  component: Menu,
   tags: ["autodocs"],
   parameters: {
     layout: "centered",

@@ -1,4 +1,5 @@
 // MenuItem — stories Storybook (Figma code part)
+import type { ComponentType } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Menu,
@@ -40,6 +41,10 @@ interface MenuItemStoryArgs {
 
 const meta = {
   title: "Components/Menu/MenuItem",
+  // REASON: cast required because args shape (MenuItemStoryArgs) differs from
+  // MenuItemProps — les args de la story (title, description, iconBefore en string, etc.)
+  // sont traduits vers les props réelles dans MenuItemStory().
+  component: MenuItem as unknown as ComponentType<MenuItemStoryArgs>,
   tags: ["autodocs"],
   parameters: {
     layout: "centered",
