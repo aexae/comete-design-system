@@ -2,6 +2,8 @@ declare const styles: {
   readonly "brand": string;
   readonly "button": string;
   readonly "button-spinner-rotate": string;
+  readonly "color-subtle": string;
+  readonly "color-subtlest": string;
   readonly "contained": string;
   readonly "critical": string;
   readonly "default": string;

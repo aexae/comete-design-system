@@ -24,7 +24,7 @@ const meta: Meta<ButtonProps> = {
     },
     color: {
       control: "select",
-      options: ["default", "brand", "success", "critical", "warning", "information"],
+      options: ["default", "subtle", "subtlest", "brand", "success", "critical", "warning", "information"],
     },
     spacing: {
       control: "select",
@@ -249,6 +249,8 @@ export const IconAllColors: Story = {
       {(
         [
           "default",
+          "subtle",
+          "subtlest",
           "brand",
           "success",
           "critical",
@@ -304,6 +306,8 @@ export const AllColors: Story = {
   render: (args) => (
     <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
       <Button color="default" appearance={args.appearance}>Default</Button>
+      <Button color="subtle" appearance={args.appearance}>Subtle</Button>
+      <Button color="subtlest" appearance={args.appearance}>Subtlest</Button>
       <Button color="brand" appearance={args.appearance}>Brand</Button>
       <Button color="success" appearance={args.appearance}>Success</Button>
       <Button color="critical" appearance={args.appearance}>Critical</Button>
