@@ -302,7 +302,7 @@ function SingleYearPicker({
 }
 
 // -----------------------------------------------------------------------
-// Range (isRange=true) — porté depuis YearRangePicker
+// Range (isRange=true)
 
 function RangeYearPicker({
   startYear,

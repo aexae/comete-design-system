@@ -444,7 +444,7 @@ function SingleMonthPicker({
 }
 
 // -----------------------------------------------------------------------
-// Range (isRange=true) — porté depuis MonthRangePicker
+// Range (isRange=true)
 
 function RangeMonthPicker({
   startMonth,
