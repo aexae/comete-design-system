@@ -19,12 +19,34 @@
   outline: none;
   -webkit-tap-highlight-color: transparent;
   border-radius: var(--radius150);
-  transition: background-color var(--duration-fast) var(--easing-default);
+}
+
+/* Fond sélection via pseudo-element — fade in/out au lieu du slide */
+.item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background-color: var(--background-selected-subtlest-default);
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--easing-default);
+  pointer-events: none;
+}
+
+.item[data-selected]::before {
+  opacity: 1;
+}
+
+.item[aria-expanded="true"]::before {
+  opacity: 1;
 }
 
 /* Zone contenu : icône + label */
 
 .content {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -41,8 +63,7 @@
   width: var(--size300);
   height: var(--size300);
   flex-shrink: 0;
-  transition: width var(--duration-fast) var(--easing-default),
-              height var(--duration-fast) var(--easing-default);
+  transition: transform var(--duration-fast) var(--easing-default);
 }
 
 /* ==========================================================================
@@ -210,8 +231,6 @@
   color: var(--text-selected);
 }
 
-/* background-color géré par l'indicateur glissant du parent BottomNav */
-
 .item[data-selected] .badge {
   --badge-cutout-color: var(--background-selected-subtlest-default);
 }
@@ -220,27 +239,14 @@
    État open (aria-expanded) — ouvre un popup
    ========================================================================== */
 
-/* background-color géré par l'indicateur glissant du parent BottomNav */
+/* L'icône grossit visuellement via transform (pas de reflow) */
+.item[aria-expanded="true"] .iconWrapper {
+  transform: scale(calc(32 / 24));
+}
 
+/* Open : sans label, centrer l'icône verticalement */
 .item[aria-expanded="true"] .content {
   justify-content: center;
-  gap: 0;
-}
-
-.item[aria-expanded="true"] .iconWrapper {
-  width: var(--size400);
-  height: var(--size400);
-}
-
-/* Non-morph : label masqué instantanément */
-.item[aria-expanded="true"]:not([data-morph]) .label {
-  display: none;
-}
-
-/* Morph : label collapse animé (zéro layout shift) */
-.item[aria-expanded="true"][data-morph] .label {
-  opacity: 0;
-  max-height: 0;
 }
 
 .item[aria-expanded="true"] .badge {

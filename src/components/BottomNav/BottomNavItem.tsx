@@ -92,7 +92,7 @@ export function BottomNavItem({
               <span className={styles.iconClose}>
                 <Icon
                   icon="Cancel"
-                  size={32}
+                  size={24}
                   appearance="filled"
                   color={closeColor}
                 />
@@ -109,7 +109,7 @@ export function BottomNavItem({
                 </span>
               )}
             </span>
-            <span className={styles.label}>{label}</span>
+            {!isOpen && <span className={styles.label}>{label}</span>}
           </span>
           {isFocusVisible && <FocusRing borderRadius="round" position="inside" />}
         </>
