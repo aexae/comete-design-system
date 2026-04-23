@@ -1,9 +1,11 @@
 declare const styles: {
+  readonly "collapseButton": string;
   readonly "divider": string;
   readonly "footer": string;
   readonly "header": string;
   readonly "headerAppName": string;
   readonly "headerContent": string;
+  readonly "headerLogo": string;
   readonly "headerSubtitle": string;
   readonly "iconAfter": string;
   readonly "iconBefore": string;

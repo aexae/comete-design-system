@@ -5,6 +5,7 @@ export {
   SideNavSection,
   SideNavDivider,
   SideNavFooter,
+  useSideNav,
 } from "./SideNav";
 export type {
   SideNavProps,
