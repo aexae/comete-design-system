@@ -36,33 +36,15 @@ export interface BottomNavItemProps {
 }
 
 // -----------------------------------------------------------------------
-// Morph SVG — Add (+ → × par rotation 45°)
-// Path issu de @naxit/comete-icons svgData3 (outlined/default 24×24).
-
-function AddMorphSvg(): ReactElement {
-  return (
-    <svg
-      className={styles.morphIcon}
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-    >
-      <g className={styles.addCross}>
-        <path d="M11 13H5v-2h6V5h2v6h6v2h-6v6h-2z" fill="currentColor" />
-      </g>
-    </svg>
-  );
-}
-
-// -----------------------------------------------------------------------
 // Composant
 
 /**
  * BottomNavItem — Comète Design System
  *
  * Item individuel de la BottomNav.
- * Les icônes Add et MoreHoriz disposent d'une animation morph SVG qui
- * transite visuellement vers le Cancel icon lorsque `isOpen` est true.
- * Les autres icônes utilisent un cross-fade standard.
+ * Gère les états hover, pressed, focus (via FocusRing) et disabled via React Aria.
+ * Utilise un cross-fade avec rotation pour la transition vers l'icône Cancel
+ * lorsque `isOpen` est true.
  */
 export function BottomNavItem({
   label,
@@ -73,9 +55,7 @@ export function BottomNavItem({
   badge,
   onClick,
 }: BottomNavItemProps): ReactElement {
-  const isMorphIcon = icon === "Add" || icon === "MoreHoriz";
-
-  // Source icon: apparence au repos (fermé) — non-morph uniquement
+  // Source icon: apparence au repos (fermé)
   const sourceColor: IconColor = isDisabled
     ? "disabled"
     : isSelected
@@ -94,7 +74,6 @@ export function BottomNavItem({
       onPress={handlePress}
       isDisabled={isDisabled}
       data-selected={isSelected || undefined}
-      data-morph={isMorphIcon || undefined}
       aria-current={isSelected ? "page" : undefined}
       aria-expanded={isOpen ? true : undefined}
     >
