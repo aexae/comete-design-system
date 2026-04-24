@@ -1,6 +1,7 @@
 // Popup — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Popup, Button } from "@naxit/comete-design-system/components";
+import type { PopupPlacement } from "@naxit/comete-design-system/components";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -10,18 +11,20 @@ const figmaUrl = (nodeId: string) =>
 // -----------------------------------------------------------------------
 // Meta
 
-const PLACEMENTS = [
-  "top start",
+const PLACEMENTS: PopupPlacement[] = [
+  "top-left",
   "top",
-  "top end",
-  "bottom start",
+  "top-right",
+  "bottom-left",
   "bottom",
-  "bottom end",
+  "bottom-right",
+  "left-top",
   "left",
+  "left-bottom",
+  "right-top",
   "right",
-  "start",
-  "end",
-] as const;
+  "right-bottom",
+];
 
 const meta = {
   title: "Components/Popup",
@@ -39,7 +42,7 @@ const meta = {
     },
   },
   args: {
-    placement: "bottom start",
+    placement: "bottom-left",
     offset: 4,
   },
   parameters: {
@@ -54,7 +57,7 @@ type Story = StoryObj<typeof Popup>;
 // -----------------------------------------------------------------------
 // Stories
 
-/** Popup bottom-start (par défaut). */
+/** Popup bottom-left (par défaut). */
 export const Default: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("3255:9400") } },
   render: (args) => (
@@ -73,47 +76,81 @@ export const Default: Story = {
   ),
 };
 
-/** Popup top-start. */
-export const TopStart: Story = {
-  name: "Top start",
+/** Popup top-left. */
+export const TopLeft: Story = {
+  name: "Top left",
   parameters: { design: { type: "figma", url: figmaUrl("3255:9382") } },
   render: () => (
     <div style={{ paddingTop: 120 }}>
-      <Popup trigger={<Button>Top start</Button>} placement="top start">
+      <Popup trigger={<Button>Top left</Button>} placement="top-left">
         <p style={{ margin: 0 }}>Popup en haut à gauche</p>
       </Popup>
     </div>
   ),
 };
 
-/** Popup bottom-end. */
-export const BottomEnd: Story = {
-  name: "Bottom end",
+/** Popup bottom-right. */
+export const BottomRight: Story = {
+  name: "Bottom right",
   parameters: { design: { type: "figma", url: figmaUrl("3255:9412") } },
   render: () => (
-    <Popup trigger={<Button>Bottom end</Button>} placement="bottom end">
+    <Popup trigger={<Button>Bottom right</Button>} placement="bottom-right">
       <p style={{ margin: 0 }}>Popup en bas à droite</p>
     </Popup>
   ),
 };
 
-/** Tous les placements. */
+/** Tous les placements — disposés spatialement comme MUI. */
 export const AllPlacements: Story = {
   name: "All placements",
-  render: () => (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(3, 1fr)",
-        gap: 24,
-        padding: 120,
-      }}
-    >
-      {PLACEMENTS.map((p) => (
-        <Popup key={p} trigger={<Button>{p}</Button>} placement={p}>
-          <p style={{ margin: 0, whiteSpace: "nowrap" }}>{p}</p>
-        </Popup>
-      ))}
-    </div>
-  ),
+  parameters: { layout: "fullscreen" },
+  render: () => {
+    const cell = (p: PopupPlacement) => (
+      <Popup key={p} trigger={<Button appearance="subtle">{p}</Button>} placement={p}>
+        <p style={{ margin: 0, whiteSpace: "nowrap" }}>{p}</p>
+      </Popup>
+    );
+    const e = <div />;
+    return (
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(5, auto)",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "var(--space200)",
+          padding: "120px 80px",
+        }}
+      >
+        {/* Row 1 : top */}
+        {e}
+        {cell("top-left")}
+        {cell("top")}
+        {cell("top-right")}
+        {e}
+
+        {/* Row 2 : left-top / right-top */}
+        {cell("left-top")}
+        {e}{e}{e}
+        {cell("right-top")}
+
+        {/* Row 3 : left / right */}
+        {cell("left")}
+        {e}{e}{e}
+        {cell("right")}
+
+        {/* Row 4 : left-bottom / right-bottom */}
+        {cell("left-bottom")}
+        {e}{e}{e}
+        {cell("right-bottom")}
+
+        {/* Row 5 : bottom */}
+        {e}
+        {cell("bottom-left")}
+        {cell("bottom")}
+        {cell("bottom-right")}
+        {e}
+      </div>
+    );
+  },
 };

@@ -4,7 +4,11 @@
    ========================================================================== */
 
 .popup {
-  /* Le Popover fournit déjà bg, shadow, radius, animations */
+  /* Le Popover fournit déjà bg, shadow, radius, animations.
+     Override overflow-y auto du Popover : le Popup affiche son contenu
+     tel quel (pas de scroll interne). */
+  overflow-y: visible;
+  min-width: auto;
 }
 
 .dialog {

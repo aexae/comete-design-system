@@ -12,7 +12,37 @@ import styles from "./Popup.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
-export type PopupPlacement = AriaPopoverProps["placement"];
+export type PopupPlacement =
+  | "top"
+  | "top-left"
+  | "top-right"
+  | "bottom"
+  | "bottom-left"
+  | "bottom-right"
+  | "left"
+  | "left-top"
+  | "left-bottom"
+  | "right"
+  | "right-top"
+  | "right-bottom";
+
+/** Maps DS placement (kebab-case) to React Aria placement (space-separated).
+ *  React Aria uses start/end for cross-axis alignment on top/bottom,
+ *  and top/bottom for cross-axis alignment on left/right. */
+const PLACEMENT_MAP: Record<PopupPlacement, NonNullable<AriaPopoverProps["placement"]>> = {
+  "top": "top",
+  "top-left": "top start",
+  "top-right": "top end",
+  "bottom": "bottom",
+  "bottom-left": "bottom start",
+  "bottom-right": "bottom end",
+  "left": "left",
+  "left-top": "left top",
+  "left-bottom": "left bottom",
+  "right": "right",
+  "right-top": "right top",
+  "right-bottom": "right bottom",
+};
 
 export interface PopupProps {
   /** Élément déclencheur (bouton, etc.). */
@@ -21,7 +51,7 @@ export interface PopupProps {
   children: ReactNode;
   /**
    * Position du popover par rapport au trigger.
-   * @default "bottom start"
+   * @default "bottom-left"
    */
   placement?: PopupPlacement;
   /** Décalage vertical en px. @default 4 */
@@ -48,7 +78,7 @@ export interface PopupProps {
  * ```tsx
  * import { Popup, Button } from "@naxit/comete-design-system";
  *
- * <Popup trigger={<Button>Ouvrir</Button>} placement="bottom start">
+ * <Popup trigger={<Button>Ouvrir</Button>} placement="bottom-left">
  *   <p>Contenu du popup</p>
  * </Popup>
  * ```
@@ -56,7 +86,7 @@ export interface PopupProps {
 export function Popup({
   trigger,
   children,
-  placement = "bottom start",
+  placement = "bottom-left",
   offset = 4,
   isOpen,
   onOpenChange,
@@ -67,7 +97,7 @@ export function Popup({
     <DialogTrigger isOpen={isOpen} onOpenChange={onOpenChange}>
       {trigger}
       <Popover
-        placement={placement}
+        placement={PLACEMENT_MAP[placement]}
         offset={offset}
         className={[styles.popup, className].filter(Boolean).join(" ")}
         style={style}
