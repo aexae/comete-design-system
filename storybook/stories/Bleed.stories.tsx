@@ -31,10 +31,33 @@ const meta = {
   parameters: {
     layout: "fullscreen",
   },
+  argTypes: {
+    isFull: { control: "boolean" },
+    isBordered: { control: "boolean" },
+    color: {
+      control: "select",
+      options: [undefined, "neutral", "brand", "success", "warning", "critical", "information", "accent", "subtlest", "subtler", "bold"],
+    },
+    inline: {
+      control: "select",
+      options: [undefined, "0", "050", "100", "150", "200", "300"],
+    },
+    block: {
+      control: "select",
+      options: [undefined, "0", "050", "100", "150", "200", "300"],
+    },
+  },
+  args: {
+    isFull: true,
+    isBordered: false,
+    color: undefined,
+    inline: undefined,
+    block: undefined,
+  },
 } satisfies Meta<typeof Bleed>;
 
 export default meta;
-type Story = StoryObj<typeof Bleed>;
+type Story = StoryObj<typeof meta>;
 
 // -----------------------------------------------------------------------
 // Shared helpers
@@ -66,6 +89,36 @@ function BleedBanner() {
     </div>
   );
 }
+
+// -----------------------------------------------------------------------
+// Default — interactive controls
+
+/** Story interactive : testez les props via le panneau Controls. */
+export const Default: Story = {
+  parameters: { layout: "fullscreen" },
+  render: (args) => (
+    <div style={{ display: "flex", height: "100vh" }}>
+      <Page style={{ flex: 1 }}>
+        <Page.Header title="Bleed playground" />
+        <Page.Body>
+          <Stack gap="200">
+            <Text as="span" color="subtle">
+              Contenu standard — respecte les gouttières de Page.
+            </Text>
+
+            <SampleCard title="Carte normale" subtitle="Dans les gouttières" />
+
+            <Bleed {...args}>
+              <BleedBanner />
+            </Bleed>
+
+            <SampleCard title="Autre carte" subtitle="Toujours dans les gouttières" />
+          </Stack>
+        </Page.Body>
+      </Page>
+    </div>
+  ),
+};
 
 // -----------------------------------------------------------------------
 // 1. MOBILE — TopNav + Page + BottomNav
