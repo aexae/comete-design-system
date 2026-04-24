@@ -22,6 +22,8 @@ export interface IllustrationComponentProps {
   "aria-label"?: string;
   /** Additional CSS class applied to the wrapper `<span>`. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // ----------------------------------------------------------------------
@@ -44,6 +46,7 @@ export function Illustration({
   size = 256,
   "aria-label": ariaLabel,
   className,
+  style,
 }: IllustrationComponentProps): ReactElement | null {
   const IllustrationComponent = illustrationRegistry[illustration];
 
@@ -56,7 +59,7 @@ export function Illustration({
     : { "aria-hidden": true };
 
   return (
-    <span className={classNames} {...ariaProps}>
+    <span className={classNames} {...ariaProps} style={style}>
       <IllustrationComponent {...illustrationProps} />
     </span>
   );

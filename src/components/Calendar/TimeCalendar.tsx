@@ -1,6 +1,6 @@
 // TimeCalendar — Comète Design System
 // Liste scrollable de créneaux horaires (pas de 15 min par défaut).
-import { useEffect, useRef, type ReactElement } from "react";
+import { useEffect, useRef, type ReactElement, type CSSProperties } from "react";
 import type { TimeValue } from "react-aria-components";
 import { Time } from "@internationalized/date";
 import styles from "./TimeCalendar.module.css";
@@ -22,6 +22,8 @@ export interface TimeCalendarProps {
   isDisabled?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
 }
 
 // -----------------------------------------------------------------------

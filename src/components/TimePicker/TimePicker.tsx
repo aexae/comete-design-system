@@ -1,7 +1,7 @@
 // TimePicker — Comète Design System
 // Sélecteur d'heure : deux modes (saisie / non-editable) selon isEditable.
 // Dans les deux modes, cliquer sur le champ OU l'icône ouvre le drum picker.
-import { useCallback, useEffect, useRef, useState, type ReactElement } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactElement, type CSSProperties } from "react";
 import {
   TimeField as AriaTimeField,
   DateInput as AriaDateInput,
@@ -42,6 +42,8 @@ export interface TimePickerProps<T extends TimeValue = TimeValue>
   isEditable?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -96,6 +98,7 @@ export function TimePicker<T extends TimeValue = TimeValue>({
   showSeconds = false,
   isEditable = true,
   className,
+  style,
   ...ariaProps
 }: TimePickerProps<T>): ReactElement {
   if (isEditable) {
@@ -105,6 +108,7 @@ export function TimePicker<T extends TimeValue = TimeValue>({
         isCompact={isCompact}
         showSeconds={showSeconds}
         className={className}
+        style={style}
         ariaProps={ariaProps}
       />
     );
@@ -124,6 +128,7 @@ export function TimePicker<T extends TimeValue = TimeValue>({
       appearance={appearance}
       isCompact={isCompact}
       className={className}
+      style={style}
       value={value}
       defaultValue={defaultValue}
       onChange={onChange as ((value: TimeValue) => void) | undefined}
@@ -144,12 +149,14 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
   isCompact,
   showSeconds,
   className,
+  style,
   ariaProps,
 }: {
   appearance: TimePickerAppearance;
   isCompact: boolean;
   showSeconds: boolean;
   className?: string;
+  style?: CSSProperties;
   ariaProps: Omit<AriaTimeFieldProps<T>, "className" | "style" | "children" | "granularity">;
 }): ReactElement {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -241,6 +248,7 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
   return (
     <AriaTimeField
       className={[styles.timePicker, className].filter(Boolean).join(" ")}
+      style={style}
       granularity={showSeconds ? "second" : "minute"}
       {...ariaProps}
       value={currentValue as T | null}
@@ -298,6 +306,7 @@ function NonEditableTimePicker({
   appearance,
   isCompact,
   className,
+  style,
   value,
   defaultValue,
   onChange,
@@ -308,6 +317,7 @@ function NonEditableTimePicker({
   appearance: TimePickerAppearance;
   isCompact: boolean;
   className?: string;
+  style?: CSSProperties;
   value?: TimeValue | null;
   defaultValue?: TimeValue | null;
   onChange?: (value: TimeValue) => void;
@@ -347,6 +357,7 @@ function NonEditableTimePicker({
       aria-label={ariaLabel ?? `Heure : ${formattedTime}`}
       data-disabled={isDisabled || undefined}
       data-invalid={isInvalid || undefined}
+      style={style}
       onClick={() => {
         if (!isDisabled) setIsOpen(true);
       }}

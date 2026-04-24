@@ -53,6 +53,8 @@ export interface AvatarProps {
   borderColor?: string;
   /** Additional CSS class names. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // ----------------------------------------------------------------------
@@ -101,6 +103,7 @@ export function Avatar({
   onPress,
   borderColor,
   className,
+  style,
 }: AvatarProps): React.ReactElement {
   const [imageLoaded, setImageLoaded] = React.useState(false);
 
@@ -113,8 +116,8 @@ export function Avatar({
     .join(" ");
 
   const borderStyle: React.CSSProperties | undefined = borderColor
-    ? { boxShadow: `0 0 0 var(--avatar-border-width) ${borderColor}` }
-    : undefined;
+    ? { ...style, boxShadow: `0 0 0 var(--avatar-border-width) ${borderColor}` }
+    : style;
 
   // --- Content resolution ---
   // Default fallback is always the Person icon (or custom icon prop).

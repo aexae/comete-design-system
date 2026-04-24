@@ -41,6 +41,8 @@ export interface MenuProps<T extends object = object>
   mode?: MenuMode;
   /** Additional CSS class on the menu list. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 export interface MenuTriggerProps extends AriaMenuTriggerProps {
@@ -198,6 +200,7 @@ MenuPopover.displayName = "MenuPopover";
 export function Menu<T extends object>({
   mode = "default",
   className,
+  style,
   ...props
 }: MenuProps<T>): ReactElement {
   const classNames = [styles.menu, className].filter(Boolean).join(" ");
@@ -207,6 +210,7 @@ export function Menu<T extends object>({
       {...props}
       selectionMode={MODE_TO_SELECTION[mode]}
       className={classNames}
+      style={style}
     />
   );
 }

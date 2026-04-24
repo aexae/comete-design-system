@@ -36,6 +36,8 @@ export interface TextFieldProps
   elemAfter?: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -97,6 +99,7 @@ export function TextField({
   elemBefore,
   elemAfter,
   className,
+  style,
   value: controlledValue,
   defaultValue,
   onChange,
@@ -125,6 +128,7 @@ export function TextField({
   return (
     <AriaTextField
       className={[styles.textField, className].filter(Boolean).join(" ")}
+      style={style}
       value={currentValue}
       onChange={handleChange}
       {...ariaProps}

@@ -1,12 +1,10 @@
 // Card — Comète Design System
 // Conteneur de surface interactif pour grouper du contenu connexe.
-import type {
-  DragEvent,
+import type { DragEvent,
   KeyboardEvent,
   MouseEvent,
   ReactElement,
-  ReactNode,
-} from "react";
+  ReactNode, CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
 import { DragIndicator } from "@naxit/comete-icons";
 import { FocusRing } from "../FocusRing/FocusRing.js";
@@ -55,6 +53,8 @@ export interface CardProps {
   children: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
   /** Callback déclenché au clic ou à la pression clavier (Enter/Space). Rend la carte actionnable (hover, press, focus ring). */
   onPress?: () => void;
   /** Callback déclenché au début du drag. Requiert drag "top" ou "left". */
@@ -96,6 +96,7 @@ export function Card({
   color = "neutral",
   children,
   className,
+  style,
   onPress,
   onDrag,
   onDragEnd: onDragEndProp,
@@ -188,6 +189,7 @@ export function Card({
   return (
     <div
       className={classNames}
+      style={style}
       role={isActionable ? "button" : undefined}
       tabIndex={isActionable ? 0 : undefined}
       onClick={isActionable ? handleClick : undefined}

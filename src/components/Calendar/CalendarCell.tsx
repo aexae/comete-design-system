@@ -1,6 +1,6 @@
 // CalendarCell — Comète Design System
 // Cellule partagée entre tous les calendriers (date, mois, année).
-import { useState, type ReactElement, type FocusEvent } from "react";
+import { useState, type ReactElement, type FocusEvent, type CSSProperties } from "react";
 import { FocusRing } from "../FocusRing/index.js";
 import styles from "./CalendarCell.module.css";
 
@@ -54,6 +54,8 @@ export interface CalendarCellProps {
   interactive?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
   /** Label accessible. */
   "aria-label"?: string;
   /** État de sélection accessible. */

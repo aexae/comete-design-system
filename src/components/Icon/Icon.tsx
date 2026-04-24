@@ -34,6 +34,8 @@ export interface IconComponentProps {
   "aria-label"?: string;
   /** Additional CSS class applied to the wrapper `<span>`. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // ----------------------------------------------------------------------
@@ -59,6 +61,7 @@ export function Icon({
   spacing = "default",
   "aria-label": ariaLabel,
   className,
+  style,
 }: IconComponentProps): ReactElement | null {
   const IconComponent = iconRegistry[icon];
   const inputCtx = useInputContext();
@@ -76,7 +79,7 @@ export function Icon({
     : { "aria-hidden": true };
 
   return (
-    <span className={classNames} {...ariaProps}>
+    <span className={classNames} {...ariaProps} style={style}>
       <IconComponent {...iconProps} />
     </span>
   );

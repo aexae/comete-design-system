@@ -10,7 +10,7 @@ const figmaUrl = (nodeId: string) =>
 
 function Wrapper({ children }: { children: ReactNode }) {
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
+    <div style={{ display: "flex", height: "100vh", backgroundColor: "var(--black-4)" }}>
       {children}
       <div style={{ flex: 1, padding: "var(--space200)" }}>
         <p>Contenu principal</p>
@@ -21,7 +21,7 @@ function Wrapper({ children }: { children: ReactNode }) {
 
 function SideNavFooterLogo() {
   const { isCollapsed } = useSideNav();
-  return <Logo size={isCollapsed ? 24 : 14} product="link" appearance="neutral" format={isCollapsed ? "icon" : "default"} />;
+  return <Logo size={isCollapsed ? 24 : 14} product="link" appearance="neutral" format={isCollapsed ? "icon" : "logo"} />;
 }
 
 function SideNavContent() {

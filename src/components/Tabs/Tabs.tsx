@@ -43,6 +43,8 @@ export interface TabProps
   iconAfter?: IconName;
   /** Additional CSS class. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 export interface TabPanelProps
@@ -118,12 +120,14 @@ export function Tab({
   iconBefore,
   iconAfter,
   className,
+  style,
   ...ariaProps
 }: TabProps): ReactElement {
   return (
     <AriaTab
       {...ariaProps}
       className={[styles.tab, className].filter(Boolean).join(" ")}
+      style={style}
     >
       {({ isSelected, isDisabled, isPressed, isFocusVisible }) => {
         /** Icon color follows label semantic: subtle → primary on press, information on selected. */

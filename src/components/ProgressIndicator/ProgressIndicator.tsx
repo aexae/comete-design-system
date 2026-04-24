@@ -1,6 +1,6 @@
 // ProgressIndicator — Comete Design System
 // Indicateur de progression par points (dot indicator) accessible.
-import { useRef, type KeyboardEvent, type ReactElement } from "react";
+import { useRef, type KeyboardEvent, type ReactElement, type CSSProperties } from "react";
 import styles from "./ProgressIndicator.module.css";
 
 // -----------------------------------------------------------------------
@@ -36,6 +36,8 @@ export interface ProgressIndicatorProps {
   "aria-label"?: string;
   /** Additional CSS class. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -73,6 +75,7 @@ export function ProgressIndicator({
   onChange,
   "aria-label": ariaLabel,
   className,
+  style,
 }: ProgressIndicatorProps): ReactElement {
   const dotsRef = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -113,6 +116,7 @@ export function ProgressIndicator({
       className={rootClassNames}
       role="tablist"
       aria-label={ariaLabel ?? `Etape ${selectedIndex + 1} sur ${total}`}
+      style={style}
     >
       {Array.from({ length: total }, (_, i) => {
         const isSelected = i === selectedIndex;

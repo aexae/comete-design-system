@@ -1,6 +1,6 @@
 // DatePicker — Comète Design System
 // Sélecteur de date : deux modes (navigation / saisie) selon isEditable.
-import { useCallback, useEffect, useRef, useState, type ReactElement } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactElement, type CSSProperties } from "react";
 import {
   DatePicker as AriaDatePicker,
   DateInput as AriaDateInput,
@@ -40,6 +40,8 @@ export interface DatePickerProps<T extends DateValue = DateValue>
   isEditable?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -88,6 +90,7 @@ export function DatePicker<T extends DateValue = DateValue>({
   isCompact = false,
   isEditable = true,
   className,
+  style,
   ...ariaProps
 }: DatePickerProps<T>): ReactElement {
   if (isEditable) {
@@ -96,6 +99,7 @@ export function DatePicker<T extends DateValue = DateValue>({
         appearance={appearance}
         isCompact={isCompact}
         className={className}
+        style={style}
         {...ariaProps}
       />
     );
@@ -106,6 +110,7 @@ export function DatePicker<T extends DateValue = DateValue>({
       appearance={appearance}
       isCompact={isCompact}
       className={className}
+      style={style}
       {...ariaProps}
     />
   );
@@ -120,11 +125,13 @@ function EditableDatePicker<T extends DateValue = DateValue>({
   appearance,
   isCompact,
   className,
+  style,
   ...ariaProps
 }: {
   appearance: DatePickerAppearance;
   isCompact: boolean;
   className?: string;
+  style?: CSSProperties;
 } & Omit<AriaDatePickerProps<T>, "className" | "style" | "children">): ReactElement {
   const containerRef = useRef<HTMLDivElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
@@ -215,6 +222,7 @@ function EditableDatePicker<T extends DateValue = DateValue>({
   return (
     <AriaDatePicker
       className={[styles.datePicker, className].filter(Boolean).join(" ")}
+      style={style}
       {...ariaProps}
       value={currentValue as T | null}
       defaultValue={undefined}
@@ -268,6 +276,7 @@ function NavigationDatePicker<T extends DateValue = DateValue>({
   appearance,
   isCompact,
   className,
+  style,
   value,
   defaultValue,
   onChange,
@@ -278,6 +287,7 @@ function NavigationDatePicker<T extends DateValue = DateValue>({
   appearance: DatePickerAppearance;
   isCompact: boolean;
   className?: string;
+  style?: CSSProperties;
 } & Omit<AriaDatePickerProps<T>, "className" | "style" | "children">): ReactElement {
   const { locale } = useLocale();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -326,6 +336,7 @@ function NavigationDatePicker<T extends DateValue = DateValue>({
       aria-label={ariaLabel ?? `Date : ${formattedDate}`}
       data-disabled={isDisabled || undefined}
       data-invalid={isInvalid || undefined}
+      style={style}
     >
       <InputContainer
         appearance={appearance}

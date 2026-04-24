@@ -1,6 +1,6 @@
 // YearPicker — Comète Design System
 // Sélecteur d'année : deux modes (navigation / saisie) selon isEditable.
-import { useEffect, useRef, useState, type ReactElement } from "react";
+import { useEffect, useRef, useState, type ReactElement, type CSSProperties } from "react";
 import {
   CalendarDate,
   today,
@@ -38,6 +38,8 @@ export interface YearPickerProps {
   isDisabled?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
   /** Label accessible. */
   "aria-label"?: string;
 }
@@ -77,6 +79,7 @@ export function YearPicker({
   isInvalid = false,
   isDisabled = false,
   className,
+  style,
   "aria-label": ariaLabel,
 }: YearPickerProps): ReactElement {
   const currentYear = today(getLocalTimeZone()).year;
@@ -163,6 +166,7 @@ export function YearPicker({
       ref={containerRef}
       aria-label={ariaLabel ?? `Sélecteur d'année : ${resolvedYear}`}
       data-invalid={isInvalid || undefined}
+      style={style}
     >
       <InputContainer isBorderless={!isEditable}
         appearance={appearance}

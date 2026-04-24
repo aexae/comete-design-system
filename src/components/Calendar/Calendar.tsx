@@ -1,6 +1,6 @@
 // Calendar — Comète Design System
 // Composant unifié : appearance=date|week|month|year, calendars=1|2, isOpen.
-import { useContext, useState, type ReactElement } from "react";
+import { useContext, useState, type ReactElement, type CSSProperties } from "react";
 import {
   Calendar as AriaCalendar,
   RangeCalendar as AriaRangeCalendar,
@@ -57,6 +57,8 @@ interface CalendarBaseProps {
   isRange?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
 }
 
 /** Props pour appearance="date" (sélection d'une date unique). */

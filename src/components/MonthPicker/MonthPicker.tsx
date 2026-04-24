@@ -1,6 +1,6 @@
 // MonthPicker — Comète Design System
 // Sélecteur de mois : deux modes (navigation / saisie) selon isEditable.
-import { useEffect, useRef, useState, type ReactElement } from "react";
+import { useEffect, useRef, useState, type ReactElement, type CSSProperties } from "react";
 import {
   CalendarDate,
   today,
@@ -44,6 +44,8 @@ export interface MonthPickerProps {
   isDisabled?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
   /** Label accessible. */
   "aria-label"?: string;
 }
@@ -114,6 +116,7 @@ export function MonthPicker({
   isInvalid = false,
   isDisabled = false,
   className,
+  style,
   "aria-label": ariaLabel,
 }: MonthPickerProps): ReactElement {
   const { locale } = useLocale();
@@ -231,6 +234,7 @@ export function MonthPicker({
       aria-label={ariaLabel ?? `Sélecteur de mois : ${formattedLabel}`}
       data-disabled={isDisabled || undefined}
       data-invalid={isInvalid || undefined}
+      style={style}
     >
       <InputContainer
         appearance={appearance}

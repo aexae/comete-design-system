@@ -22,6 +22,8 @@ export interface RangeCalendarProps<T extends DateValue>
   extends Omit<AriaRangeCalendarProps<T>, "className" | "style"> {
   /** Classe CSS additionnelle sur le conteneur. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------

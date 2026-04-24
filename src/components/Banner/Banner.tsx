@@ -16,6 +16,8 @@ export interface BannerProps {
   children: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -36,11 +38,12 @@ export interface BannerProps {
  * @param appearance - Nature : "warning" (jaune), "critical" (rouge), "announcement" (neutre sombre)
  * @param children   - Contenu du message
  */
-export function Banner({ appearance, children, className }: BannerProps): ReactElement {
+export function Banner({ appearance, children, className, style }: BannerProps): ReactElement {
   return (
     <div
       className={[styles.banner, styles[appearance], className].filter(Boolean).join(" ")}
       role="alert"
+      style={style}
     >
       <Icon
         icon="Warning"

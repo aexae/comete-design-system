@@ -24,6 +24,8 @@ export interface InputContainerProps {
   children: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -54,6 +56,7 @@ export function InputContainer({
   isInvalid = false,
   children,
   className,
+  style,
 }: InputContainerProps): ReactElement {
   const classNames = [
     styles.inputContainer,
@@ -71,7 +74,7 @@ export function InputContainer({
     .join(" ");
 
   return (
-    <div className={classNames}>
+    <div className={classNames} style={style}>
       <InputContextProvider isDisabled={isDisabled} isInvalid={isInvalid}>
         {children}
       </InputContextProvider>

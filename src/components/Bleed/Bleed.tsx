@@ -39,6 +39,8 @@ export interface BleedProps {
   children: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -82,6 +84,7 @@ export function Bleed({
   isBordered = false,
   children,
   className,
+  style: styleProp,
 }: BleedProps): ReactElement {
   const style = {
     ...(inline !== undefined &&
@@ -91,6 +94,7 @@ export function Bleed({
     ...(block !== undefined && {
       "--_bleed-block": `var(--space${block})`,
     }),
+    ...styleProp,
   } as CSSProperties;
 
   const classNames = [

@@ -27,6 +27,8 @@ export interface LogoProps {
   "aria-label"?: string;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -57,6 +59,7 @@ export function Logo({
   size = 32,
   "aria-label": ariaLabel,
   className,
+  style,
 }: LogoProps): ReactElement | null {
   const LogoComponent = logoRegistry[product];
 
@@ -65,7 +68,7 @@ export function Logo({
     : { "aria-hidden": true };
 
   return (
-    <span className={className} {...ariaProps}>
+    <span className={className} {...ariaProps} style={style}>
       <LogoComponent appearance={appearance} format={format} taglineAlign={taglineAlign} size={size} />
     </span>
   );

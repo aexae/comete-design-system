@@ -21,6 +21,8 @@ export interface FieldProps {
   children: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -47,9 +49,10 @@ export function Field({
   messageType = "neutral",
   children,
   className,
+  style,
 }: FieldProps): ReactElement {
   return (
-    <div className={[styles.field, className].filter(Boolean).join(" ")}>
+    <div className={[styles.field, className].filter(Boolean).join(" ")} style={style}>
       {label !== undefined && (
         <span className={styles.label}>
           {label}

@@ -53,6 +53,8 @@ export interface AvatarGroupProps {
   "aria-label"?: string;
   /** Additional CSS class names on the root element. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 export interface AvatarGroupItem {
@@ -112,6 +114,7 @@ export function AvatarGroup({
   onItemPress,
   "aria-label": ariaLabel = "Avatar group",
   className,
+  style,
 }: AvatarGroupProps): React.ReactElement {
   const overflowCount = overflowItems?.length ?? 0;
   const overlapPx = SIZE_OVERLAP[size];
@@ -148,6 +151,7 @@ export function AvatarGroup({
       className={[styles.group, className].filter(Boolean).join(" ")}
       role="group"
       aria-label={ariaLabel}
+      style={style}
     >
       {items.map((item, i) => {
         const key = item.key ?? String(i);

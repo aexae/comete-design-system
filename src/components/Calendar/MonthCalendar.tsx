@@ -1,5 +1,5 @@
 // MonthCalendar — Comète Design System
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { CalendarDate, today, getLocalTimeZone } from "@internationalized/date";
 import { CalendarCell } from "./CalendarCell.js";
 import { MainHeader } from "./MainHeader.js";
@@ -32,6 +32,8 @@ export interface MonthCalendarProps {
   isDisabled?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
 }
 
 // -----------------------------------------------------------------------

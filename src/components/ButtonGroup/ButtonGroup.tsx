@@ -15,6 +15,8 @@ export interface ButtonGroupProps {
   children: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -40,9 +42,10 @@ export function ButtonGroup({
   "aria-label": ariaLabel,
   children,
   className,
+  style,
 }: ButtonGroupProps): ReactElement {
   return (
-    <div role="group" aria-label={ariaLabel} className={[styles.group, className].filter(Boolean).join(" ")}>
+    <div role="group" aria-label={ariaLabel} className={[styles.group, className].filter(Boolean).join(" ")} style={style}>
       {children}
     </div>
   );

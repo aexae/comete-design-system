@@ -38,6 +38,8 @@ export interface GridProps {
   children: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 export interface GridColProps {
@@ -49,6 +51,8 @@ export interface GridColProps {
   children: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -108,11 +112,13 @@ export function Grid({
   columnGap,
   children,
   className,
+  style: styleProp,
 }: GridProps): ReactElement {
   const style = {
     ...responsiveVars("grid-cols", columns),
     "--_grid-row-gap": `var(--space${rowGap ?? gap})`,
     "--_grid-column-gap": `var(--space${columnGap ?? gap})`,
+    ...styleProp,
   } as CSSProperties;
 
   const classNames = [styles.grid, className].filter(Boolean).join(" ");
@@ -139,10 +145,12 @@ function GridCol({
   start,
   children,
   className,
+  style: styleProp,
 }: GridColProps): ReactElement {
   const style = {
     ...responsiveVars("col-span", span),
     ...responsiveVars("col-start", start),
+    ...styleProp,
   } as CSSProperties;
 
   const hasStart = start !== undefined;

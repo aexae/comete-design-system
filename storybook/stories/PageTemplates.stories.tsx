@@ -375,97 +375,72 @@ export const Entity: Story = {
           <Grid gap="300">
             <Grid.Col span={{ mobile: 12, tablet: 5, desktop: 4 }}>
               <Stack gap="200">
-                      <Stack gap="200">
-
-                        <Stack direction="row" gap="200" align="center">
-                          <Avatar size="xlarge" initials="DM" />
-                          <Stack align="start" gap="050">
-                              <Stack>
-                                <Heading size="medium" as="span">DUPONT Marie</Heading>
-                              </Stack>
-                              <Tag elemBefore={<Icon icon="AwardStar" size={16} color="success" />} label="Conforme" color="success"  />
-                          </Stack>
-                        </Stack>
-
-                        <Text size="large">Agent de sureté</Text>
-
-                        <Stack gap="050">
-                          <Stack direction="row" gap="100" align="center">
-                            <Icon icon="LabelImportant" size={20} color="subtlest" />
-                            <Text as="span" weight="medium">MAT0001</Text>
-                          </Stack>
-                          <Stack direction="row" gap="100" align="center">
-                            <Icon icon="CorporateFlare" size={20} color="subtlest" />
-                            <Text as="span">Pro sécurité</Text>
-                          </Stack>
-                          <Stack direction="row" gap="100" align="center">
-                            <Icon icon="Email" size={20} color="subtlest" />
-                            <Text as="span">marie.dupont@mail.com</Text>
-                          </Stack>
-                          <Stack direction="row" gap="100" align="center">
-                            <Icon icon="LocationOn" size={20} color="subtlest" />
-                            <Text as="span">Ile de France</Text>
-                          </Stack>
-                          <Stack direction="row" gap="100" align="center">
-                            <Icon icon="School" size={20} color="subtlest" />
-                            <Text as="span">Niveau 3, Échelon 3</Text>
-                          </Stack>
-                        </Stack>
-
-                        <Card appearance="subtle" color="neutral">
-                          <Stack padding="200" gap="150">
-                            <Stack direction="row" gap="100" align="center">
-                              <IconTile icon="CalendarClock" appearance="success" size="small" />
-                              <Text as="span">WWWW1</Text>
-                            </Stack>
-                            <Divider />
-                            <Stack direction="row" gap="100" align="center">
-                              <IconTile icon="School" appearance="information" size="small" />
-                              <Text as="span">WWWW</Text>
-                            </Stack>
-                          </Stack>
-                        </Card>
-
-                        {/* <CC>
-                          <Stack gap="150">
-                            <Stack direction="row" gap="100" align="start">
-                              <Icon icon="Email" size={20} color="subtlest" />
-                              <Text as="span">marie.dupont@mail.com</Text>
-                            </Stack>
-                            <PropRow icon="Mail" label="E-mail" value="marie.dupont@mail.com" />
-                            <PropRow icon="Badge" label="Matricule" value="150" />
-                            <PropRow icon="BusinessCenter" label="Société" value="AEXAE" />
-                            <PropRow icon="LocationOn" label="Secteur" value="Ile de France" />
-                            <PropRow icon="School" label="Qualification" value="Agent N3E3" />
-                          </Stack>
-                        </CC> */}
-                        
-                        <Cluster gap="100" justify="center">
-                          <Button appearance="contained" iconBefore="CalendarMonth" color="brand" >Planning</Button>
-                          <Button appearance="contained" iconBefore="Newspaper">Documents</Button>
-                          <Button appearance="contained" iconBefore="History">Rapports</Button>
-                        </Cluster>
+                <Stack gap="200">
+                  <Stack direction="row" gap="200" align="center">
+                    <Avatar size="xlarge" initials="DM" />
+                    <Stack align="start" gap="050">
+                      <Stack>
+                        <Heading size="medium" as="span">DUPONT Marie</Heading>
                       </Stack>
-                    {/* </CC> */}
-                    <Divider />
-                    {/* <CC> */}
-                      <Stack gap="150">
-                        <PropRow icon="Mail" label="E-mail" value="marie.dupont@mail.com" />
-                        <PropRow icon="Badge" label="Matricule" value="150" />
-                        <PropRow icon="BusinessCenter" label="Société" value="AEXAE" />
-                        <PropRow icon="LocationOn" label="Secteur" value="Ile de France" />
-                        <PropRow icon="School" label="Qualification" value="Agent N3E3" />
+                      <Tag elemBefore={<Icon icon="AwardStar" size={16} color="success" />} label="Conforme" color="success"  />
+                    </Stack>
+                  </Stack>
+                  <Text size="large">Agent de sureté</Text>
+                  <Stack gap="050">
+                    <Stack direction="row" gap="100" align="center">
+                      <Icon icon="LabelImportant" size={20} color="subtlest" />
+                      <Text as="span" weight="medium">MAT0001</Text>
+                    </Stack>
+                    <Stack direction="row" gap="100" align="center">
+                      <Icon icon="CorporateFlare" size={20} color="subtlest" />
+                      <Text as="span">Pro sécurité</Text>
+                    </Stack>
+                    <Stack direction="row" gap="100" align="center">
+                      <Icon icon="Email" size={20} color="subtlest" />
+                      <Text as="span">marie.dupont@mail.com</Text>
+                    </Stack>
+                    <Stack direction="row" gap="100" align="center">
+                      <Icon icon="LocationOn" size={20} color="subtlest" />
+                      <Text as="span">Ile de France</Text>
+                    </Stack>
+                    <Stack direction="row" gap="100" align="center">
+                      <Icon icon="School" size={20} color="subtlest" />
+                      <Text as="span">Niveau 3, Échelon 3</Text>
+                    </Stack>
+                  </Stack>
+
+                  <Card appearance="subtle" color="neutral">
+                    <Stack padding="200" gap="150">
+                      <Stack direction="row" gap="100" align="center">
+                        <IconTile icon="CalendarClock" appearance="success" size="small" />
+                        <Text as="span">WWWW1</Text>
                       </Stack>
-                    {/* </CC> */}
-                    <Divider />
-                    {/* <CC> */}
-                      <Cluster gap="100">
-                        <Button appearance="subtle" iconBefore="Edit">Modifier</Button>
-                        <Button appearance="subtle" color="critical" iconBefore="Archive">Archiver</Button>
-                      </Cluster>
-                    {/* </CC>
-                  </div> */}
-                {/* </Card> */}
+                      <Divider />
+                      <Stack direction="row" gap="100" align="center">
+                        <IconTile icon="School" appearance="information" size="small" />
+                        <Text as="span">WWWW</Text>
+                      </Stack>
+                    </Stack>
+                  </Card>                  
+                  <Cluster gap="100" justify="center">
+                    <Button appearance="contained" iconBefore="CalendarMonth" color="brand" >Planning</Button>
+                    <Button appearance="contained" iconBefore="Newspaper">Documents</Button>
+                    <Button appearance="contained" iconBefore="History">Rapports</Button>
+                  </Cluster>
+                </Stack>
+                <Divider />
+                <Stack gap="150">
+                  <PropRow icon="Mail" label="E-mail" value="marie.dupont@mail.com" />
+                  <PropRow icon="Badge" label="Matricule" value="150" />
+                  <PropRow icon="BusinessCenter" label="Société" value="AEXAE" />
+                  <PropRow icon="LocationOn" label="Secteur" value="Ile de France" />
+                  <PropRow icon="School" label="Qualification" value="Agent N3E3" />
+                </Stack>
+                <Divider />
+                <Cluster gap="100">
+                  <Button appearance="subtle" iconBefore="Edit">Modifier</Button>
+                  <Button appearance="subtle" color="critical" iconBefore="Archive">Archiver</Button>
+                </Cluster>
 
                 <Card appearance="outlined">
                   <CC>

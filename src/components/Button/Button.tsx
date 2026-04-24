@@ -33,8 +33,12 @@ export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"
   isLoading?: boolean;
   /** État sélectionné/actif — applique un style visuel persistant. @default false */
   isSelected?: boolean;
+  /** Étire le bouton sur toute la largeur du parent. @default false */
+  isFullWidth?: boolean;
   /** Additional CSS class names. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
   /** Label du bouton. Optionnel pour un bouton icon-only. */
   children?: React.ReactNode;
 }
@@ -105,7 +109,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       iconAfter,
       isLoading = false,
       isSelected = false,
+      isFullWidth = false,
       className,
+      style,
       children,
       ...ariaProps
     },
@@ -159,6 +165,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       spacingClass,
       isIconOnly ? styles.iconOnly : undefined,
       isLoading ? styles.loading : undefined,
+      isFullWidth ? styles.fullWidth : undefined,
       className,
     ]
       .filter(Boolean)
@@ -170,6 +177,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <AriaButton
         ref={ref}
         className={classNames}
+        style={style}
         isDisabled={isLoading || effectiveDisabled}
         data-selected={isSelected || undefined}
         {...ariaProps}

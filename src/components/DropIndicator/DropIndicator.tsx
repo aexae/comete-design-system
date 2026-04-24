@@ -19,6 +19,8 @@ export interface DropIndicatorProps {
   side?: DropIndicatorSide;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -43,6 +45,7 @@ export function DropIndicator({
   appearance = "round",
   side = "both",
   className,
+  style,
 }: DropIndicatorProps): ReactElement {
   const classNames = [
     styles.dropIndicator,
@@ -57,7 +60,7 @@ export function DropIndicator({
   const showEnd = side === "end" || side === "both";
 
   return (
-    <div className={classNames} role="separator" aria-orientation={orientation}>
+    <div className={classNames} role="separator" aria-orientation={orientation} style={style}>
       {showStart && <div className={capClass} />}
       <div className={styles.line} />
       {showEnd && <div className={capClass} />}
