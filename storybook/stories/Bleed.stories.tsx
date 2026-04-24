@@ -53,6 +53,7 @@ const meta = {
     color: undefined,
     inline: undefined,
     block: undefined,
+    children: null,
   },
 } satisfies Meta<typeof Bleed>;
 
