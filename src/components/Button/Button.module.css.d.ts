@@ -7,6 +7,7 @@ declare const styles: {
   readonly "contained": string;
   readonly "critical": string;
   readonly "default": string;
+  readonly "fullWidth": string;
   readonly "icon": string;
   readonly "iconOnly": string;
   readonly "information": string;
