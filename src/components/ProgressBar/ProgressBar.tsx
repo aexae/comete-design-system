@@ -19,6 +19,8 @@ export interface ProgressBarProps {
   "aria-label"?: string;
   /** Classe CSS additionnelle sur le wrapper. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -55,6 +57,7 @@ export function ProgressBar({
   showLabel = true,
   "aria-label": ariaLabel,
   className,
+  style,
 }: ProgressBarProps): ReactElement {
   const clamped = Math.round(Math.min(100, Math.max(0, value)));
   const resolved = resolveAppearance(appearance, clamped);
@@ -63,7 +66,7 @@ export function ProgressBar({
   const fillClass = [styles.fill, styles[resolved]].join(" ");
 
   return (
-    <div className={rootClass}>
+    <div className={rootClass} style={style}>
       <div
         className={styles.track}
         role="progressbar"

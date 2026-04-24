@@ -11,6 +11,8 @@ export interface CodeProps {
   children: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -27,9 +29,9 @@ export interface CodeProps {
  * <p>La propriété <Code>font-size</Code> accepte des valeurs en rem.</p>
  * ```
  */
-export function Code({ children, className }: CodeProps): ReactElement {
+export function Code({ children, className, style }: CodeProps): ReactElement {
   return (
-    <code className={[styles.code, className].filter(Boolean).join(" ")}>
+    <code className={[styles.code, className].filter(Boolean).join(" ")} style={style}>
       {children}
     </code>
   );

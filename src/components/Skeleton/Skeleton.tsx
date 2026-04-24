@@ -27,6 +27,8 @@ export interface SkeletonProps {
   "aria-label"?: string;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -54,6 +56,7 @@ export function Skeleton({
   radius,
   "aria-label": ariaLabel = "Chargement…",
   className,
+  style: styleProp,
 }: SkeletonProps): ReactElement {
   const isCircle = shape === "circle";
 
@@ -63,6 +66,7 @@ export function Skeleton({
   const style: CSSProperties = {
     width: typeof resolvedWidth === "number" ? `${resolvedWidth}px` : resolvedWidth,
     height: typeof height === "number" ? `${height}px` : height,
+    ...styleProp,
   };
 
   if (!isCircle && radius !== undefined) {

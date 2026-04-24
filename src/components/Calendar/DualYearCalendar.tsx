@@ -1,6 +1,6 @@
 // DualYearCalendar — Comète Design System (interne)
 // Double sélecteur d'année (calendars=2) : deux plages de 20 ans consécutives, sélection de plage.
-import { useState, type ReactElement } from "react";
+import { useState, type ReactElement, type CSSProperties } from "react";
 import type { RangeValue } from "react-aria-components";
 import { CalendarDate, today, getLocalTimeZone } from "@internationalized/date";
 import { CalendarCell } from "./CalendarCell.js";
@@ -23,6 +23,8 @@ export interface DualYearCalendarProps {
   isDisabled?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -213,6 +215,8 @@ export interface YearRangeCalendarProps {
   isDisabled?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
 }
 
 /**

@@ -10,6 +10,8 @@ export interface BlanketProps {
   onClick?: () => void;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -31,12 +33,13 @@ export interface BlanketProps {
  *
  * @param onClick - Appelé quand l'utilisateur clique sur l'overlay
  */
-export function Blanket({ onClick, className }: BlanketProps): ReactElement {
+export function Blanket({ onClick, className, style }: BlanketProps): ReactElement {
   return (
     <div
       className={[styles.blanket, className].filter(Boolean).join(" ")}
       role="presentation"
       onClick={onClick}
+      style={style}
     />
   );
 }

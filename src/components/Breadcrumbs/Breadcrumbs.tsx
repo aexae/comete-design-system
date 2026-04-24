@@ -12,6 +12,8 @@ export interface BreadcrumbsProps {
   "aria-label"?: string;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -38,9 +40,10 @@ export function Breadcrumbs({
   children,
   "aria-label": ariaLabel = "Fil d'Ariane",
   className,
+  style,
 }: BreadcrumbsProps): ReactElement {
   return (
-    <nav aria-label={ariaLabel} className={[styles.nav, className].filter(Boolean).join(" ")}>
+    <nav aria-label={ariaLabel} className={[styles.nav, className].filter(Boolean).join(" ")} style={style}>
       <ol className={styles.list}>{children}</ol>
     </nav>
   );

@@ -1,5 +1,5 @@
 // YearCalendar — Comète Design System
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { CalendarDate, today, getLocalTimeZone } from "@internationalized/date";
 import { CalendarCell } from "./CalendarCell.js";
 import { MainHeader } from "./MainHeader.js";
@@ -26,6 +26,8 @@ export interface YearCalendarProps {
   isDisabled?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
 }
 
 // NOTE: La grille affiche 20 ans (4 colonnes × 5 lignes), centrée sur une

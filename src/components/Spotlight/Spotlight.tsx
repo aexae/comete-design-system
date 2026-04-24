@@ -1,8 +1,7 @@
 // Spotlight — Comète Design System
 // Composant d'onboarding mettant en surbrillance un élément cible
 // avec un blanket troué et un dialog flottant positionné.
-import {
-  type ReactElement,
+import { type ReactElement,
   type ReactNode,
   type RefObject,
   useCallback,
@@ -10,8 +9,7 @@ import {
   useId,
   useLayoutEffect,
   useRef,
-  useState,
-} from "react";
+  useState,  type CSSProperties } from "react";
 import {
   Dialog as AriaDialog,
   Heading as AriaHeading,
@@ -96,6 +94,8 @@ export interface SpotlightProps {
   "aria-label"?: string;
   /** Classe CSS additionnelle sur le dialog card. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -326,6 +326,7 @@ export function Spotlight({
   onSkip,
   "aria-label": ariaLabel,
   className,
+  style,
 }: SpotlightProps): ReactElement {
   const maskId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -466,6 +467,7 @@ export function Spotlight({
             left: position?.left ?? 0,
             width,
             opacity: position ? 1 : 0,
+            ...style,
           }}
           aria-label={ariaLabel ?? title ?? "Spotlight"}
         >

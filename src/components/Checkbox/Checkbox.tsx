@@ -29,6 +29,8 @@ export interface CheckboxProps
   description?: string;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 export interface CheckboxGroupProps
@@ -37,6 +39,8 @@ export interface CheckboxGroupProps
   children: React.ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -120,11 +124,13 @@ export function Checkbox({
   isChecked,
   defaultChecked,
   className,
+  style,
   ...ariaProps
 }: CheckboxProps): ReactElement {
   return (
     <AriaCheckbox
       className={[styles.checkbox, className].filter(Boolean).join(" ")}
+      style={style}
       isRequired={isRequired}
       isSelected={isChecked}
       defaultSelected={defaultChecked}
@@ -182,11 +188,13 @@ Checkbox.displayName = "Checkbox";
 export function CheckboxGroup({
   children,
   className,
+  style,
   ...ariaProps
 }: CheckboxGroupProps): ReactElement {
   return (
     <AriaCheckboxGroup
       className={[styles.group, className].filter(Boolean).join(" ")}
+      style={style}
       {...ariaProps}
     >
       {children}

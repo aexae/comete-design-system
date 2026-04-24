@@ -1,6 +1,6 @@
 // TimeDrumPicker — Comète Design System
 // Colonnes scrollables (heures, minutes, secondes, AM/PM) pour la sélection d'heure.
-import { useEffect, useRef, useState, type ReactElement } from "react";
+import { useEffect, useRef, useState, type ReactElement, type CSSProperties } from "react";
 import type { TimeValue } from "react-aria-components";
 import { Time } from "@internationalized/date";
 import styles from "./TimeDrumPicker.module.css";
@@ -19,6 +19,8 @@ export interface TimeDrumPickerProps {
   hourCycle?: 12 | 24;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
 }
 
 // -----------------------------------------------------------------------

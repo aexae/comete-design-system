@@ -39,6 +39,8 @@ export interface DrawerProps {
   "aria-label"?: string;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -95,6 +97,7 @@ export function Drawer({
   children,
   "aria-label": ariaLabel,
   className,
+  style,
 }: DrawerProps): ReactElement {
   const uid = useId();
   const { stack, register, unregister } = useDrawerStack();
@@ -229,6 +232,7 @@ export function Drawer({
             ...pushStyle,
             "--_depth-inset": depthInset > 0 ? `${depthInset}px` : undefined,
             "--_depth-shade": depthShade > 0 ? depthShade : undefined,
+            ...style,
           } as CSSProperties}
           aria-label={ariaLabel}
           onTouchStart={handleTouchStart}
@@ -255,6 +259,8 @@ export interface DrawerHeaderProps {
   onClose?: () => void;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 /**
@@ -264,9 +270,10 @@ export function DrawerHeader({
   children,
   onClose,
   className,
+  style,
 }: DrawerHeaderProps): ReactElement {
   return (
-    <div className={[styles.header, className].filter(Boolean).join(" ")}>
+    <div className={[styles.header, className].filter(Boolean).join(" ")} style={style}>
       {typeof children === "string" ? (
         <AriaHeading slot="title" className={styles.title}>{children}</AriaHeading>
       ) : (

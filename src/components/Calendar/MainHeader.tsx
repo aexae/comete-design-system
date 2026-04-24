@@ -53,6 +53,8 @@ export interface MainHeaderProps {
   slotNav?: boolean;
   /** Classe CSS additionnelle sur le <header>. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------

@@ -39,6 +39,8 @@ export interface ModalDialogProps {
   isDismissable?: boolean;
   /** Classe CSS additionnelle sur le dialog. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -89,6 +91,7 @@ export function ModalDialog({
   onClose,
   isDismissable = true,
   className,
+  style,
 }: ModalDialogProps): ReactElement {
   const icon = APPEARANCE_ICON[appearance];
 
@@ -108,7 +111,7 @@ export function ModalDialog({
       className={styles.overlay}
     >
       <AriaModal className={styles.modal}>
-        <AriaDialog className={dialogClasses}>
+        <AriaDialog className={dialogClasses} style={style}>
           {/* Header */}
           <div className={styles.header}>
             {icon && (

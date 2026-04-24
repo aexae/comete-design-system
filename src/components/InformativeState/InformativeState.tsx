@@ -23,6 +23,8 @@ export interface InformativeStateProps {
   actions?: ReactNode;
   /** Additional CSS class. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -55,11 +57,12 @@ export function InformativeState({
   image,
   actions,
   className,
+  style,
 }: InformativeStateProps): ReactElement {
   const classNames = [styles.root, className].filter(Boolean).join(" ");
 
   return (
-    <div className={classNames}>
+    <div className={classNames} style={style}>
       {image && <div className={styles.image}>{image}</div>}
 
       <div className={styles.stack}>

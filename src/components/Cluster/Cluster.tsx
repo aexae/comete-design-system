@@ -30,10 +30,14 @@ export interface ClusterProps {
   justify?: ClusterJustify;
   /** Padding interne (token `--space{N}`). */
   padding?: StackGap;
+  /** Étire le cluster pour occuper l'espace disponible (flex: 1). @default false */
+  grow?: boolean;
   /** Contenu du cluster. */
   children: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -68,13 +72,17 @@ export function Cluster({
   align = "center",
   justify = "start",
   padding,
+  grow = false,
   children,
   className,
+  style: styleProp,
 }: ClusterProps): ReactElement {
   const style = {
     "--_cluster-row-gap": `var(--space${rowGap ?? gap})`,
     "--_cluster-column-gap": `var(--space${columnGap ?? gap})`,
     ...(padding !== undefined && { padding: `var(--space${padding})` }),
+    ...(grow && { flex: 1, minWidth: 0 }),
+    ...styleProp,
   } as CSSProperties;
 
   const classNames = [

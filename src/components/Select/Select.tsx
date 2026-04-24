@@ -1,7 +1,7 @@
 // Select — Comète Design System
 // Sélecteur déroulant accessible basé sur React Aria.
 // Intègre Field (label + message) comme wrapper obligatoire.
-import { type ReactElement, type ReactNode, type Key, useRef } from "react";
+import { type ReactElement, type ReactNode, type Key, useRef, type CSSProperties } from "react";
 import {
   Select as AriaSelect,
   ListBox as AriaListBox,
@@ -80,6 +80,8 @@ export interface SelectProps {
   "aria-label"?: string;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -173,6 +175,7 @@ export function Select({
   messageType,
   "aria-label": ariaLabel,
   className,
+  style,
 }: SelectProps): ReactElement {
   const containerRef = useRef<HTMLDivElement>(null);
   const allOptions = flattenOptions(items);
@@ -194,6 +197,7 @@ export function Select({
       message={message}
       messageType={messageType}
       className={className}
+      style={style}
     >
       <AriaSelect
         selectedKey={value}

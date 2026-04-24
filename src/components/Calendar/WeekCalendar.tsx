@@ -1,5 +1,5 @@
 // WeekCalendar — Comète Design System
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import {
   RangeCalendar as AriaRangeCalendar,
   CalendarCell as AriaCalendarCell,
@@ -44,6 +44,8 @@ export interface WeekCalendarProps {
   maxValue?: DateValue;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
   /** Accessible label. */
   "aria-label"?: string;
 }

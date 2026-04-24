@@ -21,6 +21,8 @@ export interface RadioProps
   description?: string;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 export interface RadioGroupProps
@@ -29,6 +31,8 @@ export interface RadioGroupProps
   children: React.ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -49,11 +53,13 @@ export interface RadioGroupProps
 export function RadioGroup({
   children,
   className,
+  style,
   ...ariaProps
 }: RadioGroupProps): ReactElement {
   return (
     <AriaRadioGroup
       className={[styles.group, className].filter(Boolean).join(" ")}
+      style={style}
       {...ariaProps}
     >
       {children}
@@ -77,11 +83,13 @@ export function Radio({
   label,
   description,
   className,
+  style,
   ...ariaProps
 }: RadioProps): ReactElement {
   return (
     <AriaRadio
       className={[styles.radio, className].filter(Boolean).join(" ")}
+      style={style}
       {...ariaProps}
     >
       {({ isFocusVisible }) => (

@@ -1,6 +1,6 @@
 // WeekPicker — Comète Design System
 // Sélecteur de semaine : deux modes (navigation / saisie) selon isEditable.
-import { useEffect, useRef, useState, type ReactElement } from "react";
+import { useEffect, useRef, useState, type ReactElement, type CSSProperties } from "react";
 import {
   CalendarDate,
   today,
@@ -46,6 +46,8 @@ export interface WeekPickerProps {
   isDisabled?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
   /** Label accessible. */
   "aria-label"?: string;
 }
@@ -216,6 +218,7 @@ export function WeekPicker({
   isInvalid = false,
   isDisabled = false,
   className,
+  style,
   "aria-label": ariaLabel,
 }: WeekPickerProps): ReactElement {
   const { locale } = useLocale();
@@ -330,6 +333,7 @@ export function WeekPicker({
       ref={containerRef}
       aria-label={ariaLabel ?? `Sélecteur de semaine : ${weekLabel}`}
       data-invalid={isInvalid || undefined}
+      style={style}
     >
       <InputContainer isBorderless={!isEditable}
         appearance={appearance}

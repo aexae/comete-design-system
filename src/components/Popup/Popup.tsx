@@ -32,6 +32,8 @@ export interface PopupProps {
   onOpenChange?: (isOpen: boolean) => void;
   /** Classe CSS additionnelle sur le popover. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -59,6 +61,7 @@ export function Popup({
   isOpen,
   onOpenChange,
   className,
+  style,
 }: PopupProps): ReactElement {
   return (
     <DialogTrigger isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -67,6 +70,7 @@ export function Popup({
         placement={placement}
         offset={offset}
         className={[styles.popup, className].filter(Boolean).join(" ")}
+        style={style}
       >
         <AriaDialog className={styles.dialog}>{children}</AriaDialog>
       </Popover>

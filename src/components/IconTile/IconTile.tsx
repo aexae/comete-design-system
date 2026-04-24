@@ -34,6 +34,8 @@ export interface IconTileProps {
   label?: string;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -81,6 +83,7 @@ export function IconTile({
   shape = "square",
   label,
   className,
+  style,
 }: IconTileProps): ReactElement {
   const classNames = [
     styles.iconTile,
@@ -98,6 +101,7 @@ export function IconTile({
       role={label ? "img" : undefined}
       aria-label={label}
       aria-hidden={label ? undefined : true}
+      style={style}
     >
       <Icon
         icon={icon}

@@ -10,6 +10,8 @@ export interface BottomNavProps {
   children: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -33,9 +35,9 @@ export interface BottomNavProps {
  * </BottomNav>
  * ```
  */
-export function BottomNav({ children, className }: BottomNavProps): ReactElement {
+export function BottomNav({ children, className, style }: BottomNavProps): ReactElement {
   return (
-    <nav className={[styles.nav, className].filter(Boolean).join(" ")}>
+    <nav className={[styles.nav, className].filter(Boolean).join(" ")} style={style}>
       {children}
     </nav>
   );

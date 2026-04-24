@@ -17,6 +17,8 @@ export interface DividerProps {
   appearance?: DividerAppearance;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -43,6 +45,7 @@ export function Divider({
   orientation = "horizontal",
   appearance = "subtle",
   className,
+  style,
 }: DividerProps): ReactElement {
   return (
     <Separator
@@ -50,6 +53,7 @@ export function Divider({
       className={[styles.divider, styles[orientation], styles[appearance], className]
         .filter(Boolean)
         .join(" ")}
+      style={style}
     />
   );
 }

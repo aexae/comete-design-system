@@ -1,6 +1,6 @@
 // WeekGrid — Comète Design System (interne)
 // Grille de sélection de semaine : interaction hover/focus/sélection au niveau de la ligne.
-import { useState, type ReactElement } from "react";
+import { useState, type ReactElement, type CSSProperties } from "react";
 import type { RangeValue, DateValue } from "react-aria-components";
 import {
   type CalendarDate,
@@ -142,6 +142,8 @@ export interface WeekGridProps {
   mode?: "week" | "period";
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
   /** Label accessible. */
   "aria-label"?: string;
 }

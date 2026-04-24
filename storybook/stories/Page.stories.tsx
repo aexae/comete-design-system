@@ -14,6 +14,11 @@ import {
   Badge,
   Stack,
   Divider,
+  SearchField,
+  SectionMessage,
+  Text,
+  Tag,
+  Icon,
 } from "@naxit/comete-design-system/components";
 
 const FIGMA_FILE =
@@ -64,7 +69,7 @@ export const Default: Story = {
         <Page.Toolbar
           start={
             <>
-              <TextField aria-label="Rechercher" placeholder="Rechercher" />
+              <SearchField aria-label="Rechercher" placeholder="Rechercher" />
               <Button appearance="subtle" iconBefore="Settings">
                 Filtres
               </Button>
@@ -78,6 +83,9 @@ export const Default: Story = {
           }
         />
         <Page.Body>
+          <SectionMessage appearance="information" style={{ marginBottom: 16}}>
+            Message d&apos;accueil (texte par défaut)
+          </SectionMessage>
           <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
             {Array.from({ length: 9 }, (_, i) => (
               <Grid.Col key={i}>
@@ -481,20 +489,29 @@ export const BodySidebarLayout: Story = {
         <Page.Body>
           <Grid gap="300">
             <Grid.Col span={{ mobile: 12, tablet: 5, desktop: 4 }}>
-              <Card appearance="outlined">
-                <div style={{ padding: "var(--space300)", width: "100%" }}>
-                  <Stack gap="100" align="center">
-                    <Avatar size="xlarge" initials="DM" />
-                    <strong style={{ fontFamily: "var(--font-family-primary)", fontSize: "var(--font-size-ui-m)", color: "var(--text-default)" }}>
-                      DUPONT Marie
-                    </strong>
-                    <Cluster gap="075">
-                      <Badge label="CDI" appearance="success" importance="medium" />
-                      <Badge label="Agent" appearance="neutral" importance="medium" />
-                    </Cluster>
+              <Stack gap="200">                
+                <Card appearance="outlined">
+                  <Stack padding="100" gap="100">
+                    <Stack direction="row" gap="100" align="center" grow>
+                      <Avatar size="medium" initials="DM" /> 
+                      <Text weight="medium">DUPONT Marie</Text>
+                      <div style={{ flexGrow: 1}}></div>
+                      <Tag label="Conforme" elemBefore={<Icon icon="AwardStar" size={16} color="success" />} color="success" />
+                    </Stack>
+                    <Stack direction="row" gap="200" grow>
+                      <Stack direction="row" gap="025" grow>
+                        <Icon icon="Numbers" color="subtle" size={16} />
+                        <Text>MAT-0001</Text>
+                      </Stack>             
+                      <Text size="small" color="subtle">Contrat{' '}
+                        <Text as="span" weight="medium" size="small">151.67</Text></Text>
+                      <Text size="small" color="subtle">Delta{' '}
+                        <Text as="span" weight="medium" size="small" color="success">151.67</Text>
+                      </Text>
+                    </Stack>
                   </Stack>
-                </div>
-              </Card>
+                </Card>
+              </Stack>
             </Grid.Col>
             <Grid.Col span={{ mobile: 12, tablet: 7, desktop: 8 }}>
               <Card appearance="outlined">

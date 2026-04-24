@@ -60,6 +60,8 @@ export interface ToggleButtonProps
   isDisabled?: boolean;
   /** Additional CSS class. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -114,12 +116,14 @@ export function ToggleButton({
   iconAfter,
   badge,
   className,
+  style,
   ...ariaProps
 }: ToggleButtonProps): ReactElement {
   return (
     <AriaToggleButton
       {...ariaProps}
       className={[styles.item, className].filter(Boolean).join(" ")}
+      style={style}
     >
       {({ isSelected, isDisabled, isFocusVisible }) => {
         const iconColor = isDisabled
