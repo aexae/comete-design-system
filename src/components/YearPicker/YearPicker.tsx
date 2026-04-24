@@ -1,5 +1,5 @@
 // YearPicker — Comète Design System
-// Sélecteur d'année : deux modes (navigation / saisie) selon isEditable.
+// Sélecteur d'année : deux modes (saisie / navigation) × (single / range).
 import { useEffect, useRef, useState, type ReactElement, type CSSProperties } from "react";
 import {
   CalendarDate,
@@ -7,6 +7,7 @@ import {
   getLocalTimeZone,
 } from "@internationalized/date";
 import { Dialog as AriaDialog, DialogTrigger } from "react-aria-components";
+import type { RangeValue } from "react-aria-components";
 import { Button } from "../Button/Button.js";
 import { Calendar } from "../Calendar/Calendar.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
@@ -19,14 +20,12 @@ import styles from "./YearPicker.module.css";
 
 export type YearPickerAppearance = InputContainerAppearance;
 
-export interface YearPickerProps {
-  /** Année sélectionnée. */
-  year?: number;
-  /** Callback appelé à chaque changement d'année. */
-  onChange?: (year: number) => void;
+/** Props communes aux deux variantes. */
+interface YearPickerBaseProps {
   /**
    * Mode saisie : affiche un champ texte + icône calendrier.
-   * Quand `false`, affiche les chevrons ←/→ + bouton année.
+   * Quand `false`, affiche les chevrons ←/→ + bouton année (single)
+   * ou les deux boutons année cliquables + calendrier (range).
    * @default true
    */
   isEditable?: boolean;
@@ -44,34 +43,79 @@ export interface YearPickerProps {
   "aria-label"?: string;
 }
 
+/** Props du mode simple (sélection d'une année unique). */
+export interface SingleYearPickerProps extends YearPickerBaseProps {
+  /** @default false */
+  isRange?: false;
+  /** Année sélectionnée. */
+  year?: number;
+  /** Callback appelé à chaque changement d'année. */
+  onChange?: (year: number) => void;
+}
+
+/** Props du mode plage (sélection d'une plage d'années). */
+export interface RangeYearPickerProps extends YearPickerBaseProps {
+  /** Active la sélection de plage. */
+  isRange: true;
+  /** Année de début. */
+  startYear?: number;
+  /** Année de fin. */
+  endYear?: number;
+  /**
+   * Nombre de calendriers affichés dans le popover.
+   * @default 2
+   */
+  calendars?: 1 | 2;
+  /** Callback appelé à chaque changement de plage. */
+  onChange?: (startYear: number, endYear: number) => void;
+}
+
+/** Union discriminée — TypeScript infère le bon type selon `isRange`. */
+export type YearPickerProps = SingleYearPickerProps | RangeYearPickerProps;
+
 // -----------------------------------------------------------------------
-// Composant
+// Dispatcher
 
 /**
  * YearPicker — Comète Design System
  *
- * Sélecteur d'année unique avec deux modes :
+ * Sélecteur d'année avec deux modes d'interaction × deux modes de sélection.
  *
- * **Navigation** (`isEditable={false}`, défaut) :
- * ```
- * < 2025 ▼ >
- * ```
- * Chevrons ←/→ pour ±1, bouton année ouvre le calendar.
+ * **Modes d'interaction** :
+ * - **Saisie** (`isEditable={true}`, défaut) : champ texte + icône calendrier.
+ * - **Navigation** (`isEditable={false}`) : chevrons ←/→ + bouton année (single)
+ *   ou deux boutons année cliquables + calendrier (range).
  *
- * **Saisie** (`isEditable={true}`) :
- * ```
- * [ 2025 ] 📅
- * ```
- * Champ texte éditable + icône calendrier ouvre le calendar.
+ * **Modes de sélection** :
+ * - **Simple** (`isRange={false}`, défaut) : une seule année.
+ * - **Plage** (`isRange={true}`) : deux années (start/end) séparées par `→`.
  *
  * ```tsx
- * import { YearPicker } from "@naxit/comete-design-system";
+ * // Année unique
+ * <YearPicker year={2025} onChange={(y) => ...} />
  *
- * <YearPicker year={2025} onChange={(y) => console.log(y)} />
- * <YearPicker year={2025} isEditable onChange={(y) => console.log(y)} />
+ * // Plage d'années
+ * <YearPicker
+ *   isRange
+ *   startYear={2023}
+ *   endYear={2025}
+ *   onChange={(sy, ey) => ...}
+ * />
  * ```
  */
-export function YearPicker({
+export function YearPicker(props: YearPickerProps): ReactElement {
+  if (props.isRange) {
+    return <RangeYearPicker {...props} />;
+  }
+  return <SingleYearPicker {...props} />;
+}
+
+YearPicker.displayName = "YearPicker";
+
+// -----------------------------------------------------------------------
+// Single (isRange=false)
+
+function SingleYearPicker({
   year,
   onChange,
   isEditable = true,
@@ -81,7 +125,7 @@ export function YearPicker({
   className,
   style,
   "aria-label": ariaLabel,
-}: YearPickerProps): ReactElement {
+}: Omit<SingleYearPickerProps, "isRange">): ReactElement {
   const currentYear = today(getLocalTimeZone()).year;
   const resolvedYear = year ?? currentYear;
 
@@ -261,4 +305,323 @@ export function YearPicker({
   );
 }
 
-YearPicker.displayName = "YearPicker";
+// -----------------------------------------------------------------------
+// Range (isRange=true)
+
+function RangeYearPicker({
+  startYear,
+  endYear,
+  calendars = 2,
+  onChange,
+  isEditable = true,
+  appearance = "default",
+  isInvalid = false,
+  isDisabled = false,
+  className,
+  style,
+  "aria-label": ariaLabel,
+}: Omit<RangeYearPickerProps, "isRange">): ReactElement {
+  const currentYear = today(getLocalTimeZone()).year;
+
+  const resolvedStart = startYear ?? currentYear;
+  const resolvedEnd = endYear ?? currentYear;
+
+  // Plage inversée (start > end) : force isInvalid.
+  const isInverted = resolvedStart > resolvedEnd;
+  const effectiveInvalid = isInvalid || isInverted;
+
+  // Ref du conteneur pour positionner tous les popovers sous le champ entier
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Popover open state — un seul popover ouvert à la fois
+  const [openPopover, setOpenPopover] = useState<
+    "start" | "end" | "range" | null
+  >(null);
+
+  // Close dropdown on click outside or Escape (editable mode only)
+  useEffect(() => {
+    if (!openPopover || !isEditable) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!containerRef.current?.contains(e.target as Node)) {
+        setOpenPopover(null);
+      }
+    };
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpenPopover(null);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [openPopover, isEditable]);
+
+  // -- Helper : commit new range (auto-swap if start > end) --
+
+  const commitRange = (newStart: number, newEnd: number) => {
+    const [s, e] =
+      newStart > newEnd ? [newEnd, newStart] : [newStart, newEnd];
+    onChange?.(s, e);
+  };
+
+  // -- Handlers calendar selection --
+
+  const handleStartYearSelect = (date: CalendarDate) => {
+    commitRange(date.year, resolvedEnd);
+  };
+
+  const handleEndYearSelect = (date: CalendarDate) => {
+    commitRange(resolvedStart, date.year);
+  };
+
+  const handleRangeSelect = (range: RangeValue<CalendarDate>) => {
+    commitRange(range.start.year, range.end.year);
+  };
+
+  // -- Handler : mise à jour immédiate au premier clic (start seul) --
+  // Pas de swap pour respecter l'année cliquée exactement (même si start > end
+  // temporairement). Le second clic committera la plage finale avec swap.
+  const handleIntermediateStart = (date: CalendarDate) => {
+    onChange?.(date.year, resolvedEnd);
+  };
+
+  // -- Editable input state --
+
+  const [startInput, setStartInput] = useState("");
+  const [endInput, setEndInput] = useState("");
+  const [startFocused, setStartFocused] = useState(false);
+  const [endFocused, setEndFocused] = useState(false);
+
+  const handleStartInputFocus = () => {
+    setStartInput(String(resolvedStart));
+    setStartFocused(true);
+  };
+
+  const handleStartInputBlur = () => {
+    setStartFocused(false);
+    const parsed = parseInt(startInput, 10);
+    if (!isNaN(parsed)) {
+      commitRange(parsed, resolvedEnd);
+    }
+  };
+
+  const handleEndInputFocus = () => {
+    setEndInput(String(resolvedEnd));
+    setEndFocused(true);
+  };
+
+  const handleEndInputBlur = () => {
+    setEndFocused(false);
+    const parsed = parseInt(endInput, 10);
+    if (!isNaN(parsed)) {
+      commitRange(resolvedStart, parsed);
+    }
+  };
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      (e.target as HTMLInputElement).blur();
+    }
+  };
+
+  // -- Calendar values --
+
+  const startValue = new CalendarDate(resolvedStart, 1, 1);
+  const endValue = new CalendarDate(resolvedEnd, 1, 1);
+  const rangeValue: RangeValue<CalendarDate> = {
+    start: startValue,
+    end: endValue,
+  };
+
+  const rootClassNames = [styles.root, className].filter(Boolean).join(" ");
+
+  // -- Calendar helpers --
+
+  const renderRangeCalendar = () => (
+    <Calendar
+      appearance="year"
+      isRange
+      calendars={2}
+      value={rangeValue}
+      onChange={handleRangeSelect}
+      onIntermediateStart={handleIntermediateStart}
+      isDisabled={isDisabled}
+    />
+  );
+
+  const renderSingleStartCalendar = () => (
+    <Calendar
+      appearance="year"
+      value={startValue}
+      onChange={handleStartYearSelect}
+      isDisabled={isDisabled}
+    />
+  );
+
+  const renderSingleEndCalendar = () => (
+    <Calendar
+      appearance="year"
+      value={endValue}
+      onChange={handleEndYearSelect}
+      isDisabled={isDisabled}
+    />
+  );
+
+  return (
+    <div
+      className={rootClassNames}
+      ref={containerRef}
+      aria-label={
+        ariaLabel ?? `Plage d'années : ${resolvedStart} à ${resolvedEnd}`
+      }
+      data-disabled={isDisabled || undefined}
+      data-invalid={effectiveInvalid || undefined}
+      style={style}
+    >
+      <InputContainer isBorderless={!isEditable}
+        appearance={appearance}
+        isDisabled={isDisabled}
+        isInvalid={effectiveInvalid}
+      >
+        {isEditable ? (
+          /* ---- Mode saisie : inputs + icône calendrier ---- */
+          <div className={styles.rangeValue}>
+            <input
+              type="text"
+              inputMode="numeric"
+              className={styles.yearInput}
+              value={startFocused ? startInput : String(resolvedStart)}
+              onChange={(e) => setStartInput(e.target.value)}
+              onClick={() => !isDisabled && setOpenPopover("range")}
+              onFocus={handleStartInputFocus}
+              onBlur={handleStartInputBlur}
+              onKeyDown={handleInputKeyDown}
+              disabled={isDisabled}
+              aria-label={`Année de début : ${resolvedStart}`}
+            />
+
+            <span className={styles.rangeSeparator} aria-hidden="true">
+              →
+            </span>
+
+            <input
+              type="text"
+              inputMode="numeric"
+              className={styles.yearInput}
+              value={endFocused ? endInput : String(resolvedEnd)}
+              onChange={(e) => setEndInput(e.target.value)}
+              onClick={() => !isDisabled && setOpenPopover("range")}
+              onFocus={handleEndInputFocus}
+              onBlur={handleEndInputBlur}
+              onKeyDown={handleInputKeyDown}
+              disabled={isDisabled}
+              aria-label={`Année de fin : ${resolvedEnd}`}
+            />
+
+            <Button
+              appearance="subtle"
+              iconBefore="CalendarMonth"
+              className={styles.calendarButton}
+              isDisabled={isDisabled}
+              onPress={() =>
+                !isDisabled &&
+                setOpenPopover((o) => (o === "range" ? null : "range"))
+              }
+              aria-label="Ouvrir le sélecteur d'années"
+            />
+            {openPopover === "range" && (
+              <div className={styles.calendarDropdown}>
+                {calendars === 2 ? renderRangeCalendar() : renderSingleStartCalendar()}
+              </div>
+            )}
+          </div>
+        ) : (
+          /* ---- Mode navigation : boutons année + icône calendrier ---- */
+          <>
+            <div className={styles.rangeValue}>
+              {/* Bouton année de début */}
+              <DialogTrigger
+                isOpen={openPopover === "start"}
+                onOpenChange={(open) =>
+                  setOpenPopover(open ? "start" : null)
+                }
+              >
+                <Button
+                  appearance="subtle"
+                  className={styles.yearButton}
+                  isDisabled={isDisabled}
+                  aria-label={`Année de début : ${resolvedStart}`}
+                >
+                  {resolvedStart}
+                </Button>
+                <Popover
+                  triggerRef={containerRef}
+                  placement="bottom start"
+                  shouldFlip={false}
+                >
+                  <AriaDialog className={styles.dialog}>
+                    {calendars === 2 ? renderRangeCalendar() : renderSingleStartCalendar()}
+                  </AriaDialog>
+                </Popover>
+              </DialogTrigger>
+
+              <span className={styles.rangeSeparator} aria-hidden="true">
+                →
+              </span>
+
+              {/* Bouton année de fin */}
+              <DialogTrigger
+                isOpen={openPopover === "end"}
+                onOpenChange={(open) =>
+                  setOpenPopover(open ? "end" : null)
+                }
+              >
+                <Button
+                  appearance="subtle"
+                  className={styles.yearButton}
+                  isDisabled={isDisabled}
+                  aria-label={`Année de fin : ${resolvedEnd}`}
+                >
+                  {resolvedEnd}
+                </Button>
+                <Popover
+                  triggerRef={containerRef}
+                  placement="bottom start"
+                  shouldFlip={false}
+                >
+                  <AriaDialog className={styles.dialog}>
+                    {calendars === 2 ? renderRangeCalendar() : renderSingleEndCalendar()}
+                  </AriaDialog>
+                </Popover>
+              </DialogTrigger>
+            </div>
+
+            {/* Bouton calendrier */}
+            <DialogTrigger
+              isOpen={openPopover === "range"}
+              onOpenChange={(open) => setOpenPopover(open ? "range" : null)}
+            >
+              <Button
+                appearance="subtle"
+                iconBefore="CalendarMonth"
+                className={styles.calendarButton}
+                isDisabled={isDisabled}
+                aria-label="Ouvrir le sélecteur d'années"
+              />
+              <Popover
+                triggerRef={containerRef}
+                placement="bottom start"
+                shouldFlip={false}
+              >
+                <AriaDialog className={styles.dialog}>
+                  {calendars === 2 ? renderRangeCalendar() : renderSingleStartCalendar()}
+                </AriaDialog>
+              </Popover>
+            </DialogTrigger>
+          </>
+        )}
+      </InputContainer>
+    </div>
+  );
+}

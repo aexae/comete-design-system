@@ -1,4 +1,4 @@
-import type { ReactElement, ReactNode } from "react";
+import type { CSSProperties, ReactElement, ReactNode } from "react";
 import { Icon } from "../Icon";
 import type { IconComponentProps, IconName } from "../Icon";
 import styles from "./SectionMessage.module.css";
@@ -32,6 +32,10 @@ export interface SectionMessageProps {
    * Pass `null` to hide the icon entirely.
    */
   icon?: ReactNode | null;
+  /** Additional CSS class. */
+  className?: string;
+  /** Inline styles. */
+  style?: CSSProperties;
 }
 
 // ----------------------------------------------------------------------
@@ -72,6 +76,8 @@ export function SectionMessage({
   children,
   actions,
   icon,
+  className,
+  style,
 }: SectionMessageProps): ReactElement {
   const resolvedIcon =
     icon === undefined ? (
@@ -86,7 +92,10 @@ export function SectionMessage({
 
   return (
     <div
-      className={[styles.sectionMessage, styles[appearance]].join(" ")}
+      className={[styles.sectionMessage, styles[appearance], className]
+        .filter(Boolean)
+        .join(" ")}
+      style={style}
       role="group"
     >
       {resolvedIcon && (

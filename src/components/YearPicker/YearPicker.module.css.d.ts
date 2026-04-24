@@ -4,6 +4,8 @@ declare const styles: {
   readonly "chevronButton": string;
   readonly "content": string;
   readonly "dialog": string;
+  readonly "rangeSeparator": string;
+  readonly "rangeValue": string;
   readonly "root": string;
   readonly "yearButton": string;
   readonly "yearInput": string;

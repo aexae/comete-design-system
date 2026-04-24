@@ -1,8 +1,12 @@
 // YearPicker — stories Storybook
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { YearPicker, Field } from "@naxit/comete-design-system/components";
-import type { YearPickerProps } from "@naxit/comete-design-system/components";
+import type {
+  YearPickerProps,
+  SingleYearPickerProps,
+  RangeYearPickerProps,
+} from "@naxit/comete-design-system/components";
 
 // -----------------------------------------------------------------------
 // Figma
@@ -27,9 +31,24 @@ const meta = {
     },
   },
   argTypes: {
+    isRange: {
+      control: "boolean",
+      description: "Mode plage (start/end) au lieu d'une année unique",
+    },
     year: {
       control: { type: "number" },
-      description: "Année sélectionnée",
+      description: "Année sélectionnée — mode single",
+      if: { arg: "isRange", truthy: false },
+    },
+    startYear: {
+      control: { type: "number" },
+      description: "Année de début — mode range",
+      if: { arg: "isRange", truthy: true },
+    },
+    endYear: {
+      control: { type: "number" },
+      description: "Année de fin — mode range",
+      if: { arg: "isRange", truthy: true },
     },
     isEditable: {
       control: "boolean",
@@ -55,11 +74,15 @@ export default meta;
 type Story = StoryObj<typeof YearPicker>;
 
 // -----------------------------------------------------------------------
-// Render helper — contrôlé via useState
+// Render helpers
 
-function ControlledRender(args: YearPickerProps) {
+/** Sous-composant : hooks isolés pour le mode single. */
+function SingleRender({ args }: { args: SingleYearPickerProps }) {
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(args.year ?? currentYear);
+  useEffect(() => {
+    if (args.year !== undefined) setYear(args.year);
+  }, [args.year]);
   return (
     <div
       style={{
@@ -71,10 +94,9 @@ function ControlledRender(args: YearPickerProps) {
     >
       <YearPicker
         {...args}
+        isRange={false}
         year={year}
-        onChange={(y) => {
-          setYear(y);
-        }}
+        onChange={setYear}
       />
       <p
         style={{
@@ -89,10 +111,60 @@ function ControlledRender(args: YearPickerProps) {
   );
 }
 
+/** Sous-composant : hooks isolés pour le mode range. */
+function RangeRender({ args }: { args: RangeYearPickerProps }) {
+  const [startYear, setStartYear] = useState(args.startYear ?? 2023);
+  const [endYear, setEndYear] = useState(args.endYear ?? 2025);
+  useEffect(() => {
+    if (args.startYear !== undefined) setStartYear(args.startYear);
+  }, [args.startYear]);
+  useEffect(() => {
+    if (args.endYear !== undefined) setEndYear(args.endYear);
+  }, [args.endYear]);
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 16,
+        alignItems: "center",
+      }}
+    >
+      <YearPicker
+        {...args}
+        isRange
+        startYear={startYear}
+        endYear={endYear}
+        onChange={(sy, ey) => {
+          setStartYear(sy);
+          setEndYear(ey);
+        }}
+      />
+      <p
+        style={{
+          fontFamily: "var(--font-family-primary)",
+          fontSize: "var(--font-size-ui-xs)",
+          color: "var(--text-subtlest)",
+        }}
+      >
+        Sélection : {startYear} → {endYear}
+      </p>
+    </div>
+  );
+}
+
+/** Dispatcher — switch single/range selon `args.isRange`. */
+function ControlledRender(args: YearPickerProps) {
+  if (args.isRange) {
+    return <RangeRender args={args} />;
+  }
+  return <SingleRender args={args} />;
+}
+
 // -----------------------------------------------------------------------
 // Stories
 
-/** Mode navigation (défaut) — chevrons ←/→ + bouton année. */
+/** Mode saisie (défaut) — input année + icône calendrier. */
 export const Default: Story = {
   render: ControlledRender,
   parameters: {
@@ -151,49 +223,48 @@ export const Disabled: Story = {
 /** YearPicker dans un Field avec label. */
 export const WithField: Story = {
   name: "With Field wrapper",
-  render: (args: YearPickerProps) => {
-    const [year, setYear] = useState(args.year ?? 2025);
-    return (
-      <Field label="Année" isRequired>
-        <YearPicker {...args} year={year} onChange={setYear} />
-      </Field>
-    );
-  },
+  render: (args: YearPickerProps) => (
+    <Field label="Année" isRequired>
+      <ControlledRender {...args} />
+    </Field>
+  ),
 };
 
 /** YearPicker avec message d'erreur. */
 export const FieldInvalid: Story = {
   name: "Field invalid",
   args: { isInvalid: true },
-  render: (args: YearPickerProps) => {
-    const [year, setYear] = useState(args.year ?? 2025);
-    return (
-      <Field
-        label="Année"
-        message="L'année est invalide"
-        messageType="critical"
-      >
-        <YearPicker {...args} year={year} onChange={setYear} />
-      </Field>
-    );
+  render: (args: YearPickerProps) => (
+    <Field label="Année" message="L'année est invalide" messageType="critical">
+      <ControlledRender {...args} />
+    </Field>
+  ),
+};
+
+/** Mode plage (range) — "2023 → 2025" + icône calendrier. */
+export const Range: Story = {
+  render: ControlledRender,
+  args: {
+    isRange: true,
+    startYear: 2023,
+    endYear: 2025,
+  } as never,
+  parameters: {
+    design: { type: "figma", url: figmaUrl("4253:12831") },
   },
 };
 
 /** Toutes les apparences. */
 export const AllAppearances: Story = {
   name: "All appearances",
-  render: (args: YearPickerProps) => {
-    const [yearDefault, setYearDefault] = useState(args.year ?? 2025);
-    const [yearSubtle, setYearSubtle] = useState(args.year ?? 2025);
-    return (
-      <div style={{ display: "flex", gap: 32 }}>
-        <Field label="Default">
-          <YearPicker {...args} year={yearDefault} onChange={setYearDefault} />
-        </Field>
-        <Field label="Subtle">
-          <YearPicker {...args} year={yearSubtle} onChange={setYearSubtle} appearance="subtle" />
-        </Field>
-      </div>
-    );
-  },
+  render: (args: YearPickerProps) => (
+    <div style={{ display: "flex", gap: 32 }}>
+      <Field label="Default">
+        <ControlledRender {...args} />
+      </Field>
+      <Field label="Subtle">
+        <ControlledRender {...args} appearance="subtle" />
+      </Field>
+    </div>
+  ),
 };

@@ -102,6 +102,64 @@
   flex-shrink: 0;
 }
 
+/* ==========================================================================
+   Mode range (isRange=true)
+   ========================================================================== */
+
+/* Conteneur des deux boutons mois + séparateur (mode range navigation) */
+.rangeValue {
+  display: flex;
+  align-items: center;
+  gap: var(--space100);
+}
+
+/* En mode range, le bouton mois doit être content-sized (pas de flex-grow
+   contrairement au mode single-navigation où il centre entre les chevrons) */
+.rangeValue .monthButton {
+  flex: 0 0 auto;
+  justify-content: flex-start;
+}
+
+/* Input mois/année (mode range saisie) — "Août 2025" */
+.rangeInput {
+  flex: 1 1 0%;
+  field-sizing: content;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  color: var(--text-default);
+  padding: 0;
+}
+
+.rangeInput:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+.rangeInput::placeholder {
+  color: var(--text-subtlest);
+}
+
+/* Séparateur "→" entre début et fin (mode range) */
+.rangeSeparator {
+  color: var(--text-default);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.root[data-disabled] .rangeSeparator {
+  color: var(--text-disabled);
+}
+
 /* Dialog — reset outline */
 .dialog {
   outline: none;

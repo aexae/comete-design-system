@@ -5,6 +5,8 @@ declare const styles: {
   readonly "content": string;
   readonly "dialog": string;
   readonly "navigationContent": string;
+  readonly "rangeSeparator": string;
+  readonly "rangeValue": string;
   readonly "root": string;
   readonly "weekButton": string;
   readonly "weekInput": string;

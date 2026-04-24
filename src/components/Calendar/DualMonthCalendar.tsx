@@ -21,6 +21,12 @@ export interface DualMonthCalendarProps {
   /** Callback à chaque sélection de plage. */
   onChange?: (range: RangeValue<CalendarDate>) => void;
   /**
+   * Callback appelé dès le premier clic de la plage (avant validation).
+   * Utile pour mettre à jour le champ de saisie du picker immédiatement,
+   * sans attendre le deuxième clic.
+   */
+  onIntermediateStart?: (date: CalendarDate) => void;
+  /**
    * Locale BCP 47 pour les noms de mois.
    * @default "fr-FR"
    */
@@ -134,6 +140,10 @@ export interface MonthRangeCalendarProps {
   defaultValue?: RangeValue<CalendarDate>;
   /** Callback à chaque sélection de plage. */
   onChange?: (range: RangeValue<CalendarDate>) => void;
+  /**
+   * Callback appelé dès le premier clic de la plage (avant validation).
+   */
+  onIntermediateStart?: (date: CalendarDate) => void;
   locale?: string;
   isDisabled?: boolean;
   className?: string;
@@ -150,6 +160,7 @@ export function MonthRangeCalendar({
   value,
   defaultValue,
   onChange,
+  onIntermediateStart,
   locale = "fr-FR",
   isDisabled = false,
   className,
@@ -183,6 +194,7 @@ export function MonthRangeCalendar({
     if (!pending) {
       setPending(date);
       setHovered(undefined);
+      onIntermediateStart?.(date);
     } else {
       const start = pending.compare(date) <= 0 ? pending : date;
       const end = pending.compare(date) >= 0 ? pending : date;
@@ -399,6 +411,7 @@ export function DualMonthCalendar({
   value,
   defaultValue,
   onChange,
+  onIntermediateStart,
   locale = "fr-FR",
   isDisabled = false,
   className,
@@ -441,6 +454,7 @@ export function DualMonthCalendar({
     if (!pending) {
       setPending(date);
       setHovered(undefined);
+      onIntermediateStart?.(date);
     } else {
       const start = pending.compare(date) <= 0 ? pending : date;
       const end = pending.compare(date) >= 0 ? pending : date;

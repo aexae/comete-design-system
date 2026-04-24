@@ -99,6 +99,12 @@ export interface WeekCalendarProps extends CalendarBaseProps {
   value?: RangeValue<CalendarDate>;
   defaultValue?: RangeValue<CalendarDate>;
   onChange?: (range: RangeValue<CalendarDate>) => void;
+  /**
+   * Callback appelé dès le premier clic en mode `period` (avant validation).
+   * Reçoit le lundi de la semaine cliquée. Utile pour mettre à jour un picker
+   * parent immédiatement.
+   */
+  onIntermediateStart?: (weekStart: CalendarDate) => void;
   isDisabled?: boolean;
   minValue?: DateValue;
   maxValue?: DateValue;
@@ -130,6 +136,10 @@ export interface MonthRangeCalendarExternalProps extends CalendarBaseProps {
   value?: RangeValue<CalendarDate>;
   defaultValue?: RangeValue<CalendarDate>;
   onChange?: (range: RangeValue<CalendarDate>) => void;
+  /**
+   * Callback appelé dès le premier clic de la plage (avant validation).
+   */
+  onIntermediateStart?: (date: CalendarDate) => void;
   isDisabled?: boolean;
   locale?: string;
 }
@@ -151,6 +161,10 @@ export interface YearRangeCalendarExternalProps extends CalendarBaseProps {
   value?: RangeValue<CalendarDate>;
   defaultValue?: RangeValue<CalendarDate>;
   onChange?: (range: RangeValue<CalendarDate>) => void;
+  /**
+   * Callback appelé dès le premier clic de la plage (avant validation).
+   */
+  onIntermediateStart?: (date: CalendarDate) => void;
   isDisabled?: boolean;
 }
 

@@ -1,5 +1,5 @@
 // WeekPicker — Comète Design System
-// Sélecteur de semaine : deux modes (navigation / saisie) selon isEditable.
+// Sélecteur de semaine ISO : deux modes (saisie / navigation) × (single / range).
 import { useEffect, useRef, useState, type ReactElement, type CSSProperties } from "react";
 import {
   CalendarDate,
@@ -25,16 +25,12 @@ import styles from "./WeekPicker.module.css";
 
 export type WeekPickerAppearance = InputContainerAppearance;
 
-export interface WeekPickerProps {
-  /** Numéro de semaine ISO (1-53). */
-  week?: number;
-  /** Année ISO de la semaine. */
-  year?: number;
-  /** Callback appelé à chaque changement de semaine. */
-  onChange?: (week: number, year: number) => void;
+/** Props communes aux deux variantes. */
+interface WeekPickerBaseProps {
   /**
-   * Mode saisie : affiche des champs texte (semaine / année) + icône calendrier.
-   * Quand `false`, affiche les chevrons ←/→ + bouton semaine formaté.
+   * Mode saisie : affiche un champ texte + icône calendrier.
+   * Quand `false`, affiche les chevrons ←/→ + bouton semaine formaté
+   * (single) ou les deux boutons semaine cliquables + calendrier (range).
    * @default true
    */
   isEditable?: boolean;
@@ -51,6 +47,42 @@ export interface WeekPickerProps {
   /** Label accessible. */
   "aria-label"?: string;
 }
+
+/** Props du mode simple (sélection d'une semaine unique). */
+export interface SingleWeekPickerProps extends WeekPickerBaseProps {
+  /** @default false */
+  isRange?: false;
+  /** Numéro de semaine ISO (1-53). */
+  week?: number;
+  /** Année ISO de la semaine. */
+  year?: number;
+  /** Callback appelé à chaque changement de semaine. */
+  onChange?: (week: number, year: number) => void;
+}
+
+/** Props du mode plage (sélection d'une plage de semaines). */
+export interface RangeWeekPickerProps extends WeekPickerBaseProps {
+  /** Active la sélection de plage. */
+  isRange: true;
+  /** Semaine ISO de début (1-53). */
+  startWeek?: number;
+  /** Année ISO de la semaine de début. */
+  startYear?: number;
+  /** Semaine ISO de fin (1-53). */
+  endWeek?: number;
+  /** Année ISO de la semaine de fin. */
+  endYear?: number;
+  /** Callback appelé à chaque changement de plage. */
+  onChange?: (
+    startWeek: number,
+    startYear: number,
+    endWeek: number,
+    endYear: number,
+  ) => void;
+}
+
+/** Union discriminée — TypeScript infère le bon type selon `isRange`. */
+export type WeekPickerProps = SingleWeekPickerProps | RangeWeekPickerProps;
 
 // -----------------------------------------------------------------------
 // Helpers ISO 8601
@@ -98,7 +130,7 @@ function formatShortDate(date: CalendarDate, locale: string): string {
   }).format(new Date(date.year, date.month - 1, date.day));
 }
 
-/** Formate le label semaine navigation : "Sem. 28 • 07/07/25 - 13/07/25". */
+/** Formate le label complet semaine : `Sem. 28 • 07/07/25 - 13/07/25`. */
 function formatWeekLabel(
   week: number,
   weekStart: CalendarDate,
@@ -108,6 +140,16 @@ function formatWeekLabel(
   const start = formatShortDate(weekStart, locale);
   const end = formatShortDate(weekEnd, locale);
   return `Sem. ${week} \u2022 ${start} - ${end}`;
+}
+
+/** Formate le label court (semaine + début) : `Sem. 28 • 07/07/25`. */
+function formatWeekLabelShort(
+  week: number,
+  weekStart: CalendarDate,
+  locale: string,
+): string {
+  const start = formatShortDate(weekStart, locale);
+  return `Sem. ${week} \u2022 ${start}`;
 }
 
 /**
@@ -183,33 +225,54 @@ function parseInput(
   return null;
 }
 
+/** Compare deux semaines (year * 53 + week). */
+function weekToOrdinal(week: number, year: number): number {
+  return year * 53 + week;
+}
+
 // -----------------------------------------------------------------------
-// Composant
+// Dispatcher
 
 /**
  * WeekPicker — Comète Design System
  *
- * Sélecteur de semaine ISO avec deux modes :
+ * Sélecteur de semaine ISO avec deux modes d'interaction × deux modes de sélection.
  *
- * **Navigation** (`isEditable={false}`) :
- * ```
- * < Sem. 28 • 07/07/25 - 13/07/25 ▼ >
- * ```
- * Chevrons ←/→ pour ±1 semaine, bouton ouvre le calendar.
+ * **Modes d'interaction** :
+ * - **Saisie** (`isEditable={true}`, défaut) : champ texte + icône calendrier.
+ * - **Navigation** (`isEditable={false}`) : chevrons ←/→ + bouton semaine (single)
+ *   ou deux boutons semaine cliquables + calendrier (range).
  *
- * **Saisie** (`isEditable={true}`, défaut) :
- * ```
- * [ 07/07/2025 - 13/07/2025 ] 📅
- * ```
- * Plage de dates affichée + icône calendrier ouvre le calendar.
+ * **Modes de sélection** :
+ * - **Simple** (`isRange={false}`, défaut) : une seule semaine.
+ * - **Plage** (`isRange={true}`) : deux semaines (start/end) séparées par `→`.
  *
  * ```tsx
- * import { WeekPicker } from "@naxit/comete-design-system";
+ * // Semaine unique
+ * <WeekPicker week={28} year={2025} onChange={(w, y) => ...} />
  *
- * <WeekPicker week={28} year={2025} onChange={(w, y) => console.log(w, y)} />
+ * // Plage de semaines
+ * <WeekPicker
+ *   isRange
+ *   startWeek={28} startYear={2025}
+ *   endWeek={32} endYear={2025}
+ *   onChange={(sw, sy, ew, ey) => ...}
+ * />
  * ```
  */
-export function WeekPicker({
+export function WeekPicker(props: WeekPickerProps): ReactElement {
+  if (props.isRange) {
+    return <RangeWeekPicker {...props} />;
+  }
+  return <SingleWeekPicker {...props} />;
+}
+
+WeekPicker.displayName = "WeekPicker";
+
+// -----------------------------------------------------------------------
+// Single (isRange=false)
+
+function SingleWeekPicker({
   week,
   year,
   onChange,
@@ -220,7 +283,7 @@ export function WeekPicker({
   className,
   style,
   "aria-label": ariaLabel,
-}: WeekPickerProps): ReactElement {
+}: Omit<SingleWeekPickerProps, "isRange">): ReactElement {
   const { locale } = useLocale();
   const todayDate = today(getLocalTimeZone());
 
@@ -427,4 +490,354 @@ export function WeekPicker({
   );
 }
 
-WeekPicker.displayName = "WeekPicker";
+// -----------------------------------------------------------------------
+// Range (isRange=true)
+
+function RangeWeekPicker({
+  startWeek,
+  startYear,
+  endWeek,
+  endYear,
+  onChange,
+  isEditable = true,
+  appearance = "default",
+  isInvalid = false,
+  isDisabled = false,
+  className,
+  style,
+  "aria-label": ariaLabel,
+}: Omit<RangeWeekPickerProps, "isRange">): ReactElement {
+  const { locale } = useLocale();
+  const todayDate = today(getLocalTimeZone());
+
+  const currentWeek = getISOWeekNumber(todayDate);
+  const currentYear = getISOWeekYear(todayDate);
+
+  const resolvedStartWeek = startWeek ?? currentWeek;
+  const resolvedStartYear = startYear ?? currentYear;
+  const resolvedEndWeek = endWeek ?? currentWeek;
+  const resolvedEndYear = endYear ?? currentYear;
+
+  // Plage inversée (start > end) : force isInvalid.
+  const isInverted =
+    weekToOrdinal(resolvedStartWeek, resolvedStartYear) >
+    weekToOrdinal(resolvedEndWeek, resolvedEndYear);
+  const effectiveInvalid = isInvalid || isInverted;
+
+  // Bornes dates (lundi début → dimanche fin)
+  const startMonday = getMondayOfISOWeek(resolvedStartWeek, resolvedStartYear);
+  const endMonday = getMondayOfISOWeek(resolvedEndWeek, resolvedEndYear);
+  const endSunday = endMonday.add({ days: 6 });
+
+  // Ref du conteneur pour positionner tous les popovers sous le champ entier
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Popover open state — un seul popover ouvert à la fois
+  const [openPopover, setOpenPopover] = useState<
+    "start" | "end" | "range" | null
+  >(null);
+
+  // Close dropdown on click outside or Escape (editable mode only)
+  useEffect(() => {
+    if (!openPopover || !isEditable) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!containerRef.current?.contains(e.target as Node)) {
+        setOpenPopover(null);
+      }
+    };
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpenPopover(null);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [openPopover, isEditable]);
+
+  // -- Helper : commit range (auto-swap if start > end) --
+
+  const commitRange = (
+    sw: number,
+    sy: number,
+    ew: number,
+    ey: number,
+  ) => {
+    if (weekToOrdinal(sw, sy) > weekToOrdinal(ew, ey)) {
+      onChange?.(ew, ey, sw, sy);
+    } else {
+      onChange?.(sw, sy, ew, ey);
+    }
+  };
+
+  // -- Handler calendar range selection --
+  // Le Calendar appearance="week" retourne une plage de jours. On extrait la
+  // semaine ISO du lundi de la plage de début, et celle du lundi de la plage
+  // de fin.
+
+  const handleRangeSelect = (range: RangeValue<CalendarDate>) => {
+    const startOfStart = startOfWeek(range.start, locale);
+    const startOfEnd = startOfWeek(range.end, locale);
+    commitRange(
+      getISOWeekNumber(startOfStart),
+      getISOWeekYear(startOfStart),
+      getISOWeekNumber(startOfEnd),
+      getISOWeekYear(startOfEnd),
+    );
+  };
+
+  // -- Handler : mise à jour immédiate au premier clic (start seul) --
+  // Pas de swap pour respecter la semaine cliquée exactement (même si start > end
+  // temporairement). Le second clic committera la plage finale avec swap.
+  const handleIntermediateStart = (weekStart: CalendarDate) => {
+    onChange?.(
+      getISOWeekNumber(weekStart),
+      getISOWeekYear(weekStart),
+      resolvedEndWeek,
+      resolvedEndYear,
+    );
+  };
+
+  // -- Editable input state --
+
+  // Format range : toujours "Sem. X • date de début" (pas la plage complète,
+  // sinon le libellé devient trop long côte à côte).
+  const startLabel = formatWeekLabelShort(
+    resolvedStartWeek,
+    startMonday,
+    locale,
+  );
+  const endLabel = formatWeekLabelShort(resolvedEndWeek, endMonday, locale);
+
+  const [startInput, setStartInput] = useState(startLabel);
+  const [endInput, setEndInput] = useState(endLabel);
+
+  // Synchroniser l'input quand la valeur contrôlée change
+  const prevStartRef = useRef(startLabel);
+  if (prevStartRef.current !== startLabel) {
+    prevStartRef.current = startLabel;
+    setStartInput(startLabel);
+  }
+  const prevEndRef = useRef(endLabel);
+  if (prevEndRef.current !== endLabel) {
+    prevEndRef.current = endLabel;
+    setEndInput(endLabel);
+  }
+
+  const commitStartInput = () => {
+    const result = parseInput(startInput, resolvedStartYear);
+    if (result) {
+      commitRange(
+        result.week,
+        result.year,
+        resolvedEndWeek,
+        resolvedEndYear,
+      );
+    }
+    // Toujours rétablir l'affichage formaté
+    setStartInput(startLabel);
+  };
+
+  const commitEndInput = () => {
+    const result = parseInput(endInput, resolvedEndYear);
+    if (result) {
+      commitRange(
+        resolvedStartWeek,
+        resolvedStartYear,
+        result.week,
+        result.year,
+      );
+    }
+    setEndInput(endLabel);
+  };
+
+  const handleStartInputKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      commitStartInput();
+    }
+  };
+
+  const handleEndInputKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      commitEndInput();
+    }
+  };
+
+  // -- Calendar value (range de dates : lundi début → dimanche fin) --
+
+  const calendarValue: RangeValue<CalendarDate> = {
+    start: startMonday,
+    end: endSunday,
+  };
+
+  const rootClassNames = [styles.root, className].filter(Boolean).join(" ");
+
+  const renderCalendar = () => (
+    <Calendar
+      appearance="week"
+      mode="period"
+      value={calendarValue}
+      onChange={handleRangeSelect}
+      onIntermediateStart={handleIntermediateStart}
+      isDisabled={isDisabled}
+    />
+  );
+
+  return (
+    <div
+      className={rootClassNames}
+      ref={containerRef}
+      aria-label={
+        ariaLabel ?? `Plage de semaines : ${startLabel} à ${endLabel}`
+      }
+      data-disabled={isDisabled || undefined}
+      data-invalid={effectiveInvalid || undefined}
+      style={style}
+    >
+      <InputContainer isBorderless={!isEditable}
+        appearance={appearance}
+        isDisabled={isDisabled}
+        isInvalid={effectiveInvalid}
+      >
+        {isEditable ? (
+          /* ---- Mode saisie : inputs + icône calendrier ---- */
+          <div className={styles.content}>
+            <input
+              type="text"
+              className={styles.weekInput}
+              value={startInput}
+              onChange={(e) => setStartInput(e.target.value)}
+              onClick={() => !isDisabled && setOpenPopover("range")}
+              onBlur={commitStartInput}
+              onKeyDown={handleStartInputKeyDown}
+              disabled={isDisabled}
+              aria-label={`Semaine de début : ${startLabel}`}
+            />
+
+            <span className={styles.rangeSeparator} aria-hidden="true">
+              →
+            </span>
+
+            <input
+              type="text"
+              className={styles.weekInput}
+              value={endInput}
+              onChange={(e) => setEndInput(e.target.value)}
+              onClick={() => !isDisabled && setOpenPopover("range")}
+              onBlur={commitEndInput}
+              onKeyDown={handleEndInputKeyDown}
+              disabled={isDisabled}
+              aria-label={`Semaine de fin : ${endLabel}`}
+            />
+
+            <Button
+              appearance="subtle"
+              iconBefore="CalendarMonth"
+              className={styles.calendarButton}
+              isDisabled={isDisabled}
+              onPress={() =>
+                !isDisabled &&
+                setOpenPopover((o) => (o === "range" ? null : "range"))
+              }
+              aria-label="Ouvrir le sélecteur de semaine"
+            />
+            {openPopover === "range" && (
+              <div className={styles.calendarDropdown}>{renderCalendar()}</div>
+            )}
+          </div>
+        ) : (
+          /* ---- Mode navigation : boutons semaine + icône calendrier ---- */
+          <>
+            <div className={styles.rangeValue}>
+              {/* Bouton semaine de début */}
+              <DialogTrigger
+                isOpen={openPopover === "start"}
+                onOpenChange={(open) =>
+                  setOpenPopover(open ? "start" : null)
+                }
+              >
+                <Button
+                  appearance="subtle"
+                  className={styles.weekButton}
+                  isDisabled={isDisabled}
+                  aria-label={`Semaine de début : ${startLabel}`}
+                >
+                  {startLabel}
+                </Button>
+                <Popover
+                  triggerRef={containerRef}
+                  placement="bottom start"
+                  shouldFlip={false}
+                >
+                  <AriaDialog className={styles.dialog}>
+                    {renderCalendar()}
+                  </AriaDialog>
+                </Popover>
+              </DialogTrigger>
+
+              <span className={styles.rangeSeparator} aria-hidden="true">
+                →
+              </span>
+
+              {/* Bouton semaine de fin */}
+              <DialogTrigger
+                isOpen={openPopover === "end"}
+                onOpenChange={(open) =>
+                  setOpenPopover(open ? "end" : null)
+                }
+              >
+                <Button
+                  appearance="subtle"
+                  className={styles.weekButton}
+                  isDisabled={isDisabled}
+                  aria-label={`Semaine de fin : ${endLabel}`}
+                >
+                  {endLabel}
+                </Button>
+                <Popover
+                  triggerRef={containerRef}
+                  placement="bottom start"
+                  shouldFlip={false}
+                >
+                  <AriaDialog className={styles.dialog}>
+                    {renderCalendar()}
+                  </AriaDialog>
+                </Popover>
+              </DialogTrigger>
+            </div>
+
+            {/* Bouton calendrier */}
+            <DialogTrigger
+              isOpen={openPopover === "range"}
+              onOpenChange={(open) => setOpenPopover(open ? "range" : null)}
+            >
+              <Button
+                appearance="subtle"
+                iconBefore="CalendarMonth"
+                className={styles.calendarButton}
+                isDisabled={isDisabled}
+                aria-label="Ouvrir le sélecteur de semaine"
+              />
+              <Popover
+                triggerRef={containerRef}
+                placement="bottom start"
+                shouldFlip={false}
+              >
+                <AriaDialog className={styles.dialog}>
+                  {renderCalendar()}
+                </AriaDialog>
+              </Popover>
+            </DialogTrigger>
+          </>
+        )}
+      </InputContainer>
+    </div>
+  );
+}

@@ -6,6 +6,9 @@ declare const styles: {
   readonly "dialog": string;
   readonly "monthButton": string;
   readonly "monthInput": string;
+  readonly "rangeInput": string;
+  readonly "rangeSeparator": string;
+  readonly "rangeValue": string;
   readonly "root": string;
   readonly "separator": string;
   readonly "yearInput": string;

@@ -1,5 +1,5 @@
 // MonthPicker — Comète Design System
-// Sélecteur de mois : deux modes (navigation / saisie) selon isEditable.
+// Sélecteur de mois : deux modes (saisie / navigation) × (single / range).
 import { useEffect, useRef, useState, type ReactElement, type CSSProperties } from "react";
 import {
   CalendarDate,
@@ -11,6 +11,7 @@ import {
   DialogTrigger,
   useLocale,
 } from "react-aria-components";
+import type { RangeValue } from "react-aria-components";
 import { Button } from "../Button/Button.js";
 import { Calendar } from "../Calendar/Calendar.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
@@ -23,16 +24,12 @@ import styles from "./MonthPicker.module.css";
 
 export type MonthPickerAppearance = InputContainerAppearance;
 
-export interface MonthPickerProps {
-  /** Mois sélectionné (1-12). */
-  month?: number;
-  /** Année sélectionnée. */
-  year?: number;
-  /** Callback appelé à chaque changement de mois/année. */
-  onChange?: (month: number, year: number) => void;
+/** Props communes aux deux variantes. */
+interface MonthPickerBaseProps {
   /**
    * Mode saisie : affiche des champs texte + icône calendrier.
-   * Quand `false`, affiche les chevrons ←/→ + bouton mois/année.
+   * Quand `false`, affiche les chevrons ←/→ + bouton mois/année
+   * (ou, en range, les deux boutons mois cliquables).
    * @default true
    */
   isEditable?: boolean;
@@ -49,6 +46,47 @@ export interface MonthPickerProps {
   /** Label accessible. */
   "aria-label"?: string;
 }
+
+/** Props du mode simple (sélection d'un mois unique). */
+export interface SingleMonthPickerProps extends MonthPickerBaseProps {
+  /** @default false */
+  isRange?: false;
+  /** Mois sélectionné (1-12). */
+  month?: number;
+  /** Année sélectionnée. */
+  year?: number;
+  /** Callback appelé à chaque changement de mois/année. */
+  onChange?: (month: number, year: number) => void;
+}
+
+/** Props du mode plage (sélection d'une plage de mois). */
+export interface RangeMonthPickerProps extends MonthPickerBaseProps {
+  /** Active la sélection de plage. */
+  isRange: true;
+  /** Mois de début (1-12). */
+  startMonth?: number;
+  /** Année de début. */
+  startYear?: number;
+  /** Mois de fin (1-12). */
+  endMonth?: number;
+  /** Année de fin. */
+  endYear?: number;
+  /**
+   * Nombre de calendriers affichés dans le popover.
+   * @default 2
+   */
+  calendars?: 1 | 2;
+  /** Callback appelé à chaque changement de plage. */
+  onChange?: (
+    startMonth: number,
+    startYear: number,
+    endMonth: number,
+    endYear: number,
+  ) => void;
+}
+
+/** Union discriminée — TypeScript infère le bon type selon `isRange`. */
+export type MonthPickerProps = SingleMonthPickerProps | RangeMonthPickerProps;
 
 // -----------------------------------------------------------------------
 // Helpers
@@ -81,33 +119,89 @@ function formatMonthYear(
   );
 }
 
+/**
+ * Parse une chaîne "Mois Année" (ex: "Août 2025", "août 2025", "08 2025", "08/2025").
+ * Retourne `{ month, year }` ou `null`.
+ */
+function parseMonthYear(
+  input: string,
+  locale: string,
+): { month: number; year: number } | null {
+  const trimmed = input.trim();
+
+  // Format numérique : "08 2025", "08/2025", "8/2025"
+  const numMatch = trimmed.match(/^(\d{1,2})\s*[/\s]\s*(\d{4})$/);
+  if (numMatch?.[1] && numMatch[2]) {
+    const m = parseInt(numMatch[1], 10);
+    const y = parseInt(numMatch[2], 10);
+    if (m >= 1 && m <= 12) return { month: m, year: y };
+  }
+
+  // Format texte : "Août 2025" — matcher le nom du mois dans la locale
+  for (let m = 1; m <= 12; m++) {
+    const monthName = new Intl.DateTimeFormat(locale, { month: "long" }).format(
+      new Date(2000, m - 1, 1),
+    );
+    if (trimmed.toLowerCase().startsWith(monthName.toLowerCase())) {
+      const rest = trimmed.slice(monthName.length).trim();
+      const yearMatch = rest.match(/^(\d{4})$/);
+      if (yearMatch?.[1]) {
+        return { month: m, year: parseInt(yearMatch[1], 10) };
+      }
+    }
+  }
+
+  return null;
+}
+
+/** Compare deux mois (year * 12 + month) pour ordonner. */
+function monthToOrdinal(month: number, year: number): number {
+  return year * 12 + month;
+}
+
 // -----------------------------------------------------------------------
-// Composant
+// Dispatcher
 
 /**
  * MonthPicker — Comète Design System
  *
- * Sélecteur de mois unique avec deux modes :
+ * Sélecteur de mois avec deux modes d'interaction × deux modes de sélection.
  *
- * **Navigation** (`isEditable={false}`) :
- * ```
- * < Juin 2025 ▼ >
- * ```
- * Chevrons ←/→ pour ±1 mois, bouton mois/année ouvre le calendar.
+ * **Modes d'interaction** :
+ * - **Saisie** (`isEditable={true}`, défaut) : champs texte éditables + icône calendrier.
+ * - **Navigation** (`isEditable={false}`) : chevrons ←/→ + bouton mois/année (single)
+ *   ou deux boutons mois cliquables + calendrier (range).
  *
- * **Saisie** (`isEditable={true}`, défaut) :
- * ```
- * [ 06 / 2025 ] 📅
- * ```
- * Champs texte éditables + icône calendrier ouvre le calendar.
+ * **Modes de sélection** :
+ * - **Simple** (`isRange={false}`, défaut) : un seul mois.
+ * - **Plage** (`isRange={true}`) : deux mois (start/end) séparés par `→`.
  *
  * ```tsx
- * import { MonthPicker } from "@naxit/comete-design-system";
+ * // Mois unique
+ * <MonthPicker month={6} year={2025} onChange={(m, y) => ...} />
  *
- * <MonthPicker month={6} year={2025} onChange={(m, y) => console.log(m, y)} />
+ * // Plage de mois
+ * <MonthPicker
+ *   isRange
+ *   startMonth={8} startYear={2025}
+ *   endMonth={11} endYear={2025}
+ *   onChange={(sm, sy, em, ey) => ...}
+ * />
  * ```
  */
-export function MonthPicker({
+export function MonthPicker(props: MonthPickerProps): ReactElement {
+  if (props.isRange) {
+    return <RangeMonthPicker {...props} />;
+  }
+  return <SingleMonthPicker {...props} />;
+}
+
+MonthPicker.displayName = "MonthPicker";
+
+// -----------------------------------------------------------------------
+// Single (isRange=false) — logique d'origine
+
+function SingleMonthPicker({
   month,
   year,
   onChange,
@@ -118,7 +212,7 @@ export function MonthPicker({
   className,
   style,
   "aria-label": ariaLabel,
-}: MonthPickerProps): ReactElement {
+}: Omit<SingleMonthPickerProps, "isRange">): ReactElement {
   const { locale } = useLocale();
   const todayDate = today(getLocalTimeZone());
   const currentMonth = todayDate.month;
@@ -353,4 +447,351 @@ export function MonthPicker({
   );
 }
 
-MonthPicker.displayName = "MonthPicker";
+// -----------------------------------------------------------------------
+// Range (isRange=true)
+
+function RangeMonthPicker({
+  startMonth,
+  startYear,
+  endMonth,
+  endYear,
+  calendars = 2,
+  onChange,
+  isEditable = true,
+  appearance = "default",
+  isInvalid = false,
+  isDisabled = false,
+  className,
+  style,
+  "aria-label": ariaLabel,
+}: Omit<RangeMonthPickerProps, "isRange">): ReactElement {
+  const { locale } = useLocale();
+  const todayDate = today(getLocalTimeZone());
+
+  const resolvedStartMonth = startMonth ?? todayDate.month;
+  const resolvedStartYear = startYear ?? todayDate.year;
+  const resolvedEndMonth = endMonth ?? todayDate.month;
+  const resolvedEndYear = endYear ?? todayDate.year;
+
+  // Plage inversée (start > end) : force isInvalid pour signaler l'état.
+  // Cet état survient pendant l'intermédiaire (premier clic avant le second)
+  // ou si le consommateur passe des props incohérentes.
+  const isInverted =
+    monthToOrdinal(resolvedStartMonth, resolvedStartYear) >
+    monthToOrdinal(resolvedEndMonth, resolvedEndYear);
+  const effectiveInvalid = isInvalid || isInverted;
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Popover open state — un seul popover ouvert à la fois
+  const [openPopover, setOpenPopover] = useState<
+    "start" | "end" | "range" | null
+  >(null);
+
+  // Close dropdown on click outside or Escape (editable mode only)
+  useEffect(() => {
+    if (!openPopover || !isEditable) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!containerRef.current?.contains(e.target as Node)) {
+        setOpenPopover(null);
+      }
+    };
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpenPopover(null);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [openPopover, isEditable]);
+
+  // -- Helper : commit range (auto-swap if start > end) --
+
+  const commitRange = (
+    sm: number,
+    sy: number,
+    em: number,
+    ey: number,
+  ) => {
+    if (monthToOrdinal(sm, sy) > monthToOrdinal(em, ey)) {
+      onChange?.(em, ey, sm, sy);
+    } else {
+      onChange?.(sm, sy, em, ey);
+    }
+  };
+
+  // -- Handler calendar range selection --
+
+  const handleRangeSelect = (range: RangeValue<CalendarDate>) => {
+    commitRange(
+      range.start.month,
+      range.start.year,
+      range.end.month,
+      range.end.year,
+    );
+  };
+
+  // -- Handler : mise à jour immédiate au premier clic (start seul) --
+  // Pas de swap : on veut que le champ start reflète exactement le mois cliqué,
+  // même si temporairement start > end. Le second clic committera la plage
+  // finale avec swap si nécessaire.
+  const handleIntermediateStart = (date: CalendarDate) => {
+    onChange?.(
+      date.month,
+      date.year,
+      resolvedEndMonth,
+      resolvedEndYear,
+    );
+  };
+
+  // -- Editable input state --
+
+  const [startInput, setStartInput] = useState("");
+  const [endInput, setEndInput] = useState("");
+  const [startFocused, setStartFocused] = useState(false);
+  const [endFocused, setEndFocused] = useState(false);
+
+  const startLabel = formatMonthYear(
+    resolvedStartMonth,
+    resolvedStartYear,
+    locale,
+  );
+  const endLabel = formatMonthYear(
+    resolvedEndMonth,
+    resolvedEndYear,
+    locale,
+  );
+
+  const handleStartFocus = () => {
+    setStartInput(startLabel);
+    setStartFocused(true);
+  };
+
+  const handleStartBlur = () => {
+    setStartFocused(false);
+    const parsed = parseMonthYear(startInput, locale);
+    if (parsed) {
+      commitRange(
+        parsed.month,
+        parsed.year,
+        resolvedEndMonth,
+        resolvedEndYear,
+      );
+    }
+  };
+
+  const handleEndFocus = () => {
+    setEndInput(endLabel);
+    setEndFocused(true);
+  };
+
+  const handleEndBlur = () => {
+    setEndFocused(false);
+    const parsed = parseMonthYear(endInput, locale);
+    if (parsed) {
+      commitRange(
+        resolvedStartMonth,
+        resolvedStartYear,
+        parsed.month,
+        parsed.year,
+      );
+    }
+  };
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      (e.target as HTMLInputElement).blur();
+    }
+  };
+
+  // -- Calendar values --
+
+  const startValue = new CalendarDate(resolvedStartYear, resolvedStartMonth, 1);
+  const endValue = new CalendarDate(resolvedEndYear, resolvedEndMonth, 1);
+  const rangeValue: RangeValue<CalendarDate> = {
+    start: startValue,
+    end: endValue,
+  };
+
+  const rootClassNames = [styles.root, className].filter(Boolean).join(" ");
+
+  // -- Calendar helper --
+
+  const renderCalendar = () =>
+    calendars === 2 ? (
+      <Calendar
+        appearance="month"
+        isRange
+        calendars={2}
+        value={rangeValue}
+        onChange={handleRangeSelect}
+        onIntermediateStart={handleIntermediateStart}
+        isDisabled={isDisabled}
+      />
+    ) : (
+      <Calendar
+        appearance="month"
+        isRange
+        value={rangeValue}
+        onChange={handleRangeSelect}
+        onIntermediateStart={handleIntermediateStart}
+        isDisabled={isDisabled}
+      />
+    );
+
+  return (
+    <div
+      className={rootClassNames}
+      ref={containerRef}
+      aria-label={
+        ariaLabel ?? `Plage de mois : ${startLabel} à ${endLabel}`
+      }
+      data-disabled={isDisabled || undefined}
+      data-invalid={effectiveInvalid || undefined}
+      style={style}
+    >
+      <InputContainer
+        isBorderless={!isEditable}
+        appearance={appearance}
+        isDisabled={isDisabled}
+        isInvalid={effectiveInvalid}
+      >
+        {isEditable ? (
+          /* ---- Mode saisie : inputs + icône calendrier ---- */
+          <div className={styles.content}>
+            <input
+              type="text"
+              className={styles.rangeInput}
+              value={startFocused ? startInput : startLabel}
+              onChange={(e) => setStartInput(e.target.value)}
+              onClick={() => !isDisabled && setOpenPopover("range")}
+              onFocus={handleStartFocus}
+              onBlur={handleStartBlur}
+              onKeyDown={handleInputKeyDown}
+              disabled={isDisabled}
+              aria-label={`Mois de début : ${startLabel}`}
+            />
+
+            <span className={styles.rangeSeparator} aria-hidden="true">
+              →
+            </span>
+
+            <input
+              type="text"
+              className={styles.rangeInput}
+              value={endFocused ? endInput : endLabel}
+              onChange={(e) => setEndInput(e.target.value)}
+              onClick={() => !isDisabled && setOpenPopover("range")}
+              onFocus={handleEndFocus}
+              onBlur={handleEndBlur}
+              onKeyDown={handleInputKeyDown}
+              disabled={isDisabled}
+              aria-label={`Mois de fin : ${endLabel}`}
+            />
+
+            <Button
+              appearance="subtle"
+              iconBefore="CalendarMonth"
+              className={styles.calendarButton}
+              isDisabled={isDisabled}
+              onPress={() =>
+                !isDisabled &&
+                setOpenPopover((o) => (o === "range" ? null : "range"))
+              }
+              aria-label="Ouvrir le sélecteur de mois"
+            />
+            {openPopover === "range" && (
+              <div className={styles.calendarDropdown}>{renderCalendar()}</div>
+            )}
+          </div>
+        ) : (
+          /* ---- Mode navigation : boutons mois + icône calendrier ---- */
+          <>
+            <div className={styles.rangeValue}>
+              {/* Bouton mois de début */}
+              <DialogTrigger
+                isOpen={openPopover === "start"}
+                onOpenChange={(open) =>
+                  setOpenPopover(open ? "start" : null)
+                }
+              >
+                <Button
+                  appearance="subtle"
+                  className={styles.monthButton}
+                  isDisabled={isDisabled}
+                  aria-label={`Mois de début : ${startLabel}`}
+                >
+                  {startLabel}
+                </Button>
+                <Popover
+                  triggerRef={containerRef}
+                  placement="bottom start"
+                  shouldFlip={false}
+                >
+                  <AriaDialog className={styles.dialog}>
+                    {renderCalendar()}
+                  </AriaDialog>
+                </Popover>
+              </DialogTrigger>
+
+              <span className={styles.rangeSeparator} aria-hidden="true">
+                →
+              </span>
+
+              {/* Bouton mois de fin */}
+              <DialogTrigger
+                isOpen={openPopover === "end"}
+                onOpenChange={(open) =>
+                  setOpenPopover(open ? "end" : null)
+                }
+              >
+                <Button
+                  appearance="subtle"
+                  className={styles.monthButton}
+                  isDisabled={isDisabled}
+                  aria-label={`Mois de fin : ${endLabel}`}
+                >
+                  {endLabel}
+                </Button>
+                <Popover
+                  triggerRef={containerRef}
+                  placement="bottom start"
+                  shouldFlip={false}
+                >
+                  <AriaDialog className={styles.dialog}>
+                    {renderCalendar()}
+                  </AriaDialog>
+                </Popover>
+              </DialogTrigger>
+            </div>
+
+            {/* Bouton calendrier */}
+            <DialogTrigger
+              isOpen={openPopover === "range"}
+              onOpenChange={(open) => setOpenPopover(open ? "range" : null)}
+            >
+              <Button
+                appearance="subtle"
+                iconBefore="CalendarMonth"
+                className={styles.calendarButton}
+                isDisabled={isDisabled}
+                aria-label="Ouvrir le sélecteur de mois"
+              />
+              <Popover
+                triggerRef={containerRef}
+                placement="bottom start"
+                shouldFlip={false}
+              >
+                <AriaDialog className={styles.dialog}>
+                  {renderCalendar()}
+                </AriaDialog>
+              </Popover>
+            </DialogTrigger>
+          </>
+        )}
+      </InputContainer>
+    </div>
+  );
+}
