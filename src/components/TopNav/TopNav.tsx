@@ -1,6 +1,6 @@
 // TopNav — barre de navigation principale responsive
 import type { ReactElement, ReactNode } from "react";
-import { Icon } from "../Icon/index.js";
+import { Button } from "../Button/index.js";
 import styles from "./TopNav.module.css";
 
 // -----------------------------------------------------------------------
@@ -19,6 +19,8 @@ export interface TopNavProps {
   children?: ReactNode;
   /** Additional CSS class. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -44,20 +46,20 @@ export function TopNav({
   onBack,
   children,
   className,
+  style,
 }: TopNavProps): ReactElement {
   return (
-    <nav className={[styles.topNav, className].filter(Boolean).join(" ")}>
+    <nav className={[styles.topNav, className].filter(Boolean).join(" ")} style={style}>
       {/* Start section */}
       <div className={styles.start}>
         {onBack && (
-          <button
-            type="button"
-            className={styles.backButton}
-            onClick={onBack}
+          <Button
+            appearance="subtle"
+            iconBefore="ArrowBack"
+            onPress={onBack}
             aria-label="Retour"
-          >
-            <Icon icon="ArrowBack" size={24} />
-          </button>
+            className={styles.backButton}
+          />
         )}
         {logo && <span className={styles.logo}>{logo}</span>}
         {appName && <span className={styles.appName}>{appName}</span>}

@@ -5,7 +5,7 @@ import {
   Logo,
   Button,
   Avatar,
-  SideNav,
+  Text,
 } from "@naxit/comete-design-system/components";
 
 const FIGMA_FILE =
@@ -23,6 +23,13 @@ const meta = {
   parameters: {
     layout: "fullscreen",
     design: { type: "figma", url: figmaUrl("4323:3313") },
+    backgrounds: {                                                                                  
+      default: "dark",                                                                              
+      values: [
+        { name: "dark", value: "var(--white-4)" },                                                         
+        { name: "light", value: "var(--black-4)" },                    
+      ],
+    },
   },
 } satisfies Meta<typeof TopNav>;
 
@@ -34,58 +41,36 @@ type Story = StoryObj<typeof meta>;
 
 /** Desktop/tablet : logo + nom + actions. Réduire le viewport pour voir le mode mobile. */
 export const Default: Story = {
-  render: () => (
-    <TopNav logo={<Logo />} appName="Pro Sécurité" title="Accueil">
-      <Button iconBefore="Search" appearance="subtle" spacing="compact" />
-      <Avatar initials="AC" size="small" />
-    </TopNav>
-  ),
-};
+    decorators: [
+      () => (
+        <div style={{ background: "var(--black-4)", height: "100vh", width: "100vw"}}>
+          <TopNav logo={<Logo size={24} format="icon" product="link" />} appName="Pro Sécurité" title="Accueil">
+            <Button iconBefore="Search" appearance="subtle" spacing="compact" />
+            <Avatar initials="AC" size="medium" />
+          </TopNav>
+        </div>                                                                                        
+      ),                                                          
+    ],
+  };
 
 /** Mobile avec back button. Réduire le viewport sous 600px. */
 export const WithBack: Story = {
-  render: () => (
-    <TopNav
-      logo={<Logo />}
-      appName="Pro Sécurité"
-      title="Détail agent"
-      onBack={() => window.history.back()}
-    >
-      <Button iconBefore="Search" appearance="subtle" spacing="compact" />
-      <Avatar initials="AC" size="small" />
-    </TopNav>
-  ),
-};
-
-/** Sans logo ni titre — actions seules. */
-export const ActionsOnly: Story = {
-  render: () => (
-    <TopNav>
-      <Button iconBefore="Search" appearance="subtle" spacing="compact" />
-      <Button iconBefore="Notifications" appearance="subtle" spacing="compact" />
-      <Avatar initials="JD" size="small" />
-    </TopNav>
-  ),
-};
-
-/** Combiné avec un SideNav dans un layout complet. */
-export const FullLayout: Story = {
-  render: () => (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-      <TopNav logo={<Logo />} appName="Pro Sécurité" title="Accueil">
-        <Button iconBefore="Search" appearance="subtle" spacing="compact" />
-        <Avatar initials="AC" size="small" />
-      </TopNav>
-      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
-        <SideNav>
-          <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="/" />
-          <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
-          <SideNav.Item label="Sites" iconBefore="LocationOn" href="/sites" />
-        </SideNav>
-        <main style={{ flex: 1, padding: "var(--space200)", overflowY: "auto" }}>
-          <h1>Contenu principal</h1>
-        </main>
-      </div>
-    </div>
-  ),
+    decorators: [
+      () => (
+        <div style={{ background: "var(--black-4)", height: "100vh", width: "100vw"}}>
+          <TopNav
+            logo={<Logo size={24} format="icon" product="link" />}
+            appName="Pro Sécurité"
+            title="Détail agent"
+            onBack={() => window.history.back()}
+          >
+            <Button iconBefore="Search" appearance="subtle" spacing="compact" />
+            <Avatar initials="AC" size="medium" />
+          </TopNav>
+          <Text style={{ padding: "var(--space200)" }}>
+            Réduisez la largeur de la fenêtre sous 600px pour voir le mode mobile avec back button.
+          </Text>
+        </div>                                                                                        
+      ),                                                          
+    ],
 };

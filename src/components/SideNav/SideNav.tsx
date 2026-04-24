@@ -1,13 +1,12 @@
 // SideNav — Comete Design System
-import {
-  createContext,
+import { createContext,
   useContext,
   type ReactElement,
-  type ReactNode,
-} from "react";
+  type ReactNode, type CSSProperties } from "react";
 import type { IconName } from "@naxit/comete-icons";
 import { Icon } from "../Icon/index.js";
 import { Button } from "../Button/index.js";
+import { Divider } from "../Divider/index.js";
 import styles from "./SideNav.module.css";
 
 // -----------------------------------------------------------------------
@@ -35,6 +34,8 @@ export interface SideNavProps {
   /** Callback déclenché par le bouton collapse/expand du Header. */
   onCollapsedChange?: (collapsed: boolean) => void;
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
 }
 
 export interface SideNavHeaderProps {
@@ -229,9 +230,7 @@ SideNavSection.displayName = "SideNav.Section";
 
 export function SideNavDivider({ className }: SideNavDividerProps): ReactElement {
   return (
-    <hr
-      className={[styles.divider, className].filter(Boolean).join(" ")}
-    />
+    <Divider className={[styles.divider, className].filter(Boolean).join(" ")} />
   );
 }
 
@@ -279,6 +278,7 @@ export function SideNav({
   isCollapsed = false,
   onCollapsedChange,
   className,
+  style,
 }: SideNavProps): ReactElement {
   const toggleCollapse = onCollapsedChange
     ? () => { onCollapsedChange(!isCollapsed); }
@@ -289,6 +289,7 @@ export function SideNav({
       <nav
         className={[styles.sideNav, className].filter(Boolean).join(" ")}
         data-collapsed={isCollapsed || undefined}
+        style={style}
       >
         {children}
       </nav>

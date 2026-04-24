@@ -2,6 +2,7 @@
 // Étiquette compacte pour catégoriser, filtrer ou identifier du contenu.
 // Basé sur React Aria pour l'accessibilité. Spec Figma : node 2984:15878.
 import type { ReactElement, ReactNode } from "react";
+import { Icon } from "../Icon/index.js";
 import styles from "./Tag.module.css";
 
 // -----------------------------------------------------------------------
@@ -41,6 +42,8 @@ export interface TagProps {
   onRemove?: () => void;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -69,6 +72,7 @@ export function Tag({
   onPress,
   onRemove,
   className,
+  style,
 }: TagProps): ReactElement {
   const classNames = [
     styles["tag"],
@@ -103,6 +107,7 @@ export function Tag({
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       aria-disabled={isDisabled || undefined}
+      style={style}
     >
       {elemBefore !== undefined && (
         <span className={styles["elemBefore"]}>{elemBefore}</span>
@@ -122,20 +127,7 @@ export function Tag({
           aria-label={`Supprimer ${label}`}
           tabIndex={0}
         >
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 12 12"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M9 3L3 9M3 3L9 9"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-          </svg>
+          <Icon icon="CloseSmallFaded" size={12} spacing="none" />
         </button>
       )}
     </span>
