@@ -40,6 +40,8 @@ export interface TextProps {
   className?: string;
   /** Identifiant HTML. */
   id?: string;
+  /** Prend tout l'espace disponible (flex: 1). @default false */
+  grow?: boolean;
   /** Style inline. */
   style?: CSSProperties;
 }
@@ -75,6 +77,7 @@ export function Text({
   children,
   className,
   id,
+  grow = false,
   style,
 }: TextProps): ReactElement {
   const cssKey = `text-${size}-${weight}` as keyof typeof typographyStyles;
@@ -93,9 +96,11 @@ export function Text({
     .filter(Boolean)
     .join(" ");
 
-  const mergedStyle = maxLines
-    ? { ...style, WebkitLineClamp: maxLines }
-    : style;
+  const mergedStyle = {
+    ...(grow && { flex: 1, minWidth: 0 }),
+    ...(maxLines ? { WebkitLineClamp: maxLines } : undefined),
+    ...style,
+  } as CSSProperties;
 
   return (
     <Component className={classNames} style={mergedStyle} id={id}>

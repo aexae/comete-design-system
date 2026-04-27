@@ -27,6 +27,8 @@ export interface HeroProps {
   children?: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Prend tout l'espace disponible (flex: 1). @default false */
+  grow?: boolean;
   /** Styles inline additionnels. */
   style?: React.CSSProperties;
   /** Identifiant HTML. */
@@ -69,6 +71,7 @@ export function Hero({
   noWrap = false,
   children,
   className,
+  grow = false,
   id,
   style,
 }: HeroProps): ReactElement {
@@ -85,8 +88,10 @@ export function Hero({
     .filter(Boolean)
     .join(" ");
 
+  const mergedStyle = grow ? { flex: 1, minWidth: 0, ...style } : style;
+
   return (
-    <Component className={classNames} id={id} style={style}>
+    <Component className={classNames} id={id} style={mergedStyle}>
       {children}
     </Component>
   );
