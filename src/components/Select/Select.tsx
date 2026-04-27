@@ -1,7 +1,7 @@
 // Select — Comète Design System
 // Sélecteur déroulant accessible basé sur React Aria.
 // Intègre Field (label + message) comme wrapper obligatoire.
-import { type ReactElement, type ReactNode, type Key, useRef, type CSSProperties } from "react";
+import { type ReactElement, type ReactNode, type Key, useCallback, useRef, type CSSProperties } from "react";
 import {
   Select as AriaSelect,
   ListBox as AriaListBox,
@@ -178,6 +178,7 @@ export function Select({
   style,
 }: SelectProps): ReactElement {
   const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const allOptions = flattenOptions(items);
   const hasValue = value !== undefined ? value !== null : undefined;
   const disabled = isDisabled ?? false;
@@ -189,6 +190,10 @@ export function Select({
   function handleClear() {
     onChange?.(null);
   }
+
+  const handleContainerClick = useCallback(() => {
+    triggerRef.current?.click();
+  }, []);
 
   return (
     <Field
@@ -217,8 +222,9 @@ export function Select({
                 isCompact={isCompact}
                 isDisabled={disabled}
                 isInvalid={isInvalid ?? false}
+                onContainerClick={handleContainerClick}
               >
-                <AriaButton className={styles.triggerButton}>
+                <AriaButton ref={triggerRef} className={styles.triggerButton}>
                   <AriaSelectValue className={styles.value}>
                     {({ selectedText, isPlaceholder }) =>
                       isPlaceholder ? placeholder : (selectedText ?? "")

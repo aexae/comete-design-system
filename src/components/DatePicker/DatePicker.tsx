@@ -178,14 +178,27 @@ function EditableDatePicker<T extends DateValue = DateValue>({
     setIsOpen(true);
   }, []);
 
-  // Ouvre le popover au clic sur le champ (capture phase pour intercepter
+  // Clic sur le padding de l'InputContainer → ouvre le popover + focus premier segment
+  const handleContainerClick = useCallback(() => {
+    if (ariaProps.isDisabled) return;
+    setIsOpen(true);
+    // Focus le premier segment (curseur au début pour les champs formatés)
+    const segment = containerRef.current?.querySelector<HTMLElement>("[data-type]:not([data-type='literal'])");
+    segment?.focus();
+  }, [ariaProps.isDisabled]);
+
+  // Ouvre le popover au clic sur les segments (capture phase pour intercepter
   // avant que React Aria ne stoppe la propagation sur les segments)
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
-    const handlePointerDown = () => {
-      if (!ariaProps.isDisabled) setIsOpen(true);
+    const handlePointerDown = (e: PointerEvent) => {
+      const target = e.target as HTMLElement;
+      // Ne réagir que sur les segments ou le date input, pas sur le padding
+      if (target.closest("[data-type], [class*='dateInput']")) {
+        if (!ariaProps.isDisabled) setIsOpen(true);
+      }
     };
 
     el.addEventListener("pointerdown", handlePointerDown, true);
@@ -236,6 +249,7 @@ function EditableDatePicker<T extends DateValue = DateValue>({
               isCompact={isCompact}
               isDisabled={isDisabled}
               isInvalid={isInvalid}
+              onContainerClick={handleContainerClick}
             >
               <AriaDateInput className={styles.dateInput}>
                 {(segment) => (

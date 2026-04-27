@@ -76,12 +76,9 @@ function SampleCard({ title, subtitle }: { title: string; subtitle: string }) {
 
 function BleedBanner() {
   return (
-    <div style={{
-      background: "var(--background-information-subtlest-default)",
-      padding: "var(--space300)",
-    }}>
+    <div style={{ padding: "var(--space300)" }}>
       <Stack gap="100" align="center">
-        <Icon icon="Campaign" size={32} color="information" />
+        <Icon icon="Campaign" size={32}  />
         <Heading size="small" as="span">Bannière full-bleed</Heading>
         <Text size="small" as="span" color="subtlest" align="center">
           Ce contenu traverse les gouttières de Page et va bord-à-bord.

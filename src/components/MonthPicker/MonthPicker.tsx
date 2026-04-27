@@ -335,6 +335,13 @@ function SingleMonthPicker({
         isBorderless={!isEditable}
         isDisabled={isDisabled}
         isInvalid={isInvalid}
+        onContainerClick={() => {
+          if (isDisabled || !isEditable) return;
+          setIsOpen(true);
+          const input = containerRef.current?.querySelector<HTMLInputElement>("input");
+          input?.focus();
+          input?.select();
+        }}
       >
         {isEditable ? (
           /* ---- Mode saisie : inputs mois/année + icône calendrier ---- */

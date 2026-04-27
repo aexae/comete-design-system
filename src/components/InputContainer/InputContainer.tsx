@@ -1,6 +1,6 @@
 // InputContainer — Comète Design System
 // Conteneur visuel partagé pour tous les champs de saisie.
-import type { ReactElement, ReactNode } from "react";
+import { useCallback, useRef, type MouseEvent, type ReactElement, type ReactNode } from "react";
 import { InputContextProvider } from "../../contexts/InputContext.js";
 import styles from "./InputContainer.module.css";
 
@@ -20,6 +20,12 @@ export interface InputContainerProps {
   isDisabled?: boolean;
   /** État invalide (visuel uniquement). @default false */
   isInvalid?: boolean;
+  /**
+   * Callback quand l'utilisateur clique sur le padding/fond du conteneur
+   * (pas sur un élément interactif enfant). Permet aux composants consommateurs
+   * d'implémenter focus, ouverture de popover, etc.
+   */
+  onContainerClick?: (e: MouseEvent<HTMLDivElement>) => void;
   /** Contenu du conteneur (input, segments, boutons, etc.). */
   children: ReactNode;
   /** Classe CSS additionnelle. */
@@ -54,10 +60,46 @@ export function InputContainer({
   isBorderless = false,
   isDisabled = false,
   isInvalid = false,
+  onContainerClick,
   children,
   className,
   style,
 }: InputContainerProps): ReactElement {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handlePointerDown = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (isDisabled) return;
+
+      // Ne réagir que si le clic est sur le conteneur lui-même (padding/fond),
+      // pas sur un enfant interactif (input, button, select, a, [tabindex]).
+      const target = e.target as HTMLElement;
+      if (target !== containerRef.current && target.closest("input, button, select, textarea, a, [tabindex]")) {
+        return;
+      }
+
+      // Si le conteneur a déjà le focus (un enfant est focusé), ne rien faire.
+      if (containerRef.current?.contains(document.activeElement) && document.activeElement !== containerRef.current) {
+        return;
+      }
+
+      // Empêcher le comportement par défaut (sélection de texte, etc.)
+      // pour que le focus aille bien dans le champ.
+      e.preventDefault();
+
+      if (onContainerClick) {
+        onContainerClick(e as unknown as MouseEvent<HTMLDivElement>);
+      } else {
+        // Comportement par défaut : focus le premier élément focusable
+        const focusable = containerRef.current?.querySelector<HTMLElement>(
+          "input, [tabindex]:not([tabindex='-1']), button:not([aria-label='Effacer'])",
+        );
+        focusable?.focus();
+      }
+    },
+    [isDisabled, onContainerClick],
+  );
+
   const classNames = [
     styles.inputContainer,
     isBorderless
@@ -74,7 +116,7 @@ export function InputContainer({
     .join(" ");
 
   return (
-    <div className={classNames} style={style}>
+    <div ref={containerRef} className={classNames} style={style} onPointerDown={handlePointerDown}>
       <InputContextProvider isDisabled={isDisabled} isInvalid={isInvalid}>
         {children}
       </InputContextProvider>

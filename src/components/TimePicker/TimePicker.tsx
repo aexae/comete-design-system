@@ -179,14 +179,24 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
     setIsOpen(true);
   }, []);
 
-  // Ouvre le popover au clic sur le champ (capture phase pour intercepter
-  // avant que React Aria ne stoppe la propagation sur les segments)
+  // Clic sur le padding de l'InputContainer → ouvre le popover + focus premier segment
+  const handleContainerClick = useCallback(() => {
+    if (ariaProps.isDisabled) return;
+    setIsOpen(true);
+    const segment = containerRef.current?.querySelector<HTMLElement>("[data-type]:not([data-type='literal'])");
+    segment?.focus();
+  }, [ariaProps.isDisabled]);
+
+  // Ouvre le popover au clic sur les segments
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
-    const handlePointerDown = () => {
-      if (!ariaProps.isDisabled) setIsOpen(true);
+    const handlePointerDown = (e: PointerEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest("[data-type], [class*='timeInput']")) {
+        if (!ariaProps.isDisabled) setIsOpen(true);
+      }
     };
 
     el.addEventListener("pointerdown", handlePointerDown, true);
@@ -262,6 +272,7 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
             isCompact={isCompact}
             isDisabled={isDisabled}
             isInvalid={isInvalid}
+            onContainerClick={handleContainerClick}
           >
             <div
               className={styles.editableContent}

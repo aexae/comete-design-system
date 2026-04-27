@@ -1,7 +1,7 @@
 // TextField — Comète Design System
 // Champ de saisie texte accessible via React Aria.
 import type { ReactElement, ReactNode } from "react";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
   TextField as AriaTextField,
   Input as AriaInput,
@@ -125,6 +125,15 @@ export function TextField({
     inputRef.current?.focus();
   }
 
+  const handleContainerClick = useCallback(() => {
+    const input = inputRef.current;
+    if (!input) return;
+    input.focus();
+    // Curseur à la fin du texte
+    const len = input.value.length;
+    input.setSelectionRange(len, len);
+  }, []);
+
   return (
     <AriaTextField
       className={[styles.textField, className].filter(Boolean).join(" ")}
@@ -139,6 +148,7 @@ export function TextField({
           isCompact={isCompact}
           isDisabled={isDisabled}
           isInvalid={isInvalid ?? false}
+          onContainerClick={handleContainerClick}
         >
           {elemBefore && <span className={styles.elemBefore}>{elemBefore}</span>}
           <AriaInput
@@ -154,7 +164,7 @@ export function TextField({
               onPress={handleClear}
               excludeFromTabOrder
             >
-              <Icon icon="CloseSmallFaded" size={16} spacing="none" />
+              <Icon icon="CloseSmallFaded" color="subtlest" />
             </AriaButton>
           )}
           {elemAfter && <span className={styles.elemAfter}>{elemAfter}</span>}
