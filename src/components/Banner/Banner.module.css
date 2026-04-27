@@ -18,6 +18,9 @@
 /* Zone contenu — hérite de la couleur du banner parent */
 
 .content {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
   flex: 1;
   min-width: 0; /* empêche le débordement en flex */
   font-family: var(--font-family-primary);
