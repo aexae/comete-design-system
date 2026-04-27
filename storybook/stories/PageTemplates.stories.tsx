@@ -39,6 +39,11 @@ import {
   DrawerFooter,
   DrawerProvider,
   MonthPicker,
+  Banner,
+  SideNav,
+  TopNav,
+  Logo,
+  useSideNav,
 } from "@naxit/comete-design-system/components";
 import css from "./PageTemplates.module.css";
 
@@ -246,6 +251,141 @@ const AGENTS = [
   { initials: "MC", name: "MOREAU Claire", mat: "119", contrat: "151.67", heures: "151.67", delta: "0.00", status: "success" as const },
 ];
 
+/**
+ * **Base** — Structure de base : Banner + SideNav + TopNav + Page.
+ *
+ * - Banner globale en haut du viewport
+ * - SideNav à gauche (avec collapse/expand)
+ * - TopNav à droite du SideNav
+ * - Page.Header + Page.Body dans la zone principale
+ */
+export const Base: Story = {
+  name: "Base (Banner + SideNav + TopNav)",
+  parameters: { design: { type: "figma", url: figmaUrl("4319:15827") } },
+  render: function BaseStory() {
+    const [collapsed, setCollapsed] = useState(false);
+
+    function FooterLogo() {
+      const { isCollapsed } = useSideNav();
+      return <Logo size={14} product="link" appearance="neutral" format={isCollapsed ? "icon" : "logo"} />;
+    }
+
+    return (
+      <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+        {/* Banner globale */}
+        <Banner appearance="warning">
+          <Text grow>Mise à jour planifiée le 28 avril à 22h.</Text>
+          <Button appearance="link" spacing="none">En savoir plus</Button>
+        </Banner>
+
+        <div style={{ display: "flex", flex: 1, minHeight: 0 }}>
+          {/* SideNav */}
+          <SideNav isCollapsed={collapsed} onCollapsedChange={setCollapsed}>
+            <SideNav.Header
+              logo={<Logo product="link" format="icon" />}
+              companyName="Comète Link"
+              description="Main Courante"
+            />
+            <SideNav.Section title="Manager">
+              <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="#" />
+              <SideNav.Item label="Agents" iconBefore="Agent" href="#" />
+              <SideNav.Item label="Sites" iconBefore="LocationOn" href="#" />
+              <SideNav.Item label="Pointages" iconBefore="Schedule" href="#" isDisabled />
+            </SideNav.Section>
+            <SideNav.Divider />
+            <SideNav.Section title="MCE">
+              <SideNav.Item label="Main courante" iconBefore="EditNote" href="#" />
+              <SideNav.Item label="Formulaires" iconBefore="FormEdit" href="#" />
+            </SideNav.Section>
+            <SideNav.Divider />
+            <SideNav.Section title="Administration">
+              <SideNav.Item label="Utilisateurs" iconBefore="Group" href="#" />
+              <SideNav.Item label="Droits" iconBefore="ManageAccounts" href="#" />
+              <SideNav.Item label="Licences" iconBefore="Key" href="#" />
+            </SideNav.Section>
+            <SideNav.Footer>
+              <FooterLogo />
+            </SideNav.Footer>
+          </SideNav>
+
+          {/* Zone principale */}
+          <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
+            {/* TopNav */}
+            <TopNav
+              logo={<Logo product="mycomete" format="icon" />}
+              appName="Pro Sécurité"
+              title="Accueil"
+            >
+              <Button appearance="subtle" spacing="compact" iconBefore="Notifications" aria-label="Notifications" />
+              <Avatar size="medium" initials="AC" />
+            </TopNav>
+
+            {/* Page */}
+            <Page style={{ flex: 1, minHeight: 0 }}>
+              <Page.Header
+                title="Accueil"
+                breadcrumbs={
+                  <Breadcrumbs>
+                    <BreadcrumbItem label="Espace manager" href="#" />
+                    <BreadcrumbItem label="Accueil" isCurrent />
+                  </Breadcrumbs>
+                }
+              />
+              <Page.Body>
+                <Stack gap="300">
+                  <Text as="span" color="subtle">
+                    Structure de base du layout applicatif. La Banner est au-dessus de tout,
+                    le SideNav occupe toute la hauteur sous la banner, le TopNav et la Page
+                    occupent l&apos;espace restant à droite.
+                  </Text>
+
+                  <Grid gap="200">
+                    <Grid.Col span={{ mobile: 12, tablet: 6, desktop: 4 }}>
+                      <Card appearance="outlined">
+                        <CC>
+                          <Stack gap="100">
+                            <IconTile icon="Agent" appearance="brand" size="small" />
+                            <Heading size="xsmall" as="span">42 agents</Heading>
+                            <Text size="small" as="span" color="subtlest">Actifs ce mois</Text>
+                          </Stack>
+                        </CC>
+                      </Card>
+                    </Grid.Col>
+                    <Grid.Col span={{ mobile: 12, tablet: 6, desktop: 4 }}>
+                      <Card appearance="outlined">
+                        <CC>
+                          <Stack gap="100">
+                            <IconTile icon="LocationOn" appearance="success" size="small" />
+                            <Heading size="xsmall" as="span">12 sites</Heading>
+                            <Text size="small" as="span" color="subtlest">Couverture 100%</Text>
+                          </Stack>
+                        </CC>
+                      </Card>
+                    </Grid.Col>
+                    <Grid.Col span={{ mobile: 12, tablet: 6, desktop: 4 }}>
+                      <Card appearance="outlined">
+                        <CC>
+                          <Stack gap="100">
+                            <IconTile icon="Notifications" appearance="warning" size="small" />
+                            <Heading size="xsmall" as="span">3 alertes</Heading>
+                            <Text size="small" as="span" color="subtlest">À traiter</Text>
+                          </Stack>
+                        </CC>
+                      </Card>
+                    </Grid.Col>
+                  </Grid>
+                </Stack>
+              </Page.Body>
+            </Page>
+          </div>
+        </div>
+      </div>
+    );
+  },
+};
+
+// -----------------------------------------------------------------------
+// 1. COLLECTION
 /**
  * **Collection** — Liste avec toolbar et filtres.
  *
