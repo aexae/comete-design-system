@@ -10,11 +10,14 @@
   flex-direction: column;
 }
 
-/* Base */
+/* Base — align-items: flex-start aligne le haut de l'indicateur avec le haut
+   du labelGroup (qui pousse sa première ligne via padding-top). Recette Figma. */
 .checkbox {
   display: flex;
   align-items: flex-start;
-  column-gap: var(--space025);
+  /* 4px = (32 − 24) / 2, exactement la débordement du halo 32×32 sur l'indicateur 24×24.
+     Garantit que le halo touche pile le bord du label sans le couvrir. */
+  column-gap: var(--space050);
   color: var(--text-default);
   cursor: pointer;
   user-select: none;
@@ -32,14 +35,31 @@
    Indicator (icône checkbox)
    ========================================================================== */
 
+/* L'indicateur garde la taille Figma (24×24) pour ne pas perturber
+   l'alignement avec le label. Un ::before absolu étend la zone de halo
+   visuel à 40×40 (style MUI ripple) sans modifier le layout. */
 .indicator {
   flex-shrink: 0;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   width: var(--size300);
   height: var(--size300);
   color: var(--background-neutral-bold-default);
+}
+
+.indicator::before {
+  content: "";
+  position: absolute;
+  /* (24 − 32) / 2 = −4 → halo 32×32 centré sur l'icône. */
+  inset: calc((var(--size300) - var(--size400)) / 2);
+  border-radius: var(--radius-round);
+  background-color: transparent;
+  transition-property: background-color;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--easing-default);
+  pointer-events: none;
 }
 
 .iconWrapper {
@@ -65,22 +85,36 @@
 .checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-hovered] .indicator {
   color: var(--background-neutral-bold-hovered);
 }
+.checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-hovered] .indicator::before {
+  background-color: var(--background-neutral-subtler-hovered);
+}
 
 /* Hover — checked / indeterminate */
 .checkbox[data-selected]:not([data-disabled])[data-hovered] .indicator,
 .checkbox[data-indeterminate]:not([data-disabled])[data-hovered] .indicator {
   color: var(--background-information-bold-hovered);
 }
+.checkbox[data-selected]:not([data-disabled])[data-hovered] .indicator::before,
+.checkbox[data-indeterminate]:not([data-disabled])[data-hovered] .indicator::before {
+  background-color: var(--background-information-subtlest-hovered);
+}
 
 /* Pressed — unchecked */
 .checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-pressed] .indicator {
   color: var(--background-neutral-bold-pressed);
+}
+.checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-pressed] .indicator::before {
+  background-color: var(--background-neutral-subtler-pressed);
 }
 
 /* Pressed — checked / indeterminate */
 .checkbox[data-selected]:not([data-disabled])[data-pressed] .indicator,
 .checkbox[data-indeterminate]:not([data-disabled])[data-pressed] .indicator {
   color: var(--background-information-bold-pressed);
+}
+.checkbox[data-selected]:not([data-disabled])[data-pressed] .indicator::before,
+.checkbox[data-indeterminate]:not([data-disabled])[data-pressed] .indicator::before {
+  background-color: var(--background-information-subtlest-pressed);
 }
 
 /* ==========================================================================
@@ -95,10 +129,16 @@
 .checkbox[data-invalid]:not([data-disabled])[data-hovered] .indicator {
   color: var(--background-critical-bold-hovered);
 }
+.checkbox[data-invalid]:not([data-disabled])[data-hovered] .indicator::before {
+  background-color: var(--background-critical-subtlest-hovered);
+}
 
 /* Invalid + pressed */
 .checkbox[data-invalid]:not([data-disabled])[data-pressed] .indicator {
   color: var(--background-critical-bold-pressed);
+}
+.checkbox[data-invalid]:not([data-disabled])[data-pressed] .indicator::before {
+  background-color: var(--background-critical-subtlest-pressed);
 }
 
 /* ==========================================================================
@@ -118,11 +158,14 @@
    Label + Description
    ========================================================================== */
 
+/* Recette Figma : flex-start sur .checkbox + padding-top de 2px sur le
+   labelGroup pour que la première ligne du label s'aligne avec le centre
+   vertical de l'icône (icône centrée dans un indicateur 24×24). */
 .labelGroup {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding-top: var(--space0375);
+  padding-top: var(--space025);
 }
 
 .labelRow {
