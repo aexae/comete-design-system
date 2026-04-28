@@ -153,6 +153,18 @@
   flex-shrink: 0;
 }
 
+/* Chevron auto-injecté pour les SubmenuTrigger — pivote de 90° quand le
+   submenu bascule en mode overlay (popover affiché en bas plutôt qu'à côté).
+   MenuPopover marque le trigger via [data-submenu-overlay] sur l'élément
+   .item lui-même. La transition rend le changement fluide. */
+.submenuChevron {
+  transition: transform 150ms ease;
+}
+
+.item[data-submenu-overlay] .submenuChevron {
+  transform: rotate(90deg);
+}
+
 /* ------------------------------------------------------------------ */
 /* Elem after (custom trailing content)                                */
 

@@ -49,19 +49,24 @@ export function Popover({
   style,
   offset = 4,
   matchTriggerWidth = false,
+  shouldFlip = true,
+  containerPadding = 8,
   ...ariaProps
 }: PopoverProps): ReactElement {
   return (
     <AriaPopover
+      {...ariaProps}
       className={[styles.popover, matchTriggerWidth && styles.matchTriggerWidth, className].filter(Boolean).join(" ")}
       style={style}
       offset={offset}
-      shouldFlip
-      // NOTE: containerPadding ensures the popover stays within the viewport
-      // with an 8px margin. This prevents cascading submenus from going
-      // off-screen when space is tight (e.g. Storybook panel open).
-      containerPadding={8}
-      {...ariaProps}
+      shouldFlip={shouldFlip}
+      // NOTE: containerPadding garantit que le popover reste dans le viewport
+      // avec une marge minimale (équivalent du `shift` de Floating UI / Radix).
+      // Combiné à shouldFlip, donne le comportement flip+shift attendu sur les
+      // sous-menus en cascade : flip à l'opposé puis shift pour rester visible.
+      // L'ordre (après le spread) garantit qu'on ne se fait pas écraser par
+      // un context Aria parent (SubmenuTrigger).
+      containerPadding={containerPadding}
     >
       {children}
     </AriaPopover>

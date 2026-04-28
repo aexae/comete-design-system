@@ -1,6 +1,13 @@
 // Menu — Comète Design System
 // Composant menu accessible basé sur React Aria.
-import type { ReactElement, ReactNode } from "react";
+import {
+  useContext,
+  useEffect,
+  useState,
+  type ReactElement,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import {
   Menu as AriaMenu,
   MenuItem as AriaMenuItem,
@@ -9,6 +16,7 @@ import {
   MenuSection as AriaMenuSection,
   Header as AriaHeader,
   Separator as AriaSeparator,
+  PopoverContext as AriaPopoverContext,
   type MenuProps as AriaMenuProps,
   type MenuItemProps as AriaMenuItemProps,
   type MenuTriggerProps as AriaMenuTriggerProps,
@@ -147,19 +155,75 @@ SubmenuTrigger.displayName = "SubmenuTrigger";
 /**
  * MenuPopover — Comète Design System
  *
- * Popover qui contient le Menu. Délègue au composant Popover du DS
- * pour le positionnement, l'ombre et les animations.
+ * Popover qui contient le Menu. Délègue au composant Popover du DS pour le
+ * positionnement par défaut (flip + containerPadding).
+ *
+ * **Fallback overlay** : on lit le `triggerRef` injecté par le SubmenuTrigger
+ * via `PopoverContext` et on mesure la position réelle du trigger. Si ni le
+ * côté droit ni le côté gauche n'a la place pour afficher le popover entier,
+ * on bascule sur `placement="bottom start"` — le popover s'affiche alors **sous
+ * le trigger, aligné à sa gauche**, recouvrant visuellement le menu parent
+ * plutôt que de sortir du viewport.
  */
 export function MenuPopover({
   width = 320,
   className,
   children,
 }: MenuPopoverProps): ReactElement {
+  // Lit le contexte que SubmenuTrigger / DialogTrigger injecte sur le Popover.
+  // Type opaque côté react-aria-components — on cast pour récupérer triggerRef.
+  const popoverContext = useContext(AriaPopoverContext) as
+    | { triggerRef?: RefObject<HTMLElement | null> }
+    | null;
+  const triggerRef = popoverContext?.triggerRef;
+
+  // Bascule en overlay quand ni le côté droit ni le côté gauche du trigger
+  // n'a assez de place pour afficher le popover entier. On marque aussi le
+  // trigger via un data-attribute pour que le chevron du MenuItem pivote
+  // automatiquement (CSS) — donne un feedback visuel cohérent quand le
+  // submenu s'affiche en bas plutôt qu'à côté.
+  const [overlayFallback, setOverlayFallback] = useState(false);
+  useEffect(() => {
+    // Capture le trigger au mount pour l'utiliser dans le cleanup même si le
+    // ref bouge plus tard (lint react-hooks/exhaustive-deps).
+    const initialTrigger = triggerRef?.current;
+    const check = () => {
+      const triggerEl = triggerRef?.current;
+      if (!triggerEl || typeof window === "undefined") {
+        setOverlayFallback(false);
+        return;
+      }
+      const rect = triggerEl.getBoundingClientRect();
+      const spaceRight = window.innerWidth - rect.right;
+      const spaceLeft = rect.left;
+      // Marge de sécurité : 8px de padding côté viewport + 4px d'offset Popover.
+      const needed = width + 12;
+      const isOverlay = spaceRight < needed && spaceLeft < needed;
+      setOverlayFallback(isOverlay);
+      if (isOverlay) {
+        triggerEl.setAttribute("data-submenu-overlay", "");
+      } else {
+        triggerEl.removeAttribute("data-submenu-overlay");
+      }
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => {
+      window.removeEventListener("resize", check);
+      // Cleanup au démontage (popover qui se ferme) : remet le chevron par défaut.
+      initialTrigger?.removeAttribute("data-submenu-overlay");
+    };
+  }, [triggerRef, width]);
+
   const cssVars = { "--menu-popover-width": `${width}px` } as React.CSSProperties;
   return (
     <Popover
       className={[styles.menuPopover, className].filter(Boolean).join(" ")}
       style={cssVars}
+      // En overlay : place le popover sous le trigger, aligné à sa gauche
+      // (recouvre le menu parent). Sinon, on laisse React Aria décider —
+      // côté pour SubmenuTrigger, sous le bouton pour MenuTrigger.
+      {...(overlayFallback ? { placement: "bottom start" as const } : {})}
     >
       {children}
     </Popover>
@@ -259,6 +323,12 @@ export function MenuItem({
     >
       {({ isFocusVisible, isDisabled, isSelected, hasSubmenu, selectionMode }) => {
         const trailingIcon = iconAfter ?? (hasSubmenu ? "ChevronRight" : undefined);
+        // Le chevron auto-injecté pour les SubmenuTrigger reçoit une classe
+        // dédiée — quand le popover bascule en overlay, MenuPopover marque le
+        // trigger d'un data-submenu-overlay et la CSS fait pivoter ce chevron
+        // (90deg) pour pointer vers le bas, cohérent avec la direction de la
+        // cascade overlay. Les iconAfter custom ne sont pas affectés.
+        const isAutoSubmenuChevron = !iconAfter && hasSubmenu;
         const iconColor = isDisabled ? "disabled" : isSelected ? "selected" : "default";
         const isSelectable = selectionMode !== "none";
 
@@ -315,7 +385,10 @@ export function MenuItem({
                   size={24}
                   appearance="outlined"
                   color={iconColor}
-                  className={styles.iconAfter}
+                  className={[
+                    styles.iconAfter,
+                    isAutoSubmenuChevron ? styles.submenuChevron : undefined,
+                  ].filter(Boolean).join(" ")}
                 />
               )}
             </span>

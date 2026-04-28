@@ -14,6 +14,7 @@ declare const styles: {
   readonly "section": string;
   readonly "sectionHeading": string;
   readonly "sectionNoSeparator": string;
+  readonly "submenuChevron": string;
   readonly "title": string;
   readonly "withDescription": string;
 };
