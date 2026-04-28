@@ -85,6 +85,10 @@
   color: var(--text-default);
 }
 
+.timePicker[data-disabled] .timeDisplay {
+  color: var(--text-disabled);
+}
+
 .clockButton {
   flex-shrink: 0;
 }

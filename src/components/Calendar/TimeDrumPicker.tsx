@@ -17,6 +17,8 @@ export interface TimeDrumPickerProps {
   isDisabled?: boolean;
   /** Format 12h (AM/PM) ou 24h. @default 24 */
   hourCycle?: 12 | 24;
+  /** Affiche la colonne des secondes. @default false */
+  showSeconds?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -39,6 +41,37 @@ const VISIBLE_ITEMS = 5;
 
 function pad(n: number): string {
   return String(n).padStart(2, "0");
+}
+
+/** Animation custom du scroll en RAF — courte, ease-out-cubic, légère.
+ *  Remplace `scrollTo({behavior:"smooth"})` dont la durée native (~400-500ms,
+ *  ease-in-out) donne un ressenti pesant. */
+function animateScrollTo(
+  el: HTMLElement,
+  target: number,
+  duration = 180,
+): () => void {
+  const start = el.scrollTop;
+  const change = target - start;
+  if (Math.abs(change) < 0.5) {
+    el.scrollTop = target;
+    return () => {};
+  }
+  const startTime = performance.now();
+  let rafId = 0;
+  let cancelled = false;
+  const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
+  const step = (now: number) => {
+    if (cancelled) return;
+    const t = Math.min((now - startTime) / duration, 1);
+    el.scrollTop = start + change * easeOutCubic(t);
+    if (t < 1) rafId = requestAnimationFrame(step);
+  };
+  rafId = requestAnimationFrame(step);
+  return () => {
+    cancelled = true;
+    cancelAnimationFrame(rafId);
+  };
 }
 
 /** Convertit heure 24h → heure 12h (1-12). */
@@ -77,6 +110,7 @@ function DrumColumn({
   const listRef = useRef<HTMLDivElement>(null);
   const isScrollingRef = useRef(false);
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const cancelAnimRef = useRef<(() => void) | null>(null);
 
   // Scroll vers la valeur sélectionnée au montage
   useEffect(() => {
@@ -97,11 +131,8 @@ function DrumColumn({
     if (targetIndex >= 0) {
       const targetScroll = targetIndex * ITEM_HEIGHT;
       if (Math.abs(el.scrollTop - targetScroll) > 1) {
-        if (typeof el.scrollTo === "function") {
-          el.scrollTo({ top: targetScroll, behavior: "smooth" });
-        } else {
-          el.scrollTop = targetScroll;
-        }
+        cancelAnimRef.current?.();
+        cancelAnimRef.current = animateScrollTo(el, targetScroll);
       }
     }
   }, [selected, values]);
@@ -122,16 +153,14 @@ function DrumColumn({
       const clampedIndex = Math.max(0, Math.min(index, values.length - 1));
       const snappedScroll = clampedIndex * ITEM_HEIGHT;
 
-      if (typeof el.scrollTo === "function") {
-        el.scrollTo({ top: snappedScroll, behavior: "smooth" });
-      } else {
-        el.scrollTop = snappedScroll;
-      }
+      cancelAnimRef.current?.();
+      cancelAnimRef.current = animateScrollTo(el, snappedScroll);
+
       const snappedValue = values[clampedIndex];
       if (snappedValue !== undefined) onSelect(snappedValue);
 
       isScrollingRef.current = false;
-    }, 80);
+    }, 90);
   };
 
   const handleClick = (value: number) => {
@@ -201,6 +230,7 @@ function PeriodColumn({
   isDisabled,
 }: PeriodColumnProps): ReactElement {
   const listRef = useRef<HTMLDivElement>(null);
+  const cancelAnimRef = useRef<(() => void) | null>(null);
   const paddingItems = Math.floor(VISIBLE_ITEMS / 2);
   const periods: ("AM" | "PM")[] = ["AM", "PM"];
 
@@ -222,11 +252,8 @@ function PeriodColumn({
     if (targetIndex >= 0) {
       const targetScroll = targetIndex * ITEM_HEIGHT;
       if (Math.abs(el.scrollTop - targetScroll) > 1) {
-        if (typeof el.scrollTo === "function") {
-          el.scrollTo({ top: targetScroll, behavior: "smooth" });
-        } else {
-          el.scrollTop = targetScroll;
-        }
+        cancelAnimRef.current?.();
+        cancelAnimRef.current = animateScrollTo(el, targetScroll);
       }
     }
   }, [selected]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -298,6 +325,7 @@ export function TimeDrumPicker({
   onChange,
   isDisabled = false,
   hourCycle = 24,
+  showSeconds = false,
   className,
 }: TimeDrumPickerProps): ReactElement {
   const resolvedValue = value ?? new Time(0, 0, 0);
@@ -363,7 +391,6 @@ export function TimeDrumPicker({
           onSelect={handleHour12Select}
           isDisabled={isDisabled}
           label="Heures"
-          format={(n) => String(n)}
         />
       ) : (
         <DrumColumn
@@ -378,6 +405,10 @@ export function TimeDrumPicker({
         />
       )}
 
+      <span className={styles.separator} aria-hidden="true">
+        :
+      </span>
+
       <DrumColumn
         values={MINUTES}
         selected={minute}
@@ -389,16 +420,23 @@ export function TimeDrumPicker({
         label="Minutes"
       />
 
-      <DrumColumn
-        values={SECONDS}
-        selected={second}
-        onSelect={(s) => {
-          setSecond(s);
-          handleChange(hour, minute, s);
-        }}
-        isDisabled={isDisabled}
-        label="Secondes"
-      />
+      {showSeconds && (
+        <>
+          <span className={styles.separator} aria-hidden="true">
+            :
+          </span>
+          <DrumColumn
+            values={SECONDS}
+            selected={second}
+            onSelect={(s) => {
+              setSecond(s);
+              handleChange(hour, minute, s);
+            }}
+            isDisabled={isDisabled}
+            label="Secondes"
+          />
+        </>
+      )}
 
       {/* Colonne AM/PM en mode 12h */}
       {is12h && (

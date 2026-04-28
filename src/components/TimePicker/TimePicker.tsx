@@ -10,7 +10,6 @@ import {
   DialogTrigger,
   type TimeFieldProps as AriaTimeFieldProps,
   type TimeValue,
-  useLocale,
 } from "react-aria-components";
 import { Time } from "@internationalized/date";
 import { Button } from "../Button/Button.js";
@@ -49,18 +48,13 @@ export interface TimePickerProps<T extends TimeValue = TimeValue>
 // -----------------------------------------------------------------------
 // Helpers
 
-/** Formate un TimeValue en chaîne localisée HH:MM ou HH:MM:SS. */
-function formatTime(
-  time: TimeValue,
-  locale: string,
-  showSeconds: boolean,
-): string {
-  const date = new Date(2000, 0, 1, time.hour, time.minute, time.second);
-  return new Intl.DateTimeFormat(locale, {
-    hour: "2-digit",
-    minute: "2-digit",
-    ...(showSeconds ? { second: "2-digit" } : {}),
-  }).format(date);
+/** Formate un TimeValue en HH:MM ou HH:MM:SS, toujours padé avec un 0. */
+function formatTime(time: TimeValue, showSeconds: boolean): string {
+  const h = String(time.hour).padStart(2, "0");
+  const m = String(time.minute).padStart(2, "0");
+  if (!showSeconds) return `${h}:${m}`;
+  const s = String(time.second).padStart(2, "0");
+  return `${h}:${m}:${s}`;
 }
 
 // -----------------------------------------------------------------------
@@ -260,7 +254,8 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
       className={[styles.timePicker, className].filter(Boolean).join(" ")}
       style={style}
       granularity={showSeconds ? "second" : "minute"}
-      {...ariaProps}
+      {...(ariaProps as AriaTimeFieldProps<T> & { shouldForceLeadingZeros?: boolean })}
+      shouldForceLeadingZeros
       value={currentValue as T | null}
       defaultValue={undefined}
       onChange={handleFieldChange}
@@ -301,6 +296,7 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
                 onChange={handleDrumChange}
                 isDisabled={isDisabled}
                 hourCycle={ariaProps.hourCycle}
+                showSeconds={showSeconds}
               />
             </div>
           )}
@@ -336,7 +332,6 @@ function NonEditableTimePicker({
   isInvalid?: boolean;
   "aria-label"?: string;
 }): ReactElement {
-  const { locale } = useLocale();
   const containerRef = useRef<HTMLDivElement>(null);
 
   // État interne pour le mode non contrôlé
@@ -346,7 +341,7 @@ function NonEditableTimePicker({
   );
   const resolvedValue = (isControlled ? value : internalValue) as TimeValue;
 
-  const formattedTime = formatTime(resolvedValue, locale, false);
+  const formattedTime = formatTime(resolvedValue, false);
 
   // -- Popover state --
   const [isOpen, setIsOpen] = useState(false);
@@ -375,7 +370,6 @@ function NonEditableTimePicker({
     >
       <InputContainer
         appearance={appearance}
-        isBorderless
         isCompact={isCompact}
         isDisabled={isDisabled}
         isInvalid={isInvalid}
