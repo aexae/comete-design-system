@@ -209,6 +209,7 @@ function SingleYearPicker({
       className={rootClassNames}
       ref={containerRef}
       aria-label={ariaLabel ?? `Sélecteur d'année : ${resolvedYear}`}
+      data-disabled={isDisabled || undefined}
       data-invalid={isInvalid || undefined}
       style={style}
     >

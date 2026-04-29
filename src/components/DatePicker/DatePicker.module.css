@@ -91,6 +91,16 @@
 }
 
 /* ==========================================================================
+   Invalid state — texte en critical pour signaler l'erreur
+   (utile surtout en mode navigation où la bordure est masquée).
+   ========================================================================== */
+
+.datePicker[data-invalid]:not([data-disabled]) .dateButton,
+.datePicker[data-invalid]:not([data-disabled]) .segment:not([data-focused]) {
+  color: var(--text-critical);
+}
+
+/* ==========================================================================
    Dialog — reset outline
    ========================================================================== */
 
