@@ -794,7 +794,10 @@ function CalendarGridContent({ calendarDisabled }: { calendarDisabled: boolean }
   // Quand le calendrier entier est désactivé, React Aria ne marque plus les
   // cellules intermédiaires comme isSelected → on calcule manuellement le
   // range-part à partir de state.value pour garder le style continu.
-  const selectedRange = state?.value ?? null;
+  // REASON: En mode interactif, state.value peut refléter transitoirement
+  // l'ancre + hover pendant la sélection, ce qui provoquerait un highlight
+  // incorrect. La fallback reste donc limitée au cas disabled.
+  const selectedRange = calendarDisabled ? state?.value ?? null : null;
   return (
     <>
       <CalendarGridHeader>

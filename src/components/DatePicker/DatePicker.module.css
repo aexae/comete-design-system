@@ -52,6 +52,18 @@
   color: var(--text-disabled);
 }
 
+/* Séparateur entre start et end en mode plage (isRange) */
+.rangeSeparator {
+  flex-shrink: 0;
+  padding: 0 var(--space050);
+  color: var(--text-subtle);
+  user-select: none;
+}
+
+.datePicker[data-disabled] .rangeSeparator {
+  color: var(--text-disabled);
+}
+
 /* ==========================================================================
    Date segment
    ========================================================================== */

@@ -33,6 +33,10 @@ const meta = {
       control: "boolean",
       description: "Mode saisie (champ segmenté + icône calendrier)",
     },
+    isRange: {
+      control: "boolean",
+      description: "Sélection de plage (deux dates start/end)",
+    },
     isDisabled: { control: "boolean" },
     isInvalid: { control: "boolean" },
     className: { control: "text" },
@@ -102,7 +106,7 @@ export const FieldInvalid: Story = {
         message="La date est invalide"
         messageType="critical"
       >
-        <DatePicker {...args} aria-label="Date de fin" defaultValue={today(getLocalTimeZone())} />
+        <DatePicker {...(args as Record<string, unknown>)} isRange={false} aria-label="Date de fin" defaultValue={today(getLocalTimeZone())} />
       </Field>
     </div>
   ),
@@ -114,6 +118,17 @@ export const NonEditable: Story = {
   args: { isEditable: false, defaultValue: today(getLocalTimeZone()) },
 };
 
+/** Mode plage saisie — deux DateInput (start / end) séparés par un tiret. */
+export const Range: Story = {
+  args: {
+    isRange: true,
+    defaultValue: {
+      start: today(getLocalTimeZone()),
+      end: today(getLocalTimeZone()).add({ days: 4 }),
+    },
+  } as never,
+};
+
 /** Toutes les apparences. */
 export const AllAppearances: Story = {
   name: "All appearances",
@@ -121,13 +136,14 @@ export const AllAppearances: Story = {
     <div style={{ display: "flex", gap: 32 }}>
       <div style={{ width: 280 }}>
         <Field label="Default">
-          <DatePicker {...args} aria-label="Default" defaultValue={today(getLocalTimeZone())} />
+          <DatePicker {...(args as Record<string, unknown>)} isRange={false} aria-label="Default" defaultValue={today(getLocalTimeZone())} />
         </Field>
       </div>
       <div style={{ width: 280 }}>
         <Field label="Subtle">
           <DatePicker
-            {...args}
+            {...(args as Record<string, unknown>)}
+            isRange={false}
             aria-label="Subtle"
             appearance="subtle"
             defaultValue={today(getLocalTimeZone())}
