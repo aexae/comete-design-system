@@ -38,6 +38,13 @@
   color: var(--text-disabled);
 }
 
+/* Invalid : texte en critical pour signaler l'erreur (en plus de la bordure
+   gérée par InputContainer). AriaTextField pose `data-invalid` automatiquement.
+   Quand le champ est aussi désactivé, on garde la couleur disabled (priorité). */
+.textField[data-invalid]:not([data-disabled]) .input {
+  color: var(--text-critical);
+}
+
 /* ==========================================================================
    Éléments before / after
    ========================================================================== */

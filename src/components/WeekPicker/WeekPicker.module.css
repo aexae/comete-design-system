@@ -71,6 +71,16 @@
 }
 
 /* ==========================================================================
+   Invalid state — texte en critical pour signaler l'erreur
+   (utile surtout en mode navigation où la bordure est masquée).
+   ========================================================================== */
+
+.root[data-invalid]:not([data-disabled]) .weekButton,
+.root[data-invalid]:not([data-disabled]) .weekInput {
+  color: var(--text-critical);
+}
+
+/* ==========================================================================
    Mode range (isRange=true)
    ========================================================================== */
 
