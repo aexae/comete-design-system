@@ -42,6 +42,14 @@ interface DatePickerBaseProps {
    * @default true
    */
   isEditable?: boolean;
+  /**
+   * En mode éditable, affiche une icône close (×) à la place de l'icône calendrier
+   * quand le champ a le focus et qu'une date est saisie. Cliquer dessus vide la valeur.
+   * @default true
+   */
+  isClearable?: boolean;
+  /** Callback appelé quand l'utilisateur clique sur le bouton clear. */
+  onClear?: () => void;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -117,7 +125,8 @@ export function DatePicker<T extends DateValue = DateValue>(
   const appearance = props.appearance ?? "default";
   const isCompact = props.isCompact ?? false;
   const isEditable = props.isEditable ?? true;
-  const { className, style } = props;
+  const isClearable = props.isClearable ?? true;
+  const { className, style, onClear } = props;
 
   // Mode plage — isRange=true (uniquement en mode saisie pour l'instant)
   if (props.isRange) {
@@ -126,11 +135,13 @@ export function DatePicker<T extends DateValue = DateValue>(
       appearance: _a,
       isCompact: _c,
       isEditable: _e,
+      isClearable: _ic,
+      onClear: _oc,
       className: _cn,
       style: _st,
       ...ariaProps
     } = props;
-    const common = { appearance, isCompact, className, style };
+    const common = { appearance, isCompact, isClearable, onClear, className, style };
     return <EditableDateRangePicker {...common} {...ariaProps} />;
   }
 
@@ -140,15 +151,18 @@ export function DatePicker<T extends DateValue = DateValue>(
     appearance: _a,
     isCompact: _c,
     isEditable: _e,
+    isClearable: _ic,
+    onClear: _oc,
     className: _cn,
     style: _st,
     ...ariaProps
   } = props;
-  const common = { appearance, isCompact, className, style };
+  const commonEditable = { appearance, isCompact, isClearable, onClear, className, style };
+  const commonNav = { appearance, isCompact, className, style };
   return isEditable ? (
-    <EditableDatePicker {...common} {...ariaProps} />
+    <EditableDatePicker {...commonEditable} {...ariaProps} />
   ) : (
-    <NavigationDatePicker {...common} {...ariaProps} />
+    <NavigationDatePicker {...commonNav} {...ariaProps} />
   );
 }
 
@@ -160,12 +174,16 @@ DatePicker.displayName = "DatePicker";
 function EditableDatePicker<T extends DateValue = DateValue>({
   appearance,
   isCompact,
+  isClearable,
+  onClear,
   className,
   style,
   ...ariaProps
 }: {
   appearance: DatePickerAppearance;
   isCompact: boolean;
+  isClearable: boolean;
+  onClear?: () => void;
   className?: string;
   style?: CSSProperties;
 } & Omit<AriaDatePickerProps<T>, "className" | "style" | "children">): ReactElement {
@@ -214,6 +232,22 @@ function EditableDatePicker<T extends DateValue = DateValue>({
     setIsOpen(true);
   }, []);
 
+  // Vide la valeur. Replace le focus sur le premier segment.
+  const handleClear = useCallback(() => {
+    setCurrentValue(null);
+    const onChangeProp = ariaProps.onChange as
+      | ((value: DateValue | null) => void)
+      | undefined;
+    onChangeProp?.(null);
+    onClear?.();
+    requestAnimationFrame(() => {
+      const segment = containerRef.current?.querySelector<HTMLElement>(
+        "[data-type]:not([data-type='literal'])",
+      );
+      segment?.focus();
+    });
+  }, [ariaProps.onChange, onClear]);
+
   // Clic sur le padding de l'InputContainer → ouvre le popover + focus premier segment
   const handleContainerClick = useCallback(() => {
     if (ariaProps.isDisabled) return;
@@ -241,10 +275,11 @@ function EditableDatePicker<T extends DateValue = DateValue>({
     return () => el.removeEventListener("pointerdown", handlePointerDown, true);
   }, [ariaProps.isDisabled]);
 
-  // Fermer le popover en cliquant à l'extérieur ou avec Escape
+  // Click extérieur : ferme le popover + blur du segment focus.
+  // Always-on : blur explicite même quand le popover est déjà fermé, pour
+  // que le bouton clear disparaisse quand on clique sur une zone non-
+  // focusable (padding de page).
   useEffect(() => {
-    if (!isOpen) return;
-
     const handleMouseDown = (e: MouseEvent) => {
       const target = e.target as Node;
       if (
@@ -254,18 +289,23 @@ function EditableDatePicker<T extends DateValue = DateValue>({
         return;
       }
       setIsOpen(false);
+      const active = document.activeElement as HTMLElement | null;
+      if (active && containerRef.current?.contains(active)) {
+        active.blur();
+      }
     };
+    document.addEventListener("mousedown", handleMouseDown);
+    return () => document.removeEventListener("mousedown", handleMouseDown);
+  }, []);
 
+  // Escape ferme le popover (pas de blur, on reste éditable)
+  useEffect(() => {
+    if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setIsOpen(false);
     };
-
-    document.addEventListener("mousedown", handleMouseDown);
     document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", handleMouseDown);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
   return (
@@ -277,7 +317,10 @@ function EditableDatePicker<T extends DateValue = DateValue>({
       defaultValue={undefined}
       onChange={handleFieldChange}
     >
-      {({ isDisabled, isInvalid }) => (
+      {({ isDisabled, isInvalid, isFocusWithin }) => {
+        const showClear =
+          isClearable && currentValue !== null && !isDisabled && isFocusWithin;
+        return (
         <div ref={containerRef}>
           <AriaGroup>
             <InputContainer
@@ -292,14 +335,29 @@ function EditableDatePicker<T extends DateValue = DateValue>({
                   <AriaDateSegment className={styles.segment} segment={segment} />
                 )}
               </AriaDateInput>
-              <Button
-                appearance="subtle"
-                iconBefore="CalendarMonth"
-                className={styles.calendarButton}
-                isDisabled={isDisabled}
-                aria-label="Ouvrir le calendrier"
-                onPress={isDisabled ? undefined : openPopover}
-              />
+              {showClear ? (
+                <Button
+                  appearance="subtle"
+                  iconBefore="CloseSmallFaded"
+                  className={styles.calendarButton}
+                  aria-label="Effacer"
+                  onPress={handleClear}
+                  // REASON: empêcher le blur du segment pendant le click. Sans
+                  // ça, le mousedown sur le bouton transfert le focus → segment
+                  // blur → showClear=false → le bouton disparaît mid-click →
+                  // onPress ne se déclenche jamais.
+                  onPointerDown={(e) => e.preventDefault()}
+                />
+              ) : (
+                <Button
+                  appearance="subtle"
+                  iconBefore="CalendarMonth"
+                  className={styles.calendarButton}
+                  isDisabled={isDisabled}
+                  aria-label="Ouvrir le calendrier"
+                  onPress={isDisabled ? undefined : openPopover}
+                />
+              )}
             </InputContainer>
           </AriaGroup>
 
@@ -314,7 +372,8 @@ function EditableDatePicker<T extends DateValue = DateValue>({
             </div>
           )}
         </div>
-      )}
+        );
+      }}
     </AriaDatePicker>
   );
 }
@@ -452,12 +511,16 @@ function NavigationDatePicker<T extends DateValue = DateValue>({
 function EditableDateRangePicker<T extends DateValue = DateValue>({
   appearance,
   isCompact,
+  isClearable,
+  onClear,
   className,
   style,
   ...ariaProps
 }: {
   appearance: DatePickerAppearance;
   isCompact: boolean;
+  isClearable: boolean;
+  onClear?: () => void;
   className?: string;
   style?: CSSProperties;
 } & Omit<AriaDateRangePickerProps<T>, "className" | "style" | "children">): ReactElement {
@@ -502,6 +565,22 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
     setIsOpen(true);
   }, []);
 
+  // Vide la valeur. Replace le focus sur le premier segment.
+  const handleClear = useCallback(() => {
+    setCurrentValue(null);
+    const onChangeProp = ariaProps.onChange as
+      | ((value: RangeValue<DateValue> | null) => void)
+      | undefined;
+    onChangeProp?.(null);
+    onClear?.();
+    requestAnimationFrame(() => {
+      const segment = containerRef.current?.querySelector<HTMLElement>(
+        "[data-type]:not([data-type='literal'])",
+      );
+      segment?.focus();
+    });
+  }, [ariaProps.onChange, onClear]);
+
   // Clic sur le padding de l'InputContainer → ouvre le popover + focus premier segment
   const handleContainerClick = useCallback(() => {
     if (ariaProps.isDisabled) return;
@@ -524,9 +603,9 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
     return () => el.removeEventListener("pointerdown", handlePointerDown, true);
   }, [ariaProps.isDisabled]);
 
-  // Fermeture au clic extérieur ou Escape
+  // Click extérieur : ferme le popover + blur du segment focus.
+  // Always-on : voir explication dans EditableDatePicker.
   useEffect(() => {
-    if (!isOpen) return;
     const handleMouseDown = (e: MouseEvent) => {
       const target = e.target as Node;
       if (
@@ -536,16 +615,23 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
         return;
       }
       setIsOpen(false);
+      const active = document.activeElement as HTMLElement | null;
+      if (active && containerRef.current?.contains(active)) {
+        active.blur();
+      }
     };
+    document.addEventListener("mousedown", handleMouseDown);
+    return () => document.removeEventListener("mousedown", handleMouseDown);
+  }, []);
+
+  // Escape ferme le popover (pas de blur)
+  useEffect(() => {
+    if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setIsOpen(false);
     };
-    document.addEventListener("mousedown", handleMouseDown);
     document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", handleMouseDown);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
   return (
@@ -557,7 +643,10 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
       defaultValue={undefined}
       onChange={handleFieldChange}
     >
-      {({ isDisabled, isInvalid }) => (
+      {({ isDisabled, isInvalid, isFocusWithin }) => {
+        const showClear =
+          isClearable && currentValue !== null && !isDisabled && isFocusWithin;
+        return (
         <div ref={containerRef}>
           <AriaGroup>
             <InputContainer
@@ -580,14 +669,25 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
                   <AriaDateSegment className={styles.segment} segment={segment} />
                 )}
               </AriaDateInput>
-              <Button
-                appearance="subtle"
-                iconBefore="CalendarMonth"
-                className={styles.calendarButton}
-                isDisabled={isDisabled}
-                aria-label="Ouvrir le calendrier"
-                onPress={isDisabled ? undefined : openPopover}
-              />
+              {showClear ? (
+                <Button
+                  appearance="subtle"
+                  iconBefore="CloseSmallFaded"
+                  className={styles.calendarButton}
+                  aria-label="Effacer"
+                  onPress={handleClear}
+                  onPointerDown={(e) => e.preventDefault()}
+                />
+              ) : (
+                <Button
+                  appearance="subtle"
+                  iconBefore="CalendarMonth"
+                  className={styles.calendarButton}
+                  isDisabled={isDisabled}
+                  aria-label="Ouvrir le calendrier"
+                  onPress={isDisabled ? undefined : openPopover}
+                />
+              )}
             </InputContainer>
           </AriaGroup>
 
@@ -605,7 +705,8 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
             </div>
           )}
         </div>
-      )}
+        );
+      }}
     </AriaDateRangePicker>
   );
 }

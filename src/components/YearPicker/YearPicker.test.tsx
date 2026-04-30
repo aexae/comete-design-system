@@ -6,12 +6,12 @@ import { YearPicker } from "./YearPicker.js";
 describe("YearPicker", () => {
   // -- Rendering (editable mode = default) --
 
-  it("should render with current year when no props provided", () => {
+  it("should render empty input when no props provided", () => {
     render(<YearPicker />);
-    const currentYear = new Date().getFullYear();
-    expect(
-      screen.getByLabelText(`Année : ${currentYear}`)
-    ).toBeInTheDocument();
+    // Sans valeur fournie, l'input est vide et l'aria-label est neutre
+    // (alignement DatePicker)
+    const input = screen.getByLabelText("Année");
+    expect(input).toHaveValue("");
   });
 
   it("should render with specified year", () => {

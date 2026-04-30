@@ -39,6 +39,15 @@ interface MonthPickerBaseProps {
   isInvalid?: boolean;
   /** Désactive le composant. */
   isDisabled?: boolean;
+  /**
+   * En mode éditable, affiche une icône close (×) à la place de l'icône calendrier
+   * **uniquement quand le champ a le focus** et qu'une valeur est saisie. Au blur,
+   * l'icône calendrier reprend sa place.
+   * @default true
+   */
+  isClearable?: boolean;
+  /** Callback appelé quand l'utilisateur clique sur le bouton clear. */
+  onClear?: () => void;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -55,8 +64,14 @@ export interface SingleMonthPickerProps extends MonthPickerBaseProps {
   month?: number;
   /** Année sélectionnée. */
   year?: number;
-  /** Callback appelé à chaque changement de mois/année. */
-  onChange?: (month: number, year: number) => void;
+  /**
+   * Callback appelé à chaque changement de mois/année.
+   * `undefined` pour les deux = effacé.
+   */
+  onChange?: (
+    month: number | undefined,
+    year: number | undefined,
+  ) => void;
 }
 
 /** Props du mode plage (sélection d'une plage de mois). */
@@ -76,12 +91,15 @@ export interface RangeMonthPickerProps extends MonthPickerBaseProps {
    * @default 2
    */
   calendars?: 1 | 2;
-  /** Callback appelé à chaque changement de plage. */
+  /**
+   * Callback appelé à chaque changement de plage.
+   * `undefined` pour les quatre = effacé.
+   */
   onChange?: (
-    startMonth: number,
-    startYear: number,
-    endMonth: number,
-    endYear: number,
+    startMonth: number | undefined,
+    startYear: number | undefined,
+    endMonth: number | undefined,
+    endYear: number | undefined,
   ) => void;
 }
 
@@ -209,6 +227,8 @@ function SingleMonthPicker({
   appearance = "default",
   isInvalid = false,
   isDisabled = false,
+  isClearable = true,
+  onClear,
   className,
   style,
   "aria-label": ariaLabel,
@@ -248,23 +268,31 @@ function SingleMonthPicker({
 
   const [isOpen, setIsOpen] = useState(false);
 
-  // Close dropdown on click outside or Escape (editable mode only)
+  // Click outside : ferme le popover + blur de l'input focus pour qu'on
+  // sorte effectivement du mode "focused" (sinon le bouton clear reste
+  // visible quand le popover se ferme).
   useEffect(() => {
-    if (!isOpen || !isEditable) return;
+    if (!isEditable) return;
     const handleClickOutside = (e: MouseEvent) => {
-      if (!containerRef.current?.contains(e.target as Node)) {
-        setIsOpen(false);
+      if (containerRef.current?.contains(e.target as Node)) return;
+      setIsOpen(false);
+      const active = document.activeElement as HTMLElement | null;
+      if (active && containerRef.current?.contains(active)) {
+        active.blur();
       }
     };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isEditable]);
+
+  // Escape ferme le popover (pas de blur, on reste éditable)
+  useEffect(() => {
+    if (!isOpen || !isEditable) return;
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") setIsOpen(false);
     };
-    document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleEscape);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscape);
-    };
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, isEditable]);
 
   // -- Handler calendar selection --
@@ -281,8 +309,23 @@ function SingleMonthPicker({
   const [monthFocused, setMonthFocused] = useState(false);
   const [yearFocused, setYearFocused] = useState(false);
 
+  const isFocused = monthFocused || yearFocused;
+  const hasValue = month !== undefined && year !== undefined;
+  const showClear = isClearable && hasValue && !isDisabled && isFocused;
+  const handleClear = () => {
+    setMonthInput("");
+    setYearInput("");
+    onChange?.(undefined, undefined);
+    onClear?.();
+    requestAnimationFrame(() => {
+      const input = containerRef.current?.querySelector<HTMLInputElement>("input");
+      input?.focus();
+      input?.select();
+    });
+  };
+
   const handleMonthInputFocus = () => {
-    setMonthInput(String(resolvedMonth).padStart(2, "0"));
+    setMonthInput(month !== undefined ? String(month).padStart(2, "0") : "");
     setMonthFocused(true);
   };
 
@@ -295,7 +338,7 @@ function SingleMonthPicker({
   };
 
   const handleYearInputFocus = () => {
-    setYearInput(String(resolvedYear));
+    setYearInput(year !== undefined ? String(year) : "");
     setYearFocused(true);
   };
 
@@ -353,7 +396,9 @@ function SingleMonthPicker({
               value={
                 monthFocused
                   ? monthInput
-                  : String(resolvedMonth).padStart(2, "0")
+                  : month !== undefined
+                    ? String(month).padStart(2, "0")
+                    : ""
               }
               onChange={(e) => setMonthInput(e.target.value)}
               onClick={() => !isDisabled && setIsOpen(true)}
@@ -361,7 +406,12 @@ function SingleMonthPicker({
               onBlur={handleMonthInputBlur}
               onKeyDown={handleInputKeyDown}
               disabled={isDisabled}
-              aria-label={`Mois : ${formatMonthLong(resolvedMonth, locale)}`}
+              aria-label={
+                month !== undefined
+                  ? `Mois : ${formatMonthLong(month, locale)}`
+                  : "Mois"
+              }
+              placeholder="MM"
             />
 
             <span className={styles.separator} aria-hidden="true">
@@ -372,24 +422,46 @@ function SingleMonthPicker({
               type="text"
               inputMode="numeric"
               className={styles.yearInput}
-              value={yearFocused ? yearInput : String(resolvedYear)}
+              value={
+                yearFocused
+                  ? yearInput
+                  : year !== undefined
+                    ? String(year)
+                    : ""
+              }
               onChange={(e) => setYearInput(e.target.value)}
               onClick={() => !isDisabled && setIsOpen(true)}
               onFocus={handleYearInputFocus}
               onBlur={handleYearInputBlur}
               onKeyDown={handleInputKeyDown}
               disabled={isDisabled}
-              aria-label={`Année : ${resolvedYear}`}
+              aria-label={year !== undefined ? `Année : ${year}` : "Année"}
+              placeholder="AAAA"
             />
 
-            <Button
-              appearance="subtle"
-              iconBefore="CalendarMonth"
-              className={styles.calendarButton}
-              isDisabled={isDisabled}
-              onPress={() => !isDisabled && setIsOpen((o) => !o)}
-              aria-label="Ouvrir le sélecteur de mois"
-            />
+            {showClear ? (
+              <Button
+                appearance="subtle"
+                iconBefore="CloseSmallFaded"
+                className={styles.calendarButton}
+                aria-label="Effacer"
+                onPress={handleClear}
+                // REASON: empêcher le blur de l'input pendant le click. Sans ça,
+                // le mousedown sur le bouton transfert le focus → input blur →
+                // showClear=false → le bouton disparaît mid-click → onPress
+                // ne se déclenche jamais.
+                onPointerDown={(e) => e.preventDefault()}
+              />
+            ) : (
+              <Button
+                appearance="subtle"
+                iconBefore="CalendarMonth"
+                className={styles.calendarButton}
+                isDisabled={isDisabled}
+                onPress={() => !isDisabled && setIsOpen((o) => !o)}
+                aria-label="Ouvrir le sélecteur de mois"
+              />
+            )}
             {isOpen && (
               <div className={styles.calendarDropdown}>
                 <Calendar
@@ -468,6 +540,8 @@ function RangeMonthPicker({
   appearance = "default",
   isInvalid = false,
   isDisabled = false,
+  isClearable = true,
+  onClear,
   className,
   style,
   "aria-label": ariaLabel,
@@ -495,23 +569,30 @@ function RangeMonthPicker({
     "start" | "end" | "range" | null
   >(null);
 
-  // Close dropdown on click outside or Escape (editable mode only)
+  // Click outside : ferme le popover + blur de l'input focus pour qu'on
+  // sorte effectivement du mode "focused".
   useEffect(() => {
-    if (!openPopover || !isEditable) return;
+    if (!isEditable) return;
     const handleClickOutside = (e: MouseEvent) => {
-      if (!containerRef.current?.contains(e.target as Node)) {
-        setOpenPopover(null);
+      if (containerRef.current?.contains(e.target as Node)) return;
+      setOpenPopover(null);
+      const active = document.activeElement as HTMLElement | null;
+      if (active && containerRef.current?.contains(active)) {
+        active.blur();
       }
     };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isEditable]);
+
+  // Escape ferme le popover (pas de blur, on reste éditable)
+  useEffect(() => {
+    if (!openPopover || !isEditable) return;
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpenPopover(null);
     };
-    document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleEscape);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscape);
-    };
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [openPopover, isEditable]);
 
   // -- Helper : commit range (auto-swap if start > end) --
@@ -538,6 +619,7 @@ function RangeMonthPicker({
       range.end.month,
       range.end.year,
     );
+    setOpenPopover(null);
   };
 
   // -- Handler : mise à jour immédiate au premier clic (start seul) --
@@ -560,6 +642,23 @@ function RangeMonthPicker({
   const [startFocused, setStartFocused] = useState(false);
   const [endFocused, setEndFocused] = useState(false);
 
+  const isFocused = startFocused || endFocused;
+  const hasValue =
+    (startMonth !== undefined && startYear !== undefined) ||
+    (endMonth !== undefined && endYear !== undefined);
+  const showClear = isClearable && hasValue && !isDisabled && isFocused;
+  const handleClear = () => {
+    setStartInput("");
+    setEndInput("");
+    onChange?.(undefined, undefined, undefined, undefined);
+    onClear?.();
+    requestAnimationFrame(() => {
+      const input = containerRef.current?.querySelector<HTMLInputElement>("input");
+      input?.focus();
+      input?.select();
+    });
+  };
+
   const startLabel = formatMonthYear(
     resolvedStartMonth,
     resolvedStartYear,
@@ -570,9 +669,11 @@ function RangeMonthPicker({
     resolvedEndYear,
     locale,
   );
+  const startHasValue = startMonth !== undefined && startYear !== undefined;
+  const endHasValue = endMonth !== undefined && endYear !== undefined;
 
   const handleStartFocus = () => {
-    setStartInput(startLabel);
+    setStartInput(startHasValue ? startLabel : "");
     setStartFocused(true);
   };
 
@@ -590,7 +691,7 @@ function RangeMonthPicker({
   };
 
   const handleEndFocus = () => {
-    setEndInput(endLabel);
+    setEndInput(endHasValue ? endLabel : "");
     setEndFocused(true);
   };
 
@@ -671,14 +772,25 @@ function RangeMonthPicker({
             <input
               type="text"
               className={styles.rangeInput}
-              value={startFocused ? startInput : startLabel}
+              value={
+                startFocused
+                  ? startInput
+                  : startHasValue
+                    ? startLabel
+                    : ""
+              }
               onChange={(e) => setStartInput(e.target.value)}
               onClick={() => !isDisabled && setOpenPopover("range")}
               onFocus={handleStartFocus}
               onBlur={handleStartBlur}
               onKeyDown={handleInputKeyDown}
               disabled={isDisabled}
-              aria-label={`Mois de début : ${startLabel}`}
+              aria-label={
+                startHasValue
+                  ? `Mois de début : ${startLabel}`
+                  : "Mois de début"
+              }
+              placeholder="Mois AAAA"
             />
 
             <span className={styles.rangeSeparator} aria-hidden="true">
@@ -688,27 +800,51 @@ function RangeMonthPicker({
             <input
               type="text"
               className={styles.rangeInput}
-              value={endFocused ? endInput : endLabel}
+              value={
+                endFocused
+                  ? endInput
+                  : endHasValue
+                    ? endLabel
+                    : ""
+              }
               onChange={(e) => setEndInput(e.target.value)}
               onClick={() => !isDisabled && setOpenPopover("range")}
               onFocus={handleEndFocus}
               onBlur={handleEndBlur}
               onKeyDown={handleInputKeyDown}
               disabled={isDisabled}
-              aria-label={`Mois de fin : ${endLabel}`}
+              aria-label={
+                endHasValue ? `Mois de fin : ${endLabel}` : "Mois de fin"
+              }
+              placeholder="Mois AAAA"
             />
 
-            <Button
-              appearance="subtle"
-              iconBefore="CalendarMonth"
-              className={styles.calendarButton}
-              isDisabled={isDisabled}
-              onPress={() =>
-                !isDisabled &&
-                setOpenPopover((o) => (o === "range" ? null : "range"))
-              }
-              aria-label="Ouvrir le sélecteur de mois"
-            />
+            {showClear ? (
+              <Button
+                appearance="subtle"
+                iconBefore="CloseSmallFaded"
+                className={styles.calendarButton}
+                aria-label="Effacer"
+                onPress={handleClear}
+                // REASON: empêcher le blur de l'input pendant le click. Sans ça,
+                // le mousedown sur le bouton transfert le focus → input blur →
+                // showClear=false → le bouton disparaît mid-click → onPress
+                // ne se déclenche jamais.
+                onPointerDown={(e) => e.preventDefault()}
+              />
+            ) : (
+              <Button
+                appearance="subtle"
+                iconBefore="CalendarMonth"
+                className={styles.calendarButton}
+                isDisabled={isDisabled}
+                onPress={() =>
+                  !isDisabled &&
+                  setOpenPopover((o) => (o === "range" ? null : "range"))
+                }
+                aria-label="Ouvrir le sélecteur de mois"
+              />
+            )}
             {openPopover === "range" && (
               <div className={styles.calendarDropdown}>{renderCalendar()}</div>
             )}

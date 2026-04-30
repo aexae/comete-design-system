@@ -94,8 +94,8 @@ type Story = StoryObj<typeof MonthPicker>;
 /** Sous-composant : hooks isolés pour le mode single. */
 function SingleRender({ args }: { args: SingleMonthPickerProps }) {
   const now = new Date();
-  const [month, setMonth] = useState(args.month ?? now.getMonth() + 1);
-  const [year, setYear] = useState(args.year ?? now.getFullYear());
+  const [month, setMonth] = useState<number | undefined>(args.month ?? now.getMonth() + 1);
+  const [year, setYear] = useState<number | undefined>(args.year ?? now.getFullYear());
   // Sync depuis les controls Storybook quand args change (sans écraser les
   // modifs utilisateur : onChange met à jour le state local, pas args).
   useEffect(() => {
@@ -138,10 +138,10 @@ function SingleRender({ args }: { args: SingleMonthPickerProps }) {
 
 /** Sous-composant : hooks isolés pour le mode range. */
 function RangeRender({ args }: { args: RangeMonthPickerProps }) {
-  const [startMonth, setStartMonth] = useState(args.startMonth ?? 8);
-  const [startYear, setStartYear] = useState(args.startYear ?? 2025);
-  const [endMonth, setEndMonth] = useState(args.endMonth ?? 11);
-  const [endYear, setEndYear] = useState(args.endYear ?? 2025);
+  const [startMonth, setStartMonth] = useState<number | undefined>(args.startMonth ?? 8);
+  const [startYear, setStartYear] = useState<number | undefined>(args.startYear ?? 2025);
+  const [endMonth, setEndMonth] = useState<number | undefined>(args.endMonth ?? 11);
+  const [endYear, setEndYear] = useState<number | undefined>(args.endYear ?? 2025);
   // Sync depuis les controls Storybook quand args change.
   useEffect(() => {
     if (args.startMonth !== undefined) setStartMonth(args.startMonth);

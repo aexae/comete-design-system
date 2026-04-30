@@ -35,6 +35,15 @@ interface YearPickerBaseProps {
   isInvalid?: boolean;
   /** Désactive le composant. */
   isDisabled?: boolean;
+  /**
+   * En mode éditable, affiche une icône close (×) à la place de l'icône calendrier
+   * **uniquement quand le champ a le focus** et qu'une valeur est saisie. Au blur,
+   * l'icône calendrier reprend sa place.
+   * @default true
+   */
+  isClearable?: boolean;
+  /** Callback appelé quand l'utilisateur clique sur le bouton clear. */
+  onClear?: () => void;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -49,8 +58,8 @@ export interface SingleYearPickerProps extends YearPickerBaseProps {
   isRange?: false;
   /** Année sélectionnée. */
   year?: number;
-  /** Callback appelé à chaque changement d'année. */
-  onChange?: (year: number) => void;
+  /** Callback appelé à chaque changement d'année. `undefined` = effacé. */
+  onChange?: (year: number | undefined) => void;
 }
 
 /** Props du mode plage (sélection d'une plage d'années). */
@@ -66,8 +75,14 @@ export interface RangeYearPickerProps extends YearPickerBaseProps {
    * @default 2
    */
   calendars?: 1 | 2;
-  /** Callback appelé à chaque changement de plage. */
-  onChange?: (startYear: number, endYear: number) => void;
+  /**
+   * Callback appelé à chaque changement de plage.
+   * `undefined` pour les deux = effacé.
+   */
+  onChange?: (
+    startYear: number | undefined,
+    endYear: number | undefined,
+  ) => void;
 }
 
 /** Union discriminée — TypeScript infère le bon type selon `isRange`. */
@@ -122,6 +137,8 @@ function SingleYearPicker({
   appearance = "default",
   isInvalid = false,
   isDisabled = false,
+  isClearable = true,
+  onClear,
   className,
   style,
   "aria-label": ariaLabel,
@@ -148,23 +165,29 @@ function SingleYearPicker({
 
   const [isOpen, setIsOpen] = useState(false);
 
-  // Close dropdown on click outside or Escape (editable mode only)
+  // Click outside : ferme le popover + blur de l'input focus.
   useEffect(() => {
-    if (!isOpen || !isEditable) return;
+    if (!isEditable) return;
     const handleClickOutside = (e: MouseEvent) => {
-      if (!containerRef.current?.contains(e.target as Node)) {
-        setIsOpen(false);
+      if (containerRef.current?.contains(e.target as Node)) return;
+      setIsOpen(false);
+      const active = document.activeElement as HTMLElement | null;
+      if (active && containerRef.current?.contains(active)) {
+        active.blur();
       }
     };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isEditable]);
+
+  // Escape ferme le popover (pas de blur, on reste éditable)
+  useEffect(() => {
+    if (!isOpen || !isEditable) return;
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") setIsOpen(false);
     };
-    document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleEscape);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscape);
-    };
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, isEditable]);
 
   // -- Handler calendar selection --
@@ -179,8 +202,22 @@ function SingleYearPicker({
   const [inputValue, setInputValue] = useState("");
   const [isInputFocused, setIsInputFocused] = useState(false);
 
+  const hasValue = year !== undefined;
+  const showClear =
+    isClearable && hasValue && !isDisabled && isInputFocused;
+  const handleClear = () => {
+    setInputValue("");
+    onChange?.(undefined);
+    onClear?.();
+    requestAnimationFrame(() => {
+      const input = containerRef.current?.querySelector<HTMLInputElement>("input");
+      input?.focus();
+      input?.select();
+    });
+  };
+
   const handleInputFocus = () => {
-    setInputValue(String(resolvedYear));
+    setInputValue(year !== undefined ? String(year) : "");
     setIsInputFocused(true);
   };
 
@@ -232,23 +269,45 @@ function SingleYearPicker({
               type="text"
               inputMode="numeric"
               className={styles.yearInput}
-              value={isInputFocused ? inputValue : String(resolvedYear)}
+              value={
+                isInputFocused
+                  ? inputValue
+                  : year !== undefined
+                    ? String(year)
+                    : ""
+              }
               onChange={(e) => setInputValue(e.target.value)}
               onClick={() => !isDisabled && setIsOpen(true)}
               onFocus={handleInputFocus}
               onBlur={handleInputBlur}
               onKeyDown={handleInputKeyDown}
               disabled={isDisabled}
-              aria-label={`Année : ${resolvedYear}`}
+              placeholder="AAAA"
+              aria-label={year !== undefined ? `Année : ${year}` : "Année"}
             />
-            <Button
-              appearance="subtle"
-              iconBefore="CalendarMonth"
-              className={styles.calendarButton}
-              isDisabled={isDisabled}
-              onPress={() => !isDisabled && setIsOpen((o) => !o)}
-              aria-label="Ouvrir le sélecteur d'années"
-            />
+            {showClear ? (
+              <Button
+                appearance="subtle"
+                iconBefore="CloseSmallFaded"
+                className={styles.calendarButton}
+                aria-label="Effacer"
+                onPress={handleClear}
+                // REASON: empêcher le blur de l'input pendant le click. Sans ça,
+                // le mousedown sur le bouton transfert le focus → input blur →
+                // showClear=false → le bouton disparaît mid-click → onPress
+                // ne se déclenche jamais.
+                onPointerDown={(e) => e.preventDefault()}
+              />
+            ) : (
+              <Button
+                appearance="subtle"
+                iconBefore="CalendarMonth"
+                className={styles.calendarButton}
+                isDisabled={isDisabled}
+                onPress={() => !isDisabled && setIsOpen((o) => !o)}
+                aria-label="Ouvrir le sélecteur d'années"
+              />
+            )}
             {isOpen && (
               <div className={styles.calendarDropdown}>
                 <Calendar
@@ -325,6 +384,8 @@ function RangeYearPicker({
   appearance = "default",
   isInvalid = false,
   isDisabled = false,
+  isClearable = true,
+  onClear,
   className,
   style,
   "aria-label": ariaLabel,
@@ -346,23 +407,29 @@ function RangeYearPicker({
     "start" | "end" | "range" | null
   >(null);
 
-  // Close dropdown on click outside or Escape (editable mode only)
+  // Click outside : ferme le popover + blur de l'input focus.
   useEffect(() => {
-    if (!openPopover || !isEditable) return;
+    if (!isEditable) return;
     const handleClickOutside = (e: MouseEvent) => {
-      if (!containerRef.current?.contains(e.target as Node)) {
-        setOpenPopover(null);
+      if (containerRef.current?.contains(e.target as Node)) return;
+      setOpenPopover(null);
+      const active = document.activeElement as HTMLElement | null;
+      if (active && containerRef.current?.contains(active)) {
+        active.blur();
       }
     };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isEditable]);
+
+  // Escape ferme le popover (pas de blur, on reste éditable)
+  useEffect(() => {
+    if (!openPopover || !isEditable) return;
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpenPopover(null);
     };
-    document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleEscape);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscape);
-    };
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [openPopover, isEditable]);
 
   // -- Helper : commit new range (auto-swap if start > end) --
@@ -377,14 +444,17 @@ function RangeYearPicker({
 
   const handleStartYearSelect = (date: CalendarDate) => {
     commitRange(date.year, resolvedEnd);
+    setOpenPopover(null);
   };
 
   const handleEndYearSelect = (date: CalendarDate) => {
     commitRange(resolvedStart, date.year);
+    setOpenPopover(null);
   };
 
   const handleRangeSelect = (range: RangeValue<CalendarDate>) => {
     commitRange(range.start.year, range.end.year);
+    setOpenPopover(null);
   };
 
   // -- Handler : mise à jour immédiate au premier clic (start seul) --
@@ -401,8 +471,23 @@ function RangeYearPicker({
   const [startFocused, setStartFocused] = useState(false);
   const [endFocused, setEndFocused] = useState(false);
 
+  const isFocused = startFocused || endFocused;
+  const hasValue = startYear !== undefined || endYear !== undefined;
+  const showClear = isClearable && hasValue && !isDisabled && isFocused;
+  const handleClear = () => {
+    setStartInput("");
+    setEndInput("");
+    onChange?.(undefined, undefined);
+    onClear?.();
+    requestAnimationFrame(() => {
+      const input = containerRef.current?.querySelector<HTMLInputElement>("input");
+      input?.focus();
+      input?.select();
+    });
+  };
+
   const handleStartInputFocus = () => {
-    setStartInput(String(resolvedStart));
+    setStartInput(startYear !== undefined ? String(startYear) : "");
     setStartFocused(true);
   };
 
@@ -415,7 +500,7 @@ function RangeYearPicker({
   };
 
   const handleEndInputFocus = () => {
-    setEndInput(String(resolvedEnd));
+    setEndInput(endYear !== undefined ? String(endYear) : "");
     setEndFocused(true);
   };
 
@@ -499,14 +584,25 @@ function RangeYearPicker({
               type="text"
               inputMode="numeric"
               className={styles.yearInput}
-              value={startFocused ? startInput : String(resolvedStart)}
+              value={
+                startFocused
+                  ? startInput
+                  : startYear !== undefined
+                    ? String(startYear)
+                    : ""
+              }
               onChange={(e) => setStartInput(e.target.value)}
               onClick={() => !isDisabled && setOpenPopover("range")}
               onFocus={handleStartInputFocus}
               onBlur={handleStartInputBlur}
               onKeyDown={handleInputKeyDown}
               disabled={isDisabled}
-              aria-label={`Année de début : ${resolvedStart}`}
+              aria-label={
+                startYear !== undefined
+                  ? `Année de début : ${startYear}`
+                  : "Année de début"
+              }
+              placeholder="AAAA"
             />
 
             <span className={styles.rangeSeparator} aria-hidden="true">
@@ -517,27 +613,53 @@ function RangeYearPicker({
               type="text"
               inputMode="numeric"
               className={styles.yearInput}
-              value={endFocused ? endInput : String(resolvedEnd)}
+              value={
+                endFocused
+                  ? endInput
+                  : endYear !== undefined
+                    ? String(endYear)
+                    : ""
+              }
               onChange={(e) => setEndInput(e.target.value)}
               onClick={() => !isDisabled && setOpenPopover("range")}
               onFocus={handleEndInputFocus}
               onBlur={handleEndInputBlur}
               onKeyDown={handleInputKeyDown}
               disabled={isDisabled}
-              aria-label={`Année de fin : ${resolvedEnd}`}
+              aria-label={
+                endYear !== undefined
+                  ? `Année de fin : ${endYear}`
+                  : "Année de fin"
+              }
+              placeholder="AAAA"
             />
 
-            <Button
-              appearance="subtle"
-              iconBefore="CalendarMonth"
-              className={styles.calendarButton}
-              isDisabled={isDisabled}
-              onPress={() =>
-                !isDisabled &&
-                setOpenPopover((o) => (o === "range" ? null : "range"))
-              }
-              aria-label="Ouvrir le sélecteur d'années"
-            />
+            {showClear ? (
+              <Button
+                appearance="subtle"
+                iconBefore="CloseSmallFaded"
+                className={styles.calendarButton}
+                aria-label="Effacer"
+                onPress={handleClear}
+                // REASON: empêcher le blur de l'input pendant le click. Sans ça,
+                // le mousedown sur le bouton transfert le focus → input blur →
+                // showClear=false → le bouton disparaît mid-click → onPress
+                // ne se déclenche jamais.
+                onPointerDown={(e) => e.preventDefault()}
+              />
+            ) : (
+              <Button
+                appearance="subtle"
+                iconBefore="CalendarMonth"
+                className={styles.calendarButton}
+                isDisabled={isDisabled}
+                onPress={() =>
+                  !isDisabled &&
+                  setOpenPopover((o) => (o === "range" ? null : "range"))
+                }
+                aria-label="Ouvrir le sélecteur d'années"
+              />
+            )}
             {openPopover === "range" && (
               <div className={styles.calendarDropdown}>
                 {calendars === 2 ? renderRangeCalendar() : renderSingleStartCalendar()}

@@ -33,8 +33,10 @@
 }
 
 /* Input année (mode saisie) */
+/* width 4.75ch : 1ch est calé sur "0", mais "AAAA" majuscule est plus large
+   que "0000". 4.75ch laisse "AAAA" lisible sans couper. */
 .yearInput {
-  width: 4ch;
+  width: 4.75ch;
   border: none;
   outline: none;
   background: transparent;

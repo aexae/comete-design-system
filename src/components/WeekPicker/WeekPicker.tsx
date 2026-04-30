@@ -40,6 +40,15 @@ interface WeekPickerBaseProps {
   isInvalid?: boolean;
   /** Désactive le composant. */
   isDisabled?: boolean;
+  /**
+   * En mode éditable, affiche une icône close (×) à la place de l'icône calendrier
+   * **uniquement quand le champ a le focus** et qu'une valeur est saisie. Au blur,
+   * l'icône calendrier reprend sa place.
+   * @default true
+   */
+  isClearable?: boolean;
+  /** Callback appelé quand l'utilisateur clique sur le bouton clear. */
+  onClear?: () => void;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -56,8 +65,14 @@ export interface SingleWeekPickerProps extends WeekPickerBaseProps {
   week?: number;
   /** Année ISO de la semaine. */
   year?: number;
-  /** Callback appelé à chaque changement de semaine. */
-  onChange?: (week: number, year: number) => void;
+  /**
+   * Callback appelé à chaque changement de semaine.
+   * `undefined` pour les deux = effacé.
+   */
+  onChange?: (
+    week: number | undefined,
+    year: number | undefined,
+  ) => void;
 }
 
 /** Props du mode plage (sélection d'une plage de semaines). */
@@ -72,12 +87,15 @@ export interface RangeWeekPickerProps extends WeekPickerBaseProps {
   endWeek?: number;
   /** Année ISO de la semaine de fin. */
   endYear?: number;
-  /** Callback appelé à chaque changement de plage. */
+  /**
+   * Callback appelé à chaque changement de plage.
+   * `undefined` pour les quatre = effacé.
+   */
   onChange?: (
-    startWeek: number,
-    startYear: number,
-    endWeek: number,
-    endYear: number,
+    startWeek: number | undefined,
+    startYear: number | undefined,
+    endWeek: number | undefined,
+    endYear: number | undefined,
   ) => void;
 }
 
@@ -280,6 +298,8 @@ function SingleWeekPicker({
   appearance = "default",
   isInvalid = false,
   isDisabled = false,
+  isClearable = true,
+  onClear,
   className,
   style,
   "aria-label": ariaLabel,
@@ -329,23 +349,29 @@ function SingleWeekPicker({
 
   const [isOpen, setIsOpen] = useState(false);
 
-  // Close dropdown on click outside or Escape (editable mode only)
+  // Click outside : ferme le popover + blur de l'input focus.
   useEffect(() => {
-    if (!isOpen || !isEditable) return;
+    if (!isEditable) return;
     const handleClickOutside = (e: MouseEvent) => {
-      if (!containerRef.current?.contains(e.target as Node)) {
-        setIsOpen(false);
+      if (containerRef.current?.contains(e.target as Node)) return;
+      setIsOpen(false);
+      const active = document.activeElement as HTMLElement | null;
+      if (active && containerRef.current?.contains(active)) {
+        active.blur();
       }
     };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isEditable]);
+
+  // Escape ferme le popover (pas de blur, on reste éditable)
+  useEffect(() => {
+    if (!isOpen || !isEditable) return;
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") setIsOpen(false);
     };
-    document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleEscape);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscape);
-    };
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, isEditable]);
 
   // -- Handler calendar selection --
@@ -361,15 +387,32 @@ function SingleWeekPicker({
   // -- Derived --
 
   const weekLabel = formatWeekLabel(resolvedWeek, monday, sunday, locale);
+  const hasValue = week !== undefined && year !== undefined;
+  // Affichage : vide si aucune valeur, sinon le label formaté
+  const displayLabel = hasValue ? weekLabel : "";
 
   // -- État local pour le champ de saisie --
-  const [inputValue, setInputValue] = useState(weekLabel);
+  const [inputValue, setInputValue] = useState(displayLabel);
+  const [isInputFocused, setIsInputFocused] = useState(false);
   // Synchroniser l'input quand la valeur contrôlée change
-  const prevLabelRef = useRef(weekLabel);
-  if (prevLabelRef.current !== weekLabel) {
-    prevLabelRef.current = weekLabel;
-    setInputValue(weekLabel);
+  const prevLabelRef = useRef(displayLabel);
+  if (prevLabelRef.current !== displayLabel) {
+    prevLabelRef.current = displayLabel;
+    setInputValue(displayLabel);
   }
+
+  const showClear =
+    isClearable && hasValue && !isDisabled && isInputFocused;
+  const handleClear = () => {
+    setInputValue("");
+    onChange?.(undefined, undefined);
+    onClear?.();
+    requestAnimationFrame(() => {
+      const input = containerRef.current?.querySelector<HTMLInputElement>("input");
+      input?.focus();
+      input?.select();
+    });
+  };
 
   /** Valide la saisie : numéro de semaine ou date → résout la semaine ISO. */
   const commitInput = () => {
@@ -378,7 +421,7 @@ function SingleWeekPicker({
       onChange?.(result.week, result.year);
     }
     // Toujours rétablir l'affichage formaté
-    setInputValue(weekLabel);
+    setInputValue(displayLabel);
   };
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -419,20 +462,44 @@ function SingleWeekPicker({
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onClick={() => !isDisabled && setIsOpen(true)}
-              onBlur={commitInput}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => {
+                setIsInputFocused(false);
+                commitInput();
+              }}
               onKeyDown={handleInputKeyDown}
               disabled={isDisabled}
-              aria-label={`Semaine ${resolvedWeek} : ${weekLabel}`}
+              aria-label={
+                hasValue
+                  ? `Semaine ${resolvedWeek} : ${weekLabel}`
+                  : "Semaine"
+              }
+              placeholder="Sem. SS • JJ/MM/AA"
             />
 
-            <Button
-              appearance="subtle"
-              iconBefore="CalendarMonth"
-              className={styles.calendarButton}
-              isDisabled={isDisabled}
-              onPress={() => !isDisabled && setIsOpen((o) => !o)}
-              aria-label="Ouvrir le sélecteur de semaine"
-            />
+            {showClear ? (
+              <Button
+                appearance="subtle"
+                iconBefore="CloseSmallFaded"
+                className={styles.calendarButton}
+                aria-label="Effacer"
+                onPress={handleClear}
+                // REASON: empêcher le blur de l'input pendant le click. Sans ça,
+                // le mousedown sur le bouton transfert le focus → input blur →
+                // showClear=false → le bouton disparaît mid-click → onPress
+                // ne se déclenche jamais.
+                onPointerDown={(e) => e.preventDefault()}
+              />
+            ) : (
+              <Button
+                appearance="subtle"
+                iconBefore="CalendarMonth"
+                className={styles.calendarButton}
+                isDisabled={isDisabled}
+                onPress={() => !isDisabled && setIsOpen((o) => !o)}
+                aria-label="Ouvrir le sélecteur de semaine"
+              />
+            )}
             {isOpen && (
               <div className={styles.calendarDropdown}>
                 <Calendar
@@ -510,6 +577,8 @@ function RangeWeekPicker({
   appearance = "default",
   isInvalid = false,
   isDisabled = false,
+  isClearable = true,
+  onClear,
   className,
   style,
   "aria-label": ariaLabel,
@@ -544,23 +613,29 @@ function RangeWeekPicker({
     "start" | "end" | "range" | null
   >(null);
 
-  // Close dropdown on click outside or Escape (editable mode only)
+  // Click outside : ferme le popover + blur de l'input focus.
   useEffect(() => {
-    if (!openPopover || !isEditable) return;
+    if (!isEditable) return;
     const handleClickOutside = (e: MouseEvent) => {
-      if (!containerRef.current?.contains(e.target as Node)) {
-        setOpenPopover(null);
+      if (containerRef.current?.contains(e.target as Node)) return;
+      setOpenPopover(null);
+      const active = document.activeElement as HTMLElement | null;
+      if (active && containerRef.current?.contains(active)) {
+        active.blur();
       }
     };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isEditable]);
+
+  // Escape ferme le popover (pas de blur, on reste éditable)
+  useEffect(() => {
+    if (!openPopover || !isEditable) return;
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpenPopover(null);
     };
-    document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleEscape);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscape);
-    };
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [openPopover, isEditable]);
 
   // -- Helper : commit range (auto-swap if start > end) --
@@ -592,6 +667,7 @@ function RangeWeekPicker({
       getISOWeekNumber(startOfEnd),
       getISOWeekYear(startOfEnd),
     );
+    setOpenPopover(null);
   };
 
   // -- Handler : mise à jour immédiate au premier clic (start seul) --
@@ -617,20 +693,42 @@ function RangeWeekPicker({
   );
   const endLabel = formatWeekLabelShort(resolvedEndWeek, endMonday, locale);
 
-  const [startInput, setStartInput] = useState(startLabel);
-  const [endInput, setEndInput] = useState(endLabel);
+  const startHasValue = startWeek !== undefined && startYear !== undefined;
+  const endHasValue = endWeek !== undefined && endYear !== undefined;
+  const startDisplay = startHasValue ? startLabel : "";
+  const endDisplay = endHasValue ? endLabel : "";
+
+  const [startInput, setStartInput] = useState(startDisplay);
+  const [endInput, setEndInput] = useState(endDisplay);
+  const [startFocused, setStartFocused] = useState(false);
+  const [endFocused, setEndFocused] = useState(false);
 
   // Synchroniser l'input quand la valeur contrôlée change
-  const prevStartRef = useRef(startLabel);
-  if (prevStartRef.current !== startLabel) {
-    prevStartRef.current = startLabel;
-    setStartInput(startLabel);
+  const prevStartRef = useRef(startDisplay);
+  if (prevStartRef.current !== startDisplay) {
+    prevStartRef.current = startDisplay;
+    setStartInput(startDisplay);
   }
-  const prevEndRef = useRef(endLabel);
-  if (prevEndRef.current !== endLabel) {
-    prevEndRef.current = endLabel;
-    setEndInput(endLabel);
+  const prevEndRef = useRef(endDisplay);
+  if (prevEndRef.current !== endDisplay) {
+    prevEndRef.current = endDisplay;
+    setEndInput(endDisplay);
   }
+
+  const isFocused = startFocused || endFocused;
+  const hasValue = startHasValue || endHasValue;
+  const showClear = isClearable && hasValue && !isDisabled && isFocused;
+  const handleClear = () => {
+    setStartInput("");
+    setEndInput("");
+    onChange?.(undefined, undefined, undefined, undefined);
+    onClear?.();
+    requestAnimationFrame(() => {
+      const input = containerRef.current?.querySelector<HTMLInputElement>("input");
+      input?.focus();
+      input?.select();
+    });
+  };
 
   const commitStartInput = () => {
     const result = parseInput(startInput, resolvedStartYear);
@@ -643,7 +741,7 @@ function RangeWeekPicker({
       );
     }
     // Toujours rétablir l'affichage formaté
-    setStartInput(startLabel);
+    setStartInput(startDisplay);
   };
 
   const commitEndInput = () => {
@@ -656,7 +754,7 @@ function RangeWeekPicker({
         result.year,
       );
     }
-    setEndInput(endLabel);
+    setEndInput(endDisplay);
   };
 
   const handleStartInputKeyDown = (
@@ -722,10 +820,19 @@ function RangeWeekPicker({
               value={startInput}
               onChange={(e) => setStartInput(e.target.value)}
               onClick={() => !isDisabled && setOpenPopover("range")}
-              onBlur={commitStartInput}
+              onFocus={() => setStartFocused(true)}
+              onBlur={() => {
+                setStartFocused(false);
+                commitStartInput();
+              }}
               onKeyDown={handleStartInputKeyDown}
               disabled={isDisabled}
-              aria-label={`Semaine de début : ${startLabel}`}
+              aria-label={
+                startHasValue
+                  ? `Semaine de début : ${startLabel}`
+                  : "Semaine de début"
+              }
+              placeholder="Sem. SS • JJ/MM"
             />
 
             <span className={styles.rangeSeparator} aria-hidden="true">
@@ -738,23 +845,47 @@ function RangeWeekPicker({
               value={endInput}
               onChange={(e) => setEndInput(e.target.value)}
               onClick={() => !isDisabled && setOpenPopover("range")}
-              onBlur={commitEndInput}
+              onFocus={() => setEndFocused(true)}
+              onBlur={() => {
+                setEndFocused(false);
+                commitEndInput();
+              }}
               onKeyDown={handleEndInputKeyDown}
               disabled={isDisabled}
-              aria-label={`Semaine de fin : ${endLabel}`}
+              aria-label={
+                endHasValue
+                  ? `Semaine de fin : ${endLabel}`
+                  : "Semaine de fin"
+              }
+              placeholder="Sem. SS • JJ/MM"
             />
 
-            <Button
-              appearance="subtle"
-              iconBefore="CalendarMonth"
-              className={styles.calendarButton}
-              isDisabled={isDisabled}
-              onPress={() =>
-                !isDisabled &&
-                setOpenPopover((o) => (o === "range" ? null : "range"))
-              }
-              aria-label="Ouvrir le sélecteur de semaine"
-            />
+            {showClear ? (
+              <Button
+                appearance="subtle"
+                iconBefore="CloseSmallFaded"
+                className={styles.calendarButton}
+                aria-label="Effacer"
+                onPress={handleClear}
+                // REASON: empêcher le blur de l'input pendant le click. Sans ça,
+                // le mousedown sur le bouton transfert le focus → input blur →
+                // showClear=false → le bouton disparaît mid-click → onPress
+                // ne se déclenche jamais.
+                onPointerDown={(e) => e.preventDefault()}
+              />
+            ) : (
+              <Button
+                appearance="subtle"
+                iconBefore="CalendarMonth"
+                className={styles.calendarButton}
+                isDisabled={isDisabled}
+                onPress={() =>
+                  !isDisabled &&
+                  setOpenPopover((o) => (o === "range" ? null : "range"))
+                }
+                aria-label="Ouvrir le sélecteur de semaine"
+              />
+            )}
             {openPopover === "range" && (
               <div className={styles.calendarDropdown}>{renderCalendar()}</div>
             )}

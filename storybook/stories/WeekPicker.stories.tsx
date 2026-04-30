@@ -93,8 +93,8 @@ type Story = StoryObj<typeof WeekPicker>;
 
 /** Sous-composant : hooks isolés pour le mode single. */
 function SingleRender({ args }: { args: SingleWeekPickerProps }) {
-  const [week, setWeek] = useState(args.week ?? 28);
-  const [year, setYear] = useState(args.year ?? 2025);
+  const [week, setWeek] = useState<number | undefined>(args.week ?? 28);
+  const [year, setYear] = useState<number | undefined>(args.year ?? 2025);
   useEffect(() => {
     if (args.week !== undefined) setWeek(args.week);
   }, [args.week]);
@@ -135,10 +135,10 @@ function SingleRender({ args }: { args: SingleWeekPickerProps }) {
 
 /** Sous-composant : hooks isolés pour le mode range. */
 function RangeRender({ args }: { args: RangeWeekPickerProps }) {
-  const [startWeek, setStartWeek] = useState(args.startWeek ?? 28);
-  const [startYear, setStartYear] = useState(args.startYear ?? 2025);
-  const [endWeek, setEndWeek] = useState(args.endWeek ?? 32);
-  const [endYear, setEndYear] = useState(args.endYear ?? 2025);
+  const [startWeek, setStartWeek] = useState<number | undefined>(args.startWeek ?? 28);
+  const [startYear, setStartYear] = useState<number | undefined>(args.startYear ?? 2025);
+  const [endWeek, setEndWeek] = useState<number | undefined>(args.endWeek ?? 32);
+  const [endYear, setEndYear] = useState<number | undefined>(args.endYear ?? 2025);
   useEffect(() => {
     if (args.startWeek !== undefined) setStartWeek(args.startWeek);
   }, [args.startWeek]);

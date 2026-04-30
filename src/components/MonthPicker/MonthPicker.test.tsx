@@ -6,19 +6,14 @@ import { MonthPicker } from "./MonthPicker.js";
 describe("MonthPicker", () => {
   // -- Rendering (editable mode = default) --
 
-  it("should render with current month/year when no props provided", () => {
+  it("should render empty inputs when no props provided", () => {
     render(<MonthPicker />);
-    const now = new Date();
-    const currentMonth = now.getMonth() + 1;
-    const currentYear = now.getFullYear();
-    const monthInput = screen.getByRole("textbox", {
-      name: /Mois : /,
-    });
-    expect(monthInput).toHaveValue(String(currentMonth).padStart(2, "0"));
-    const yearInput = screen.getByRole("textbox", {
-      name: `Année : ${currentYear}`,
-    });
-    expect(yearInput).toHaveValue(String(currentYear));
+    // Sans valeur fournie, les inputs sont vides et l'aria-label est neutre
+    // (alignement DatePicker)
+    const monthInput = screen.getByRole("textbox", { name: "Mois" });
+    expect(monthInput).toHaveValue("");
+    const yearInput = screen.getByRole("textbox", { name: "Année" });
+    expect(yearInput).toHaveValue("");
   });
 
   it("should render with specified month and year", () => {

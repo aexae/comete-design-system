@@ -79,7 +79,7 @@ type Story = StoryObj<typeof YearPicker>;
 /** Sous-composant : hooks isolés pour le mode single. */
 function SingleRender({ args }: { args: SingleYearPickerProps }) {
   const currentYear = new Date().getFullYear();
-  const [year, setYear] = useState(args.year ?? currentYear);
+  const [year, setYear] = useState<number | undefined>(args.year ?? currentYear);
   useEffect(() => {
     if (args.year !== undefined) setYear(args.year);
   }, [args.year]);
@@ -113,8 +113,8 @@ function SingleRender({ args }: { args: SingleYearPickerProps }) {
 
 /** Sous-composant : hooks isolés pour le mode range. */
 function RangeRender({ args }: { args: RangeYearPickerProps }) {
-  const [startYear, setStartYear] = useState(args.startYear ?? 2023);
-  const [endYear, setEndYear] = useState(args.endYear ?? 2025);
+  const [startYear, setStartYear] = useState<number | undefined>(args.startYear ?? 2023);
+  const [endYear, setEndYear] = useState<number | undefined>(args.endYear ?? 2025);
   useEffect(() => {
     if (args.startYear !== undefined) setStartYear(args.startYear);
   }, [args.startYear]);

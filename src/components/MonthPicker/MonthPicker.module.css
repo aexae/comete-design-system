@@ -32,8 +32,10 @@
 }
 
 /* Input mois (mode saisie) */
+/* width 2.75ch : 1ch est calé sur "0" mais le placeholder "MM" en majuscule
+   est plus large que 2ch. 2.75ch laisse "MM" lisible sans couper. */
 .monthInput {
-  width: 2ch;
+  width: 2.75ch;
   border: none;
   outline: none;
   background: transparent;
@@ -72,9 +74,11 @@
 }
 
 /* Input année (mode saisie) */
+/* min-width 4.75ch : "AAAA" majuscule est plus large que 4 chiffres "0000". */
 .yearInput {
   flex: 1 1 0%;
-  width: 4ch;
+  min-width: 4.75ch;
+  width: 4.75ch;
   border: none;
   outline: none;
   background: transparent;
