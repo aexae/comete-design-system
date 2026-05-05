@@ -1,21 +1,58 @@
 // SideNav — story principale (composition complète)
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { type ReactNode, useState } from "react";
-import { SideNav, Logo, useSideNav } from "@naxit/comete-design-system/components";
+import { useState } from "react";
+import { SideNav, Page, Logo, useSideNav } from "@naxit/comete-design-system/components";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
-function Wrapper({ children }: { children: ReactNode }) {
+/** Composition complète : Page.Header en haut sur toute la largeur (au-dessus
+ *  de tout structurellement), puis SideNav + Page.Body dans une zone flex en
+ *  dessous. Comme la SideNav vit dans cette zone, son overlay en peek ne
+ *  recouvre jamais le Page.Header — le Trigger reste cliquable. */
+function Layout({ initialCollapsed }: { initialCollapsed: boolean }) {
+  const [collapsed, setCollapsed] = useState(initialCollapsed);
   return (
-    <div style={{ display: "flex", height: "100vh", backgroundColor: "var(--black-4)" }}>
-      {children}
-      <div style={{ flex: 1, padding: "var(--space200)" }}>
-        <p>Contenu principal</p>
+    <SideNav.Provider isCollapsed={collapsed} onCollapsedChange={setCollapsed}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          height: "100vh",
+          backgroundColor: "var(--black-4)",
+        }}
+      >
+        {/* Header au-dessus, pleine largeur — jamais recouvert par la nav */}
+        <Page.Header
+          title="Accueil"
+          leading={<SideNav.Trigger />}
+        />
+
+        {/* Zone sous le header : SideNav + contenu côte à côte */}
+        <div
+          style={{
+            display: "flex",
+            flex: 1,
+            overflow: "hidden",
+            position: "relative",
+          }}
+        >
+          <SideNav>
+            <SideNav.Header
+              logo={<Logo product="cafe" format="icon" />}
+              companyName="Pro Sécurité"
+              description="Main Courante"
+            />
+            <SideNavContent />
+          </SideNav>
+          <Page.Body>
+            <p>Contenu principal</p>
+          </Page.Body>
+        </div>
       </div>
-    </div>
+    </SideNav.Provider>
   );
 }
 
@@ -51,58 +88,33 @@ function SideNavContent() {
   );
 }
 
-const meta = {
+type StoryArgs = { initialCollapsed: boolean };
+
+const meta: Meta<StoryArgs> = {
   title: "Navigation/SideNav",
-  component: SideNav,
   tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
     design: { type: "figma", url: figmaUrl("4319:15156") },
   },
   argTypes: {
-    isCollapsed: { control: "boolean" },
+    initialCollapsed: { control: "boolean" },
   },
-  args: { children: null as unknown as ReactNode, isCollapsed: false },
-} satisfies Meta<typeof SideNav>;
+  args: { initialCollapsed: false },
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Composition complète avec bouton collapse/expand dans le Header. */
+/** Composition complète : SideNav.Provider + SideNav + Page avec Trigger
+ *  dans Page.Header.leading. Expanded par défaut. */
 export const Default: Story = {
-  render: (args) => {
-    const [collapsed, setCollapsed] = useState(args.isCollapsed ?? false);
-    return (
-      <Wrapper>
-        <SideNav isCollapsed={collapsed} onCollapsedChange={setCollapsed}>
-          <SideNav.Header
-            logo={<Logo product="cafe" format="icon" />}
-            companyName="Pro Sécurité"
-            description="Main Courante"
-          />
-          <SideNavContent />
-        </SideNav>
-      </Wrapper>
-    );
-  },
+  render: (args) => <Layout initialCollapsed={args.initialCollapsed} />,
 };
 
-/** Mode réduit : cliquer sur le bouton expand pour revenir à la vue complète. */
+/** Mode réduit : la SideNav est totalement invisible. Le Trigger dans
+ *  `Page.Header.leading` permet de rouvrir (click) ou de peek (hover). */
 export const Collapsed: Story = {
-  args: { isCollapsed: true },
-  render: (args) => {
-    const [collapsed, setCollapsed] = useState(args.isCollapsed ?? true);
-    return (
-      <Wrapper>
-        <SideNav isCollapsed={collapsed} onCollapsedChange={setCollapsed}>
-          <SideNav.Header
-            logo={<Logo product="cafe" format="icon" />}
-            companyName="Pro Sécurité"
-            description="Main Courante"
-          />
-          <SideNavContent />
-        </SideNav>
-      </Wrapper>
-    );
-  },
+  args: { initialCollapsed: true },
+  render: (args) => <Layout initialCollapsed={args.initialCollapsed} />,
 };

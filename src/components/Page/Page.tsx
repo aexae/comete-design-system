@@ -30,6 +30,11 @@ export interface PageHeaderProps {
    */
   breadcrumbs?: ReactNode;
   /**
+   * Zone alignée à gauche du titre. Typiquement utilisée pour héberger
+   * un `<SideNav.Trigger />` discret quand la SideNav est cachée.
+   */
+  leading?: ReactNode;
+  /**
    * Zone d'actions alignée à droite du titre (avatar utilisateur,
    * boutons d'action rapides, menu "…"). Sur mobile, reste visible à
    * droite du titre grâce au `flex-shrink: 0`.
@@ -108,6 +113,7 @@ Page.displayName = "Page";
 function PageHeader({
   title,
   breadcrumbs,
+  leading,
   trailing,
   className,
 }: PageHeaderProps): ReactElement {
@@ -118,6 +124,9 @@ function PageHeader({
         <div className={styles.breadcrumbs}>{breadcrumbs}</div>
       )}
       <div className={styles.titleRow}>
+        {leading !== undefined && (
+          <div className={styles.leading}>{leading}</div>
+        )}
         <h1 className={styles.title}>{title}</h1>
         {trailing !== undefined && (
           <div className={styles.trailing}>{trailing}</div>

@@ -1,6 +1,7 @@
 // SideNav — Comete Design System
 import { createContext,
   useContext,
+  useState,
   type ReactElement,
   type ReactNode, type CSSProperties } from "react";
 import type { IconName } from "@naxit/comete-icons";
@@ -10,16 +11,26 @@ import { Divider } from "../Divider/index.js";
 import styles from "./SideNav.module.css";
 
 // -----------------------------------------------------------------------
-// Context interne
+// Context partagé (couvre SideNav + SideNav.Trigger + SideNavHeader)
 
 interface SideNavContextValue {
   isCollapsed: boolean;
+  /** Toggle du mode collapsed. */
   onToggleCollapse?: () => void;
+  /** Vrai quand un peek est demandé (hover sur Trigger ou nav). */
+  isPeeking: boolean;
+  /** Marque la zone Trigger (Page.Header.leading) comme survolée. */
+  setTriggerHover?: (hovered: boolean) => void;
+  /** Marque la nav elle-même comme survolée. */
+  setNavHover?: (hovered: boolean) => void;
 }
 
-const SideNavContext = createContext<SideNavContextValue>({ isCollapsed: false });
+const SideNavContext = createContext<SideNavContextValue>({
+  isCollapsed: false,
+  isPeeking: false,
+});
 
-/** Hook pour accéder à l'état collapsed du SideNav parent. */
+/** Hook pour accéder à l'état du SideNav parent. */
 export function useSideNav(): SideNavContextValue {
   return useContext(SideNavContext);
 }
@@ -29,13 +40,19 @@ export function useSideNav(): SideNavContextValue {
 
 export interface SideNavProps {
   children: ReactNode;
-  /** Mode réduit : icône au-dessus du label, largeur minimale. @default false */
-  isCollapsed?: boolean;
-  /** Callback déclenché par le bouton collapse/expand du Header. */
-  onCollapsedChange?: (collapsed: boolean) => void;
   className?: string;
   /** Styles inline additionnels. */
   style?: CSSProperties;
+}
+
+export interface SideNavProviderProps {
+  children: ReactNode;
+  /** Mode réduit (controlled). */
+  isCollapsed?: boolean;
+  /** Mode réduit initial (uncontrolled). @default false */
+  defaultCollapsed?: boolean;
+  /** Callback déclenché à chaque changement de l'état collapsed. */
+  onCollapsedChange?: (collapsed: boolean) => void;
 }
 
 export interface SideNavHeaderProps {
@@ -83,6 +100,11 @@ export interface SideNavFooterProps {
   className?: string;
 }
 
+export interface SideNavTriggerProps {
+  /** Classe CSS additionnelle. */
+  className?: string;
+}
+
 // -----------------------------------------------------------------------
 // SideNavHeader
 
@@ -92,8 +114,6 @@ export function SideNavHeader({
   description,
   className,
 }: SideNavHeaderProps): ReactElement {
-  const { isCollapsed, onToggleCollapse } = useContext(SideNavContext);
-
   return (
     <div className={[styles.header, className].filter(Boolean).join(" ")}>
       {logo && <span className={styles.headerLogo}>{logo}</span>}
@@ -105,16 +125,8 @@ export function SideNavHeader({
           )}
         </div>
       )}
-      {onToggleCollapse && (
-        <Button
-          appearance="subtle"
-          color="subtlest"
-          iconBefore={isCollapsed ? "LeftPanelOpen" : "LeftPanelClose"}
-          onPress={onToggleCollapse}
-          aria-label={isCollapsed ? "Développer la navigation" : "Réduire la navigation"}
-          className={styles.collapseButton}
-        />
-      )}
+      {/* Pas de bouton collapse ici — le toggle est exclusivement géré par
+          `<SideNav.Trigger />` dans `Page.Header.leading`. */}
     </div>
   );
 }
@@ -253,47 +265,166 @@ export function SideNavFooter({
 SideNavFooter.displayName = "SideNav.Footer";
 
 // -----------------------------------------------------------------------
+// SideNavTrigger — bouton standalone à placer dans une TopNav
+
+/**
+ * SideNav.Trigger — bouton de toggle à placer dans `Page.Header.leading`.
+ * Lit son état depuis le `<SideNav.Provider>` parent (commun avec la
+ * `<SideNav>`).
+ *
+ * Comportement :
+ * - **Click** : toggle l'état collapsed/expanded.
+ * - **Hover en collapsed** : déclenche le peek — la SideNav s'ouvre en
+ *   overlay par-dessus le contenu sans pousser la layout.
+ *
+ * ```tsx
+ * <SideNav.Provider isCollapsed={c} onCollapsedChange={setC}>
+ *   <SideNav>...</SideNav>
+ *   <Page>
+ *     <Page.Header leading={<SideNav.Trigger />} />
+ *   </Page>
+ * </SideNav.Provider>
+ * ```
+ */
+export function SideNavTrigger({
+  className,
+}: SideNavTriggerProps): ReactElement {
+  const { isCollapsed, onToggleCollapse, setTriggerHover } = useContext(
+    SideNavContext,
+  );
+  return (
+    <Button
+      appearance="subtle"
+      color="subtlest"
+      iconBefore={isCollapsed ? "LeftPanelOpen" : "LeftPanelClose"}
+      onPress={onToggleCollapse}
+      onHoverStart={() => setTriggerHover?.(true)}
+      onHoverEnd={() => setTriggerHover?.(false)}
+      aria-label={isCollapsed ? "Développer la navigation" : "Réduire la navigation"}
+      className={className}
+    />
+  );
+}
+
+SideNavTrigger.displayName = "SideNav.Trigger";
+
+// -----------------------------------------------------------------------
+// SideNav.Provider — détient le state partagé (isCollapsed, peek)
+
+/**
+ * SideNav.Provider — wrapper à placer **au-dessus** de la `<SideNav>` ET
+ * du `<Page>` qui contient le `<SideNav.Trigger />`. Détient le state
+ * partagé (collapsed + peek hover) pour que les deux puissent se
+ * coordonner.
+ *
+ * Mode controlled : passer `isCollapsed` + `onCollapsedChange`.
+ * Mode uncontrolled : passer `defaultCollapsed`.
+ *
+ * ```tsx
+ * const [collapsed, setCollapsed] = useState(false);
+ *
+ * <SideNav.Provider isCollapsed={collapsed} onCollapsedChange={setCollapsed}>
+ *   <div style={{ display: "flex" }}>
+ *     <SideNav>
+ *       <SideNav.Header ... />
+ *       <SideNav.Section title="...">...</SideNav.Section>
+ *     </SideNav>
+ *     <Page>
+ *       <Page.Header leading={<SideNav.Trigger />} title="..." />
+ *     </Page>
+ *   </div>
+ * </SideNav.Provider>
+ * ```
+ */
+export function SideNavProvider({
+  children,
+  isCollapsed: controlled,
+  defaultCollapsed = false,
+  onCollapsedChange,
+}: SideNavProviderProps): ReactElement {
+  const [internalCollapsed, setInternalCollapsed] = useState(defaultCollapsed);
+  const [triggerHover, setTriggerHover] = useState(false);
+  const [navHover, setNavHover] = useState(false);
+
+  const isCollapsed = controlled ?? internalCollapsed;
+  const onToggleCollapse = () => {
+    const next = !isCollapsed;
+    setInternalCollapsed(next);
+    onCollapsedChange?.(next);
+  };
+  const isPeeking = isCollapsed && (triggerHover || navHover);
+
+  return (
+    <SideNavContext.Provider
+      value={{
+        isCollapsed,
+        onToggleCollapse,
+        isPeeking,
+        setTriggerHover,
+        setNavHover,
+      }}
+    >
+      {children}
+    </SideNavContext.Provider>
+  );
+}
+
+SideNavProvider.displayName = "SideNav.Provider";
+
+// -----------------------------------------------------------------------
 // SideNav (main)
 
 /**
  * SideNav — Comete Design System
  *
- * Navigation latérale composable avec mode collapsed.
- * La transition collapse/expand utilise des hauteurs explicites
- * et overflow:hidden pour masquer le changement de flex-direction.
+ * Navigation latérale composable. Lit son état (isCollapsed + peek) depuis
+ * le `<SideNav.Provider>` parent — doit donc toujours être placée à
+ * l'intérieur de celui-ci.
  *
  * ```tsx
- * const [collapsed, setCollapsed] = useState(false);
- *
- * <SideNav isCollapsed={collapsed} onCollapsedChange={setCollapsed}>
- *   <SideNav.Header companyName="Mon App" logo={<Logo format="icon" />} />
- *   <SideNav.Section title="Navigation">
- *     <SideNav.Item label="Accueil" iconBefore="Home" isSelected />
- *   </SideNav.Section>
- * </SideNav>
+ * <SideNav.Provider isCollapsed={c} onCollapsedChange={setC}>
+ *   <SideNav>
+ *     <SideNav.Header ... />
+ *     <SideNav.Section title="Navigation">
+ *       <SideNav.Item label="Accueil" iconBefore="Home" isSelected />
+ *     </SideNav.Section>
+ *   </SideNav>
+ * </SideNav.Provider>
  * ```
  */
 export function SideNav({
   children,
-  isCollapsed = false,
-  onCollapsedChange,
   className,
   style,
 }: SideNavProps): ReactElement {
-  const toggleCollapse = onCollapsedChange
-    ? () => { onCollapsedChange(!isCollapsed); }
-    : undefined;
+  const { isCollapsed, isPeeking, setNavHover } = useContext(SideNavContext);
 
   return (
-    <SideNavContext.Provider value={{ isCollapsed, onToggleCollapse: toggleCollapse }}>
+    <div
+      className={styles.container}
+      data-collapsed={isCollapsed || undefined}
+      data-peeking={isPeeking || undefined}
+      style={style}
+    >
       <nav
         className={[styles.sideNav, className].filter(Boolean).join(" ")}
         data-collapsed={isCollapsed || undefined}
-        style={style}
+        data-peeking={isPeeking || undefined}
+        /* Handlers actifs uniquement quand expanded ou en peek. En
+           collapsed-not-peeking la nav fait 0px et n'a pas de zone hover —
+           le hover sur le bord gauche NE déclenche PAS le peek (seul le
+           Trigger le fait). En peek, les handlers maintiennent l'overlay
+           ouvert tant que la souris est dessus. */
+        onMouseEnter={
+          !isCollapsed || isPeeking ? () => setNavHover?.(true) : undefined
+        }
+        onMouseLeave={
+          !isCollapsed || isPeeking ? () => setNavHover?.(false) : undefined
+        }
       >
         {children}
       </nav>
-    </SideNavContext.Provider>
+    </div>
   );
 }
 
@@ -305,3 +436,5 @@ SideNav.Item = SideNavItem;
 SideNav.Section = SideNavSection;
 SideNav.Divider = SideNavDivider;
 SideNav.Footer = SideNavFooter;
+SideNav.Trigger = SideNavTrigger;
+SideNav.Provider = SideNavProvider;

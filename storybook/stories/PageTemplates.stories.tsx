@@ -271,16 +271,37 @@ export const Base: Story = {
     }
 
     return (
+      <SideNav.Provider isCollapsed={collapsed} onCollapsedChange={setCollapsed}>
       <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-        {/* Banner globale */}
+        {/* Banner globale — pleine largeur, au-dessus de tout */}
         <Banner appearance="warning">
           <Text grow>Mise à jour planifiée le 28 avril à 22h.</Text>
           <Button appearance="link" spacing="none">En savoir plus</Button>
         </Banner>
 
-        <div style={{ display: "flex", flex: 1, minHeight: 0 }}>
+        {/* TopNav — pleine largeur, au-dessus de la SideNav. Le SideNav.Trigger
+            est passé via le slot `logo` pour apparaître à gauche de la TopNav,
+            jamais recouvert par le peek overlay (qui vit dans la zone flex en
+            dessous). */}
+        <TopNav
+          logo={
+            <>
+              <SideNav.Trigger />
+              <Logo product="mycomete" format="icon" />
+            </>
+          }
+          appName="Pro Sécurité"
+          title="Accueil"
+        >
+          <Button appearance="subtle" spacing="compact" iconBefore="Notifications" aria-label="Notifications" />
+          <Avatar size="medium" initials="AC" />
+        </TopNav>
+
+        {/* Zone sous le header : SideNav + contenu côte à côte. La nav en
+            peek (overlay absolute) ne déborde QUE dans cette zone. */}
+        <div style={{ display: "flex", flex: 1, minHeight: 0, position: "relative" }}>
           {/* SideNav */}
-          <SideNav isCollapsed={collapsed} onCollapsedChange={setCollapsed}>
+          <SideNav>
             <SideNav.Header
               logo={<Logo product="link" format="icon" />}
               companyName="Comète Link"
@@ -308,19 +329,8 @@ export const Base: Story = {
             </SideNav.Footer>
           </SideNav>
 
-          {/* Zone principale */}
-          <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
-            {/* TopNav */}
-            <TopNav
-              logo={<Logo product="mycomete" format="icon" />}
-              appName="Pro Sécurité"
-              title="Accueil"
-            >
-              <Button appearance="subtle" spacing="compact" iconBefore="Notifications" aria-label="Notifications" />
-              <Avatar size="medium" initials="AC" />
-            </TopNav>
-
-            {/* Page */}
+          {/* Page */}
+          <div style={{ flex: 1, minWidth: 0 }}>
             <Page style={{ flex: 1, minHeight: 0 }}>
               <Page.Header
                 title="Accueil"
@@ -380,6 +390,7 @@ export const Base: Story = {
           </div>
         </div>
       </div>
+      </SideNav.Provider>
     );
   },
 };

@@ -1,26 +1,69 @@
 /* SideNav — Comete Design System
-   Animation collapse/expand : hauteurs explicites + overflow:hidden.
-   Le flex-direction snap est masqué par la transition de height. */
+   Pattern Jira : quand collapsed, la sidebar n'affiche que son trigger
+   (largeur ~48px). Au survol du collapsed, elle s'ouvre en OVERLAY au-
+   dessus du contenu (sans pousser la mise en page) pour permettre à
+   l'utilisateur de revoir la nav et la rouvrir d'un clic. Implémenté
+   avec un container externe qui réserve l'espace en flex et un `<nav>`
+   interne en `position: absolute` qui peut déborder. */
 
 /* ------------------------------------------------------------------ */
-/* Container                                                           */
+/* Container — flex child, contrôle l'espace réservé                  */
+
+.container {
+  position: relative;
+  width: 240px;
+  height: 100%;
+  flex-shrink: 0;
+  overflow: hidden;
+  transition: width var(--duration-normal) var(--easing-default);
+}
+
+/* Collapsed : aucun espace réservé en layout. Le toggle (re-open) est à
+   placer côté consommateur dans `Page.Header` via `<SideNav.Trigger />`. */
+.container[data-collapsed] {
+  width: 0;
+}
+
+/* Peek : container revient à 240px → la SideNav POUSSE le contenu, comme
+   en mode expanded mais temporaire. Pas d'overlay : le main content reste
+   visible à droite, jamais caché. */
+.container[data-collapsed][data-peeking] {
+  width: 240px;
+}
+
+/* ------------------------------------------------------------------ */
+/* SideNav — flex child à l'intérieur du container, pas d'overlay      */
+/* (le container porte la largeur ; la nav remplit le container).      */
 
 .sideNav {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  width: 240px;
-  min-height: 100%;
   padding: 0 var(--space100);
   background: var(--background-surface-default);
   border-right: 1px solid var(--border-subtle);
   overflow: hidden;
-  transition: width var(--duration-fast) var(--easing-default),
-              padding var(--duration-fast) var(--easing-default);
+  box-sizing: border-box;
+  transition: padding var(--duration-normal) var(--easing-default);
 }
 
+/* Collapsed : container 0px → la nav est totalement masquée (overflow
+   hidden du container clippe le contenu). Pas de bordure ni de fond
+   visible. */
 .sideNav[data-collapsed] {
-  width: 72px;
-  padding: 0 var(--space050);
+  padding: 0;
+  background: transparent;
+  border-right: none;
+}
+
+/* Peek : on rétablit fond + bordure quand le container s'élargit à 240
+   (cf. .container[data-collapsed][data-peeking] plus bas). La nav
+   POUSSE le contenu (pas d'overlay) — le main content reste visible. */
+.sideNav[data-collapsed][data-peeking] {
+  padding: 0 var(--space100);
+  background: var(--background-surface-default);
+  border-right: 1px solid var(--border-subtle);
 }
 
 /* ------------------------------------------------------------------ */
@@ -32,20 +75,12 @@
   gap: var(--space150);
   min-height: 72px;
   padding: var(--space300) var(--space100) var(--space100) var(--space100);
-  transition: padding var(--duration-fast) var(--easing-default),
-              gap var(--duration-fast) var(--easing-default);
 }
 
 .headerLogo {
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  opacity: 1;
-  max-width: 100px;
-  overflow: hidden;
-  /* Expand : max-width révèle progressivement, opacity suit */
-  transition: opacity var(--duration-fast) var(--easing-default),
-              max-width var(--duration-fast) var(--easing-default);
 }
 
 .headerContent {
@@ -53,18 +88,6 @@
   flex-direction: column;
   flex: 1;
   min-width: 0;
-  opacity: 1;
-  max-width: 200px;
-  overflow: hidden;
-  /* Expand : max-width révèle, opacity suit */
-  transition: opacity var(--duration-fast) var(--easing-default),
-              max-width var(--duration-fast) var(--easing-default);
-}
-
-.collapseButton {
-  flex-shrink: 0;
-  margin-left: auto;
-  transition: margin var(--duration-fast) var(--easing-default);
 }
 
 .headerAppName {
@@ -98,7 +121,6 @@
   align-items: center;
   gap: var(--space150);
   padding: var(--space075) var(--space150);
-  /* Hauteur explicite expanded = icon + 2*padding-vertical */
   height: calc(var(--size300) + 2 * var(--space075));
   border: none;
   border-radius: var(--radius0375);
@@ -110,11 +132,7 @@
   text-align: start;
   box-sizing: border-box;
   overflow: hidden;
-  transition: background-color 100ms ease,
-              height var(--duration-fast) var(--easing-default),
-              padding var(--duration-fast) var(--easing-default),
-              gap var(--duration-fast) var(--easing-default),
-              border-radius var(--duration-fast) var(--easing-default);
+  transition: background-color 100ms ease;
 }
 
 .item:hover {
@@ -138,29 +156,13 @@
   background: var(--background-selected-subtlest-pressed);
 }
 
-/* Selection indicator */
-/* .itemSelected::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 4px;
-  height: 20px;
-  background: var(--border-selected);
-  border-radius: 0 4px 4px 0;
-} */
-
 /* Disabled */
 .itemDisabled {
   color: var(--text-disabled);
   cursor: not-allowed;
 }
 
-.itemDisabled:hover {
-  background: var(--background-surface-default);
-}
-
+.itemDisabled:hover,
 .itemDisabled:active {
   background: var(--background-surface-default);
 }
@@ -184,7 +186,6 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: opacity var(--duration-fast) var(--easing-default);
 }
 
 .itemSelected .itemTitle {
@@ -204,10 +205,6 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  opacity: 1;
-  max-height: var(--line-height-ui-xs);
-  transition: opacity var(--duration-fast) var(--easing-default) var(--duration-fast),
-              max-height var(--duration-fast) var(--easing-default);
 }
 
 .itemDisabled .itemDescription {
@@ -220,105 +217,6 @@
 .iconBefore,
 .iconAfter {
   flex-shrink: 0;
-}
-
-.iconAfter {
-  opacity: 1;
-  overflow: hidden;
-  max-width: 24px;
-  transition: opacity var(--duration-fast) var(--easing-default) var(--duration-fast),
-              max-width var(--duration-fast) var(--easing-default);
-}
-
-/* ------------------------------------------------------------------ */
-/* Collapsed mode                                                      */
-
-.sideNav[data-collapsed] .item {
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space025);
-  padding: var(--space100) var(--space050);
-  /* Hauteur explicite collapsed = icon + gap + title-lineheight + 2*padding */
-  height: calc(var(--size300) + var(--space025) + var(--line-height-ui-xxs) + 2 * var(--space100));
-  border-radius: var(--radius150);
-}
-
-.sideNav[data-collapsed] .itemContent {
-  align-items: center;
-}
-
-.sideNav[data-collapsed] .itemTitle {
-  font-size: var(--font-size-ui-xxxs);
-  line-height: var(--line-height-ui-xxs);
-  text-align: center;
-}
-
-.sideNav[data-collapsed] .itemDescription {
-  opacity: 0;
-  max-height: 0;
-  transition: opacity var(--duration-fast) var(--easing-default) 0ms,
-              max-height var(--duration-fast) var(--easing-default);
-}
-
-.sideNav[data-collapsed] .iconAfter {
-  opacity: 0;
-  max-width: 0;
-  transition: opacity var(--duration-fast) var(--easing-default) 0ms,
-              max-width var(--duration-fast) var(--easing-default);
-}
-
-/* Selection indicator collapsed */
-.sideNav[data-collapsed] .itemSelected::before {
-  left: 50%;
-  top: auto;
-  bottom: 0;
-  transform: translateX(-50%);
-  width: 20px;
-  height: 4px;
-  border-radius: 4px 4px 0 0;
-}
-
-/* Header collapsed */
-.sideNav[data-collapsed] .header {
-  padding: var(--space300) var(--space050) var(--space100);
-  gap: 0;
-  justify-content: center;
-}
-
-.sideNav[data-collapsed] .headerLogo {
-  opacity: 0;
-  max-width: 0;
-  transition: opacity var(--duration-fast) var(--easing-default),
-              max-width var(--duration-fast) var(--easing-default);
-}
-
-.sideNav[data-collapsed] .headerContent {
-  opacity: 0;
-  flex: 0;
-  max-width: 0;
-  transition: opacity var(--duration-fast) var(--easing-default),
-              flex var(--duration-fast) var(--easing-default),
-              max-width var(--duration-fast) var(--easing-default);
-}
-
-.sideNav[data-collapsed] .collapseButton {
-  margin-left: 0;
-}
-
-.sideNav[data-collapsed] .sectionHeading {
-  opacity: 0;
-  max-height: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-  transition: opacity var(--duration-instant) var(--easing-default),
-              max-height var(--duration-fast) var(--easing-default),
-              padding var(--duration-fast) var(--easing-default);
-}
-
-/* Footer collapsed */
-.sideNav[data-collapsed] .footer {
-  padding: var(--space100) var(--space050);
-  align-items: center;
 }
 
 /* ------------------------------------------------------------------ */
@@ -338,12 +236,9 @@
   color: var(--text-subtle);
   text-transform: uppercase;
   letter-spacing: var(--letter-spacing-normal);
+  white-space: nowrap;
   overflow: hidden;
-  max-height: 50px;
-  opacity: 1;
-  transition: opacity var(--duration-fast) var(--easing-default) var(--duration-fast),
-              max-height var(--duration-fast) var(--easing-default),
-              padding var(--duration-fast) var(--easing-default);
+  text-overflow: ellipsis;
 }
 
 /* ------------------------------------------------------------------ */
@@ -365,5 +260,9 @@
   flex-direction: column;
   padding: var(--space200);
   margin-top: auto;
-  transition: padding var(--duration-fast) var(--easing-default);
 }
+
+/* Mode collapsed : la sidebar est invisible (width 0 + overflow hidden).
+   Aucun besoin de masquer le contenu individuellement — l'overflow s'en
+   charge. Le consommateur place `<SideNav.Trigger />` dans sa TopNav pour
+   rouvrir. */

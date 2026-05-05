@@ -5,6 +5,8 @@ export {
   SideNavSection,
   SideNavDivider,
   SideNavFooter,
+  SideNavTrigger,
+  SideNavProvider,
   useSideNav,
 } from "./SideNav";
 export type {
@@ -14,4 +16,6 @@ export type {
   SideNavSectionProps,
   SideNavDividerProps,
   SideNavFooterProps,
+  SideNavTriggerProps,
+  SideNavProviderProps,
 } from "./SideNav";

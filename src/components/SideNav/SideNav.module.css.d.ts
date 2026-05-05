@@ -1,5 +1,5 @@
 declare const styles: {
-  readonly "collapseButton": string;
+  readonly "container": string;
   readonly "divider": string;
   readonly "footer": string;
   readonly "header": string;

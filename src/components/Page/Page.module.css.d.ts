@@ -2,6 +2,7 @@ declare const styles: {
   readonly "body": string;
   readonly "breadcrumbs": string;
   readonly "header": string;
+  readonly "leading": string;
   readonly "page": string;
   readonly "title": string;
   readonly "titleRow": string;

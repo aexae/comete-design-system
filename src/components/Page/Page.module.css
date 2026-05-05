@@ -50,12 +50,18 @@
   min-width: 0;
 }
 
-/* Title row : title flex-1 + trailing shrink-0 */
+/* Title row : leading shrink-0 + title flex-1 + trailing shrink-0 */
 .titleRow {
   display: flex;
   align-items: center;
   gap: var(--space100);
   min-width: 0;
+}
+
+.leading {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
 }
 
 .title {
