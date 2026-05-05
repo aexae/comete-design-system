@@ -21,10 +21,9 @@
 .radio {
   display: flex;
   align-items: flex-start;
-  /* 2px = (28 − 24) / 2, débordement du halo 28×28 sur l'indicateur 24×24.
-     Halo plus petit que la Checkbox pour éviter de chevaucher le radio voisin
-     dans un RadioGroup empilé. */
-  column-gap: var(--space025);
+  /* Halo strictement contenu dans l'indicateur 24×24 → pas de débordement,
+     `column-gap` garde un écart visuel propre avec le label. */
+  column-gap: var(--space050);
   color: var(--text-default);
   cursor: pointer;
   user-select: none;
@@ -46,11 +45,10 @@
    Le dot checked est `::after` en `currentColor`.
    ========================================================================== */
 
-/* L'indicateur garde la taille Figma (24×24) pour ne pas perturber
-   l'alignement avec le label. Un ::before absolu étend la zone de halo
-   visuel à 28×28 (style MUI ripple) sans modifier le layout. Halo
-   volontairement plus petit que la Checkbox pour ne pas empiéter sur le
-   radio voisin dans un RadioGroup empilé verticalement. */
+/* L'indicateur fait 24×24 (taille Figma). Le halo MUI-ripple est un ::before
+   de 26×26 (`inset: -1px` → 1px de débordement de chaque côté), centré sur
+   l'iconWrapper visible 20×20. Halo discret mais légèrement plus généreux
+   que le strict bord de l'indicateur. */
 .indicator {
   flex-shrink: 0;
   position: relative;
@@ -65,8 +63,8 @@
 .indicator::before {
   content: "";
   position: absolute;
-  /* (24 − 28) / 2 = −2 → halo 28×28 centré sur l'icône. */
-  inset: calc((var(--size300) - var(--size350)) / 2);
+  /* (24 − 26) / 2 = −1 → halo 26×26 centré sur l'indicateur. */
+  inset: calc(var(--size0125) * -1);
   border-radius: var(--radius-round);
   background-color: transparent;
   transition-property: background-color;
