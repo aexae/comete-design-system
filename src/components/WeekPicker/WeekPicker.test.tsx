@@ -210,4 +210,59 @@ describe("WeekPicker", () => {
     await user.click(screen.getByRole("button", { name: /Semaine : / }));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
+
+  // -- Range mode : contraintes logiques --
+  // Exemple typique : 08/07/2026 (semaine 28) → 05/07/2026 (semaine 27) = invalide.
+
+  it("should set data-invalid when range is inverted (start > end, same year)", () => {
+    const { container } = render(
+      <WeekPicker
+        isRange
+        startWeek={28}
+        startYear={2026}
+        endWeek={27}
+        endYear={2026}
+      />,
+    );
+    expect(container.firstChild).toHaveAttribute("data-invalid", "true");
+  });
+
+  it("should set data-invalid when range is inverted across years", () => {
+    const { container } = render(
+      <WeekPicker
+        isRange
+        startWeek={3}
+        startYear={2026}
+        endWeek={50}
+        endYear={2025}
+      />,
+    );
+    expect(container.firstChild).toHaveAttribute("data-invalid", "true");
+  });
+
+  it("should not set data-invalid when range is valid (start <= end)", () => {
+    const { container } = render(
+      <WeekPicker
+        isRange
+        startWeek={27}
+        startYear={2026}
+        endWeek={28}
+        endYear={2026}
+      />,
+    );
+    expect(container.firstChild).not.toHaveAttribute("data-invalid");
+  });
+
+  it("should not set data-invalid when range bounds are equal", () => {
+    const { container } = render(
+      <WeekPicker
+        isRange
+        startWeek={28}
+        startYear={2026}
+        endWeek={28}
+        endYear={2026}
+      />,
+    );
+    expect(container.firstChild).not.toHaveAttribute("data-invalid");
+  });
 });

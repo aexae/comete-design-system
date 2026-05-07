@@ -197,4 +197,58 @@ describe("MonthPicker", () => {
     // Popover should close after selection
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
+
+  // -- Range mode : contraintes logiques --
+
+  it("should set data-invalid when range is inverted (start > end)", () => {
+    const { container } = render(
+      <MonthPicker
+        isRange
+        startMonth={8}
+        startYear={2025}
+        endMonth={5}
+        endYear={2025}
+      />,
+    );
+    expect(container.firstChild).toHaveAttribute("data-invalid", "true");
+  });
+
+  it("should set data-invalid when range is inverted across years", () => {
+    const { container } = render(
+      <MonthPicker
+        isRange
+        startMonth={1}
+        startYear={2026}
+        endMonth={12}
+        endYear={2025}
+      />,
+    );
+    expect(container.firstChild).toHaveAttribute("data-invalid", "true");
+  });
+
+  it("should not set data-invalid when range is valid (start <= end)", () => {
+    const { container } = render(
+      <MonthPicker
+        isRange
+        startMonth={5}
+        startYear={2025}
+        endMonth={8}
+        endYear={2025}
+      />,
+    );
+    expect(container.firstChild).not.toHaveAttribute("data-invalid");
+  });
+
+  it("should not set data-invalid when range bounds are equal", () => {
+    const { container } = render(
+      <MonthPicker
+        isRange
+        startMonth={6}
+        startYear={2025}
+        endMonth={6}
+        endYear={2025}
+      />,
+    );
+    expect(container.firstChild).not.toHaveAttribute("data-invalid");
+  });
 });

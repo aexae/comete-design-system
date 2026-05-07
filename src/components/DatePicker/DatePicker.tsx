@@ -673,19 +673,27 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
       {({ isDisabled, isInvalid, isFocusWithin }) => {
         const showClear =
           isClearable && currentValue !== null && !isDisabled && (isFocusWithin || isHovered);
+        // Plage inversée (end < start) : force l'état invalide. React Aria's
+        // DateRangePicker ne valide pas systématiquement cet ordre au rendu
+        // initial — on garantit le feedback visuel ici.
+        const isInverted =
+          currentValue !== null &&
+          currentValue.start.compare(currentValue.end) > 0;
+        const effectiveInvalid = isInvalid || isInverted;
         return (
         <div
           ref={containerRef}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
           data-suppress-hover={isHoverSuppressed || undefined}
+          data-invalid={effectiveInvalid || undefined}
         >
           <AriaGroup>
             <InputContainer
               appearance={appearance}
               isCompact={isCompact}
               isDisabled={isDisabled}
-              isInvalid={isInvalid}
+              isInvalid={effectiveInvalid}
               onContainerClick={handleContainerClick}
             >
               <AriaDateInput slot="start" className={styles.dateInput}>

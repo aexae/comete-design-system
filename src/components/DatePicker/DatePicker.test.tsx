@@ -179,4 +179,55 @@ describe("DatePicker", () => {
       expect(screen.getByLabelText("Jour suivant")).toBeDisabled();
     });
   });
+
+  // =====================================================================
+  // Mode plage (isRange=true) — contraintes logiques
+  // =====================================================================
+
+  describe("range mode — logical constraints", () => {
+    // Le DatePicker compute lui-même `isInverted` (end < start) car React Aria
+    // DateRangePicker ne marque pas systématiquement le champ invalide au
+    // rendu initial pour ce cas.
+
+    it("should mark range as invalid when end is before start", () => {
+      const start = new CalendarDate(2026, 7, 8);
+      const end = new CalendarDate(2026, 7, 5);
+      const { container } = render(
+        <DatePicker
+          aria-label="Date range"
+          isRange
+          value={{ start, end }}
+        />,
+      );
+      const wrapper = container.querySelector("[data-invalid]");
+      expect(wrapper).not.toBeNull();
+    });
+
+    it("should not mark range as invalid when end is after start", () => {
+      const start = new CalendarDate(2026, 7, 5);
+      const end = new CalendarDate(2026, 7, 8);
+      const { container } = render(
+        <DatePicker
+          aria-label="Date range"
+          isRange
+          value={{ start, end }}
+        />,
+      );
+      const wrapper = container.querySelector("[data-invalid]");
+      expect(wrapper).toBeNull();
+    });
+
+    it("should not mark range as invalid when start equals end", () => {
+      const date = new CalendarDate(2026, 7, 8);
+      const { container } = render(
+        <DatePicker
+          aria-label="Date range"
+          isRange
+          value={{ start: date, end: date }}
+        />,
+      );
+      const wrapper = container.querySelector("[data-invalid]");
+      expect(wrapper).toBeNull();
+    });
+  });
 });

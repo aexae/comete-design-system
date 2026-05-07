@@ -119,4 +119,27 @@ describe("YearPicker", () => {
     // Popover should close after selection
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
+
+  // -- Range mode : contraintes logiques --
+
+  it("should set data-invalid when range is inverted (start > end)", () => {
+    const { container } = render(
+      <YearPicker isRange startYear={2026} endYear={2024} />,
+    );
+    expect(container.firstChild).toHaveAttribute("data-invalid", "true");
+  });
+
+  it("should not set data-invalid when range is valid (start <= end)", () => {
+    const { container } = render(
+      <YearPicker isRange startYear={2024} endYear={2026} />,
+    );
+    expect(container.firstChild).not.toHaveAttribute("data-invalid");
+  });
+
+  it("should not set data-invalid when range bounds are equal", () => {
+    const { container } = render(
+      <YearPicker isRange startYear={2025} endYear={2025} />,
+    );
+    expect(container.firstChild).not.toHaveAttribute("data-invalid");
+  });
 });
