@@ -84,6 +84,7 @@ export const Selected: Story = {
 
 /** Mode sélection multiple. */
 export const Multiple: Story = {
+  name: "Multiple selection",
   render: () => (
     <ToggleButtonGroup
       aria-label="Formatting"
@@ -163,6 +164,34 @@ export const WithIconAfter: Story = {
       </ToggleButton>
       <ToggleButton id="desc" iconAfter="ArrowDropDown">
         Descending
+      </ToggleButton>
+    </ToggleButtonGroup>
+  ),
+};
+
+/**
+ * Icônes seules — chaque bouton ne contient qu'une icône, le label étant
+ * porté par `aria-label` pour l'accessibilité.
+ */
+export const IconsOnly: Story = {
+  name: "Icons only",
+  render: () => (
+    <ToggleButtonGroup
+      aria-label="Text alignment"
+      selectionMode="single"
+      defaultSelectedKeys={["left"]}
+    >
+      <ToggleButton id="left" iconBefore="FormatAlignLeft" aria-label="Align left">
+        {""}
+      </ToggleButton>
+      <ToggleButton id="center" iconBefore="FormatAlignCenter" aria-label="Align center">
+        {""}
+      </ToggleButton>
+      <ToggleButton id="right" iconBefore="FormatAlignRight" aria-label="Align right">
+        {""}
+      </ToggleButton>
+      <ToggleButton id="justify" iconBefore="FormatAlignJustify" aria-label="Justify">
+        {""}
       </ToggleButton>
     </ToggleButtonGroup>
   ),
