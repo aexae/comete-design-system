@@ -17,8 +17,9 @@
 .timeInput {
   display: flex;
   align-items: center;
-  flex: 1 1 0%;
-  min-width: 0;
+  /* Content-sized comme `.timeDisplay` (mode non-éditable) pour que le bouton
+     horloge se retrouve immédiatement à droite du texte (et non poussé au
+     bord droit du champ par un `flex: 1`). */
   /* Typo alignée sur le `.timeDisplay` (mode non-éditable) pour que les deux
      modes affichent l'heure avec la même graisse et le même spacing. */
   font-weight: var(--font-weight-medium);
@@ -82,6 +83,9 @@
 .editableContent {
   display: flex;
   align-items: center;
+  /* gap aligné sur `.content` (mode non-éditable) pour que la distance texte
+     ↔ icône horloge soit identique dans les deux modes. */
+  gap: var(--space100);
   width: 100%;
   cursor: pointer;
 }
