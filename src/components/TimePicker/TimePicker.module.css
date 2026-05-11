@@ -19,6 +19,9 @@
   align-items: center;
   flex: 1 1 0%;
   min-width: 0;
+  /* Typo alignée sur le `.timeDisplay` (mode non-éditable) pour que les deux
+     modes affichent l'heure avec la même graisse et le même spacing. */
+  font-weight: var(--font-weight-medium);
   color: var(--text-default);
 }
 
@@ -31,7 +34,11 @@
    ========================================================================== */
 
 .segment {
-  padding-inline: 1px;
+  /* padding-inline 0 pour matcher le rendu condensé du `.timeDisplay`
+     (mode non-éditable). L'ancien `1px` créait ~2 px d'écart entre chaque
+     segment (HH, ":", MM) et faisait paraître le mode éditable plus large
+     qu'il ne devrait. */
+  padding-inline: 0;
   border-radius: var(--radius025);
   outline: none;
   caret-color: transparent;
