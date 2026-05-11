@@ -17,8 +17,12 @@
 .timeInput {
   display: flex;
   align-items: center;
-  flex: 1 1 0%;
-  min-width: 0;
+  /* Content-sized comme `.timeDisplay` (mode non-éditable) pour que le bouton
+     horloge se retrouve immédiatement à droite du texte (et non poussé au
+     bord droit du champ par un `flex: 1`). */
+  /* Typo alignée sur le `.timeDisplay` (mode non-éditable) pour que les deux
+     modes affichent l'heure avec la même graisse et le même spacing. */
+  font-weight: var(--font-weight-medium);
   color: var(--text-default);
 }
 
@@ -31,7 +35,11 @@
    ========================================================================== */
 
 .segment {
-  padding-inline: 1px;
+  /* padding-inline 0 pour matcher le rendu condensé du `.timeDisplay`
+     (mode non-éditable). L'ancien `1px` créait ~2 px d'écart entre chaque
+     segment (HH, ":", MM) et faisait paraître le mode éditable plus large
+     qu'il ne devrait. */
+  padding-inline: 0;
   border-radius: var(--radius025);
   outline: none;
   caret-color: transparent;
@@ -51,8 +59,21 @@
   padding-inline: 0;
 }
 
-.timePicker[data-disabled] .segment[data-type="literal"] {
+/* Disabled — surclasse les couleurs de placeholder ET de literal pour que
+   tous les segments adoptent --text-disabled. Sans ces overrides, les
+   placeholders (HH/MM) restent en text-subtlest (spec (0,2,0)) et écrasent
+   l'héritage du .timeInput parent en text-disabled. */
+.timePicker[data-disabled] .segment[data-type="literal"],
+.timePicker[data-disabled] .segment[data-placeholder] {
   color: var(--text-disabled);
+}
+
+/* Invalid — texte segments en critical pour signaler l'erreur (alignement
+   avec DatePicker.segment[data-invalid]). `:not([data-focused])` car le
+   segment focused garde le fond bleu + texte inversé. `:not([data-disabled])`
+   sur le picker garantit que disabled prime sur invalid. */
+.timePicker[data-invalid]:not([data-disabled]) .segment:not([data-focused]) {
+  color: var(--text-critical);
 }
 
 /* ==========================================================================
@@ -62,6 +83,9 @@
 .editableContent {
   display: flex;
   align-items: center;
+  /* gap aligné sur `.content` (mode non-éditable) pour que la distance texte
+     ↔ icône horloge soit identique dans les deux modes. */
+  gap: var(--space100);
   width: 100%;
   cursor: pointer;
 }
@@ -85,6 +109,17 @@
   color: var(--text-default);
 }
 
+/* Invalid (mode non-éditable) — texte en critical pour signaler l'erreur.
+   `:not([data-disabled])` garantit que la couleur disabled gagne quand les
+   deux états sont actifs (disabled prime sur invalid).
+   Spécificité (0,3,1) — bat le hover (0,3,0). */
+.timePicker[data-invalid]:not([data-disabled]) .timeDisplay {
+  color: var(--text-critical);
+}
+
+/* Disabled (mode non-éditable) — texte en text-disabled.
+   Déclaré APRÈS la règle invalid pour gagner sur les conflits de spécificité
+   égale via l'ordre de source. */
 .timePicker[data-disabled] .timeDisplay {
   color: var(--text-disabled);
 }

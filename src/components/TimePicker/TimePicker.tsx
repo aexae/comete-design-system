@@ -134,6 +134,7 @@ export function TimePicker<T extends TimeValue = TimeValue>({
     <NonEditableTimePicker
       appearance={appearance}
       isCompact={isCompact}
+      showSeconds={showSeconds}
       className={className}
       style={style}
       value={value}
@@ -421,6 +422,7 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
 function NonEditableTimePicker({
   appearance,
   isCompact,
+  showSeconds = false,
   className,
   style,
   value,
@@ -432,6 +434,7 @@ function NonEditableTimePicker({
 }: {
   appearance: TimePickerAppearance;
   isCompact: boolean;
+  showSeconds?: boolean;
   className?: string;
   style?: CSSProperties;
   value?: TimeValue | null;
@@ -450,7 +453,7 @@ function NonEditableTimePicker({
   );
   const resolvedValue = (isControlled ? value : internalValue) as TimeValue;
 
-  const formattedTime = formatTime(resolvedValue, false);
+  const formattedTime = formatTime(resolvedValue, showSeconds);
 
   // -- Popover state --
   const [isOpen, setIsOpen] = useState(false);
