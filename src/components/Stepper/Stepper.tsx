@@ -218,14 +218,29 @@ export function Step({
   const connectorStatus: "completed" | "default" =
     status === "completed" ? "completed" : "default";
 
+  // `spacing="none"` : viewBox 16x16 sans padding interne. Sans ça (avec
+  // le spacing par défaut), l'icône est dessinée dans un viewBox 24x24 avec
+  // padding, et la transparence autour laisse voir le fond de l'indicateur,
+  // créant l'impression d'un « halo » blanc/coloré autour de l'icône.
   const indicatorContent =
     status === "completed" ? (
-      <Icon icon="Check" size={16} color="inverted" appearance="filled" />
+      <Icon
+        icon="Check"
+        size={16}
+        spacing="none"
+        color="inverted"
+        appearance="filled"
+      />
     ) : status === "error" ? (
       // Convention DS : `Warning` pour signaler un état critique
-      // (cf. Banner, IconTile). `CloseSmallFaded` est réservé aux actions
-      // « effacer » (TextField, Select, Tag).
-      <Icon icon="Warning" size={16} color="inverted" appearance="filled" />
+      // (cf. Banner, IconTile).
+      <Icon
+        icon="Warning"
+        size={16}
+        spacing="none"
+        color="inverted"
+        appearance="filled"
+      />
     ) : (
       <span className={styles.indicatorNumber}>{index + 1}</span>
     );
