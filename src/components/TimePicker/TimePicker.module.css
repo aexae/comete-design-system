@@ -85,6 +85,17 @@
   color: var(--text-default);
 }
 
+/* Invalid (mode non-éditable) — texte en critical pour signaler l'erreur.
+   `:not([data-disabled])` garantit que la couleur disabled gagne quand les
+   deux états sont actifs (disabled prime sur invalid).
+   Spécificité (0,3,1) — bat le hover (0,3,0). */
+.timePicker[data-invalid]:not([data-disabled]) .timeDisplay {
+  color: var(--text-critical);
+}
+
+/* Disabled (mode non-éditable) — texte en text-disabled.
+   Déclaré APRÈS la règle invalid pour gagner sur les conflits de spécificité
+   égale via l'ordre de source. */
 .timePicker[data-disabled] .timeDisplay {
   color: var(--text-disabled);
 }

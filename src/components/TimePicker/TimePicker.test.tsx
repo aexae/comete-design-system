@@ -132,4 +132,86 @@ describe("TimePicker", () => {
       expect(container.firstElementChild).toHaveClass("custom");
     });
   });
+
+  // ---------------------------------------------------------------------
+  // Mode non-éditable (isEditable=false) — états visuels
+  // ---------------------------------------------------------------------
+
+  describe("non-editable mode states", () => {
+    it("should render formatted time in .timeDisplay", () => {
+      const { container } = render(
+        <TimePicker
+          aria-label="Heure"
+          isEditable={false}
+          defaultValue={new Time(14, 30)}
+        />,
+      );
+      const timeDisplay = container.querySelector(".timeDisplay");
+      expect(timeDisplay).toHaveTextContent("14:30");
+    });
+
+    it("should set data-disabled on root when isDisabled", () => {
+      const { container } = render(
+        <TimePicker
+          aria-label="Heure"
+          isEditable={false}
+          isDisabled
+          defaultValue={new Time(14, 30)}
+        />,
+      );
+      expect(container.firstElementChild).toHaveAttribute("data-disabled", "true");
+    });
+
+    it("should set data-invalid on root when isInvalid", () => {
+      const { container } = render(
+        <TimePicker
+          aria-label="Heure"
+          isEditable={false}
+          isInvalid
+          defaultValue={new Time(14, 30)}
+        />,
+      );
+      expect(container.firstElementChild).toHaveAttribute("data-invalid", "true");
+    });
+
+    it("should propagate isInvalid to InputContainer (border critical)", () => {
+      const { container } = render(
+        <TimePicker
+          aria-label="Heure"
+          isEditable={false}
+          isInvalid
+          defaultValue={new Time(14, 30)}
+        />,
+      );
+      const inputContainer = container.querySelector(".inputContainer");
+      expect(inputContainer).toHaveClass("invalid");
+    });
+
+    it("should propagate isDisabled to InputContainer", () => {
+      const { container } = render(
+        <TimePicker
+          aria-label="Heure"
+          isEditable={false}
+          isDisabled
+          defaultValue={new Time(14, 30)}
+        />,
+      );
+      const inputContainer = container.querySelector(".inputContainer");
+      expect(inputContainer).toHaveClass("disabled");
+    });
+
+    it("should set both data-disabled and data-invalid when both flags are true", () => {
+      const { container } = render(
+        <TimePicker
+          aria-label="Heure"
+          isEditable={false}
+          isDisabled
+          isInvalid
+          defaultValue={new Time(14, 30)}
+        />,
+      );
+      expect(container.firstElementChild).toHaveAttribute("data-disabled", "true");
+      expect(container.firstElementChild).toHaveAttribute("data-invalid", "true");
+    });
+  });
 });
