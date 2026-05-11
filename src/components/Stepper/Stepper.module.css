@@ -158,9 +158,12 @@ button.stepContent:not(:disabled):active {
   color: var(--text-inverted);
 }
 
+/* Status — error : on retire le cercle de fond ; l'icône Warning (filled,
+   24px, color critical) fait elle-même office d'indicateur (triangle rouge
+   avec ! blanc — style MUI). */
 .indicator[data-status="error"] {
-  background-color: var(--background-critical-bold-default);
-  color: var(--text-inverted);
+  background-color: transparent;
+  color: var(--text-critical);
 }
 
 .indicator[data-disabled] {

@@ -218,20 +218,19 @@ export function Step({
   const connectorStatus: "completed" | "default" =
     status === "completed" ? "completed" : "default";
 
-  // `appearance="outlined"` (défaut) : tracé seul, sans disque de fond. Avec
-  // `appearance="filled"` la variante DS dessine un disque rempli avec le
-  // glyphe en négatif (transparent), ce qui fait apparaître un cercle blanc
-  // dans l'indicateur — visuellement faux ici (on a déjà le cercle de fond
-  // via `.indicator`).
-  // `spacing="none"` : viewBox 16x16 sans padding interne pour que le glyphe
-  // remplisse bien la zone affichée.
+  // Indicator content selon le status :
+  // - completed : check `outlined` blanc sur cercle brand (le cercle vient
+  //   de `.indicator[data-status="completed"]`).
+  // - error : icône Warning `filled` en taille pleine (24px) — l'icône fait
+  //   office d'indicateur, on retire le cercle de fond via le CSS pour
+  //   matcher MUI (triangle rouge avec « ! » blanc directement, pas de
+  //   cercle critical autour).
+  // - upcoming / active : numéro de l'étape (1-based).
   const indicatorContent =
     status === "completed" ? (
       <Icon icon="Check" size={16} spacing="none" color="inverted" />
     ) : status === "error" ? (
-      // Convention DS : `Warning` pour signaler un état critique
-      // (cf. Banner, IconTile).
-      <Icon icon="Warning" size={16} spacing="none" color="inverted" />
+      <Icon icon="Warning" size={24} color="critical" appearance="filled" />
     ) : (
       <span className={styles.indicatorNumber}>{index + 1}</span>
     );
