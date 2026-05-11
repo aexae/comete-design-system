@@ -58,8 +58,17 @@ export interface StepProps {
   /** Label visible de l'étape. */
   label: string;
   /**
-   * Force l'état d'erreur sur cette étape (override du status calculé
-   * depuis `activeStep`).
+   * Override explicite du statut « complété » de cette étape.
+   * - **Linéaire** : si non fourni, dérivé automatiquement (toute étape
+   *   d'index < `activeStep` est complétée).
+   * - **Non-linéaire** : par défaut **rien n'est auto-complété** ; le parent
+   *   doit passer `isCompleted` quand une étape a effectivement été validée
+   *   (sinon l'utilisateur pourrait sauter à l'étape 3 et l'étape 2 serait
+   *   affichée par erreur comme complétée).
+   */
+  isCompleted?: boolean;
+  /**
+   * Force l'état d'erreur sur cette étape (override du status calculé).
    * @default false
    */
   isError?: boolean;
@@ -192,6 +201,7 @@ interface StepInternalProps extends StepProps {
  */
 export function Step({
   label,
+  isCompleted,
   isError = false,
   isDisabled = false,
   className,
@@ -204,10 +214,19 @@ export function Step({
   const index = __index ?? 0;
   const isLast = index === count - 1;
 
-  // Status calculé : isError prend la priorité.
+  // Détermine si l'étape est complétée :
+  // - override explicite via `isCompleted` (prioritaire) ;
+  // - sinon, en mode linéaire seulement : auto-dérivé depuis activeStep ;
+  // - en mode non-linéaire, aucune auto-complétion (l'utilisateur peut sauter
+  //   à n'importe quelle étape sans valider les précédentes — le parent
+  //   doit passer `isCompleted` explicitement pour les étapes validées).
+  const isCompletedAuto = isLinear && index < activeStep;
+  const effectiveCompleted = isCompleted ?? isCompletedAuto;
+
+  // Priorité : error > completed > active > upcoming.
   const status: StepStatus = isError
     ? "error"
-    : index < activeStep
+    : effectiveCompleted
       ? "completed"
       : index === activeStep
         ? "active"

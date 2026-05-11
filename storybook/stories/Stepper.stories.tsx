@@ -115,24 +115,60 @@ export const VerticalWithError: Story = {
  * Stepper non-linéaire : chaque étape est cliquable et déclenche
  * `onStepChange`. Utile pour les wizards où l'utilisateur peut revenir
  * sur une étape précédente librement.
+ *
+ * **Important** : en mode non-linéaire, les étapes précédentes ne sont
+ * **pas** auto-marquées « complétées » — c'est au parent de gérer quel
+ * étape est réellement validée via la prop `isCompleted`. Ici, on tient
+ * un `Set` des étapes complétées explicitement et on l'incrémente quand
+ * l'utilisateur valide une étape.
  */
 export const NonLinear: Story = {
   name: "Non-linear (clickable)",
   render: () => {
     function NonLinearDemo() {
+      const steps = ["Compte", "Adresse", "Paiement", "Confirmation"];
       const [step, setStep] = useState(1);
+      const [completed, setCompleted] = useState<Set<number>>(new Set());
+
+      const validateCurrent = () => {
+        setCompleted((prev) => new Set(prev).add(step));
+      };
+      const reset = () => {
+        setCompleted(new Set());
+        setStep(0);
+      };
+
       return (
-        <div style={{ width: 600, display: "flex", flexDirection: "column", gap: 24 }}>
+        <div
+          style={{
+            width: 600,
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+          }}
+        >
           <Stepper activeStep={step} isLinear={false} onStepChange={setStep}>
-            <Step label="Compte" />
-            <Step label="Adresse" />
-            <Step label="Paiement" />
-            <Step label="Confirmation" />
+            {steps.map((label, i) => (
+              <Step key={label} label={label} isCompleted={completed.has(i)} />
+            ))}
           </Stepper>
           <p style={{ margin: 0, color: "var(--text-subtle)" }}>
-            Étape active : <strong>{step + 1}</strong> / 4 — clique sur une
-            étape pour y sauter.
+            Étape active : <strong>{steps[step]}</strong> ({step + 1} / 4) —
+            clique sur n&apos;importe quelle étape pour y sauter, sans que
+            les précédentes soient auto-validées.
           </p>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button
+              type="button"
+              onClick={validateCurrent}
+              disabled={completed.has(step)}
+            >
+              Valider l&apos;étape courante
+            </button>
+            <button type="button" onClick={reset}>
+              Reset
+            </button>
+          </div>
         </div>
       );
     }

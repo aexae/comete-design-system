@@ -272,6 +272,65 @@ describe("Stepper", () => {
     expect(numbers).toEqual(["2", "3"]); // 1 is completed, no number
   });
 
+  // -- isCompleted override + non-linear behavior --
+
+  it("should NOT auto-complete previous steps in non-linear mode", () => {
+    const { container } = render(
+      <Stepper activeStep={2} isLinear={false} onStepChange={() => {}}>
+        <Step label="Step 1" />
+        <Step label="Step 2" />
+        <Step label="Step 3" />
+      </Stepper>,
+    );
+    const items = container.querySelectorAll("li");
+    // En non-linéaire, sans `isCompleted` explicite, les steps avant activeStep
+    // restent "upcoming" — l'utilisateur a pu sauter par-dessus.
+    expect(items[0]).toHaveAttribute("data-status", "upcoming");
+    expect(items[1]).toHaveAttribute("data-status", "upcoming");
+    expect(items[2]).toHaveAttribute("data-status", "active");
+  });
+
+  it("should mark only explicitly isCompleted steps as completed in non-linear mode", () => {
+    const { container } = render(
+      <Stepper activeStep={2} isLinear={false} onStepChange={() => {}}>
+        <Step label="Step 1" isCompleted />
+        <Step label="Step 2" />
+        <Step label="Step 3" />
+      </Stepper>,
+    );
+    const items = container.querySelectorAll("li");
+    expect(items[0]).toHaveAttribute("data-status", "completed");
+    expect(items[1]).toHaveAttribute("data-status", "upcoming");
+    expect(items[2]).toHaveAttribute("data-status", "active");
+  });
+
+  it("isCompleted=true should override even in linear mode", () => {
+    const { container } = render(
+      <Stepper activeStep={0}>
+        <Step label="Step 1" />
+        <Step label="Step 2" isCompleted />
+      </Stepper>,
+    );
+    const items = container.querySelectorAll("li");
+    expect(items[0]).toHaveAttribute("data-status", "active");
+    expect(items[1]).toHaveAttribute("data-status", "completed");
+  });
+
+  it("isCompleted=false should override linear auto-derivation", () => {
+    const { container } = render(
+      <Stepper activeStep={2}>
+        <Step label="Step 1" />
+        <Step label="Step 2" isCompleted={false} />
+        <Step label="Step 3" />
+      </Stepper>,
+    );
+    const items = container.querySelectorAll("li");
+    expect(items[0]).toHaveAttribute("data-status", "completed");
+    // Step 2 (index 1) serait normalement "completed" (index < activeStep) ;
+    // l'override le maintient en "upcoming".
+    expect(items[1]).toHaveAttribute("data-status", "upcoming");
+  });
+
   // -- Error throws when Step used outside Stepper --
 
   it("should throw when <Step> is used outside <Stepper>", () => {
