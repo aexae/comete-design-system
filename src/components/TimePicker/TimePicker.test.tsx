@@ -213,5 +213,29 @@ describe("TimePicker", () => {
       expect(container.firstElementChild).toHaveAttribute("data-disabled", "true");
       expect(container.firstElementChild).toHaveAttribute("data-invalid", "true");
     });
+
+    it("should include seconds in timeDisplay when showSeconds is true", () => {
+      const { container } = render(
+        <TimePicker
+          aria-label="Heure"
+          isEditable={false}
+          showSeconds
+          defaultValue={new Time(14, 30, 45)}
+        />,
+      );
+      expect(container.querySelector(".timeDisplay")).toHaveTextContent("14:30:45");
+    });
+
+    it("should omit seconds in timeDisplay when showSeconds is false (default)", () => {
+      const { container } = render(
+        <TimePicker
+          aria-label="Heure"
+          isEditable={false}
+          defaultValue={new Time(14, 30, 45)}
+        />,
+      );
+      expect(container.querySelector(".timeDisplay")).toHaveTextContent("14:30");
+      expect(container.querySelector(".timeDisplay")).not.toHaveTextContent("14:30:45");
+    });
   });
 });
