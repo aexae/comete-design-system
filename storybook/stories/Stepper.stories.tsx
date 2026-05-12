@@ -25,6 +25,7 @@ const meta = {
       options: ["horizontal", "vertical"],
     },
     isLinear: { control: "boolean" },
+    isInteractive: { control: "boolean" },
   },
 } satisfies Meta<typeof Stepper>;
 
@@ -147,7 +148,12 @@ export const NonLinear: Story = {
             gap: 16,
           }}
         >
-          <Stepper activeStep={step} isLinear={false} onStepChange={setStep}>
+          <Stepper
+            activeStep={step}
+            isLinear={false}
+            isInteractive
+            onStepChange={setStep}
+          >
             {steps.map((label, i) => (
               <Step key={label} label={label} isCompleted={completed.has(i)} />
             ))}
@@ -176,7 +182,7 @@ export const NonLinear: Story = {
   },
 };
 
-/** Étape désactivée — non cliquable même en mode non-linéaire. */
+/** Étape désactivée — non cliquable même en mode interactif. */
 export const DisabledStep: Story = {
   name: "Disabled step",
   render: () => {
@@ -184,7 +190,12 @@ export const DisabledStep: Story = {
       const [step, setStep] = useState(0);
       return (
         <div style={{ width: 600 }}>
-          <Stepper activeStep={step} isLinear={false} onStepChange={setStep}>
+          <Stepper
+            activeStep={step}
+            isLinear={false}
+            isInteractive
+            onStepChange={setStep}
+          >
             <Step label="Compte" />
             <Step label="Adresse" isDisabled />
             <Step label="Paiement" />
@@ -193,6 +204,36 @@ export const DisabledStep: Story = {
       );
     }
     return <DisabledDemo />;
+  },
+};
+
+/**
+ * Linéaire + interactif : auto-complétion préservée (les étapes précédentes
+ * sont auto-marquées « complétées »), MAIS l'utilisateur peut cliquer sur
+ * une étape précédente pour revenir en arrière. Utile pour les wizards
+ * séquentiels où on veut permettre une revisite d'étape.
+ */
+export const LinearInteractive: Story = {
+  name: "Linear + interactive",
+  render: () => {
+    function Demo() {
+      const [step, setStep] = useState(2);
+      return (
+        <div style={{ width: 600 }}>
+          <Stepper activeStep={step} isInteractive onStepChange={setStep}>
+            <Step label="Compte" />
+            <Step label="Adresse" />
+            <Step label="Paiement" />
+            <Step label="Confirmation" />
+          </Stepper>
+          <p style={{ marginTop: 16, color: "var(--text-subtle)" }}>
+            Toutes les étapes &lt; {step + 1} sont auto-complétées. Clique sur
+            une étape précédente pour y revenir.
+          </p>
+        </div>
+      );
+    }
+    return <Demo />;
   },
 };
 

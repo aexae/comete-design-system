@@ -209,11 +209,11 @@ describe("Stepper", () => {
     expect(onStepChange).not.toHaveBeenCalled();
   });
 
-  // -- Mode non-linear — cliquable --
+  // -- Mode interactif — cliquable --
 
-  it("should render steps as buttons in non-linear mode", () => {
+  it("should render steps as buttons when isInteractive is true", () => {
     render(
-      <Stepper activeStep={0} isLinear={false} onStepChange={() => {}}>
+      <Stepper activeStep={0} isInteractive onStepChange={() => {}}>
         <Step label="Step 1" />
         <Step label="Step 2" />
       </Stepper>,
@@ -221,11 +221,38 @@ describe("Stepper", () => {
     expect(screen.getAllByRole("button")).toHaveLength(2);
   });
 
-  it("should call onStepChange with index when a step is clicked in non-linear mode", async () => {
+  it("should NOT render steps as buttons when isInteractive is false (default)", () => {
+    render(
+      <Stepper activeStep={0} onStepChange={() => {}}>
+        <Step label="Step 1" />
+        <Step label="Step 2" />
+      </Stepper>,
+    );
+    expect(screen.queryAllByRole("button")).toHaveLength(0);
+  });
+
+  it("isInteractive and isLinear are independent (interactive + linear)", () => {
+    const { container } = render(
+      <Stepper activeStep={2} isInteractive onStepChange={() => {}}>
+        <Step label="Step 1" />
+        <Step label="Step 2" />
+        <Step label="Step 3" />
+      </Stepper>,
+    );
+    // Interactive → boutons
+    expect(screen.getAllByRole("button")).toHaveLength(3);
+    // Linear (défaut) → auto-complétion préservée
+    const items = container.querySelectorAll("li");
+    expect(items[0]).toHaveAttribute("data-status", "completed");
+    expect(items[1]).toHaveAttribute("data-status", "completed");
+    expect(items[2]).toHaveAttribute("data-status", "active");
+  });
+
+  it("should call onStepChange with index when a step is clicked (isInteractive)", async () => {
     const user = userEvent.setup();
     const onStepChange = vi.fn();
     render(
-      <Stepper activeStep={0} isLinear={false} onStepChange={onStepChange}>
+      <Stepper activeStep={0} isInteractive onStepChange={onStepChange}>
         <Step label="Step 1" />
         <Step label="Step 2" />
         <Step label="Step 3" />
@@ -237,11 +264,11 @@ describe("Stepper", () => {
 
   // -- Disabled step --
 
-  it("should not be clickable when isDisabled in non-linear mode", async () => {
+  it("should not be clickable when isDisabled (isInteractive)", async () => {
     const user = userEvent.setup();
     const onStepChange = vi.fn();
     render(
-      <Stepper activeStep={0} isLinear={false} onStepChange={onStepChange}>
+      <Stepper activeStep={0} isInteractive onStepChange={onStepChange}>
         <Step label="Step 1" />
         <Step label="Step 2" isDisabled />
       </Stepper>,

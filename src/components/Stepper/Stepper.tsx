@@ -34,14 +34,26 @@ export interface StepperProps {
   /** Orientation du layout. @default "horizontal" */
   orientation?: StepperOrientation;
   /**
-   * Mode linear : les étapes ne sont pas cliquables, la progression est
-   * portée par `activeStep`. Mode non-linear : chaque étape est un bouton
-   * cliquable qui appelle `onStepChange`. @default true
+   * Mode linéaire : les étapes d'index < `activeStep` sont auto-marquées
+   * comme complétées (utile pour les wizards séquentiels). En mode
+   * non-linéaire, l'auto-complétion est désactivée et chaque étape doit
+   * être marquée explicitement via la prop `isCompleted` de `<Step>`.
+   * @default true
    */
   isLinear?: boolean;
   /**
+   * Rend chaque étape comme un `<button>` cliquable qui appelle
+   * `onStepChange(index)`. Indépendant de `isLinear` :
+   * - linéaire + interactive : cliquer revient en arrière dans un flux
+   *   séquentiel ;
+   * - non-linéaire + interactive : navigation libre entre étapes
+   *   (pattern MUI non-linear).
+   * @default false
+   */
+  isInteractive?: boolean;
+  /**
    * Callback appelé quand l'utilisateur clique sur une étape.
-   * Uniquement utilisé en mode non-linear.
+   * Requis si `isInteractive={true}` pour que les boutons aient un effet.
    */
   onStepChange?: (step: number) => void;
   /** Children : composants `<Step>`. */
@@ -89,6 +101,7 @@ export interface StepProps {
 interface StepperContextValue {
   activeStep: number;
   isLinear: boolean;
+  isInteractive: boolean;
   orientation: StepperOrientation;
   count: number;
   onStepChange?: (step: number) => void;
@@ -141,6 +154,7 @@ export function Stepper({
   activeStep,
   orientation = "horizontal",
   isLinear = true,
+  isInteractive = false,
   onStepChange,
   children,
   className,
@@ -152,8 +166,15 @@ export function Stepper({
   const count = items.length;
 
   const ctx = useMemo<StepperContextValue>(
-    () => ({ activeStep, isLinear, orientation, count, onStepChange }),
-    [activeStep, isLinear, orientation, count, onStepChange],
+    () => ({
+      activeStep,
+      isLinear,
+      isInteractive,
+      orientation,
+      count,
+      onStepChange,
+    }),
+    [activeStep, isLinear, isInteractive, orientation, count, onStepChange],
   );
 
   return (
@@ -208,8 +229,14 @@ export function Step({
   style,
   __index,
 }: StepInternalProps): ReactElement {
-  const { activeStep, isLinear, orientation, count, onStepChange } =
-    useStepperContext();
+  const {
+    activeStep,
+    isLinear,
+    isInteractive,
+    orientation,
+    count,
+    onStepChange,
+  } = useStepperContext();
 
   const index = __index ?? 0;
   const isLast = index === count - 1;
@@ -254,9 +281,10 @@ export function Step({
       <span className={styles.indicatorNumber}>{index + 1}</span>
     );
 
-  // En non-linear, on rend toujours un <button> (même désactivé) pour conserver
-  // la sémantique. L'attribut `disabled` empêche le déclenchement de onClick.
-  const isInteractive = !isLinear && onStepChange !== undefined;
+  // Quand `isInteractive` est activé sur le Stepper, on rend chaque étape
+  // comme un <button> (même désactivé) pour conserver la sémantique cliquable.
+  // L'attribut `disabled` empêche le déclenchement de onClick.
+  const renderAsButton = isInteractive && onStepChange !== undefined;
 
   // Contenu commun (indicateur + label).
   const inner = (
@@ -276,14 +304,15 @@ export function Step({
       >
         {label}
       </span>
-      {isInteractive && !isDisabled && (
+      {renderAsButton && !isDisabled && (
         <FocusRing borderRadius={4} position="outside" />
       )}
     </>
   );
 
-  // Wrapper : button (linéaire désactivé OU cliquable) en non-linear, div statique en linear.
-  const innerEl = isInteractive ? (
+  // Wrapper : <button> si `isInteractive` (cliquable, même désactivé), <div>
+  // statique sinon.
+  const innerEl = renderAsButton ? (
     <button
       type="button"
       className={styles.stepContent}
