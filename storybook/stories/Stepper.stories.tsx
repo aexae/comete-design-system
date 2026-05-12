@@ -66,63 +66,87 @@ export const Default: Story = {
 /** Étape complétée + active + à venir. */
 export const Progression: Story = {
   args: { activeStep: 2 },
-  render: (args) => (
-    <div style={{ width: 600 }}>
-      <Stepper {...args}>
-        <Step label="Compte" />
-        <Step label="Adresse" />
-        <Step label="Paiement" />
-        <Step label="Confirmation" />
-      </Stepper>
-    </div>
-  ),
+  render: (args) => {
+    function Demo() {
+      const [step, setStep] = useState(args.activeStep);
+      return (
+        <div style={{ width: 600 }}>
+          <Stepper {...args} activeStep={step} onStepChange={setStep}>
+            <Step label="Compte" />
+            <Step label="Adresse" />
+            <Step label="Paiement" />
+            <Step label="Confirmation" />
+          </Stepper>
+        </div>
+      );
+    }
+    return <Demo key={args.activeStep} />;
+  },
 };
 
 /** Une étape en erreur. `isError` est prioritaire sur le status calculé. */
 export const WithError: Story = {
   name: "With error",
   args: { activeStep: 2 },
-  render: (args) => (
-    <div style={{ width: 600 }}>
-      <Stepper {...args}>
-        <Step label="Compte" />
-        <Step label="Adresse" isError />
-        <Step label="Paiement" />
-        <Step label="Confirmation" />
-      </Stepper>
-    </div>
-  ),
+  render: (args) => {
+    function Demo() {
+      const [step, setStep] = useState(args.activeStep);
+      return (
+        <div style={{ width: 600 }}>
+          <Stepper {...args} activeStep={step} onStepChange={setStep}>
+            <Step label="Compte" />
+            <Step label="Adresse" isError />
+            <Step label="Paiement" />
+            <Step label="Confirmation" />
+          </Stepper>
+        </div>
+      );
+    }
+    return <Demo key={args.activeStep} />;
+  },
 };
 
 /** Stepper vertical. */
 export const Vertical: Story = {
   args: { activeStep: 1, orientation: "vertical" },
-  render: (args) => (
-    <div style={{ width: 300 }}>
-      <Stepper {...args}>
-        <Step label="Compte" />
-        <Step label="Adresse" />
-        <Step label="Paiement" />
-        <Step label="Confirmation" />
-      </Stepper>
-    </div>
-  ),
+  render: (args) => {
+    function Demo() {
+      const [step, setStep] = useState(args.activeStep);
+      return (
+        <div style={{ width: 300 }}>
+          <Stepper {...args} activeStep={step} onStepChange={setStep}>
+            <Step label="Compte" />
+            <Step label="Adresse" />
+            <Step label="Paiement" />
+            <Step label="Confirmation" />
+          </Stepper>
+        </div>
+      );
+    }
+    return <Demo key={args.activeStep} />;
+  },
 };
 
 /** Stepper vertical avec une étape en erreur. */
 export const VerticalWithError: Story = {
   name: "Vertical with error",
   args: { activeStep: 2, orientation: "vertical" },
-  render: (args) => (
-    <div style={{ width: 300 }}>
-      <Stepper {...args}>
-        <Step label="Compte" />
-        <Step label="Adresse" isError />
-        <Step label="Paiement" />
-        <Step label="Confirmation" />
-      </Stepper>
-    </div>
-  ),
+  render: (args) => {
+    function Demo() {
+      const [step, setStep] = useState(args.activeStep);
+      return (
+        <div style={{ width: 300 }}>
+          <Stepper {...args} activeStep={step} onStepChange={setStep}>
+            <Step label="Compte" />
+            <Step label="Adresse" isError />
+            <Step label="Paiement" />
+            <Step label="Confirmation" />
+          </Stepper>
+        </div>
+      );
+    }
+    return <Demo key={args.activeStep} />;
+  },
 };
 
 /**
