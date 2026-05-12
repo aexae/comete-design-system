@@ -1,0 +1,262 @@
+/* ==========================================================================
+   Stepper — Comète Design System
+   Étapes numérotées avec états visuels par status.
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+
+   Layout horizontal (style Material UI) :
+   ─ indicateur centré dans chaque cellule
+   ─ label centré dessous
+   ─ connecteur horizontal entre indicateurs voisins, à la hauteur du centre
+     de l'indicateur (positionné en absolute)
+
+   Layout vertical :
+   ─ indicateur à gauche, label à droite (inline)
+   ─ connecteur vertical sous l'indicateur, aligné avec son centre horizontal
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Root (`<ol>`)
+   -------------------------------------------------------------------------- */
+
+.stepper {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.stepper[data-orientation="horizontal"] {
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.stepper[data-orientation="vertical"] {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* --------------------------------------------------------------------------
+   StepItem (`<li>`)
+   -------------------------------------------------------------------------- */
+
+.stepItem {
+  display: flex;
+  position: relative;
+  overflow: visible;
+}
+
+/* Horizontal : chaque step occupe une part égale ; indicateur centré au-dessus
+   du label centré.
+   NOTE : la dernière étape reste aussi en `flex: 1 1 0` pour que toutes les
+   cellules aient la même largeur. Si elle était content-sized, l'avant-dernière
+   cellule serait plus large et son connecteur (calculé en % de sa propre
+   largeur) déborderait au-delà de l'indicateur de la dernière. */
+.stepItem[data-orientation="horizontal"] {
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+
+/* Vertical : step item en column (stepContent + connecteur dessous) */
+.stepItem[data-orientation="vertical"] {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* --------------------------------------------------------------------------
+   StepContent — wrapper indicator + label
+   En non-linear : <button> cliquable. En linear : <div> statique.
+   Layout interne dépend de l'orientation du Stepper parent.
+   -------------------------------------------------------------------------- */
+
+.stepContent {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space075);
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  cursor: default;
+  outline: none;
+  /* z-index pour s'assurer que l'indicateur passe au-dessus des connecteurs
+     positionnés en absolute. */
+  z-index: 1;
+}
+
+/* Horizontal : indicateur au-dessus, label en dessous (centré) */
+.stepItem[data-orientation="horizontal"] .stepContent {
+  flex-direction: column;
+}
+
+/* Vertical : indicateur à gauche, label à droite (inline) */
+.stepItem[data-orientation="vertical"] .stepContent {
+  flex-direction: row;
+}
+
+/* En non-linear (rendered as <button>), affordance cliquable. */
+button.stepContent:not(:disabled) {
+  cursor: pointer;
+  border-radius: var(--radius0375);
+}
+
+button.stepContent:disabled {
+  cursor: not-allowed;
+}
+
+button.stepContent:not(:disabled):hover {
+  background-color: var(--background-neutral-subtlest-hovered);
+}
+
+button.stepContent:not(:disabled):active {
+  background-color: var(--background-neutral-subtlest-pressed);
+}
+
+/* --------------------------------------------------------------------------
+   Indicator — pastille circulaire (numéro / check / X)
+   -------------------------------------------------------------------------- */
+
+.indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--size300);
+  height: var(--size300);
+  border-radius: var(--radius-round);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xs);
+  transition-property: background-color, color;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--easing-default);
+}
+
+.indicatorNumber {
+  user-select: none;
+}
+
+.indicator[data-status="upcoming"] {
+  background-color: var(--background-neutral-subtler-default);
+  color: var(--text-subtle);
+}
+
+.indicator[data-status="active"] {
+  background-color: var(--background-brand-bold-default);
+  color: var(--text-inverted);
+}
+
+.indicator[data-status="completed"] {
+  background-color: var(--background-brand-bold-default);
+  color: var(--text-inverted);
+}
+
+/* Status — error : on retire le cercle de fond ; l'icône Warning (filled,
+   24px, color critical) fait elle-même office d'indicateur (triangle rouge
+   avec ! blanc — style MUI). */
+.indicator[data-status="error"] {
+  background-color: transparent;
+  color: var(--text-critical);
+}
+
+.indicator[data-disabled] {
+  background-color: var(--background-disabled-default);
+  color: var(--text-disabled);
+}
+
+/* --------------------------------------------------------------------------
+   Label
+   -------------------------------------------------------------------------- */
+
+.label {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  color: var(--text-subtle);
+  word-break: break-word;
+  min-width: 0;
+}
+
+/* Horizontal : label centré sous l'indicateur */
+.stepItem[data-orientation="horizontal"] .label {
+  text-align: center;
+}
+
+/* Vertical : label à gauche, à côté de l'indicateur */
+.stepItem[data-orientation="vertical"] .label {
+  text-align: start;
+}
+
+/* Couleur par status — la graisse est gérée séparément via `data-active` */
+.label[data-status="active"] {
+  color: var(--text-default);
+}
+
+.label[data-status="completed"] {
+  color: var(--text-default);
+}
+
+.label[data-status="error"] {
+  color: var(--text-critical);
+}
+
+/* Étape courante (active) → graisse medium, quel que soit le status.
+   Ainsi une étape en erreur qui n'est pas l'étape courante garde la graisse
+   normale, et une étape en erreur qui EST l'étape courante est emphased. */
+.label[data-active] {
+  font-weight: var(--font-weight-medium);
+}
+
+.label[data-disabled] {
+  color: var(--text-disabled);
+}
+
+/* --------------------------------------------------------------------------
+   Connector — ligne reliant deux indicateurs voisins
+   -------------------------------------------------------------------------- */
+
+.connector {
+  background-color: var(--border-default);
+  transition-property: background-color;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--easing-default);
+  z-index: 0;
+}
+
+/* Horizontal — positionné en absolute entre l'indicateur courant et le
+   suivant, à la hauteur du centre de l'indicateur.
+
+   Chaque stepItem (sauf le dernier) a flex:1 et le même width que ses voisins.
+   L'indicateur est centré horizontalement (align-items:center sur stepItem
+   column), donc à 50% de la largeur de la cellule. Le connecteur va du centre
+   de l'indicateur courant au centre du suivant — i.e. de 50% à 150% du width
+   de la cellule courante, moins le rayon de chaque indicateur. */
+.connector[data-orientation="horizontal"] {
+  position: absolute;
+  top: calc((var(--size300) - var(--size025)) / 2);
+  left: calc(50% + var(--size300) / 2 + var(--space050));
+  right: calc(-50% + var(--size300) / 2 + var(--space050));
+  height: var(--size025);
+}
+
+/* Vertical : ligne verticale, sous l'indicateur, alignée sur son centre */
+.connector[data-orientation="vertical"] {
+  width: var(--size025);
+  min-height: var(--size300);
+  margin-block: var(--space075);
+  margin-inline-start: calc(var(--size300) / 2 - var(--size025) / 2);
+  flex: 0 0 auto;
+}
+
+.connector[data-status="completed"] {
+  background-color: var(--background-brand-bold-default);
+}

@@ -45,6 +45,7 @@ export * from "./Select";
 export * from "./Skeleton";
 export * from "./Spotlight";
 export * from "./Stack";
+export * from "./Stepper";
 export * from "./Tabs";
 export * from "./Tag";
 export * from "./Text";
