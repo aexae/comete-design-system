@@ -44,16 +44,16 @@ export interface StepperProps {
   /**
    * Rend chaque étape comme un `<button>` cliquable qui appelle
    * `onStepChange(index)`. Indépendant de `isLinear` :
-   * - linéaire + interactive : cliquer revient en arrière dans un flux
+   * - linéaire + cliquable : cliquer revient en arrière dans un flux
    *   séquentiel ;
-   * - non-linéaire + interactive : navigation libre entre étapes
+   * - non-linéaire + cliquable : navigation libre entre étapes
    *   (pattern MUI non-linear).
    * @default false
    */
-  isInteractive?: boolean;
+  isClickable?: boolean;
   /**
    * Callback appelé quand l'utilisateur clique sur une étape.
-   * Requis si `isInteractive={true}` pour que les boutons aient un effet.
+   * Requis si `isClickable={true}` pour que les boutons aient un effet.
    */
   onStepChange?: (step: number) => void;
   /** Children : composants `<Step>`. */
@@ -101,7 +101,7 @@ export interface StepProps {
 interface StepperContextValue {
   activeStep: number;
   isLinear: boolean;
-  isInteractive: boolean;
+  isClickable: boolean;
   orientation: StepperOrientation;
   count: number;
   onStepChange?: (step: number) => void;
@@ -154,7 +154,7 @@ export function Stepper({
   activeStep,
   orientation = "horizontal",
   isLinear = true,
-  isInteractive = false,
+  isClickable = false,
   onStepChange,
   children,
   className,
@@ -169,12 +169,12 @@ export function Stepper({
     () => ({
       activeStep,
       isLinear,
-      isInteractive,
+      isClickable,
       orientation,
       count,
       onStepChange,
     }),
-    [activeStep, isLinear, isInteractive, orientation, count, onStepChange],
+    [activeStep, isLinear, isClickable, orientation, count, onStepChange],
   );
 
   return (
@@ -232,7 +232,7 @@ export function Step({
   const {
     activeStep,
     isLinear,
-    isInteractive,
+    isClickable,
     orientation,
     count,
     onStepChange,
@@ -281,10 +281,10 @@ export function Step({
       <span className={styles.indicatorNumber}>{index + 1}</span>
     );
 
-  // Quand `isInteractive` est activé sur le Stepper, on rend chaque étape
+  // Quand `isClickable` est activé sur le Stepper, on rend chaque étape
   // comme un <button> (même désactivé) pour conserver la sémantique cliquable.
   // L'attribut `disabled` empêche le déclenchement de onClick.
-  const renderAsButton = isInteractive && onStepChange !== undefined;
+  const renderAsButton = isClickable && onStepChange !== undefined;
 
   // Contenu commun (indicateur + label).
   const inner = (
@@ -310,7 +310,7 @@ export function Step({
     </>
   );
 
-  // Wrapper : <button> si `isInteractive` (cliquable, même désactivé), <div>
+  // Wrapper : <button> si `isClickable` (cliquable, même désactivé), <div>
   // statique sinon.
   const innerEl = renderAsButton ? (
     <button

@@ -25,7 +25,7 @@ const meta = {
       options: ["horizontal", "vertical"],
     },
     isLinear: { control: "boolean" },
-    isInteractive: { control: "boolean" },
+    isClickable: { control: "boolean" },
   },
 } satisfies Meta<typeof Stepper>;
 
@@ -151,7 +151,7 @@ export const NonLinear: Story = {
           <Stepper
             activeStep={step}
             isLinear={false}
-            isInteractive
+            isClickable
             onStepChange={setStep}
           >
             {steps.map((label, i) => (
@@ -193,7 +193,7 @@ export const DisabledStep: Story = {
           <Stepper
             activeStep={step}
             isLinear={false}
-            isInteractive
+            isClickable
             onStepChange={setStep}
           >
             <Step label="Compte" />
@@ -208,19 +208,19 @@ export const DisabledStep: Story = {
 };
 
 /**
- * Linéaire + interactif : auto-complétion préservée (les étapes précédentes
+ * Linéaire + cliquable : auto-complétion préservée (les étapes précédentes
  * sont auto-marquées « complétées »), MAIS l'utilisateur peut cliquer sur
  * une étape précédente pour revenir en arrière. Utile pour les wizards
  * séquentiels où on veut permettre une revisite d'étape.
  */
-export const LinearInteractive: Story = {
-  name: "Linear + interactive",
+export const LinearClickable: Story = {
+  name: "Linear + clickable",
   render: () => {
     function Demo() {
       const [step, setStep] = useState(2);
       return (
         <div style={{ width: 600 }}>
-          <Stepper activeStep={step} isInteractive onStepChange={setStep}>
+          <Stepper activeStep={step} isClickable onStepChange={setStep}>
             <Step label="Compte" />
             <Step label="Adresse" />
             <Step label="Paiement" />

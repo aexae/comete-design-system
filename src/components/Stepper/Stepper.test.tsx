@@ -211,9 +211,9 @@ describe("Stepper", () => {
 
   // -- Mode interactif — cliquable --
 
-  it("should render steps as buttons when isInteractive is true", () => {
+  it("should render steps as buttons when isClickable is true", () => {
     render(
-      <Stepper activeStep={0} isInteractive onStepChange={() => {}}>
+      <Stepper activeStep={0} isClickable onStepChange={() => {}}>
         <Step label="Step 1" />
         <Step label="Step 2" />
       </Stepper>,
@@ -221,7 +221,7 @@ describe("Stepper", () => {
     expect(screen.getAllByRole("button")).toHaveLength(2);
   });
 
-  it("should NOT render steps as buttons when isInteractive is false (default)", () => {
+  it("should NOT render steps as buttons when isClickable is false (default)", () => {
     render(
       <Stepper activeStep={0} onStepChange={() => {}}>
         <Step label="Step 1" />
@@ -231,15 +231,15 @@ describe("Stepper", () => {
     expect(screen.queryAllByRole("button")).toHaveLength(0);
   });
 
-  it("isInteractive and isLinear are independent (interactive + linear)", () => {
+  it("isClickable and isLinear are independent (clickable + linear)", () => {
     const { container } = render(
-      <Stepper activeStep={2} isInteractive onStepChange={() => {}}>
+      <Stepper activeStep={2} isClickable onStepChange={() => {}}>
         <Step label="Step 1" />
         <Step label="Step 2" />
         <Step label="Step 3" />
       </Stepper>,
     );
-    // Interactive → boutons
+    // Clickable → boutons
     expect(screen.getAllByRole("button")).toHaveLength(3);
     // Linear (défaut) → auto-complétion préservée
     const items = container.querySelectorAll("li");
@@ -248,11 +248,11 @@ describe("Stepper", () => {
     expect(items[2]).toHaveAttribute("data-status", "active");
   });
 
-  it("should call onStepChange with index when a step is clicked (isInteractive)", async () => {
+  it("should call onStepChange with index when a step is clicked (isClickable)", async () => {
     const user = userEvent.setup();
     const onStepChange = vi.fn();
     render(
-      <Stepper activeStep={0} isInteractive onStepChange={onStepChange}>
+      <Stepper activeStep={0} isClickable onStepChange={onStepChange}>
         <Step label="Step 1" />
         <Step label="Step 2" />
         <Step label="Step 3" />
@@ -264,11 +264,11 @@ describe("Stepper", () => {
 
   // -- Disabled step --
 
-  it("should not be clickable when isDisabled (isInteractive)", async () => {
+  it("should not be clickable when isDisabled (isClickable)", async () => {
     const user = userEvent.setup();
     const onStepChange = vi.fn();
     render(
-      <Stepper activeStep={0} isInteractive onStepChange={onStepChange}>
+      <Stepper activeStep={0} isClickable onStepChange={onStepChange}>
         <Step label="Step 1" />
         <Step label="Step 2" isDisabled />
       </Stepper>,
