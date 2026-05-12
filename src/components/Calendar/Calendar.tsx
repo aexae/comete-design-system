@@ -357,8 +357,6 @@ function DualPanelHeadingButton({
     return (
       // WORKAROUND: ButtonContext.Provider value={{}} efface le contexte de slots
       // d'AriaRangeCalendar qui exigerait slot="previous"/"next" sur tout AriaButton enfant.
-      // NOTE: icône `ArrowDropDown` ajoutée pour aligner visuellement sur le
-      // `MainHeader` du single mode (affordance drill-up).
       <ButtonContext.Provider value={{}}>
         <Button
           className={[styles.headingButton, className].filter(Boolean).join(" ")}
@@ -368,7 +366,6 @@ function DualPanelHeadingButton({
           appearance="subtle"
         >
           <span>{label}</span>
-          <Icon icon="ArrowDropDown" size={16} />
         </Button>
       </ButtonContext.Provider>
     );
