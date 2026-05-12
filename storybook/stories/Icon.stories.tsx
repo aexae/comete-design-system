@@ -465,18 +465,21 @@ function IconDetailPanel({
   isOpen,
   onOpenChange,
 }: IconDetailPanelProps): ReactElement {
-  const previewRef = useRef<HTMLDivElement>(null);
+  const previewRef = useRef<HTMLButtonElement>(null);
   const [panelVariant, setPanelVariant] = useState<IconVariant>("outlined");
   const [panelSize, setPanelSize] = useState(PANEL_SIZE_DEFAULT);
   const [codeCopied, setCodeCopied] = useState(false);
+  const [svgCopied, setSvgCopied] = useState(false);
   const codeCopyTimerRef = useRef<number | null>(null);
+  const svgCopyTimerRef = useRef<number | null>(null);
 
-  // Reset variant + size à chaque ouverture sur une nouvelle icône.
+  // Reset variant + size + feedback à chaque ouverture sur une nouvelle icône.
   useEffect(() => {
     if (isOpen) {
       setPanelVariant("outlined");
       setPanelSize(PANEL_SIZE_DEFAULT);
       setCodeCopied(false);
+      setSvgCopied(false);
     }
   }, [isOpen, name]);
 
@@ -485,9 +488,26 @@ function IconDetailPanel({
       if (codeCopyTimerRef.current !== null) {
         window.clearTimeout(codeCopyTimerRef.current);
       }
+      if (svgCopyTimerRef.current !== null) {
+        window.clearTimeout(svgCopyTimerRef.current);
+      }
     },
     [],
   );
+
+  /** Clic sur la preview → copie le SVG (variant + taille courants) + check. */
+  const handleCopySvg = (): void => {
+    if (!previewRef.current) return;
+    const svgString = buildSvgString(previewRef.current);
+    if (svgString) void navigator.clipboard.writeText(svgString);
+    setSvgCopied(true);
+    if (svgCopyTimerRef.current !== null) {
+      window.clearTimeout(svgCopyTimerRef.current);
+    }
+    svgCopyTimerRef.current = window.setTimeout(() => {
+      setSvgCopied(false);
+    }, 1500);
+  };
 
   // Code d'import — inclut `appearance` si différent du défaut (outlined).
   const importCode =
@@ -540,21 +560,65 @@ function IconDetailPanel({
       <DrawerHeader onClose={() => onOpenChange(false)}>{name}</DrawerHeader>
       <DrawerBody>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          {/* Preview SVG (utilisé pour téléchargement) */}
-          <div
+          {/* Preview SVG cliquable → copie le SVG (variant + taille courants). */}
+          <button
             ref={previewRef}
+            type="button"
+            onClick={handleCopySvg}
+            title="Cliquer pour copier le SVG"
             style={{
+              position: "relative",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               padding: 32,
               minHeight: 160,
-              background: "var(--background-surface-elevation-sunken-default)",
+              background: svgCopied
+                ? "var(--background-success-subtlest-default)"
+                : "var(--background-surface-elevation-sunken-default)",
+              border: `1.5px solid ${
+                svgCopied ? "var(--border-success)" : "transparent"
+              }`,
               borderRadius: 8,
+              cursor: "pointer",
+              transition: "background 0.15s, border-color 0.15s",
+              fontFamily: "inherit",
+              width: "100%",
+            }}
+            onMouseEnter={(e) => {
+              if (!svgCopied) {
+                e.currentTarget.style.background =
+                  "var(--background-neutral-subtlest-hovered)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!svgCopied) {
+                e.currentTarget.style.background =
+                  "var(--background-surface-elevation-sunken-default)";
+              }
             }}
           >
             <Component variant={panelVariant} size={panelSize} />
-          </div>
+            {/* Feedback de copie en overlay (sans déplacer la preview) */}
+            {svgCopied && (
+              <span
+                style={{
+                  position: "absolute",
+                  bottom: 8,
+                  right: 8,
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: "var(--text-success)",
+                  background: "var(--background-default-default)",
+                  padding: "3px 8px",
+                  borderRadius: 4,
+                  border: "1px solid var(--border-success)",
+                }}
+              >
+                ✓ Copié
+              </span>
+            )}
+          </button>
 
           {/* Slider de taille */}
           <div>
