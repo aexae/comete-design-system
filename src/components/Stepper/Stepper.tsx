@@ -282,9 +282,10 @@ export function Step({
     );
 
   // Quand `isClickable` est activé sur le Stepper, on rend chaque étape
-  // comme un <button> (même désactivé) pour conserver la sémantique cliquable.
-  // L'attribut `disabled` empêche le déclenchement de onClick.
-  const renderAsButton = isClickable && onStepChange !== undefined;
+  // comme un <button> (même désactivé, même sans onStepChange) pour conserver
+  // la sémantique cliquable. Si `onStepChange` n'est pas fourni, le clic ne
+  // fait rien — le bouton reste cohérent visuellement.
+  const renderAsButton = isClickable;
 
   // Contenu commun (indicateur + label).
   const inner = (

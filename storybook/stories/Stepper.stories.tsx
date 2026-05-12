@@ -35,19 +35,32 @@ type Story = StoryObj<typeof Stepper>;
 // -----------------------------------------------------------------------
 // Stories
 
-/** Stepper linéaire horizontal, étape active = 1 (`Adresse`). */
+/**
+ * Stepper linéaire horizontal, étape active = 1 (`Adresse`).
+ *
+ * Active `isClickable` dans les controls pour rendre les étapes cliquables —
+ * `onStepChange` est branché sur un state local pour que les clics
+ * fonctionnent directement.
+ */
 export const Default: Story = {
-  args: { activeStep: 1 },
-  render: (args) => (
-    <div style={{ width: 600 }}>
-      <Stepper {...args}>
-        <Step label="Compte" />
-        <Step label="Adresse" />
-        <Step label="Paiement" />
-        <Step label="Confirmation" />
-      </Stepper>
-    </div>
-  ),
+  args: { activeStep: 1, isClickable: false },
+  render: (args) => {
+    function Demo() {
+      const [step, setStep] = useState(args.activeStep);
+      return (
+        <div style={{ width: 600 }}>
+          <Stepper {...args} activeStep={step} onStepChange={setStep}>
+            <Step label="Compte" />
+            <Step label="Adresse" />
+            <Step label="Paiement" />
+            <Step label="Confirmation" />
+          </Stepper>
+        </div>
+      );
+    }
+    // `key` force le remount quand le slider activeStep change dans les controls.
+    return <Demo key={args.activeStep} />;
+  },
 };
 
 /** Étape complétée + active + à venir. */
