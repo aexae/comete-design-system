@@ -1,10 +1,15 @@
 import {
+  Button,
   Drawer,
   DrawerBody,
   DrawerFooter,
   DrawerHeader,
   DrawerProvider,
   Icon,
+  SearchField,
+  Select,
+  ToggleButton,
+  ToggleButtonGroup,
 } from "@naxit/comete-design-system";
 import type { IconComponentProps } from "@naxit/comete-design-system";
 import * as Icons from "@naxit/comete-icons";
@@ -520,18 +525,6 @@ function IconDetailPanel({
     marginBottom: 8,
   };
 
-  const dlBtnStyle: CSSProperties = {
-    padding: "8px 16px",
-    border: "1px solid var(--border-default)",
-    borderRadius: 6,
-    background: "var(--background-neutral-subtler-default)",
-    color: "var(--text-default)",
-    cursor: "pointer",
-    fontSize: 13,
-    fontWeight: 500,
-    fontFamily: "inherit",
-  };
-
   return (
     <Drawer
       isOpen={isOpen}
@@ -678,20 +671,12 @@ function IconDetailPanel({
         </div>
       </DrawerBody>
       <DrawerFooter>
-        <button
-          type="button"
-          onClick={handleDownloadSvg}
-          style={{ ...dlBtnStyle, flex: 1 }}
-        >
+        <Button appearance="outlined" isFullWidth onPress={handleDownloadSvg}>
           Télécharger SVG
-        </button>
-        <button
-          type="button"
-          onClick={handleDownloadPng}
-          style={{ ...dlBtnStyle, flex: 1 }}
-        >
+        </Button>
+        <Button isFullWidth onPress={handleDownloadPng}>
           Télécharger PNG
-        </button>
+        </Button>
       </DrawerFooter>
     </Drawer>
   );
@@ -750,15 +735,6 @@ function IconExplorer(): ReactElement {
     letterSpacing: "0.05em",
   };
 
-  const control: CSSProperties = {
-    padding: "5px 10px",
-    border: "1px solid var(--border-default)",
-    borderRadius: 6,
-    background: "var(--background-neutral-subtler-default)",
-    color: "var(--text-default)",
-    fontSize: 13,
-  };
-
   return (
     <DrawerProvider>
       <div
@@ -782,73 +758,51 @@ function IconExplorer(): ReactElement {
           border: "1px solid var(--border-default)",
         }}
       >
-        {/* Recherche */}
+        {/* Recherche — DS SearchField */}
         <div style={{ flex: "1 1 220px", minWidth: 160 }}>
           <div style={label}>Recherche</div>
-          <input
-            type="search"
+          <SearchField
             placeholder="Filtrer par nom…"
             value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-            }}
-            style={{ ...control, width: "100%", boxSizing: "border-box" }}
+            onChange={setSearch}
+            aria-label="Rechercher une icône"
           />
         </div>
 
-        {/* Variant */}
+        {/* Variant — DS ToggleButtonGroup single */}
         <div>
           <div style={label}>Variant</div>
-          <div style={{ display: "flex", gap: 4 }}>
-            {VARIANTS.map((v) => (
-              <button
-                key={v}
-                onClick={() => {
-                  setVariant(v);
-                }}
-                style={{
-                  ...control,
-                  background:
-                    variant === v
-                      ? "var(--background-selected-subtlest-default)"
-                      : "var(--background-neutral-subtler-default)",
-                  borderColor:
-                    variant === v
-                      ? "var(--border-focus)"
-                      : "var(--border-default)",
-                  color:
-                    variant === v
-                      ? "var(--text-selected)"
-                      : "var(--text-default)",
-                  fontWeight: variant === v ? 600 : 400,
-                  cursor: "pointer",
-                }}
-              >
-                {v}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Couleur */}
-        <div>
-          <div style={label}>Couleur</div>
-          <select
-            value={color}
-            onChange={(e) => {
-              setColor(e.target.value as IconColor);
+          <ToggleButtonGroup
+            aria-label="Variant"
+            selectionMode="single"
+            selectedKeys={[variant]}
+            onSelectionChange={(keys) => {
+              const first = Array.from(keys as Set<string>)[0];
+              if (first !== undefined) setVariant(first as IconVariant);
             }}
-            style={{ ...control, cursor: "pointer" }}
           >
-            {COLORS.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
+            {VARIANTS.map((v) => (
+              <ToggleButton key={v} id={v}>
+                {v}
+              </ToggleButton>
             ))}
-          </select>
+          </ToggleButtonGroup>
         </div>
 
-        {/* Taille */}
+        {/* Couleur — DS Select */}
+        <div style={{ minWidth: 160 }}>
+          <div style={label}>Couleur</div>
+          <Select
+            items={COLORS.map((c) => ({ value: c, label: c }))}
+            value={color}
+            onChange={(v) => {
+              if (v !== null) setColor(v as IconColor);
+            }}
+            aria-label="Couleur"
+          />
+        </div>
+
+        {/* Taille — range natif (pas d'équivalent DS) */}
         <div>
           <div style={label}>Taille — {size}px</div>
           <input
@@ -864,39 +818,24 @@ function IconExplorer(): ReactElement {
           />
         </div>
 
-        {/* Spacing */}
+        {/* Spacing — DS ToggleButtonGroup single */}
         <div>
           <div style={label}>Spacing</div>
-          <div style={{ display: "flex", gap: 4 }}>
+          <ToggleButtonGroup
+            aria-label="Spacing"
+            selectionMode="single"
+            selectedKeys={[spacing]}
+            onSelectionChange={(keys) => {
+              const first = Array.from(keys as Set<string>)[0];
+              if (first !== undefined) setSpacing(first as IconSpacing);
+            }}
+          >
             {(["default", "none"] as const).map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => {
-                  setSpacing(s);
-                }}
-                style={{
-                  ...control,
-                  background:
-                    spacing === s
-                      ? "var(--background-selected-subtlest-default)"
-                      : "var(--background-neutral-subtler-default)",
-                  borderColor:
-                    spacing === s
-                      ? "var(--border-focus)"
-                      : "var(--border-default)",
-                  color:
-                    spacing === s
-                      ? "var(--text-selected)"
-                      : "var(--text-default)",
-                  fontWeight: spacing === s ? 600 : 400,
-                  cursor: "pointer",
-                }}
-              >
+              <ToggleButton key={s} id={s}>
                 {s}
-              </button>
+              </ToggleButton>
             ))}
-          </div>
+          </ToggleButtonGroup>
         </div>
       </div>
 
