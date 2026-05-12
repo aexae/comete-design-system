@@ -152,9 +152,6 @@ export function MainHeader({
 
   // WORKAROUND: ButtonContext.Provider value={{}} efface le contexte de slots
   // d'AriaCalendar/AriaRangeCalendar qui exigerait slot="previous"/"next" sur tout AriaButton enfant.
-  // NOTE: `appearance="contained"` (et non `subtle`) pour donner au bouton
-  // heading son fond gris filled par défaut — affordance plus claire pour
-  // signaler qu'il est cliquable (drill-up).
   const heading: ReactElement = onHeadingPress ? (
     <ButtonContext.Provider value={{}}>
       <Button
@@ -162,7 +159,7 @@ export function MainHeader({
         onPress={onHeadingPress}
         isDisabled={isDisabled}
         aria-label={`Niveau supérieur — ${label}`}
-        appearance="contained"
+        appearance="subtle"
       >
         <span>{label}</span>
         <Icon icon="ArrowDropDown" size={16} />
