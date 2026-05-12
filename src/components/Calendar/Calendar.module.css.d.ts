@@ -4,11 +4,10 @@ declare const styles: {
   readonly "dualCalendar": string;
   readonly "dualGrid1": string;
   readonly "dualGrid2": string;
-  readonly "dualHeadingLeft": string;
-  readonly "dualHeadingRight": string;
   readonly "dualLinkedCalendar": string;
-  readonly "dualNavNext": string;
-  readonly "dualNavPrev": string;
+  readonly "dualPanelHeaderLeft": string;
+  readonly "dualPanelHeaderRight": string;
+  readonly "dualPanelHeading": string;
   readonly "grid": string;
   readonly "header": string;
   readonly "headerCell": string;

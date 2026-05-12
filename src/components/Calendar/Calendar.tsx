@@ -549,24 +549,32 @@ function DualDateCalendar({
       aria-labelledby={ariaLabelledby}
       className={[styles.dualLinkedCalendar, className].filter(Boolean).join(" ")}
     >
-      <AriaButton slot="previous" className={[styles.navButton, styles.dualNavPrev].join(" ")}>
-        <Icon icon="ChevronLeft" size={20} appearance="filled" />
-      </AriaButton>
-      <DualPanelHeadingButton
-        offset={0}
-        className={styles.dualHeadingLeft}
-        onDrillUp={handleDrillUp}
-        isDisabled={isDisabled}
-      />
-      <DualPanelHeadingButton
-        offset={1}
-        className={styles.dualHeadingRight}
-        onDrillUp={handleDrillUp}
-        isDisabled={isDisabled}
-      />
-      <AriaButton slot="next" className={[styles.navButton, styles.dualNavNext].join(" ")}>
-        <Icon icon="ChevronRight" size={20} appearance="filled" />
-      </AriaButton>
+      {/* Panel gauche — header flex : chevron + heading (flex: 1) + spacer */}
+      <div className={styles.dualPanelHeaderLeft}>
+        <AriaButton slot="previous" className={styles.navButton}>
+          <Icon icon="ChevronLeft" size={20} appearance="filled" />
+        </AriaButton>
+        <DualPanelHeadingButton
+          offset={0}
+          className={styles.dualPanelHeading}
+          onDrillUp={handleDrillUp}
+          isDisabled={isDisabled}
+        />
+        <span className={styles.navSpacer} aria-hidden="true" />
+      </div>
+      {/* Panel droit — header flex : spacer + heading (flex: 1) + chevron */}
+      <div className={styles.dualPanelHeaderRight}>
+        <span className={styles.navSpacer} aria-hidden="true" />
+        <DualPanelHeadingButton
+          offset={1}
+          className={styles.dualPanelHeading}
+          onDrillUp={handleDrillUp}
+          isDisabled={isDisabled}
+        />
+        <AriaButton slot="next" className={styles.navButton}>
+          <Icon icon="ChevronRight" size={20} appearance="filled" />
+        </AriaButton>
+      </div>
       <CalendarGrid className={[styles.grid, styles.dualGrid1].join(" ")}>
         <CalendarGridContent calendarDisabled={isDisabled ?? false} />
       </CalendarGrid>
@@ -701,24 +709,32 @@ function DualDateRangeCalendar({
       aria-labelledby={ariaLabelledby}
       className={[styles.dualLinkedCalendar, className].filter(Boolean).join(" ")}
     >
-      <AriaButton slot="previous" className={[styles.navButton, styles.dualNavPrev].join(" ")}>
-        <Icon icon="ChevronLeft" size={20} appearance="filled" />
-      </AriaButton>
-      <DualPanelHeadingButton
-        offset={0}
-        className={styles.dualHeadingLeft}
-        onDrillUp={handleDrillUp}
-        isDisabled={isDisabled}
-      />
-      <DualPanelHeadingButton
-        offset={1}
-        className={styles.dualHeadingRight}
-        onDrillUp={handleDrillUp}
-        isDisabled={isDisabled}
-      />
-      <AriaButton slot="next" className={[styles.navButton, styles.dualNavNext].join(" ")}>
-        <Icon icon="ChevronRight" size={20} appearance="filled" />
-      </AriaButton>
+      {/* Panel gauche — header flex : chevron + heading (flex: 1) + spacer */}
+      <div className={styles.dualPanelHeaderLeft}>
+        <AriaButton slot="previous" className={styles.navButton}>
+          <Icon icon="ChevronLeft" size={20} appearance="filled" />
+        </AriaButton>
+        <DualPanelHeadingButton
+          offset={0}
+          className={styles.dualPanelHeading}
+          onDrillUp={handleDrillUp}
+          isDisabled={isDisabled}
+        />
+        <span className={styles.navSpacer} aria-hidden="true" />
+      </div>
+      {/* Panel droit — header flex : spacer + heading (flex: 1) + chevron */}
+      <div className={styles.dualPanelHeaderRight}>
+        <span className={styles.navSpacer} aria-hidden="true" />
+        <DualPanelHeadingButton
+          offset={1}
+          className={styles.dualPanelHeading}
+          onDrillUp={handleDrillUp}
+          isDisabled={isDisabled}
+        />
+        <AriaButton slot="next" className={styles.navButton}>
+          <Icon icon="ChevronRight" size={20} appearance="filled" />
+        </AriaButton>
+      </div>
       <CalendarGrid className={[styles.grid, styles.dualGrid1].join(" ")}>
         <CalendarGridContent calendarDisabled={isDisabled ?? false} />
       </CalendarGrid>

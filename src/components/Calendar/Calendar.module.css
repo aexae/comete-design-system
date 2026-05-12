@@ -152,39 +152,36 @@
   outline: none;
 }
 
-/* Ligne 1 — navigation + titres */
+/* Ligne 1 — navigation + titres
 
-/* Conteneur flex avec flèche gauche + heading gauche */
-.dualNavPrev {
+   Chaque panel a son propre header flex : chevron + heading (flex: 1) + spacer
+   (pour équilibrer l'absence du chevron opposé). Le heading occupe ainsi tout
+   l'espace disponible entre les deux extrémités, comme dans le single mode
+   `MainHeader`. */
+
+.dualPanelHeaderLeft {
   grid-column: 1;
   grid-row: 1;
-  align-self: center;
-  justify-self: start;
-}
-
-.dualHeadingLeft {
-  grid-column: 1;
-  grid-row: 1;
-  align-self: center;
-  justify-self: center;
+  display: flex;
+  align-items: center;
+  gap: var(--space050);
   margin-bottom: var(--space050);
 }
 
 /* col 2 est vide (espace entre les deux panels) */
 
-.dualHeadingRight {
+.dualPanelHeaderRight {
   grid-column: 3;
   grid-row: 1;
-  align-self: center;
-  justify-self: center;
+  display: flex;
+  align-items: center;
+  gap: var(--space050);
   margin-bottom: var(--space050);
 }
 
-.dualNavNext {
-  grid-column: 3;
-  grid-row: 1;
-  align-self: center;
-  justify-self: end;
+/* Heading qui prend toute la largeur disponible dans son header de panel. */
+.dualPanelHeading {
+  flex: 1;
 }
 
 /* Ligne 2 — grilles */

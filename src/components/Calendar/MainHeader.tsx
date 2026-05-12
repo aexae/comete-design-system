@@ -1,7 +1,7 @@
 // MainHeader — Comète Design System
 // Sous-composant header unifié pour tous les calendriers du design system.
-// Composé d'un bouton chevron gauche, d'un bouton heading avec ArrowDropDown,
-// et d'un bouton chevron droit. Les boutons latéraux peuvent être masqués (spacer)
+// Composé d'un bouton chevron gauche, d'un bouton heading (drill-up) et d'un
+// bouton chevron droit. Les boutons latéraux peuvent être masqués (spacer)
 // pour les panels internes des doubles calendriers.
 // NOTE: Le bouton heading utilise un <button> natif (pas AriaButton) pour éviter
 // le conflit avec le système de slots React Aria (slot="previous"/"next" requis
@@ -162,7 +162,6 @@ export function MainHeader({
         appearance="subtle"
       >
         <span>{label}</span>
-        <Icon icon="ArrowDropDown" size={16} />
       </Button>
     </ButtonContext.Provider>
   ) : (
