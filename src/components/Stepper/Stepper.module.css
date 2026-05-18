@@ -98,12 +98,31 @@
 /* Vertical : indicateur à gauche, label à droite (inline) */
 .stepItem[data-orientation="vertical"] .stepContent {
   flex-direction: row;
+  align-items: center;
 }
 
-/* En non-linear (rendered as <button>), affordance cliquable. */
+/* En non-linear (rendered as <button>), affordance cliquable.
+
+   Le padding agrandit la zone de clic autour de l'indicateur + label, et la
+   marge négative équivalente compense pour que le layout visuel reste
+   inchangé (l'indicateur garde sa position d'origine, donc les connecteurs
+   en absolute restent alignés).
+
+   Conséquence : la zone de hover/click VISIBLE = la zone CLIQUABLE — pas
+   de mismatch entre ce que l'utilisateur voit et ce sur quoi il peut cliquer. */
 button.stepContent:not(:disabled) {
   cursor: pointer;
+  padding: var(--space075) var(--space100);
+  margin: calc(var(--space075) * -1) calc(var(--space100) * -1);
   border-radius: var(--radius0375);
+  transition: background-color var(--duration-fast) var(--easing-default);
+}
+
+/* En vertical, le stepItem a `align-items: stretch` ce qui ferait étirer le
+   bouton sur toute la largeur de la ligne. Force le bouton à hug son contenu
+   pour que la zone de hover/click soit aussi compacte que les indicateurs. */
+.stepItem[data-orientation="vertical"] button.stepContent {
+  align-self: flex-start;
 }
 
 button.stepContent:disabled {
@@ -116,6 +135,14 @@ button.stepContent:not(:disabled):hover {
 
 button.stepContent:not(:disabled):active {
   background-color: var(--background-neutral-subtlest-pressed);
+}
+
+/* Renforce le feedback hover : le label passe en couleur "default" pour
+   signaler l'interactivité. L'indicateur (cercle) garde sa couleur de
+   status — il encode l'état, pas l'interaction.
+   Exclut les labels en erreur (--text-critical) pour préserver le signal. */
+button.stepContent:not(:disabled):hover .label:not([data-status="error"]) {
+  color: var(--text-default);
 }
 
 /* --------------------------------------------------------------------------
@@ -141,6 +168,12 @@ button.stepContent:not(:disabled):active {
 
 .indicatorNumber {
   user-select: none;
+  /* Force un line-height = 1 (et non --line-height-ui-xs hérité du parent)
+     pour que la bounding-box du chiffre matche son em-height. Sans ça, le
+     line-box de 18px inclut un padding interne (leading) qui pousse la
+     baseline sous le centre géométrique du cercle — le chiffre apparaît
+     légèrement au-dessus du centre visuel. */
+  line-height: 1;
 }
 
 .indicator[data-status="upcoming"] {

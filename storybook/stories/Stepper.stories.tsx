@@ -8,6 +8,13 @@ import {
   ButtonGroup,
 } from "@naxit/comete-design-system/components";
 
+// Largeur du wrapper adaptée à l'orientation pour que le toggle `orientation`
+// dans les controls reste lisible : 300px en vertical (compact), 600px en
+// horizontal (laisse respirer les labels).
+function getWrapperWidth(orientation?: "horizontal" | "vertical"): number {
+  return orientation === "vertical" ? 300 : 600;
+}
+
 // -----------------------------------------------------------------------
 // Meta
 
@@ -48,7 +55,7 @@ export const Default: Story = {
     function Demo() {
       const [step, setStep] = useState(args.activeStep);
       return (
-        <div style={{ width: 600 }}>
+        <div style={{ width: getWrapperWidth(args.orientation) }}>
           <Stepper {...args} activeStep={step} onStepChange={setStep}>
             <Step label="Compte" />
             <Step label="Adresse" />
@@ -70,7 +77,7 @@ export const Progression: Story = {
     function Demo() {
       const [step, setStep] = useState(args.activeStep);
       return (
-        <div style={{ width: 600 }}>
+        <div style={{ width: getWrapperWidth(args.orientation) }}>
           <Stepper {...args} activeStep={step} onStepChange={setStep}>
             <Step label="Compte" />
             <Step label="Adresse" />
@@ -92,7 +99,7 @@ export const WithError: Story = {
     function Demo() {
       const [step, setStep] = useState(args.activeStep);
       return (
-        <div style={{ width: 600 }}>
+        <div style={{ width: getWrapperWidth(args.orientation) }}>
           <Stepper {...args} activeStep={step} onStepChange={setStep}>
             <Step label="Compte" />
             <Step label="Adresse" isError />
@@ -113,7 +120,7 @@ export const Vertical: Story = {
     function Demo() {
       const [step, setStep] = useState(args.activeStep);
       return (
-        <div style={{ width: 300 }}>
+        <div style={{ width: getWrapperWidth(args.orientation) }}>
           <Stepper {...args} activeStep={step} onStepChange={setStep}>
             <Step label="Compte" />
             <Step label="Adresse" />
@@ -135,7 +142,7 @@ export const VerticalWithError: Story = {
     function Demo() {
       const [step, setStep] = useState(args.activeStep);
       return (
-        <div style={{ width: 300 }}>
+        <div style={{ width: getWrapperWidth(args.orientation) }}>
           <Stepper {...args} activeStep={step} onStepChange={setStep}>
             <Step label="Compte" />
             <Step label="Adresse" isError />
@@ -162,7 +169,7 @@ export const VerticalWithError: Story = {
  */
 export const NonLinear: Story = {
   name: "Non-linear (clickable)",
-  render: () => {
+  render: (args) => {
     function NonLinearDemo() {
       const steps = ["Compte", "Adresse", "Paiement", "Confirmation"];
       const [step, setStep] = useState(1);
@@ -179,13 +186,14 @@ export const NonLinear: Story = {
       return (
         <div
           style={{
-            width: 600,
+            width: getWrapperWidth(args.orientation),
             display: "flex",
             flexDirection: "column",
             gap: 16,
           }}
         >
           <Stepper
+            orientation={args.orientation}
             activeStep={step}
             isLinear={false}
             isClickable
@@ -222,12 +230,13 @@ export const NonLinear: Story = {
 /** Étape désactivée — non cliquable même en mode interactif. */
 export const DisabledStep: Story = {
   name: "Disabled step",
-  render: () => {
+  render: (args) => {
     function DisabledDemo() {
       const [step, setStep] = useState(0);
       return (
-        <div style={{ width: 600 }}>
+        <div style={{ width: getWrapperWidth(args.orientation) }}>
           <Stepper
+            orientation={args.orientation}
             activeStep={step}
             isLinear={false}
             isClickable
@@ -252,12 +261,17 @@ export const DisabledStep: Story = {
  */
 export const LinearClickable: Story = {
   name: "Linear + clickable",
-  render: () => {
+  render: (args) => {
     function Demo() {
       const [step, setStep] = useState(2);
       return (
-        <div style={{ width: 600 }}>
-          <Stepper activeStep={step} isClickable onStepChange={setStep}>
+        <div style={{ width: getWrapperWidth(args.orientation) }}>
+          <Stepper
+            orientation={args.orientation}
+            activeStep={step}
+            isClickable
+            onStepChange={setStep}
+          >
             <Step label="Compte" />
             <Step label="Adresse" />
             <Step label="Paiement" />
@@ -277,20 +291,20 @@ export const LinearClickable: Story = {
 /** Wizard interactif : Précédent / Suivant. */
 export const InteractiveWizard: Story = {
   name: "Interactive wizard",
-  render: () => {
+  render: (args) => {
     function Wizard() {
       const steps = ["Compte", "Adresse", "Paiement", "Confirmation"];
       const [step, setStep] = useState(0);
       return (
         <div
           style={{
-            width: 600,
+            width: getWrapperWidth(args.orientation),
             display: "flex",
             flexDirection: "column",
             gap: 24,
           }}
         >
-          <Stepper activeStep={step}>
+          <Stepper orientation={args.orientation} activeStep={step}>
             {steps.map((label) => (
               <Step key={label} label={label} />
             ))}
