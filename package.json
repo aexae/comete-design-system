@@ -47,7 +47,7 @@
   "peerDependencies": {
     "@naxit/comete-design-tokens": "^0.4.1",
     "@naxit/comete-icons": "^0.3.1",
-    "@naxit/comete-illustrations": "^0.1.0-alpha.1",
+    "@naxit/comete-illustrations": "^0.1.0-alpha.3",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"
   },
