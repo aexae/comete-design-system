@@ -237,5 +237,66 @@ describe("TimePicker", () => {
       expect(container.querySelector(".timeDisplay")).toHaveTextContent("14:30");
       expect(container.querySelector(".timeDisplay")).not.toHaveTextContent("14:30:45");
     });
+
+    it("should display AM suffix in 12h mode for morning time", () => {
+      const { container } = render(
+        <TimePicker
+          aria-label="Heure"
+          isEditable={false}
+          hourCycle={12}
+          defaultValue={new Time(9, 5)}
+        />,
+      );
+      expect(container.querySelector(".timeDisplay")).toHaveTextContent("09:05 AM");
+    });
+
+    it("should display PM suffix in 12h mode for afternoon time", () => {
+      const { container } = render(
+        <TimePicker
+          aria-label="Heure"
+          isEditable={false}
+          hourCycle={12}
+          defaultValue={new Time(14, 30)}
+        />,
+      );
+      expect(container.querySelector(".timeDisplay")).toHaveTextContent("02:30 PM");
+    });
+
+    it("should display 12 PM for noon in 12h mode", () => {
+      const { container } = render(
+        <TimePicker
+          aria-label="Heure"
+          isEditable={false}
+          hourCycle={12}
+          defaultValue={new Time(12, 0)}
+        />,
+      );
+      expect(container.querySelector(".timeDisplay")).toHaveTextContent("12:00 PM");
+    });
+
+    it("should display 12 AM for midnight in 12h mode", () => {
+      const { container } = render(
+        <TimePicker
+          aria-label="Heure"
+          isEditable={false}
+          hourCycle={12}
+          defaultValue={new Time(0, 0)}
+        />,
+      );
+      expect(container.querySelector(".timeDisplay")).toHaveTextContent("12:00 AM");
+    });
+
+    it("should use 24h format with no AM/PM suffix when hourCycle is 24", () => {
+      const { container } = render(
+        <TimePicker
+          aria-label="Heure"
+          isEditable={false}
+          hourCycle={24}
+          defaultValue={new Time(14, 30)}
+        />,
+      );
+      expect(container.querySelector(".timeDisplay")).toHaveTextContent("14:30");
+      expect(container.querySelector(".timeDisplay")).not.toHaveTextContent("PM");
+    });
   });
 });

@@ -57,13 +57,28 @@ export interface TimePickerProps<T extends TimeValue = TimeValue>
 // -----------------------------------------------------------------------
 // Helpers
 
-/** Formate un TimeValue en HH:MM ou HH:MM:SS, toujours padé avec un 0. */
-function formatTime(time: TimeValue, showSeconds: boolean): string {
-  const h = String(time.hour).padStart(2, "0");
-  const m = String(time.minute).padStart(2, "0");
-  if (!showSeconds) return `${h}:${m}`;
-  const s = String(time.second).padStart(2, "0");
-  return `${h}:${m}:${s}`;
+/**
+ * Formate un TimeValue en HH:MM[:SS] avec suffixe AM/PM si hourCycle=12.
+ * Reproduit le format affiché par les segments react-aria en mode éditable.
+ */
+function formatTime(
+  time: TimeValue,
+  showSeconds: boolean,
+  hourCycle?: 12 | 24,
+): string {
+  let hour = time.hour;
+  let suffix = "";
+
+  if (hourCycle === 12) {
+    suffix = ` ${hour >= 12 ? "PM" : "AM"}`;
+    hour = hour % 12 || 12;
+  }
+
+  const hh = String(hour).padStart(2, "0");
+  const mm = String(time.minute).padStart(2, "0");
+  if (!showSeconds) return `${hh}:${mm}${suffix}`;
+  const ss = String(time.second).padStart(2, "0");
+  return `${hh}:${mm}:${ss}${suffix}`;
 }
 
 // -----------------------------------------------------------------------
@@ -127,6 +142,7 @@ export function TimePicker<T extends TimeValue = TimeValue>({
     onChange,
     isDisabled,
     isInvalid,
+    hourCycle,
     "aria-label": ariaLabelProp,
   } = ariaProps as AriaTimeFieldProps<T>;
 
@@ -142,6 +158,7 @@ export function TimePicker<T extends TimeValue = TimeValue>({
       onChange={onChange as ((value: TimeValue) => void) | undefined}
       isDisabled={isDisabled}
       isInvalid={isInvalid}
+      hourCycle={hourCycle}
       aria-label={ariaLabelProp}
     />
   );
@@ -430,6 +447,7 @@ function NonEditableTimePicker({
   onChange,
   isDisabled = false,
   isInvalid = false,
+  hourCycle,
   "aria-label": ariaLabel,
 }: {
   appearance: TimePickerAppearance;
@@ -442,6 +460,7 @@ function NonEditableTimePicker({
   onChange?: (value: TimeValue) => void;
   isDisabled?: boolean;
   isInvalid?: boolean;
+  hourCycle?: 12 | 24;
   "aria-label"?: string;
 }): ReactElement {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -453,7 +472,7 @@ function NonEditableTimePicker({
   );
   const resolvedValue = (isControlled ? value : internalValue) as TimeValue;
 
-  const formattedTime = formatTime(resolvedValue, showSeconds);
+  const formattedTime = formatTime(resolvedValue, showSeconds, hourCycle);
 
   // -- Popover state --
   const [isOpen, setIsOpen] = useState(false);
@@ -507,6 +526,8 @@ function NonEditableTimePicker({
                   value={resolvedValue}
                   onChange={handleTimeSelect}
                   isDisabled={isDisabled}
+                  hourCycle={hourCycle}
+                  showSeconds={showSeconds}
                 />
               </AriaDialog>
             </Popover>

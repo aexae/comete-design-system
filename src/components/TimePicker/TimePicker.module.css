@@ -83,9 +83,7 @@
 .editableContent {
   display: flex;
   align-items: center;
-  /* gap aligné sur `.content` (mode non-éditable) pour que la distance texte
-     ↔ icône horloge soit identique dans les deux modes. */
-  gap: var(--space100);
+  gap: var(--space075);
   width: 100%;
   cursor: pointer;
 }
@@ -97,7 +95,6 @@
 .content {
   display: flex;
   align-items: center;
-  gap: var(--space100);
 }
 
 .timeDisplay {
