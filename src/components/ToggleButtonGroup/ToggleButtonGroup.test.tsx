@@ -259,4 +259,26 @@ describe("ToggleButtonGroup", () => {
       "Formatting options",
     );
   });
+
+  // -------------------------------------------------------------------
+  // Icon-only buttons
+  // -------------------------------------------------------------------
+
+  it("should not render an empty label span when used as icon-only", () => {
+    // An empty label span participates in the flex layout and is offset by
+    // `gap`, which visually shifts the icon off-center. The component must
+    // skip rendering the label when no children are passed.
+    const { container } = render(
+      <ToggleButtonGroup aria-label="Alignment">
+        <ToggleButton
+          id="left"
+          iconBefore="FormatAlignLeft"
+          aria-label="Align left"
+        />
+      </ToggleButtonGroup>,
+    );
+
+    // The label class is unique to ToggleButton — verify no element uses it.
+    expect(container.querySelector(".label")).toBeNull();
+  });
 });

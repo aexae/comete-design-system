@@ -181,18 +181,10 @@ export const IconsOnly: Story = {
       selectionMode="single"
       defaultSelectedKeys={["left"]}
     >
-      <ToggleButton id="left" iconBefore="FormatAlignLeft" aria-label="Align left">
-        {""}
-      </ToggleButton>
-      <ToggleButton id="center" iconBefore="FormatAlignCenter" aria-label="Align center">
-        {""}
-      </ToggleButton>
-      <ToggleButton id="right" iconBefore="FormatAlignRight" aria-label="Align right">
-        {""}
-      </ToggleButton>
-      <ToggleButton id="justify" iconBefore="FormatAlignJustify" aria-label="Justify">
-        {""}
-      </ToggleButton>
+      <ToggleButton id="left" iconBefore="FormatAlignLeft" aria-label="Align left" />
+      <ToggleButton id="center" iconBefore="FormatAlignCenter" aria-label="Align center" />
+      <ToggleButton id="right" iconBefore="FormatAlignRight" aria-label="Align right" />
+      <ToggleButton id="justify" iconBefore="FormatAlignJustify" aria-label="Justify" />
     </ToggleButtonGroup>
   ),
 };

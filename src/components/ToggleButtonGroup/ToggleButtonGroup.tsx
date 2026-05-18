@@ -48,8 +48,11 @@ export interface ToggleButtonProps
   extends Omit<AriaToggleButtonProps, "className" | "style" | "children"> {
   /** Identifiant unique du bouton dans le groupe (requis pour la selection). */
   id: string;
-  /** Label du bouton. */
-  children: ReactNode;
+  /**
+   * Label du bouton. Optionnel : pour un bouton icon-only, ne passer aucun
+   * children et fournir un `aria-label` pour l'accessibilité.
+   */
+  children?: ReactNode;
   /** Icone affichee avant le label. */
   iconBefore?: IconName;
   /** Icone affichee apres le label. */
@@ -142,7 +145,9 @@ export function ToggleButton({
                 color={iconColor}
               />
             )}
-            <span className={styles.label}>{children}</span>
+            {children ? (
+              <span className={styles.label}>{children}</span>
+            ) : null}
             {badge && (
               <Badge
                 label={badge}
