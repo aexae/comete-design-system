@@ -320,7 +320,11 @@ function AllTokensTab(): ReactElement {
             })
           : isColorPalette && palettes
             ? palettes.map((palette) => {
-                const tokens = activeTokens.filter((t) => getColorPalette(t.name) === palette);
+                const tokens = activeTokens.filter((t) => getColorPalette(t.name) === palette).sort((a, b) => {
+                  const numA = parseInt(a.name.match(/-(\d+)[A-Z]*$/)?.[1] ?? "0", 10);
+                  const numB = parseInt(b.name.match(/-(\d+)[A-Z]*$/)?.[1] ?? "0", 10);
+                  return numA - numB;
+                });
                 return (<div key={palette}><p style={S.subgroupTitle}>{palette}</p><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))", gap: 4, marginBottom: 8 }}>{tokens.map((t) => <ColorSwatch key={t.name} token={t} copiedField={copiedField} onCopy={handleCopy} />)}</div></div>);
               })
             : activeTokens.map((t) => <TokenRow key={t.name} token={t} computedValue={getComputedTokenValue(t.name)} copiedField={copiedField} onCopy={handleCopy} />)}
