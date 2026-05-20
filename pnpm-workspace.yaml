@@ -4,3 +4,6 @@ packages:
 allowBuilds:
   esbuild: true
   unrs-resolver: false
+
+minimumReleaseAgeExclude:
+  - '@naxit/comete-design-tokens@0.5.0'
