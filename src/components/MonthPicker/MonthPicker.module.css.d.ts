@@ -11,6 +11,7 @@ declare const styles: {
   readonly "rangeValue": string;
   readonly "root": string;
   readonly "separator": string;
+  readonly "trailingButtons": string;
   readonly "yearInput": string;
 };
 export = styles;

@@ -8,6 +8,7 @@ declare const styles: {
   readonly "timeDisplay": string;
   readonly "timeInput": string;
   readonly "timePicker": string;
+  readonly "trailingButtons": string;
 };
 export = styles;
 

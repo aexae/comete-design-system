@@ -17,7 +17,6 @@ import { TimeDrumPicker } from "../Calendar/TimeDrumPicker.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
 import { Popover } from "../Popover/Popover.js";
-import { useHoverIntent } from "../../hooks/useHoverIntent.js";
 import styles from "./TimePicker.module.css";
 
 // -----------------------------------------------------------------------
@@ -41,8 +40,10 @@ export interface TimePickerProps<T extends TimeValue = TimeValue>
    */
   isEditable?: boolean;
   /**
-   * En mode éditable, affiche une icône close (×) à la place de l'icône horloge
-   * quand le champ a le focus et qu'une heure est saisie. Cliquer dessus vide la valeur.
+   * En mode éditable, affiche une icône close (×) à côté du bouton horloge
+   * dès qu'une heure est saisie. Cliquer dessus vide la valeur.
+   * Le bouton clear est masqué en mode `isReadOnly` et désactivé en mode
+   * `isDisabled` (le bouton horloge reste visible dans les deux cas).
    * @default true
    */
   isClearable?: boolean;
@@ -191,9 +192,6 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
   const containerRef = useRef<HTMLDivElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
-  const { isHovered, isHoverSuppressed, onMouseEnter, onMouseLeave, suppress } =
-    useHoverIntent();
 
   // Traque la valeur courante pour la synchroniser avec le drum picker
   const [currentValue, setCurrentValue] = useState<TimeValue | null>(
@@ -220,14 +218,13 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
       | undefined;
     onChangeProp?.(null);
     onClear?.();
-    suppress();
     requestAnimationFrame(() => {
       const segment = containerRef.current?.querySelector<HTMLElement>(
         "[data-type]:not([data-type='literal'])",
       );
       segment?.focus();
     });
-  }, [ariaProps.onChange, onClear, suppress]);
+  }, [ariaProps.onChange, onClear]);
 
   // Clic sur le padding de l'InputContainer → ouvre le popover + focus premier segment
   const handleContainerClick = useCallback(() => {
@@ -252,22 +249,6 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
     el.addEventListener("pointerdown", handlePointerDown, true);
     return () => el.removeEventListener("pointerdown", handlePointerDown, true);
   }, [ariaProps.isDisabled]);
-
-  // Tracking robuste du focus-within (les segments react-aria ne bubblent pas
-  // toujours le blur synthétique fiablement).
-  useEffect(() => {
-    const update = () => {
-      setIsFocused(
-        !!containerRef.current?.contains(document.activeElement),
-      );
-    };
-    document.addEventListener("focusin", update);
-    document.addEventListener("focusout", update);
-    return () => {
-      document.removeEventListener("focusin", update);
-      document.removeEventListener("focusout", update);
-    };
-  }, []);
 
   // Intercepte onChange de AriaTimeField pour tracker la valeur locale
   const handleFieldChange = useCallback(
@@ -338,17 +319,11 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
       defaultValue={undefined}
       onChange={handleFieldChange}
     >
-      {({ isDisabled, isInvalid }) => {
+      {({ isDisabled, isInvalid, isReadOnly }) => {
         const hasValue = currentValue !== null;
-        const showClear =
-          isClearable && hasValue && !isDisabled && (isFocused || isHovered);
+        const showClear = isClearable && hasValue && !isReadOnly;
         return (
-        <div
-          ref={containerRef}
-          onMouseEnter={onMouseEnter}
-          onMouseLeave={onMouseLeave}
-          data-suppress-hover={isHoverSuppressed || undefined}
-        >
+        <div ref={containerRef}>
           <InputContainer
             appearance={appearance}
             isCompact={isCompact}
@@ -380,38 +355,32 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
                 )}
               </AriaDateInput>
 
-              {showClear ? (
+              <div className={styles.trailingButtons}>
+                {showClear && (
+                  <Button
+                    appearance="subtle"
+                    spacing="none"
+                    iconBefore="CloseSmallFaded"
+                    className={styles.clockButton}
+                    isDisabled={isDisabled}
+                    aria-label="Effacer"
+                    onPress={handleClear}
+                    // REASON: empêcher le blur du segment pendant le click. Sans
+                    // ça, le mousedown sur le bouton transfert le focus → segment
+                    // blur, ce qui peut surprendre l'UX d'édition.
+                    onPointerDown={(e) => e.preventDefault()}
+                  />
+                )}
                 <Button
-                  // REASON: key distincte → unmount/mount propre au swap.
-                  // Sans key, React reuse l'instance et préserve l'état hover
-                  // de useHover (data-hovered) — le bouton horloge qui apparaît
-                  // après un clear hériterait du hover du bouton X.
-                  key="clear"
                   appearance="subtle"
-                  iconBefore="CloseSmallFaded"
-                  className={styles.clockButton}
-                  aria-label="Effacer"
-                  onPress={handleClear}
-                  // REASON: empêcher le blur du segment pendant le click. Sans
-                  // ça, le mousedown sur le bouton transfert le focus → segment
-                  // blur → showClear=false → le bouton disparaît mid-click →
-                  // onPress ne se déclenche jamais.
-                  onPointerDown={(e) => e.preventDefault()}
-                />
-              ) : (
-                <Button
-                  key="clock"
-                  appearance="subtle"
+                  spacing="none"
                   iconBefore="Schedule"
                   className={styles.clockButton}
                   isDisabled={isDisabled}
                   aria-label="Ouvrir le sélecteur d'heure"
                   onPress={isDisabled ? undefined : openPopover}
-                  // REASON: cf. DatePicker — neutralise visuellement le hover
-                  // du bouton horloge qui apparaît sous le curseur après clear.
-                  style={isHoverSuppressed ? { backgroundColor: "transparent" } : undefined}
                 />
-              )}
+              </div>
             </div>
           </InputContainer>
 
