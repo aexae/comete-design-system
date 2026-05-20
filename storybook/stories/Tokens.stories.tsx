@@ -224,7 +224,7 @@ function ColorSwatch({ token: t, copiedField, onCopy }: {
   copiedField: { name: string; field: "var" | "value" } | null;
   onCopy: (name: string, field: "var" | "value", text: string) => void;
 }): ReactElement {
-  const shade = t.name.split("-").pop() ?? "";
+  const shade = t.name.match(/-(\d+-a)$/)?.[1] ?? t.name.split("-").pop() ?? "";
   const isCopiedVar = copiedField?.name === t.name && copiedField.field === "var";
   const isCopiedValue = copiedField?.name === t.name && copiedField.field === "value";
   const isAnyCopied = isCopiedVar || isCopiedValue;
