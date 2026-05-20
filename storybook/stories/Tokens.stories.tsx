@@ -100,7 +100,7 @@ function getBackgroundSubgroup(name: string): string {
 }
 
 function getColorPalette(name: string): string {
-  return name.replace(/^--/, "").replace(/-\d+[A-Z]*$/, "");
+  return name.replace(/^--/, "").replace(/-\d+(-a)?$/, "");
 }
 
 const semanticTokens = ALL_TOKENS.filter((t) => getSemanticGroup(t.name) !== null);
