@@ -102,17 +102,13 @@
   flex-shrink: 0;
 }
 
-/* Après un clear, le bouton calendrier remplace le bouton X sous le curseur.
-   Le navigateur fire `pointerover` sur le nouvel élément, ce qui pose
-   `data-hovered` (visuellement surprenant : on n'a pas bougé la souris).
-   Le picker pose `data-suppress-hover` jusqu'au prochain mouseLeave pour
-   neutraliser visuellement le hover du bouton calendrier.
-
-   NOTE spécificité : le hover Button (`.subtle.default:not([data-disabled])
-   [data-hovered]`) est en (0,4,0). On chaîne `.calendarButton` 3 fois pour
-   atteindre (0,5,0) et battre proprement, sans recourir à `!important`. */
-[data-suppress-hover] .calendarButton.calendarButton.calendarButton[data-hovered] {
-  background-color: transparent;
+/* Wrapper des boutons trailing (clear + calendrier). Pas de gap entre les
+   deux icônes — elles sont collées. Le gap de l'InputContainer reste actif
+   entre les segments et ce wrapper. */
+.trailingButtons {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 /* ==========================================================================

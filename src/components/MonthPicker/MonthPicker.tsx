@@ -17,7 +17,6 @@ import { Calendar } from "../Calendar/Calendar.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
 import { Popover } from "../Popover/Popover.js";
-import { useHoverIntent } from "../../hooks/useHoverIntent.js";
 import styles from "./MonthPicker.module.css";
 
 // -----------------------------------------------------------------------
@@ -41,9 +40,10 @@ interface MonthPickerBaseProps {
   /** Désactive le composant. */
   isDisabled?: boolean;
   /**
-   * En mode éditable, affiche une icône close (×) à la place de l'icône calendrier
-   * **uniquement quand le champ a le focus** et qu'une valeur est saisie. Au blur,
-   * l'icône calendrier reprend sa place.
+   * En mode éditable, affiche une icône close (×) à côté du bouton calendrier
+   * dès qu'une date est saisie. Cliquer dessus vide la valeur.
+   * Le bouton clear est masqué en mode `isReadOnly` et désactivé en mode
+   * `isDisabled` (le bouton calendrier reste visible dans les deux cas).
    * @default true
    */
   isClearable?: boolean;
@@ -309,19 +309,14 @@ function SingleMonthPicker({
   const [yearInput, setYearInput] = useState("");
   const [monthFocused, setMonthFocused] = useState(false);
   const [yearFocused, setYearFocused] = useState(false);
-  const { isHovered, isHoverSuppressed, onMouseEnter, onMouseLeave, suppress } =
-    useHoverIntent();
 
-  const isFocused = monthFocused || yearFocused;
   const hasValue = month !== undefined && year !== undefined;
-  const showClear =
-    isClearable && hasValue && !isDisabled && (isFocused || isHovered);
+  const showClear = isClearable && hasValue;
   const handleClear = () => {
     setMonthInput("");
     setYearInput("");
     onChange?.(undefined, undefined);
     onClear?.();
-    suppress();
     requestAnimationFrame(() => {
       const input = containerRef.current?.querySelector<HTMLInputElement>("input");
       input?.focus();
@@ -377,9 +372,6 @@ function SingleMonthPicker({
       data-disabled={isDisabled || undefined}
       data-invalid={isInvalid || undefined}
       style={style}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      data-suppress-hover={isHoverSuppressed || undefined}
     >
       <InputContainer
         appearance={appearance}
@@ -447,36 +439,33 @@ function SingleMonthPicker({
               placeholder="AAAA"
             />
 
-            {showClear ? (
+            <div className={styles.trailingButtons}>
+              {showClear && (
+                <Button
+                  appearance="subtle"
+                  spacing="none"
+                  iconBefore="CloseSmallFaded"
+                  className={styles.calendarButton}
+                  isDisabled={isDisabled}
+                  aria-label="Effacer"
+                  onPress={handleClear}
+                  // REASON: empêcher le blur de l'input pendant le click. Sans ça,
+                  // le mousedown sur le bouton transfert le focus → input blur →
+                  // showClear=false → le bouton disparaît mid-click → onPress
+                  // ne se déclenche jamais.
+                  onPointerDown={(e) => e.preventDefault()}
+                />
+              )}
               <Button
-                // REASON: key distincte → unmount/mount propre au swap.
-                // Sans key, React reuse l'instance et préserve l'état hover.
-                key="clear"
                 appearance="subtle"
-                iconBefore="CloseSmallFaded"
-                className={styles.calendarButton}
-                aria-label="Effacer"
-                onPress={handleClear}
-                // REASON: empêcher le blur de l'input pendant le click. Sans ça,
-                // le mousedown sur le bouton transfert le focus → input blur →
-                // showClear=false → le bouton disparaît mid-click → onPress
-                // ne se déclenche jamais.
-                onPointerDown={(e) => e.preventDefault()}
-              />
-            ) : (
-              <Button
-                key="calendar"
-                appearance="subtle"
+                spacing="none"
                 iconBefore="CalendarMonth"
                 className={styles.calendarButton}
                 isDisabled={isDisabled}
                 onPress={() => !isDisabled && setIsOpen((o) => !o)}
                 aria-label="Ouvrir le sélecteur de mois"
-                // REASON: cf. DatePicker — neutralise le hover involontaire
-                // du bouton calendrier qui remplace le X sous le curseur.
-                style={isHoverSuppressed ? { backgroundColor: "transparent" } : undefined}
               />
-            )}
+            </div>
             {isOpen && (
               <div className={styles.calendarDropdown}>
                 <Calendar
@@ -655,21 +644,16 @@ function RangeMonthPicker({
   const [endInput, setEndInput] = useState("");
   const [startFocused, setStartFocused] = useState(false);
   const [endFocused, setEndFocused] = useState(false);
-  const { isHovered, isHoverSuppressed, onMouseEnter, onMouseLeave, suppress } =
-    useHoverIntent();
 
-  const isFocused = startFocused || endFocused;
   const hasValue =
     (startMonth !== undefined && startYear !== undefined) ||
     (endMonth !== undefined && endYear !== undefined);
-  const showClear =
-    isClearable && hasValue && !isDisabled && (isFocused || isHovered);
+  const showClear = isClearable && hasValue;
   const handleClear = () => {
     setStartInput("");
     setEndInput("");
     onChange?.(undefined, undefined, undefined, undefined);
     onClear?.();
-    suppress();
     requestAnimationFrame(() => {
       const input = containerRef.current?.querySelector<HTMLInputElement>("input");
       input?.focus();
@@ -777,9 +761,6 @@ function RangeMonthPicker({
       data-disabled={isDisabled || undefined}
       data-invalid={effectiveInvalid || undefined}
       style={style}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      data-suppress-hover={isHoverSuppressed || undefined}
     >
       <InputContainer
         isBorderless={!isEditable}
@@ -840,24 +821,26 @@ function RangeMonthPicker({
               placeholder="Mois AAAA"
             />
 
-            {showClear ? (
+            <div className={styles.trailingButtons}>
+              {showClear && (
+                <Button
+                  appearance="subtle"
+                  spacing="none"
+                  iconBefore="CloseSmallFaded"
+                  className={styles.calendarButton}
+                  isDisabled={isDisabled}
+                  aria-label="Effacer"
+                  onPress={handleClear}
+                  // REASON: empêcher le blur de l'input pendant le click. Sans ça,
+                  // le mousedown sur le bouton transfert le focus → input blur →
+                  // showClear=false → le bouton disparaît mid-click → onPress
+                  // ne se déclenche jamais.
+                  onPointerDown={(e) => e.preventDefault()}
+                />
+              )}
               <Button
-                key="clear"
                 appearance="subtle"
-                iconBefore="CloseSmallFaded"
-                className={styles.calendarButton}
-                aria-label="Effacer"
-                onPress={handleClear}
-                // REASON: empêcher le blur de l'input pendant le click. Sans ça,
-                // le mousedown sur le bouton transfert le focus → input blur →
-                // showClear=false → le bouton disparaît mid-click → onPress
-                // ne se déclenche jamais.
-                onPointerDown={(e) => e.preventDefault()}
-              />
-            ) : (
-              <Button
-                key="calendar"
-                appearance="subtle"
+                spacing="none"
                 iconBefore="CalendarMonth"
                 className={styles.calendarButton}
                 isDisabled={isDisabled}
@@ -866,9 +849,8 @@ function RangeMonthPicker({
                   setOpenPopover((o) => (o === "range" ? null : "range"))
                 }
                 aria-label="Ouvrir le sélecteur de mois"
-                style={isHoverSuppressed ? { backgroundColor: "transparent" } : undefined}
               />
-            )}
+            </div>
             {openPopover === "range" && (
               <div className={styles.calendarDropdown}>{renderCalendar()}</div>
             )}
@@ -941,6 +923,7 @@ function RangeMonthPicker({
             >
               <Button
                 appearance="subtle"
+                spacing="none"
                 iconBefore="CalendarMonth"
                 className={styles.calendarButton}
                 isDisabled={isDisabled}

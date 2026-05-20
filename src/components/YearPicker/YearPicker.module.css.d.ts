@@ -7,6 +7,7 @@ declare const styles: {
   readonly "rangeSeparator": string;
   readonly "rangeValue": string;
   readonly "root": string;
+  readonly "trailingButtons": string;
   readonly "yearButton": string;
   readonly "yearInput": string;
 };

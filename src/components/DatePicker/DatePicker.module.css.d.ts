@@ -9,6 +9,7 @@ declare const styles: {
   readonly "navigationContent": string;
   readonly "rangeSeparator": string;
   readonly "segment": string;
+  readonly "trailingButtons": string;
 };
 export = styles;
 
