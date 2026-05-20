@@ -25,7 +25,7 @@
    avec espacement vertical de 4px de part et d'autre (spec Figma). */
 .horizontal {
   block-size: var(--size0125);
-  inline-size: 100%;
+  /* inline-size: 100%; */
   margin-block: var(--size050);
 }
 
@@ -33,6 +33,6 @@
    avec espacement horizontal de 4px de part et d'autre (spec Figma). */
 .vertical {
   inline-size: var(--size0125);
-  block-size: 100%;
+  /* block-size: 100%; */
   margin-inline: var(--size050);
 }
