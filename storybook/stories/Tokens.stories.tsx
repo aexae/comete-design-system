@@ -80,7 +80,7 @@ function getSemanticGroup(name: string): SemanticGroup | null {
 }
 
 function getPrimitiveGroup(name: string): PrimitiveGroup {
-  if (/^--(red|salem|grey|white|black|blue-marguerite|blue-grey|porcelain|supernova|comete-biscay|comete-lightning-yellow|saffron|green-vogue|orange|lime)/.test(name))
+  if (/^--(red|green|grey|white|black|purple|cool-grey|yellow|comete-blue|comete-yellow|orange|blue|lime|magenta|teal|turquoise|dark-grey)/.test(name))
     return "color";
   if (name.startsWith("--size")) return "size";
   if (name.startsWith("--space")) return "space";
@@ -435,7 +435,7 @@ Exemples :
   --shadow-key-2
   --radius050          (primitif : 4px)
   --space200           (primitif : 16px)
-  --porcelain-300      (primitif : couleur)`}</CodeBlock>
+  --cool-grey-300      (primitif : couleur)`}</CodeBlock>
       </Section>
     </div>
   );

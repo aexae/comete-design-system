@@ -154,7 +154,7 @@ for t,v in re.findall(r'(--[\w-]+)\s*:\s*(#[0-9a-fA-F]{6})\s*;', root):
 "
 ```
 
-**Priorité tokens** : toujours préférer les tokens sémantiques (`--background-*`, `--text-*`, `--border-*`) aux tokens primitifs (`--porcelain-*`, `--red-*`, etc.).
+**Priorité tokens** : toujours préférer les tokens sémantiques (`--background-*`, `--text-*`, `--border-*`) aux tokens primitifs (`--cool-grey-*`, `--red-*`, etc.).
 
 ### 2. Fichiers à créer
 
