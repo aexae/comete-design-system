@@ -205,7 +205,7 @@ export const AllAppearances: Story = {
       <InteractiveProgressIndicator {...args} appearance="help" />
       <div
         style={{
-          backgroundColor: "var(--background-accent-bold-default)",
+          backgroundColor: "var(--background-accent-purple-bold-default)",
           padding: "var(--space200)",
           borderRadius: "var(--radius100)",
         }}
