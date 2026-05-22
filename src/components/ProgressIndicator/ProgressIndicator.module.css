@@ -115,7 +115,7 @@
 }
 
 .dot.help.selected {
-  background-color: var(--background-accent-bold-default);
+  background-color: var(--background-accent-purple-bold-default);
 }
 
 .dot.inverted.selected {

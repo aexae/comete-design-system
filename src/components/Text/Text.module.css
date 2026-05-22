@@ -14,7 +14,7 @@
 .color-disabled { color: var(--text-disabled); }
 .color-inverted { color: var(--text-inverted); }
 .color-brand { color: var(--text-brand); }
-.color-accent { color: var(--text-accent); }
+.color-accent { color: var(--text-accent-purple); }
 .color-success { color: var(--text-success); }
 .color-information { color: var(--text-information); }
 .color-warning { color: var(--text-warning); }

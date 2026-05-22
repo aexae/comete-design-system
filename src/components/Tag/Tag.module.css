@@ -103,11 +103,11 @@
 .bold.information.interactive:active { background: var(--background-information-bold-pressed); }
 
 .bold.accent {
-  background: var(--background-accent-bold-default);
+  background: var(--background-accent-purple-bold-default);
   color: var(--text-inverted);
 }
-.bold.accent.interactive:hover { background: var(--background-accent-bold-hovered); }
-.bold.accent.interactive:active { background: var(--background-accent-bold-pressed); }
+.bold.accent.interactive:hover { background: var(--background-accent-purple-bold-hovered); }
+.bold.accent.interactive:active { background: var(--background-accent-purple-bold-pressed); }
 
 /* ==========================================================================
    Style: subtle — fond léger, texte coloré
@@ -156,11 +156,11 @@
 .subtle.information.interactive:active { background: var(--background-information-subtlest-pressed); }
 
 .subtle.accent {
-  background: var(--background-accent-subtlest-default);
-  color: var(--text-accent);
+  background: var(--background-accent-purple-subtlest-default);
+  color: var(--text-accent-purple);
 }
-.subtle.accent.interactive:hover { background: var(--background-accent-subtlest-hovered); }
-.subtle.accent.interactive:active { background: var(--background-accent-subtlest-pressed); }
+.subtle.accent.interactive:hover { background: var(--background-accent-purple-subtlest-hovered); }
+.subtle.accent.interactive:active { background: var(--background-accent-purple-subtlest-pressed); }
 
 /* ==========================================================================
    Style: outlined — fond transparent, bordure colorée
@@ -216,11 +216,11 @@
 
 .outlined.accent {
   background: transparent;
-  border-color: var(--border-accent);
-  color: var(--text-accent);
+  border-color: var(--border-accent-purple);
+  color: var(--text-accent-purple);
 }
-.outlined.accent.interactive:hover { background: var(--background-accent-subtlest-hovered); }
-.outlined.accent.interactive:active { background: var(--background-accent-subtlest-pressed); }
+.outlined.accent.interactive:hover { background: var(--background-accent-purple-subtlest-hovered); }
+.outlined.accent.interactive:active { background: var(--background-accent-purple-subtlest-pressed); }
 
 /* ==========================================================================
    Slots: elemBefore, elemAfter, label, removeButton

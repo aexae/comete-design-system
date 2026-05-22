@@ -86,9 +86,9 @@
 .bold.color-information     { background-color: var(--background-information-bold-default); }
 
 /* ---- accent ---- */
-.outlined.color-accent { border-color: var(--border-accent); }
-.subtle.color-accent   { background-color: var(--background-accent-subtlest-default); }
-.bold.color-accent     { background-color: var(--background-accent-bold-default); }
+.outlined.color-accent { border-color: var(--border-accent-purple); }
+.subtle.color-accent   { background-color: var(--background-accent-purple-subtlest-default); }
+.bold.color-accent     { background-color: var(--background-accent-purple-bold-default); }
 
 /* ---- client (pas de border-client token → on utilise le bold background) ---- */
 .outlined.color-client { border-color: var(--background-client-bold-default); }
@@ -180,7 +180,7 @@
 .subtle.color-warning[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-warning-subtlest-hovered); }
 .subtle.color-critical[data-interactive]:not([data-dragging]):hover    { background-color: var(--background-critical-subtlest-hovered); }
 .subtle.color-information[data-interactive]:not([data-dragging]):hover { background-color: var(--background-information-subtlest-hovered); }
-.subtle.color-accent[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-accent-subtlest-hovered); }
+.subtle.color-accent[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-accent-purple-subtlest-hovered); }
 .subtle.color-client[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-client-subtlest-hovered); }
 
 /* ---- Hover background : bold ---- */
@@ -191,7 +191,7 @@
 .bold.color-warning[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-warning-bold-hovered); }
 .bold.color-critical[data-interactive]:not([data-dragging]):hover    { background-color: var(--background-critical-bold-hovered); }
 .bold.color-information[data-interactive]:not([data-dragging]):hover { background-color: var(--background-information-bold-hovered); }
-.bold.color-accent[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-accent-bold-hovered); }
+.bold.color-accent[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-accent-purple-bold-hovered); }
 .bold.color-client[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-client-bold-hovered); }
 
 /* ---- Pressed ---- */
@@ -211,7 +211,7 @@
 .subtle.color-warning[data-interactive]:not([data-dragging]):active     { background-color: var(--background-warning-subtlest-pressed); }
 .subtle.color-critical[data-interactive]:not([data-dragging]):active    { background-color: var(--background-critical-subtlest-pressed); }
 .subtle.color-information[data-interactive]:not([data-dragging]):active { background-color: var(--background-information-subtlest-pressed); }
-.subtle.color-accent[data-interactive]:not([data-dragging]):active      { background-color: var(--background-accent-subtlest-pressed); }
+.subtle.color-accent[data-interactive]:not([data-dragging]):active      { background-color: var(--background-accent-purple-subtlest-pressed); }
 .subtle.color-client[data-interactive]:not([data-dragging]):active      { background-color: var(--background-client-subtlest-pressed); }
 
 .bold.color-neutral[data-interactive]:not([data-dragging]):active     { background-color: var(--background-neutral-bold-pressed); }
@@ -220,7 +220,7 @@
 .bold.color-warning[data-interactive]:not([data-dragging]):active     { background-color: var(--background-warning-bold-pressed); }
 .bold.color-critical[data-interactive]:not([data-dragging]):active    { background-color: var(--background-critical-bold-pressed); }
 .bold.color-information[data-interactive]:not([data-dragging]):active { background-color: var(--background-information-bold-pressed); }
-.bold.color-accent[data-interactive]:not([data-dragging]):active      { background-color: var(--background-accent-bold-pressed); }
+.bold.color-accent[data-interactive]:not([data-dragging]):active      { background-color: var(--background-accent-purple-bold-pressed); }
 .bold.color-client[data-interactive]:not([data-dragging]):active      { background-color: var(--background-client-bold-pressed); }
 
 /* Focus visible — géré par le composant FocusRing */

@@ -89,9 +89,9 @@
 .warning.low    { background-color: var(--background-warning-bold-default); }
 
 /* — accent — */
-.accent.high   { background-color: var(--background-accent-bold-default);     color: var(--text-inverted); }
-.accent.medium { background-color: var(--background-accent-subtlest-default); color: var(--text-accent); }
-.accent.low    { background-color: var(--background-accent-bold-default); }
+.accent.high   { background-color: var(--background-accent-purple-bold-default);     color: var(--text-inverted); }
+.accent.medium { background-color: var(--background-accent-purple-subtlest-default); color: var(--text-accent-purple); }
+.accent.low    { background-color: var(--background-accent-purple-bold-default); }
 
 /* ==========================================================================
    Disabled — placé en dernier pour surcharger tous les sélecteurs composés
