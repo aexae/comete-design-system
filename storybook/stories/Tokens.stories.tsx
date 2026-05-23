@@ -304,7 +304,7 @@ function AllTokensTab(): ReactElement {
         </div>
 
         {category === "primitive" && (
-          <div style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "10px 14px", background: "var(--background-warning-subtlest-default)", border: "1px solid var(--border-warning)", borderRadius: 8, marginBottom: 20, color: "var(--text-warning)", fontSize: 13 }}>
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "10px 14px", background: "var(--background-warning-subtlest-default)", border: "1px solid var(--border-warning-bold)", borderRadius: 8, marginBottom: 20, color: "var(--text-warning)", fontSize: 13 }}>
             <span style={{ fontSize: 16 }}>⚠</span>
             <span><strong>Tokens primitifs — usage exceptionnel uniquement.</strong><br />Dans quasiment tous les cas, utilise les <strong>tokens thématiques</strong>. Les primitifs ne répondent pas au changement de thème light/dark.</span>
           </div>

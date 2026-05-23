@@ -44,7 +44,7 @@
 }
 
 .bordered.invalid {
-  border-color: var(--border-critical);
+  border-color: var(--border-critical-bold);
 }
 
 .bordered.disabled {
@@ -67,7 +67,7 @@
 }
 
 .subtle.invalid {
-  border-bottom-color: var(--border-critical);
+  border-bottom-color: var(--border-critical-bold);
 }
 
 .subtle.disabled {

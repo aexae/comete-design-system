@@ -725,7 +725,7 @@ function TypographyPage(): ReactElement {
               style={{
                 padding: "12px 16px",
                 background: "var(--background-information-subtlest-default)",
-                border: "1px solid var(--border-information)",
+                border: "1px solid var(--border-information-bold)",
                 borderRadius: 8,
                 display: "flex",
                 gap: 10,

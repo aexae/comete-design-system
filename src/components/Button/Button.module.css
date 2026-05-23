@@ -265,7 +265,7 @@
 }
 
 .outlined.success {
-  border-color: var(--border-success);
+  border-color: var(--border-success-bold);
   color: var(--text-success);
 }
 .outlined.success:not([data-disabled])[data-hovered] {
@@ -276,7 +276,7 @@
 }
 
 .outlined.critical {
-  border-color: var(--border-critical);
+  border-color: var(--border-critical-bold);
   color: var(--text-critical);
 }
 .outlined.critical:not([data-disabled])[data-hovered] {
@@ -287,7 +287,7 @@
 }
 
 .outlined.warning {
-  border-color: var(--border-warning);
+  border-color: var(--border-warning-bold);
   color: var(--text-warning);
 }
 .outlined.warning:not([data-disabled])[data-hovered] {
@@ -298,7 +298,7 @@
 }
 
 .outlined.information {
-  border-color: var(--border-information);
+  border-color: var(--border-information-bold);
   color: var(--text-information);
 }
 .outlined.information:not([data-disabled])[data-hovered] {

@@ -184,7 +184,7 @@
 
 .outlined.success {
   background: transparent;
-  border-color: var(--border-success);
+  border-color: var(--border-success-bold);
   color: var(--text-success);
 }
 .outlined.success.interactive:hover { background: var(--background-success-subtlest-hovered); }
@@ -192,7 +192,7 @@
 
 .outlined.warning {
   background: transparent;
-  border-color: var(--border-warning);
+  border-color: var(--border-warning-bold);
   color: var(--text-warning);
 }
 .outlined.warning.interactive:hover { background: var(--background-warning-subtlest-hovered); }
@@ -200,7 +200,7 @@
 
 .outlined.critical {
   background: transparent;
-  border-color: var(--border-critical);
+  border-color: var(--border-critical-bold);
   color: var(--text-critical);
 }
 .outlined.critical.interactive:hover { background: var(--background-critical-subtlest-hovered); }
@@ -208,7 +208,7 @@
 
 .outlined.information {
   background: transparent;
-  border-color: var(--border-information);
+  border-color: var(--border-information-bold);
   color: var(--text-information);
 }
 .outlined.information.interactive:hover { background: var(--background-information-subtlest-hovered); }
@@ -216,7 +216,7 @@
 
 .outlined.accent {
   background: transparent;
-  border-color: var(--border-accent-purple);
+  border-color: var(--border-accent-purple-bold);
   color: var(--text-accent-purple);
 }
 .outlined.accent.interactive:hover { background: var(--background-accent-purple-subtlest-hovered); }

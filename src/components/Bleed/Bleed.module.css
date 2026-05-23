@@ -72,8 +72,8 @@
 .bordered.bold        { border-color: var(--border-neutral); }
 .bordered.neutral     { border-color: var(--border-neutral); }
 .bordered.brand       { border-color: var(--border-brand); }
-.bordered.success     { border-color: var(--border-success); }
-.bordered.warning     { border-color: var(--border-warning); }
-.bordered.critical    { border-color: var(--border-critical); }
-.bordered.information { border-color: var(--border-information); }
-.bordered.accent      { border-color: var(--border-accent-purple); }
+.bordered.success     { border-color: var(--border-success-bold); }
+.bordered.warning     { border-color: var(--border-warning-bold); }
+.bordered.critical    { border-color: var(--border-critical-bold); }
+.bordered.information { border-color: var(--border-information-bold); }
+.bordered.accent      { border-color: var(--border-accent-purple-bold); }

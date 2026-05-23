@@ -57,12 +57,12 @@
 .bold.color-brand     { background-color: var(--background-brand-bold-default); }
 
 /* ---- success ---- */
-.outlined.color-success { border-color: var(--border-success); }
+.outlined.color-success { border-color: var(--border-success-bold); }
 .subtle.color-success   { background-color: var(--background-success-subtlest-default); }
 .bold.color-success     { background-color: var(--background-success-bold-default); }
 
 /* ---- warning ---- */
-.outlined.color-warning { border-color: var(--border-warning); }
+.outlined.color-warning { border-color: var(--border-warning-bold); }
 .subtle.color-warning   { background-color: var(--background-warning-subtlest-default); }
 .bold.color-warning {
   background-color: var(--background-warning-bold-default);
@@ -76,17 +76,17 @@
 }
 
 /* ---- critical ---- */
-.outlined.color-critical { border-color: var(--border-critical); }
+.outlined.color-critical { border-color: var(--border-critical-bold); }
 .subtle.color-critical   { background-color: var(--background-critical-subtlest-default); }
 .bold.color-critical     { background-color: var(--background-critical-bold-default); }
 
 /* ---- information ---- */
-.outlined.color-information { border-color: var(--border-information); }
+.outlined.color-information { border-color: var(--border-information-bold); }
 .subtle.color-information   { background-color: var(--background-information-subtlest-default); }
 .bold.color-information     { background-color: var(--background-information-bold-default); }
 
 /* ---- accent ---- */
-.outlined.color-accent { border-color: var(--border-accent-purple); }
+.outlined.color-accent { border-color: var(--border-accent-purple-bold); }
 .subtle.color-accent   { background-color: var(--background-accent-purple-subtlest-default); }
 .bold.color-accent     { background-color: var(--background-accent-purple-bold-default); }
 
