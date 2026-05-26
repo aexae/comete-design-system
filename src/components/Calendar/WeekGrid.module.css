@@ -103,7 +103,7 @@
 
 /* Début de plage */
 .weekRow[data-state="range-start"] {
-  background-color: var(--border-brand);
+  background-color: var(--border-brand-bold);
 }
 
 .weekRow[data-state="range-start"] .weekDayText,
@@ -113,7 +113,7 @@
 
 /* Fin de plage */
 .weekRow[data-state="range-end"] {
-  background-color: var(--border-brand);
+  background-color: var(--border-brand-bold);
 }
 
 .weekRow[data-state="range-end"] .weekDayText,

@@ -383,7 +383,7 @@ function IconCard({
           alignItems: "center",
           gap: 6,
           padding: "12px 4px 8px",
-          border: `1.5px solid ${isCopied ? "var(--border-focus)" : "transparent"}`,
+          border: `1.5px solid ${isCopied ? "var(--border-focused)" : "transparent"}`,
           borderRadius: 8,
           background: isCopied
             ? "var(--background-selected-subtlest-default)"
@@ -545,7 +545,7 @@ function IconExplorer(): ReactElement {
                       : "var(--background-neutral-subtler-default)",
                   borderColor:
                     variant === v
-                      ? "var(--border-focus)"
+                      ? "var(--border-focused)"
                       : "var(--border-default)",
                   color:
                     variant === v
@@ -614,7 +614,7 @@ function IconExplorer(): ReactElement {
                       : "var(--background-neutral-subtler-default)",
                   borderColor:
                     spacing === s
-                      ? "var(--border-focus)"
+                      ? "var(--border-focused)"
                       : "var(--border-default)",
                   color:
                     spacing === s

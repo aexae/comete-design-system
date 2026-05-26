@@ -152,7 +152,7 @@ function Tab({ label, active, onClick, badge }: { label: string; active: boolean
   return (
     <button type="button" onClick={onClick} style={{
       padding: "8px 16px", border: "none",
-      borderBottom: active ? "2px solid var(--border-focus)" : "2px solid transparent",
+      borderBottom: active ? "2px solid var(--border-focused)" : "2px solid transparent",
       background: "transparent", color: active ? "var(--text-selected)" : "var(--text-subtle)",
       fontWeight: active ? 600 : 400, fontSize: 13, cursor: "pointer", marginBottom: -2,
       display: "flex", alignItems: "center", gap: 6, fontFamily: "inherit",
@@ -168,7 +168,7 @@ function NavLink({ label, count, active, onClick }: { label: string; count: numb
     <button type="button" onClick={onClick} style={{
       display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%",
       padding: "6px 12px", border: "none",
-      borderLeft: active ? "2px solid var(--border-focus)" : "2px solid transparent",
+      borderLeft: active ? "2px solid var(--border-focused)" : "2px solid transparent",
       background: active ? "var(--background-selected-subtlest-default)" : "transparent",
       color: active ? "var(--text-selected)" : "var(--text-subtle)",
       fontWeight: active ? 600 : 400, fontSize: 13, cursor: "pointer", fontFamily: "inherit", textAlign: "left", borderRadius: 0,
@@ -195,7 +195,7 @@ function TokenRow({ token, computedValue, copiedField, onCopy }: {
   return (
     <div style={{
       display: "grid", gridTemplateColumns: "32px 1fr auto", alignItems: "center", gap: 10,
-      padding: "6px 10px", border: `1px solid ${isAnyCopied ? "var(--border-focus)" : "transparent"}`,
+      padding: "6px 10px", border: `1px solid ${isAnyCopied ? "var(--border-focused)" : "transparent"}`,
       borderRadius: 6, background: isAnyCopied ? "var(--background-selected-subtlest-default)" : "transparent",
       width: "100%", textAlign: "left", transition: "background 0.1s, border-color 0.1s",
     }}>
@@ -229,7 +229,7 @@ function ColorSwatch({ token: t, copiedField, onCopy }: {
   const isCopiedValue = copiedField?.name === t.name && copiedField.field === "value";
   const isAnyCopied = isCopiedVar || isCopiedValue;
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "6px 2px", border: `1.5px solid ${isAnyCopied ? "var(--border-focus)" : "transparent"}`, borderRadius: 6 }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "6px 2px", border: `1.5px solid ${isAnyCopied ? "var(--border-focused)" : "transparent"}`, borderRadius: 6 }}>
       <span style={{ width: 40, height: 40, borderRadius: 6, background: `var(${t.name}, ${t.light})`, border: "1px solid var(--border-default)", display: "block" }} />
       <button type="button" onClick={() => onCopy(t.name, "var", `var(${t.name})`)} title={`Copier var(${t.name})`}
         style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 10, fontFamily: "monospace", color: isCopiedVar ? "var(--text-selected)" : "var(--text-subtlest)" }}>
@@ -430,7 +430,7 @@ function CodeTab(): ReactElement {
 Exemples :
   --background-brand-bold-default
   --text-default
-  --border-focus
+  --border-focused
   --icon-subtle
   --shadow-key-2
   --radius050          (primitif : 4px)

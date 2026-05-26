@@ -176,7 +176,7 @@
 
 .outlined.brand {
   background: transparent;
-  border-color: var(--border-brand);
+  border-color: var(--border-brand-bold);
   color: var(--text-brand);
 }
 .outlined.brand.interactive:hover { background: var(--background-brand-subtlest-hovered); }

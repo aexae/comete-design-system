@@ -52,7 +52,7 @@
 .bold.color-neutral     { background-color: var(--background-neutral-bold-default); }
 
 /* ---- brand ---- */
-.outlined.color-brand { border-color: var(--border-brand); }
+.outlined.color-brand { border-color: var(--border-brand-bold); }
 .subtle.color-brand   { background-color: var(--background-brand-subtlest-default); }
 .bold.color-brand     { background-color: var(--background-brand-bold-default); }
 

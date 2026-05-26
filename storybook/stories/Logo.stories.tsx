@@ -535,7 +535,7 @@ function LogoCard({
     gap: 8,
     padding: "16px 8px 10px",
     borderRadius: 10,
-    border: `1.5px solid ${isCopied ? "var(--border-focus)" : "transparent"}`,
+    border: `1.5px solid ${isCopied ? "var(--border-focused)" : "transparent"}`,
     background: isInverse
       ? "var(--background-default-inverted)"
       : isCopied
@@ -683,7 +683,7 @@ function LogoExplorer(): ReactElement {
     background: active
       ? "var(--background-selected-subtlest-default)"
       : "var(--background-default-default)",
-    borderColor: active ? "var(--border-focus)" : "var(--border-default)",
+    borderColor: active ? "var(--border-focused)" : "var(--border-default)",
     color: active ? "var(--text-selected)" : "var(--text-default)",
     fontWeight: active ? 600 : 400,
     cursor: "pointer",

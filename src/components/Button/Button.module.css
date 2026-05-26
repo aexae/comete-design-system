@@ -38,7 +38,7 @@
 
 /* Focus visible --------------------------------------------------------- */
 .button[data-focus-visible] {
-  outline: 2px solid var(--border-focus);
+  outline: 2px solid var(--border-focused);
   outline-offset: 2px;
 }
 
@@ -254,7 +254,7 @@
 }
 
 .outlined.brand {
-  border-color: var(--border-brand);
+  border-color: var(--border-brand-bold);
   color: var(--text-brand);
 }
 .outlined.brand:not([data-disabled])[data-hovered] {

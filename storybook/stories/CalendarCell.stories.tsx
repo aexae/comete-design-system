@@ -194,7 +194,7 @@ export const AllStates: StoryObj = {
 
       <CellPreview
         label="Plage — début"
-        background="var(--border-brand)"
+        background="var(--border-brand-bold)"
         borderRadius="var(--radius0375) 0 0 var(--radius0375)"
         color="var(--text-inverted)"
       />
@@ -208,14 +208,14 @@ export const AllStates: StoryObj = {
 
       <CellPreview
         label="Plage — fin"
-        background="var(--border-brand)"
+        background="var(--border-brand-bold)"
         borderRadius="0 var(--radius0375) var(--radius0375) 0"
         color="var(--text-inverted)"
       />
 
       <CellPreview
         label="Plage — seule"
-        background="var(--border-brand)"
+        background="var(--border-brand-bold)"
         color="var(--text-inverted)"
       />
 

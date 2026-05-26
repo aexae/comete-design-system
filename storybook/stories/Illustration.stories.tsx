@@ -134,7 +134,7 @@ function IllustrationCard({
         alignItems: "center",
         gap: 8,
         padding: 16,
-        border: `1.5px solid ${isCopied ? "var(--border-focus)" : "transparent"}`,
+        border: `1.5px solid ${isCopied ? "var(--border-focused)" : "transparent"}`,
         borderRadius: 12,
         background: isCopied
           ? "var(--background-selected-subtlest-default)"

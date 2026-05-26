@@ -129,7 +129,7 @@ button.cell:active:not([data-disabled]) {
 
 /* Plage — début */
 .cell[data-selection-start]:not([data-selection-end]) {
-  background-color: var(--border-brand);
+  background-color: var(--border-brand-bold);
   border-radius: var(--radius0375) 0 0 var(--radius0375);
 }
 
@@ -139,7 +139,7 @@ button.cell:active:not([data-disabled]) {
 
 /* Plage — fin */
 .cell[data-selection-end]:not([data-selection-start]) {
-  background-color: var(--border-brand);
+  background-color: var(--border-brand-bold);
   border-radius: 0 var(--radius0375) var(--radius0375) 0;
 }
 
@@ -149,7 +149,7 @@ button.cell:active:not([data-disabled]) {
 
 /* Plage — unique (start = end) */
 .cell[data-selection-start][data-selection-end] {
-  background-color: var(--border-brand);
+  background-color: var(--border-brand-bold);
   border-radius: var(--radius0375);
 }
 
