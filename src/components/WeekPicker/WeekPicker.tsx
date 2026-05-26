@@ -477,7 +477,7 @@ function SingleWeekPicker({
                 <Button
                   appearance="subtle"
                   spacing="none"
-                  iconBefore="CloseSmallFaded"
+                  iconBefore="CloseSmall"
                   className={styles.calendarButton}
                   isDisabled={isDisabled}
                   aria-label="Effacer"
@@ -851,7 +851,7 @@ function RangeWeekPicker({
                 <Button
                   appearance="subtle"
                   spacing="none"
-                  iconBefore="CloseSmallFaded"
+                  iconBefore="CloseSmall"
                   className={styles.calendarButton}
                   isDisabled={isDisabled}
                   aria-label="Effacer"

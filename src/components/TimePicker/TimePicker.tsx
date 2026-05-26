@@ -360,7 +360,7 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
                   <Button
                     appearance="subtle"
                     spacing="none"
-                    iconBefore="CloseSmallFaded"
+                    iconBefore="CloseSmall"
                     className={styles.clockButton}
                     isDisabled={isDisabled}
                     aria-label="Effacer"

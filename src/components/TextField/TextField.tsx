@@ -164,7 +164,7 @@ export function TextField({
               onPress={handleClear}
               excludeFromTabOrder
             >
-              <Icon icon="CloseSmallFaded" color="subtlest" />
+              <Icon icon="CloseSmall" color="subtlest" />
             </AriaButton>
           )}
           {elemAfter && <span className={styles.elemAfter}>{elemAfter}</span>}

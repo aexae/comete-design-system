@@ -282,7 +282,7 @@ export function DrawerHeader({
       {onClose && (
         <Button
           appearance="subtle"
-          iconBefore="CloseSmallFaded"
+          iconBefore="CloseSmall"
           aria-label="Fermer"
           onPress={onClose}
           className={styles.closeButton}

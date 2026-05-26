@@ -127,7 +127,7 @@ export function Tag({
           aria-label={`Supprimer ${label}`}
           tabIndex={0}
         >
-          <Icon icon="CloseSmallFaded" size={12} spacing="none" />
+          <Icon icon="CloseSmall" size={12} spacing="none" />
         </button>
       )}
     </span>
