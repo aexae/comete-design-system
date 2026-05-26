@@ -288,7 +288,7 @@ function SingleYearPicker({
                 <Button
                   appearance="subtle"
                   spacing="none"
-                  iconBefore="CloseSmallFaded"
+                  iconBefore="CloseSmall"
                   className={styles.calendarButton}
                   isDisabled={isDisabled}
                   aria-label="Effacer"
@@ -638,7 +638,7 @@ function RangeYearPicker({
                 <Button
                   appearance="subtle"
                   spacing="none"
-                  iconBefore="CloseSmallFaded"
+                  iconBefore="CloseSmall"
                   className={styles.calendarButton}
                   isDisabled={isDisabled}
                   aria-label="Effacer"

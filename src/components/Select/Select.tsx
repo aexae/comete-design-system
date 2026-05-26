@@ -254,7 +254,7 @@ export function Select({
                       }
                     }}
                   >
-                    <Icon icon="CloseSmallFaded" size={16} spacing="none" />
+                    <Icon icon="CloseSmall" size={16} spacing="none" />
                   </span>
                 )}
                 <Icon
