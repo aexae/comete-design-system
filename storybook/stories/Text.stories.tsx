@@ -31,7 +31,7 @@ const meta = {
       control: "select",
       options: [
         "default", "subtle", "subtlest", "disabled", "inverted",
-        "brand", "accentPurple", "success", "information", "warning", "critical", "link",
+        "brand", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey", "success", "information", "warning", "critical", "link",
       ],
     },
     align: {
@@ -106,7 +106,8 @@ export const SizeWeightMatrix: Story = {
 };
 
 const COLOR_OPTIONS = [
-  "default", "subtle", "subtlest", "disabled", "brand", "accentPurple",
+  "default", "subtle", "subtlest", "disabled", "brand",
+  "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey",
   "success", "information", "warning", "critical", "link",
 ] as const;
 

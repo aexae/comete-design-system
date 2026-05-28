@@ -26,6 +26,10 @@ const APPEARANCES: IconTileAppearance[] = [
   "warning",
   "critical",
   "accentPurple",
+  "accentTeal",
+  "accentTurquoise",
+  "accentMagenta",
+  "accentBlueGrey",
 ];
 
 const SIZES: IconTileSize[] = ["xsmall", "small", "medium", "large"];

@@ -28,6 +28,10 @@ const meta = {
         "success",
         "warning",
         "accentPurple",
+        "accentTeal",
+        "accentTurquoise",
+        "accentMagenta",
+        "accentBlueGrey",
       ] satisfies BadgeAppearance[],
     },
     importance: {
@@ -74,7 +78,7 @@ export const LowImportance: Story = {
   },
   render: () => (
     <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-      {(["neutral", "primary", "critical", "success", "warning", "accentPurple"] as BadgeAppearance[]).map(
+      {(["neutral", "primary", "critical", "success", "warning", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey"] as BadgeAppearance[]).map(
         (appearance) => (
           <Badge key={appearance} appearance={appearance} importance="low" />
         )
@@ -118,7 +122,7 @@ export const WithCutoutBorder: Story = {
         borderRadius: 12,
       }}
     >
-      {(["neutral", "primary", "critical", "success", "warning", "accentPurple"] as BadgeAppearance[]).map(
+      {(["neutral", "primary", "critical", "success", "warning", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey"] as BadgeAppearance[]).map(
         (appearance) => (
           <Badge key={appearance} appearance={appearance} importance="high" label="99" cutoutBorder />
         )
@@ -174,6 +178,10 @@ export const AllAppearances: Story = {
           "success",
           "warning",
           "accentPurple",
+          "accentTeal",
+          "accentTurquoise",
+          "accentMagenta",
+          "accentBlueGrey",
         ] as const
       ).map((appearance) => (
         <div key={appearance} style={{ display: "flex", alignItems: "center", gap: 12 }}>

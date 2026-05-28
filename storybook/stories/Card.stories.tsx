@@ -26,7 +26,7 @@ const figmaUrl = (nodeId: string) =>
 // -----------------------------------------------------------------------
 // Constants
 
-const ALL_COLORS: CardColor[] = ["neutral", "brand", "success", "warning", "critical", "information", "accentPurple", "client"];
+const ALL_COLORS: CardColor[] = ["neutral", "brand", "success", "warning", "critical", "information", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey", "client"];
 const ALL_APPEARANCES: CardAppearance[] = ["outlined", "subtle", "bold"];
 
 // -----------------------------------------------------------------------
