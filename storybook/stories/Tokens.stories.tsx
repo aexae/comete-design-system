@@ -80,7 +80,7 @@ function getSemanticGroup(name: string): SemanticGroup | null {
 }
 
 function getPrimitiveGroup(name: string): PrimitiveGroup {
-  if (/^--(red|green|grey|white|black|purple|cool-grey|yellow|comete-blue|comete-yellow|orange|blue|lime|magenta|teal|turquoise|dark-grey|slate)/.test(name))
+  if (/^--(red|green|grey|white|black|purple|cool-grey|yellow|comete-blue|comete-yellow|orange|blue|lime|magenta|teal|turquoise|dark-grey|blue-grey)/.test(name))
     return "color";
   if (name.startsWith("--size")) return "size";
   if (name.startsWith("--space")) return "space";
