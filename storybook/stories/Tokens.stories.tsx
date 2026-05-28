@@ -137,7 +137,7 @@ function useCopy(): [
 // Styles partagés
 
 const S = {
-  page: { display: "flex", fontFamily: "var(--font-family-primary, system-ui, sans-serif)", fontSize: 13, color: "var(--text-default)", height: "100vh", overflow: "hidden", background: "var(--background-surface-default)" } satisfies CSSProperties,
+  page: { display: "flex", fontFamily: "var(--font-family-primary, system-ui, sans-serif)", fontSize: 13, color: "var(--text-default)", position: "fixed", inset: 0, overflow: "hidden", background: "var(--background-surface-default)" } satisfies CSSProperties,
   sidebar: { width: 220, flexShrink: 0, padding: "24px 0 24px 24px", borderRight: "1px solid var(--border-default)", overflowY: "auto" as const } satisfies CSSProperties,
   toolbar: { display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" as const, marginBottom: 20, padding: "12px 16px", background: "var(--background-surface-elevation-sunken-default)", borderRadius: 10, border: "1px solid var(--border-default)" } satisfies CSSProperties,
   topTabBar: { display: "flex", gap: 0, borderBottom: "2px solid var(--border-default)", marginBottom: 24 } satisfies CSSProperties,
