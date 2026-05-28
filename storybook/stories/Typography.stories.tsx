@@ -1,6 +1,6 @@
 // Foundation / Typography — styles typographiques du Comète Design System
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { CSSProperties, ReactElement } from "react";
+import { useState, type CSSProperties, type ReactElement } from "react";
 
 // -----------------------------------------------------------------------
 // Définition des styles typographiques
@@ -680,11 +680,72 @@ function FontFamilySection(): ReactElement {
 // -----------------------------------------------------------------------
 // Page principale
 
+type TypeTab = "fonts" | "hero" | "heading" | "body" | "code";
+
+const TAB_LABELS: Record<TypeTab, string> = {
+  fonts: "Polices",
+  hero: "Hero",
+  heading: "Heading",
+  body: "Body",
+  code: "Code",
+};
+
+function TypeTabButton({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }): ReactElement {
+  return (
+    <button type="button" onClick={onClick} style={{
+      padding: "8px 16px", border: "none",
+      borderBottom: active ? "2px solid var(--border-focused)" : "2px solid transparent",
+      background: "transparent", color: active ? "var(--text-selected)" : "var(--text-subtle)",
+      fontWeight: active ? 600 : 400, fontSize: 13, cursor: "pointer", marginBottom: -2,
+      fontFamily: "inherit",
+    }}>
+      {label}
+    </button>
+  );
+}
+
+function TypeGroupSection({ group }: { group: TypeGroup }): ReactElement {
+  return (
+    <div style={css.groupSection}>
+      <div style={css.groupHeader}>
+        <p style={css.groupLabel}>{group.label}</p>
+        <p style={css.groupDesc}>{group.description}</p>
+        <div
+          style={{
+            padding: "12px 16px",
+            background: "var(--background-information-subtlest-default)",
+            border: "1px solid var(--border-information-bold)",
+            borderRadius: 8,
+            display: "flex",
+            gap: 10,
+          }}
+        >
+          <span style={{ fontSize: 14 }}>ℹ</span>
+          <ul style={css.guidanceList}>
+            {group.guidance.map((g) => (
+              <li key={g} style={css.guidanceItem}>{g}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      {group.styles.map((style) => (
+        <StyleRow
+          key={style.name}
+          style={style}
+          sample={SAMPLES[group.id] ?? "Texte d'exemple"}
+          isCode={group.id === "code"}
+        />
+      ))}
+    </div>
+  );
+}
+
 function TypographyPage(): ReactElement {
+  const [activeTab, setActiveTab] = useState<TypeTab>("fonts");
+
   return (
     <div style={css.page}>
-      {/* En-tête */}
-      <div style={{ marginBottom: 48 }}>
+      <div style={{ marginBottom: 0 }}>
         <p style={{ ...css.groupLabel, margin: "0 0 8px" }}>Foundation</p>
         <h1
           style={{
@@ -699,7 +760,7 @@ function TypographyPage(): ReactElement {
         </h1>
         <p
           style={{
-            margin: 0,
+            margin: "0 0 24px",
             fontSize: 16,
             lineHeight: "24px",
             color: "var(--text-subtle)",
@@ -712,46 +773,18 @@ function TypographyPage(): ReactElement {
         </p>
       </div>
 
-      <FontFamilySection />
+      <div style={{ display: "flex", gap: 0, borderBottom: "2px solid var(--border-default)", marginBottom: 32, position: "sticky", top: 0, zIndex: 10, background: "var(--background-default-default)" }}>
+        {(Object.keys(TAB_LABELS) as TypeTab[]).map((id) => (
+          <TypeTabButton key={id} label={TAB_LABELS[id]} active={activeTab === id} onClick={() => setActiveTab(id)} />
+        ))}
+      </div>
 
-      {TYPE_GROUPS.map((group) => (
-        <div key={group.id} style={css.groupSection}>
-          <div style={css.groupHeader}>
-            <p style={css.groupLabel}>{group.label}</p>
-            <p style={css.groupDesc}>{group.description}</p>
-
-            {/* Guidance */}
-            <div
-              style={{
-                padding: "12px 16px",
-                background: "var(--background-information-subtlest-default)",
-                border: "1px solid var(--border-information-bold)",
-                borderRadius: 8,
-                display: "flex",
-                gap: 10,
-              }}
-            >
-              <span style={{ fontSize: 14 }}>ℹ</span>
-              <ul style={css.guidanceList}>
-                {group.guidance.map((g) => (
-                  <li key={g} style={css.guidanceItem}>
-                    {g}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {group.styles.map((style) => (
-            <StyleRow
-              key={style.name}
-              style={style}
-              sample={SAMPLES[group.id] ?? "Texte d'exemple"}
-              isCode={group.id === "code"}
-            />
-          ))}
-        </div>
-      ))}
+      {activeTab === "fonts" && <FontFamilySection />}
+      {activeTab !== "fonts" &&
+        TYPE_GROUPS.filter((g) => g.id === activeTab).map((group) => (
+          <TypeGroupSection key={group.id} group={group} />
+        ))
+      }
     </div>
   );
 }
