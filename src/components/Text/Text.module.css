@@ -14,7 +14,11 @@
 .color-disabled { color: var(--text-disabled); }
 .color-inverted { color: var(--text-inverted); }
 .color-brand { color: var(--text-brand); }
-.color-accent { color: var(--text-accent-purple); }
+.color-accentPurple { color: var(--text-accent-purple); }
+.color-accentTeal { color: var(--text-accent-teal); }
+.color-accentTurquoise { color: var(--text-accent-turquoise); }
+.color-accentMagenta { color: var(--text-accent-magenta); }
+.color-accentBlueGrey { color: var(--text-accent-blue-grey); }
 .color-success { color: var(--text-success); }
 .color-information { color: var(--text-information); }
 .color-warning { color: var(--text-warning); }

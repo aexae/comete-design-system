@@ -49,7 +49,7 @@ describe("Card", () => {
       expect(container.firstElementChild).toHaveClass("color-neutral");
     });
 
-    it.each(["neutral", "brand", "success", "warning", "critical", "information", "accent", "client"] as const)(
+    it.each(["neutral", "brand", "success", "warning", "critical", "information", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey", "client"] as const)(
       "should apply color-%s class",
       (color) => {
         const { container } = render(<Card color={color}>x</Card>);

@@ -1,7 +1,11 @@
 declare const styles: {
   readonly "bold": string;
   readonly "card": string;
-  readonly "color-accent": string;
+  readonly "color-accentBlueGrey": string;
+  readonly "color-accentMagenta": string;
+  readonly "color-accentPurple": string;
+  readonly "color-accentTeal": string;
+  readonly "color-accentTurquoise": string;
   readonly "color-brand": string;
   readonly "color-client": string;
   readonly "color-critical": string;

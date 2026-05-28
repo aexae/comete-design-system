@@ -2,7 +2,11 @@ declare const styles: {
   readonly "align-center": string;
   readonly "align-end": string;
   readonly "align-start": string;
-  readonly "color-accent": string;
+  readonly "color-accentBlueGrey": string;
+  readonly "color-accentMagenta": string;
+  readonly "color-accentPurple": string;
+  readonly "color-accentTeal": string;
+  readonly "color-accentTurquoise": string;
   readonly "color-brand": string;
   readonly "color-critical": string;
   readonly "color-default": string;

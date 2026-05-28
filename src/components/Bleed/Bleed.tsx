@@ -14,7 +14,11 @@ export type BleedColor =
   | "warning"
   | "critical"
   | "information"
-  | "accent"
+  | "accentPurple"
+  | "accentTeal"
+  | "accentTurquoise"
+  | "accentMagenta"
+  | "accentBlueGrey"
   | "subtlest"
   | "subtler"
   | "bold";

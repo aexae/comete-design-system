@@ -56,7 +56,11 @@
 .warning     { background-color: var(--background-warning-subtlest-default); }
 .critical    { background-color: var(--background-critical-subtlest-default); }
 .information { background-color: var(--background-information-subtlest-default); }
-.accent      { background-color: var(--background-accent-purple-subtlest-default); }
+.accentPurple    { background-color: var(--background-accent-purple-subtlest-default); }
+.accentTeal      { background-color: var(--background-accent-teal-subtlest-default); }
+.accentTurquoise { background-color: var(--background-accent-turquoise-subtlest-default); }
+.accentMagenta   { background-color: var(--background-accent-magenta-subtlest-default); }
+.accentBlueGrey  { background-color: var(--background-accent-blue-grey-subtlest-default); }
 
 /* ==========================================================================
    Bordered — bordure top + bottom avec le token de couleur associé
@@ -76,4 +80,8 @@
 .bordered.warning     { border-color: var(--border-warning-bold); }
 .bordered.critical    { border-color: var(--border-critical-bold); }
 .bordered.information { border-color: var(--border-information-bold); }
-.bordered.accent      { border-color: var(--border-accent-purple-bold); }
+.bordered.accentPurple    { border-color: var(--border-accent-purple-bold); }
+.bordered.accentTeal      { border-color: var(--border-accent-teal-bold); }
+.bordered.accentTurquoise { border-color: var(--border-accent-turquoise-bold); }
+.bordered.accentMagenta   { border-color: var(--border-accent-magenta-bold); }
+.bordered.accentBlueGrey  { border-color: var(--border-accent-blue-grey-bold); }

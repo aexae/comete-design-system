@@ -36,7 +36,7 @@ const meta = {
     isBordered: { control: "boolean" },
     color: {
       control: "select",
-      options: [undefined, "neutral", "brand", "success", "warning", "critical", "information", "accent", "subtlest", "subtler", "bold"],
+      options: [undefined, "neutral", "brand", "success", "warning", "critical", "information", "accentPurple", "subtlest", "subtler", "bold"],
     },
     inline: {
       control: "select",

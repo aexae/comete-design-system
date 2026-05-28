@@ -15,7 +15,11 @@ export type IconTileAppearance =
   | "success"
   | "warning"
   | "critical"
-  | "accent";
+  | "accentPurple"
+  | "accentTeal"
+  | "accentTurquoise"
+  | "accentMagenta"
+  | "accentBlueGrey";
 
 export type IconTileSize = "xsmall" | "small" | "medium" | "large";
 
@@ -56,7 +60,11 @@ const ICON_COLOR_MAP: Record<IconTileAppearance, string> = {
   success: "success",
   warning: "warning",
   critical: "critical",
-  accent: "accent",
+  accentPurple: "accent",
+  accentTeal: "accent",
+  accentTurquoise: "accent",
+  accentMagenta: "accent",
+  accentBlueGrey: "accent",
 };
 
 // -----------------------------------------------------------------------

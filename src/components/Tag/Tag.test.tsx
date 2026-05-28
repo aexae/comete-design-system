@@ -96,8 +96,8 @@ describe("Tag", () => {
     expect(tag.className).not.toContain("interactive");
   });
 
-  it("should support all 7 colors", () => {
-    const colors = ["neutral", "brand", "success", "warning", "critical", "information", "accent"] as const;
+  it("should support all colors", () => {
+    const colors = ["neutral", "brand", "success", "warning", "critical", "information", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey"] as const;
     for (const color of colors) {
       const { container, unmount } = render(<Tag label="X" color={color} />);
       expect(container.firstElementChild!.className).toContain(color);

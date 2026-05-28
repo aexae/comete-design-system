@@ -88,10 +88,30 @@
 .warning.medium { background-color: var(--background-warning-subtlest-default); color: var(--text-on-warning); }
 .warning.low    { background-color: var(--background-warning-bold-default); }
 
-/* — accent — */
-.accent.high   { background-color: var(--background-accent-purple-bold-default);     color: var(--text-inverted); }
-.accent.medium { background-color: var(--background-accent-purple-subtlest-default); color: var(--text-accent-purple); }
-.accent.low    { background-color: var(--background-accent-purple-bold-default); }
+/* — accentPurple — */
+.accentPurple.high   { background-color: var(--background-accent-purple-bold-default);     color: var(--text-inverted); }
+.accentPurple.medium { background-color: var(--background-accent-purple-subtlest-default); color: var(--text-accent-purple); }
+.accentPurple.low    { background-color: var(--background-accent-purple-bold-default); }
+
+/* — accentTeal — */
+.accentTeal.high   { background-color: var(--background-accent-teal-bold-default);     color: var(--text-inverted); }
+.accentTeal.medium { background-color: var(--background-accent-teal-subtlest-default); color: var(--text-accent-teal); }
+.accentTeal.low    { background-color: var(--background-accent-teal-bold-default); }
+
+/* — accentTurquoise — */
+.accentTurquoise.high   { background-color: var(--background-accent-turquoise-bold-default);     color: var(--text-inverted); }
+.accentTurquoise.medium { background-color: var(--background-accent-turquoise-subtlest-default); color: var(--text-accent-turquoise); }
+.accentTurquoise.low    { background-color: var(--background-accent-turquoise-bold-default); }
+
+/* — accentMagenta — */
+.accentMagenta.high   { background-color: var(--background-accent-magenta-bold-default);     color: var(--text-inverted); }
+.accentMagenta.medium { background-color: var(--background-accent-magenta-subtlest-default); color: var(--text-accent-magenta); }
+.accentMagenta.low    { background-color: var(--background-accent-magenta-bold-default); }
+
+/* — accentBlueGrey — */
+.accentBlueGrey.high   { background-color: var(--background-accent-blue-grey-bold-default);     color: var(--text-inverted); }
+.accentBlueGrey.medium { background-color: var(--background-accent-blue-grey-subtlest-default); color: var(--text-accent-blue-grey); }
+.accentBlueGrey.low    { background-color: var(--background-accent-blue-grey-bold-default); }
 
 /* ==========================================================================
    Disabled — placé en dernier pour surcharger tous les sélecteurs composés

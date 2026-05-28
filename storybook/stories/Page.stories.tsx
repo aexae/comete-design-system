@@ -152,7 +152,7 @@ export const WithoutToolbar: Story = {
         <Page.Body>
           <Cluster gap="200">
             <Badge label="En ligne" appearance="success" />
-            <Badge label="Admin" appearance="accent" />
+            <Badge label="Admin" appearance="accentPurple" />
           </Cluster>
         </Page.Body>
       </Page>

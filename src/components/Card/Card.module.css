@@ -85,10 +85,30 @@
 .subtle.color-information   { background-color: var(--background-information-subtlest-default); }
 .bold.color-information     { background-color: var(--background-information-bold-default); }
 
-/* ---- accent ---- */
-.outlined.color-accent { border-color: var(--border-accent-purple-bold); }
-.subtle.color-accent   { background-color: var(--background-accent-purple-subtlest-default); }
-.bold.color-accent     { background-color: var(--background-accent-purple-bold-default); }
+/* ---- accentPurple ---- */
+.outlined.color-accentPurple { border-color: var(--border-accent-purple-bold); }
+.subtle.color-accentPurple   { background-color: var(--background-accent-purple-subtlest-default); }
+.bold.color-accentPurple     { background-color: var(--background-accent-purple-bold-default); }
+
+/* ---- accentTeal ---- */
+.outlined.color-accentTeal { border-color: var(--border-accent-teal-bold); }
+.subtle.color-accentTeal   { background-color: var(--background-accent-teal-subtlest-default); }
+.bold.color-accentTeal     { background-color: var(--background-accent-teal-bold-default); }
+
+/* ---- accentTurquoise ---- */
+.outlined.color-accentTurquoise { border-color: var(--border-accent-turquoise-bold); }
+.subtle.color-accentTurquoise   { background-color: var(--background-accent-turquoise-subtlest-default); }
+.bold.color-accentTurquoise     { background-color: var(--background-accent-turquoise-bold-default); }
+
+/* ---- accentMagenta ---- */
+.outlined.color-accentMagenta { border-color: var(--border-accent-magenta-bold); }
+.subtle.color-accentMagenta   { background-color: var(--background-accent-magenta-subtlest-default); }
+.bold.color-accentMagenta     { background-color: var(--background-accent-magenta-bold-default); }
+
+/* ---- accentBlueGrey ---- */
+.outlined.color-accentBlueGrey { border-color: var(--border-accent-blue-grey-bold); }
+.subtle.color-accentBlueGrey   { background-color: var(--background-accent-blue-grey-subtlest-default); }
+.bold.color-accentBlueGrey     { background-color: var(--background-accent-blue-grey-bold-default); }
 
 /* ---- client (pas de border-client token → on utilise le bold background) ---- */
 .outlined.color-client { border-color: var(--background-client-bold-default); }
@@ -180,7 +200,11 @@
 .subtle.color-warning[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-warning-subtlest-hovered); }
 .subtle.color-critical[data-interactive]:not([data-dragging]):hover    { background-color: var(--background-critical-subtlest-hovered); }
 .subtle.color-information[data-interactive]:not([data-dragging]):hover { background-color: var(--background-information-subtlest-hovered); }
-.subtle.color-accent[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-accent-purple-subtlest-hovered); }
+.subtle.color-accentPurple[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-accent-purple-subtlest-hovered); }
+.subtle.color-accentTeal[data-interactive]:not([data-dragging]):hover       { background-color: var(--background-accent-teal-subtlest-hovered); }
+.subtle.color-accentTurquoise[data-interactive]:not([data-dragging]):hover  { background-color: var(--background-accent-turquoise-subtlest-hovered); }
+.subtle.color-accentMagenta[data-interactive]:not([data-dragging]):hover    { background-color: var(--background-accent-magenta-subtlest-hovered); }
+.subtle.color-accentBlueGrey[data-interactive]:not([data-dragging]):hover   { background-color: var(--background-accent-blue-grey-subtlest-hovered); }
 .subtle.color-client[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-client-subtlest-hovered); }
 
 /* ---- Hover background : bold ---- */
@@ -191,7 +215,11 @@
 .bold.color-warning[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-warning-bold-hovered); }
 .bold.color-critical[data-interactive]:not([data-dragging]):hover    { background-color: var(--background-critical-bold-hovered); }
 .bold.color-information[data-interactive]:not([data-dragging]):hover { background-color: var(--background-information-bold-hovered); }
-.bold.color-accent[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-accent-purple-bold-hovered); }
+.bold.color-accentPurple[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-accent-purple-bold-hovered); }
+.bold.color-accentTeal[data-interactive]:not([data-dragging]):hover       { background-color: var(--background-accent-teal-bold-hovered); }
+.bold.color-accentTurquoise[data-interactive]:not([data-dragging]):hover  { background-color: var(--background-accent-turquoise-bold-hovered); }
+.bold.color-accentMagenta[data-interactive]:not([data-dragging]):hover    { background-color: var(--background-accent-magenta-bold-hovered); }
+.bold.color-accentBlueGrey[data-interactive]:not([data-dragging]):hover   { background-color: var(--background-accent-blue-grey-bold-hovered); }
 .bold.color-client[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-client-bold-hovered); }
 
 /* ---- Pressed ---- */
@@ -211,7 +239,11 @@
 .subtle.color-warning[data-interactive]:not([data-dragging]):active     { background-color: var(--background-warning-subtlest-pressed); }
 .subtle.color-critical[data-interactive]:not([data-dragging]):active    { background-color: var(--background-critical-subtlest-pressed); }
 .subtle.color-information[data-interactive]:not([data-dragging]):active { background-color: var(--background-information-subtlest-pressed); }
-.subtle.color-accent[data-interactive]:not([data-dragging]):active      { background-color: var(--background-accent-purple-subtlest-pressed); }
+.subtle.color-accentPurple[data-interactive]:not([data-dragging]):active      { background-color: var(--background-accent-purple-subtlest-pressed); }
+.subtle.color-accentTeal[data-interactive]:not([data-dragging]):active       { background-color: var(--background-accent-teal-subtlest-pressed); }
+.subtle.color-accentTurquoise[data-interactive]:not([data-dragging]):active  { background-color: var(--background-accent-turquoise-subtlest-pressed); }
+.subtle.color-accentMagenta[data-interactive]:not([data-dragging]):active    { background-color: var(--background-accent-magenta-subtlest-pressed); }
+.subtle.color-accentBlueGrey[data-interactive]:not([data-dragging]):active   { background-color: var(--background-accent-blue-grey-subtlest-pressed); }
 .subtle.color-client[data-interactive]:not([data-dragging]):active      { background-color: var(--background-client-subtlest-pressed); }
 
 .bold.color-neutral[data-interactive]:not([data-dragging]):active     { background-color: var(--background-neutral-bold-pressed); }
@@ -220,7 +252,11 @@
 .bold.color-warning[data-interactive]:not([data-dragging]):active     { background-color: var(--background-warning-bold-pressed); }
 .bold.color-critical[data-interactive]:not([data-dragging]):active    { background-color: var(--background-critical-bold-pressed); }
 .bold.color-information[data-interactive]:not([data-dragging]):active { background-color: var(--background-information-bold-pressed); }
-.bold.color-accent[data-interactive]:not([data-dragging]):active      { background-color: var(--background-accent-purple-bold-pressed); }
+.bold.color-accentPurple[data-interactive]:not([data-dragging]):active      { background-color: var(--background-accent-purple-bold-pressed); }
+.bold.color-accentTeal[data-interactive]:not([data-dragging]):active       { background-color: var(--background-accent-teal-bold-pressed); }
+.bold.color-accentTurquoise[data-interactive]:not([data-dragging]):active  { background-color: var(--background-accent-turquoise-bold-pressed); }
+.bold.color-accentMagenta[data-interactive]:not([data-dragging]):active    { background-color: var(--background-accent-magenta-bold-pressed); }
+.bold.color-accentBlueGrey[data-interactive]:not([data-dragging]):active   { background-color: var(--background-accent-blue-grey-bold-pressed); }
 .bold.color-client[data-interactive]:not([data-dragging]):active      { background-color: var(--background-client-bold-pressed); }
 
 /* Focus visible — géré par le composant FocusRing */

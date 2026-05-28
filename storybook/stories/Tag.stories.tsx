@@ -21,7 +21,7 @@ const meta = {
   argTypes: {
     color: {
       control: "select",
-      options: ["neutral", "brand", "success", "warning", "critical", "information", "accent"],
+      options: ["neutral", "brand", "success", "warning", "critical", "information", "accentPurple"],
     },
     appearance: {
       control: "inline-radio",
@@ -66,7 +66,7 @@ export const AllColors: Story = {
       <Tag label="Warning" color="warning" />
       <Tag label="Critical" color="critical" />
       <Tag label="Information" color="information" />
-      <Tag label="Accent" color="accent" />
+      <Tag label="Accent" color="accentPurple" />
     </Cluster>
   ),
 };
@@ -188,7 +188,7 @@ export const FullMatrix: Story = {
   name: "Full matrix",
   parameters: { design: { type: "figma", url: figmaUrl("2984:15878") } },
   render: () => {
-    const colors = ["neutral", "brand", "success", "warning", "critical", "information", "accent"] as const;
+    const colors = ["neutral", "brand", "success", "warning", "critical", "information", "accentPurple"] as const;
     const appearances = ["bold", "subtle", "outlined"] as const;
     const shapes = ["square", "rounded"] as const;
     return (

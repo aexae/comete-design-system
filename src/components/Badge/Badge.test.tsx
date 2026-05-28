@@ -48,7 +48,11 @@ describe("Badge", () => {
     "critical",
     "success",
     "warning",
-    "accent",
+    "accentPurple",
+    "accentTeal",
+    "accentTurquoise",
+    "accentMagenta",
+    "accentBlueGrey",
   ] as const)("should apply appearance class '%s'", (appearance) => {
     render(<Badge appearance={appearance} label="X" />);
     expect(screen.getByText("X").className).toContain(appearance);

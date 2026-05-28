@@ -36,7 +36,11 @@ describe("SectionMessage", () => {
       "success",
       "warning",
       "critical",
-      "discovery",
+      "accentPurple",
+      "accentTeal",
+      "accentTurquoise",
+      "accentMagenta",
+      "accentBlueGrey",
     ] as const;
 
     for (const appearance of appearances) {

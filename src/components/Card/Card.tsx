@@ -24,7 +24,11 @@ export type CardColor =
   | "warning"
   | "critical"
   | "information"
-  | "accent"
+  | "accentPurple"
+  | "accentTeal"
+  | "accentTurquoise"
+  | "accentMagenta"
+  | "accentBlueGrey"
   | "client";
 
 export interface CardProps {

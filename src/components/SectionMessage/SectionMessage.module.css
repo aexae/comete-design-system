@@ -80,6 +80,22 @@
   background-color: var(--background-critical-subtlest-default);
 }
 
-.discovery {
+.accentPurple {
   background-color: var(--background-accent-purple-subtlest-default);
+}
+
+.accentTeal {
+  background-color: var(--background-accent-teal-subtlest-default);
+}
+
+.accentTurquoise {
+  background-color: var(--background-accent-turquoise-subtlest-default);
+}
+
+.accentMagenta {
+  background-color: var(--background-accent-magenta-subtlest-default);
+}
+
+.accentBlueGrey {
+  background-color: var(--background-accent-blue-grey-subtlest-default);
 }

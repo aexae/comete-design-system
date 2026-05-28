@@ -10,7 +10,11 @@ export type SectionMessageAppearance =
   | "success"
   | "warning"
   | "critical"
-  | "discovery";
+  | "accentPurple"
+  | "accentTeal"
+  | "accentTurquoise"
+  | "accentMagenta"
+  | "accentBlueGrey";
 
 export interface SectionMessageProps {
   /**
@@ -45,7 +49,11 @@ const DEFAULT_ICONS: Record<SectionMessageAppearance, IconName> = {
   success: "CheckCircle",
   warning: "Warning",
   critical: "Report",
-  discovery: "Help",
+  accentPurple: "Help",
+  accentTeal: "Help",
+  accentTurquoise: "Help",
+  accentMagenta: "Help",
+  accentBlueGrey: "Help",
 };
 
 const ICON_COLORS: Record<SectionMessageAppearance, IconComponentProps["color"]> = {
@@ -53,7 +61,11 @@ const ICON_COLORS: Record<SectionMessageAppearance, IconComponentProps["color"]>
   success: "success",
   warning: "warning",
   critical: "critical",
-  discovery: "accent",
+  accentPurple: "accent",
+  accentTeal: "accent",
+  accentTurquoise: "accent",
+  accentMagenta: "accent",
+  accentBlueGrey: "accent",
 };
 
 // ----------------------------------------------------------------------

@@ -18,7 +18,11 @@ const APPEARANCES: SectionMessageAppearance[] = [
   "success",
   "warning",
   "critical",
-  "discovery",
+  "accentPurple",
+  "accentTeal",
+  "accentTurquoise",
+  "accentMagenta",
+  "accentBlueGrey",
 ];
 
 // -----------------------------------------------------------------------
@@ -77,9 +81,9 @@ export const Critical: Story = {
   args: { appearance: "critical" },
 };
 
-export const Discovery: Story = {
+export const AccentPurple: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("2071-8328") } },
-  args: { appearance: "discovery" },
+  args: { appearance: "accentPurple" },
 };
 
 export const WithActions: Story = {

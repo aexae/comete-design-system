@@ -1,5 +1,9 @@
 declare const styles: {
-  readonly "accent": string;
+  readonly "accentBlueGrey": string;
+  readonly "accentMagenta": string;
+  readonly "accentPurple": string;
+  readonly "accentTeal": string;
+  readonly "accentTurquoise": string;
   readonly "bold": string;
   readonly "brand": string;
   readonly "critical": string;

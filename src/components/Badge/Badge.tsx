@@ -13,7 +13,11 @@ export type BadgeAppearance =
   | "critical"
   | "success"
   | "warning"
-  | "accent";
+  | "accentPurple"
+  | "accentTeal"
+  | "accentTurquoise"
+  | "accentMagenta"
+  | "accentBlueGrey";
 
 /**
  * Niveau d'importance du badge.

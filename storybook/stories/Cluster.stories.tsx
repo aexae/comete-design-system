@@ -96,7 +96,7 @@ export const JustifyEnd: Story = {
   render: (args) => (
     <Cluster {...args}>
       <Badge appearance="neutral" label="Annuler" />
-      <Badge appearance="accent" label="Confirmer" />
+      <Badge appearance="accentPurple" label="Confirmer" />
     </Cluster>
   ),
 };

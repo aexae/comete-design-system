@@ -27,7 +27,7 @@ const meta = {
         "critical",
         "success",
         "warning",
-        "accent",
+        "accentPurple",
       ] satisfies BadgeAppearance[],
     },
     importance: {
@@ -68,13 +68,13 @@ export const LowImportance: Story = {
 <Badge appearance="critical" importance="low" />
 <Badge appearance="success" importance="low" />
 <Badge appearance="warning" importance="low" />
-<Badge appearance="accent" importance="low" />`,
+<Badge appearance="accentPurple" importance="low" />`,
       },
     },
   },
   render: () => (
     <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-      {(["neutral", "primary", "critical", "success", "warning", "accent"] as BadgeAppearance[]).map(
+      {(["neutral", "primary", "critical", "success", "warning", "accentPurple"] as BadgeAppearance[]).map(
         (appearance) => (
           <Badge key={appearance} appearance={appearance} importance="low" />
         )
@@ -118,7 +118,7 @@ export const WithCutoutBorder: Story = {
         borderRadius: 12,
       }}
     >
-      {(["neutral", "primary", "critical", "success", "warning", "accent"] as BadgeAppearance[]).map(
+      {(["neutral", "primary", "critical", "success", "warning", "accentPurple"] as BadgeAppearance[]).map(
         (appearance) => (
           <Badge key={appearance} appearance={appearance} importance="high" label="99" cutoutBorder />
         )
@@ -159,7 +159,7 @@ export const AllAppearances: Story = {
 <Badge appearance="neutral" importance="low" />
 
 // Autres appearances disponibles :
-// "primary" | "primary-inverted" | "critical" | "success" | "warning" | "accent"`,
+// "primary" | "primary-inverted" | "critical" | "success" | "warning" | "accentPurple"`,
       },
     },
   },
@@ -173,7 +173,7 @@ export const AllAppearances: Story = {
           "critical",
           "success",
           "warning",
-          "accent",
+          "accentPurple",
         ] as const
       ).map((appearance) => (
         <div key={appearance} style={{ display: "flex", alignItems: "center", gap: 12 }}>

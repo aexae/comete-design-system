@@ -15,7 +15,11 @@ export type TagColor =
   | "warning"
   | "critical"
   | "information"
-  | "accent";
+  | "accentPurple"
+  | "accentTeal"
+  | "accentTurquoise"
+  | "accentMagenta"
+  | "accentBlueGrey";
 
 export type TagAppearance = "bold" | "subtle" | "outlined";
 

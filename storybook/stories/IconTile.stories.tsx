@@ -25,7 +25,7 @@ const APPEARANCES: IconTileAppearance[] = [
   "success",
   "warning",
   "critical",
-  "accent",
+  "accentPurple",
 ];
 
 const SIZES: IconTileSize[] = ["xsmall", "small", "medium", "large"];
