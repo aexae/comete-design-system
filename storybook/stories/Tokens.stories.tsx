@@ -137,8 +137,8 @@ function useCopy(): [
 // Styles partagés
 
 const S = {
-  page: { display: "flex", fontFamily: "var(--font-family-primary, system-ui, sans-serif)", fontSize: 13, color: "var(--text-default)", minHeight: "100vh", background: "var(--background-surface-default)" } satisfies CSSProperties,
-  sidebar: { position: "sticky" as const, top: 0, alignSelf: "flex-start", width: 220, flexShrink: 0, padding: "24px 0 24px 24px", borderRight: "1px solid var(--border-default)", overflowY: "auto" as const, maxHeight: "100vh" } satisfies CSSProperties,
+  page: { display: "flex", fontFamily: "var(--font-family-primary, system-ui, sans-serif)", fontSize: 13, color: "var(--text-default)", height: "100vh", overflow: "hidden", background: "var(--background-surface-default)" } satisfies CSSProperties,
+  sidebar: { width: 220, flexShrink: 0, padding: "24px 0 24px 24px", borderRight: "1px solid var(--border-default)", overflowY: "auto" as const } satisfies CSSProperties,
   toolbar: { display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" as const, marginBottom: 20, padding: "12px 16px", background: "var(--background-surface-elevation-sunken-default)", borderRadius: 10, border: "1px solid var(--border-default)" } satisfies CSSProperties,
   topTabBar: { display: "flex", gap: 0, borderBottom: "2px solid var(--border-default)", marginBottom: 24 } satisfies CSSProperties,
   subTabBar: { display: "flex", gap: 2, marginBottom: 20, borderBottom: "2px solid var(--border-default)" } satisfies CSSProperties,
@@ -280,7 +280,7 @@ function AllTokensTab(): ReactElement {
   const subgroups = isBackground ? [...new Set(activeTokens.map((t) => getBackgroundSubgroup(t.name)))] : null;
 
   return (
-    <div style={{ display: "flex", minHeight: "100%" }}>
+    <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
       <nav style={S.sidebar}>
         <p style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em", color: "var(--text-subtlest)", margin: "0 0 8px 12px" }}>Thématiques</p>
         {SEMANTIC_GROUPS.map((g) => (
@@ -294,7 +294,7 @@ function AllTokensTab(): ReactElement {
         })}
       </nav>
 
-      <div style={{ flex: 1, minWidth: 0, padding: 24 }}>
+      <div style={{ flex: 1, minWidth: 0, padding: 24, overflowY: "auto" }}>
         <div style={S.toolbar}>
           <input type="search" placeholder="Rechercher un token…" value={search} onChange={(e) => setSearch(e.target.value)}
             style={{ flex: "1 1 240px", padding: "6px 10px", border: "1px solid var(--border-default)", borderRadius: 6, background: "var(--background-default-default)", color: "var(--text-default)", fontSize: 13, fontFamily: "inherit" }} />
@@ -562,17 +562,19 @@ function TokenExplorer(): ReactElement {
   const [mainTab, setMainTab] = useState<MainTab>("all-tokens");
   return (
     <div style={S.page}>
-      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        <div style={{ ...S.topTabBar, position: "sticky", top: 0, zIndex: 10, background: "var(--background-surface-default)", paddingLeft: 24 }}>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        <div style={{ ...S.topTabBar, flexShrink: 0, zIndex: 10, background: "var(--background-surface-default)", paddingLeft: 24 }}>
           <Tab label={`All tokens (${ALL_TOKENS.length})`} active={mainTab === "all-tokens"} onClick={() => setMainTab("all-tokens")} />
           <Tab label="Code" active={mainTab === "code"} onClick={() => setMainTab("code")} />
           <Tab label="Examples" active={mainTab === "examples"} onClick={() => setMainTab("examples")} />
           <Tab label="Changelog" active={mainTab === "changelog"} onClick={() => setMainTab("changelog")} />
         </div>
-        {mainTab === "all-tokens" && <AllTokensTab />}
-        {mainTab === "code" && <CodeTab />}
-        {mainTab === "examples" && <ExamplesTab />}
-        {mainTab === "changelog" && <ChangelogTab />}
+        <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+          {mainTab === "all-tokens" && <AllTokensTab />}
+          {mainTab === "code" && <div style={{ overflowY: "auto", flex: 1 }}><CodeTab /></div>}
+          {mainTab === "examples" && <div style={{ overflowY: "auto", flex: 1 }}><ExamplesTab /></div>}
+          {mainTab === "changelog" && <div style={{ overflowY: "auto", flex: 1 }}><ChangelogTab /></div>}
+        </div>
       </div>
     </div>
   );
