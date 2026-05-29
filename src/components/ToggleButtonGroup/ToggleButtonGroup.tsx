@@ -1,7 +1,7 @@
 // ToggleButtonGroup — Comete Design System
 // Groupe de boutons toggle avec selection unique ou multiple.
 // Basé sur React Aria ToggleButtonGroup + ToggleButton.
-import type { ReactElement, ReactNode } from "react";
+import { createContext, useContext, type ReactElement, type ReactNode } from "react";
 import {
   ToggleButtonGroup as AriaToggleButtonGroup,
   ToggleButton as AriaToggleButton,
@@ -21,6 +21,14 @@ import styles from "./ToggleButtonGroup.module.css";
 /** Mode de selection du groupe. */
 export type ToggleButtonGroupSelectionMode = "single" | "multiple";
 
+/** Taille des boutons du groupe. */
+export type ToggleButtonGroupSize = "small" | "medium" | "large";
+
+// -----------------------------------------------------------------------
+// Contexte interne pour transmettre la taille aux ToggleButton enfants
+
+const SizeContext = createContext<ToggleButtonGroupSize>("medium");
+
 export interface ToggleButtonGroupProps
   extends Omit<
     AriaToggleButtonGroupProps,
@@ -28,6 +36,8 @@ export interface ToggleButtonGroupProps
   > {
   /** Mode de selection : "single" (defaut) ou "multiple". */
   selectionMode?: ToggleButtonGroupSelectionMode;
+  /** Taille des boutons : "small", "medium" (defaut) ou "large". */
+  size?: ToggleButtonGroupSize;
   /** Cles selectionnees (mode controle). */
   selectedKeys?: Iterable<string>;
   /** Cles selectionnees par defaut (mode non controle). */
@@ -88,6 +98,7 @@ export function ToggleButtonGroup({
   className,
   children,
   selectionMode = "single",
+  size = "medium",
   ...ariaProps
 }: ToggleButtonGroupProps): ReactElement {
   const classNames = [styles.group, className].filter(Boolean).join(" ");
@@ -97,7 +108,7 @@ export function ToggleButtonGroup({
       selectionMode={selectionMode}
       className={classNames}
     >
-      {children}
+      <SizeContext.Provider value={size}>{children}</SizeContext.Provider>
     </AriaToggleButtonGroup>
   );
 }
@@ -113,6 +124,13 @@ ToggleButtonGroup.displayName = "ToggleButtonGroup";
  * Bouton individuel au sein d'un `ToggleButtonGroup`.
  * Supporte les icones avant/apres et l'etat desactive.
  */
+/** Taille d'icone par taille de bouton. */
+const ICON_SIZE: Record<ToggleButtonGroupSize, 16 | 20> = {
+  small: 16,
+  medium: 20,
+  large: 20,
+};
+
 export function ToggleButton({
   children,
   iconBefore,
@@ -122,10 +140,15 @@ export function ToggleButton({
   style,
   ...ariaProps
 }: ToggleButtonProps): ReactElement {
+  const size = useContext(SizeContext);
+  const iconSize = ICON_SIZE[size];
+
   return (
     <AriaToggleButton
       {...ariaProps}
-      className={[styles.item, className].filter(Boolean).join(" ")}
+      className={[styles.item, styles[size], className]
+        .filter(Boolean)
+        .join(" ")}
       style={style}
     >
       {({ isSelected, isDisabled, isFocusVisible }) => {
@@ -140,7 +163,7 @@ export function ToggleButton({
             {iconBefore && (
               <Icon
                 icon={iconBefore}
-                size={20}
+                size={iconSize}
                 appearance="outlined"
                 color={iconColor}
               />
@@ -159,7 +182,7 @@ export function ToggleButton({
             {iconAfter && (
               <Icon
                 icon={iconAfter}
-                size={20}
+                size={iconSize}
                 appearance="outlined"
                 color={iconColor}
               />
