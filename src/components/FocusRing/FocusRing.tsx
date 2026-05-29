@@ -95,7 +95,7 @@ export function FocusRing({
   const style: CSSProperties = {
     borderRadius: radius,
     ...(position === "outside" ? { "--focus-ring-offset": OFFSET_MAP[offset] } : {}),
-  } as CSSProperties;
+  };
 
   return (
     <span

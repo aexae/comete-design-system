@@ -174,11 +174,11 @@ export function WeekGrid({
   className,
   "aria-label": ariaLabel,
 }: WeekGridProps): ReactElement {
-  const todayDate = today(getLocalTimeZone()) as unknown as CalendarDate;
+  const todayDate = today(getLocalTimeZone());
   const initialMonth = value?.start ?? defaultValue?.start ?? todayDate;
 
   const [displayedMonth, setDisplayedMonth] = useState<CalendarDate>(
-    startOfMonth(initialMonth) as unknown as CalendarDate
+    startOfMonth(initialMonth)
   );
 
   // Niveau d'affichage : "week" = grille de semaines, "month" = MonthCalendar drill-up.
@@ -267,7 +267,7 @@ export function WeekGrid({
 
   // Drill-down depuis le sélecteur de mois.
   const handleMonthSelect = (month: CalendarDate) => {
-    setDisplayedMonth(startOfMonth(month) as unknown as CalendarDate);
+    setDisplayedMonth(startOfMonth(month));
     setDrillLevel("week");
   };
 
@@ -505,14 +505,14 @@ export function DualWeekGrid({
   // NOTE: mode est ignoré — DualWeekGrid est toujours en mode "period".
   mode: _mode,
 }: WeekGridProps): ReactElement {
-  const todayDate = today(getLocalTimeZone()) as unknown as CalendarDate;
+  const todayDate = today(getLocalTimeZone());
   const initialMonth = value?.start ?? defaultValue?.start ?? todayDate;
 
   const [leftMonth, setLeftMonth] = useState<CalendarDate>(
-    startOfMonth(initialMonth) as unknown as CalendarDate
+    startOfMonth(initialMonth)
   );
   // Le panel droit affiche toujours le mois suivant le panel gauche.
-  const rightMonth = leftMonth.add({ months: 1 }) as unknown as CalendarDate;
+  const rightMonth = leftMonth.add({ months: 1 });
 
   // Niveau d'affichage : "week" = grilles de semaines, "month" = MonthCalendar drill-up (simple).
   const [drillLevel, setDrillLevel] = useState<"week" | "month">("week");
@@ -581,8 +581,8 @@ export function DualWeekGrid({
   // - panel droit  → rightMonth = sélection, leftMonth = sélection - 1
   const handleMonthSelect = (month: CalendarDate) => {
     const newLeft = drilledPanel === "right"
-      ? startOfMonth(month.subtract({ months: 1 })) as unknown as CalendarDate
-      : startOfMonth(month) as unknown as CalendarDate;
+      ? startOfMonth(month.subtract({ months: 1 }))
+      : startOfMonth(month);
     setLeftMonth(newLeft);
     setDrillLevel("week");
   };

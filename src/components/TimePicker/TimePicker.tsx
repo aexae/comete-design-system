@@ -201,7 +201,7 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
   // Sync si la valeur contrôlée change depuis l'extérieur
   useEffect(() => {
     if (ariaProps.value !== undefined) {
-      setCurrentValue(ariaProps.value as TimeValue);
+      setCurrentValue(ariaProps.value);
     }
   }, [ariaProps.value]);
 
@@ -313,7 +313,7 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
       className={[styles.timePicker, className].filter(Boolean).join(" ")}
       style={style}
       granularity={showSeconds ? "second" : "minute"}
-      {...(ariaProps as AriaTimeFieldProps<T> & { shouldForceLeadingZeros?: boolean })}
+      {...(ariaProps)}
       shouldForceLeadingZeros
       value={currentValue as T | null}
       defaultValue={undefined}

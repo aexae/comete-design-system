@@ -92,7 +92,7 @@ function renderCalendar(args: Args, extra?: Record<string, unknown>) {
   return (
     <Calendar
       key={`${appearance}-${isRange}-${calendars}`}
-      {...(props as Parameters<typeof Calendar>[0])}
+      {...(props)}
     />
   );
 }
@@ -220,7 +220,7 @@ function RangeControlledInner({
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <Calendar {...(calProps as Parameters<typeof Calendar>[0])} />
+      <Calendar {...(calProps)} />
       <p style={{ fontFamily: "monospace", fontSize: 13 }}>
         {formatRange(appearance, range)}
       </p>
@@ -259,7 +259,7 @@ function SingleControlledInner({
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <Calendar {...(calProps as Parameters<typeof Calendar>[0])} />
+      <Calendar {...(calProps)} />
       <p style={{ fontFamily: "monospace", fontSize: 13 }}>
         Sélectionné : {formatSingle(appearance, value)}
       </p>

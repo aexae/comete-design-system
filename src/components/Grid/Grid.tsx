@@ -78,7 +78,7 @@ function responsiveVars(
   } else {
     vars[`--_${prefix}-mobile`] = value;
   }
-  return vars as CSSProperties;
+  return vars;
 }
 
 // -----------------------------------------------------------------------
@@ -151,7 +151,7 @@ function GridCol({
     ...responsiveVars("col-span", span),
     ...responsiveVars("col-start", start),
     ...styleProp,
-  } as CSSProperties;
+  };
 
   const hasStart = start !== undefined;
   const classNames = [
