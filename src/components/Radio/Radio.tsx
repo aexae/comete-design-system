@@ -96,7 +96,41 @@ export function Radio({
         <>
           <span className={styles.indicator}>
             <span className={styles.iconWrapper}>
-              <span className={styles.icon}></span>
+              {/* SVG plutôt que `border` + dot CSS : garantit un cercle
+                  parfaitement rond à n'importe quel niveau de zoom (les
+                  arcs CSS sont rasterisés en polygones, le stroke SVG est
+                  un vrai arc à toute échelle). */}
+              <svg
+                className={styles.svg}
+                width="14"
+                height="14"
+                viewBox="0 0 14 14"
+                fill="none"
+                shapeRendering="geometricPrecision"
+                aria-hidden="true"
+              >
+                {/* Anneau : r=6 + strokeWidth=2 → stroke de radius 5 à 7,
+                    soit un anneau visible de 14px de diamètre dont le bord
+                    extérieur touche la viewBox. */}
+                <circle
+                  cx="7"
+                  cy="7"
+                  r="6"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+                {/* Dot intérieur : r=3 → diamètre 6px, 2px de gap entre
+                    le bord du dot (r=3) et le bord intérieur de l'anneau
+                    (r=5). Scale(0/1) animé via CSS, transform-origin
+                    center pour scaler depuis le centre. */}
+                <circle
+                  className={styles.dot}
+                  cx="7"
+                  cy="7"
+                  r="3"
+                  fill="currentColor"
+                />
+              </svg>
               {isFocusVisible && (
                 <FocusRing borderRadius="round" position="outside" offset={1} />
               )}

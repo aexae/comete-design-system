@@ -45,10 +45,11 @@
    Le dot checked est `::after` en `currentColor`.
    ========================================================================== */
 
-/* L'indicateur fait 24×24 (taille Figma). Le halo MUI-ripple est un ::before
-   de 26×26 (`inset: -1px` → 1px de débordement de chaque côté), centré sur
-   l'iconWrapper visible 20×20. Halo discret mais légèrement plus généreux
-   que le strict bord de l'indicateur. */
+/* L'indicateur fait 24×24 (zone cliquable / target tap WCAG). Le cercle
+   visible (iconWrapper) fait 14×14 conformément à Figma. Le halo MUI-ripple
+   est un ::before de 26×26 (`inset: -1px` sur l'indicateur 24×24), centré
+   sur l'iconWrapper — il déborde légèrement de l'indicateur pour offrir une
+   zone de hover généreuse autour du cercle 14×14. */
 .indicator {
   flex-shrink: 0;
   position: relative;
@@ -73,31 +74,40 @@
   pointer-events: none;
 }
 
+/* Wrapper du SVG — 14×14, sert d'ancre `position: relative` pour le
+   FocusRing en `position: outside` (qui se positionne autour de cet
+   élément). Le cercle visible est tracé par le SVG, pas par CSS. */
 .iconWrapper {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--size200);
-  height: var(--size200);
-  border: var(--size025) solid currentColor;
-  border-radius: var(--radius-round);
+  width: var(--size175);
+  height: var(--size175);
 }
 
-/* Dot intérieur — invisible par défaut (scale 0), apparaît quand sélectionné.
-   `currentColor` hérité du `.indicator` → suit la couleur d'état (information,
-   critical, disabled). */
-.icon {
-  width: var(--size100);
-  height: var(--size100);
-  border-radius: var(--radius-round);
-  background-color: currentColor;
+/* SVG du radio — remplit le wrapper. Le `stroke` du cercle externe et le
+   `fill` du dot interne héritent de `currentColor`, lui-même piloté par
+   `color` sur `.indicator` (gère neutral / information / critical /
+   disabled selon l'état).
+   `overflow: visible` indispensable : le cercle anneau (r=6 + strokeWidth=2)
+   a son bord extérieur exactement à la limite de la viewBox 14×14. Sans
+   overflow visible, l'antialiasing du stroke est clippé aux 4 cardinales,
+   ce qui donne un effet de cercle « cassé » au rendu. */
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Dot intérieur (cercle SVG `cx=7 cy=7 r=3` = diamètre 6px).
+   Invisible par défaut (scale 0), animé à scale(1) quand sélectionné.
+   `transform-origin: center` pour scaler depuis le centre du SVG. */
+.dot {
+  transform-origin: center;
   transform: scale(0);
   transition: transform var(--duration-fast) var(--easing-default);
 }
 
-/* Selected — le dot apparaît */
-.radio[data-selected] .icon {
+.radio[data-selected] .dot {
   transform: scale(1);
 }
 
@@ -165,9 +175,15 @@
 }
 
 /* ==========================================================================
-   Focus visible — pas d'override de .indicator : le FocusRing (halo bleu)
-   signale le focus. L'indicateur garde sa couleur d'état.
+   Focus visible — l'anneau du radio passe en `information-bold` (bleu)
+   indépendamment de l'état (override invalid → blue). Le FocusRing externe
+   ajoute le halo d'accessibilité par-dessus. Conforme à la matrice Figma
+   `<RadioIcon>` (node 3704:73891).
    ========================================================================== */
+
+.radio[data-focus-visible]:not([data-disabled]) .indicator {
+  color: var(--background-information-bold-default);
+}
 
 /* ==========================================================================
    Disabled — priorité maximale, déclaré en dernier
