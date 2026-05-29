@@ -475,7 +475,7 @@ function StyleRow({ style, sample, isCode }: { style: TypeStyle; sample: string;
   const textStyle: CSSProperties = {
     fontSize: `var(${style.fontSizeToken}, ${style.fontSize})`,
     lineHeight: `var(${style.lineHeightToken}, ${style.lineHeight})`,
-    fontWeight: `var(${style.fontWeightToken}, ${style.fontWeight})` as CSSProperties["fontWeight"],
+    fontWeight: `var(${style.fontWeightToken}, ${style.fontWeight})`,
     letterSpacing: style.letterSpacingToken
       ? `var(${style.letterSpacingToken}, ${style.letterSpacing ?? "0"})`
       : undefined,

@@ -88,7 +88,7 @@ export function InputContainer({
       e.preventDefault();
 
       if (onContainerClick) {
-        onContainerClick(e as unknown as MouseEvent<HTMLDivElement>);
+        onContainerClick(e);
       } else {
         // Comportement par défaut : focus le premier élément focusable
         const focusable = containerRef.current?.querySelector<HTMLElement>(

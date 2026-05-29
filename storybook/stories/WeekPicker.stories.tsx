@@ -292,7 +292,7 @@ export const Range: Story = {
     startYear: 2025,
     endWeek: 32,
     endYear: 2025,
-  } as never,
+  },
 };
 
 /** Toutes les apparences. */

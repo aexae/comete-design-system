@@ -292,7 +292,7 @@ export const Range: Story = {
     startYear: 2025,
     endMonth: 11,
     endYear: 2025,
-  } as never,
+  },
   parameters: {
     design: { type: "figma", url: figmaUrl("4189:17716") },
   },

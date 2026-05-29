@@ -60,8 +60,8 @@ function weekRange(
   // NOTE: startOfWeek/endOfWeek retournent AnyCalendarDate ; le cast est sûr
   // car l'entrée est un CalendarDate (calendrier grégorien proleptic).
   return {
-    start: startOfWeek(date, locale) as unknown as CalendarDate,
-    end: endOfWeek(date, locale) as unknown as CalendarDate,
+    start: startOfWeek(date, locale),
+    end: endOfWeek(date, locale),
   };
 }
 

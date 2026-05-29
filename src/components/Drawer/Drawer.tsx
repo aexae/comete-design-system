@@ -368,6 +368,6 @@ function buildPushStyle(
   const values = pusherSizes.map(resolveSizeValue);
   const offset = values.length === 1 ? values[0] : `calc(${values.join(" + ")})`;
   // Shift the anchored edge inward by the cumulative pusher size(s)
-  return { [placement]: offset } as CSSProperties;
+  return { [placement]: offset };
 }
 

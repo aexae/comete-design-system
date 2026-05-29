@@ -201,7 +201,7 @@ function EditableDatePicker<T extends DateValue = DateValue>({
   // Sync si la valeur contrôlée change depuis l'extérieur
   useEffect(() => {
     if (ariaProps.value !== undefined) {
-      setCurrentValue(ariaProps.value as DateValue);
+      setCurrentValue(ariaProps.value);
     }
   }, [ariaProps.value]);
 
@@ -533,12 +533,12 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
   const [isOpen, setIsOpen] = useState(false);
 
   const [currentValue, setCurrentValue] = useState<RangeValue<DateValue> | null>(
-    () => (ariaProps.value ?? ariaProps.defaultValue ?? null) as RangeValue<DateValue> | null,
+    () => (ariaProps.value ?? ariaProps.defaultValue ?? null),
   );
 
   useEffect(() => {
     if (ariaProps.value !== undefined) {
-      setCurrentValue(ariaProps.value as RangeValue<DateValue>);
+      setCurrentValue(ariaProps.value);
     }
   }, [ariaProps.value]);
 

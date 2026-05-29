@@ -100,7 +100,7 @@ export function Text({
     ...(grow && { flex: 1, minWidth: 0 }),
     ...(maxLines ? { WebkitLineClamp: maxLines } : undefined),
     ...style,
-  } as CSSProperties;
+  };
 
   return (
     <Component className={classNames} style={mergedStyle} id={id}>
