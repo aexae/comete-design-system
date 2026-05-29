@@ -25,14 +25,33 @@
   align-items: center;
   justify-content: center;
   gap: var(--space050);
-  min-height: var(--size400);
-  min-width: var(--size400);
-  padding: var(--space100) var(--space150);
   border: 1px solid var(--border-default);
   border-left-width: 0;
   background: transparent;
   cursor: pointer;
   outline: none;
+}
+
+/* --------------------------------------------------------------------------
+   Sizes
+   -------------------------------------------------------------------------- */
+
+.small {
+  min-height: var(--size300);
+  min-width: var(--size300);
+  padding: var(--space050) var(--space100);
+}
+
+.medium {
+  min-height: var(--size400);
+  min-width: var(--size400);
+  padding: var(--space100) var(--space150);
+}
+
+.large {
+  min-height: var(--size500);
+  min-width: var(--size500);
+  padding: var(--space150) var(--space200);
 }
 
 /* First item: left border + left border-radius */

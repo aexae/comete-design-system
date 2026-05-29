@@ -32,6 +32,10 @@ const meta = {
       control: "select",
       options: ["single", "multiple"],
     },
+    size: {
+      control: "select",
+      options: ["small", "medium", "large"],
+    },
     isDisabled: {
       control: "boolean",
     },
@@ -51,7 +55,7 @@ export const Default: Story = {
   },
   render: (args) => (
     <ToggleButtonGroup
-      key={args.selectionMode}
+      key={`${args.selectionMode}-${args.size}`}
       {...args}
       aria-label="Options"
       defaultSelectedKeys={["option1"]}
@@ -64,7 +68,62 @@ export const Default: Story = {
   ),
   args: {
     selectionMode: "single",
+    size: "medium",
   },
+};
+
+/** Taille small. */
+export const Small: Story = {
+  render: () => (
+    <ToggleButtonGroup
+      aria-label="Options"
+      size="small"
+      defaultSelectedKeys={["a"]}
+    >
+      <ToggleButton id="a">Option A</ToggleButton>
+      <ToggleButton id="b">Option B</ToggleButton>
+      <ToggleButton id="c">Option C</ToggleButton>
+    </ToggleButtonGroup>
+  ),
+};
+
+/** Taille large. */
+export const Large: Story = {
+  render: () => (
+    <ToggleButtonGroup
+      aria-label="Options"
+      size="large"
+      defaultSelectedKeys={["a"]}
+    >
+      <ToggleButton id="a">Option A</ToggleButton>
+      <ToggleButton id="b">Option B</ToggleButton>
+      <ToggleButton id="c">Option C</ToggleButton>
+    </ToggleButtonGroup>
+  ),
+};
+
+/** Comparaison des trois tailles. */
+export const AllSizes: Story = {
+  name: "All sizes",
+  render: () => (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "flex-start" }}>
+      <ToggleButtonGroup aria-label="Small" size="small" defaultSelectedKeys={["a"]}>
+        <ToggleButton id="a">Small</ToggleButton>
+        <ToggleButton id="b">Option</ToggleButton>
+        <ToggleButton id="c">Toggle</ToggleButton>
+      </ToggleButtonGroup>
+      <ToggleButtonGroup aria-label="Medium" size="medium" defaultSelectedKeys={["a"]}>
+        <ToggleButton id="a">Medium</ToggleButton>
+        <ToggleButton id="b">Option</ToggleButton>
+        <ToggleButton id="c">Toggle</ToggleButton>
+      </ToggleButtonGroup>
+      <ToggleButtonGroup aria-label="Large" size="large" defaultSelectedKeys={["a"]}>
+        <ToggleButton id="a">Large</ToggleButton>
+        <ToggleButton id="b">Option</ToggleButton>
+        <ToggleButton id="c">Toggle</ToggleButton>
+      </ToggleButtonGroup>
+    </div>
+  ),
 };
 
 /** Avec un bouton pré-sélectionné. */

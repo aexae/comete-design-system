@@ -261,6 +261,45 @@ describe("ToggleButtonGroup", () => {
   });
 
   // -------------------------------------------------------------------
+  // Size
+  // -------------------------------------------------------------------
+
+  it("should default to medium size", () => {
+    render(
+      <ToggleButtonGroup aria-label="Options">
+        <ToggleButton id="a">A</ToggleButton>
+      </ToggleButtonGroup>,
+    );
+
+    const button = screen.getByRole("radio");
+    expect(button.className).toContain("medium");
+  });
+
+  it("should apply small size class", () => {
+    render(
+      <ToggleButtonGroup aria-label="Options" size="small">
+        <ToggleButton id="a">A</ToggleButton>
+      </ToggleButtonGroup>,
+    );
+
+    const button = screen.getByRole("radio");
+    expect(button.className).toContain("small");
+    expect(button.className).not.toContain("medium");
+  });
+
+  it("should apply large size class", () => {
+    render(
+      <ToggleButtonGroup aria-label="Options" size="large">
+        <ToggleButton id="a">A</ToggleButton>
+      </ToggleButtonGroup>,
+    );
+
+    const button = screen.getByRole("radio");
+    expect(button.className).toContain("large");
+    expect(button.className).not.toContain("medium");
+  });
+
+  // -------------------------------------------------------------------
   // Icon-only buttons
   // -------------------------------------------------------------------
 
