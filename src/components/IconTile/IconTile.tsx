@@ -58,7 +58,7 @@ const ICON_COLOR_MAP: Record<IconTileAppearance, string> = {
   brand: "brand",
   information: "information",
   success: "success",
-  warning: "warning",
+  warning: "on-warning",
   critical: "critical",
   accentPurple: "accentPurple",
   accentTeal: "accentTeal",
