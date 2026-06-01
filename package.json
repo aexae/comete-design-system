@@ -2,7 +2,7 @@
   "name": "@aexae/comete-design-system",
   "description": "Comète Design System — React Aria + CSS Modules + Design Tokens",
   "author": "aexae",
-  "version": "1.0.0-alpha.131",
+  "version": "1.0.0-alpha.132",
   "license": "MIT",
   "private": false,
   "type": "module",
@@ -46,15 +46,15 @@
   },
   "peerDependencies": {
     "@aexae/comete-design-tokens": "^0.11.0",
-    "@naxit/comete-icons": "^0.5.0",
+    "@naxit/comete-icons": "^0.6.0",
     "@naxit/comete-illustrations": "^0.1.0-alpha.3",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
+    "@aexae/comete-design-tokens": "latest",
     "@eslint/js": "^9.39.4",
     "@internationalized/date": "^3.12.0",
-    "@aexae/comete-design-tokens": "latest",
     "@naxit/comete-icons": "latest",
     "@naxit/comete-illustrations": "alpha",
     "@naxit/comete-logos": "0.12.2",

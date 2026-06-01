@@ -23,7 +23,7 @@ importers:
         version: 3.12.1
       '@naxit/comete-icons':
         specifier: latest
-        version: 0.5.0(react@19.2.6)
+        version: 0.6.0(@aexae/comete-design-tokens@0.11.2)(react@19.2.6)
       '@naxit/comete-illustrations':
         specifier: alpha
         version: 0.1.0-alpha.3(react@19.2.6)
@@ -101,10 +101,10 @@ importers:
     dependencies:
       '@aexae/comete-design-system':
         specifier: file:..
-        version: file:(@aexae/comete-design-tokens@0.11.2)(@naxit/comete-icons@0.5.0(react@19.2.6))(@naxit/comete-illustrations@0.1.0-alpha.3(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: file:(@aexae/comete-design-tokens@0.11.2)(@naxit/comete-icons@0.6.0(@aexae/comete-design-tokens@0.11.2)(react@19.2.6))(@naxit/comete-illustrations@0.1.0-alpha.3(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@naxit/comete-icons':
-        specifier: 0.5.0
-        version: 0.5.0(react@19.2.6)
+        specifier: 0.6.0
+        version: 0.6.0(@aexae/comete-design-tokens@0.11.2)(react@19.2.6)
       '@naxit/comete-logos':
         specifier: 0.12.2
         version: 0.12.2(@naxit/comete-design-tokens@0.11.2)(react@19.2.6)
@@ -204,7 +204,7 @@ packages:
     engines: {node: '>=22', pnpm: '>=10'}
     peerDependencies:
       '@aexae/comete-design-tokens': ^0.11.0
-      '@naxit/comete-icons': ^0.5.0
+      '@naxit/comete-icons': ^0.6.0
       '@naxit/comete-illustrations': ^0.1.0-alpha.3
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
@@ -672,10 +672,11 @@ packages:
     resolution: {integrity: sha512-dCudUystBngLEpWsuZnF/PLw6DOGEwE1Vl+zGMeJL/9tEkDEJagI0JGDjA2uMW4hVwq41xjMY30Ov+kXrf55Aw==, tarball: https://npm.pkg.github.com/download/@naxit/comete-design-tokens/0.11.2/ffa97003e13fba38c9b431a69cb36ddc72046dfa}
     engines: {node: '>=22'}
 
-  '@naxit/comete-icons@0.5.0':
-    resolution: {integrity: sha512-Wip6B/MvisgNfUskjVi9p3Suh50eJA4YSbBbumUGxmZyw9UG/UttNGMclQnrq3TK41+kghmwDRWx90BWdDTzqw==, tarball: https://npm.pkg.github.com/download/@naxit/comete-icons/0.5.0/58a45d41b0e700611aa3580cf03f5d9cf9916ff8}
+  '@naxit/comete-icons@0.6.0':
+    resolution: {integrity: sha512-0k9wjjVU4VHN6gTmj69Wrn0OFylPX8dNEDr46I41xhMhoWtVD2AZq1JaGO9Qh5XEeHREUe5nhh3BEeiOGMCM4w==, tarball: https://npm.pkg.github.com/download/@naxit/comete-icons/0.6.0/63b1c2c85f0fa972779b17fa0c2b5206d0249eb9}
     engines: {node: '>=22'}
     peerDependencies:
+      '@aexae/comete-design-tokens': ^0.11.0
       react: ^18.0.0 || ^19.0.0
 
   '@naxit/comete-illustrations@0.1.0-alpha.3':
@@ -3745,10 +3746,10 @@ snapshots:
 
   '@adobe/css-tools@4.5.0': {}
 
-  '@aexae/comete-design-system@file:(@aexae/comete-design-tokens@0.11.2)(@naxit/comete-icons@0.5.0(react@19.2.6))(@naxit/comete-illustrations@0.1.0-alpha.3(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+  '@aexae/comete-design-system@file:(@aexae/comete-design-tokens@0.11.2)(@naxit/comete-icons@0.6.0(@aexae/comete-design-tokens@0.11.2)(react@19.2.6))(@naxit/comete-illustrations@0.1.0-alpha.3(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
       '@aexae/comete-design-tokens': 0.11.2
-      '@naxit/comete-icons': 0.5.0(react@19.2.6)
+      '@naxit/comete-icons': 0.6.0(@aexae/comete-design-tokens@0.11.2)(react@19.2.6)
       '@naxit/comete-illustrations': 0.1.0-alpha.3(react@19.2.6)
       react: 19.2.6
       react-aria-components: 1.17.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -4191,8 +4192,9 @@ snapshots:
 
   '@naxit/comete-design-tokens@0.11.2': {}
 
-  '@naxit/comete-icons@0.5.0(react@19.2.6)':
+  '@naxit/comete-icons@0.6.0(@aexae/comete-design-tokens@0.11.2)(react@19.2.6)':
     dependencies:
+      '@aexae/comete-design-tokens': 0.11.2
       react: 19.2.6
 
   '@naxit/comete-illustrations@0.1.0-alpha.3(react@19.2.6)':

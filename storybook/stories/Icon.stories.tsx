@@ -43,6 +43,7 @@ const COLORS: IconColor[] = [
   "accentTurquoise",
   "accentMagenta",
   "accentBlueGrey",
+  "bold",
   "day",
   "night",
 ];
