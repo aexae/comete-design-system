@@ -60,11 +60,11 @@ const ICON_COLOR_MAP: Record<IconTileAppearance, string> = {
   success: "success",
   warning: "warning",
   critical: "critical",
-  accentPurple: "accent",
-  accentTeal: "accent",
-  accentTurquoise: "accent",
-  accentMagenta: "accent",
-  accentBlueGrey: "accent",
+  accentPurple: "accentPurple",
+  accentTeal: "accentTeal",
+  accentTurquoise: "accentTurquoise",
+  accentMagenta: "accentMagenta",
+  accentBlueGrey: "accentBlueGrey",
 };
 
 // -----------------------------------------------------------------------

@@ -61,11 +61,11 @@ const ICON_COLORS: Record<SectionMessageAppearance, IconComponentProps["color"]>
   success: "success",
   warning: "warning",
   critical: "critical",
-  accentPurple: "accent",
-  accentTeal: "accent",
-  accentTurquoise: "accent",
-  accentMagenta: "accent",
-  accentBlueGrey: "accent",
+  accentPurple: "accentPurple",
+  accentTeal: "accentTeal",
+  accentTurquoise: "accentTurquoise",
+  accentMagenta: "accentMagenta",
+  accentBlueGrey: "accentBlueGrey",
 };
 
 // ----------------------------------------------------------------------

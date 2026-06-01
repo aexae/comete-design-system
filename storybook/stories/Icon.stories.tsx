@@ -38,7 +38,11 @@ const COLORS: IconColor[] = [
   "warning",
   "on-warning",
   "critical",
-  "accent",
+  "accentPurple",
+  "accentTeal",
+  "accentTurquoise",
+  "accentMagenta",
+  "accentBlueGrey",
   "day",
   "night",
 ];
