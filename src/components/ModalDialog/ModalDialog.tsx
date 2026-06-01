@@ -62,7 +62,7 @@ const APPEARANCE_ICON: Record<string, IconName | undefined> = {
  * Focus trap, fermeture Escape et clic overlay via React Aria.
  *
  * ```tsx
- * import { ModalDialog, Button, ButtonGroup } from "@naxit/comete-design-system";
+ * import { ModalDialog, Button, ButtonGroup } from "@aexae/comete-design-system";
  *
  * <ModalDialog
  *   title="Confirmer la suppression"

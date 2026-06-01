@@ -1,7 +1,7 @@
 {
-  "name": "@naxit/comete-design-system",
+  "name": "@aexae/comete-design-system",
   "description": "Comète Design System — React Aria + CSS Modules + Design Tokens",
-  "author": "naxit",
+  "author": "aexae",
   "version": "1.0.0-alpha.130",
   "license": "MIT",
   "private": false,
@@ -13,7 +13,7 @@
   "packageManager": "pnpm@11.1.3+sha512.c85357fe17ca12dd23dd7071822666dfd7e3cb76fe214e3370b5ea2fb34f2a231185509b63e717f3cd0acb38dd3f8d82bcd5e8172400ae678b70ea4fbed0896d",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Naxit/comete-design-system.git"
+    "url": "git+https://github.com/aexae/comete-design-system.git"
   },
   "keywords": [
     "react",
@@ -36,7 +36,7 @@
     "build": "pnpm css-types && tsup",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:stories": "pnpm --filter @naxit/comete-design-system-storybook test",
+    "test:stories": "pnpm --filter @aexae/comete-design-system-storybook test",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint src --fix",
     "clean": "rimraf dist coverage"
@@ -45,7 +45,7 @@
     "react-aria-components": "^1.16.0"
   },
   "peerDependencies": {
-    "@naxit/comete-design-tokens": "^0.11.0",
+    "@aexae/comete-design-tokens": "^0.11.0",
     "@naxit/comete-icons": "^0.5.0",
     "@naxit/comete-illustrations": "^0.1.0-alpha.3",
     "react": "^18.0.0 || ^19.0.0",
@@ -54,7 +54,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.4",
     "@internationalized/date": "^3.12.0",
-    "@naxit/comete-design-tokens": "latest",
+    "@aexae/comete-design-tokens": "latest",
     "@naxit/comete-icons": "latest",
     "@naxit/comete-illustrations": "alpha",
     "@naxit/comete-logos": "0.12.2",

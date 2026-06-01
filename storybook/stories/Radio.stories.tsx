@@ -1,6 +1,6 @@
 // Radio — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Radio, RadioGroup } from "@naxit/comete-design-system/components";
+import { Radio, RadioGroup } from "@aexae/comete-design-system/components";
 import { expect, fn, userEvent, within } from "storybook/test";
 
 const FIGMA_FILE =

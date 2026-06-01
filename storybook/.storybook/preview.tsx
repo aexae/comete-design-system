@@ -1,6 +1,6 @@
 import { DocsContainer } from "@storybook/addon-docs/blocks";
-import { ThemeProvider } from "@naxit/comete-design-system/providers";
-import "@naxit/comete-design-tokens/css";
+import { ThemeProvider } from "@aexae/comete-design-system/providers";
+import "@aexae/comete-design-tokens/css";
 import "./preview.css";
 import type { ComponentProps } from "react";
 import { useEffect, useState } from "react";
@@ -66,7 +66,7 @@ const preview: Preview = {
       },
     },
     // WORKAROUND: "todo" au lieu de "error" — violations de contraste connues dans
-    // @naxit/comete-design-tokens (success, critical, information : ratio < 4.5:1 WCAG AA).
+    // @aexae/comete-design-tokens (success, critical, information : ratio < 4.5:1 WCAG AA).
     // Repasser à "error" une fois les tokens corrigés.
     a11y: {
       test: "todo",

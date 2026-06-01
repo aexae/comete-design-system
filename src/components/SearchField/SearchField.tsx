@@ -30,7 +30,7 @@ export interface SearchFieldProps
  * - `aria-label` "Rechercher" par défaut
  *
  * ```tsx
- * import { SearchField } from "@naxit/comete-design-system";
+ * import { SearchField } from "@aexae/comete-design-system";
  *
  * <SearchField placeholder="Rechercher un agent…" />
  * <SearchField isCompact />

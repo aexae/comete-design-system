@@ -30,14 +30,14 @@ pnpm clean
 
 ## Architecture
 
-**Comète Design System** est une librairie React publiée sur GitHub Packages (`@naxit/comete-design-system`). Elle utilise React Aria (headless accessible) + CSS Modules + design tokens.
+**Comète Design System** est une librairie React publiée sur GitHub Packages (`@aexae/comete-design-system`). Elle utilise React Aria (headless accessible) + CSS Modules + design tokens.
 
 ### Stack
 
 - **React 18/19** + **TypeScript strict** (`strict: true`, `noUncheckedIndexedAccess`, `noUnusedLocals/Parameters`)
 - **React Aria** (`react-aria-components`) — primitives accessibles headless
 - **CSS Modules** — styling scopé, 100% design tokens, zéro valeur hardcodée
-- **@naxit/comete-design-tokens** (peer dep) — CSS custom properties (primitives + semantic light/dark)
+- **@aexae/comete-design-tokens** (peer dep) — CSS custom properties (primitives + semantic light/dark)
 - **tsup** — bundler ESM uniquement, `splitting: false`. React, react-dom, react-aria-components sont externalisés
 - **Vitest** + jsdom + @testing-library/react pour les tests
 - **Storybook 10** dans `storybook/` (workspace pnpm séparé)
@@ -71,7 +71,7 @@ src/
 Le thème fonctionne via l'attribut `data-theme` sur `<html>` :
 - `ThemeProvider` expose un contexte pour switcher light/dark
 - `useTheme` retourne le mode actif et les fonctions de bascule
-- Les CSS custom properties de `@naxit/comete-design-tokens` gèrent les couleurs via `:root` (light) et `[data-theme="dark"]`
+- Les CSS custom properties de `@aexae/comete-design-tokens` gèrent les couleurs via `:root` (light) et `[data-theme="dark"]`
 
 ### Conventions composants
 
@@ -86,7 +86,7 @@ ComponentName/
 
 ### Styling
 
-- **Aucune valeur hardcodée** — tout passe par les CSS custom properties de `@naxit/comete-design-tokens`
+- **Aucune valeur hardcodée** — tout passe par les CSS custom properties de `@aexae/comete-design-tokens`
 - Les CSS Modules utilisent les data-attributes React Aria : `[data-hovered]`, `[data-pressed]`, `[data-focus-visible]`, `[data-disabled]`
 - Build : `typed-css-modules` génère les `.d.ts` pour les imports CSS Modules avant tsup
 
@@ -253,4 +253,4 @@ La PR doit inclure dans son body :
 
 ### Distribution
 
-Publication sur GitHub Packages (registry configuré dans `.npmrc`). Les apps consommatrices installent via `pnpm add @naxit/comete-design-system`.
+Publication sur GitHub Packages (registry configuré dans `.npmrc`). Les apps consommatrices installent via `pnpm add @aexae/comete-design-system`.

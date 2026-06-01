@@ -19,7 +19,7 @@ import {
   Button,
   Icon,
   Tag,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 
 // -----------------------------------------------------------------------
 // Meta

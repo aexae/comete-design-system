@@ -4,13 +4,13 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Button,
   ProgressIndicator,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 import type {
   ProgressIndicatorAppearance,
   ProgressIndicatorProps,
   ProgressIndicatorSize,
   ProgressIndicatorSpacing,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 
 // -----------------------------------------------------------------------
 // Figma

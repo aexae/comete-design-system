@@ -81,7 +81,7 @@ export interface CardProps {
  * Supporte l'interaction (onPress) et le drag-and-drop (onDrag/onDragEnd).
  *
  * ```tsx
- * import { Card } from "@naxit/comete-design-system";
+ * import { Card } from "@aexae/comete-design-system";
  *
  * <Card appearance="outlined" color="neutral">
  *   <p>Carte avec bordure</p>

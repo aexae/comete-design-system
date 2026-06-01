@@ -1,5 +1,5 @@
-import { Illustration } from "@naxit/comete-design-system";
-import type { IllustrationComponentProps, IllustrationSize } from "@naxit/comete-design-system";
+import { Illustration } from "@aexae/comete-design-system";
+import type { IllustrationComponentProps, IllustrationSize } from "@aexae/comete-design-system";
 import type { IllustrationName, IllustrationProps } from "@naxit/comete-illustrations";
 import { illustrationRegistry } from "@naxit/comete-illustrations";
 import type { Meta, StoryObj } from "@storybook/react-vite";

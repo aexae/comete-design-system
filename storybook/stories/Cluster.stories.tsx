@@ -1,6 +1,6 @@
 // Cluster — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Cluster, Badge } from "@naxit/comete-design-system/components";
+import { Cluster, Badge } from "@aexae/comete-design-system/components";
 
 // -----------------------------------------------------------------------
 // Meta

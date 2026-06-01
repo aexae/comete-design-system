@@ -51,7 +51,7 @@ export interface ClusterProps {
  * tags, chips, actions, filtres, breadcrumbs…
  *
  * ```tsx
- * import { Cluster } from "@naxit/comete-design-system";
+ * import { Cluster } from "@aexae/comete-design-system";
  *
  * <Cluster gap="100" align="center">
  *   <Badge>React</Badge>

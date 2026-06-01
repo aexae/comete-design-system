@@ -47,7 +47,7 @@ export interface IconComponentProps {
  * Wraps the SVG in a `<span>` for easy CSS positioning.
  *
  * ```tsx
- * import { Icon } from "@naxit/comete-design-system";
+ * import { Icon } from "@aexae/comete-design-system";
  *
  * <Icon icon="Check" color="success" />
  * <Icon icon="Warning" appearance="filled" size={16} aria-label="Attention" />

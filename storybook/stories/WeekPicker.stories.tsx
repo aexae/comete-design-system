@@ -1,12 +1,12 @@
 // WeekPicker — stories Storybook
 import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { WeekPicker, Field } from "@naxit/comete-design-system/components";
+import { WeekPicker, Field } from "@aexae/comete-design-system/components";
 import type {
   WeekPickerProps,
   SingleWeekPickerProps,
   RangeWeekPickerProps,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 
 // -----------------------------------------------------------------------
 // Figma

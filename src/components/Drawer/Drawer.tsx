@@ -78,7 +78,7 @@ function getSwipeSign(placement: DrawerPlacement): 1 | -1 {
  * (overlay ou push), le swipe-to-close et 4 directions.
  *
  * ```tsx
- * import { Drawer, DrawerHeader, DrawerBody, DrawerFooter } from "@naxit/comete-design-system";
+ * import { Drawer, DrawerHeader, DrawerBody, DrawerFooter } from "@aexae/comete-design-system";
  *
  * <Drawer isOpen={isOpen} onOpenChange={setIsOpen} placement="right" size="wide">
  *   <DrawerHeader onClose={() => setIsOpen(false)}>Filtres</DrawerHeader>

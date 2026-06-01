@@ -6,7 +6,7 @@ import {
   Stack,
   Text,
   type SpotlightPlacement,
-} from "@naxit/comete-design-system";
+} from "@aexae/comete-design-system";
 
 // const FIGMA_FILE =
 //   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";

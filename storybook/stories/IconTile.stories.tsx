@@ -4,12 +4,12 @@ import {
   Stack,
   Cluster,
   Text,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 import type {
   IconTileAppearance,
   IconTileSize,
   IconTileShape,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 import type { IconName } from "@naxit/comete-icons";
 import { iconRegistry } from "@naxit/comete-icons";
 

@@ -26,12 +26,12 @@ const config: StorybookConfig = {
       resolve: {
         alias: {
           "@": resolve(__dirname, "../../src"),
-          "@naxit/comete-design-system": resolve(__dirname, "../../src"),
+          "@aexae/comete-design-system": resolve(__dirname, "../../src"),
         },
         dedupe: ["react", "react-dom"],
       },
       optimizeDeps: {
-        exclude: ["@naxit/comete-design-system"],
+        exclude: ["@aexae/comete-design-system"],
         include: [
           "react-aria-components",
           "@naxit/comete-icons",

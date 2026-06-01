@@ -32,7 +32,7 @@ export interface DividerProps {
  * Basé sur `Separator` de React Aria (role="separator").
  *
  * ```tsx
- * import { Divider } from "@naxit/comete-design-system";
+ * import { Divider } from "@aexae/comete-design-system";
  *
  * // Horizontal
  * <Divider />

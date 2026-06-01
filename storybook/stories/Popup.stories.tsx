@@ -1,7 +1,7 @@
 // Popup — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Popup, Button } from "@naxit/comete-design-system/components";
-import type { PopupPlacement } from "@naxit/comete-design-system/components";
+import { Popup, Button } from "@aexae/comete-design-system/components";
+import type { PopupPlacement } from "@aexae/comete-design-system/components";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";

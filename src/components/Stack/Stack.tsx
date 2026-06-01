@@ -74,7 +74,7 @@ export interface StackProps {
  * uniforme issu des tokens `--space*`.
  *
  * ```tsx
- * import { Stack } from "@naxit/comete-design-system";
+ * import { Stack } from "@aexae/comete-design-system";
  *
  * // Empilement vertical
  * <Stack gap="200">

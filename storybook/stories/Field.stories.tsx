@@ -1,7 +1,7 @@
 // Field — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { FieldMessageType } from "@naxit/comete-design-system/components";
-import { Field, TextField } from "@naxit/comete-design-system/components";
+import type { FieldMessageType } from "@aexae/comete-design-system/components";
+import { Field, TextField } from "@aexae/comete-design-system/components";
 
 const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;

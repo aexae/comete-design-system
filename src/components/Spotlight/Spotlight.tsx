@@ -287,7 +287,7 @@ function DefaultTourActions({
  * Idéal pour l'onboarding et la découverte de fonctionnalités.
  *
  * ```tsx
- * import { Spotlight } from "@naxit/comete-design-system";
+ * import { Spotlight } from "@aexae/comete-design-system";
  *
  * const targetRef = useRef<HTMLButtonElement>(null);
  *

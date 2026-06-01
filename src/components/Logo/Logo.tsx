@@ -44,7 +44,7 @@ export interface LogoProps {
  * automatique via `[data-theme]` sur `<html>`.
  *
  * ```tsx
- * import { Logo } from "@naxit/comete-design-system";
+ * import { Logo } from "@aexae/comete-design-system";
  *
  * <Logo product="comete" />
  * <Logo product="cafe" taglineAlign="column" />

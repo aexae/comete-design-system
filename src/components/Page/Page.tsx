@@ -78,7 +78,7 @@ export interface PageBodyProps {
  * typiquement dans le slot principal d'une AppShell.
  *
  * ```tsx
- * import { Page, Button, Breadcrumbs } from "@naxit/comete-design-system";
+ * import { Page, Button, Breadcrumbs } from "@aexae/comete-design-system";
  *
  * <Page>
  *   <Page.Header

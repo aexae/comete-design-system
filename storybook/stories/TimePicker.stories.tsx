@@ -4,7 +4,7 @@ import {
   Field,
   TimePicker,
   type TimePickerAppearance,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 import { Time } from "@internationalized/date";
 import { fn } from "storybook/test";
 

@@ -78,7 +78,7 @@ const ICON_COLOR_MAP: Record<IconTileAppearance, string> = {
  * KPIs, listes, etc.).
  *
  * ```tsx
- * import { IconTile } from "@naxit/comete-design-system";
+ * import { IconTile } from "@aexae/comete-design-system";
  *
  * <IconTile icon="CalendarMonth" appearance="information" />
  * <IconTile icon="Warning" appearance="critical" shape="circle" size="large" />

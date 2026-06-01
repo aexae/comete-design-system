@@ -37,10 +37,10 @@ const reducer = (state: State, action: Action): State => {
 /**
  * ThemeProvider — gère le mode light/dark via l'attribut `data-theme`
  * sur `<html>`, ce qui active les bons tokens CSS sémantiques
- * de @naxit/comete-design-tokens.
+ * de @aexae/comete-design-tokens.
  *
  * ```tsx
- * import { ThemeProvider } from "@naxit/comete-design-system";
+ * import { ThemeProvider } from "@aexae/comete-design-system";
  *
  * <ThemeProvider mode="light">
  *   <App />

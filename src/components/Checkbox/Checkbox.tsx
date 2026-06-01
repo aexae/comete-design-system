@@ -112,7 +112,7 @@ function IconIndeterminate() {
  * Supporte la validation (isInvalid), le required et le disabled.
  *
  * ```tsx
- * import { Checkbox } from "@naxit/comete-design-system";
+ * import { Checkbox } from "@aexae/comete-design-system";
  *
  * <Checkbox label="Accepter les conditions" isRequired />
  * ```

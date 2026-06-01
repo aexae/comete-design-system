@@ -6,7 +6,7 @@ import {
   Step,
   Button,
   ButtonGroup,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 
 // Largeur du wrapper adaptée à l'orientation pour que le toggle `orientation`
 // dans les controls reste lisible : 300px en vertical (compact), 600px en

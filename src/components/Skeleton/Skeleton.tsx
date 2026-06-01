@@ -42,7 +42,7 @@ export interface SkeletonProps {
  * d'un avatar, d'un paragraphe, etc.
  *
  * ```tsx
- * import { Skeleton } from "@naxit/comete-design-system";
+ * import { Skeleton } from "@aexae/comete-design-system";
  *
  * <Skeleton width={240} height={20} />
  * <Skeleton shape="circle" width={48} />

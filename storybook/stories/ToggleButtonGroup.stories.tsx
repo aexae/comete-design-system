@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   ToggleButtonGroup,
   ToggleButton,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 
 // -----------------------------------------------------------------------
 // Figma

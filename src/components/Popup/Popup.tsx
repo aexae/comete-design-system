@@ -76,7 +76,7 @@ export interface PopupProps {
  * Positionné automatiquement via React Aria + Popover DS.
  *
  * ```tsx
- * import { Popup, Button } from "@naxit/comete-design-system";
+ * import { Popup, Button } from "@aexae/comete-design-system";
  *
  * <Popup trigger={<Button>Ouvrir</Button>} placement="bottom-left">
  *   <p>Contenu du popup</p>

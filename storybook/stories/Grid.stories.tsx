@@ -1,6 +1,6 @@
 // Grid — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Grid, Card } from "@naxit/comete-design-system/components";
+import { Grid, Card } from "@aexae/comete-design-system/components";
 
 // -----------------------------------------------------------------------
 // Meta

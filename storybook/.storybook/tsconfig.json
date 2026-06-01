@@ -3,8 +3,8 @@
   "compilerOptions": {
     "baseUrl": "../..",
     "paths": {
-      "@naxit/comete-design-system": ["./src/index.ts"],
-      "@naxit/comete-design-system/*": ["./src/*"]
+      "@aexae/comete-design-system": ["./src/index.ts"],
+      "@aexae/comete-design-system/*": ["./src/*"]
     }
   },
   "include": ["../../src/**/*", "./**/*"]

@@ -34,7 +34,7 @@ export interface ProgressBarProps {
  * à droite de la barre.
  *
  * ```tsx
- * import { ProgressBar } from "@naxit/comete-design-system";
+ * import { ProgressBar } from "@aexae/comete-design-system";
  *
  * <ProgressBar value={60} />
  * <ProgressBar value={100} showLabel={false} />

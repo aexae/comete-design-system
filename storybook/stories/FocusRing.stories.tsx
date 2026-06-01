@@ -1,8 +1,8 @@
 // FocusRing — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
-import { FocusRing } from "@naxit/comete-design-system/components";
-import type { FocusRingBorderRadius, FocusRingPosition } from "@naxit/comete-design-system/components";
+import { FocusRing } from "@aexae/comete-design-system/components";
+import type { FocusRingBorderRadius, FocusRingPosition } from "@aexae/comete-design-system/components";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";

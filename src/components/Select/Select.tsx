@@ -142,7 +142,7 @@ function SelectOptionItem({ children, ...props }: SelectOptionItemProps): ReactE
  * et InputContainer (bordure + états visuels) comme le TextField.
  *
  * ```tsx
- * import { Select } from "@naxit/comete-design-system";
+ * import { Select } from "@aexae/comete-design-system";
  *
  * <Select
  *   label="Pays"

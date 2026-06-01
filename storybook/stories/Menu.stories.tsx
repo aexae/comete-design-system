@@ -7,7 +7,7 @@ import {
   MenuPopover,
   MenuSection,
   SubmenuTrigger,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 
 // -----------------------------------------------------------------------
 // Figma

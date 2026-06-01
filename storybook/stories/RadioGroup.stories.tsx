@@ -1,7 +1,7 @@
 // RadioGroup — stories Storybook
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Radio, RadioGroup } from "@naxit/comete-design-system/components";
+import { Radio, RadioGroup } from "@aexae/comete-design-system/components";
 import { fn } from "storybook/test";
 
 const FIGMA_FILE =

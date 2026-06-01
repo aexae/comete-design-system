@@ -1,6 +1,6 @@
 // Checkbox — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Checkbox } from "@naxit/comete-design-system/components";
+import { Checkbox } from "@aexae/comete-design-system/components";
 import { expect, fn, userEvent, within } from "storybook/test";
 
 const FIGMA_FILE =

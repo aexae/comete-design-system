@@ -56,7 +56,7 @@ export interface TextProps {
  * de longueur variable. La taille par défaut est `medium` (14px).
  *
  * ```tsx
- * import { Text } from "@naxit/comete-design-system";
+ * import { Text } from "@aexae/comete-design-system";
  *
  * <Text>Paragraphe par défaut</Text>
  * <Text size="large" weight="bold">Texte accentué</Text>

@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
-import { Avatar, Button } from "@naxit/comete-design-system";
-import type { AvatarProps } from "@naxit/comete-design-system";
+import { Avatar, Button } from "@aexae/comete-design-system";
+import type { AvatarProps } from "@aexae/comete-design-system";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, userEvent, within } from "storybook/test";
 

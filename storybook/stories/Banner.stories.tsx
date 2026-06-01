@@ -1,7 +1,7 @@
 // Banner — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Banner } from "@naxit/comete-design-system/components";
-import type { BannerAppearance } from "@naxit/comete-design-system/components";
+import { Banner } from "@aexae/comete-design-system/components";
+import type { BannerAppearance } from "@aexae/comete-design-system/components";
 
 const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;

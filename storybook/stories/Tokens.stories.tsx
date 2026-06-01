@@ -1,5 +1,5 @@
-// Token Explorer — parcourir les tokens de @naxit/comete-design-tokens
-import tokensRaw from "@naxit/comete-design-tokens/css?raw";
+// Token Explorer — parcourir les tokens de @aexae/comete-design-tokens
+import tokensRaw from "@aexae/comete-design-tokens/css?raw";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { CSSProperties, ReactElement, ReactNode } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -372,11 +372,11 @@ function CodeTab(): ReactElement {
   return (
     <div style={{ maxWidth: 720, padding: 24 }}>
       <Section title="Installation">
-        <CodeBlock>{`pnpm add @naxit/comete-design-tokens`}</CodeBlock>
+        <CodeBlock>{`pnpm add @aexae/comete-design-tokens`}</CodeBlock>
         <p style={{ fontSize: 13, color: "var(--text-subtle)", lineHeight: 1.6 }}>
           Les tokens sont distribués sous forme de CSS custom properties. Importez le fichier CSS à la racine de votre application.
         </p>
-        <CodeBlock>{`import "@naxit/comete-design-tokens/css";`}</CodeBlock>
+        <CodeBlock>{`import "@aexae/comete-design-tokens/css";`}</CodeBlock>
       </Section>
 
       <Section title="Utilisation en CSS Modules">
@@ -413,7 +413,7 @@ function CodeTab(): ReactElement {
         <p style={{ fontSize: 13, color: "var(--text-subtle)", lineHeight: 1.6, marginBottom: 12 }}>
           Les tokens thématiques changent automatiquement de valeur selon l&apos;attribut <code>data-theme</code> sur <code>&lt;html&gt;</code>. Utilisez le <code>ThemeProvider</code> du DS pour gérer le basculement.
         </p>
-        <CodeBlock>{`import { ThemeProvider } from "@naxit/comete-design-system/providers";
+        <CodeBlock>{`import { ThemeProvider } from "@aexae/comete-design-system/providers";
 
 <ThemeProvider mode="dark">
   <App />
@@ -535,7 +535,7 @@ function ChangelogEntry({ version, title, children }: { version: string; title: 
 function ChangelogTab(): ReactElement {
   return (
     <div style={{ maxWidth: 720, padding: 24, fontSize: 13, color: "var(--text-subtle)", lineHeight: 1.8 }}>
-      <p style={{ color: "var(--text-subtlest)", marginBottom: 24 }}>Historique des changements significatifs dans <code>@naxit/comete-design-tokens</code>.</p>
+      <p style={{ color: "var(--text-subtlest)", marginBottom: 24 }}>Historique des changements significatifs dans <code>@aexae/comete-design-tokens</code>.</p>
       <ChangelogEntry version="0.4.6" title="Renommage text-default, nouvelles palettes">
         Renommage <code>--text-default</code> → <code>--text-default</code>. Ajout des palettes <code>orange</code> et <code>lime</code> (11 shades chacune, basées sur Atlassian Design).
       </ChangelogEntry>

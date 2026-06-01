@@ -61,7 +61,7 @@ export interface BleedProps {
  *   la CSS custom property `--page-gutter`. CSS pur, pas de JS.
  *
  * ```tsx
- * import { Page, Bleed, Stack, Card } from "@naxit/comete-design-system";
+ * import { Page, Bleed, Stack, Card } from "@aexae/comete-design-system";
  *
  * // Relatif — compense le padding parent
  * <Stack padding="200" gap="200">

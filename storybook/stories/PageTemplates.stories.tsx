@@ -6,7 +6,7 @@
 
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { IconName } from "@naxit/comete-design-system/components";
+import type { IconName } from "@aexae/comete-design-system/components";
 import {
   Page,
   Grid,
@@ -44,7 +44,7 @@ import {
   TopNav,
   Logo,
   useSideNav,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 import css from "./PageTemplates.module.css";
 
 // -----------------------------------------------------------------------

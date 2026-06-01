@@ -37,7 +37,7 @@ export interface InformativeStateProps {
  * titre, description et boutons d'action optionnels.
  *
  * ```tsx
- * import { InformativeState, Illustration, ButtonGroup, Button } from "@naxit/comete-design-system";
+ * import { InformativeState, Illustration, ButtonGroup, Button } from "@aexae/comete-design-system";
  *
  * <InformativeState
  *   title="Aucun élément"

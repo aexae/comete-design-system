@@ -6,5 +6,5 @@ allowBuilds:
   unrs-resolver: false
 
 minimumReleaseAgeExclude:
-  - '@naxit/comete-design-tokens'
+  - '@aexae/comete-design-tokens'
   - '@naxit/comete-icons'

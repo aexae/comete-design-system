@@ -86,11 +86,11 @@ function resolveIconColor(appearance: ButtonAppearance, color: ButtonColor): Ico
  * Button — Comète Design System
  *
  * Built on React Aria for accessibility (keyboard, focus, ARIA).
- * Styled with CSS Modules consuming @naxit/comete-design-tokens.
+ * Styled with CSS Modules consuming @aexae/comete-design-tokens.
  * Icon color is automatically resolved from the button appearance + color.
  *
  * ```tsx
- * import { Button } from "@naxit/comete-design-system";
+ * import { Button } from "@aexae/comete-design-system";
  * import { Check } from "@naxit/comete-icons";
  *
  * <Button color="brand">Enregistrer</Button>

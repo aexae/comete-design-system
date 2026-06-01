@@ -4,7 +4,7 @@ import {
   DatePicker,
   Field,
   type DatePickerAppearance,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 import { today, getLocalTimeZone } from "@internationalized/date";
 import { fn } from "storybook/test";
 

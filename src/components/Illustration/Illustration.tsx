@@ -35,7 +35,7 @@ export interface IllustrationComponentProps {
  * Wraps the SVG in a `<span>` for easy CSS positioning.
  *
  * ```tsx
- * import { Illustration } from "@naxit/comete-design-system";
+ * import { Illustration } from "@aexae/comete-design-system";
  *
  * <Illustration illustration="Empty" />
  * <Illustration illustration="ForbiddenAccess" size={128} aria-label="Accès refusé" />

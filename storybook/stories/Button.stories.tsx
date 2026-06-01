@@ -1,5 +1,5 @@
-import { Button } from "@naxit/comete-design-system";
-import type { ButtonProps } from "@naxit/comete-design-system";
+import { Button } from "@aexae/comete-design-system";
+import type { ButtonProps } from "@aexae/comete-design-system";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, userEvent, within } from "storybook/test";
 

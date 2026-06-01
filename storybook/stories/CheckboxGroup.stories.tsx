@@ -1,7 +1,7 @@
 // CheckboxGroup — stories Storybook
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Checkbox, CheckboxGroup } from "@naxit/comete-design-system/components";
+import { Checkbox, CheckboxGroup } from "@aexae/comete-design-system/components";
 import { fn } from "storybook/test";
 
 const FIGMA_FILE =

@@ -6,7 +6,7 @@ import {
   Icon,
   Stack,
   type TextFieldAppearance,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 import { fn } from "storybook/test";
 
 const FIGMA_FILE =

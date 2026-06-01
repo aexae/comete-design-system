@@ -1,6 +1,6 @@
 // SearchField — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { SearchField, Field, Stack } from "@naxit/comete-design-system/components";
+import { SearchField, Field, Stack } from "@aexae/comete-design-system/components";
 
 const meta = {
   title: "Components/SearchField",

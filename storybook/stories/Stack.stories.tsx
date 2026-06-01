@@ -1,6 +1,6 @@
 // Stack — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Stack, Card } from "@naxit/comete-design-system/components";
+import { Stack, Card } from "@aexae/comete-design-system/components";
 
 // -----------------------------------------------------------------------
 // Meta

@@ -1,12 +1,12 @@
 // MonthPicker — stories Storybook
 import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { MonthPicker, Field } from "@naxit/comete-design-system/components";
+import { MonthPicker, Field } from "@aexae/comete-design-system/components";
 import type {
   MonthPickerProps,
   SingleMonthPickerProps,
   RangeMonthPickerProps,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 
 // -----------------------------------------------------------------------
 // Figma

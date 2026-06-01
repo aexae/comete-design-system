@@ -5,7 +5,7 @@ import {
   Illustration,
   ButtonGroup,
   Button,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 import type { IllustrationName } from "@naxit/comete-illustrations";
 import { illustrationRegistry } from "@naxit/comete-illustrations";
 

@@ -6,7 +6,7 @@ import {
   type LogoAppearance,
   type LogoProduct,
   type LogoFormat,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 import type { CSSProperties, ReactElement } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { logoRegistry } from "@naxit/comete-logos";

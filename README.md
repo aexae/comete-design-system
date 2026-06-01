@@ -1,19 +1,19 @@
-# @naxit/comete-design-system
+# @aexae/comete-design-system
 
 Design system Comète — composants React accessibles, thémables et 100% pilotés par des design tokens.
 
 ## Installation
 
 ```bash
-pnpm add @naxit/comete-design-system @naxit/comete-design-tokens
+pnpm add @aexae/comete-design-system @aexae/comete-design-tokens
 ```
 
 ## Utilisation
 
 ```tsx
-import { Button, ThemeProvider } from "@naxit/comete-design-system";
+import { Button, ThemeProvider } from "@aexae/comete-design-system";
 import { Lock } from "@naxit/comete-icons";
-import "@naxit/comete-design-tokens/css";
+import "@aexae/comete-design-tokens/css";
 
 function App() {
   return (
@@ -45,7 +45,7 @@ function App() {
 ### ThemeProvider & useTheme
 
 ```tsx
-import { ThemeProvider, useTheme } from "@naxit/comete-design-system";
+import { ThemeProvider, useTheme } from "@aexae/comete-design-system";
 
 // Provider
 <ThemeProvider mode="light">
@@ -56,16 +56,16 @@ import { ThemeProvider, useTheme } from "@naxit/comete-design-system";
 const { mode, toggleTheme, setMode } = useTheme();
 ```
 
-Gère le light/dark mode via l'attribut `data-theme` sur `<html>`, synchronisé avec les CSS custom properties de `@naxit/comete-design-tokens`.
+Gère le light/dark mode via l'attribut `data-theme` sur `<html>`, synchronisé avec les CSS custom properties de `@aexae/comete-design-tokens`.
 
 ## Points d'entrée
 
 | Import | Contenu |
 |---|---|
-| `@naxit/comete-design-system` | Tout (composants + providers + hooks) |
-| `@naxit/comete-design-system/components` | Composants uniquement |
-| `@naxit/comete-design-system/providers` | ThemeProvider |
-| `@naxit/comete-design-system/hooks` | useTheme |
+| `@aexae/comete-design-system` | Tout (composants + providers + hooks) |
+| `@aexae/comete-design-system/components` | Composants uniquement |
+| `@aexae/comete-design-system/providers` | ThemeProvider |
+| `@aexae/comete-design-system/hooks` | useTheme |
 
 ## Développement
 
@@ -88,7 +88,7 @@ cd storybook && pnpm install && pnpm start   # → http://localhost:6006
 
 - **React Aria Components** — Accessibilité native headless
 - **CSS Modules** — Styles scopés, zéro valeur hardcodée
-- **100% token-driven** — Toutes les valeurs visuelles proviennent de `@naxit/comete-design-tokens`
+- **100% token-driven** — Toutes les valeurs visuelles proviennent de `@aexae/comete-design-tokens`
 - **tsup** — Bundle ESM, code splitting, tree-shaking
 
 ## Stack
@@ -100,7 +100,7 @@ cd storybook && pnpm install && pnpm start   # → http://localhost:6006
 
 ## Écosystème
 
-Ce package consomme `@naxit/comete-design-tokens` (theming + styles) et `@naxit/comete-icons` (icônes dans les composants). Les trois packages forment la base de l'écosystème Comète.
+Ce package consomme `@aexae/comete-design-tokens` (theming + styles) et `@naxit/comete-icons` (icônes dans les composants). Les trois packages forment la base de l'écosystème Comète.
 
 ## Licence
 

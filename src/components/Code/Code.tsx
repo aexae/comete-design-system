@@ -24,7 +24,7 @@ export interface CodeProps {
  * Met en évidence des fragments de code inline dans le texte courant.
  *
  * ```tsx
- * import { Code } from "@naxit/comete-design-system";
+ * import { Code } from "@aexae/comete-design-system";
  *
  * <p>La propriété <Code>font-size</Code> accepte des valeurs en rem.</p>
  * ```

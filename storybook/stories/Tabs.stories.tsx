@@ -5,7 +5,7 @@ import {
   TabList,
   Tab,
   TabPanel,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 
 // -----------------------------------------------------------------------
 // Figma

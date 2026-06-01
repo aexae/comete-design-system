@@ -1,12 +1,12 @@
 // YearPicker — stories Storybook
 import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { YearPicker, Field } from "@naxit/comete-design-system/components";
+import { YearPicker, Field } from "@aexae/comete-design-system/components";
 import type {
   YearPickerProps,
   SingleYearPickerProps,
   RangeYearPickerProps,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 
 // -----------------------------------------------------------------------
 // Figma

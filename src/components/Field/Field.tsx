@@ -35,7 +35,7 @@ export interface FieldProps {
  * pour le contrôle et un message optionnel (neutre, succès, erreur).
  *
  * ```tsx
- * import { Field, TextField } from "@naxit/comete-design-system";
+ * import { Field, TextField } from "@aexae/comete-design-system";
  *
  * <Field label="Nom" isRequired message="Ce champ est requis" messageType="critical">
  *   <TextField placeholder="Saisir un nom" isInvalid />

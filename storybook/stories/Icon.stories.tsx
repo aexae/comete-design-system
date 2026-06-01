@@ -1,5 +1,5 @@
-import { Icon } from "@naxit/comete-design-system";
-import type { IconComponentProps } from "@naxit/comete-design-system";
+import { Icon } from "@aexae/comete-design-system";
+import type { IconComponentProps } from "@aexae/comete-design-system";
 import * as Icons from "@naxit/comete-icons";
 import type { IconColor, IconName, IconProps, IconVariant } from "@naxit/comete-icons";
 import { iconRegistry } from "@naxit/comete-icons";

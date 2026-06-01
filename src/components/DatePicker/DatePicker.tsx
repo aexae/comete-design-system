@@ -111,7 +111,7 @@ function formatDateLong(date: CalendarDate, locale: string): string {
  * - **Plage** (`isRange={true}`) : deux dates (start/end) séparées par `–`.
  *
  * ```tsx
- * import { DatePicker } from "@naxit/comete-design-system";
+ * import { DatePicker } from "@aexae/comete-design-system";
  * import { today, getLocalTimeZone } from "@internationalized/date";
  *
  * // Date unique saisie

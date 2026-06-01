@@ -58,7 +58,7 @@ const DEFAULT_AS: Record<HeadingSize, HeadingAs> = {
  * HTML h1–h6. Utilisez `as` pour découpler le style de la hiérarchie HTML.
  *
  * ```tsx
- * import { Heading } from "@naxit/comete-design-system";
+ * import { Heading } from "@aexae/comete-design-system";
  *
  * <Heading size="xxlarge">Titre de page</Heading>
  * <Heading size="medium">Sous-section</Heading>

@@ -5,7 +5,7 @@ import type {
   CardDrag,
   CardAppearance,
   CardColor,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 import {
   Card,
   Stack,
@@ -15,7 +15,7 @@ import {
   Tag,
   Cluster,
   Divider,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 import { expect, fn, userEvent, within } from "storybook/test";
 
 const FIGMA_FILE =

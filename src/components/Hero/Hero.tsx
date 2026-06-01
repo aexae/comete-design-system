@@ -58,7 +58,7 @@ const DEFAULT_AS: Record<HeroSize, HeroAs> = {
  * Homes de métriques clés ou écrans de bienvenue.
  *
  * ```tsx
- * import { Hero } from "@naxit/comete-design-system";
+ * import { Hero } from "@aexae/comete-design-system";
  *
  * <Hero size="xxlarge">Donnez vie à vos données.</Hero>
  * <Hero size="small">Chiffre clé du mois</Hero>

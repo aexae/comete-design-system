@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { AvatarGroup } from "@naxit/comete-design-system";
-import type { AvatarGroupProps, AvatarGroupItem } from "@naxit/comete-design-system";
+import { AvatarGroup } from "@aexae/comete-design-system";
+import type { AvatarGroupProps, AvatarGroupItem } from "@aexae/comete-design-system";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
 

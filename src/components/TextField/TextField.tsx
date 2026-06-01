@@ -83,7 +83,7 @@ function Spinner() {
  * clear button et loading spinner.
  *
  * ```tsx
- * import { Field, TextField } from "@naxit/comete-design-system";
+ * import { Field, TextField } from "@aexae/comete-design-system";
  *
  * <Field label="Email" isRequired>
  *   <TextField placeholder="nom@example.com" type="email" isClearable />

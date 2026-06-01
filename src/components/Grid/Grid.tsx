@@ -91,7 +91,7 @@ function responsiveVars(
  * s'adapte aux breakpoints `mobile` / `tablet` / `desktop`.
  *
  * ```tsx
- * import { Grid } from "@naxit/comete-design-system";
+ * import { Grid } from "@aexae/comete-design-system";
  *
  * // 12 colonnes par défaut, gap standard
  * <Grid gap="200">

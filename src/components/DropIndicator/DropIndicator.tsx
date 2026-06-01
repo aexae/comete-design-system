@@ -34,7 +34,7 @@ export interface DropIndicatorProps {
  * aux extrémités (cercles ou triangles rentrants).
  *
  * ```tsx
- * import { DropIndicator } from "@naxit/comete-design-system";
+ * import { DropIndicator } from "@aexae/comete-design-system";
  *
  * <DropIndicator />
  * <DropIndicator appearance="angle" side="start" />

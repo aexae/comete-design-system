@@ -3,8 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Button,
   SectionMessage,
-} from "@naxit/comete-design-system/components";
-import type { SectionMessageAppearance } from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
+import type { SectionMessageAppearance } from "@aexae/comete-design-system/components";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";

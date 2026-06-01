@@ -32,7 +32,7 @@ export interface PopoverProps
  * À utiliser avec un `DialogTrigger` ou `MenuTrigger` comme parent.
  *
  * ```tsx
- * import { Popover } from "@naxit/comete-design-system";
+ * import { Popover } from "@aexae/comete-design-system";
  * import { DialogTrigger, Dialog } from "react-aria-components";
  *
  * <DialogTrigger>

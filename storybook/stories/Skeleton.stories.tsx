@@ -1,6 +1,6 @@
 // Skeleton — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Skeleton } from "@naxit/comete-design-system/components";
+import { Skeleton } from "@aexae/comete-design-system/components";
 import type { ReactElement } from "react";
 
 const FIGMA_FILE =

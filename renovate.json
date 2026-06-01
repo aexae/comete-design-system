@@ -3,7 +3,7 @@
   "extends": ["config:recommended"],
   "packageRules": [
     {
-      "matchPackageNames": ["@naxit/comete-design-tokens"],
+      "matchPackageNames": ["@aexae/comete-design-tokens"],
       "matchManagers": ["npm"],
       "groupName": "comete-design-tokens",
       "automerge": false

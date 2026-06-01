@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Menu,
   MenuItem,
-} from "@naxit/comete-design-system/components";
+} from "@aexae/comete-design-system/components";
 import type { IconName } from "@naxit/comete-icons";
 import { iconRegistry } from "@naxit/comete-icons";
 

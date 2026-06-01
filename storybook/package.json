@@ -1,5 +1,5 @@
 {
-  "name": "@naxit/comete-design-system-storybook",
+  "name": "@aexae/comete-design-system-storybook",
   "version": "0.0.2-alpha.1",
   "private": true,
   "type": "module",
@@ -13,7 +13,7 @@
     "chromatic": "chromatic"
   },
   "dependencies": {
-    "@naxit/comete-design-system": "file:..",
+    "@aexae/comete-design-system": "file:..",
     "@naxit/comete-icons": "0.5.0",
     "@naxit/comete-logos": "0.12.2",
     "react": "^19.2.4",
@@ -24,7 +24,7 @@
     "@chromatic-com/storybook": "^5.2.1",
     "@eslint/js": "^9.39.4",
     "@mdx-js/react": "^3.1.1",
-    "@naxit/comete-design-tokens": "^0.11.0",
+    "@aexae/comete-design-tokens": "^0.11.0",
     "@storybook/addon-a11y": "^10.4.0",
     "@storybook/addon-designs": "^11.1.3",
     "@storybook/addon-docs": "^10.4.0",

@@ -1,7 +1,7 @@
 // Popover — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Popover } from "@naxit/comete-design-system/components";
-import { Button } from "@naxit/comete-design-system/components";
+import { Popover } from "@aexae/comete-design-system/components";
+import { Button } from "@aexae/comete-design-system/components";
 import { DialogTrigger, Dialog } from "react-aria-components";
 
 const FIGMA_FILE =

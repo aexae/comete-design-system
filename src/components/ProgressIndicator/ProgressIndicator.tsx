@@ -53,7 +53,7 @@ export interface ProgressIndicatorProps {
  * gauche/droite deplacent le focus et selectionnent le dot.
  *
  * ```tsx
- * import { ProgressIndicator } from "@naxit/comete-design-system";
+ * import { ProgressIndicator } from "@aexae/comete-design-system";
  *
  * <ProgressIndicator
  *   appearance="primary"

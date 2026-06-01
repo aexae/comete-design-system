@@ -104,7 +104,7 @@ function formatTime(
  * Heure formatée + bouton horloge ouvrant le drum picker.
  *
  * ```tsx
- * import { TimePicker } from "@naxit/comete-design-system";
+ * import { TimePicker } from "@aexae/comete-design-system";
  * import { Time } from "@internationalized/date";
  *
  * <TimePicker defaultValue={new Time(9, 30)} />

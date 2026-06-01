@@ -1,4 +1,4 @@
-# @naxit/comete-design-system v1.0.0-alpha.1 — Première release
+# @aexae/comete-design-system v1.0.0-alpha.1 — Première release
 
 La première brique du design system Comète : une bibliothèque de composants React accessibles, thémables et 100% pilotés par des design tokens.
 
@@ -9,7 +9,7 @@ La première brique du design system Comète : une bibliothèque de composants R
 Le seul composant de cette release, avec une couverture complète des cas d'usage :
 
 ```tsx
-import { Button } from "@naxit/comete-design-system";
+import { Button } from "@aexae/comete-design-system";
 import { Lock, ChevronRight } from "@naxit/comete-icons";
 
 <Button variant="contained" color="brand">Valider</Button>
@@ -27,7 +27,7 @@ import { Lock, ChevronRight } from "@naxit/comete-icons";
 ## ThemeProvider & useTheme
 
 ```tsx
-import { ThemeProvider, useTheme } from "@naxit/comete-design-system";
+import { ThemeProvider, useTheme } from "@aexae/comete-design-system";
 
 <ThemeProvider mode="light">
   <App />
@@ -53,7 +53,7 @@ const { mode, toggleTheme, setMode } = useTheme();
 
 - **React Aria Components** — Accessibilité native (ARIA, clavier, focus management)
 - **CSS Modules** — Styles scopés, zéro valeur hardcodée
-- **100% token-driven** — Toutes les valeurs visuelles proviennent de `@naxit/comete-design-tokens`
+- **100% token-driven** — Toutes les valeurs visuelles proviennent de `@aexae/comete-design-tokens`
 - **Styling par data-attributes** — `[data-hovered]`, `[data-pressed]`, `[data-focus-visible]`, `[data-disabled]`
 
 ## Stack technique
@@ -68,12 +68,12 @@ const { mode, toggleTheme, setMode } = useTheme();
 ## Utilisation
 
 ```bash
-pnpm add @naxit/comete-design-system @naxit/comete-design-tokens
+pnpm add @aexae/comete-design-system @aexae/comete-design-tokens
 ```
 
 ```tsx
-import { Button, ThemeProvider } from "@naxit/comete-design-system";
-import "@naxit/comete-design-tokens/css";
+import { Button, ThemeProvider } from "@aexae/comete-design-system";
+import "@aexae/comete-design-tokens/css";
 
 function App() {
   return (
@@ -88,4 +88,4 @@ function App() {
 
 ## Écosystème
 
-Consomme `@naxit/comete-design-tokens` (theming + styles) et `@naxit/comete-icons` (icônes dans les composants). Les trois packages forment la base de l'écosystème Comète.
+Consomme `@aexae/comete-design-tokens` (theming + styles) et `@naxit/comete-icons` (icônes dans les composants). Les trois packages forment la base de l'écosystème Comète.
