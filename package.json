@@ -2,7 +2,7 @@
   "name": "@aexae/comete-design-system",
   "description": "Comète Design System — React Aria + CSS Modules + Design Tokens",
   "author": "aexae",
-  "version": "1.0.0-alpha.130",
+  "version": "1.0.0-alpha.131",
   "license": "MIT",
   "private": false,
   "type": "module",
