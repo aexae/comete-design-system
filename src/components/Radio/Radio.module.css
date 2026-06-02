@@ -175,14 +175,21 @@
 }
 
 /* ==========================================================================
-   Focus visible — l'anneau du radio passe en `information-bold` (bleu)
-   indépendamment de l'état (override invalid → blue). Le FocusRing externe
-   ajoute le halo d'accessibilité par-dessus. Conforme à la matrice Figma
-   `<RadioIcon>` (node 3704:73891).
+   Focus visible — l'anneau du radio passe en `--background-focused-default`
+   (`#009bfe`, conforme variable Figma `DEPRECATED-radio/color/background/focused`).
+   Override invalid → focus blue. Pas de halo séparé : la couleur de l'anneau
+   suffit comme indicateur de focus.
+   Le halo de hover (`indicator::before`) est explicitement supprimé pour
+   ne pas coexister avec le focus (cas : utilisateur tabule vers un radio
+   avec la souris dessus → hover + focus-visible actifs simultanément).
    ========================================================================== */
 
 .radio[data-focus-visible]:not([data-disabled]) .indicator {
-  color: var(--background-information-bold-default);
+  color: var(--background-focused-default);
+}
+
+.radio[data-focus-visible]:not([data-disabled]) .indicator::before {
+  background-color: transparent;
 }
 
 /* ==========================================================================
