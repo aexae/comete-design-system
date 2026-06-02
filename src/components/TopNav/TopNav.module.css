@@ -42,10 +42,13 @@
   }
 }
 
-/* Logo — hidden on mobile */
+/* Logo — hidden on mobile.
+   `gap` espace les éléments multiples passés au slot `logo` (typiquement
+   un `<SideNav.Trigger />` + le logo produit). */
 .logo {
   display: flex;
   align-items: center;
+  gap: var(--space100);
 }
 
 @media (max-width: 599px) {
