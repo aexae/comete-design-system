@@ -8,3 +8,5 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - '@aexae/comete-design-tokens'
   - '@naxit/comete-icons'
+  - '@naxit/comete-logos'
+  - '@naxit/comete-illustrations'
