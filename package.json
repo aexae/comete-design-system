@@ -3,7 +3,7 @@
   "description": "Comète Design System — React Aria + CSS Modules + Design Tokens",
   "author": "aexae",
   "version": "1.0.0-alpha.133",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "private": false,
   "type": "module",
   "sideEffects": false,
