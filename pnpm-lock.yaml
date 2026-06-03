@@ -14,7 +14,7 @@ importers:
     devDependencies:
       '@aexae/comete-design-tokens':
         specifier: latest
-        version: 0.11.2
+        version: 0.11.3
       '@eslint/js':
         specifier: ^9.39.4
         version: 9.39.4
@@ -23,7 +23,7 @@ importers:
         version: 3.12.1
       '@naxit/comete-icons':
         specifier: latest
-        version: 0.6.0(@aexae/comete-design-tokens@0.11.2)(react@19.2.6)
+        version: 0.6.0(@aexae/comete-design-tokens@0.11.3)(react@19.2.6)
       '@naxit/comete-illustrations':
         specifier: alpha
         version: 0.1.0-alpha.3(react@19.2.6)
@@ -211,6 +211,10 @@ packages:
 
   '@aexae/comete-design-tokens@0.11.2':
     resolution: {integrity: sha512-I0+uxEmq94U/0paj/yb5f4lQLrnXpDwI+AasUgD0rzig/QG39RGk3gJ69mXtqF6Xt0rcaMNm5+go4EOV7H/LUw==, tarball: https://npm.pkg.github.com/download/@aexae/comete-design-tokens/0.11.2/23592af0944c8a03da56e24f474d1b1b21605149}
+    engines: {node: '>=22'}
+
+  '@aexae/comete-design-tokens@0.11.3':
+    resolution: {integrity: sha512-QnxsCLOOWrRd7B/qtLQEXi9mbof4SDl6noB/ju4aGAwwo8TKAVSzvRCH2V152/eTWzeoLrRo+jX//IGdiJOzzA==, tarball: https://npm.pkg.github.com/download/@aexae/comete-design-tokens/0.11.3/898d7eaea75f017963a7db7ed0f6424f19a71538}
     engines: {node: '>=22'}
 
   '@asamuzakjp/css-color@5.1.11':
@@ -3757,6 +3761,8 @@ snapshots:
 
   '@aexae/comete-design-tokens@0.11.2': {}
 
+  '@aexae/comete-design-tokens@0.11.3': {}
+
   '@asamuzakjp/css-color@5.1.11':
     dependencies:
       '@asamuzakjp/generational-cache': 1.0.1
@@ -4195,6 +4201,11 @@ snapshots:
   '@naxit/comete-icons@0.6.0(@aexae/comete-design-tokens@0.11.2)(react@19.2.6)':
     dependencies:
       '@aexae/comete-design-tokens': 0.11.2
+      react: 19.2.6
+
+  '@naxit/comete-icons@0.6.0(@aexae/comete-design-tokens@0.11.3)(react@19.2.6)':
+    dependencies:
+      '@aexae/comete-design-tokens': 0.11.3
       react: 19.2.6
 
   '@naxit/comete-illustrations@0.1.0-alpha.3(react@19.2.6)':
