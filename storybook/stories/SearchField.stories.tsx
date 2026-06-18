@@ -17,13 +17,17 @@ const meta = {
   },
   argTypes: {
     appearance: { control: "inline-radio", options: ["default", "subtle"] },
-    isCompact: { control: "boolean" },
+    density: {
+      control: "select",
+      options: ["compact", "default", "touch"],
+      description: "Densité — hauteur/padding/radius (échelle partagée avec Button).",
+    },
     isDisabled: { control: "boolean" },
     placeholder: { control: "text" },
   },
   args: {
     placeholder: "Rechercher",
-    isCompact: false,
+    density: "default",
     isDisabled: false,
   },
 } satisfies Meta<typeof SearchField>;
@@ -43,7 +47,7 @@ export const CustomPlaceholder: Story = {
 
 /** Mode compact pour les toolbars. */
 export const Compact: Story = {
-  args: { isCompact: true },
+  args: { density: "compact" },
 };
 
 /** Apparence subtle (bordure basse uniquement). */
@@ -56,7 +60,7 @@ export const Disabled: Story = {
   args: { isDisabled: true },
 };
 
-/** Dans un Field avec label. Les controls isCompact et isDisabled fonctionnent. */
+/** Dans un Field avec label. Les controls density et isDisabled fonctionnent. */
 export const InField: Story = {
   render: (args) => (
     <Field label="Recherche">
@@ -72,7 +76,7 @@ export const AllVariants: Story = {
     <div style={{ width: 300 }}>
     <Stack gap="200">
       <SearchField placeholder="Default" />
-      <SearchField placeholder="Compact" isCompact />
+      <SearchField placeholder="Compact" density="compact" />
       <SearchField placeholder="Subtle" appearance="subtle" />
       <SearchField placeholder="Disabled" isDisabled />
     </Stack>

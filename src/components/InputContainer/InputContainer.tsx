@@ -2,6 +2,7 @@
 // Conteneur visuel partagé pour tous les champs de saisie.
 import { useCallback, useRef, type MouseEvent, type ReactElement, type ReactNode } from "react";
 import { InputContextProvider } from "../../contexts/InputContext.js";
+import { useDensity, type Density } from "../../contexts/DensityContext.js";
 import styles from "./InputContainer.module.css";
 
 // -----------------------------------------------------------------------
@@ -12,8 +13,11 @@ export type InputContainerAppearance = "default" | "subtle";
 export interface InputContainerProps {
   /** Apparence visuelle. @default "default" */
   appearance?: InputContainerAppearance;
-  /** Taille compacte (padding réduit). @default false */
-  isCompact?: boolean;
+  /**
+   * Densité — hauteur + padding + radius (échelle partagée avec Button).
+   * Si non fournie, hérite d'un `DensityProvider`, sinon `"default"`.
+   */
+  density?: Density;
   /** Supprime toute bordure (utilisé par les pickers en mode navigation). @default false */
   isBorderless?: boolean;
   /** État désactivé (visuel uniquement). @default false */
@@ -56,7 +60,7 @@ export interface InputContainerProps {
  */
 export function InputContainer({
   appearance = "default",
-  isCompact = false,
+  density,
   isBorderless = false,
   isDisabled = false,
   isInvalid = false,
@@ -100,6 +104,14 @@ export function InputContainer({
     [isDisabled, onContainerClick],
   );
 
+  // Densité : prop `density` > contexte (DensityProvider) > "default".
+  const resolvedDensity = useDensity(density);
+  const densityClassMap: Record<Density, string> = {
+    compact: styles.densityCompact,
+    default: styles.densityDefault,
+    touch: styles.densityTouch,
+  };
+
   const classNames = [
     styles.inputContainer,
     isBorderless
@@ -107,7 +119,7 @@ export function InputContainer({
       : appearance === "default"
         ? styles.bordered
         : styles.subtle,
-    isCompact ? styles.compact : undefined,
+    densityClassMap[resolvedDensity],
     isDisabled ? styles.disabled : undefined,
     isInvalid ? styles.invalid : undefined,
     className,

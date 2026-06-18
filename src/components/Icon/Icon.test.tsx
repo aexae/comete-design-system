@@ -2,6 +2,7 @@
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { Icon } from "./Icon";
+import { InputContextProvider } from "../../contexts/InputContext";
 
 // NOTE: CSS Modules en environnement jsdom = proxy identité.
 // Les noms de classe correspondent aux noms bruts définis dans Icon.module.css.
@@ -98,5 +99,32 @@ describe("Icon", () => {
     const span = container.firstChild as HTMLElement;
     expect(span).toHaveAttribute("aria-hidden", "true");
     expect(span).not.toHaveAttribute("aria-label");
+  });
+
+  // Couleur & contexte disabled --------------------------------------------
+
+  it("should apply the explicit color class when not in a disabled context", () => {
+    const { container } = render(<Icon icon="Add" color="subtlest" />);
+    expect(container.querySelector("svg")).toHaveClass("comete-icon--subtlest");
+  });
+
+  it("should force the disabled color over an explicit color inside a disabled InputContext", () => {
+    const { container } = render(
+      <InputContextProvider isDisabled isInvalid={false}>
+        <Icon icon="Add" color="subtlest" />
+      </InputContextProvider>,
+    );
+    const svg = container.querySelector("svg");
+    expect(svg).toHaveClass("comete-icon--disabled");
+    expect(svg).not.toHaveClass("comete-icon--subtlest");
+  });
+
+  it("should keep the explicit color when the InputContext is not disabled", () => {
+    const { container } = render(
+      <InputContextProvider isDisabled={false} isInvalid={false}>
+        <Icon icon="Add" color="brand" />
+      </InputContextProvider>,
+    );
+    expect(container.querySelector("svg")).toHaveClass("comete-icon--brand");
   });
 });

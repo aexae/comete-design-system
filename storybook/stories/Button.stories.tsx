@@ -1,4 +1,4 @@
-import { Button } from "@aexae/comete-design-system";
+import { Button, DensityProvider } from "@aexae/comete-design-system";
 import type { ButtonProps } from "@aexae/comete-design-system";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, userEvent, within } from "storybook/test";
@@ -26,9 +26,15 @@ const meta: Meta<ButtonProps> = {
       control: "select",
       options: ["default", "subtle", "subtlest", "brand", "success", "critical", "warning", "information"],
     },
-    spacing: {
+    density: {
       control: "select",
-      options: ["default", "compact", "none"],
+      options: ["compact", "default", "touch"],
+      description: "Densité — hauteur/padding/radius (échelle partagée avec les champs).",
+    },
+    isInline: {
+      control: "boolean",
+      description:
+        "Composition inline — supprime padding et hauteur minimale, pour un bouton lien inséré dans du texte. Ignore `density`.",
     },
     isDisabled: {
       control: "boolean",
@@ -56,7 +62,7 @@ const meta: Meta<ButtonProps> = {
     children: "Button",
     appearance: "contained",
     color: "default",
-    spacing: "default",
+    density: "default",
     onPress: fn(),
   },
   parameters: {
@@ -181,11 +187,11 @@ export const LinkSubtle: Story = {
 // ----------------------------------------------------------------------
 
 export const Compact: Story = {
-  args: { spacing: "compact", color: "brand", children: "Compact" },
+  args: { density: "compact", color: "brand", children: "Compact" },
 };
 
-export const None: Story = {
-  args: { spacing: "none", appearance: "link-subtle", children: "None" },
+export const Inline: Story = {
+  args: { isInline: true, appearance: "link-subtle", children: "Inline" },
 };
 
 // ----------------------------------------------------------------------
@@ -278,7 +284,7 @@ export const IconOnly: Story = {
   name: "Icon only",
   render: () => (
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Button iconBefore="Image" color="default" spacing="compact" />
+      <Button iconBefore="Image" color="default" density="compact" />
       <Button iconBefore="Lock" color="brand" />
       <Button iconBefore="Check" color="success" appearance="outlined" />
       <Button iconBefore="Image" color="critical" appearance="subtle" />
@@ -331,16 +337,48 @@ export const AllVariants: Story = {
 };
 
 /**
- * Toutes les densités du bouton. Même contenu et même appearance pour
- * mettre en évidence la différence de hauteur/padding/icône.
+ * `isInline` — cas spécial de composition inline : padding nul et hauteur
+ * minimale réduite, pour un bouton `link`/`link-subtle` inséré dans un paragraphe
+ * sans générer d'espace disgracieux dans le texte.
  */
-export const AllSpacings: Story = {
-  name: "All spacings",
+export const InlineLink: Story = {
+  name: "Inline link (isInline)",
+  render: () => (
+    <p style={{ maxWidth: 420, lineHeight: 1.6 }}>
+      Consultez notre{" "}
+      <Button appearance="link" color="information" isInline>
+        politique de confidentialité
+      </Button>{" "}
+      avant de continuer. Le bouton reste dans le fil du texte, sans padding superflu.
+    </p>
+  ),
+};
+
+export const AllDensities: Story = {
+  name: "All densities",
   render: () => (
     <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-      <Button spacing="default">Button</Button>
-      <Button spacing="compact">Button</Button>
-      <Button spacing="none">Button</Button>
+      <Button density="compact" color="brand">Compact · 24</Button>
+      <Button density="default" color="brand">Default · 32</Button>
+      <Button density="touch" color="brand">Touch · 48</Button>
     </div>
+  ),
+};
+
+export const Touch: Story = {
+  args: { density: "touch", color: "brand", children: "Cible tactile" },
+};
+
+export const TouchViaProvider: Story = {
+  name: "Touch via DensityProvider",
+  render: () => (
+    <DensityProvider density="touch">
+      <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+        <Button color="brand">Hérite touch</Button>
+        <Button appearance="outlined">Hérite touch</Button>
+        {/* override local : repasse en compact malgré le provider */}
+        <Button density="compact">Override compact</Button>
+      </div>
+    </DensityProvider>
   ),
 };

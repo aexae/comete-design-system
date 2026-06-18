@@ -30,7 +30,11 @@ const meta = {
       control: "select",
       options: ["default", "subtle"] satisfies TextFieldAppearance[],
     },
-    isCompact: { control: "boolean" },
+    density: {
+      control: "select",
+      options: ["compact", "default", "touch"],
+      description: "Densité — hauteur/padding/radius (échelle partagée avec Button).",
+    },
     isDisabled: { control: "boolean" },
     isInvalid: { control: "boolean" },
     isRequired: { control: "boolean" },
@@ -67,7 +71,12 @@ export const Subtle: Story = {
 
 /** TextField compact. */
 export const Compact: Story = {
-  args: { isCompact: true },
+  args: { density: "compact" },
+};
+
+/** TextField en densité tactile (48 px). */
+export const Touch: Story = {
+  args: { density: "touch" },
 };
 
 /** Focus — auto-focus pour tester la bordure bleue et le focus ring. */

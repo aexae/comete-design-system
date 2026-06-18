@@ -92,8 +92,8 @@ export const AllSpacings: Story = {
         <Button color="brand">Confirmer</Button>
       </ButtonGroup>
       <ButtonGroup aria-label="Actions compact">
-        <Button spacing="compact">Annuler</Button>
-        <Button spacing="compact" color="brand">Confirmer</Button>
+        <Button density="compact">Annuler</Button>
+        <Button density="compact" color="brand">Confirmer</Button>
       </ButtonGroup>
     </div>
   ),

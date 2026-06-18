@@ -276,7 +276,7 @@ export const Base: Story = {
         {/* Banner globale — pleine largeur, au-dessus de tout */}
         <Banner appearance="warning">
           <Text grow>Mise à jour planifiée le 28 avril à 22h.</Text>
-          <Button appearance="link" spacing="none">En savoir plus</Button>
+          <Button appearance="link" isInline>En savoir plus</Button>
         </Banner>
 
         {/* TopNav — pleine largeur, au-dessus de la SideNav. Le SideNav.Trigger
@@ -293,7 +293,7 @@ export const Base: Story = {
           appName="Pro Sécurité"
           title="Accueil"
         >
-          <Button appearance="subtle" spacing="compact" iconBefore="Notifications" aria-label="Notifications" />
+          <Button appearance="subtle" density="compact" iconBefore="Notifications" aria-label="Notifications" />
           <Avatar size="medium" initials="AC" />
         </TopNav>
 
@@ -416,7 +416,7 @@ export const Collection: Story = {
             start={
               <>
                 <div className={css["searchWrapper"]}>
-                  <SearchField placeholder="Rechercher…" isCompact />
+                  <SearchField placeholder="Rechercher…" density="compact" />
                 </div>
                 <span className={css["showOnDesktop"]}>
                   <Button appearance="subtle" iconBefore="FilterList" onPress={() => setFiltersOpen(true)}>Filtres</Button>
@@ -709,9 +709,9 @@ export const Home: Story = {
           title="Accueil"
           trailing={
             <Stack direction="row" gap="150" align="center">
-              <Button appearance="subtle" spacing="compact" iconBefore="ChevronLeft" aria-label="Précédent" />
+              <Button appearance="subtle" density="compact" iconBefore="ChevronLeft" aria-label="Précédent" />
               <Text weight="medium" as="span">Avril 2026</Text>
-              <Button appearance="subtle" spacing="compact" iconBefore="ChevronRight" aria-label="Suivant" />
+              <Button appearance="subtle" density="compact" iconBefore="ChevronRight" aria-label="Suivant" />
               <Avatar size="medium" initials="AC" />
             </Stack>
           }
@@ -751,7 +751,7 @@ export const Home: Story = {
                     <Stack gap="200">
                       <Cluster justify="between" align="center">
                         <Heading size="small" as="span">Activité récente</Heading>
-                        <Button appearance="link" spacing="compact">Tout voir</Button>
+                        <Button appearance="link" density="compact">Tout voir</Button>
                       </Cluster>
                       <Divider />
                       {[
@@ -797,7 +797,7 @@ export const Home: Story = {
             <Stack gap="200">
               <Cluster justify="between" align="center">
                 <Heading size="small" as="span">Sites actifs</Heading>
-                <Button appearance="link" spacing="compact">Voir tous</Button>
+                <Button appearance="link" density="compact">Voir tous</Button>
               </Cluster>
               <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
                 {[

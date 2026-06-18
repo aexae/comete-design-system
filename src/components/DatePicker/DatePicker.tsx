@@ -22,6 +22,7 @@ import { Button } from "../Button/Button.js";
 import { Calendar } from "../Calendar/Calendar.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
+import { DensityProvider, type Density } from "../../contexts/DensityContext.js";
 import { Popover } from "../Popover/Popover.js";
 import styles from "./DatePicker.module.css";
 
@@ -34,8 +35,11 @@ export type DatePickerAppearance = InputContainerAppearance;
 interface DatePickerBaseProps {
   /** Apparence visuelle. @default "default" */
   appearance?: DatePickerAppearance;
-  /** Taille compacte (padding réduit). @default false */
-  isCompact?: boolean;
+  /**
+   * Densité — hauteur + padding + radius. Si non fournie, hérite d'un
+   * `DensityProvider`, sinon `"default"`.
+   */
+  density?: Density;
   /**
    * Mode saisie : affiche un champ segmenté + icône calendrier.
    * Quand `false`, affiche les chevrons ←/→ + bouton date formatée.
@@ -125,17 +129,23 @@ export function DatePicker<T extends DateValue = DateValue>(
   props: DatePickerProps<T>,
 ): ReactElement {
   const appearance = props.appearance ?? "default";
-  const isCompact = props.isCompact ?? false;
   const isEditable = props.isEditable ?? true;
   const isClearable = props.isClearable ?? true;
   const { className, style, onClear } = props;
+
+  // Densité : si fournie (prop ou contexte ancêtre), on enveloppe le rendu dans un
+  // DensityProvider — les InputContainer profonds la lisent via le contexte
+  // (pas besoin de la propager à travers chaque sous-composant).
+  const density = props.density;
+  const withDensity = (el: ReactElement): ReactElement =>
+    density ? <DensityProvider density={density}>{el}</DensityProvider> : el;
 
   // Mode plage — isRange=true (uniquement en mode saisie pour l'instant)
   if (props.isRange) {
     const {
       isRange: _r,
       appearance: _a,
-      isCompact: _c,
+      density: _d,
       isEditable: _e,
       isClearable: _ic,
       onClear: _oc,
@@ -143,15 +153,15 @@ export function DatePicker<T extends DateValue = DateValue>(
       style: _st,
       ...ariaProps
     } = props;
-    const common = { appearance, isCompact, isClearable, onClear, className, style };
-    return <EditableDateRangePicker {...common} {...ariaProps} />;
+    const common = { appearance, isClearable, onClear, className, style };
+    return withDensity(<EditableDateRangePicker {...common} {...ariaProps} />);
   }
 
   // Mode simple — isRange=false (défaut)
   const {
     isRange: _r,
     appearance: _a,
-    isCompact: _c,
+    density: _d,
     isEditable: _e,
     isClearable: _ic,
     onClear: _oc,
@@ -159,12 +169,14 @@ export function DatePicker<T extends DateValue = DateValue>(
     style: _st,
     ...ariaProps
   } = props;
-  const commonEditable = { appearance, isCompact, isClearable, onClear, className, style };
-  const commonNav = { appearance, isCompact, className, style };
-  return isEditable ? (
-    <EditableDatePicker {...commonEditable} {...ariaProps} />
-  ) : (
-    <NavigationDatePicker {...commonNav} {...ariaProps} />
+  const commonEditable = { appearance, isClearable, onClear, className, style };
+  const commonNav = { appearance, className, style };
+  return withDensity(
+    isEditable ? (
+      <EditableDatePicker {...commonEditable} {...ariaProps} />
+    ) : (
+      <NavigationDatePicker {...commonNav} {...ariaProps} />
+    ),
   );
 }
 
@@ -175,7 +187,6 @@ DatePicker.displayName = "DatePicker";
 
 function EditableDatePicker<T extends DateValue = DateValue>({
   appearance,
-  isCompact,
   isClearable,
   onClear,
   className,
@@ -183,7 +194,6 @@ function EditableDatePicker<T extends DateValue = DateValue>({
   ...ariaProps
 }: {
   appearance: DatePickerAppearance;
-  isCompact: boolean;
   isClearable: boolean;
   onClear?: () => void;
   className?: string;
@@ -327,7 +337,6 @@ function EditableDatePicker<T extends DateValue = DateValue>({
           <AriaGroup>
             <InputContainer
               appearance={appearance}
-              isCompact={isCompact}
               isDisabled={isDisabled}
               isInvalid={isInvalid}
               onContainerClick={handleContainerClick}
@@ -341,7 +350,7 @@ function EditableDatePicker<T extends DateValue = DateValue>({
                 {showClear && (
                   <Button
                     appearance="subtle"
-                    spacing="none"
+                    isInline
                     iconBefore="CloseSmall"
                     className={styles.calendarButton}
                     isDisabled={isDisabled}
@@ -355,7 +364,7 @@ function EditableDatePicker<T extends DateValue = DateValue>({
                 )}
                 <Button
                   appearance="subtle"
-                  spacing="none"
+                  isInline
                   iconBefore="CalendarMonth"
                   className={styles.calendarButton}
                   isDisabled={isDisabled}
@@ -388,7 +397,6 @@ function EditableDatePicker<T extends DateValue = DateValue>({
 
 function NavigationDatePicker<T extends DateValue = DateValue>({
   appearance,
-  isCompact,
   className,
   style,
   value,
@@ -399,7 +407,6 @@ function NavigationDatePicker<T extends DateValue = DateValue>({
   "aria-label": ariaLabel,
 }: {
   appearance: DatePickerAppearance;
-  isCompact: boolean;
   className?: string;
   style?: CSSProperties;
 } & Omit<AriaDatePickerProps<T>, "className" | "style" | "children">): ReactElement {
@@ -455,7 +462,6 @@ function NavigationDatePicker<T extends DateValue = DateValue>({
       <InputContainer
         appearance={appearance}
         isBorderless
-        isCompact={isCompact}
         isDisabled={isDisabled}
         isInvalid={isInvalid}
       >
@@ -514,7 +520,6 @@ function NavigationDatePicker<T extends DateValue = DateValue>({
 
 function EditableDateRangePicker<T extends DateValue = DateValue>({
   appearance,
-  isCompact,
   isClearable,
   onClear,
   className,
@@ -522,7 +527,6 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
   ...ariaProps
 }: {
   appearance: DatePickerAppearance;
-  isCompact: boolean;
   isClearable: boolean;
   onClear?: () => void;
   className?: string;
@@ -665,7 +669,6 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
           <AriaGroup>
             <InputContainer
               appearance={appearance}
-              isCompact={isCompact}
               isDisabled={isDisabled}
               isInvalid={effectiveInvalid}
               onContainerClick={handleContainerClick}
@@ -687,7 +690,7 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
                 {showClear && (
                   <Button
                     appearance="subtle"
-                    spacing="none"
+                    isInline
                     iconBefore="CloseSmall"
                     className={styles.calendarButton}
                     isDisabled={isDisabled}
@@ -698,7 +701,7 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
                 )}
                 <Button
                   appearance="subtle"
-                  spacing="none"
+                  isInline
                   iconBefore="CalendarMonth"
                   className={styles.calendarButton}
                   isDisabled={isDisabled}

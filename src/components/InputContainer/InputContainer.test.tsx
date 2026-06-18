@@ -28,11 +28,15 @@ describe("InputContainer", () => {
     expect(container.firstChild).not.toHaveClass("bordered");
   });
 
-  it("should apply compact class when isCompact is true", () => {
+  it.each([
+    ["compact", "densityCompact"],
+    ["default", "densityDefault"],
+    ["touch", "densityTouch"],
+  ] as const)("should apply class %s when density=%s", (density, cssClass) => {
     const { container } = render(
-      <InputContainer isCompact>content</InputContainer>
+      <InputContainer density={density}>content</InputContainer>
     );
-    expect(container.firstChild).toHaveClass("compact");
+    expect(container.firstChild).toHaveClass(cssClass);
   });
 
   it("should apply disabled class when isDisabled is true", () => {
@@ -56,10 +60,11 @@ describe("InputContainer", () => {
     expect(container.firstChild).toHaveClass("custom");
   });
 
-  it("should not apply compact class by default", () => {
+  it("should apply densityDefault and not densityCompact by default", () => {
     const { container } = render(
       <InputContainer>content</InputContainer>
     );
-    expect(container.firstChild).not.toHaveClass("compact");
+    expect(container.firstChild).toHaveClass("densityDefault");
+    expect(container.firstChild).not.toHaveClass("densityCompact");
   });
 });

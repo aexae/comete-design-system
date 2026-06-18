@@ -44,12 +44,12 @@ describe("TimePicker", () => {
     });
   });
 
-  describe("prop isCompact", () => {
-    it("should apply compact class on InputContainer", () => {
+  describe("prop density", () => {
+    it("should apply densityCompact class on InputContainer", () => {
       const { container } = render(
-        <TimePicker aria-label="Heure" isCompact />,
+        <TimePicker aria-label="Heure" density="compact" />,
       );
-      expect(container.querySelector(".inputContainer")).toHaveClass("compact");
+      expect(container.querySelector(".inputContainer")).toHaveClass("densityCompact");
     });
   });
 

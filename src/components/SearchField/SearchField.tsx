@@ -33,7 +33,7 @@ export interface SearchFieldProps
  * import { SearchField } from "@aexae/comete-design-system";
  *
  * <SearchField placeholder="Rechercher un agent…" />
- * <SearchField isCompact />
+ * <SearchField density="compact" />
  * ```
  */
 export function SearchField({
@@ -47,7 +47,7 @@ export function SearchField({
       placeholder={placeholder}
       isClearable={isClearable}
       aria-label={ariaLabel}
-      elemBefore={<Icon icon="EditorSearch" />}
+      elemBefore={<Icon icon="EditorSearch" color="subtlest" />}
       type="search"
       {...rest}
     />

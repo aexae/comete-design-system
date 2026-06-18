@@ -16,6 +16,7 @@ import { Button } from "../Button/Button.js";
 import { TimeDrumPicker } from "../Calendar/TimeDrumPicker.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
+import { DensityProvider, type Density } from "../../contexts/DensityContext.js";
 import { Popover } from "../Popover/Popover.js";
 import styles from "./TimePicker.module.css";
 
@@ -28,8 +29,11 @@ export interface TimePickerProps<T extends TimeValue = TimeValue>
   extends Omit<AriaTimeFieldProps<T>, "className" | "style" | "children" | "granularity"> {
   /** Apparence visuelle. @default "default" */
   appearance?: TimePickerAppearance;
-  /** Taille compacte (padding réduit). @default false */
-  isCompact?: boolean;
+  /**
+   * Densité — hauteur + padding + radius. Si non fournie, hérite d'un
+   * `DensityProvider`, sinon `"default"`.
+   */
+  density?: Density;
   /** Affiche le segment des secondes. @default false */
   showSeconds?: boolean;
   /**
@@ -113,7 +117,7 @@ function formatTime(
  */
 export function TimePicker<T extends TimeValue = TimeValue>({
   appearance = "default",
-  isCompact = false,
+  density,
   showSeconds = false,
   isEditable = true,
   isClearable = true,
@@ -122,18 +126,23 @@ export function TimePicker<T extends TimeValue = TimeValue>({
   style,
   ...ariaProps
 }: TimePickerProps<T>): ReactElement {
+  // Densité : si fournie (prop ou contexte ancêtre), on enveloppe le rendu dans un
+  // DensityProvider — les InputContainer profonds la lisent via le contexte
+  // (pas besoin de la propager à travers chaque sous-composant).
+  const withDensity = (el: ReactElement): ReactElement =>
+    density ? <DensityProvider density={density}>{el}</DensityProvider> : el;
+
   if (isEditable) {
-    return (
+    return withDensity(
       <EditableTimePicker
         appearance={appearance}
-        isCompact={isCompact}
         showSeconds={showSeconds}
         isClearable={isClearable}
         onClear={onClear}
         className={className}
         style={style}
         ariaProps={ariaProps}
-      />
+      />,
     );
   }
 
@@ -147,10 +156,9 @@ export function TimePicker<T extends TimeValue = TimeValue>({
     "aria-label": ariaLabelProp,
   } = ariaProps as AriaTimeFieldProps<T>;
 
-  return (
+  return withDensity(
     <NonEditableTimePicker
       appearance={appearance}
-      isCompact={isCompact}
       showSeconds={showSeconds}
       className={className}
       style={style}
@@ -161,7 +169,7 @@ export function TimePicker<T extends TimeValue = TimeValue>({
       isInvalid={isInvalid}
       hourCycle={hourCycle}
       aria-label={ariaLabelProp}
-    />
+    />,
   );
 }
 
@@ -172,7 +180,6 @@ TimePicker.displayName = "TimePicker";
 
 function EditableTimePicker<T extends TimeValue = TimeValue>({
   appearance,
-  isCompact,
   showSeconds,
   isClearable,
   onClear,
@@ -181,7 +188,6 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
   ariaProps,
 }: {
   appearance: TimePickerAppearance;
-  isCompact: boolean;
   showSeconds: boolean;
   isClearable: boolean;
   onClear?: () => void;
@@ -326,7 +332,6 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
         <div ref={containerRef}>
           <InputContainer
             appearance={appearance}
-            isCompact={isCompact}
             isDisabled={isDisabled}
             isInvalid={isInvalid}
             onContainerClick={handleContainerClick}
@@ -359,7 +364,7 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
                 {showClear && (
                   <Button
                     appearance="subtle"
-                    spacing="none"
+                    isInline
                     iconBefore="CloseSmall"
                     className={styles.clockButton}
                     isDisabled={isDisabled}
@@ -373,7 +378,7 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
                 )}
                 <Button
                   appearance="subtle"
-                  spacing="none"
+                  isInline
                   iconBefore="Schedule"
                   className={styles.clockButton}
                   isDisabled={isDisabled}
@@ -407,7 +412,6 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
 
 function NonEditableTimePicker({
   appearance,
-  isCompact,
   showSeconds = false,
   className,
   style,
@@ -420,7 +424,6 @@ function NonEditableTimePicker({
   "aria-label": ariaLabel,
 }: {
   appearance: TimePickerAppearance;
-  isCompact: boolean;
   showSeconds?: boolean;
   className?: string;
   style?: CSSProperties;
@@ -470,7 +473,6 @@ function NonEditableTimePicker({
     >
       <InputContainer
         appearance={appearance}
-        isCompact={isCompact}
         isDisabled={isDisabled}
         isInvalid={isInvalid}
       >

@@ -45,7 +45,7 @@ export const Default: Story = {
       () => (
         <div style={{ background: "var(--black-4)", height: "100vh", width: "100vw"}}>
           <TopNav logo={<Logo size={24} format="icon" product="link" />} appName="Pro Sécurité" title="Accueil">
-            <Button iconBefore="Search" appearance="subtle" spacing="compact" />
+            <Button iconBefore="Search" appearance="subtle" density="compact" />
             <Avatar initials="AC" size="medium" />
           </TopNav>
         </div>                                                                                        
@@ -64,7 +64,7 @@ export const WithBack: Story = {
             title="Détail agent"
             onBack={() => window.history.back()}
           >
-            <Button iconBefore="Search" appearance="subtle" spacing="compact" />
+            <Button iconBefore="Search" appearance="subtle" density="compact" />
             <Avatar initials="AC" size="medium" />
           </TopNav>
           <Text style={{ padding: "var(--space200)" }}>

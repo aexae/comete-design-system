@@ -272,7 +272,7 @@ function PlacementsRender() {
             <Button
               key={p}
               appearance={p === placement ? "contained" : "outlined"}
-              spacing="compact"
+              density="compact"
               onPress={() => {
                 setPlacement(p);
                 setIsOpen(true);

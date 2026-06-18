@@ -4,6 +4,7 @@ import { forwardRef } from "react";
 import type { IconColor, IconName } from "@naxit/comete-icons";
 import { Icon } from "../Icon/index.js";
 import { useInputContext } from "../../contexts/InputContext.js";
+import { useDensity, type Density } from "../../contexts/DensityContext.js";
 import styles from "./Button.module.css";
 
 // ----------------------------------------------------------------------
@@ -11,20 +12,31 @@ import styles from "./Button.module.css";
 export type ButtonAppearance = "contained" | "outlined" | "subtle" | "link" | "link-subtle";
 export type ButtonColor = "default" | "subtle" | "subtlest" | "brand" | "success" | "critical" | "warning" | "information";
 /**
- * Densité — dimension + padding, alignée sur les variantes Figma.
- * - `default` — hauteur 32 px, padding 4/12, icône 24 px
- * - `compact` — hauteur 24 px, padding 0/8, icône 20 px
- * - `none`    — hauteur 20 px, aucun padding (pour link-subtle ou composition serrée)
+ * Densité — dimension + padding + radius, échelle partagée avec les champs.
+ * - `compact` — hauteur 24 px, radius 4 px, padding 0/4, icône 20 px (desktop dense)
+ * - `default` — hauteur 32 px, radius 6 px, padding 4/8, icône 24 px (desktop standard)
+ * - `touch`   — hauteur 48 px, radius 8 px, padding 8/12, icône 24 px (mobile / cible tactile)
+ *
+ * @see {@link Density} et `DensityProvider` pour régler la densité globalement.
  */
-export type ButtonSpacing = "default" | "compact" | "none";
+export type ButtonDensity = Density;
 
 export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"> {
   /** Visual appearance. @default "contained" */
   appearance?: ButtonAppearance;
   /** Color scheme. @default "default" */
   color?: ButtonColor;
-  /** Densité — dimension + padding. @default "default" */
-  spacing?: ButtonSpacing;
+  /**
+   * Densité — dimension + padding + radius (échelle partagée avec les champs).
+   * Si non fournie, hérite d'un `DensityProvider`, sinon `"default"`.
+   */
+  density?: ButtonDensity;
+  /**
+   * Composition inline — supprime padding et hauteur minimale, pour un bouton
+   * `link`/`link-subtle` inséré dans un paragraphe (évite tout espace
+   * disgracieux dans le texte). Ignore `density`. @default false
+   */
+  isInline?: boolean;
   /** Icon name displayed before the label. Color is automatically resolved from appearance + color. */
   iconBefore?: IconName;
   /** Icon name displayed after the label. Color is automatically resolved from appearance + color. */
@@ -91,10 +103,9 @@ function resolveIconColor(appearance: ButtonAppearance, color: ButtonColor): Ico
  *
  * ```tsx
  * import { Button } from "@aexae/comete-design-system";
- * import { Check } from "@naxit/comete-icons";
  *
  * <Button color="brand">Enregistrer</Button>
- * <Button appearance="outlined" color="critical" iconBefore={<TrashIcon spacing="default" variant="filled" />}>
+ * <Button appearance="outlined" color="critical" iconBefore="Delete">
  *   Supprimer
  * </Button>
  * ```
@@ -104,7 +115,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     {
       appearance = "contained",
       color = "default",
-      spacing = "default",
+      density,
+      isInline = false,
       iconBefore,
       iconAfter,
       isLoading = false,
@@ -145,13 +157,18 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     };
     const colorClass = colorClassMap[color];
 
-    // Map spacing (densité) to CSS class — contrôle height, padding et icon size
-    const spacingClassMap: Record<ButtonSpacing, string> = {
-      default: styles.spacingDefault,
-      compact: styles.spacingCompact,
-      none: styles.spacingNone,
+    // Densité → classe CSS (height, padding, radius, icon size).
+    // Priorité : prop `density` > contexte (DensityProvider) > "default".
+    // `isInline` reste un cas spécial (composition inline sans densité).
+    const resolvedDensity = useDensity(density);
+    const densityClassMap: Record<Density, string> = {
+      compact: styles.densityCompact,
+      default: styles.densityDefault,
+      touch: styles.densityTouch,
     };
-    const spacingClass = spacingClassMap[spacing];
+    const spacingClass = isInline
+      ? styles.inline
+      : densityClassMap[resolvedDensity];
 
     // NOTE: icon-only when icon is present but children is empty/null/undefined
     const isIconOnly =

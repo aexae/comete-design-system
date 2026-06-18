@@ -49,31 +49,46 @@
 }
 
 /* ==========================================================================
-   Spacing — densité (hauteur, padding, icône) alignée sur les variantes Figma.
+   Densité — échelle unifiée (hauteur, padding, radius, icône), partagée avec
+   les champs via les tokens sémantiques --control-*. Fallback sur les
+   primitives pour rester fonctionnel si la version de tokens consommée ne
+   définit pas encore les tokens --control-*.
    --button-icon-size : consommée par .icon pour adapter la taille des icônes.
    Font-size et line-height partagent le même token quelle que soit la densité.
    ========================================================================== */
 
-/* Default : bouton standard — 32 px, padding 4/12, icône 24 px */
-.spacingDefault {
-  --button-icon-size: var(--size300);
-  min-height: var(--size400);
-  padding: var(--space050) var(--space150);
+/* Compact : bouton dense — 24 px, radius 4 px, padding 0/4, icône 20 px */
+.densityCompact {
+  --button-icon-size: var(--control-icon-compact, var(--size250));
+  min-height: var(--control-height-compact, var(--size300));
+  padding: 0 var(--control-padding-x-compact, var(--space050));
+  border-radius: var(--control-radius-compact, var(--radius050));
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-s);
 }
 
-/* Compact : bouton dense — 24 px, padding 0/8, icône 20 px */
-.spacingCompact {
-  --button-icon-size: var(--size250);
-  min-height: var(--size300);
-  padding: 0 var(--space100);
+/* Default : bouton standard — 32 px, radius 6 px, padding 4/8, icône 24 px */
+.densityDefault {
+  --button-icon-size: var(--control-icon-default, var(--size300));
+  min-height: var(--control-height-default, var(--size400));
+  padding: var(--space050) var(--control-padding-x-default, var(--space100));
+  border-radius: var(--control-radius-default, var(--radius075));
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-s);
 }
 
-/* None : sans padding — 20 px, icône 16 px (pour link-subtle / composition serrée) */
-.spacingNone {
+/* Touch : cible tactile mobile — 48 px, radius 8 px, padding 8/12, icône 24 px */
+.densityTouch {
+  --button-icon-size: var(--control-icon-touch, var(--size300));
+  min-height: var(--control-height-touch, var(--size600));
+  padding: var(--space100) var(--control-padding-x-touch, var(--space150));
+  border-radius: var(--control-radius-touch, var(--radius100));
+  font-size: var(--font-size-ui-xs);
+  line-height: var(--line-height-ui-s);
+}
+
+/* Inline : sans padding — 20 px, icône 16 px (pour link/link-subtle dans du texte) */
+.inline {
   --button-icon-size: var(--size200);
   min-height: var(--size250);
   padding: 0;

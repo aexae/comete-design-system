@@ -65,7 +65,7 @@ const ALL_TOKENS = buildTokenEntries().sort((a, b) => a.name.localeCompare(b.nam
 // -----------------------------------------------------------------------
 // Catégorisation
 
-type SemanticGroup = "background" | "text" | "border" | "icon" | "interaction" | "blanket" | "logo";
+type SemanticGroup = "background" | "text" | "border" | "icon" | "interaction" | "blanket" | "logo" | "control";
 type PrimitiveGroup = "color" | "size" | "space" | "radius" | "typography" | "animation" | "shadow" | "opacity" | "z-index" | "breakpoint" | "other";
 
 function getSemanticGroup(name: string): SemanticGroup | null {
@@ -76,6 +76,7 @@ function getSemanticGroup(name: string): SemanticGroup | null {
   if (name.startsWith("--interaction-")) return "interaction";
   if (name.startsWith("--blanket-")) return "blanket";
   if (name.startsWith("--logo-")) return "logo";
+  if (name.startsWith("--control-")) return "control";
   return null;
 }
 
@@ -247,8 +248,8 @@ function ColorSwatch({ token: t, copiedField, onCopy }: {
 // TAB 1 — All Tokens
 // =======================================================================
 
-const SEMANTIC_GROUPS: SemanticGroup[] = ["background", "text", "border", "icon", "interaction", "blanket", "logo"];
-const SEMANTIC_LABELS: Record<SemanticGroup, string> = { background: "Background", text: "Text", border: "Border", icon: "Icon", interaction: "Interaction", blanket: "Blanket", logo: "Logo" };
+const SEMANTIC_GROUPS: SemanticGroup[] = ["background", "text", "border", "icon", "interaction", "blanket", "logo", "control"];
+const SEMANTIC_LABELS: Record<SemanticGroup, string> = { background: "Background", text: "Text", border: "Border", icon: "Icon", interaction: "Interaction", blanket: "Blanket", logo: "Logo", control: "Control" };
 const PRIMITIVE_GROUPS: PrimitiveGroup[] = ["color", "size", "space", "radius", "typography", "animation", "shadow", "opacity", "z-index", "breakpoint"];
 const PRIMITIVE_LABELS: Record<PrimitiveGroup, string> = { color: "Couleurs", size: "Tailles", space: "Espacement", radius: "Radius", typography: "Typographie", animation: "Animation", shadow: "Ombres", opacity: "Opacité", "z-index": "Z-index", breakpoint: "Breakpoints", other: "Autres" };
 

@@ -17,6 +17,7 @@ import { Button } from "../Button/Button.js";
 import { Calendar } from "../Calendar/Calendar.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
+import { DensityProvider, type Density } from "../../contexts/DensityContext.js";
 import { Popover } from "../Popover/Popover.js";
 import styles from "./WeekPicker.module.css";
 
@@ -36,6 +37,11 @@ interface WeekPickerBaseProps {
   isEditable?: boolean;
   /** Apparence visuelle. @default "default" */
   appearance?: WeekPickerAppearance;
+  /**
+   * Densité — hauteur + padding + radius. Si non fournie, hérite d'un
+   * `DensityProvider`, sinon `"default"`.
+   */
+  density?: Density;
   /** Marque le champ comme invalide. */
   isInvalid?: boolean;
   /** Désactive le composant. */
@@ -280,10 +286,18 @@ function weekToOrdinal(week: number, year: number): number {
  * ```
  */
 export function WeekPicker(props: WeekPickerProps): ReactElement {
-  if (props.isRange) {
-    return <RangeWeekPicker {...props} />;
-  }
-  return <SingleWeekPicker {...props} />;
+  const inner = props.isRange ? (
+    <RangeWeekPicker {...props} />
+  ) : (
+    <SingleWeekPicker {...props} />
+  );
+  // Densité : si fournie, enveloppe le rendu dans un DensityProvider — les
+  // InputContainer profonds la lisent via le contexte.
+  return props.density ? (
+    <DensityProvider density={props.density}>{inner}</DensityProvider>
+  ) : (
+    inner
+  );
 }
 
 WeekPicker.displayName = "WeekPicker";
@@ -476,7 +490,7 @@ function SingleWeekPicker({
               {showClear && (
                 <Button
                   appearance="subtle"
-                  spacing="none"
+                  isInline
                   iconBefore="CloseSmall"
                   className={styles.calendarButton}
                   isDisabled={isDisabled}
@@ -490,7 +504,7 @@ function SingleWeekPicker({
               )}
               <Button
                 appearance="subtle"
-                spacing="none"
+                isInline
                 iconBefore="CalendarMonth"
                 className={styles.calendarButton}
                 isDisabled={isDisabled}
@@ -850,7 +864,7 @@ function RangeWeekPicker({
               {showClear && (
                 <Button
                   appearance="subtle"
-                  spacing="none"
+                  isInline
                   iconBefore="CloseSmall"
                   className={styles.calendarButton}
                   isDisabled={isDisabled}
@@ -864,7 +878,7 @@ function RangeWeekPicker({
               )}
               <Button
                 appearance="subtle"
-                spacing="none"
+                isInline
                 iconBefore="CalendarMonth"
                 className={styles.calendarButton}
                 isDisabled={isDisabled}
@@ -947,7 +961,7 @@ function RangeWeekPicker({
             >
               <Button
                 appearance="subtle"
-                spacing="none"
+                isInline
                 iconBefore="CalendarMonth"
                 className={styles.calendarButton}
                 isDisabled={isDisabled}
