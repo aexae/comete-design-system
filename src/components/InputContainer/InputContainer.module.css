@@ -84,10 +84,35 @@
 }
 
 /* ==========================================================================
-   Compact
+   Densité — échelle unifiée (hauteur, padding, radius), partagée avec Button
+   via les tokens sémantiques --control-*. Fallback sur les primitives si la
+   version de tokens consommée ne définit pas encore les tokens --control-*.
    ========================================================================== */
 
-.compact.bordered {
-  padding: var(--space050);
-  --container-padding-end: var(--space050);
+/* Hauteur — toutes apparences */
+.densityCompact {
+  min-height: var(--control-height-compact, var(--size300));
+}
+.densityDefault {
+  min-height: var(--control-height-default, var(--size400));
+}
+.densityTouch {
+  min-height: var(--control-height-touch, var(--size600));
+}
+
+/* Bordered — padding + radius par densité */
+.densityCompact.bordered {
+  padding: var(--space025) var(--control-padding-x-compact, var(--space050));
+  --container-padding-end: var(--control-padding-x-compact, var(--space050));
+  border-radius: var(--control-radius-compact, var(--radius050));
+}
+.densityDefault.bordered {
+  padding: var(--space050) var(--control-padding-x-default, var(--space100));
+  --container-padding-end: var(--control-padding-x-default, var(--space100));
+  border-radius: var(--control-radius-default, var(--radius075));
+}
+.densityTouch.bordered {
+  padding: var(--space100) var(--control-padding-x-touch, var(--space150));
+  --container-padding-end: var(--control-padding-x-touch, var(--space150));
+  border-radius: var(--control-radius-touch, var(--radius100));
 }

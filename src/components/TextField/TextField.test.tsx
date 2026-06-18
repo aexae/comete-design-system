@@ -31,12 +31,19 @@ describe("TextField", () => {
     });
   });
 
-  describe("prop isCompact", () => {
-    it("should apply compact class on InputContainer", () => {
+  describe("prop density", () => {
+    it("should apply densityCompact class on InputContainer", () => {
       const { container } = render(
-        <TextField aria-label="test" isCompact />,
+        <TextField aria-label="test" density="compact" />,
       );
-      expect(container.querySelector(".inputContainer")).toHaveClass("compact");
+      expect(container.querySelector(".inputContainer")).toHaveClass("densityCompact");
+    });
+
+    it("should forward density to InputContainer", () => {
+      const { container } = render(
+        <TextField aria-label="test" density="touch" />,
+      );
+      expect(container.querySelector(".inputContainer")).toHaveClass("densityTouch");
     });
   });
 

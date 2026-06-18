@@ -66,9 +66,12 @@ export function Icon({
   const IconComponent = iconRegistry[icon];
   const inputCtx = useInputContext();
 
-  // Si color n'est pas passée explicitement, hériter du contexte InputContext
-  const resolvedColor: IconColor =
-    color ?? (inputCtx?.isDisabled ? "disabled" : "default");
+  // Le disabled du contexte (InputContainer) prime sur toute couleur explicite :
+  // dans un champ désactivé, toutes les icônes suivent l'état disabled.
+  // Sinon, couleur explicite > "default".
+  const resolvedColor: IconColor = inputCtx?.isDisabled
+    ? "disabled"
+    : (color ?? "default");
 
   const iconProps: IconProps = { variant: appearance, color: resolvedColor, size, spacing };
 

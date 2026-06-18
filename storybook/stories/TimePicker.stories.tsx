@@ -29,7 +29,11 @@ const meta = {
       control: "select",
       options: ["default", "subtle"] satisfies TimePickerAppearance[],
     },
-    isCompact: { control: "boolean" },
+    density: {
+      control: "select",
+      options: ["compact", "default", "touch"],
+      description: "Densité — hauteur/padding/radius (échelle partagée avec Button).",
+    },
     isDisabled: { control: "boolean" },
     isInvalid: { control: "boolean" },
     hourCycle: {
@@ -80,7 +84,12 @@ export const Subtle: Story = {
 
 /** Compact. */
 export const Compact: Story = {
-  args: { isCompact: true, defaultValue: new Time(9, 0) },
+  args: { density: "compact", defaultValue: new Time(9, 0) },
+};
+
+/** Densité tactile (48 px). */
+export const Touch: Story = {
+  args: { density: "touch", defaultValue: new Time(9, 0) },
 };
 
 /** Invalid. */

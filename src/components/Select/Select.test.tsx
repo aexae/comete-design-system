@@ -126,8 +126,8 @@ describe("Select", () => {
   });
 
   it("should render compact variant", () => {
-    const { container } = render(<Select items={BASIC_ITEMS} isCompact aria-label="Pays" />);
-    expect(container.querySelector(".compact")).not.toBeNull();
+    const { container } = render(<Select items={BASIC_ITEMS} density="compact" aria-label="Pays" />);
+    expect(container.querySelector(".densityCompact")).not.toBeNull();
   });
 
   it("should support disabled options", async () => {

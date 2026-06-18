@@ -74,6 +74,11 @@ const meta = {
       options: ["default", "subtle"],
       description: "Apparence visuelle",
     },
+    density: {
+      control: "select",
+      options: ["compact", "default", "touch"],
+      description: "Densité — hauteur/padding/radius (échelle partagée avec Button).",
+    },
     isInvalid: {
       control: "boolean",
       description: "Marque le champ comme invalide",

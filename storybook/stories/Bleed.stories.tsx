@@ -93,7 +93,12 @@ function BleedBanner() {
 
 /** Story interactive : testez les props via le panneau Controls. */
 export const Default: Story = {
+  args: {
+    color: "brand"
+  },
+
   parameters: { layout: "fullscreen" },
+
   render: (args) => (
     <div style={{ display: "flex", height: "100vh" }}>
       <Page style={{ flex: 1 }}>
@@ -115,7 +120,7 @@ export const Default: Story = {
         </Page.Body>
       </Page>
     </div>
-  ),
+  )
 };
 
 // -----------------------------------------------------------------------
@@ -254,7 +259,7 @@ export const BleedDesktop: Story = {
           title="Accueil"
           trailing={
             <Stack direction="row" gap="100" align="center">
-              <Button appearance="subtle" spacing="compact" iconBefore="Notifications" aria-label="Notifications" />
+              <Button appearance="subtle" density="compact" iconBefore="Notifications" aria-label="Notifications" />
               <Avatar size="medium" initials="AC" />
             </Stack>
           }

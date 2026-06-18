@@ -60,7 +60,11 @@ const meta = {
       control: "inline-radio",
       options: ["default", "subtle"],
     },
-    isCompact: { control: "boolean" },
+    density: {
+      control: "select",
+      options: ["compact", "default", "touch"],
+      description: "Densité — hauteur/padding/radius (échelle partagée avec Button).",
+    },
     isClearable: { control: "boolean" },
     isLoading: { control: "boolean" },
     isDisabled: { control: "boolean" },
@@ -79,7 +83,7 @@ const meta = {
     label: "Pays",
     placeholder: "Sélectionner\u2026",
     appearance: "default",
-    isCompact: false,
+    density: "default",
     isClearable: false,
     isLoading: false,
     isDisabled: false,
@@ -119,7 +123,11 @@ export const Clearable: Story = {
 };
 
 export const Compact: Story = {
-  args: { isCompact: true },
+  args: { density: "compact" },
+};
+
+export const Touch: Story = {
+  args: { density: "touch" },
 };
 
 export const Subtle: Story = {
@@ -173,7 +181,7 @@ export const AllStates: Story = {
       <Select items={COUNTRIES} label="Désactivé" isDisabled value="fr" />
       <Select items={COUNTRIES} label="Chargement" isLoading />
       <Select items={COUNTRIES} label="Clearable" value="fr" isClearable />
-      <Select items={COUNTRIES} label="Compact" isCompact />
+      <Select items={COUNTRIES} label="Compact" density="compact" />
     </Stack>
   ),
 };

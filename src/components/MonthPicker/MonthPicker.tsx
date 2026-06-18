@@ -16,6 +16,7 @@ import { Button } from "../Button/Button.js";
 import { Calendar } from "../Calendar/Calendar.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
+import { DensityProvider, type Density } from "../../contexts/DensityContext.js";
 import { Popover } from "../Popover/Popover.js";
 import styles from "./MonthPicker.module.css";
 
@@ -35,6 +36,11 @@ interface MonthPickerBaseProps {
   isEditable?: boolean;
   /** Apparence visuelle. @default "default" */
   appearance?: MonthPickerAppearance;
+  /**
+   * Densité — hauteur + padding + radius. Si non fournie, hérite d'un
+   * `DensityProvider`, sinon `"default"`.
+   */
+  density?: Density;
   /** Marque le champ comme invalide. */
   isInvalid?: boolean;
   /** Désactive le composant. */
@@ -209,10 +215,18 @@ function monthToOrdinal(month: number, year: number): number {
  * ```
  */
 export function MonthPicker(props: MonthPickerProps): ReactElement {
-  if (props.isRange) {
-    return <RangeMonthPicker {...props} />;
-  }
-  return <SingleMonthPicker {...props} />;
+  const inner = props.isRange ? (
+    <RangeMonthPicker {...props} />
+  ) : (
+    <SingleMonthPicker {...props} />
+  );
+  // Densité : si fournie, enveloppe le rendu dans un DensityProvider — les
+  // InputContainer profonds la lisent via le contexte.
+  return props.density ? (
+    <DensityProvider density={props.density}>{inner}</DensityProvider>
+  ) : (
+    inner
+  );
 }
 
 MonthPicker.displayName = "MonthPicker";
@@ -443,7 +457,7 @@ function SingleMonthPicker({
               {showClear && (
                 <Button
                   appearance="subtle"
-                  spacing="none"
+                  isInline
                   iconBefore="CloseSmall"
                   className={styles.calendarButton}
                   isDisabled={isDisabled}
@@ -458,7 +472,7 @@ function SingleMonthPicker({
               )}
               <Button
                 appearance="subtle"
-                spacing="none"
+                isInline
                 iconBefore="CalendarMonth"
                 className={styles.calendarButton}
                 isDisabled={isDisabled}
@@ -825,7 +839,7 @@ function RangeMonthPicker({
               {showClear && (
                 <Button
                   appearance="subtle"
-                  spacing="none"
+                  isInline
                   iconBefore="CloseSmall"
                   className={styles.calendarButton}
                   isDisabled={isDisabled}
@@ -840,7 +854,7 @@ function RangeMonthPicker({
               )}
               <Button
                 appearance="subtle"
-                spacing="none"
+                isInline
                 iconBefore="CalendarMonth"
                 className={styles.calendarButton}
                 isDisabled={isDisabled}
@@ -923,7 +937,7 @@ function RangeMonthPicker({
             >
               <Button
                 appearance="subtle"
-                spacing="none"
+                isInline
                 iconBefore="CalendarMonth"
                 className={styles.calendarButton}
                 isDisabled={isDisabled}

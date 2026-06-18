@@ -12,6 +12,7 @@ import { Button } from "../Button/Button.js";
 import { Calendar } from "../Calendar/Calendar.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
+import { DensityProvider, type Density } from "../../contexts/DensityContext.js";
 import { Popover } from "../Popover/Popover.js";
 import styles from "./YearPicker.module.css";
 
@@ -31,6 +32,11 @@ interface YearPickerBaseProps {
   isEditable?: boolean;
   /** Apparence visuelle. @default "default" */
   appearance?: YearPickerAppearance;
+  /**
+   * Densité — hauteur + padding + radius. Si non fournie, hérite d'un
+   * `DensityProvider`, sinon `"default"`.
+   */
+  density?: Density;
   /** Marque le champ comme invalide. */
   isInvalid?: boolean;
   /** Désactive le composant. */
@@ -118,10 +124,18 @@ export type YearPickerProps = SingleYearPickerProps | RangeYearPickerProps;
  * ```
  */
 export function YearPicker(props: YearPickerProps): ReactElement {
-  if (props.isRange) {
-    return <RangeYearPicker {...props} />;
-  }
-  return <SingleYearPicker {...props} />;
+  const inner = props.isRange ? (
+    <RangeYearPicker {...props} />
+  ) : (
+    <SingleYearPicker {...props} />
+  );
+  // Densité : si fournie, enveloppe le rendu dans un DensityProvider — les
+  // InputContainer profonds la lisent via le contexte.
+  return props.density ? (
+    <DensityProvider density={props.density}>{inner}</DensityProvider>
+  ) : (
+    inner
+  );
 }
 
 YearPicker.displayName = "YearPicker";
@@ -287,7 +301,7 @@ function SingleYearPicker({
               {showClear && (
                 <Button
                   appearance="subtle"
-                  spacing="none"
+                  isInline
                   iconBefore="CloseSmall"
                   className={styles.calendarButton}
                   isDisabled={isDisabled}
@@ -301,7 +315,7 @@ function SingleYearPicker({
               )}
               <Button
                 appearance="subtle"
-                spacing="none"
+                isInline
                 iconBefore="CalendarMonth"
                 className={styles.calendarButton}
                 isDisabled={isDisabled}
@@ -637,7 +651,7 @@ function RangeYearPicker({
               {showClear && (
                 <Button
                   appearance="subtle"
-                  spacing="none"
+                  isInline
                   iconBefore="CloseSmall"
                   className={styles.calendarButton}
                   isDisabled={isDisabled}
@@ -651,7 +665,7 @@ function RangeYearPicker({
               )}
               <Button
                 appearance="subtle"
-                spacing="none"
+                isInline
                 iconBefore="CalendarMonth"
                 className={styles.calendarButton}
                 isDisabled={isDisabled}
@@ -736,7 +750,7 @@ function RangeYearPicker({
             >
               <Button
                 appearance="subtle"
-                spacing="none"
+                isInline
                 iconBefore="CalendarMonth"
                 className={styles.calendarButton}
                 isDisabled={isDisabled}

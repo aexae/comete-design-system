@@ -23,7 +23,7 @@ describe("Button", () => {
     it("should apply default appearance, color and spacing classes when no props given", () => {
       render(<Button>Label</Button>);
       const button = screen.getByRole("button");
-      expect(button).toHaveClass("button", "contained", "default", "spacingDefault");
+      expect(button).toHaveClass("button", "contained", "default", "densityDefault");
     });
   });
 
@@ -56,19 +56,35 @@ describe("Button", () => {
     });
   });
 
-  describe("prop spacing", () => {
-    it("should apply class spacingDefault when spacing is omitted", () => {
+  describe("prop density", () => {
+    it("should apply class densityDefault when density is omitted", () => {
       render(<Button>Label</Button>);
-      expect(screen.getByRole("button")).toHaveClass("spacingDefault");
+      expect(screen.getByRole("button")).toHaveClass("densityDefault");
     });
 
     it.each([
-      ["default", "spacingDefault"],
-      ["compact", "spacingCompact"],
-      ["none", "spacingNone"],
-    ] as const)("should apply class %s when spacing=%s", (spacing, cssClass) => {
-      render(<Button spacing={spacing}>Label</Button>);
+      ["compact", "densityCompact"],
+      ["default", "densityDefault"],
+      ["touch", "densityTouch"],
+    ] as const)("should apply class %s when density=%s", (density, cssClass) => {
+      render(<Button density={density}>Label</Button>);
       expect(screen.getByRole("button")).toHaveClass(cssClass);
+    });
+  });
+
+  describe("prop isInline", () => {
+    it("should apply inline class when isInline is true", () => {
+      render(<Button isInline>Label</Button>);
+      const button = screen.getByRole("button");
+      expect(button).toHaveClass("inline");
+      expect(button).not.toHaveClass("densityDefault");
+    });
+
+    it("should ignore density classes when isInline even if density is set", () => {
+      render(<Button isInline density="touch">Label</Button>);
+      const button = screen.getByRole("button");
+      expect(button).toHaveClass("inline");
+      expect(button).not.toHaveClass("densityTouch");
     });
   });
 

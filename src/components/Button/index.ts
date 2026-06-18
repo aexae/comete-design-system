@@ -3,5 +3,5 @@ export type {
   ButtonProps,
   ButtonAppearance,
   ButtonColor,
-  ButtonSpacing,
+  ButtonDensity,
 } from "./Button";

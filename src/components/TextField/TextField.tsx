@@ -11,6 +11,7 @@ import {
 import { Icon } from "../Icon/Icon.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
+import type { Density } from "../../contexts/DensityContext.js";
 import styles from "./TextField.module.css";
 
 // -----------------------------------------------------------------------
@@ -22,8 +23,11 @@ export interface TextFieldProps
   extends Omit<AriaTextFieldProps, "className" | "style" | "children"> {
   /** Apparence visuelle. @default "default" */
   appearance?: TextFieldAppearance;
-  /** Taille compacte (padding réduit). @default false */
-  isCompact?: boolean;
+  /**
+   * Densité — hauteur + padding + radius. Si non fournie, hérite d'un
+   * `DensityProvider`, sinon `"default"`.
+   */
+  density?: Density;
   /** Texte indicatif affiché quand le champ est vide. */
   placeholder?: string;
   /** Affiche un bouton clear (×) quand le champ a une valeur. @default false */
@@ -92,7 +96,7 @@ function Spinner() {
  */
 export function TextField({
   appearance = "default",
-  isCompact = false,
+  density,
   placeholder,
   isClearable = true,
   isLoading = false,
@@ -145,7 +149,7 @@ export function TextField({
       {({ isDisabled, isInvalid }) => (
         <InputContainer
           appearance={appearance}
-          isCompact={isCompact}
+          density={density}
           isDisabled={isDisabled}
           isInvalid={isInvalid ?? false}
           onContainerClick={handleContainerClick}

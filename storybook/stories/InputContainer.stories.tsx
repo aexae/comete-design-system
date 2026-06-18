@@ -22,13 +22,17 @@ const meta = {
       control: "select",
       options: ["default", "subtle"] satisfies InputContainerAppearance[],
     },
-    isCompact: { control: "boolean" },
+    density: {
+      control: "select",
+      options: ["compact", "default", "touch"],
+      description: "Densité — hauteur/padding/radius (échelle partagée avec Button).",
+    },
     isDisabled: { control: "boolean" },
     isInvalid: { control: "boolean" },
   },
   args: {
     appearance: "default",
-    isCompact: false,
+    density: "default",
     isDisabled: false,
     isInvalid: false,
   },
@@ -66,7 +70,7 @@ export const Subtle: Story = {
 };
 
 export const Compact: Story = {
-  args: { isCompact: true },
+  args: { density: "compact" },
   render: (args) => (
     <InputContainer {...args}>
       <input

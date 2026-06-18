@@ -16,6 +16,7 @@ import { Icon } from "../Icon/Icon.js";
 import { FocusRing } from "../FocusRing/FocusRing.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
+import type { Density } from "../../contexts/DensityContext.js";
 import { Field, type FieldMessageType } from "../Field/Field.js";
 import { Popover } from "../Popover/Popover.js";
 import styles from "./Select.module.css";
@@ -56,8 +57,11 @@ export interface SelectProps {
   placeholder?: string;
   /** Apparence visuelle. @default "default" */
   appearance?: SelectAppearance;
-  /** Taille compacte (padding réduit). @default false */
-  isCompact?: boolean;
+  /**
+   * Densité — hauteur + padding + radius. Si non fournie, hérite d'un
+   * `DensityProvider`, sinon `"default"`.
+   */
+  density?: Density;
   /** Affiche un bouton clear quand une valeur est sélectionnée. @default false */
   isClearable?: boolean;
   /** Affiche un spinner de chargement. @default false */
@@ -76,6 +80,8 @@ export interface SelectProps {
   message?: string;
   /** Type du message. @default "neutral" */
   messageType?: FieldMessageType;
+  /** Callback au blur (perte de focus). */
+  onBlur?: () => void;
   /** Label accessible (si pas de label visible). */
   "aria-label"?: string;
   /** Classe CSS additionnelle. */
@@ -163,7 +169,7 @@ export function Select({
   onChange,
   placeholder = "Sélectionner\u2026",
   appearance = "default",
-  isCompact = false,
+  density,
   isClearable = false,
   isLoading = false,
   isDisabled,
@@ -173,6 +179,7 @@ export function Select({
   isRequired,
   message,
   messageType,
+  onBlur,
   "aria-label": ariaLabel,
   className,
   style,
@@ -208,6 +215,7 @@ export function Select({
         selectedKey={value}
         defaultSelectedKey={defaultValue}
         onSelectionChange={handleSelectionChange}
+        onBlur={onBlur}
         isDisabled={isDisabled}
         isInvalid={isInvalid}
         placeholder={placeholder}
@@ -219,7 +227,7 @@ export function Select({
             <div ref={containerRef}>
               <InputContainer
                 appearance={appearance}
-                isCompact={isCompact}
+                density={density}
                 isDisabled={disabled}
                 isInvalid={isInvalid ?? false}
                 onContainerClick={handleContainerClick}

@@ -43,9 +43,9 @@ describe("SearchField", () => {
     expect(container.querySelector(".subtle")).toBeInTheDocument();
   });
 
-  it("should support isCompact", () => {
-    const { container } = render(<SearchField isCompact />);
-    expect(container.querySelector(".compact")).toBeInTheDocument();
+  it("should support density compact", () => {
+    const { container } = render(<SearchField density="compact" />);
+    expect(container.querySelector(".densityCompact")).toBeInTheDocument();
   });
 
   it("should support isDisabled", () => {
