@@ -1,21 +1,29 @@
-# Security Policy
+# Politique de sécurité
 
-## Supported Versions
+## Versions supportées
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Comète Design System est actuellement en phase `1.0.0-alpha`. Seule la dernière
+version alpha publiée reçoit des correctifs de sécurité.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+| Version            | Supportée |
+| ------------------ | --------- |
+| `1.0.0-alpha.*` (dernière) | ✅ |
+| Versions antérieures        | ❌ |
 
-## Reporting a Vulnerability
+## Signaler une vulnérabilité
 
-Use this section to tell people how to report a vulnerability.
+Merci de **ne pas** ouvrir d'issue publique pour une faille de sécurité.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Signalez-la de façon privée via l'un de ces canaux :
+
+- [GitHub Security Advisories](https://github.com/aexae/comete-design-system/security/advisories/new) (recommandé)
+- Par e-mail à l'équipe Comète.
+
+Merci d'inclure, dans la mesure du possible :
+
+- une description de la vulnérabilité et de son impact ;
+- les étapes de reproduction ou un proof of concept ;
+- les versions concernées.
+
+Nous accusons réception sous quelques jours ouvrés et vous tenons informé du
+traitement (accepté / refusé) ainsi que du calendrier de correction.

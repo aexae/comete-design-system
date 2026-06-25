@@ -9,11 +9,11 @@ declare const styles: {
   readonly "cutoutBorder": string;
   readonly "disabled": string;
   readonly "high": string;
+  readonly "information": string;
+  readonly "information-inverted": string;
   readonly "low": string;
   readonly "medium": string;
   readonly "neutral": string;
-  readonly "primary": string;
-  readonly "primary-inverted": string;
   readonly "success": string;
   readonly "warning": string;
 };

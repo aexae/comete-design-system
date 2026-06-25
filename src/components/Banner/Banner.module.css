@@ -50,3 +50,15 @@
   background-color: var(--background-neutral-bold-default);
   color: var(--text-inverted);
 }
+
+/* success : fond vert, texte inversé (blanc) */
+.success {
+  background-color: var(--background-success-bold-default);
+  color: var(--text-inverted);
+}
+
+/* information : fond bleu, texte inversé (blanc) */
+.information {
+  background-color: var(--background-information-bold-default);
+  color: var(--text-inverted);
+}

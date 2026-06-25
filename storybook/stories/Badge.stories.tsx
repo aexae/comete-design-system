@@ -22,8 +22,8 @@ const meta = {
       control: "select",
       options: [
         "neutral",
-        "primary",
-        "primary-inverted",
+        "information",
+        "information-inverted",
         "critical",
         "success",
         "warning",
@@ -68,7 +68,7 @@ export const LowImportance: Story = {
     docs: {
       source: {
         code: `<Badge appearance="neutral" importance="low" />
-<Badge appearance="primary" importance="low" />
+<Badge appearance="information" importance="low" />
 <Badge appearance="critical" importance="low" />
 <Badge appearance="success" importance="low" />
 <Badge appearance="warning" importance="low" />
@@ -78,7 +78,7 @@ export const LowImportance: Story = {
   },
   render: () => (
     <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-      {(["neutral", "primary", "critical", "success", "warning", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey"] as BadgeAppearance[]).map(
+      {(["neutral", "information", "critical", "success", "warning", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey"] as BadgeAppearance[]).map(
         (appearance) => (
           <Badge key={appearance} appearance={appearance} importance="low" />
         )
@@ -122,7 +122,7 @@ export const WithCutoutBorder: Story = {
         borderRadius: 12,
       }}
     >
-      {(["neutral", "primary", "critical", "success", "warning", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey"] as BadgeAppearance[]).map(
+      {(["neutral", "information", "critical", "success", "warning", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey"] as BadgeAppearance[]).map(
         (appearance) => (
           <Badge key={appearance} appearance={appearance} importance="high" label="99" cutoutBorder />
         )
@@ -137,7 +137,7 @@ export const Disabled: Story = {
     docs: {
       source: {
         code: `<Badge appearance="neutral" importance="high" label="Disabled" isDisabled />
-<Badge appearance="primary" importance="medium" label="Disabled" isDisabled />
+<Badge appearance="information" importance="medium" label="Disabled" isDisabled />
 <Badge appearance="critical" importance="low" isDisabled />`,
       },
     },
@@ -145,7 +145,7 @@ export const Disabled: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
       <Badge appearance="neutral" importance="high" label="Disabled" isDisabled />
-      <Badge appearance="primary" importance="medium" label="Disabled" isDisabled />
+      <Badge appearance="information" importance="medium" label="Disabled" isDisabled />
       <Badge appearance="critical" importance="low" isDisabled />
     </div>
   ),
@@ -163,7 +163,7 @@ export const AllAppearances: Story = {
 <Badge appearance="neutral" importance="low" />
 
 // Autres appearances disponibles :
-// "primary" | "primary-inverted" | "critical" | "success" | "warning" | "accentPurple"`,
+// "information" | "information-inverted" | "critical" | "success" | "warning" | "accentPurple"`,
       },
     },
   },
@@ -172,8 +172,8 @@ export const AllAppearances: Story = {
       {(
         [
           "neutral",
-          "primary",
-          "primary-inverted",
+          "information",
+          "information-inverted",
           "critical",
           "success",
           "warning",

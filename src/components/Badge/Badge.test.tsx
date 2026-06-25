@@ -43,8 +43,8 @@ describe("Badge", () => {
 
   it.each([
     "neutral",
-    "primary",
-    "primary-inverted",
+    "information",
+    "information-inverted",
     "critical",
     "success",
     "warning",

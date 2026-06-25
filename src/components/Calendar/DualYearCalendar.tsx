@@ -89,7 +89,7 @@ function YearPanel({
             return (
               <CalendarCell
                 key={year}
-                size="lg"
+                size="large"
                 {...cellState}
                 isToday={isToday}
                 isDisabled={isDisabled}

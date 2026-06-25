@@ -88,7 +88,7 @@ export interface PageBodyProps {
  *   />
  *   <Page.Toolbar
  *     start={<><SearchField /><Button>Filtres</Button></>}
- *     end={<Button appearance="primary">Nouvel agent</Button>}
+ *     end={<Button appearance="contained" color="brand">Nouvel agent</Button>}
  *   />
  *   <Page.Body>
  *     {/* Liste, tableau, formulaire… *\/}

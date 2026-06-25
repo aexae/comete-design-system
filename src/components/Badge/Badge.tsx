@@ -8,8 +8,8 @@ import styles from "./Badge.module.css";
 /** Apparence colorée du badge. */
 export type BadgeAppearance =
   | "neutral"
-  | "primary"
-  | "primary-inverted"
+  | "information"
+  | "information-inverted"
   | "critical"
   | "success"
   | "warning"
@@ -57,7 +57,7 @@ export interface BadgeProps {
  * ```tsx
  * // High / Medium — étiquettes avec texte
  * <Badge appearance="critical" importance="high" label="3" />
- * <Badge appearance="primary" importance="medium" label="Beta" />
+ * <Badge appearance="information" importance="medium" label="Beta" />
  *
  * // Low — point coloré sans texte
  * <Badge appearance="success" importance="low" />

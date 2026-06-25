@@ -1,7 +1,8 @@
 /* ==========================================================================
    CalendarCell — Comète Design System
    Cellule partagée entre tous les calendriers (date, mois, année).
-   Taille sm = 32 × 32 px (grille date) | lg = 48 px × flex (mois / année).
+   Taille small = pleine largeur de colonne × 32 px (grille date) |
+   large = 48 px × flex (mois / année).
    Toutes les valeurs proviennent de @aexae/comete-design-tokens.
    ========================================================================== */
 
@@ -22,14 +23,18 @@
   width: 100%;
 }
 
-/* sm — date grid (32 × 32 px) */
-.cell[data-size="sm"] {
-  width: var(--size400);
+/* small — date grid : remplit la colonne (largeur constante dans tous les états),
+   hauteur fixe 32 px. La largeur 100% (héritée de .cell) garantit que default,
+   hover, selected et range ont exactement la même largeur — pas de saut visuel.
+   `min-width` fixe un plancher 32 px pour que les colonnes ne s'écrasent pas
+   quand plusieurs grilles partagent un conteneur (calendrier double / plage). */
+.cell[data-size="small"] {
   height: var(--size400);
+  min-width: var(--size400);
 }
 
 /* lg — mois / année (48 px, largeur flexible) */
-.cell[data-size="lg"] {
+.cell[data-size="large"] {
   flex: 1;
   height: var(--size600);
 }
@@ -114,18 +119,10 @@ button.cell:active:not([data-disabled]) {
 }
 
 /* ==========================================================================
-   Mode plage (range) — les cellules `sm` (date) remplissent horizontalement
-   leur <td> pour supprimer le gap visuel et afficher une bande continue de
-   la sélection. La hauteur reste var(--size400) (base .cell[data-size="sm"]) :
-   `height: 100%` dans un <td> (display: table-cell) ne se résout pas
-   correctement et ferait collapser la cellule.
+   Mode plage (range) — les cellules date remplissent déjà leur <td> (width: 100%
+   en toutes circonstances), ce qui supprime le gap visuel et affiche une bande
+   continue sans changement de largeur entre les états.
    ========================================================================== */
-
-.cell[data-size="sm"][data-selection-start],
-.cell[data-size="sm"][data-selection-end],
-.cell[data-size="sm"][data-range-part] {
-  width: 100%;
-}
 
 /* Plage — début */
 .cell[data-selection-start]:not([data-selection-end]) {

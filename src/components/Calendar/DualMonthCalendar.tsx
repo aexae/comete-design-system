@@ -105,7 +105,7 @@ function MonthPanel({
             return (
               <CalendarCell
                 key={month}
-                size="lg"
+                size="large"
                 {...cellState}
                 isToday={isToday}
                 isDisabled={isDisabled}

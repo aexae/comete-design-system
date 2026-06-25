@@ -7,15 +7,16 @@ import styles from "./CalendarCell.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
-export type CalendarCellSize = "sm" | "lg";
+export type CalendarCellSize = "small" | "large";
 
 export interface CalendarCellProps {
   /** Contenu textuel affiché dans la cellule (jour, abréviation de mois, année…). */
   children: React.ReactNode;
   /**
    * Taille de la cellule.
-   * sm = 32 × 32 px (grille date) | lg = 48 px × flex (grille mois / année).
-   * @default "sm"
+   * small = pleine largeur de colonne × 32 px (grille date) |
+   * large = 48 px × flex (grille mois / année).
+   * @default "small"
    */
   size?: CalendarCellSize;
   /** Cellule sélectionnée (date unique). */
@@ -93,18 +94,18 @@ export interface CalendarCellProps {
  *
  * Usage standalone (mois / année) :
  * ```tsx
- * <CalendarCell size="lg" isSelected={isSelected} isToday={isToday} onClick={handleSelect}>
+ * <CalendarCell size="large" isSelected={isSelected} isToday={isToday} onClick={handleSelect}>
  *   mars
  * </CalendarCell>
  * ```
  *
- * @param size          - sm = 32 × 32 px | lg = 48 px × flex
+ * @param size          - small = pleine largeur × 32 px | large = 48 px × flex
  * @param interactive   - true = <button> | false = <span> dans AriaCalendarCell
  * @param isRangePart   - milieu de plage (style distinct de isSelected)
  */
 export function CalendarCell({
   children,
-  size = "sm",
+  size = "small",
   isSelected,
   isSelectionStart,
   isSelectionEnd,

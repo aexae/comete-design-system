@@ -163,7 +163,7 @@ export function MonthCalendar({
               return (
                 <CalendarCell
                   key={month}
-                  size="lg"
+                  size="large"
                   isSelected={isSelected}
                   isToday={isToday}
                   isDisabled={isDisabled}

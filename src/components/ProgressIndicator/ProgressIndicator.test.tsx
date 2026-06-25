@@ -69,10 +69,10 @@ describe("ProgressIndicator", () => {
   });
 
   it("should apply the appearance class to dots", () => {
-    render(<ProgressIndicator appearance="primary" total={2} />);
+    render(<ProgressIndicator appearance="neutral" total={2} />);
     const dots = screen.getAllByRole("tab");
-    expect(dots[0]).toHaveClass("primary");
-    expect(dots[1]).toHaveClass("primary");
+    expect(dots[0]).toHaveClass("neutral");
+    expect(dots[1]).toHaveClass("neutral");
   });
 
   it("should apply the default appearance class to dots", () => {

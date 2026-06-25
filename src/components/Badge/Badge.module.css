@@ -62,16 +62,16 @@
 .neutral.medium { background-color: var(--background-neutral-subtler-default);   color: var(--text-default); }
 .neutral.low    { background-color: var(--background-neutral-bold-default); }
 
-/* — primary — */
-.primary.high   { background-color: var(--background-information-bold-default);     color: var(--text-inverted); }
-.primary.medium { background-color: var(--background-information-subtlest-default); color: var(--text-information); }
-.primary.low    { background-color: var(--background-information-bold-default); }
+/* — information — */
+.information.high   { background-color: var(--background-information-bold-default);     color: var(--text-inverted); }
+.information.medium { background-color: var(--background-information-subtlest-default); color: var(--text-information); }
+.information.low    { background-color: var(--background-information-bold-default); }
 
-/* — primary-inverted (fond blanc, texte information) — */
-/* NOTE: CSS Modules expose le nom de classe tel quel via styles["primary-inverted"] */
-.primary-inverted.high   { background-color: var(--background-default-default); color: var(--text-information); }
-.primary-inverted.medium { background-color: var(--background-default-default); color: var(--text-selected); }
-.primary-inverted.low    { background-color: var(--background-default-default); }
+/* — information-inverted (fond blanc, texte information) — */
+/* NOTE: CSS Modules expose le nom de classe tel quel via styles["information-inverted"] */
+.information-inverted.high   { background-color: var(--background-default-default); color: var(--text-information); }
+.information-inverted.medium { background-color: var(--background-default-default); color: var(--text-selected); }
+.information-inverted.low    { background-color: var(--background-default-default); }
 
 /* — critical — */
 .critical.high   { background-color: var(--background-critical-bold-default);     color: var(--text-inverted); }
