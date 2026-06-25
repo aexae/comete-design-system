@@ -93,7 +93,7 @@
    ----------------------------------------------------------------------- */
 
 .dot.default,
-.dot.primary,
+.dot.neutral,
 .dot.help {
   background-color: var(--background-neutral-subtler-default);
 }
@@ -110,8 +110,8 @@
   background-color: var(--background-selected-bold-default);
 }
 
-.dot.primary.selected {
-  background-color: var(--background-brand-bold-default);
+.dot.neutral.selected {
+  background-color: var(--background-neutral-bold-default);
 }
 
 .dot.help.selected {

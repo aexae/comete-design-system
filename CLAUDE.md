@@ -249,6 +249,10 @@ La PR doit inclure dans son body :
 - Lien vers le node Figma
 - Test plan (build, tests, lint, Storybook)
 
+> **CHANGELOG** : à chaque PR de composant (ajout, modification d'API, breaking change),
+> mettre à jour la section `## [Unreleased]` de `CHANGELOG.md` (format Keep a Changelog).
+> Marquer explicitement les changements cassants sous `### Changements cassants (BREAKING)`.
+
 ---
 
 ### Distribution

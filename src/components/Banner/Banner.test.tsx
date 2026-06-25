@@ -53,6 +53,14 @@ describe("Banner", () => {
     expect(screen.getByRole("alert").className).not.toContain("warning");
   });
 
+  it.each(["success", "information", "announcement"] as const)(
+    "should apply the %s class for that appearance",
+    (appearance) => {
+      render(<Banner appearance={appearance}>Message</Banner>);
+      expect(screen.getByRole("alert").className).toContain(appearance);
+    }
+  );
+
   // Structure interne ----------------------------------------------------
 
   it("should render a content area with children inside", () => {

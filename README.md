@@ -12,13 +12,12 @@ pnpm add @aexae/comete-design-system @aexae/comete-design-tokens
 
 ```tsx
 import { Button, ThemeProvider } from "@aexae/comete-design-system";
-import { Lock } from "@naxit/comete-icons";
 import "@aexae/comete-design-tokens/css";
 
 function App() {
   return (
     <ThemeProvider mode="light">
-      <Button variant="contained" color="brand" iconBefore={<Lock />}>
+      <Button appearance="contained" color="brand" iconBefore="Lock">
         Connexion
       </Button>
     </ThemeProvider>
@@ -31,15 +30,15 @@ function App() {
 ### Button
 
 ```tsx
-<Button variant="contained" color="brand">Valider</Button>
-<Button variant="outlined" color="critical" size="small">Supprimer</Button>
-<Button variant="link" color="information" iconAfter={<ChevronRight />}>Voir plus</Button>
+<Button appearance="contained" color="brand">Valider</Button>
+<Button appearance="outlined" color="critical" density="compact">Supprimer</Button>
+<Button appearance="link" color="information" iconAfter="ChevronRight">Voir plus</Button>
 ```
 
-- **Variants** : `contained`, `outlined`, `subtle`, `link`, `link-subtle`
-- **Couleurs** : `default`, `brand`, `success`, `critical`, `warning`, `information`
-- **Tailles** : `small`, `medium`, `large`
-- **Icônes** : `iconBefore` / `iconAfter` — couleur automatiquement résolue selon variant + color
+- **Apparences** (`appearance`) : `contained`, `outlined`, `subtle`, `link`, `link-subtle`
+- **Couleurs** (`color`) : `default`, `subtle`, `subtlest`, `brand`, `success`, `critical`, `warning`, `information`
+- **Densité** (`density`) : `compact`, `default`, `touch` — dimension + padding + radius, pilotable globalement via `DensityProvider`
+- **Icônes** : `iconBefore` / `iconAfter` reçoivent un `IconName` (string) de `@naxit/comete-icons` — couleur résolue automatiquement selon `appearance` + `color`
 - **Accessibilité** : React Aria (ARIA, clavier, focus management)
 
 ### ThemeProvider & useTheme
@@ -64,8 +63,8 @@ Gère le light/dark mode via l'attribut `data-theme` sur `<html>`, synchronisé 
 |---|---|
 | `@aexae/comete-design-system` | Tout (composants + providers + hooks) |
 | `@aexae/comete-design-system/components` | Composants uniquement |
-| `@aexae/comete-design-system/providers` | ThemeProvider |
-| `@aexae/comete-design-system/hooks` | useTheme |
+| `@aexae/comete-design-system/providers` | ThemeProvider, DensityProvider |
+| `@aexae/comete-design-system/hooks` | useTheme, useDensity |
 
 ## Développement
 
@@ -82,7 +81,7 @@ pnpm lint               # Lint strict (zéro warning)
 cd storybook && pnpm install && pnpm start   # → http://localhost:6006
 ```
 
-20 stories pour le Button avec tests d'interaction intégrés. Lien Figma via `@storybook/addon-designs`.
+Catalogue complet des composants avec tests d'interaction intégrés. Lien Figma via `@storybook/addon-designs`.
 
 ## Architecture
 
@@ -104,4 +103,4 @@ Ce package consomme `@aexae/comete-design-tokens` (theming + styles) et `@naxit/
 
 ## Licence
 
-MIT
+AGPL-3.0-only — voir [`package.json`](./package.json).

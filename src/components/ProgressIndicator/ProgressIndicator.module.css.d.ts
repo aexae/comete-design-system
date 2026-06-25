@@ -8,7 +8,7 @@ declare const styles: {
   readonly "inverted": string;
   readonly "large": string;
   readonly "medium": string;
-  readonly "primary": string;
+  readonly "neutral": string;
   readonly "root": string;
   readonly "selected": string;
   readonly "small": string;

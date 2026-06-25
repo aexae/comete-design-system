@@ -8,7 +8,7 @@ import styles from "./ProgressIndicator.module.css";
 
 export type ProgressIndicatorAppearance =
   | "default"
-  | "primary"
+  | "neutral"
   | "help"
   | "inverted";
 
@@ -56,7 +56,7 @@ export interface ProgressIndicatorProps {
  * import { ProgressIndicator } from "@aexae/comete-design-system";
  *
  * <ProgressIndicator
- *   appearance="primary"
+ *   appearance="neutral"
  *   size="medium"
  *   spacing="comfortable"
  *   selectedIndex={2}

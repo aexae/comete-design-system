@@ -174,7 +174,7 @@ export function ToggleButton({
             {badge && (
               <Badge
                 label={badge}
-                appearance="primary-inverted"
+                appearance="information-inverted"
                 importance="medium"
                 isDisabled={isDisabled}
               />

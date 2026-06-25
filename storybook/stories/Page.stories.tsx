@@ -546,7 +546,7 @@ export const BodyFullWidth: Story = {
         <Page.Body>
           <Stack gap="200">
             <Cluster gap="075">
-              <Badge label="Tous" appearance="primary" importance="high" />
+              <Badge label="Tous" appearance="information" importance="high" />
               <Badge label="Administrateur" appearance="neutral" importance="medium" />
               <Badge label="Manager" appearance="neutral" importance="medium" />
               <Badge label="Agent" appearance="neutral" importance="medium" />

@@ -120,7 +120,7 @@ export function YearCalendar({
               return (
                 <CalendarCell
                   key={year}
-                  size="lg"
+                  size="large"
                   isSelected={isSelected}
                   isToday={isToday}
                   isDisabled={isDisabled}

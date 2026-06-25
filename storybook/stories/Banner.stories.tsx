@@ -22,7 +22,7 @@ const meta = {
   argTypes: {
     appearance: {
       control: "select",
-      options: ["warning", "critical", "announcement"] satisfies BannerAppearance[],
+      options: ["warning", "critical", "announcement", "success", "information"] satisfies BannerAppearance[],
     },
     children: { control: "text" },
   },
@@ -57,6 +57,14 @@ export const Announcement: Story = {
   args: { appearance: "announcement", children: LOREM },
 };
 
+export const Success: Story = {
+  args: { appearance: "success", children: LOREM },
+};
+
+export const Information: Story = {
+  args: { appearance: "information", children: LOREM },
+};
+
 export const AllAppearances: Story = {
   name: "All appearances",
   parameters: { design: { type: "figma", url: figmaUrl("4559-5335") } },
@@ -65,6 +73,8 @@ export const AllAppearances: Story = {
       <Banner appearance="warning">{LOREM}</Banner>
       <Banner appearance="critical">{LOREM}</Banner>
       <Banner appearance="announcement">{LOREM}</Banner>
+      <Banner appearance="success">{LOREM}</Banner>
+      <Banner appearance="information">{LOREM}</Banner>
     </div>
   ),
 };

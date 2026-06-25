@@ -56,7 +56,7 @@ const meta = {
       control: "select",
       options: [
         "default",
-        "primary",
+        "neutral",
         "help",
         "inverted",
       ] satisfies ProgressIndicatorAppearance[],
@@ -108,9 +108,9 @@ export const Default: Story = {
   },
 };
 
-/** Apparence primary (brand). */
-export const Primary: Story = {
-  args: { appearance: "primary" },
+/** Apparence neutral (point sélectionné en neutral-bold). */
+export const Neutral: Story = {
+  args: { appearance: "neutral" },
   parameters: {
     design: { type: "figma", url: figmaUrl("4713:10822") },
   },
@@ -201,7 +201,7 @@ export const AllAppearances: Story = {
   render: (args) => (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       <InteractiveProgressIndicator {...args} appearance="default" />
-      <InteractiveProgressIndicator {...args} appearance="primary" />
+      <InteractiveProgressIndicator {...args} appearance="neutral" />
       <InteractiveProgressIndicator {...args} appearance="help" />
       <div
         style={{
