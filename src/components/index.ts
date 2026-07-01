@@ -27,6 +27,7 @@ export * from "./IconTile";
 export * from "./Illustration";
 export * from "./InformativeState";
 export * from "./InputContainer";
+export * from "./List";
 export * from "./Logo";
 export * from "./Menu";
 export * from "./ModalDialog";
