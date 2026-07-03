@@ -1,0 +1,269 @@
+/* ==========================================================================
+   Table — Comète Design System
+   Table HTML sémantique + support de densité (compact / default / touch)
+   et de tri de colonne. 100 % tokens, zéro valeur hardcodée.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Root <table>
+   -------------------------------------------------------------------------- */
+
+.table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: var(--font-family-primary);
+  color: var(--text-default);
+  /* Cache le double-border du header quand `border-collapse: collapse` :
+     le bord bas du `<thead>` et le bord haut du premier `<tbody>` fusionnent. */
+  border-spacing: 0;
+}
+
+/* --------------------------------------------------------------------------
+   <thead>
+   -------------------------------------------------------------------------- */
+
+.head {
+  /* Divider fin (1px) entre thead et tbody. */
+  border-bottom: var(--size0125) solid var(--border-default);
+}
+
+/* --------------------------------------------------------------------------
+   <tbody>
+   -------------------------------------------------------------------------- */
+
+.body {
+  /* Divider fin (1px) qui sépare la dernière ligne du footer / contenu suivant. */
+  border-bottom: var(--size0125) solid var(--border-default);
+}
+
+/* --------------------------------------------------------------------------
+   <tr> — row (hover / selected / clickable)
+   -------------------------------------------------------------------------- */
+
+.row {
+  transition: background-color var(--duration-fast) var(--easing-default);
+}
+
+/* Row cliquable → cursor pointer + hover subtil */
+.row[data-clickable]:hover {
+  background-color: var(--background-neutral-subtler-hovered);
+  cursor: pointer;
+}
+
+/* Row sélectionnée */
+.row[data-selected] {
+  background-color: var(--background-selected-subtlest-default);
+}
+
+.row[data-selected][data-clickable]:hover {
+  background-color: var(--background-selected-subtlest-hovered);
+}
+
+/* --------------------------------------------------------------------------
+   <td> — cell
+   -------------------------------------------------------------------------- */
+
+.cell {
+  padding: var(--space075) var(--space100);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  color: var(--text-default);
+  vertical-align: middle;
+  text-align: left;
+  /* Hauteur cible 40px (Figma) obtenue via padding + font-size natif. */
+}
+
+/* Alignement du texte piloté par data-align (défaut left). */
+.cell[data-align="center"] {
+  text-align: center;
+}
+
+.cell[data-align="right"] {
+  text-align: right;
+}
+
+/* --------------------------------------------------------------------------
+   <th> — header cell
+   -------------------------------------------------------------------------- */
+
+.headerCell {
+  padding: var(--space050) var(--space100);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxs);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui-xxs);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--text-subtle);
+  text-align: left;
+  vertical-align: middle;
+  /* Hauteur cible 30px (Figma) via padding + font-size. */
+}
+
+/* Alignement du header suit la même règle que la cellule (left par défaut). */
+.headerCell[data-align="center"] {
+  text-align: center;
+}
+
+.headerCell[data-align="right"] {
+  text-align: right;
+}
+
+/* Header triable — pointer + hover subtle sur le label */
+.headerCell[data-sortable] {
+  cursor: pointer;
+  user-select: none;
+}
+
+.headerCell[data-sortable]:hover {
+  color: var(--text-default);
+}
+
+/* Focus visible sur un header triable — anneau focused inset (pas d'outline
+   par défaut car les cells n'ont pas de bordure propre). */
+.headerCell[data-sortable]:focus {
+  outline: none;
+}
+
+.headerCell[data-sortable]:focus-visible {
+  box-shadow: inset 0 0 0 var(--size025) var(--background-focused-default);
+}
+
+/* Wrapper flex du contenu d'un header : label + icône de tri à droite. */
+.headerContent {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space050);
+  width: 100%;
+}
+
+.headerCell[data-align="center"] .headerContent {
+  justify-content: center;
+}
+
+.headerCell[data-align="right"] .headerContent {
+  justify-content: flex-end;
+}
+
+/* Label du header. `min-width: 0` pour permettre le shrink en cas
+   d'ellipse (les libellés d'en-tête sont conservés sur une seule ligne). */
+.headerLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Icône de tri — legerement plus sombre quand un tri est actif. */
+.headerSortIcon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  color: var(--icon-subtle);
+}
+
+.headerCell[data-sort-direction="ascending"] .headerSortIcon,
+.headerCell[data-sort-direction="descending"] .headerSortIcon {
+  color: var(--icon-default);
+}
+
+/* --------------------------------------------------------------------------
+   Density — compact / default / touch
+   Impacte le padding des cellules (donc la hauteur des lignes).
+   -------------------------------------------------------------------------- */
+
+/* Compact — hauteur ≈ 32px */
+.table[data-density="compact"] .cell {
+  padding-top: var(--space050);
+  padding-bottom: var(--space050);
+}
+
+.table[data-density="compact"] .headerCell {
+  padding-top: var(--space025);
+  padding-bottom: var(--space025);
+}
+
+/* Touch — hauteur ≈ 48px pour les cibles tactiles */
+.table[data-density="touch"] .cell {
+  padding-top: var(--space125);
+  padding-bottom: var(--space125);
+}
+
+.table[data-density="touch"] .headerCell {
+  padding-top: var(--space075);
+  padding-bottom: var(--space075);
+}
+
+/* --------------------------------------------------------------------------
+   TablePagination — contrôles bas de table
+   -------------------------------------------------------------------------- */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space200);
+  padding: var(--space050) var(--space100);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  line-height: var(--line-height-ui-xs);
+  color: var(--text-subtle);
+  border-top: var(--size025) solid var(--border-subtle);
+}
+
+.paginationRowsPerPage {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space075);
+}
+
+.paginationLabel {
+  font-weight: var(--font-weight-regular);
+  white-space: nowrap;
+}
+
+.paginationControls {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space025);
+}
+
+/* --------------------------------------------------------------------------
+   TableView — wrapper header + table + footer
+   -------------------------------------------------------------------------- */
+
+.view {
+  /* Pas de border externe — la Table apporte déjà ses bordures head/body.
+     Le radius + overflow hidden restent pour clipper les slots header/footer
+     et garder les coins arrondis. */
+  border-radius: var(--radius200);
+  overflow: hidden;
+  background: var(--background-surface-default);
+}
+
+.viewHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space150);
+  padding: var(--space150) var(--space200);
+  border-bottom: var(--size0125) solid var(--border-default);
+}
+
+/* Padding interne pour donner de l'air à la Table à l'intérieur du wrapper. */
+.viewContent {
+  padding: var(--space100) var(--space200);
+}
+
+.viewFooter {
+  /* Pas de border-top — le border-bottom du tbody de la Table sert déjà
+     de séparateur, l'ajouter ici doublerait le divider. */
+}
+
+/* Quand le wrapper contient un footer (pagination…), le divider bas du tbody
+   disparait : la présence du footer joue elle-même le rôle de séparateur
+   visuel, un divider en plus alourdirait le rendu. */
+.view[data-has-footer="true"] .body {
+  border-bottom: none;
+}
