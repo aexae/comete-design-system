@@ -1,0 +1,275 @@
+/* ==========================================================================
+   List — Comète Design System
+   Liste verticale composable. Tous les tokens proviennent de
+   @aexae/comete-design-tokens, zéro valeur hardcodée.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Root <ul>
+   -------------------------------------------------------------------------- */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+}
+
+/* Variante encadrée : bordure subtle + coins arrondis. `overflow: hidden`
+   pour clipper le fond hover/selected des items sur les coins arrondis. */
+.list[data-bordered] {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius050);
+  background: var(--background-surface-default);
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   ListHead — sous-titre de section
+   -------------------------------------------------------------------------- */
+
+.head {
+  display: flex;
+  align-items: center;
+  padding: var(--space150) var(--space200) var(--space050);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xxs);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--text-subtle);
+  text-transform: uppercase;
+  user-select: none;
+}
+
+/* Mode dense : padding vertical réduit. */
+.list[data-dense] .head {
+  padding-top: var(--space100);
+  padding-bottom: var(--space025);
+}
+
+/* --------------------------------------------------------------------------
+   ListItem (et `.itemButton` en hérite via composition de classes)
+   -------------------------------------------------------------------------- */
+
+.item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space150);
+  padding: var(--space125) var(--space200);
+  min-height: var(--size500);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-s);
+  line-height: var(--line-height-ui-s);
+  color: var(--text-default);
+}
+
+/* Item avec une action secondaire : réserve de la place à droite pour que
+   le contenu du texte ne passe pas sous l'action absolute. */
+.item:has(.itemSecondaryAction) {
+  padding-right: var(--space700);
+}
+
+.list[data-dense] .item {
+  padding-top: var(--space075);
+  padding-bottom: var(--space075);
+  min-height: var(--size400);
+}
+
+/* Item sélectionné — fond information subtle. */
+.item[data-selected] {
+  background-color: var(--background-selected-subtlest-default);
+  color: var(--text-selected);
+}
+
+/* Item désactivé — texte sourd, curseur not-allowed sur les boutons. */
+.item[data-disabled] {
+  color: var(--text-disabled);
+}
+
+/* --------------------------------------------------------------------------
+   ListItemButton — wrapper `<li>` + `<button>` cliquable
+   -------------------------------------------------------------------------- */
+
+/* Le `<li>` qui contient le `<button>` doit être transparent côté layout :
+   pas de padding, pas de min-height — c'est le bouton qui porte ces règles
+   via `.item`. `position: relative` sert d'ancre pour l'action secondaire
+   (rendue en sœur du bouton en absolute). */
+.itemButtonWrapper {
+  position: relative;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Réserve la même largeur à droite quand un `.itemSecondaryAction` est
+   sœur du bouton dans `ListItemButton`. */
+.itemButtonWrapper:has(.itemSecondaryAction) .item {
+  padding-right: var(--space700);
+}
+
+/* Reset du `<button>` natif + comportement de bloc cliquable. */
+.itemButton {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: background-color var(--duration-fast) var(--easing-default);
+}
+
+/* Hover — fond neutre subtle (non-sélectionné). */
+.itemButton[data-hovered]:not([data-selected]) {
+  background-color: var(--background-neutral-subtler-hovered);
+}
+
+/* Pressed — fond plus saturé. */
+.itemButton[data-pressed]:not([data-selected]) {
+  background-color: var(--background-neutral-subtler-pressed);
+}
+
+/* Hover quand sélectionné — assombrir le fond selected. */
+.itemButton[data-selected][data-hovered] {
+  background-color: var(--background-selected-subtlest-hovered);
+}
+
+.itemButton[data-selected][data-pressed] {
+  background-color: var(--background-selected-subtlest-pressed);
+}
+
+/* Focus-visible — outline conforme aux autres composants (anneau focused). */
+.itemButton[data-focus-visible] {
+  box-shadow: inset 0 0 0 var(--size025) var(--background-focused-default);
+}
+
+/* Disabled — déclaré en dernier pour gagner sur hover/press. */
+.itemButton[data-disabled] {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+  background-color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   ListItemIcon — slot icône au début de l'item
+   -------------------------------------------------------------------------- */
+
+.itemIcon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--size300);
+  color: var(--icon-subtle);
+}
+
+/* Icon hérite la couleur d'état du bouton parent quand applicable.
+   Le `<Icon>` de comete-icons applique sa propre classe `.comete-icon--default`
+   qui définit un `color` fixe → on l'override via `:global()` pour que la
+   couleur d'état (selected/disabled) gagne sans que l'utilisateur ait à
+   passer `color="selected"` manuellement. */
+.item[data-selected] .itemIcon,
+.itemButton[data-selected] .itemIcon {
+  color: var(--icon-selected);
+}
+
+.item[data-selected] .itemIcon :global(.comete-icon--default),
+.itemButton[data-selected] .itemIcon :global(.comete-icon--default) {
+  color: var(--icon-selected);
+}
+
+.item[data-disabled] .itemIcon,
+.itemButton[data-disabled] .itemIcon {
+  color: var(--icon-disabled);
+}
+
+.item[data-disabled] .itemIcon :global(.comete-icon--default),
+.itemButton[data-disabled] .itemIcon :global(.comete-icon--default) {
+  color: var(--icon-disabled);
+}
+
+/* --------------------------------------------------------------------------
+   ListItemSecondaryAction — action à droite (Button, Switch, Checkbox…)
+   -------------------------------------------------------------------------- */
+
+/* Positionnée en absolute par rapport à l'ancre :
+   - `.item` (position: relative) pour `ListItem`
+   - `.itemButtonWrapper` (position: relative) pour `ListItemButton`
+   Centrée verticalement, calée à droite avec le padding horizontal
+   standard de l'item. */
+.itemSecondaryAction {
+  position: absolute;
+  right: var(--space200);
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space100);
+}
+
+/* --------------------------------------------------------------------------
+   ListItemAvatar — slot avatar au début de l'item
+   -------------------------------------------------------------------------- */
+
+.itemAvatar {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   ListItemText — slot texte (primary + secondary)
+   -------------------------------------------------------------------------- */
+
+.itemText {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space025);
+  overflow: hidden;
+}
+
+.itemTextPrimary {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-s);
+  line-height: var(--line-height-ui-s);
+  color: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemTextSecondary {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  line-height: var(--line-height-ui-xs);
+  color: var(--text-subtle);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Mode wrap : texte multi-lignes, plus de troncature.
+   Le wrapper `.itemText` doit aussi laisser le contenu déborder verticalement. */
+.itemText[data-wrap] {
+  overflow: visible;
+}
+
+.itemText[data-wrap] .itemTextPrimary,
+.itemText[data-wrap] .itemTextSecondary {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+/* Texte secondaire en disabled : reste sourd. */
+.item[data-disabled] .itemTextSecondary,
+.itemButton[data-disabled] .itemTextSecondary {
+  color: var(--text-disabled);
+}
