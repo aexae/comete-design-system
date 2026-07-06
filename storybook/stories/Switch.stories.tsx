@@ -58,7 +58,7 @@ export const Checked: Story = {
   args: {
     children: "Notifications",
     defaultChecked: true,
-  } as Story["args"],
+  },
 };
 
 /** Sans label — utiliser `aria-label` pour l'accessibilité. */
@@ -178,7 +178,7 @@ export const InPreferences: Story = {
           isChecked={pref.analytics}
           onChange={set("analytics")}
         >
-          Partage des données d'utilisation
+          Partage des données d&apos;utilisation
         </Switch>
       </div>
     );
