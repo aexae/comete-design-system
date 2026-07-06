@@ -674,8 +674,8 @@ const STATUSES: Row["status"][] = ["Actif", "En attente", "Suspendu"];
 const LARGE_DATASET: LargeRow[] = Array.from({ length: 200 }, (_, i) => ({
   id: i + 1,
   title: `Projet ${String(i + 1).padStart(3, "0")}`,
-  status: STATUSES[i % STATUSES.length]!,
-  user: USERS[i % USERS.length]!,
+  status: STATUSES[i % STATUSES.length],
+  user: USERS[i % USERS.length],
   key: `CODE-${String(i + 1).padStart(4, "0")}`,
 }));
 
