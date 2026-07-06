@@ -1,0 +1,168 @@
+/* ==========================================================================
+   Switch — Comète Design System
+   Interrupteur binaire (React Aria Switch) — track 40×20 + thumb 16×16.
+   100% tokens, zéro valeur hardcodée.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Root (<label>)
+   -------------------------------------------------------------------------- */
+
+.root {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space100);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-s);
+  line-height: var(--line-height-ui-s);
+  color: var(--text-default);
+  cursor: pointer;
+  user-select: none;
+}
+
+.root[data-disabled] {
+  cursor: not-allowed;
+  color: var(--text-disabled);
+}
+
+/* --------------------------------------------------------------------------
+   Track — le rail (pill)
+   -------------------------------------------------------------------------- */
+
+.track {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+  width: 40px;
+  height: 20px;
+  border-radius: var(--radius300);
+  background-color: var(--background-neutral-subtler-default);
+  transition:
+    background-color var(--duration-fast) var(--easing-default);
+}
+
+/* Appearance × unchecked (off) */
+.track[data-appearance="default"] {
+  background-color: var(--background-neutral-subtler-default);
+}
+
+.track[data-appearance="success"] {
+  background-color: var(--background-success-subtlest-default);
+}
+
+.track[data-appearance="warning"] {
+  background-color: var(--background-warning-subtlest-default);
+}
+
+.track[data-appearance="critical"] {
+  background-color: var(--background-critical-subtlest-default);
+}
+
+/* Appearance × checked (on) — background bold */
+.track[data-appearance="default"][data-selected] {
+  background-color: var(--background-selected-bold-default);
+}
+
+.track[data-appearance="success"][data-selected] {
+  background-color: var(--background-success-bold-default);
+}
+
+.track[data-appearance="warning"][data-selected] {
+  background-color: var(--background-warning-bold-default);
+}
+
+.track[data-appearance="critical"][data-selected] {
+  background-color: var(--background-critical-bold-default);
+}
+
+/* Indeterminate — visuel dérivé du bold-default de l'apparence. Le pouce
+   devient une petite barre horizontale (voir .thumb ci-dessous). */
+.track[data-appearance="default"][data-indeterminate] {
+  background-color: var(--background-selected-bold-default);
+}
+
+.track[data-appearance="success"][data-indeterminate] {
+  background-color: var(--background-success-bold-default);
+}
+
+.track[data-appearance="warning"][data-indeterminate] {
+  background-color: var(--background-warning-bold-default);
+}
+
+.track[data-appearance="critical"][data-indeterminate] {
+  background-color: var(--background-critical-bold-default);
+}
+
+/* Disabled — remplace tout (déclaré après pour gagner à spécificité égale) */
+.track[data-disabled],
+.track[data-disabled][data-selected],
+.track[data-disabled][data-indeterminate] {
+  background-color: var(--background-disabled-default);
+}
+
+/* --------------------------------------------------------------------------
+   Thumb — le pouce blanc (cercle 16×16, décalé de 2px du bord)
+   -------------------------------------------------------------------------- */
+
+.thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius300);
+  background-color: var(--background-surface-default);
+  color: var(--icon-subtle);
+  transition:
+    left var(--duration-fast) var(--easing-default),
+    width var(--duration-fast) var(--easing-default),
+    height var(--duration-fast) var(--easing-default);
+}
+
+/* Position du pouce quand coché → glisse à droite */
+.track[data-selected] .thumb {
+  left: 22px;
+}
+
+/* Indeterminate → pouce = petite barre horizontale centrée (12×2, r=1024) */
+.track[data-indeterminate] .thumb {
+  top: 9px;
+  left: 14px;
+  width: 12px;
+  height: 2px;
+}
+
+/* Couleur d'icône dans le pouce, par apparence — s'applique à l'Icon
+   (surchargé via :global(.comete-icon--default) pour battre le default de
+   la lib d'icônes). */
+.track[data-appearance="success"] .thumb :global(.comete-icon--default) {
+  color: var(--icon-success);
+}
+
+.track[data-appearance="warning"] .thumb :global(.comete-icon--default) {
+  color: var(--icon-warning);
+}
+
+.track[data-appearance="critical"] .thumb :global(.comete-icon--default) {
+  color: var(--icon-critical);
+}
+
+/* Disabled — icône estompée (spécificité gagne par ordre de source) */
+.track[data-disabled] .thumb :global(.comete-icon--default) {
+  color: var(--icon-disabled);
+}
+
+/* --------------------------------------------------------------------------
+   Label
+   -------------------------------------------------------------------------- */
+
+.label {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
