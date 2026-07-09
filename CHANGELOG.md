@@ -9,6 +9,18 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.139] - 2026-07-10
+
+### Corrigé
+
+- **Switch** : conformité Figma. Le label est désormais rendu à gauche et
+  l'interrupteur à droite (label en `flex: 1`), au lieu de l'ordre inverse.
+- **Switch** : les glyphes du pouce sont désormais fidèles au design — coche pour
+  `success` (cochée), point d'exclamation nu pour `warning` / `critical` (au lieu
+  de l'icône triangle « Warning »). Rendus en SVG inline (le « ! » nu n'existe pas
+  dans `@naxit/comete-icons`), colorés via `--icon-success` / `--icon-warning` /
+  `--icon-critical`.
+
 ## [1.0.0-alpha.138] - 2026-07-10
 
 ### Corrigé
