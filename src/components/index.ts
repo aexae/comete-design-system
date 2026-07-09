@@ -45,6 +45,7 @@ export * from "./SearchField";
 export * from "./SectionMessage";
 export * from "./Select";
 export * from "./Skeleton";
+export * from "./Snackbar";
 export * from "./Spotlight";
 export * from "./Stack";
 export * from "./Stepper";

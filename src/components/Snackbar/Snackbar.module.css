@@ -1,0 +1,124 @@
+/* ==========================================================================
+   Snackbar — Comète Design System
+   Notification transitoire à fond bold. 100% tokens, zéro valeur hardcodée.
+   Dimensions Figma : radius 4px, padding 16px, gap 16px.
+   ========================================================================== */
+
+.snackbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space200);
+  padding: var(--space200);
+  border-radius: var(--radius050);
+  box-sizing: border-box;
+  font-family: var(--font-family-primary);
+}
+
+/* Zone message — hérite de la couleur du snackbar parent. */
+.message {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-s);
+  color: inherit;
+}
+
+/* --------------------------------------------------------------------------
+   Action — bouton inline à droite du message
+   -------------------------------------------------------------------------- */
+
+.action {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space050);
+  flex-shrink: 0;
+  padding: 0 var(--space100);
+  min-height: var(--size300);
+  border: 0;
+  border-radius: var(--radius0375);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: background-color var(--duration-fast) var(--easing-default);
+}
+
+.actionLabel {
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-s);
+  color: inherit;
+}
+
+/* Overlay au survol / appui — assombrit légèrement le fond coloré. */
+.action[data-hovered] {
+  background-color: var(--background-neutral-bold-hovered);
+}
+
+.action[data-pressed] {
+  background-color: var(--background-neutral-bold-pressed);
+}
+
+/* --------------------------------------------------------------------------
+   Close — bouton icône de fermeture
+   -------------------------------------------------------------------------- */
+
+.close {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: var(--space025) var(--space050);
+  border: 0;
+  border-radius: var(--radius0375);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: background-color var(--duration-fast) var(--easing-default);
+}
+
+.close[data-hovered] {
+  background-color: var(--background-neutral-bold-hovered);
+}
+
+.close[data-pressed] {
+  background-color: var(--background-neutral-bold-pressed);
+}
+
+/* ==========================================================================
+   Apparences — fond bold + couleur de contenu héritée
+   ========================================================================== */
+
+/* information : fond bleu, contenu inversé (blanc) */
+.information {
+  background-color: var(--background-information-bold-default);
+  color: var(--text-inverted);
+}
+
+/* success : fond vert, contenu inversé (blanc) */
+.success {
+  background-color: var(--background-success-bold-default);
+  color: var(--text-inverted);
+}
+
+/* warning : fond jaune (clair), contenu sombre pour le contraste */
+.warning {
+  background-color: var(--background-warning-bold-default);
+  color: var(--text-on-warning);
+}
+
+/* critical : fond rouge, contenu inversé (blanc) */
+.critical {
+  background-color: var(--background-critical-bold-default);
+  color: var(--text-inverted);
+}
+
+/* discovery : fond violet (accent purple), contenu inversé (blanc) */
+.discovery {
+  background-color: var(--background-accent-purple-bold-default);
+  color: var(--text-inverted);
+}
