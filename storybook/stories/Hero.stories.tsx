@@ -31,7 +31,7 @@ const meta = {
   component: Hero,
   tags: ["autodocs"],
   parameters: {
-    layout: "padded",
+    layout: "centered",
     design: { type: "figma", url: figmaUrl("4726:54750") },
   },
   argTypes: {
@@ -42,8 +42,15 @@ const meta = {
     },
     color: {
       control: "inline-radio",
-      options: ["default", "inverse"],
+      options: ["default", "inverted"],
     },
+    align: {
+      control: "inline-radio",
+      options: [undefined, "start", "center", "end"],
+    },
+    italic: { control: "boolean" },
+    noWrap: { control: "boolean" },
+    maxLines: { control: { type: "number", min: 1 } },
     as: {
       control: "select",
       options: ["h1", "h2", "h3", "h4", "h5", "h6", "div", "span"],
@@ -77,11 +84,40 @@ export const AllSizes: Story = {
   ),
 };
 
-export const Inverse: Story = {
+export const Inverted: Story = {
   render: () => (
     <div style={{ background: "var(--background-neutral-bold-default)", padding: 32, borderRadius: 8 }}>
-      <Hero size="large" color="inverse">
+      <Hero size="large" color="inverted">
         Texte inversé sur fond sombre
+      </Hero>
+    </div>
+  ),
+};
+
+export const Align: Story = {
+  render: () => (
+    <Stack gap="300" style={{ width: 800 }}>
+      <Hero size="small" align="start" style={{ border: "1px solid var(--border-default)" }}>Aligné à gauche</Hero>
+      <Hero size="small" align="center" style={{ border: "1px solid var(--border-default)" }}>Centré</Hero>
+      <Hero size="small" align="end" style={{ border: "1px solid var(--border-default)" }}>Aligné à droite</Hero>
+    </Stack>
+  ),
+};
+
+export const Italic: Story = {
+  render: () => (
+    <Hero size="large" italic>
+      Donnez vie à vos données.
+    </Hero>
+  ),
+};
+
+export const MaxLines: Story = {
+  render: () => (
+    <div style={{ maxWidth: 480 }}>
+      <Hero size="small" maxLines={2}>
+        Un titre d’accroche très long qui dépasse largement la largeur disponible
+        et se retrouve tronqué proprement après deux lignes avec des points de suspension.
       </Hero>
     </div>
   ),
