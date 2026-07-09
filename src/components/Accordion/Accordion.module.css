@@ -1,0 +1,133 @@
+/* ==========================================================================
+   Accordion — Comète Design System
+   Composition shadcn / Base UI : Accordion › Item › (Trigger + Content).
+   Style minimal : divider bas par item (par défaut). Les bordures externes
+   et l'encart Card se font par composition (className / <Card>), pas via
+   des props d'apparence. 100% tokens, zéro valeur hardcodée.
+   Data-attributes React Aria : [data-expanded], [data-hovered],
+   [data-pressed], [data-focus-visible-within], [data-disabled].
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Root
+   -------------------------------------------------------------------------- */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-family: var(--font-family-primary);
+}
+
+/* --------------------------------------------------------------------------
+   Item — divider bas par défaut (retirable via className côté consumer)
+   -------------------------------------------------------------------------- */
+
+.item {
+  position: relative;
+  border-bottom: var(--size0125) solid var(--border-subtle);
+}
+
+/* --------------------------------------------------------------------------
+   Trigger — <h3><button/></h3>
+   -------------------------------------------------------------------------- */
+
+.triggerHeading {
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+}
+
+.trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space100);
+  width: 100%;
+  /* Padding vertical 4px (--space050) — espace entre le trigger et les
+     dividers. Pas de min-height : le padding gouverne la hauteur de ligne. */
+  padding: var(--space050) var(--space150);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  /* Typographie text-large-regular (16px, poids regular). */
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-s);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-s);
+  color: var(--text-default);
+  outline: none;
+  transition: background-color var(--duration-fast) var(--easing-default);
+}
+
+.trigger[data-hovered]:not([data-disabled]) {
+  background-color: var(--background-neutral-subtlest-hovered);
+}
+
+.trigger[data-pressed]:not([data-disabled]) {
+  background-color: var(--background-neutral-subtlest-pressed);
+}
+
+.trigger[data-disabled] {
+  cursor: not-allowed;
+  color: var(--text-disabled);
+}
+
+/* Slots */
+.triggerStart {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--icon-subtle);
+}
+
+.triggerLabel {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.triggerChevron {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--icon-default);
+  transition: transform var(--duration-fast) var(--easing-default);
+}
+
+/* Rotation du chevron quand l'item est ouvert (data-expanded exposé par
+   React Aria sur le <Disclosure>). */
+.item[data-expanded="true"] .triggerChevron {
+  transform: rotate(180deg);
+}
+
+/* Icônes estompées quand l'item est désactivé (déclaré après pour gagner
+   à spécificité égale). */
+.item[data-disabled] .triggerChevron,
+.item[data-disabled] .triggerStart {
+  color: var(--icon-disabled);
+}
+
+/* --------------------------------------------------------------------------
+   Content — le panel
+   -------------------------------------------------------------------------- */
+
+/* Panel replié : forcer display:none pour qu'il n'occupe aucune place
+   (sinon son padding bas rend le trigger décentré entre les dividers). */
+.content[hidden] {
+  display: none;
+}
+
+.content {
+  /* Gap 4px (--space050) entre le contenu et le divider bas de l'item. */
+  padding: 0 var(--space150) var(--space050);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xs);
+  color: var(--text-subtle);
+}
