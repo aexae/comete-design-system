@@ -172,9 +172,11 @@ export const Positioned: Story = {
         <div
           style={{
             display: "flex",
-            flexWrap: "wrap",
+            alignItems: "center",
             justifyContent: "center",
+            flexWrap: "wrap",
             gap: 8,
+            minHeight: "80vh",
           }}
         >
           {positions.map((p) => (
