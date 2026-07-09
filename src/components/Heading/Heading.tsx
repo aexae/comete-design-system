@@ -10,7 +10,9 @@ import styles from "./Heading.module.css";
 export type HeadingSize =
   | "xxlarge" | "xlarge" | "large" | "medium" | "small" | "xsmall" | "xxsmall";
 
-export type HeadingColor = "default" | "inverse";
+export type HeadingColor = "default" | "inverted";
+
+export type HeadingAlign = "start" | "center" | "end";
 
 export type HeadingAs = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "div" | "span";
 
@@ -19,10 +21,16 @@ export interface HeadingProps {
   size: HeadingSize;
   /** Couleur du titre. @default "default" */
   color?: HeadingColor;
+  /** Alignement du texte. */
+  align?: HeadingAlign;
+  /** Applique une mise en italique. @default false */
+  italic?: boolean;
   /** Override la balise HTML déduite de la taille. */
   as?: HeadingAs;
   /** Empêche le retour à la ligne (white-space: nowrap). @default false */
   noWrap?: boolean;
+  /** Limite le nombre de lignes avec troncature (ellipsis). */
+  maxLines?: number;
   /** Contenu textuel. */
   children?: ReactNode;
   /** Classe CSS additionnelle. */
@@ -68,8 +76,11 @@ const DEFAULT_AS: Record<HeadingSize, HeadingAs> = {
 export function Heading({
   size,
   color = "default",
+  align,
+  italic,
   as,
   noWrap = false,
+  maxLines,
   children,
   className,
   grow = false,
@@ -83,13 +94,20 @@ export function Heading({
     styles.heading,
     typographyStyles[cssKey],
     styles[`color-${color}` as keyof typeof styles],
+    align ? styles[`align-${align}` as keyof typeof styles] : undefined,
+    italic ? styles.italic : undefined,
     noWrap ? styles.noWrap : undefined,
+    maxLines ? styles.truncate : undefined,
     className,
   ]
     .filter(Boolean)
     .join(" ");
 
-  const mergedStyle = grow ? { flex: 1, minWidth: 0, ...style } : style;
+  const mergedStyle = {
+    ...(grow && { flex: 1, minWidth: 0 }),
+    ...(maxLines ? { WebkitLineClamp: maxLines } : undefined),
+    ...style,
+  };
 
   return (
     <Component className={classNames} id={id} style={mergedStyle}>

@@ -59,9 +59,43 @@ describe("Hero", () => {
     expect(screen.getByText("Hero").className).toContain("color-default");
   });
 
-  it("should apply color-inverse", () => {
-    render(<Hero size="large" color="inverse">Hero</Hero>);
-    expect(screen.getByText("Hero").className).toContain("color-inverse");
+  it("should apply color-inverted", () => {
+    render(<Hero size="large" color="inverted">Hero</Hero>);
+    expect(screen.getByText("Hero").className).toContain("color-inverted");
+  });
+
+  // -------------------------------------------------------------------
+  // Align
+  // -------------------------------------------------------------------
+
+  it("should not apply an align class by default", () => {
+    render(<Hero size="large">Hero</Hero>);
+    expect(screen.getByText("Hero").className).not.toContain("align-");
+  });
+
+  it("should apply align-center", () => {
+    render(<Hero size="large" align="center">Hero</Hero>);
+    expect(screen.getByText("Hero").className).toContain("align-center");
+  });
+
+  // -------------------------------------------------------------------
+  // Italic
+  // -------------------------------------------------------------------
+
+  it("should apply italic class when italic", () => {
+    render(<Hero size="large" italic>Hero</Hero>);
+    expect(screen.getByText("Hero").className).toContain("italic");
+  });
+
+  // -------------------------------------------------------------------
+  // maxLines truncation
+  // -------------------------------------------------------------------
+
+  it("should apply truncate class and WebkitLineClamp when maxLines is set", () => {
+    render(<Hero size="large" maxLines={2}>Hero</Hero>);
+    const el = screen.getByText("Hero");
+    expect(el.className).toContain("truncate");
+    expect(el.style.webkitLineClamp).toBe("2");
   });
 
   // -------------------------------------------------------------------

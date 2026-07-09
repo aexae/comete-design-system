@@ -10,7 +10,9 @@ import styles from "./Hero.module.css";
 export type HeroSize =
   | "xxlarge" | "xlarge" | "large" | "medium" | "small" | "xsmall" | "xxsmall";
 
-export type HeroColor = "default" | "inverse";
+export type HeroColor = "default" | "inverted";
+
+export type HeroAlign = "start" | "center" | "end";
 
 export type HeroAs = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "div" | "span";
 
@@ -19,10 +21,16 @@ export interface HeroProps {
   size: HeroSize;
   /** Couleur du texte. @default "default" */
   color?: HeroColor;
+  /** Alignement du texte. */
+  align?: HeroAlign;
+  /** Applique une mise en italique. @default false */
+  italic?: boolean;
   /** Override la balise HTML déduite de la taille. */
   as?: HeroAs;
   /** Empêche le retour à la ligne (white-space: nowrap). @default false */
   noWrap?: boolean;
+  /** Limite le nombre de lignes avec troncature (ellipsis). */
+  maxLines?: number;
   /** Contenu textuel. */
   children?: ReactNode;
   /** Classe CSS additionnelle. */
@@ -67,8 +75,11 @@ const DEFAULT_AS: Record<HeroSize, HeroAs> = {
 export function Hero({
   size,
   color = "default",
+  align,
+  italic,
   as,
   noWrap = false,
+  maxLines,
   children,
   className,
   grow = false,
@@ -82,13 +93,20 @@ export function Hero({
     styles.hero,
     typographyStyles[cssKey],
     styles[`color-${color}` as keyof typeof styles],
+    align ? styles[`align-${align}` as keyof typeof styles] : undefined,
+    italic ? styles.italic : undefined,
     noWrap ? styles.noWrap : undefined,
+    maxLines ? styles.truncate : undefined,
     className,
   ]
     .filter(Boolean)
     .join(" ");
 
-  const mergedStyle = grow ? { flex: 1, minWidth: 0, ...style } : style;
+  const mergedStyle = {
+    ...(grow && { flex: 1, minWidth: 0 }),
+    ...(maxLines ? { WebkitLineClamp: maxLines } : undefined),
+    ...style,
+  };
 
   return (
     <Component className={classNames} id={id} style={mergedStyle}>

@@ -31,7 +31,7 @@ const meta = {
   component: Heading,
   tags: ["autodocs"],
   parameters: {
-    layout: "padded",
+    layout: "centered",
     design: { type: "figma", url: figmaUrl("4726:54750") },
   },
   argTypes: {
@@ -42,8 +42,15 @@ const meta = {
     },
     color: {
       control: "inline-radio",
-      options: ["default", "inverse"],
+      options: ["default", "inverted"],
     },
+    align: {
+      control: "inline-radio",
+      options: [undefined, "start", "center", "end"],
+    },
+    italic: { control: "boolean" },
+    noWrap: { control: "boolean" },
+    maxLines: { control: { type: "number", min: 1 } },
     as: {
       control: "select",
       options: ["h1", "h2", "h3", "h4", "h5", "h6", "div", "span"],
@@ -90,11 +97,40 @@ export const AsOverride: Story = {
   ),
 };
 
-export const Inverse: Story = {
+export const Inverted: Story = {
   render: () => (
     <div style={{ background: "var(--background-neutral-bold-default)", padding: 24, borderRadius: 8 }}>
-      <Heading size="large" color="inverse">
+      <Heading size="large" color="inverted">
         Titre inversé sur fond sombre
+      </Heading>
+    </div>
+  ),
+};
+
+export const Align: Story = {
+  render: () => (
+    <Stack gap="300" style={{ width: 400 }}>
+      <Heading size="medium" align="start" style={{ border: "1px solid var(--border-default)" }}>Aligné à gauche</Heading>
+      <Heading size="medium" align="center" style={{ border: "1px solid var(--border-default)" }}>Centré</Heading>
+      <Heading size="medium" align="end" style={{ border: "1px solid var(--border-default)" }}>Aligné à droite</Heading>
+    </Stack>
+  ),
+};
+
+export const Italic: Story = {
+  render: () => (
+    <Heading size="large" italic>
+      Titre en italique
+    </Heading>
+  ),
+};
+
+export const MaxLines: Story = {
+  render: () => (
+    <div style={{ maxWidth: 360 }}>
+      <Heading size="medium" maxLines={2}>
+        Un titre de section particulièrement long qui dépasse la largeur disponible
+        et se retrouve tronqué proprement après deux lignes avec une ellipse.
       </Heading>
     </div>
   ),

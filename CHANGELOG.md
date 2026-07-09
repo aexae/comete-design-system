@@ -9,6 +9,20 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.137] - 2026-07-10
+
+### Changements cassants (BREAKING)
+
+- **Hero** et **Heading** : la couleur `color="inverse"` devient `color="inverted"`,
+  pour s'aligner sur la nomenclature de `Text` (`color="inverted"`) et sur le token
+  sous-jacent `--text-inverted`.
+
+### Ajouté
+
+- **Hero** et **Heading** : nouvelles props `align` (`start` | `center` | `end`),
+  `italic` (booléen) et `maxLines` (troncature multi-lignes avec ellipsis),
+  alignées sur l'API de `Text`.
+
 ## [1.0.0-alpha.136] - 2026-06-25
 
 ### Changements cassants (BREAKING)
