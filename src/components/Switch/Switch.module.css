@@ -136,23 +136,29 @@
   height: 2px;
 }
 
-/* Couleur d'icône dans le pouce, par apparence — s'applique à l'Icon
-   (surchargé via :global(.comete-icon--default) pour battre le default de
-   la lib d'icônes). */
-.track[data-appearance="success"] .thumb :global(.comete-icon--default) {
+/* Glyphe indicateur inline (SVG) — remplit le pouce (16×16). Sa couleur
+   provient de `color` du pouce via currentColor. */
+.thumb svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+/* Couleur du glyphe par apparence. */
+.track[data-appearance="success"] .thumb {
   color: var(--icon-success);
 }
 
-.track[data-appearance="warning"] .thumb :global(.comete-icon--default) {
+.track[data-appearance="warning"] .thumb {
   color: var(--icon-warning);
 }
 
-.track[data-appearance="critical"] .thumb :global(.comete-icon--default) {
+.track[data-appearance="critical"] .thumb {
   color: var(--icon-critical);
 }
 
-/* Disabled — icône estompée (spécificité gagne par ordre de source) */
-.track[data-disabled] .thumb :global(.comete-icon--default) {
+/* Disabled — glyphe estompé (spécificité gagne par ordre de source) */
+.track[data-disabled] .thumb {
   color: var(--icon-disabled);
 }
 
@@ -161,6 +167,8 @@
    -------------------------------------------------------------------------- */
 
 .label {
+  flex: 1 1 auto;
+  min-width: 0;
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
