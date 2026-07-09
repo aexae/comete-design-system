@@ -32,7 +32,7 @@ const meta = {
   component: Table,
   tags: ["autodocs"],
   parameters: {
-    layout: "padded",
+    layout: "centered",
     design: { type: "figma", url: figmaUrl("4765:3311") },
   },
   argTypes: {

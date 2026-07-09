@@ -9,6 +9,15 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.138] - 2026-07-10
+
+### Corrigé
+
+- **Table** : le composant composé expose désormais un type nommable `TableComponent`
+  (au lieu du type inféré `typeof TableRoot`, non exportable). Corrige l'erreur TS4023
+  (« name 'TableRoot' … cannot be named ») qui remontait dans les stories et les apps
+  consommatrices dès qu'elles référençaient `typeof Table`.
+
 ## [1.0.0-alpha.137] - 2026-07-10
 
 ### Changements cassants (BREAKING)

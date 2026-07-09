@@ -214,7 +214,7 @@ export const WithTrailing: Story = {
           <Icon icon="Email" />
         </ListItemIcon>
         <ListItemText primary="Boîte de réception" />
-        <Badge label="12" appearance="primary" importance="high" />
+        <Badge label="12" appearance="information" importance="high" />
       </ListItemButton>
       <ListItemButton>
         <ListItemIcon>

@@ -9,6 +9,7 @@ export {
   TableView,
 } from "./Table";
 export type {
+  TableComponent,
   TableProps,
   TableHeadProps,
   TableBodyProps,

@@ -584,4 +584,16 @@ TableView.displayName = "TableView";
 // -----------------------------------------------------------------------
 // Compound API — expose `Table.View` en plus de l'export nommé `TableView`.
 
-export const Table = Object.assign(TableRoot, { View: TableView });
+/**
+ * Type du composant composé `Table`. Explicite (plutôt que `typeof TableRoot`)
+ * pour que `typeof Table` reste nommable côté consommateur — sinon TS4023
+ * (« name 'TableRoot' … cannot be named ») remonte dans les stories/apps.
+ */
+export interface TableComponent {
+  (props: TableProps): ReactElement;
+  displayName?: string;
+  /** Vue haut niveau avec en-tête, pagination et gestion du tri. */
+  View: typeof TableView;
+}
+
+export const Table: TableComponent = Object.assign(TableRoot, { View: TableView });
