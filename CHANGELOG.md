@@ -9,6 +9,17 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.140] - 2026-07-10
+
+### Corrigé
+
+- **Switch** : conformité Figma des états *unchecked* (off). Le rail est désormais
+  neutre (gris) pour **toutes** les apparences en off (fin des teintes
+  `success/warning/critical-subtlest`) ; la couleur d'apparence n'apparaît qu'en
+  checked / indéterminé. Pour `warning` / `critical` en off, le pouce devient un
+  cercle plein coloré (`--background-warning-bold-default` / `--background-critical-bold-default`)
+  avec un glyphe contrasté (`--icon-bold` / `--icon-inverted`).
+
 ## [1.0.0-alpha.139] - 2026-07-10
 
 ### Corrigé
