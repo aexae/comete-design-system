@@ -19,7 +19,7 @@ const meta = {
   component: Switch,
   tags: ["autodocs"],
   parameters: {
-    layout: "padded",
+    layout: "centered",
     design: { type: "figma", url: figmaUrl("4925:9034") },
   },
   argTypes: {
@@ -85,35 +85,40 @@ export const Controlled: Story = {
   },
 };
 
-/** Les 4 apparences sémantiques, sur/off. */
+/** Les 4 apparences sémantiques × états off / indéterminé / on. */
 export const Appearances: Story = {
   render: () => (
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "auto auto auto",
+        gridTemplateColumns: "auto auto auto auto",
         gap: 16,
         alignItems: "center",
       }}
     >
       <span />
       <span style={{ fontSize: 12, color: "var(--text-subtle)" }}>Off</span>
+      <span style={{ fontSize: 12, color: "var(--text-subtle)" }}>Indéterminé</span>
       <span style={{ fontSize: 12, color: "var(--text-subtle)" }}>On</span>
 
       <span style={{ fontSize: 12 }}>default</span>
       <Switch appearance="default" aria-label="default off" />
+      <Switch appearance="default" aria-label="default indeterminate" isIndeterminate />
       <Switch appearance="default" aria-label="default on" defaultChecked />
 
       <span style={{ fontSize: 12 }}>success</span>
       <Switch appearance="success" aria-label="success off" />
+      <Switch appearance="success" aria-label="success indeterminate" isIndeterminate />
       <Switch appearance="success" aria-label="success on" defaultChecked />
 
       <span style={{ fontSize: 12 }}>warning</span>
       <Switch appearance="warning" aria-label="warning off" />
+      <Switch appearance="warning" aria-label="warning indeterminate" isIndeterminate />
       <Switch appearance="warning" aria-label="warning on" defaultChecked />
 
       <span style={{ fontSize: 12 }}>critical</span>
       <Switch appearance="critical" aria-label="critical off" />
+      <Switch appearance="critical" aria-label="critical indeterminate" isIndeterminate />
       <Switch appearance="critical" aria-label="critical on" defaultChecked />
     </div>
   ),
