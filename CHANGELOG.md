@@ -9,6 +9,15 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.141] - 2026-07-15
+
+### Modifié
+
+- **Accordion** : le trigger et le contenu ont désormais un fond plein subtil
+  (`--background-neutral-subtlest-default`) et un padding vertical harmonisé
+  (`--space100`). Le feedback hover/pressed du trigger est conservé.
+- **Tag** : interlignage resserré (`--line-height-ui-xxs` → `--line-height-ui-xxxs`).
+
 ## [1.0.0-alpha.140] - 2026-07-10
 
 ### Corrigé

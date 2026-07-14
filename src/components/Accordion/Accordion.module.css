@@ -45,14 +45,11 @@
   align-items: center;
   gap: var(--space100);
   width: 100%;
-  /* Padding vertical 4px (--space050) — espace entre le trigger et les
-     dividers. Pas de min-height : le padding gouverne la hauteur de ligne. */
-  padding: var(--space050) var(--space150);
-  background: transparent;
+  padding: var(--space100) var(--space150);
+  background: var(--background-neutral-subtlest-default);
   border: 0;
   cursor: pointer;
   text-align: left;
-  /* Typographie text-large-regular (16px, poids regular). */
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-s);
   font-weight: var(--font-weight-regular);
@@ -124,10 +121,11 @@
 
 .content {
   /* Gap 4px (--space050) entre le contenu et le divider bas de l'item. */
-  padding: 0 var(--space150) var(--space050);
+  padding: var(--space100) var(--space150);
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xs);
   color: var(--text-subtle);
+  background: var(--background-neutral-subtlest-default);
 }
