@@ -17,7 +17,7 @@ const meta = {
   title: "Components/Accordion",
   component: Accordion,
   tags: ["autodocs"],
-  parameters: { layout: "padded" },
+  parameters: { layout: "centered" },
   argTypes: {
     multiple: { control: "boolean" },
     disabled: { control: "boolean" },
@@ -52,7 +52,7 @@ const FAQ = [
   },
 ];
 
-const WRAP: React.CSSProperties = { maxWidth: 384 };
+const WRAP: React.CSSProperties = { width: 384 };
 
 // -----------------------------------------------------------------------
 // Stories

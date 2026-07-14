@@ -91,7 +91,7 @@ export const Default: Story = {
           <TableRow key={r.id}>
             <TableCell>{r.title}</TableCell>
             <TableCell>
-              <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} />
+              <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
             </TableCell>
             <TableCell>{r.user}</TableCell>
             <TableCell>{r.key}</TableCell>
@@ -174,7 +174,7 @@ export const Sortable: Story = {
             <TableRow key={r.id}>
               <TableCell>{r.title}</TableCell>
               <TableCell>
-                <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} />
+                <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
               </TableCell>
               <TableCell>{r.user}</TableCell>
               <TableCell>{r.key}</TableCell>
@@ -246,6 +246,7 @@ export const WithSelection: Story = {
                   <Tag
                     label={r.status}
                     appearance={STATUS_APPEARANCE[r.status]}
+                    shape="rounded"
                   />
                 </TableCell>
                 <TableCell>{r.user}</TableCell>
@@ -301,7 +302,7 @@ export const RichCells: Story = {
               </span>
             </TableCell>
             <TableCell>
-              <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} />
+              <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
             </TableCell>
             <TableCell>{r.key}</TableCell>
             <TableCell align="center">
@@ -353,6 +354,7 @@ export const ClickableRows: Story = {
                   <Tag
                     label={r.status}
                     appearance={STATUS_APPEARANCE[r.status]}
+                    shape="rounded"
                   />
                 </TableCell>
                 <TableCell>{r.user}</TableCell>
@@ -532,6 +534,7 @@ export const AllInOne: Story = {
                   <Tag
                     label={r.status}
                     appearance={STATUS_APPEARANCE[r.status]}
+                    shape="rounded"
                   />
                 </TableCell>
                 <TableCell>{r.user}</TableCell>
@@ -571,7 +574,7 @@ export const SelectionToolbar: Story = {
               alignItems: "center",
               gap: "var(--space150)",
               padding: "var(--space100) var(--space150)",
-              background: "var(--background-selected-subtlest-default)",
+              background: "var(--background-neutral-subtlest-default)",
               borderRadius: "var(--radius050)",
             }}
           >
@@ -579,20 +582,14 @@ export const SelectionToolbar: Story = {
               style={{
                 color: "var(--text-default)",
                 fontSize: "var(--font-size-ui-xs)",
+                flexGrow: 1
               }}
             >
               {selected.size} ligne{selected.size > 1 ? "s" : ""} sélectionnée
               {selected.size > 1 ? "s" : ""}
             </span>
-            <Button appearance="subtle" density="compact" iconBefore="Delete">
+            <Button appearance="subtle" iconBefore="Delete">
               Supprimer
-            </Button>
-            <Button
-              appearance="subtle"
-              density="compact"
-              onPress={() => setSelected(new Set())}
-            >
-              Effacer
             </Button>
           </div>
         )}
@@ -644,6 +641,7 @@ export const SelectionToolbar: Story = {
                     <Tag
                       label={r.status}
                       appearance={STATUS_APPEARANCE[r.status]}
+                      shape="rounded"
                     />
                   </TableCell>
                   <TableCell>{r.user}</TableCell>
@@ -726,7 +724,7 @@ export const Virtualized: Story = {
                 <TableCell>{r.id}</TableCell>
                 <TableCell>{r.title}</TableCell>
                 <TableCell>
-                  <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} />
+                  <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
                 </TableCell>
                 <TableCell>{r.user}</TableCell>
                 <TableCell>{r.key}</TableCell>
@@ -772,7 +770,7 @@ export const WithPagination: Story = {
                 <TableCell>{r.id}</TableCell>
                 <TableCell>{r.title}</TableCell>
                 <TableCell>
-                  <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} />
+                  <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
                 </TableCell>
                 <TableCell>{r.user}</TableCell>
                 <TableCell>{r.key}</TableCell>
