@@ -8,7 +8,6 @@ import {
 import type { IconName } from "@naxit/comete-icons";
 import { iconRegistry } from "@naxit/comete-icons";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
-import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Icon options (from registry — always in sync)
@@ -51,29 +50,7 @@ const meta = {
   parameters: {
     docs: {
       page: () => (
-        <DocsTabsPage
-          guidelines={
-            <GuidelinesFlat
-              when={[
-                "Représenter une action ou une option individuelle à l'intérieur d'un Menu.",
-                "Ajouter icône (iconBefore/iconAfter), description ou état sélectionné à une entrée de menu.",
-              ]}
-              avoid={[
-                "En dehors d'un Menu → ce n'est pas un bouton autonome (Button).",
-                "Une entrée de navigation latérale → SideNavItem.",
-                "Une ligne de données → ListItem.",
-              ]}
-              best={[
-                "Libellé = verbe d'action court ; iconBefore pour la reconnaissance, iconAfter (ChevronRight) pour un sous-menu.",
-                "Grouper les items apparentés dans une MenuSection ; réserver isSelected au mode sélection.",
-              ]}
-              accessibility={[
-                "Rôle menuitem ; navigable au clavier au sein du Menu.",
-                "Un libellé d'action clair ; l'icône seule ne suffit pas.",
-              ]}
-            />
-          }
-        />
+        <DocsTabsPage />
       ),
     },
     layout: "centered",

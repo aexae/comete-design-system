@@ -72,6 +72,7 @@ const meta = {
                 "Empiler des sections repliables consultables ensemble → Accordion.",
                 "Une étape séquentielle obligatoire → Stepper.",
                 "Une navigation entre pages/routes → SideNav/TopNav.",
+                "Déclencher une action ponctuelle → Button.",
               ]}
               best={[
                 "Libellés courts ; un onglet actif par défaut ; éviter un trop grand nombre d'onglets (préférer un regroupement).",
@@ -80,6 +81,7 @@ const meta = {
               accessibility={[
                 "`TabList` porte un `aria-label` ; navigation au clavier par les flèches.",
                 "Associer chaque `Tab` (id) à son `TabPanel` correspondant.",
+                "L'état actif ne doit pas être porté par la seule couleur.",
               ]}
             />
           }

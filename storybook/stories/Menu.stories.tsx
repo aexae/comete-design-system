@@ -126,10 +126,12 @@ const meta = {
               best={[
                 "Grouper par MenuSection avec séparateurs ; libellés = verbes d'action ; icônes optionnelles alignées.",
                 "Réserver le mode sélection (`single`/`multiple`) aux options d'affichage, pas aux actions.",
+                "`iconBefore` pour la reconnaissance visuelle, `iconAfter` (ChevronRight) pour signaler un sous-menu.",
               ]}
               accessibility={[
                 "`aria-label` sur le Menu ; navigation au clavier (flèches, saisie rapide, Échap).",
                 "Libellés = verbes d'action ; le mode sélection reste réservé aux options d'affichage.",
+                "L'icône seule ne suffit pas — chaque MenuItem doit garder un libellé textuel.",
               ]}
             />
           }
