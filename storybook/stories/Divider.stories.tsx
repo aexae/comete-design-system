@@ -27,13 +27,12 @@ const meta = {
                 "orientation horizontal (entre blocs empilés) ou vertical (entre éléments d'une ligne).",
               ]}
               avoid={[
-                "Créer de l'espace → utiliser le gap d'un Stack/Cluster plutôt qu'un divider.",
                 "Encadrer un bloc → une bordure (Card).",
-                "Rythmer toute une page de traits → alléger.",
               ]}
               best={[
                 "Utiliser avec parcimonie ; préférer l'espacement quand une séparation implicite suffit.",
                 "orientation cohérente avec la direction du contenu voisin.",
+                "Créer de l'espace : utiliser le `gap` d'un Stack/Cluster plutôt qu'un Divider.",
               ]}
               accessibility={[
                 "Décoratif par défaut (aria-hidden) ; un séparateur porteur de sens prend role=\"separator\".",

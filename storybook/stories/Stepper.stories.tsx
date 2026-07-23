@@ -65,11 +65,11 @@ const meta = {
               avoid={[
                 "Naviguer entre des vues indépendantes → Tabs.",
                 "Une simple progression sans étapes nommées → ProgressBar/ProgressIndicator.",
-                "Trop d'étapes (> ~6) → regrouper ou repenser le parcours.",
               ]}
               best={[
                 "Libellés d'étape courts ; horizontal pour peu d'étapes, vertical pour des libellés longs.",
                 "Distinguer clairement étape courante, complétées et à venir ; valider avant de progresser en mode linéaire.",
+                "Limiter le nombre d'étapes (au-delà de ~6, regrouper ou repenser le parcours).",
               ]}
               accessibility={[
                 "Indiquer l'étape courante (`aria-current`) et l'état (complétée / à venir).",

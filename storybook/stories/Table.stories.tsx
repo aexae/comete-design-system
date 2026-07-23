@@ -100,12 +100,12 @@ const meta = {
               avoid={[
                 "Une seule dimension d'information par ligne → préférer List.",
                 "De la mise en page générale → utiliser Grid ou Stack.",
-                "Un mobile étroit où les colonnes ne tiennent pas → repenser le contenu en cartes.",
               ]}
               best={[
                 "Aligner les nombres à droite (`align=\"right\"`) et le texte à gauche.",
                 "Colonnes triables via `isSortable` + `aria-sort` ; densité `compact` pour les vues denses.",
                 "Le divider bas disparaît quand un footer/pagination est présent (géré par Table.View).",
+                "Sur mobile étroit, repenser le contenu en cartes plutôt qu'en colonnes.",
               ]}
               accessibility={[
                 "En-têtes de colonnes (TableHeaderCell) reliés aux cellules ; navigation au clavier.",

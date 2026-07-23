@@ -90,12 +90,12 @@ const meta = {
               ]}
               avoid={[
                 "La navigation principale → SideNav/TopNav.",
-                "Une hiérarchie plate (1-2 niveaux) → inutile.",
                 "Un parcours séquentiel → Stepper.",
               ]}
               best={[
                 "Dernier item = page courante (`isCurrent`, non cliquable) ; tronquer les niveaux intermédiaires via un menu si trop longs.",
                 "Libellés courts reprenant les titres de page ; du plus général au plus spécifique.",
+                "Réserver aux hiérarchies profondes ; inutile sur 1-2 niveaux.",
               ]}
               accessibility={[
                 "Le dernier item (`isCurrent`) est la page courante, non cliquable.",

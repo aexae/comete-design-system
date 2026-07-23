@@ -59,7 +59,6 @@ const meta = {
               avoid={[
                 "Un parcours avec étapes nommées et validation → Stepper.",
                 "Un avancement chiffré → ProgressBar.",
-                "Un grand nombre de points (> ~10) → repenser la navigation.",
               ]}
               best={[
                 "Garder un total lisible (quelques points) ; refléter l'index courant en synchro avec le contenu.",

@@ -27,7 +27,6 @@ const meta = {
               avoid={[
                 "Un contenu de dialogue → ModalDialog (qui gère déjà son scrim).",
                 "Un simple fond coloré → un style de conteneur.",
-                "Bloquer l'UI sans overlay associé → repenser l'interaction.",
               ]}
               best={[
                 "Utiliser conjointement avec l'overlay qu'il accompagne ; gérer focus/scroll au niveau de l'overlay.",

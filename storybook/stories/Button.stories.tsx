@@ -106,13 +106,12 @@ const meta: Meta<ButtonProps> = {
               ]}
               avoid={[
                 "Naviguer vers une autre page/URL → utiliser un lien (ou appearance=\"link\" si le style bouton est requis).",
-                "Plusieurs actions principales (contained) côte à côte → une seule action dominante par zone.",
-                "Un libellé vague (« OK », « Valider ») → préférer un verbe d'action explicite.",
               ]}
               best={[
                 "Regrouper des actions liées dans un ButtonGroup (action principale à droite).",
                 "Densité alignée sur les champs voisins (`compact`/`default`/`touch`) ; `isLoading` pour désactiver + signaler un traitement.",
                 "Réserver `color=\"critical\"` aux actions destructrices, avec confirmation si irréversible.",
+                "Une seule action principale (`contained`) dominante par zone.",
               ]}
               accessibility={[
                 "Libellé = verbe d'action explicite ; éviter « OK » / « Valider » seuls.",

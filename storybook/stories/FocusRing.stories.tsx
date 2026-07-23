@@ -74,7 +74,6 @@ const meta = {
               avoid={[
                 "Un composant standard → il gère déjà son focus (Button, TextField…).",
                 "Un effet décoratif → un style de bordure.",
-                "Masquer le focus → jamais (accessibilité).",
               ]}
               best={[
                 "Réserver aux éléments interactifs personnalisés ; borderRadius/position alignés sur la cible.",

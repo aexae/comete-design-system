@@ -64,7 +64,6 @@ const meta = {
               avoid={[
                 "Une progression mesurable → ProgressBar.",
                 "Une absence de données (vide) → InformativeState.",
-                "Des chargements très courts → éviter le clignotement.",
               ]}
               best={[
                 "Reproduire la forme/les dimensions du contenu réel (`shape`, `width`, `height`) ; `aria-label` décrivant le chargement.",

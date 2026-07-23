@@ -91,11 +91,11 @@ const meta = {
               avoid={[
                 "Une liste d'éléments homogènes → List.",
                 "De la mise en page générale → Grid/Stack.",
-                "Des cartes imbriquées → aplatir la hiérarchie.",
               ]}
               best={[
                 "`appearance` outlined par défaut ; subtle/bold selon l'emphase ; `color` pour un accent sémantique.",
                 "Composer le contenu (Heading + Text + actions) avec une action principale claire.",
+                "Aplatir la hiérarchie : ne pas imbriquer de cartes.",
               ]}
               accessibility={[
                 "Carte cliquable (`onPress`) : un seul élément focusable la représente.",

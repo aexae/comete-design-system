@@ -53,7 +53,6 @@ const meta = {
               avoid={[
                 "Un séparateur statique → Divider.",
                 "Un état de survol simple → un style hover.",
-                "Sans logique de drag & drop associée → inutile.",
               ]}
               best={[
                 "Afficher uniquement pendant le drag, à la cible d'insertion réelle ; orientation cohérente avec la liste.",

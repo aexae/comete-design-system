@@ -24,7 +24,6 @@ const meta = {
               avoid={[
                 "Un enroulement multi-lignes d'éléments de tailles variées → Cluster.",
                 "Une grille en 2 dimensions (colonnes + lignes) → Grid.",
-                "Espacer via des marges manuelles → utiliser gap.",
               ]}
               best={[
                 "Choisir direction + gap parmi l'échelle de tokens ; aligner via align/justify plutôt qu'avec des marges.",

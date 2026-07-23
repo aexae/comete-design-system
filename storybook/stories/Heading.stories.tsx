@@ -61,7 +61,6 @@ const meta = {
               avoid={[
                 "Du corps de texte → Text.",
                 "Une accroche marketing surdimensionnée → Hero.",
-                "Sauter des niveaux pour un effet visuel → choisir la taille indépendamment du niveau.",
               ]}
               best={[
                 "Faire correspondre le niveau sémantique (`as` h1…h6) à la hiérarchie, la taille au design.",
