@@ -564,3 +564,201 @@ export const BodyFullWidth: Story = {
     </Gutters>
   ),
 };
+
+// =======================================================================
+// Page.Bar — barre de page unifiée (remplace TopNav + Page.Header)
+//
+// NB : en usage réel, le consommateur ne passe QUE `title` — la variante
+// (large/compact) est choisie par le gabarit selon le breakpoint. Les stories
+// forcent `size` uniquement pour afficher chaque variante de façon déterministe
+// (indépendante de la largeur du canvas Storybook).
+// =======================================================================
+
+/** Actions globales type d'une Page.Bar : notifications, réglages, avatar. */
+function BarActions() {
+  return (
+    <>
+      <Button appearance="subtle" iconBefore="Notifications" aria-label="Notifications" />
+      <Button appearance="subtle" iconBefore="Settings" aria-label="Réglages" />
+      <Avatar size="medium" initials="AC" />
+    </>
+  );
+}
+
+/** Cadre borné + contenu long, pour visualiser l'épinglage (sticky) de la compacte. */
+function ScrollFrame({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        height: 420,
+        overflow: "hidden",
+        border: "1px solid var(--border-subtle)",
+        borderRadius: "var(--radius200)",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+const barFiller = Array.from({ length: 24 }, (_, i) => (
+  <p
+    key={i}
+    style={{
+      margin: "0 0 var(--space200)",
+      fontFamily: "var(--font-family-primary)",
+      fontSize: "var(--font-size-ui-s)",
+      color: "var(--text-default)",
+    }}
+  >
+    Ligne de contenu {i + 1}
+  </p>
+));
+
+/**
+ * **Bar — large** : titre 32px + actions globales (notifications, réglages,
+ * avatar). Variante desktop/tablette.
+ */
+export const BarLarge: Story = {
+  name: "Bar — large",
+  render: () => (
+    <Gutters>
+      <Page>
+        <Page.Bar size="large" title="Accueil" trailing={<BarActions />} />
+        <Page.Body>
+          <p>Contenu de la page…</p>
+        </Page.Body>
+      </Page>
+    </Gutters>
+  ),
+};
+
+/**
+ * **Bar — page racine, responsive** : une **seule** affordance de navigation
+ * dans `leading` — ici le menu hamburger (un `<SideNav.Trigger />` en contexte
+ * réel). Aucune `size` forcée : le titre suit la **largeur de la Page** via
+ * `@container`.
+ *
+ * 👉 Redimensionne le cadre (poignée en bas à droite) : sous 768px la barre
+ * passe compacte (épinglée, titre tronqué), au-dessus elle repasse large.
+ *
+ * NB : en contexte réel, l'app n'affiche le hamburger que lorsque la SideNav
+ * est repliée (desktop persistante ⇒ pas de hamburger). Ici il est toujours
+ * montré pour la démo.
+ */
+export const BarRootResponsive: Story = {
+  name: "Bar — root page (responsive)",
+  render: () => (
+    <div
+      style={{
+        resize: "horizontal",
+        overflow: "hidden",
+        width: 1000,
+        maxWidth: "100%",
+        minWidth: 320,
+        height: 420,
+        border: "1px solid var(--border-subtle)",
+        borderRadius: "var(--radius200)",
+      }}
+    >
+      <Page style={{ height: "100%" }}>
+        <Page.Bar
+          title="Accueil"
+          leading={
+            <Button appearance="subtle" iconBefore="Menu" aria-label="Ouvrir le menu" />
+          }
+          trailing={<BarActions />}
+        />
+        <Page.Body>{barFiller}</Page.Body>
+      </Page>
+    </div>
+  ),
+};
+
+/**
+ * **Bar — compacte (épinglée)** : barre 56px `sticky` en haut ; le contenu
+ * défile dessous, la barre reste visible.
+ */
+export const BarCompact: Story = {
+  name: "Bar — compact (pinned)",
+  render: () => (
+    <ScrollFrame>
+      <Page style={{ height: "100%" }}>
+        <Page.Bar
+          size="compact"
+          title="Fiche agent"
+          leading={
+            <Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Retour" />
+          }
+          trailing={<BarActions />}
+        />
+        <Page.Body>{barFiller}</Page.Body>
+      </Page>
+    </ScrollFrame>
+  ),
+};
+
+/**
+ * **Bar — titre long tronqué** (compacte) : le titre s'ellipse sur une ligne
+ * sans pousser les actions trailing.
+ */
+export const BarLongTitle: Story = {
+  name: "Bar — long title (ellipsis)",
+  render: () => (
+    <ScrollFrame>
+      <Page style={{ height: "100%" }}>
+        <Page.Bar
+          size="compact"
+          title="Un titre de page extrêmement long qui doit être tronqué avec une ellipse quand l'espace disponible n'est pas suffisant"
+          trailing={<BarActions />}
+        />
+        <Page.Body>{barFiller}</Page.Body>
+      </Page>
+    </ScrollFrame>
+  ),
+};
+
+/**
+ * **Bar — avec Toolbar** : variante responsive (le consommateur ne passe que
+ * `title`). La Toolbar est composée par le gabarit, inchangée.
+ */
+export const BarWithToolbar: Story = {
+  name: "Bar — with toolbar",
+  render: () => (
+    <Gutters>
+      <Page>
+        <Page.Bar size="large" title="Agents" trailing={<BarActions />} />
+        <Page.Toolbar
+          start={
+            <SearchField aria-label="Rechercher" placeholder="Rechercher un agent…" />
+          }
+          end={<Button color="brand" iconBefore="Add">Nouvel agent</Button>}
+        />
+        <Page.Body>
+          <p>Liste des agents…</p>
+        </Page.Body>
+      </Page>
+    </Gutters>
+  ),
+};
+
+/**
+ * **Bar — sans Toolbar** : page de détail ou de réglages, barre seule.
+ */
+export const BarWithoutToolbar: Story = {
+  name: "Bar — without toolbar",
+  render: () => (
+    <Gutters>
+      <Page>
+        <Page.Bar
+          size="large"
+          title="Paramètres du compte"
+          trailing={<Avatar size="medium" initials="AC" />}
+        />
+        <Page.Body>
+          <p>Contenu de la page…</p>
+        </Page.Body>
+      </Page>
+    </Gutters>
+  ),
+};

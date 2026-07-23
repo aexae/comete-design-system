@@ -6,6 +6,11 @@ import styles from "./TopNav.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
+/**
+ * @deprecated Utiliser `Page.Bar` (fusion de TopNav + Page.Header). `TopNav`
+ * reste disponible pour rétro-compatibilité mais sera retiré dans une version
+ * ultérieure.
+ */
 export interface TopNavProps {
   /** Logo element displayed on desktop/tablet. */
   logo?: ReactNode;
@@ -38,6 +43,10 @@ export interface TopNavProps {
  *   <button>Profile</button>
  * </TopNav>
  * ```
+ *
+ * @deprecated Utiliser `Page.Bar` (fusion de TopNav + Page.Header). `TopNav`
+ * reste disponible pour rétro-compatibilité mais sera retiré dans une version
+ * ultérieure.
  */
 export function TopNav({
   logo,
