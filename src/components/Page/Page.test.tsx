@@ -94,6 +94,78 @@ describe("Page.Header", () => {
   });
 });
 
+describe("Page.Bar", () => {
+  it("should render the title in an h1", () => {
+    const { getByRole } = render(<Page.Bar title="My page" />);
+    const h1 = getByRole("heading", { level: 1 });
+    expect(h1).toBeInTheDocument();
+    expect(h1.textContent).toBe("My page");
+  });
+
+  it("should render a ReactNode title", () => {
+    const { getByText } = render(
+      <Page.Bar title={<span data-testid="custom-title">Custom</span>} />,
+    );
+    expect(getByText("Custom")).toBeInTheDocument();
+  });
+
+  it("should render leading when provided", () => {
+    const { getByText } = render(
+      <Page.Bar title="T" leading={<button>Menu</button>} />,
+    );
+    expect(getByText("Menu")).toBeInTheDocument();
+  });
+
+  it("should NOT render leading slot when omitted", () => {
+    const { container } = render(<Page.Bar title="T" />);
+    expect(container.querySelector("[class*='leading']")).toBeNull();
+  });
+
+  it("should render trailing when provided", () => {
+    const { getByText } = render(
+      <Page.Bar title="T" trailing={<button>Avatar</button>} />,
+    );
+    expect(getByText("Avatar")).toBeInTheDocument();
+  });
+
+  it("should NOT render trailing slot when omitted", () => {
+    const { container } = render(<Page.Bar title="T" />);
+    expect(container.querySelector("[class*='trailing']")).toBeNull();
+  });
+
+  it("should include the base bar class", () => {
+    const { container } = render(<Page.Bar title="T" />);
+    expect((container.firstChild as HTMLElement).className).toContain("bar");
+  });
+
+  it("should render a <header> element", () => {
+    const { container } = render(<Page.Bar title="T" />);
+    expect((container.firstChild as HTMLElement).tagName).toBe("HEADER");
+  });
+
+  it("should be responsive (no size class) by default", () => {
+    const { container } = render(<Page.Bar title="T" />);
+    const cls = (container.firstChild as HTMLElement).className;
+    expect(cls).not.toContain("large");
+    expect(cls).not.toContain("compact");
+  });
+
+  it("should apply the large class when size=large", () => {
+    const { container } = render(<Page.Bar title="T" size="large" />);
+    expect((container.firstChild as HTMLElement).className).toContain("large");
+  });
+
+  it("should apply the compact class when size=compact", () => {
+    const { container } = render(<Page.Bar title="T" size="compact" />);
+    expect((container.firstChild as HTMLElement).className).toContain("compact");
+  });
+
+  it("should include custom className", () => {
+    const { container } = render(<Page.Bar title="T" className="custom" />);
+    expect((container.firstChild as HTMLElement).className).toContain("custom");
+  });
+});
+
 describe("Page.Toolbar", () => {
   it("should render start when provided", () => {
     const { getByText } = render(<Page.Toolbar start={<span>Search</span>} />);
