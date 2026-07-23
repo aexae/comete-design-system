@@ -5,6 +5,8 @@ import {
   SectionMessage,
 } from "@aexae/comete-design-system/components";
 import type { SectionMessageAppearance } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -33,6 +35,50 @@ const meta = {
   component: SectionMessage,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <SectionMessage appearance="critical" title="Import échoué">
+                    3 lignes n&apos;ont pas pu être importées.
+                  </SectionMessage>
+                ),
+                caption:
+                  "Message contextuel, dans le flux, près de l'élément concerné.",
+              }}
+              dontExample={{
+                example: (
+                  <SectionMessage appearance="warning" title="Maintenance">
+                    L&apos;application sera indisponible ce soir.
+                  </SectionMessage>
+                ),
+                caption: "Ne pas l'utiliser pour un message global à toute l'app.",
+              }}
+              when={[
+                "Signaler une information contextuelle rattachée à une section ou un formulaire (aide, erreur locale, succès).",
+                "Message inline persistant, dans le flux, à proximité de ce qu'il concerne.",
+              ]}
+              avoid={[
+                "Un message global sur toute l'app → Banner.",
+                "Un retour transitoire → Snackbar.",
+                "Une interruption bloquante → ModalDialog.",
+              ]}
+              best={[
+                "Titre court + explication ; apparence sémantique cohérente avec la gravité.",
+                "Placer au plus près de l'élément concerné ; au plus une action principale.",
+              ]}
+              accessibility={[
+                "L'apparence sémantique complète le texte, elle ne le remplace pas.",
+                "Une action au plus, accessible au clavier.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("2867-18456") },
   },

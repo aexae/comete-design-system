@@ -7,6 +7,8 @@ import type {
   SingleMonthPickerProps,
   RangeMonthPickerProps,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Figma
@@ -24,6 +26,33 @@ const meta = {
   component: MonthPicker,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Choisir un mois (ou une plage avec isRange) — reporting, facturation, période.",
+                "Quand la granularité « mois » suffit, sans jour précis.",
+              ]}
+              avoid={[
+                "Une date précise → DatePicker.",
+                "Une année seule → YearPicker ; une semaine → WeekPicker.",
+                "Un calendrier jour par jour → Calendar.",
+              ]}
+              best={[
+                "Label explicite ; défaut sur le mois courant si pertinent.",
+                "isRange pour une période ; bornes min/max cohérentes avec les données.",
+              ]}
+              accessibility={[
+                "Label associé ; sélection annoncée ; bornes min/max communiquées.",
+                "Navigation au clavier dans la grille des mois.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: {
       type: "figma",

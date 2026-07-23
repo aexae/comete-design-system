@@ -9,6 +9,8 @@ import {
 } from "@aexae/comete-design-system/components";
 import type { IconName } from "@naxit/comete-icons";
 import { iconRegistry } from "@naxit/comete-icons";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Figma
@@ -50,6 +52,33 @@ const meta = {
     ),
   ],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Représenter un onglet individuel dans une TabList (au sein d'un Tabs).",
+                "Ajouter une icône (iconBefore/iconAfter) ou un état à un onglet.",
+              ]}
+              avoid={[
+                "En dehors d'un Tabs/TabList → ce n'est pas un bouton (Button).",
+                "Une navigation entre pages → SideNav/TopNav.",
+                "Un contenu repliable → Accordion.",
+              ]}
+              best={[
+                "Libellé court ; associer chaque Tab (id) à son TabPanel (id).",
+                "Limiter le nombre d'onglets ; garder un onglet actif par défaut.",
+              ]}
+              accessibility={[
+                "Rôle tab relié à son tabpanel ; sélection au clavier (flèches).",
+                "Libellé court et explicite ; état non porté par la seule couleur.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: {
       type: "figma",

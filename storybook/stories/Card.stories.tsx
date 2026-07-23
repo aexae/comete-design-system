@@ -17,6 +17,8 @@ import {
   Divider,
 } from "@aexae/comete-design-system/components";
 import { expect, fn, userEvent, within } from "storybook/test";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -44,6 +46,66 @@ const meta = {
   component: Card,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <Card appearance="outlined">
+                    <div style={{ padding: "var(--space200)", maxWidth: 220 }}>
+                      <Stack gap="075">
+                        <Heading size="xsmall" as="span">
+                          Rapport mensuel
+                        </Heading>
+                        <Text size="small" as="span" color="subtlest">
+                          Généré le 3 mars
+                        </Text>
+                      </Stack>
+                    </div>
+                  </Card>
+                ),
+                caption: "Regrouper un contenu lié dans un conteneur autonome.",
+              }}
+              dontExample={{
+                example: (
+                  <Card appearance="outlined">
+                    <div style={{ padding: "var(--space200)", maxWidth: 220 }}>
+                      <Card appearance="outlined">
+                        <div style={{ padding: "var(--space200)" }}>
+                          <Text size="small" as="span">
+                            Carte imbriquée
+                          </Text>
+                        </div>
+                      </Card>
+                    </div>
+                  </Card>
+                ),
+                caption: "Ne pas imbriquer des cartes.",
+              }}
+              when={[
+                "Regrouper un contenu lié et ses actions dans un conteneur autonome (résumé, aperçu, tuile).",
+                "Rendre un bloc cliquable (`onPress`) ou déplaçable (`drag`) comme une entité.",
+              ]}
+              avoid={[
+                "Une liste d'éléments homogènes → List.",
+                "De la mise en page générale → Grid/Stack.",
+                "Des cartes imbriquées → aplatir la hiérarchie.",
+              ]}
+              best={[
+                "`appearance` outlined par défaut ; subtle/bold selon l'emphase ; `color` pour un accent sémantique.",
+                "Composer le contenu (Heading + Text + actions) avec une action principale claire.",
+              ]}
+              accessibility={[
+                "Carte cliquable (`onPress`) : un seul élément focusable la représente.",
+                "Ne pas imbriquer de contrôles interactifs dans une carte cliquable.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("5467:27892") },
   },

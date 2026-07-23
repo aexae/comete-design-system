@@ -795,7 +795,15 @@ function TypographyPage(): ReactElement {
 const meta = {
   title: "Foundation/Typography",
   tags: ["autodocs"],
-  parameters: { layout: "fullscreen" },
+  parameters: {
+    layout: "fullscreen",
+    docs: {
+      description: {
+        component:
+          "Référence de l'échelle typographique du Comète Design System (familles, tailles, graisses, interlignages). N'utilisez pas ces valeurs en dur : passez par les composants Text et Heading — ou les tokens --font-* — qui appliquent cette échelle. Cette page aide à choisir le bon style selon le niveau hiérarchique.",
+      },
+    },
+  },
 } satisfies Meta;
 
 export default meta;

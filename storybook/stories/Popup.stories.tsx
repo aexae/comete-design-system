@@ -2,6 +2,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Popup, Button } from "@aexae/comete-design-system/components";
 import type { PopupPlacement } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -46,6 +48,67 @@ const meta = {
     offset: 4,
   },
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <Popup trigger={<Button>Détails</Button>} placement="bottom-left">
+                    <p
+                      style={{
+                        margin: 0,
+                        fontFamily: "var(--font-family-primary)",
+                        fontSize: "var(--font-size-ui-xs)",
+                        color: "var(--text-default)",
+                      }}
+                    >
+                      Contenu flottant court, près du déclencheur.
+                    </p>
+                  </Popup>
+                ),
+                caption: "Contenu flottant court, positionné près du déclencheur.",
+              }}
+              dontExample={{
+                example: (
+                  <Popup trigger={<Button>Actions</Button>} placement="bottom-left">
+                    <p
+                      style={{
+                        margin: 0,
+                        fontFamily: "var(--font-family-primary)",
+                        fontSize: "var(--font-size-ui-xs)",
+                        color: "var(--text-default)",
+                      }}
+                    >
+                      Une liste d&apos;actions ou un dialogue interactif n&apos;y a pas sa place.
+                    </p>
+                  </Popup>
+                ),
+                caption:
+                  "Ne pas y mettre une liste d'actions ou un dialogue interactif.",
+              }}
+              when={[
+                "Positionner un contenu flottant par rapport à un déclencheur (placement + offset), sans la sémantique dialog.",
+                "Comme brique de base pour construire menus, popovers ou tooltips personnalisés.",
+              ]}
+              avoid={[
+                "Un dialogue interactif avec gestion du focus → Popover.",
+                "Une liste d'actions → Menu.",
+              ]}
+              best={[
+                "Choisir le `placement` selon l'espace disponible ; laisser le flip automatique gérer les bords.",
+                "Gérer l'accessibilité (rôle, focus) au niveau du composant qui l'utilise.",
+              ]}
+              accessibility={[
+                "Popup ne gère que le positionnement : rôle, focus et fermeture se gèrent sur le composant hôte.",
+                "S'assurer que le contenu flottant reste atteignable au clavier.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("3247:5981") },
   },

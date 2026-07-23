@@ -8,6 +8,8 @@ import {
   type TextFieldAppearance,
 } from "@aexae/comete-design-system/components";
 import { fn } from "storybook/test";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -22,6 +24,46 @@ const meta = {
   component: TextField,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <Field label="E-mail">
+                    <TextField placeholder="nom@exemple.fr" />
+                  </Field>
+                ),
+                caption: "Champ avec un label explicite (via Field).",
+              }}
+              dontExample={{
+                example: <TextField aria-label="E-mail" placeholder="E-mail" />,
+                caption:
+                  "Ne pas se reposer sur le placeholder en guise de label.",
+              }}
+              when={[
+                "Saisir une valeur textuelle libre courte (nom, e-mail, référence).",
+                "Associer à Field pour label, description et message d'erreur cohérents.",
+              ]}
+              avoid={[
+                "Une recherche → SearchField (icône + clear standardisés).",
+                "Un choix dans une liste finie → Select ; un choix binaire → Switch/Checkbox.",
+                "Un texte long multi-ligne → un textarea (composant dédié).",
+              ]}
+              best={[
+                "Toujours un label (via `Field` ou `aria-label`) ; le placeholder ne remplace pas le label.",
+                "`isInvalid` + message pour l'erreur ; `isClearable`/`isLoading` selon le besoin ; densité alignée sur les voisins.",
+              ]}
+              accessibility={[
+                "Un label associé est obligatoire — le placeholder disparaît à la saisie.",
+                "Signaler l'erreur avec `isInvalid` + message, pas uniquement par la couleur.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("3232:15140") },
   },

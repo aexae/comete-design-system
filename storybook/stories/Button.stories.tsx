@@ -2,6 +2,8 @@ import { Button, DensityProvider } from "@aexae/comete-design-system";
 import type { ButtonProps } from "@aexae/comete-design-system";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, userEvent, within } from "storybook/test";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // ----------------------------------------------------------------------
 // Figma design URLs — public file, addon-designs embeds
@@ -66,6 +68,61 @@ const meta: Meta<ButtonProps> = {
     onPress: fn(),
   },
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <Button appearance="subtle">Annuler</Button>
+                    <Button appearance="contained" color="brand">
+                      Enregistrer
+                    </Button>
+                  </div>
+                ),
+                caption:
+                  "Hiérarchie claire : une action principale, les autres secondaires.",
+              }}
+              dontExample={{
+                example: (
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <Button appearance="contained" color="brand">
+                      Enregistrer
+                    </Button>
+                    <Button appearance="contained" color="brand">
+                      Publier
+                    </Button>
+                  </div>
+                ),
+                caption:
+                  "Ne pas placer deux actions principales concurrentes côte à côte.",
+              }}
+              when={[
+                "Déclencher une action immédiate (soumettre, enregistrer, ouvrir une modale, lancer un traitement).",
+                "Hiérarchiser les actions par apparence : `contained` pour l'action principale, `outlined`/`subtle` pour les secondaires.",
+                "Présenter une navigation comme un lien tout en gardant le comportement bouton via `appearance=\"link\"`.",
+              ]}
+              avoid={[
+                "Naviguer vers une autre page/URL → utiliser un lien (ou appearance=\"link\" si le style bouton est requis).",
+                "Plusieurs actions principales (contained) côte à côte → une seule action dominante par zone.",
+                "Un libellé vague (« OK », « Valider ») → préférer un verbe d'action explicite.",
+              ]}
+              best={[
+                "Regrouper des actions liées dans un ButtonGroup (action principale à droite).",
+                "Densité alignée sur les champs voisins (`compact`/`default`/`touch`) ; `isLoading` pour désactiver + signaler un traitement.",
+                "Réserver `color=\"critical\"` aux actions destructrices, avec confirmation si irréversible.",
+              ]}
+              accessibility={[
+                "Libellé = verbe d'action explicite ; éviter « OK » / « Valider » seuls.",
+                "`isLoading` / `isDisabled` doivent rester perceptibles au clavier et aux lecteurs d'écran.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     design: {
       type: "figma",
       url: figmaUrl("213:725"),

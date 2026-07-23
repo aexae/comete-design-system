@@ -16,6 +16,8 @@ import {
   Tag,
   Text,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Meta
@@ -25,6 +27,76 @@ const meta = {
   component: List,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <div style={{ maxWidth: 280 }}>
+                    <List isBordered aria-label="Notifications">
+                      <ListItem>
+                        <ListItemIcon>
+                          <Icon icon="Notifications" />
+                        </ListItemIcon>
+                        <ListItemText primary="Nouveau message" />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemIcon>
+                          <Icon icon="CheckCircle" />
+                        </ListItemIcon>
+                        <ListItemText primary="Sauvegarde terminée" />
+                      </ListItem>
+                    </List>
+                  </div>
+                ),
+                caption: "Éléments homogènes d'une seule dimension.",
+              }}
+              dontExample={{
+                example: (
+                  <div style={{ maxWidth: 280 }}>
+                    <List isBordered aria-label="Projets">
+                      <ListItem>
+                        <ListItemText
+                          primary="Alpha"
+                          secondary="Actif · John Doe · CODE-001"
+                        />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemText
+                          primary="Beta"
+                          secondary="En attente · Jane Smith · CODE-002"
+                        />
+                      </ListItem>
+                    </List>
+                  </div>
+                ),
+                caption: "Ne pas y entasser des données multi-colonnes.",
+              }}
+              when={[
+                "Empiler des éléments homogènes d'une seule dimension (navigation, menus, réglages, fichiers).",
+                "Quand chaque ligne est une entité avec une action principale (ListItemButton).",
+                "À insérer dans une Card, un Menu ou une SideNav.",
+              ]}
+              avoid={[
+                "Comparer plusieurs colonnes de données → préférer Table.",
+                "Un groupe d'options sélectionnables dans un formulaire → Checkbox/Radio groupés.",
+              ]}
+              best={[
+                "`isBordered=false` par défaut (inséré dans un conteneur) ; l'activer pour un rendu autonome.",
+                "ListItemIcon / ListItemAvatar à largeur fixe pour aligner le texte.",
+                "ListItemSecondaryAction pour une action à droite, sans imbriquer d'interactif dans le bouton.",
+              ]}
+              accessibility={[
+                "`List` porte un `aria-label` ; chaque item est une entité cohérente.",
+                "Action principale via ListItemButton ; ne pas imbriquer d'interactifs.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
   },
   args: {

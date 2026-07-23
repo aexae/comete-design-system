@@ -12,6 +12,8 @@ import {
   type DrawerSize,
   type DrawerStacking,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -54,6 +56,50 @@ const meta = {
     swipeable: false,
   },
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <DrawerProvider>
+                    <DrawerStory placement="right" />
+                  </DrawerProvider>
+                ),
+                caption:
+                  "Tâche secondaire dans un panneau latéral, sans quitter la page.",
+              }}
+              dontExample={{
+                example: (
+                  <DrawerProvider>
+                    <DrawerStory placement="right" />
+                  </DrawerProvider>
+                ),
+                caption: "Ne pas l'utiliser pour une décision courte et bloquante.",
+              }}
+              when={[
+                "Afficher un panneau latéral pour une tâche secondaire sans quitter le contexte (détails, filtres, édition).",
+                "Contenu moyen à long, éventuellement empilé (stacking) ou poussant le contenu (push).",
+              ]}
+              avoid={[
+                "Une décision courte et bloquante → ModalDialog.",
+                "Un petit complément ancré à un déclencheur → Popover.",
+                "Le contenu principal de la page → une vue/route dédiée.",
+              ]}
+              best={[
+                "Structurer avec DrawerHeader/Body/Footer ; placement à droite par défaut pour les détails.",
+                "Une action de fermeture toujours visible ; largeur (`size`) adaptée à la densité du contenu.",
+              ]}
+              accessibility={[
+                "Focus déplacé dans le Drawer à l'ouverture, rendu au déclencheur à la fermeture ; Échap ferme.",
+                "Fournir un titre (`aria-label`/`aria-labelledby`) décrivant le panneau.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "fullscreen",
     design: { type: "figma", url: figmaUrl("5088:14152") },
   },

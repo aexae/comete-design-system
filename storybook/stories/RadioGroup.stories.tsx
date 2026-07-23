@@ -3,6 +3,8 @@ import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Radio, RadioGroup } from "@aexae/comete-design-system/components";
 import { fn } from "storybook/test";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -16,6 +18,56 @@ const meta = {
   component: RadioGroup,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <RadioGroup aria-label="Fréquence" defaultValue="week">
+                    <Radio value="day" label="Quotidien" />
+                    <Radio value="week" label="Hebdomadaire" />
+                    <Radio value="month" label="Mensuel" />
+                  </RadioGroup>
+                ),
+                caption: "Un choix unique parmi des options exclusives visibles.",
+              }}
+              dontExample={{
+                example: (
+                  <RadioGroup aria-label="Pays" defaultValue="fr">
+                    <Radio value="fr" label="France" />
+                    <Radio value="be" label="Belgique" />
+                    <Radio value="ch" label="Suisse" />
+                    <Radio value="lu" label="Luxembourg" />
+                    <Radio value="mc" label="Monaco" />
+                    <Radio value="ca" label="Canada" />
+                  </RadioGroup>
+                ),
+                caption: "Ne pas présenter un grand nombre d'options en radios.",
+              }}
+              when={[
+                "Regrouper des Radio pour un choix unique parmi des options exclusives visibles.",
+                "Dans un formulaire où le choix est validé à la soumission.",
+              ]}
+              avoid={[
+                "Choix multiples → CheckboxGroup.",
+                "Beaucoup d'options → Select (menu déroulant).",
+                "Une bascule binaire immédiate → Switch.",
+              ]}
+              best={[
+                "Label de groupe explicite + `isRequired`/`isInvalid` au niveau du groupe.",
+                "2 à 5 options ; disposition verticale par défaut pour la lisibilité.",
+              ]}
+              accessibility={[
+                "Fournir un label de groupe (`aria-label` ou label visible).",
+                "Navigation au clavier par flèches ; état sélectionné perceptible au-delà de la couleur.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("3704:73901") },
   },

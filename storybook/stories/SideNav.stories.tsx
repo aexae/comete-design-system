@@ -2,6 +2,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { SideNav, Page, Logo, useSideNav } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -94,6 +96,33 @@ const meta: Meta<StoryArgs> = {
   title: "Navigation/SideNav",
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Navigation principale persistante d'une application, sur le côté (sections, rubriques).",
+                "Quand la hiérarchie de navigation est riche et bénéficie d'un mode replié (collapse).",
+              ]}
+              avoid={[
+                "Une navigation d'app mobile → BottomNav.",
+                "Une barre supérieure globale (marque, compte, actions) → TopNav.",
+                "Naviguer entre vues d'une même page → Tabs.",
+              ]}
+              best={[
+                "Structurer avec SideNavSection/Item ; un seul item actif reflétant la route courante.",
+                "Prévoir l'état replié (icônes + tooltips) ; garder l'ordre stable entre les pages.",
+              ]}
+              accessibility={[
+                "Repère de navigation (`nav`) avec un libellé ; un seul item courant (`aria-current`).",
+                "Utilisable au clavier ; en mode replié, chaque icône garde un nom accessible.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "fullscreen",
     design: { type: "figma", url: figmaUrl("4319:15156") },
   },

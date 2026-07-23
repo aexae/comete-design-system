@@ -1,6 +1,8 @@
 // Grid — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Grid, Card } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Meta
@@ -10,6 +12,33 @@ const meta = {
   component: Grid,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Disposer des éléments en grille régulière (cartes, galeries, tableaux de bord).",
+                "Quand on a besoin de colonnes/lignes alignées en 2 dimensions.",
+              ]}
+              avoid={[
+                "Un simple empilement 1D → Stack.",
+                "Un enroulement d'éléments de tailles variées → Cluster.",
+                "La structure d'une page entière → Page.",
+              ]}
+              best={[
+                "gap via tokens ; définir les colonnes de façon responsive.",
+                "Garder des éléments d'hauteur cohérente ; éviter d'imbriquer trop de grilles.",
+              ]}
+              accessibility={[
+                "Layout sans sémantique : l'ordre DOM prime sur le placement visuel.",
+                "Pour un vrai tableau de données → Table (rôles de grille sémantiques).",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "padded",
   },
   argTypes: {

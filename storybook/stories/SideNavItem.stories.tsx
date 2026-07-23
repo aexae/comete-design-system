@@ -3,6 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
 import { SideNavItem } from "@aexae/comete-design-system/components";
 import type { SideNavItemProps } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -22,6 +24,33 @@ const meta = {
   component: SideNavItem,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Entrée de navigation cliquable dans une SideNav (rubrique, page).",
+                "iconBefore pour la reconnaissance ; isSelected pour refléter la route courante.",
+              ]}
+              avoid={[
+                "Une action (et non une navigation) → Button ou MenuItem.",
+                "Une ligne de données → ListItem.",
+                "Un onglet de vue → Tab.",
+              ]}
+              best={[
+                "Un seul item actif reflétant la route ; libellé court + icône cohérente.",
+                "Regrouper via SideNavSection ; prévoir le rendu replié (icône + tooltip).",
+              ]}
+              accessibility={[
+                "Item courant via `aria-current` ; nom accessible en mode replié (icône seule).",
+                "Cible cliquable suffisamment grande ; focus visible.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("4277:13347") },
   },

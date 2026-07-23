@@ -7,6 +7,8 @@ import {
 } from "@aexae/comete-design-system/components";
 import { today, getLocalTimeZone } from "@internationalized/date";
 import { fn } from "storybook/test";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -21,6 +23,33 @@ const meta = {
   component: DatePicker,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Saisir ou choisir une date (ou une plage avec isRange) via un champ + calendrier.",
+                "isEditable pour la saisie clavier segmentée ; idéal dans un formulaire.",
+              ]}
+              avoid={[
+                "Choisir un mois/semaine/année entier → MonthPicker/WeekPicker/YearPicker.",
+                "Une heure → TimePicker.",
+                "Afficher un calendrier permanent sans champ → Calendar.",
+              ]}
+              best={[
+                "Toujours un label (via Field) ; fournir min/max et un défaut pertinent.",
+                "isRange pour les plages ; messages d'erreur clairs sur les dates invalides.",
+              ]}
+              accessibility={[
+                "Champ segmenté navigable au clavier ; label associé obligatoire.",
+                "Erreurs de date annoncées ; bornes min/max communiquées.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("3240:13513") },
   },

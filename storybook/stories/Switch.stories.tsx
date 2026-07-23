@@ -2,6 +2,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Switch } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Figma links
@@ -19,6 +21,47 @@ const meta = {
   component: Switch,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: <Switch defaultChecked>Notifications</Switch>,
+                caption: "Réglage on/off à effet immédiat, avec un label clair.",
+              }}
+              dontExample={{
+                example: (
+                  <div
+                    style={{ display: "flex", flexDirection: "column", gap: 8 }}
+                  >
+                    <Switch>Quotidien</Switch>
+                    <Switch>Hebdomadaire</Switch>
+                  </div>
+                ),
+                caption: "Ne pas gérer un choix exclusif avec plusieurs Switch.",
+              }}
+              when={[
+                "Basculer un réglage on/off à effet immédiat (préférences, activation d'une option).",
+                "Quand l'état s'applique sans étape de validation.",
+              ]}
+              avoid={[
+                "Un choix qui nécessite une soumission de formulaire → Checkbox.",
+                "Un choix parmi plusieurs options exclusives → Radio ou ToggleButtonGroup.",
+              ]}
+              best={[
+                "Label décrivant clairement l'état activé ; apparence sémantique (`success`/`warning`/`critical`) avec parcimonie.",
+                "Mode contrôlé (`isChecked` + `onChange`) pour rester synchronisé avec l'état applicatif.",
+              ]}
+              accessibility={[
+                "Toujours un label (ou `aria-label`) décrivant ce que le switch active.",
+                "L'état activé/désactivé doit être perceptible autrement que par la seule couleur.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "padded",
     design: { type: "figma", url: figmaUrl("4925:9034") },
   },

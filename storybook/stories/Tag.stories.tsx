@@ -1,6 +1,8 @@
 // Tag — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Tag, Cluster, Stack } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -15,6 +17,47 @@ const meta = {
   component: Tag,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <Tag label="Actif" color="success" />
+                    <Tag label="Brouillon" color="neutral" />
+                  </div>
+                ),
+                caption:
+                  "Étiquettes courtes et non interactives, couleur sémantique.",
+              }}
+              dontExample={{
+                example: <Tag label="Enregistrer" color="brand" appearance="bold" />,
+                caption: "Ne pas détourner un Tag en action cliquable.",
+              }}
+              when={[
+                "Étiqueter ou catégoriser un élément (statut, type, mot-clé) de façon compacte et non interactive.",
+                "Afficher plusieurs attributs côte à côte (filtres appliqués, tags d'un contenu).",
+              ]}
+              avoid={[
+                "Un compteur ou une pastille de notification → Badge.",
+                "Une action cliquable principale → Button.",
+                "Un message d'état sur une section → SectionMessage.",
+              ]}
+              best={[
+                "Libellé court (1-2 mots) ; couleur sémantique cohérente avec la signification.",
+                "`appearance=\"subtle\"` par défaut ; `bold` pour attirer l'attention, `outlined` sur fond coloré.",
+              ]}
+              accessibility={[
+                "La couleur ne doit pas être le seul porteur de sens — garder un libellé explicite.",
+                "Un Tag est informatif : ne pas y attacher d'interaction attendue au clavier.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("2984:15878") },
   },

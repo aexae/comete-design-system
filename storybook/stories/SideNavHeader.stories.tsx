@@ -2,6 +2,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
 import { SideNav, Logo } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -33,6 +35,33 @@ const meta = {
   component: SideNavHeaderStory,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "En-tête d'une SideNav : logo/marque + nom d'organisation, en haut de la navigation.",
+                "Pour ancrer l'identité en tête du menu latéral.",
+              ]}
+              avoid={[
+                "Une barre supérieure globale → TopNav.",
+                "Un en-tête de page → Page.Header.",
+                "Un item de navigation → SideNavItem.",
+              ]}
+              best={[
+                "Composer avec Logo ; s'adapter à l'état replié (icône seule).",
+                "companyName/description concis ; à utiliser au sein de SideNav uniquement.",
+              ]}
+              accessibility={[
+                "Le logo a un texte alternatif ; en mode replié, un nom accessible subsiste.",
+                "Ne pas y masquer d'information critique en mode replié.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("4402:2954") },
   },

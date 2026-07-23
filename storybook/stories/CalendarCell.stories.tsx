@@ -148,6 +148,12 @@ const meta = {
       type: "figma",
       url: `${FIGMA_FILE}?node-id=3147-10692`,
     },
+    docs: {
+      description: {
+        component:
+          "Référence design des états visuels de la cellule de Calendar (défaut, survol, sélectionné, plage, aujourd'hui, désactivé). La cellule n'est pas un composant à utiliser directement : elle est rendue par Calendar et DatePicker. Cette page sert de spécification visuelle des états.",
+      },
+    },
   },
 } satisfies Meta;
 

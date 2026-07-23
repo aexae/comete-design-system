@@ -8,6 +8,8 @@ import {
 } from "@aexae/comete-design-system/components";
 import type { IllustrationName } from "@naxit/comete-illustrations";
 import { illustrationRegistry } from "@naxit/comete-illustrations";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Figma
@@ -51,6 +53,65 @@ const meta = {
   title: "Components/InformativeState",
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <div style={{ maxWidth: 320 }}>
+                    <InformativeState
+                      title="Aucun résultat"
+                      description="Aucun élément ne correspond à votre recherche."
+                      image={
+                        <Illustration
+                          illustration={ILLUSTRATION_NAMES[0]}
+                          size={128}
+                        />
+                      }
+                      actions={
+                        <ButtonGroup>
+                          <Button appearance="contained" color="brand">
+                            Réinitialiser
+                          </Button>
+                        </ButtonGroup>
+                      }
+                    />
+                  </div>
+                ),
+                caption: "État plein : illustration, titre, description et action.",
+              }}
+              dontExample={{
+                example: (
+                  <div style={{ maxWidth: 320 }}>
+                    <InformativeState title="Erreur" />
+                  </div>
+                ),
+                caption: "Ne pas l'utiliser pour un simple message inline.",
+              }}
+              when={[
+                "Communiquer un état vide, une absence de résultat, une erreur ou un succès pleine zone.",
+                "Quand il faut orienter l'utilisateur (illustration + titre + description + action).",
+              ]}
+              avoid={[
+                "Un message inline dans le flux → SectionMessage.",
+                "Un chargement → Skeleton.",
+                "Une notification transitoire → Snackbar.",
+              ]}
+              best={[
+                "Titre clair + description concise + au plus une ou deux actions (ButtonGroup).",
+                "Illustration cohérente avec le contexte ; proposer une issue (créer, réessayer, réinitialiser les filtres).",
+              ]}
+              accessibility={[
+                "Titre + description forment un message compréhensible à eux seuls.",
+                "L'illustration est décorative ; les actions sont atteignables au clavier.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: {
       type: "figma",

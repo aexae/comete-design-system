@@ -2,6 +2,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { FieldMessageType } from "@aexae/comete-design-system/components";
 import { Field, TextField } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
@@ -14,6 +16,33 @@ const meta = {
   component: Field,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Habiller un contrôle de formulaire avec un label, une aide et un message d'erreur cohérents.",
+                "Autour de TextField, Select, DatePicker… pour uniformiser la structure de champ.",
+              ]}
+              avoid={[
+                "Un contrôle sans label visible → aria-label directement.",
+                "Un message global → Banner/SectionMessage.",
+                "Le cadre visuel seul → InputContainer.",
+              ]}
+              best={[
+                "Toujours associer un label explicite ; `messageType` `critical`/`success`/`neutral` selon l'état.",
+                "`isRequired` pour signaler l'obligation ; garder le message concis.",
+              ]}
+              accessibility={[
+                "Le label est associé au contrôle (clic sur le label → focus) et le message lié via aria.",
+                "`isRequired` et l'état d'erreur sont annoncés aux lecteurs d'écran.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("0-0") },
   },

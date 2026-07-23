@@ -4,6 +4,8 @@ import {
   ProgressBar,
   type ProgressBarAppearance,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -42,6 +44,33 @@ const meta = {
     showLabel: true,
   },
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Montrer l'avancement déterminé d'une tâche en % (téléchargement, remplissage, quota).",
+                "Quand la proportion est connue et mesurable.",
+              ]}
+              avoid={[
+                "Une attente de durée inconnue → un indicateur indéterminé (spinner).",
+                "Une position dans une séquence d'écrans → ProgressIndicator/Stepper.",
+                "Un simple statut → Tag/Badge.",
+              ]}
+              best={[
+                "appearance auto pour dériver la couleur du contexte ; showLabel pour afficher la valeur.",
+                "Accompagner d'un libellé décrivant ce qui progresse ; valeur 0-100 réaliste.",
+              ]}
+              accessibility={[
+                "Fournir un libellé décrivant ce qui progresse ; la valeur est annoncée (aria-valuenow).",
+                "Ne pas coder l'état uniquement par la couleur de la barre.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "padded",
     design: { type: "figma", url: figmaUrl("5794:3853") },
   },

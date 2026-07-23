@@ -1,6 +1,8 @@
 // Heading — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Heading, Stack } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -31,6 +33,49 @@ const meta = {
   component: Heading,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <Heading size="small" as="h2">
+                    Titre de section
+                  </Heading>
+                ),
+                caption: "Titre hiérarchique (le niveau porte la sémantique).",
+              }}
+              dontExample={{
+                example: (
+                  <Heading size="xxsmall" as="span">
+                    Un paragraphe de contenu courant utilisé à tort comme titre.
+                  </Heading>
+                ),
+                caption: "Ne pas s'en servir pour du corps de texte.",
+              }}
+              when={[
+                "Titrer une page ou une section selon un niveau hiérarchique (h1-h6).",
+                "Structurer le document pour l'accessibilité (ordre des niveaux).",
+              ]}
+              avoid={[
+                "Du corps de texte → Text.",
+                "Une accroche marketing surdimensionnée → Hero.",
+                "Sauter des niveaux pour un effet visuel → choisir la taille indépendamment du niveau.",
+              ]}
+              best={[
+                "Faire correspondre le niveau sémantique (`as` h1…h6) à la hiérarchie, la taille au design.",
+                "Un seul h1 par page ; ne pas sauter de niveaux dans l'arborescence.",
+              ]}
+              accessibility={[
+                "Le niveau (`as` h1…h6) suit la hiérarchie du document, indépendamment de la taille visuelle.",
+                "Un seul `h1` par page ; ne pas sauter de niveaux.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "padded",
     design: { type: "figma", url: figmaUrl("4726:54750") },
   },

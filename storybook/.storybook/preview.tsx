@@ -1,4 +1,5 @@
 import { DocsContainer } from "@storybook/addon-docs/blocks";
+import { DocsTabsPage } from "./DocsTabsPage";
 import { ThemeProvider } from "@aexae/comete-design-system/providers";
 import "@aexae/comete-design-tokens/css";
 import "./preview.css";
@@ -52,6 +53,10 @@ const preview: Preview = {
 
   parameters: {
     docs: {
+      // Page Docs par défaut à onglets (Code / Design / Guidelines). Les tabs
+      // Design/Guidelines n'apparaissent que si un composant les fournit en
+      // surchargeant `docs.page` dans son meta.
+      page: () => <DocsTabsPage />,
       container: (props: ComponentProps<typeof DocsContainer>) => {
         const initial = document.documentElement.getAttribute("data-theme") === "dark";
         const [isDark, setIsDark] = useState(initial); // eslint-disable-line react-hooks/rules-of-hooks
@@ -62,6 +67,11 @@ const preview: Preview = {
           props.context.channel.on(GLOBALS_UPDATED, onGlobalsUpdated);
           return () => { props.context.channel.off(GLOBALS_UPDATED, onGlobalsUpdated); };
         }, [props.context.channel]);
+        // Propage le thème Comète au <html> : le contenu Docs hors stories
+        // (ex. GuidelinesFlat dans l'onglet Guidelines) doit résoudre les tokens
+        // light/dark même quand aucune story n'est montée (le décorateur, lui, ne
+        // s'exécute que pour les stories du tab Code).
+        document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
         return <DocsContainer {...props} theme={isDark ? themes.dark : themes.light} />;
       },
     },

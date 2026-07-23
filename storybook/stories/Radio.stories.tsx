@@ -2,6 +2,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Radio, RadioGroup } from "@aexae/comete-design-system/components";
 import { expect, fn, userEvent, within } from "storybook/test";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -16,6 +18,58 @@ const meta = {
   component: RadioGroup,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <RadioGroup aria-label="Fréquence" defaultValue="week">
+                    <Radio value="day" label="Quotidien" />
+                    <Radio value="week" label="Hebdomadaire" />
+                    <Radio value="month" label="Mensuel" />
+                  </RadioGroup>
+                ),
+                caption:
+                  "Choix unique parmi 2 à 5 options exclusives, toutes visibles.",
+              }}
+              dontExample={{
+                example: (
+                  <RadioGroup aria-label="Pays" defaultValue="fr">
+                    <Radio value="fr" label="France" />
+                    <Radio value="be" label="Belgique" />
+                    <Radio value="ch" label="Suisse" />
+                    <Radio value="lu" label="Luxembourg" />
+                    <Radio value="mc" label="Monaco" />
+                    <Radio value="ca" label="Canada" />
+                  </RadioGroup>
+                ),
+                caption:
+                  "Ne pas empiler un grand nombre d'options en boutons radio.",
+              }}
+              when={[
+                "Proposer un choix unique parmi 2 à ~5 options mutuellement exclusives, toutes visibles.",
+                "Toujours à l'intérieur d'un RadioGroup, qui porte la valeur et le label.",
+              ]}
+              avoid={[
+                "Une option activable/désactivable indépendante → Checkbox ou Switch.",
+                "Plus de ~6 options → Select pour gagner de la place.",
+                "Un réglage on/off à effet immédiat → Switch.",
+              ]}
+              best={[
+                "Une option pré-sélectionnée par défaut quand un défaut raisonnable existe.",
+                "Libellés courts et parallèles ; `isDisabled` sur une option plutôt que la masquer si elle reste informative.",
+              ]}
+              accessibility={[
+                "Le RadioGroup porte le label du groupe ; chaque Radio a un libellé court.",
+                "La sélection doit être perceptible autrement que par la seule couleur.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("3704:73901") },
   },

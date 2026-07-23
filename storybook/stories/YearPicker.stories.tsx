@@ -7,6 +7,8 @@ import type {
   SingleYearPickerProps,
   RangeYearPickerProps,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Figma
@@ -24,6 +26,33 @@ const meta = {
   component: YearPicker,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Choisir une année (ou une plage) — millésime, exercice, archives.",
+                "Quand seule l'année importe.",
+              ]}
+              avoid={[
+                "Une date/mois précis → DatePicker/MonthPicker.",
+                "Une semaine → WeekPicker.",
+                "Un intervalle libre de dates → DatePicker isRange.",
+              ]}
+              best={[
+                "Label explicite ; bornes min/max réalistes (pas de plage infinie).",
+                "isRange pour une période d'années ; défaut sur l'année courante si pertinent.",
+              ]}
+              accessibility={[
+                "Label associé ; sélection annoncée ; bornes réalistes communiquées.",
+                "Navigation au clavier dans la grille des années.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: {
       type: "figma",

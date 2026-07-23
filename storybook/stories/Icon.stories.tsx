@@ -6,6 +6,8 @@ import { iconRegistry } from "@naxit/comete-icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { CSSProperties, ComponentType, ReactElement } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // ----------------------------------------------------------------------
 // Build icon name list from the registry (always in sync with the package)
@@ -88,6 +90,33 @@ const meta: Meta<IconComponentProps> = {
     spacing: "default",
   },
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Renforcer visuellement une action, un statut ou une étiquette par un pictogramme.",
+                "variant (outlined/filled/duotone) et color sémantique selon le contexte.",
+              ]}
+              avoid={[
+                "Une icône mise en avant sur une tuile colorée → IconTile.",
+                "Une image narrative → Illustration.",
+                "Un logo de produit → Logo.",
+              ]}
+              best={[
+                "Accompagner d'un texte, ou fournir un aria-label si l'icône est seule et signifiante.",
+                "Taille et couleur cohérentes avec le texte adjacent ; icône décorative → aria-hidden.",
+              ]}
+              accessibility={[
+                "Icône seule signifiante → fournir un `aria-label` ; décorative → `aria-hidden`.",
+                "Taille et couleur cohérentes avec le texte adjacent (contraste suffisant).",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     design: {
       type: "figma",
       url: figmaUrl("5133-3041"),

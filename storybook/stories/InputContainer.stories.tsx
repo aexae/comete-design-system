@@ -2,6 +2,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { InputContainerAppearance } from "@aexae/comete-design-system/components";
 import { InputContainer } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
@@ -14,6 +16,33 @@ const meta = {
   component: InputContainer,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Brique bas niveau : cadre visuel d'un champ (bordure, densité, états focus/invalid/disabled).",
+                "Pour construire un champ personnalisé partageant l'apparence standard des inputs.",
+              ]}
+              avoid={[
+                "Un champ texte prêt à l'emploi → TextField.",
+                "La gestion label/erreur → Field.",
+                "Une saisie spécifique → le composant dédié (Select, DatePicker…).",
+              ]}
+              best={[
+                "Réserver aux composants sur mesure ; réutiliser `density`/`appearance` pour rester cohérent.",
+                "Gérer l'accessibilité (label, aria) au niveau du champ qui l'englobe.",
+              ]}
+              accessibility={[
+                "InputContainer n'est qu'un cadre visuel : label et rôles se gèrent sur le champ englobant.",
+                "Les états `isInvalid`/`isDisabled` doivent rester perceptibles au-delà de la couleur.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("0-0") },
   },

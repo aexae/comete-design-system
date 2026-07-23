@@ -1,6 +1,8 @@
 // Stack — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Stack, Card } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Meta
@@ -10,6 +12,33 @@ const meta = {
   component: Stack,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Empiler des éléments dans une seule direction (colonne ou ligne) avec un espacement régulier (gap).",
+                "Structurer un contenu vertical simple (formulaire, sections d'une carte).",
+              ]}
+              avoid={[
+                "Un enroulement multi-lignes d'éléments de tailles variées → Cluster.",
+                "Une grille en 2 dimensions (colonnes + lignes) → Grid.",
+                "Espacer via des marges manuelles → utiliser gap.",
+              ]}
+              best={[
+                "Choisir direction + gap parmi l'échelle de tokens ; aligner via align/justify plutôt qu'avec des marges.",
+                "Composer les Stack pour les hiérarchies (Stack de Stacks) au lieu d'espacements ad hoc.",
+              ]}
+              accessibility={[
+                "Layout sans sémantique : l'ordre visuel doit suivre l'ordre du DOM.",
+                "Ne pas véhiculer de sens par le seul espacement.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "padded",
   },
   argTypes: {

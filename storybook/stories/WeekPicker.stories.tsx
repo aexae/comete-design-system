@@ -7,6 +7,8 @@ import type {
   SingleWeekPickerProps,
   RangeWeekPickerProps,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Figma
@@ -24,6 +26,33 @@ const meta = {
   component: WeekPicker,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Choisir une semaine ISO (ou une plage) — planning, feuilles de temps, rapports hebdomadaires.",
+                "Quand la semaine est l'unité de travail.",
+              ]}
+              avoid={[
+                "Un jour précis → DatePicker ; un mois → MonthPicker.",
+                "Un calendrier jour par jour → Calendar.",
+                "Une année → YearPicker.",
+              ]}
+              best={[
+                "Afficher le numéro de semaine ISO et les dates de début/fin pour lever l'ambiguïté.",
+                "Label explicite ; défaut sur la semaine courante ; bornes cohérentes.",
+              ]}
+              accessibility={[
+                "Annoncer le numéro de semaine ET les dates de début/fin.",
+                "Label associé ; navigation au clavier.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: {
       type: "figma",
