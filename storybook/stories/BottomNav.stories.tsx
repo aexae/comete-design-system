@@ -443,7 +443,6 @@ export const WithPopupRight: Story = {
 
 const SCRIM_HEIGHT = 320; // hauteur du voile assombri qui remonte depuis la barre
 const FAB_SIZE = 56; // diamètre du bouton « + » central (FAB surélevé)
-const FAB_SLOT = FAB_SIZE + 12; // largeur réservée au centre (bouton + anneau + marge)
 
 interface MceAction {
   id: string;
@@ -638,7 +637,7 @@ function BottomNavFieldToolMce() {
           style={{
             position: "absolute",
             left: "50%",
-            top: -((FAB_SIZE + 12) / 2),
+            top: -((FAB_SIZE + 12) / 2 - 14),
             transform: "translateX(-50%)",
             width: FAB_SIZE + 12,
             height: FAB_SIZE + 12,
@@ -680,7 +679,7 @@ function BottomNavFieldToolMce() {
             onClick={() => { setSelected("Planning"); }}
           />
           {/* Réserve l'emplacement central pour le bouton + */}
-          <span aria-hidden style={{ flexGrow: 0, flexShrink: 0, flexBasis: FAB_SLOT }} />
+          <span aria-hidden style={{ flex: "1 1 0" }} />
           <BottomNavItem
             label="Rapports"
             icon="Assignment"
@@ -707,7 +706,7 @@ function BottomNavFieldToolMce() {
           style={{
             position: "absolute",
             left: "50%",
-            top: -(FAB_SIZE / 2),
+            top: -(FAB_SIZE / 2 - 14),
             transform: "translateX(-50%)",
             width: FAB_SIZE,
             height: FAB_SIZE,
@@ -728,7 +727,7 @@ function BottomNavFieldToolMce() {
               transition: "transform 200ms ease-out",
             }}
           >
-            <Icon icon="Add" size={24} appearance="filled" color="inverted" />
+            <Icon icon="Add" size={28} appearance="filled" color="inverted" />
           </span>
         </button>
 
