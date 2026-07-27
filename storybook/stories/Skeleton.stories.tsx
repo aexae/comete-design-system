@@ -2,6 +2,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Skeleton } from "@aexae/comete-design-system/components";
 import type { ReactElement } from "react";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -31,6 +33,51 @@ const meta = {
     height: 20,
   },
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                    <Skeleton shape="circle" width={40} height={40} />
+                    <div
+                      style={{ display: "flex", flexDirection: "column", gap: 8 }}
+                    >
+                      <Skeleton width={140} height={12} />
+                      <Skeleton width={90} height={12} />
+                    </div>
+                  </div>
+                ),
+                caption: "Reproduire la forme et les dimensions du contenu réel.",
+              }}
+              dontExample={{
+                example: <Skeleton shape="rectangle" width={200} height={120} />,
+                caption:
+                  "Ne pas utiliser un bloc générique sans rapport avec le contenu.",
+              }}
+              when={[
+                "Réserver l'espace du contenu pendant son chargement (listes, cartes, textes).",
+                "Quand la structure finale est connue et qu'on veut réduire le ressenti d'attente.",
+              ]}
+              avoid={[
+                "Une progression mesurable → ProgressBar.",
+                "Une absence de données (vide) → InformativeState.",
+              ]}
+              best={[
+                "Reproduire la forme/les dimensions du contenu réel (`shape`, `width`, `height`) ; `aria-label` décrivant le chargement.",
+                "Remplacer par le contenu dès qu'il est prêt ; éviter de mélanger skeleton et contenu partiel.",
+              ]}
+              accessibility={[
+                "Annoncer l'état de chargement (`aria-label` / aria-busy) pour les lecteurs d'écran.",
+                "Retirer le skeleton dès l'arrivée du contenu ; éviter les clignotements rapides.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     design: {
       type: "figma",
       url: figmaUrl("9198-44257"),

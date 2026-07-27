@@ -1,6 +1,8 @@
 // SearchField — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { SearchField, Field, Stack } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const meta = {
   title: "Components/SearchField",
@@ -13,6 +15,39 @@ const meta = {
         component:
           "Champ de recherche standardisé. Encapsule TextField avec les conventions du DS : icône `EditorSearch`, clearable, placeholder et aria-label par défaut.",
       },
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: <SearchField placeholder="Rechercher un agent…" />,
+                caption: "Recherche/filtre, avec icône et bouton d'effacement.",
+              }}
+              dontExample={{
+                example: <SearchField placeholder="Adresse e-mail" />,
+                caption:
+                  "Ne pas l'utiliser pour saisir une donnée de formulaire.",
+              }}
+              when={[
+                "Filtrer ou rechercher dans un contenu (liste, tableau, page).",
+                "Quand on veut les conventions DS prêtes à l'emploi : icône de recherche, bouton clear, placeholder « Rechercher ».",
+              ]}
+              avoid={[
+                "Une saisie de donnée de formulaire → TextField.",
+                "Un filtre à choix finis → Select ou ToggleButtonGroup.",
+              ]}
+              best={[
+                "Placeholder décrivant la portée (« Rechercher un agent… ») ; `density=\"compact\"` dans une toolbar.",
+                "Débouncer la recherche côté application ; conserver le focus après effacement.",
+              ]}
+              accessibility={[
+                "Le champ expose un rôle de recherche ; garder un placeholder décrivant la portée.",
+                "Conserver le focus dans le champ après effacement.",
+              ]}
+            />
+          }
+        />
+      ),
     },
   },
   argTypes: {

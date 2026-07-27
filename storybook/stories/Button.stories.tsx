@@ -2,6 +2,8 @@ import { Button, DensityProvider } from "@aexae/comete-design-system";
 import type { ButtonProps } from "@aexae/comete-design-system";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, userEvent, within } from "storybook/test";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // ----------------------------------------------------------------------
 // Figma design URLs — public file, addon-designs embeds
@@ -66,6 +68,42 @@ const meta: Meta<ButtonProps> = {
     onPress: fn(),
   },
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: <Button color="critical">Supprimer</Button>,
+                caption:
+                  "Couleur sémantique alignée sur l'action (`critical` pour une action destructrice).",
+              }}
+              dontExample={{
+                example: <Button color="critical">Enregistrer</Button>,
+                caption:
+                  "Ne pas utiliser une couleur critique pour une action non destructrice.",
+              }}
+              when={[
+                "Déclencher une action immédiate (soumettre, enregistrer, ouvrir une modale, lancer un traitement).",
+                "Hiérarchiser les actions par apparence : `contained` pour l'action principale, `outlined`/`subtle` pour les secondaires.",
+              ]}
+              avoid={[
+                "Naviguer entre des pages → Breadcrumbs ou SideNavItem.",
+              ]}
+              best={[
+                "Regrouper des actions liées dans un ButtonGroup (action principale à droite).",
+                "Densité alignée sur les champs voisins (`compact`/`default`/`touch`) ; `isLoading` pour désactiver + signaler un traitement.",
+                "Réserver `color=\"critical\"` aux actions destructrices, avec confirmation si irréversible.",
+              ]}
+              accessibility={[
+                "Libellé = verbe d'action explicite ; éviter les libellés vagues (« OK », « Oui »).",
+                "`isLoading` / `isDisabled` doivent rester perceptibles au clavier et aux lecteurs d'écran.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     design: {
       type: "figma",
       url: figmaUrl("213:725"),

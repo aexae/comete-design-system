@@ -3,6 +3,8 @@ import { Avatar, Button } from "@aexae/comete-design-system";
 import type { AvatarProps } from "@aexae/comete-design-system";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, userEvent, within } from "storybook/test";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // ----------------------------------------------------------------------
 // Figma design URLs — public file, addon-designs embeds
@@ -74,6 +76,46 @@ const meta: Meta<AvatarProps> = {
     return <Avatar {...resolvedArgs} />;
   },
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <div style={{ display: "flex", gap: 12 }}>
+                    <Avatar initials="AB" />
+                    <Avatar initials="CD" />
+                  </div>
+                ),
+                caption: "Photo ou initiales (2 max) pour représenter une personne.",
+              }}
+              dontExample={{
+                example: <Avatar initials="ALICE" />,
+                caption: "Ne pas dépasser deux initiales.",
+              }}
+              when={[
+                "Représenter une personne ou une entité par une photo, des initiales ou une icône.",
+                "Afficher un statut de présence ou un compteur de notifications greffé.",
+              ]}
+              avoid={[
+                "Plusieurs personnes → AvatarGroup.",
+                "Un logo de marque/produit → Logo.",
+                "Une icône décorative → Icon.",
+              ]}
+              best={[
+                "Priorité photo > initiales > icône ; toujours un `alt`/`aria-label` décrivant la personne.",
+                "Taille cohérente avec le contexte ; presence/notification avec parcimonie.",
+              ]}
+              accessibility={[
+                "Toujours un `alt`/`aria-label` décrivant la personne représentée.",
+                "Une icône purement décorative dans l'avatar reste ignorée des lecteurs d'écran.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     design: {
       type: "figma",
       url: figmaUrl("2745:15527"),

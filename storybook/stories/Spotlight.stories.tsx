@@ -7,6 +7,8 @@ import {
   Text,
   type SpotlightPlacement,
 } from "@aexae/comete-design-system";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // const FIGMA_FILE =
 //   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -21,6 +23,36 @@ const meta: Meta<typeof Spotlight> = {
   component: Spotlight,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Mettre en avant un élément pour l'onboarding ou la découverte d'une fonctionnalité (coach mark).",
+                "Quand on veut attirer l'attention sur une cible précise avec une bulle explicative.",
+                "Première visite ou déploiement d'une nouvelle fonctionnalité que l'utilisateur risque de manquer.",
+              ]}
+              avoid={[
+                "Un complément contextuel permanent → Popover.",
+                "Une liste d'actions → Menu.",
+                "Un message global → Banner.",
+              ]}
+              best={[
+                "Cibler un seul élément à la fois ; texte bref orienté action.",
+                "Enchaîner les étapes d'onboarding avec parcimonie ; toujours permettre de passer/fermer.",
+                "Limiter un parcours d'onboarding à 3-5 étapes maximum pour ne pas frustrer l'utilisateur.",
+              ]}
+              accessibility={[
+                "Le focus va sur la bulle à l'ouverture ; passer/fermer toujours possible (Échap).",
+                "Cibler un seul élément, décrit clairement pour les lecteurs d'écran.",
+                "Le contenu sous le Spotlight (assombri par le Blanket) doit être rendu inerte pour les lecteurs d'écran.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
   },
   argTypes: {

@@ -12,6 +12,8 @@ import {
   MenuPopover,
   MenuTrigger,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -57,6 +59,53 @@ const meta = {
   component: Breadcrumbs,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <Breadcrumbs>
+                    <BreadcrumbItem label="Accueil" onClick={() => undefined} />
+                    <BreadcrumbItem label="Agents" onClick={() => undefined} />
+                    <BreadcrumbItem label="Fiche agent" isCurrent />
+                  </Breadcrumbs>
+                ),
+                caption: "Localisation dans une hiérarchie profonde.",
+              }}
+              dontExample={{
+                example: (
+                  <Breadcrumbs>
+                    <BreadcrumbItem label="Accueil" onClick={() => undefined} />
+                    <BreadcrumbItem label="Profil" isCurrent />
+                  </Breadcrumbs>
+                ),
+                caption:
+                  "Ne pas l'utiliser pour une hiérarchie plate (1-2 niveaux).",
+              }}
+              when={[
+                "Indiquer la localisation dans une hiérarchie profonde et permettre de remonter (fichiers, catégories).",
+                "Quand l'arborescence a plusieurs niveaux et que le contexte de position aide l'utilisateur.",
+              ]}
+              avoid={[
+                "La navigation principale → SideNav/TopNav.",
+                "Un parcours séquentiel → Stepper.",
+              ]}
+              best={[
+                "Dernier item = page courante (`isCurrent`, non cliquable) ; tronquer les niveaux intermédiaires via un menu si trop longs.",
+                "Libellés courts reprenant les titres de page ; du plus général au plus spécifique.",
+                "Réserver aux hiérarchies profondes ; inutile sur 1-2 niveaux.",
+              ]}
+              accessibility={[
+                "Le dernier item (`isCurrent`) est la page courante, non cliquable.",
+                "Repère de navigation avec libellés explicites, navigable au clavier.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("3132:44041") },
   },

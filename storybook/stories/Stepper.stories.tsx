@@ -7,6 +7,8 @@ import {
   Button,
   ButtonGroup,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // Largeur du wrapper adaptée à l'orientation pour que le toggle `orientation`
 // dans les controls reste lisible : 300px en vertical (compact), 600px en
@@ -23,6 +25,61 @@ const meta = {
   component: Stepper,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <div style={{ width: 360 }}>
+                    <Stepper activeStep={1}>
+                      <Step label="Panier" />
+                      <Step label="Adresse" />
+                      <Step label="Paiement" />
+                    </Stepper>
+                  </div>
+                ),
+                caption: "Parcours séquentiel en quelques étapes nommées.",
+              }}
+              dontExample={{
+                example: (
+                  <div style={{ width: 360 }}>
+                    <Stepper activeStep={1}>
+                      <Step label="Un" />
+                      <Step label="Deux" />
+                      <Step label="Trois" />
+                      <Step label="Quatre" />
+                      <Step label="Cinq" />
+                      <Step label="Six" />
+                      <Step label="Sept" />
+                    </Stepper>
+                  </div>
+                ),
+                caption: "Ne pas multiplier les étapes (> ~6).",
+              }}
+              when={[
+                "Guider un parcours séquentiel en plusieurs étapes (formulaire long, assistant, checkout).",
+                "`isLinear` pour imposer l'ordre ; `isClickable` pour autoriser le retour en arrière.",
+              ]}
+              avoid={[
+                "Naviguer entre des vues indépendantes → Tabs.",
+                "Une simple progression sans étapes nommées → ProgressBar/ProgressIndicator.",
+              ]}
+              best={[
+                "Libellés d'étape courts ; horizontal pour peu d'étapes, vertical pour des libellés longs.",
+                "Distinguer clairement étape courante, complétées et à venir ; valider avant de progresser en mode linéaire.",
+                "Limiter le nombre d'étapes (au-delà de ~6, regrouper ou repenser le parcours).",
+              ]}
+              accessibility={[
+                "Indiquer l'étape courante (`aria-current`) et l'état (complétée / à venir).",
+                "Ne pas coder l'état uniquement par la couleur ; navigation cohérente au clavier.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
   },
   argTypes: {

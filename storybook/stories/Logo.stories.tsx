@@ -10,6 +10,8 @@ import {
 import type { CSSProperties, ReactElement } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { logoRegistry } from "@naxit/comete-logos";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 /** All products from the registry — always up to date. */
 const ALL_PRODUCTS = Object.keys(logoRegistry).sort() as LogoProduct[];
@@ -56,6 +58,33 @@ const meta = {
     size: 32,
   },
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Afficher l'identité d'un produit/marque Comète (en-tête, écran de connexion, footer).",
+                "Choisir product/appearance/format selon le contexte.",
+              ]}
+              avoid={[
+                "Représenter une personne → Avatar.",
+                "Un pictogramme d'action → Icon.",
+                "Une illustration narrative → Illustration.",
+              ]}
+              best={[
+                "Respecter les variantes officielles et les zones de protection (ne pas déformer/recolorer).",
+                "appearance adaptée au fond (clair/sombre) ; format selon l'espace disponible.",
+              ]}
+              accessibility={[
+                "Fournir un texte alternatif nommant le produit/la marque.",
+                "Respecter le contraste sur le fond choisi (variante claire/sombre).",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("1981:32146") },
   },

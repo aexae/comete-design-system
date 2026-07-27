@@ -9,6 +9,8 @@ import {
   Card,
   Icon,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Meta
@@ -17,7 +19,71 @@ const meta = {
   title: "Components/Accordion",
   component: Accordion,
   tags: ["autodocs"],
-  parameters: { layout: "centered" },
+  parameters: {
+    layout: "centered",
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <div style={{ maxWidth: 300 }}>
+                    <Accordion defaultValue={["a"]}>
+                      <AccordionItem value="a">
+                        <AccordionTrigger>Est-ce accessible ?</AccordionTrigger>
+                        <AccordionContent>
+                          Oui, conforme au pattern WAI-ARIA.
+                        </AccordionContent>
+                      </AccordionItem>
+                      <AccordionItem value="b">
+                        <AccordionTrigger>Est-ce personnalisable ?</AccordionTrigger>
+                        <AccordionContent>
+                          Oui, via les design tokens.
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  </div>
+                ),
+                caption: "Sections repliables consultées séparément (FAQ, détails).",
+              }}
+              dontExample={{
+                example: (
+                  <div style={{ maxWidth: 300 }}>
+                    <Accordion defaultValue={["a"]}>
+                      <AccordionItem value="a">
+                        <AccordionTrigger>Section unique</AccordionTrigger>
+                        <AccordionContent>
+                          Un contenu court, toujours pertinent.
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  </div>
+                ),
+                caption: "Ne pas l'utiliser pour une seule section.",
+              }}
+              when={[
+                "Regrouper du contenu long en sections repliables (FAQ, détails, réglages).",
+                "Quand l'utilisateur n'a besoin que d'une partie du contenu à la fois.",
+              ]}
+              avoid={[
+                "Naviguer entre des vues de même niveau → Tabs.",
+                "Du contenu court toujours pertinent → l'afficher directement, sans repli.",
+              ]}
+              best={[
+                "`multiple=false` par défaut (une section ouverte) ; `multiple` si les sections sont indépendantes.",
+                "Bordures / encart via composition (Card), pas de prop d'apparence dédiée.",
+              ]}
+              accessibility={[
+                "Chaque en-tête est un bouton ; l'état ouvert/fermé est annoncé aux lecteurs d'écran.",
+                "Navigation au clavier ; le contenu suit son déclencheur dans l'ordre du DOM.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
+  },
   argTypes: {
     multiple: { control: "boolean" },
     disabled: { control: "boolean" },

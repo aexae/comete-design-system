@@ -3,6 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
 import { FocusRing } from "@aexae/comete-design-system/components";
 import type { FocusRingBorderRadius, FocusRingPosition } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -60,6 +62,32 @@ const meta = {
   component: FocusRing,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Ajouter un anneau de focus cohérent autour d'un élément interactif personnalisé.",
+                "Quand un composant sur mesure doit adopter le focus visible du DS.",
+              ]}
+              avoid={[
+                "Un composant standard → il gère déjà son focus (Button, TextField…).",
+                "Un effet décoratif → un style de bordure.",
+              ]}
+              best={[
+                "Réserver aux éléments interactifs personnalisés ; borderRadius/position alignés sur la cible.",
+                "Ne jamais supprimer le focus visible ; s'appuyer sur focus-visible.",
+              ]}
+              accessibility={[
+                "Ne jamais supprimer le focus visible ; s'appuyer sur `:focus-visible`.",
+                "L'anneau doit rester visible sur tous les fonds (contraste suffisant).",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("3134:45684") },
   },

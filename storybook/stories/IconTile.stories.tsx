@@ -12,6 +12,8 @@ import type {
 } from "@aexae/comete-design-system/components";
 import type { IconName } from "@naxit/comete-icons";
 import { iconRegistry } from "@naxit/comete-icons";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Constants
@@ -44,6 +46,33 @@ const meta = {
   component: IconTile,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Mettre en avant une icône dans une tuile colorée (fonctionnalité, catégorie, en-tête de carte).",
+                "Quand l'icône doit avoir plus de présence qu'un simple Icon.",
+              ]}
+              avoid={[
+                "Une icône inline dans du texte ou un bouton → Icon.",
+                "Une image narrative → Illustration.",
+                "Un avatar de personne → Avatar.",
+              ]}
+              best={[
+                "appearance sémantique cohérente avec la catégorie ; taille selon le contexte.",
+                "Garder l'icône lisible ; associer un libellé décrivant la fonction.",
+              ]}
+              accessibility={[
+                "La tuile est décorative : le sens vient du libellé qui l'accompagne.",
+                "Contraste suffisant entre l'icône et le fond de la tuile.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
   },
   argTypes: {

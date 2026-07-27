@@ -20,6 +20,8 @@ import {
   Icon,
   Tag,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Meta
@@ -29,6 +31,33 @@ const meta = {
   component: Bleed,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Faire déborder un contenu au-delà du padding de son conteneur (média pleine largeur, séparateur bord à bord).",
+                "isFull pour occuper toute la largeur disponible.",
+              ]}
+              avoid={[
+                "Un simple espacement → gap/padding via Stack.",
+                "Une mise en page globale → Page/Grid.",
+                "Détourer un overlay → Blanket.",
+              ]}
+              best={[
+                "Réserver aux cas de débordement volontaire ; vérifier le rendu responsive.",
+                "Associer à Card/Page pour les médias bord à bord.",
+              ]}
+              accessibility={[
+                "Bleed ne fait que déborder visuellement : aucune sémantique ajoutée.",
+                "Vérifier que le contenu débordant reste lisible et atteignable au clavier.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "fullscreen",
   },
   argTypes: {

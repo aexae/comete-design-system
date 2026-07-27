@@ -4,6 +4,8 @@ import {
   ToggleButtonGroup,
   ToggleButton,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Figma
@@ -21,6 +23,60 @@ const meta = {
   component: ToggleButtonGroup,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <ToggleButtonGroup
+                    selectionMode="single"
+                    defaultSelectedKeys={["list"]}
+                    aria-label="Vue"
+                  >
+                    <ToggleButton id="list">Liste</ToggleButton>
+                    <ToggleButton id="grid">Grille</ToggleButton>
+                    <ToggleButton id="board">Tableau</ToggleButton>
+                  </ToggleButtonGroup>
+                ),
+                caption: "Sélection segmentée parmi quelques options visibles.",
+              }}
+              dontExample={{
+                example: (
+                  <ToggleButtonGroup selectionMode="single" aria-label="Statut">
+                    <ToggleButton id="a">Nouveau</ToggleButton>
+                    <ToggleButton id="b">En cours</ToggleButton>
+                    <ToggleButton id="c">En attente</ToggleButton>
+                    <ToggleButton id="d">Résolu</ToggleButton>
+                    <ToggleButton id="e">Fermé</ToggleButton>
+                    <ToggleButton id="f">Archivé</ToggleButton>
+                  </ToggleButtonGroup>
+                ),
+                caption: "Ne pas l'utiliser pour un grand nombre d'options.",
+              }}
+              when={[
+                "Choisir parmi un petit nombre d'options visibles en permanence (alignement, vue liste/grille, filtre rapide).",
+                "Sélection unique (`single`) ou multiple (`multiple`) avec retour visuel immédiat, sans validation.",
+              ]}
+              avoid={[
+                "Un choix dans un formulaire soumis → RadioGroup (single) ou CheckboxGroup (multiple).",
+                "Déclencher des actions plutôt que sélectionner un état → ButtonGroup.",
+                "Un grand nombre d'options → Select.",
+              ]}
+              best={[
+                "2 à 5 options courtes, idéalement avec icône ; toujours un `aria-label` sur le groupe.",
+                "Garder au moins une option sélectionnée en mode `single` (`defaultSelectedKeys`).",
+              ]}
+              accessibility={[
+                "Toujours un `aria-label` décrivant le groupe.",
+                "Navigation au clavier ; l'état sélectionné ne repose pas uniquement sur la couleur.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: {
       type: "figma",

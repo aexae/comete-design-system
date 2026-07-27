@@ -7,6 +7,8 @@ import {
 } from "@aexae/comete-design-system/components";
 import { Time } from "@internationalized/date";
 import { fn } from "storybook/test";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -21,6 +23,35 @@ const meta = {
   component: TimePicker,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Saisir ou choisir une heure (champ segmenté), seule ou en complément d'une date.",
+                "hourCycle 12h/24h selon la locale.",
+                "Formulaires nécessitant une heure précise (rendez-vous, alarme, planification).",
+              ]}
+              avoid={[
+                "Une date → DatePicker.",
+                "Une durée → un champ dédié.",
+                "Un libellé horaire non éditable → Text.",
+              ]}
+              best={[
+                "Label explicite (via Field) ; densité alignée sur les champs voisins.",
+                "Respecter la locale (hourCycle) ; messages d'erreur pour les heures invalides.",
+                "Associer au DatePicker quand date + heure sont requises ensemble.",
+              ]}
+              accessibility={[
+                "Champ segmenté navigable au clavier ; label associé obligatoire.",
+                "Respecter la locale (hourCycle) pour l'annonce de l'heure.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("6284:794") },
   },

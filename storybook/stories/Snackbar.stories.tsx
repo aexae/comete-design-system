@@ -7,6 +7,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import { Button, Snackbar } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Figma links
@@ -43,6 +45,57 @@ const meta = {
   component: Snackbar,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <div style={{ maxWidth: 340 }}>
+                    <Snackbar
+                      appearance="success"
+                      action={{ label: "Annuler", onPress: () => undefined }}
+                      onClose={() => undefined}
+                    >
+                      Élément supprimé.
+                    </Snackbar>
+                  </div>
+                ),
+                caption: "Retour bref et transitoire, non bloquant.",
+              }}
+              dontExample={{
+                example: (
+                  <div style={{ maxWidth: 340 }}>
+                    <Snackbar appearance="warning">
+                      Votre session va bientôt expirer. Enregistrez votre travail
+                      et reconnectez-vous pour éviter toute perte de données.
+                    </Snackbar>
+                  </div>
+                ),
+                caption: "Ne pas y mettre un message long ou permanent.",
+              }}
+              when={[
+                "Notifier d'un événement transitoire suite à une action (sauvegarde, suppression, échec d'envoi).",
+                "Quand un retour bref et non bloquant suffit, éventuellement avec une action (Annuler / Réessayer).",
+              ]}
+              avoid={[
+                "Un message persistant pleine largeur → Banner.",
+                "Une confirmation bloquante nécessitant une décision → ModalDialog.",
+              ]}
+              best={[
+                "`role=\"alert\"` pour les messages critiques/urgents ; `status` (défaut) sinon.",
+                "Une action courte au maximum + fermeture ; l'auto-hide est géré côté application.",
+              ]}
+              accessibility={[
+                "`role=\"alert\"` pour l'urgent, `status` (défaut) sinon — annoncé sans voler le focus.",
+                "Durée d'auto-hide suffisante pour lire ; une seule action, accessible au clavier.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "padded",
     design: { type: "figma", url: figmaUrl("5448:1991") },
   },

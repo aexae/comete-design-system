@@ -15,6 +15,8 @@ import {
   Tag,
   type TableSortDirection,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Figma links
@@ -32,6 +34,88 @@ const meta = {
   component: Table,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <Table aria-label="Projets">
+                    <TableHead>
+                      <TableRow>
+                        <TableHeaderCell>Projet</TableHeaderCell>
+                        <TableHeaderCell>Statut</TableHeaderCell>
+                        <TableHeaderCell>Responsable</TableHeaderCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>Alpha</TableCell>
+                        <TableCell>
+                          <Tag label="Actif" appearance="subtle" />
+                        </TableCell>
+                        <TableCell>John Doe</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Beta</TableCell>
+                        <TableCell>
+                          <Tag label="En attente" appearance="subtle" />
+                        </TableCell>
+                        <TableCell>Jane Smith</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                ),
+                caption: "Comparer des données sur plusieurs colonnes.",
+              }}
+              dontExample={{
+                example: (
+                  <Table aria-label="Agents">
+                    <TableHead>
+                      <TableRow>
+                        <TableHeaderCell>Agent</TableHeaderCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell>John Doe</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Jane Smith</TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>Alice Chen</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                ),
+                caption: "Ne pas l'utiliser pour une seule colonne.",
+              }}
+              when={[
+                "Afficher des données tabulaires comparables sur plusieurs colonnes (listes d'entités, rapports).",
+                "Quand l'utilisateur doit trier, scanner ou comparer des lignes entre elles.",
+                "Associer TablePagination pour les grands jeux de données et Table.View pour un en-tête (toolbar) + pied.",
+              ]}
+              avoid={[
+                "Une seule dimension d'information par ligne → préférer List.",
+                "De la mise en page générale → utiliser Grid ou Stack.",
+              ]}
+              best={[
+                "Aligner les nombres à droite (`align=\"right\"`) et le texte à gauche.",
+                "Colonnes triables via `isSortable` + `aria-sort` ; densité `compact` pour les vues denses.",
+                "Le divider bas disparaît quand un footer/pagination est présent (géré par Table.View).",
+                "Sur mobile étroit, repenser le contenu en cartes plutôt qu'en colonnes.",
+              ]}
+              accessibility={[
+                "En-têtes de colonnes (TableHeaderCell) reliés aux cellules ; navigation au clavier.",
+                "`align=\"right\"` pour les nombres ; l'état de tri est annoncé (`aria-sort`).",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("4765:3311") },
   },
@@ -793,4 +877,3 @@ export const WithPagination: Story = {
     );
   },
 };
-

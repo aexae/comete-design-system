@@ -11,6 +11,8 @@ import {
   Text,
 } from "@aexae/comete-design-system/components";
 import type { IconName } from "@naxit/comete-icons";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -28,6 +30,36 @@ const meta = {
   parameters: {
     layout: "centered",
     design: { type: "figma", url: figmaUrl("2524:18591") },
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Navigation principale sur mobile : 3 à 5 destinations de premier niveau accessibles au pouce.",
+                "Quand l'app est consultée majoritairement sur petit écran.",
+                "Applications web progressives (PWA) ou apps hybrides ciblant principalement le mobile.",
+              ]}
+              avoid={[
+                "Un desktop avec navigation riche → SideNav.",
+                "Une barre globale marque/compte → TopNav.",
+                "Plus de 5 destinations → regrouper via un item « Plus » (Menu).",
+              ]}
+              best={[
+                "3 à 5 items avec icône + libellé court ; un seul actif reflétant la vue courante.",
+                "Icônes explicites et cohérentes ; réserver le débordement à un menu « Plus ».",
+                "Masquer la BottomNav au scroll descendant pour gagner de l'espace, la réafficher au scroll montant.",
+              ]}
+              accessibility={[
+                "Chaque item a un libellé (visible ou `aria-label`) ; item courant via `aria-current`.",
+                "Cibles tactiles suffisamment grandes ; navigation possible au clavier.",
+                "Assurer un contraste suffisant entre l'icône active et les icônes inactives.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
   },
   decorators: [
     (Story: () => ReactNode) => (

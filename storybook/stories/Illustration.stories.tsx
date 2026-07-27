@@ -5,6 +5,8 @@ import { illustrationRegistry } from "@naxit/comete-illustrations";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { CSSProperties, ComponentType, ReactElement } from "react";
 import { useEffect, useRef, useState } from "react";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // ----------------------------------------------------------------------
 // Build illustration name list from the registry (always in sync with the package)
@@ -43,6 +45,33 @@ const meta: Meta<IllustrationComponentProps> = {
     size: 256,
   },
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Illustrer un état ou un concept par une image narrative (état vide, succès, onboarding).",
+                "Souvent dans un InformativeState pour donner du contexte.",
+              ]}
+              avoid={[
+                "Un pictogramme fonctionnel → Icon.",
+                "Une tuile d'icône → IconTile.",
+                "Un logo de marque → Logo.",
+              ]}
+              best={[
+                "Choisir une illustration cohérente avec le message ; taille adaptée à la zone.",
+                "Accompagner d'un titre/texte ; rester sobre (une illustration par état).",
+              ]}
+              accessibility={[
+                "Décorative par défaut (aria-hidden) ; porteuse de sens → texte alternatif.",
+                "Ne pas véhiculer une information uniquement par l'illustration.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     design: {
       type: "figma",
       url: "https://www.figma.com/design/3rYV3P1VzRh0q22HNhgCZv/Com%C3%A8te-icons?node-id=723-3562",

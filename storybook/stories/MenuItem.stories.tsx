@@ -7,6 +7,7 @@ import {
 } from "@aexae/comete-design-system/components";
 import type { IconName } from "@naxit/comete-icons";
 import { iconRegistry } from "@naxit/comete-icons";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 
 // -----------------------------------------------------------------------
 // Icon options (from registry — always in sync)
@@ -47,6 +48,11 @@ const meta = {
   component: MenuItem as unknown as ComponentType<MenuItemStoryArgs>,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage />
+      ),
+    },
     layout: "centered",
     design: {
       type: "figma",

@@ -11,6 +11,8 @@ import type {
   ProgressIndicatorSize,
   ProgressIndicatorSpacing,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Figma
@@ -45,6 +47,33 @@ const meta = {
   component: ProgressIndicator,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Indiquer la position dans une séquence courte de pages/écrans (onboarding, carrousel).",
+                "Quand seul le repère « où suis-je » importe, sans détail d'étape.",
+              ]}
+              avoid={[
+                "Un parcours avec étapes nommées et validation → Stepper.",
+                "Un avancement chiffré → ProgressBar.",
+              ]}
+              best={[
+                "Garder un total lisible (quelques points) ; refléter l'index courant en synchro avec le contenu.",
+                "Combiner avec des boutons/gestes de navigation ; taille/espacement selon la densité.",
+                "Associer les dots à un geste de swipe ou des boutons précédent/suivant pour la navigation.",
+              ]}
+              accessibility={[
+                "Annoncer la position courante (« étape 2 sur 5 »).",
+                "Les points ne sont pas le seul repère — accompagner d'un libellé.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: {
       type: "figma",

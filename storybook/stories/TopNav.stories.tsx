@@ -7,6 +7,8 @@ import {
   Avatar,
   Text,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -21,6 +23,35 @@ const meta = {
   component: TopNav,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Barre supérieure globale : marque, navigation de haut niveau, compte/actions.",
+                "Quand un accès permanent à l'identité de l'app et aux actions globales est requis.",
+                "Applications desktop ou responsive nécessitant un accès permanent au branding et aux actions globales.",
+              ]}
+              avoid={[
+                "La navigation principale riche par sections → SideNav.",
+                "La navigation d'app mobile → BottomNav.",
+                "Un fil d'Ariane de localisation → Breadcrumbs.",
+              ]}
+              best={[
+                "Marque à gauche, actions/compte à droite ; limiter les items de premier niveau.",
+                "Cohérent sur toutes les pages ; regrouper les actions secondaires dans un Menu.",
+                "Sur mobile, regrouper les items dans un menu hamburger plutôt que de tronquer.",
+              ]}
+              accessibility={[
+                "Repère de navigation principal (`nav`/`banner`) avec un libellé explicite.",
+                "Toutes les actions atteignables au clavier ; une icône seule garde un nom accessible.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "fullscreen",
     design: { type: "figma", url: figmaUrl("4323:3313") },
     backgrounds: {                                                                                  

@@ -1,6 +1,8 @@
 // Text — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Text, Stack } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -15,6 +17,49 @@ const meta = {
   component: Text,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <Text size="medium" as="p">
+                    Un paragraphe de contenu courant, lisible et bien contrasté.
+                  </Text>
+                ),
+                caption: "Corps de texte, libellés, descriptions.",
+              }}
+              dontExample={{
+                example: (
+                  <Text size="large" weight="bold" as="p">
+                    Titre de section
+                  </Text>
+                ),
+                caption: "Ne pas s'en servir comme titre.",
+              }}
+              when={[
+                "Afficher du corps de texte, des libellés, des descriptions.",
+                "Choisir size/weight/color parmi l'échelle sémantique.",
+              ]}
+              avoid={[
+                "Un titre hiérarchique → Heading.",
+                "Une accroche de grande taille → Hero.",
+                "Du code inline → Code.",
+              ]}
+              best={[
+                "Utiliser les couleurs sémantiques (`subtle`/`subtlest` pour le secondaire) plutôt que des couleurs brutes.",
+                "`as` pour la balise sémantique correcte ; garder une échelle typographique cohérente.",
+              ]}
+              accessibility={[
+                "`as` choisit la balise sémantique (`p`, `span`…) adaptée au contenu.",
+                "Contraste suffisant : préférer les tokens de couleur sémantiques.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("4726:54750") },
   },

@@ -587,6 +587,12 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
+    docs: {
+      description: {
+        component:
+          "Explorateur des design tokens de @aexae/comete-design-tokens (couleurs, espacements, rayons, typographie, élévations) en thèmes clair et sombre. Utilisez toujours les tokens (var(--…)) plutôt que des valeurs codées en dur, et préférez les tokens sémantiques (--text-*, --background-*, --border-*) aux primitifs. Cette page sert à retrouver le bon token.",
+      },
+    },
   },
 } satisfies Meta;
 

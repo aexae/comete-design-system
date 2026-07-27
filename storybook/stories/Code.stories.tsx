@@ -1,6 +1,8 @@
 // Code — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Code } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -15,6 +17,35 @@ const meta = {
   component: Code,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Mettre en évidence un fragment technique inline (nom de variable, valeur, raccourci, clé).",
+                "Quand un texte doit se distinguer comme du code au sein d'une phrase.",
+                "Documentation technique inline (noms de props, valeurs de tokens, raccourcis clavier).",
+              ]}
+              avoid={[
+                "Un bloc de code multi-lignes → un bloc de code dédié.",
+                "Simplement mettre en gras → Text weight bold.",
+                "Un badge de statut → Tag/Badge.",
+              ]}
+              best={[
+                "Réserver aux vrais fragments techniques ; garder le contenu court.",
+                "Intégrer dans le flux de Text pour la lisibilité.",
+                "Ne pas mélanger texte normal et code dans un même Tag ou Badge — réserver Code au contexte textuel.",
+              ]}
+              accessibility={[
+                "Rendu via `<code>` — sémantique de code inline préservée.",
+                "Réserver aux vrais fragments techniques, pas à de la mise en évidence.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("3211:58477") },
   },

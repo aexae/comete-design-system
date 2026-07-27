@@ -6,6 +6,8 @@ import {
   type DropIndicatorAppearance,
   type DropIndicatorSide,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -39,6 +41,32 @@ const meta = {
     side: "both",
   },
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Signaler la position d'insertion pendant un glisser-déposer (réordonnancement de liste/colonnes).",
+                "orientation/side selon le sens du drop.",
+              ]}
+              avoid={[
+                "Un séparateur statique → Divider.",
+                "Un état de survol simple → un style hover.",
+              ]}
+              best={[
+                "Afficher uniquement pendant le drag, à la cible d'insertion réelle ; orientation cohérente avec la liste.",
+                "Rester discret mais visible ; gérer l'accessibilité du DnD au niveau de la liste.",
+              ]}
+              accessibility={[
+                "Le drag & drop doit avoir une alternative clavier gérée par la liste.",
+                "L'indicateur signale la cible ; annoncer le déplacement aux lecteurs d'écran.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("6284:794") },
   },

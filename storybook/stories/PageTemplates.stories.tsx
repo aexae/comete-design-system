@@ -96,6 +96,12 @@ const meta = {
   parameters: {
     layout: "fullscreen",
     design: { type: "figma", url: figmaUrl("4319:15827") },
+    docs: {
+      description: {
+        component:
+          "Exemples de compositions de page complètes (listes, détails, tableaux de bord) assemblées à partir des composants du DS. Utilisez ces gabarits comme point de départ à copier/adapter, en composant Page avec SideNav/TopNav, Grid, Card, etc. Rappel : Banner au-dessus du layout (alerte globale), SectionMessage à l'intérieur du contenu.",
+      },
+    },
   },
 } satisfies Meta;
 

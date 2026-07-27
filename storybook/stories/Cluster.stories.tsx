@@ -1,6 +1,8 @@
 // Cluster — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Cluster, Badge } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Meta
@@ -10,6 +12,33 @@ const meta = {
   component: Cluster,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Aligner horizontalement des éléments de tailles variées qui passent à la ligne si besoin (tags, chips, actions).",
+                "Quand le nombre d'éléments est variable et doit s'enrouler proprement.",
+              ]}
+              avoid={[
+                "Un empilement strict sans retour à la ligne → Stack (row).",
+                "Une grille régulière en colonnes → Grid.",
+                "Un alignement pixel-perfect d'une seule ligne → Stack row.",
+              ]}
+              best={[
+                "gap (+ rowGap/columnGap si besoin) via tokens ; align/justify pour le placement.",
+                "Idéal pour des listes de Tag/Badge/Button dont le nombre varie.",
+              ]}
+              accessibility={[
+                "Layout sans sémantique : garder un ordre DOM logique pour le clavier.",
+                "Le retour à la ligne ne doit pas casser l'ordre de lecture.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "padded",
   },
   argTypes: {

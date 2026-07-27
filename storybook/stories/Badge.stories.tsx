@@ -2,6 +2,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { BadgeAppearance, BadgeImportance } from "@aexae/comete-design-system/components";
 import { Badge } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
@@ -14,6 +16,41 @@ const meta = {
   component: Badge,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: <Badge label="3" appearance="critical" />,
+                caption: "Compteur court greffé sur un élément.",
+              }}
+              dontExample={{
+                example: <Badge label="Nouveau" appearance="information" />,
+                caption: "Ne pas utiliser un Badge comme étiquette de texte.",
+              }}
+              when={[
+                "Signaler un compteur ou un statut ponctuel greffé sur un élément (notifications, nombre d'items).",
+                "`importance=\"low\"` (pastille) pour signaler une simple présence, sans chiffre.",
+              ]}
+              avoid={[
+                "Étiqueter/catégoriser un contenu → Tag.",
+                "Un message informatif → SectionMessage/Banner.",
+                "Un nombre > 99 → tronquer et afficher « 99+ ».",
+              ]}
+              best={[
+                "Placer en overlay sur l'icône/avatar concerné ; couleur sémantique (`critical` pour une alerte).",
+                "Contenu très court ; `importance` `high`/`medium`/`low` selon la saillance voulue.",
+              ]}
+              accessibility={[
+                "Donner le contexte du nombre aux lecteurs d'écran via un `aria-label` sur l'élément porteur (ex. « 3 notifications non lues »).",
+                "`importance=\"low\"` (pastille sans chiffre) exige un libellé accessible sur l'élément parent.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("341-2448") },
   },

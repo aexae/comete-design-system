@@ -8,6 +8,8 @@ import {
   type ModalDialogAppearance,
   type ModalDialogWidth,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -39,6 +41,47 @@ const meta = {
     isDismissable: true,
   },
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <ModalStory
+                    title="Supprimer l'élément ?"
+                    appearance="critical"
+                  />
+                ),
+                caption: "Décision courte ou confirmation, actions explicites.",
+              }}
+              dontExample={{
+                example: <ModalStory title="Modifier le profil complet" />,
+                caption:
+                  "Ne pas y loger un long formulaire ou un flux en plusieurs étapes.",
+              }}
+              when={[
+                "Interrompre le flux pour une tâche courte ou une décision nécessitant l'attention (confirmation, formulaire bref).",
+                "Quand l'utilisateur doit agir ou annuler avant de continuer.",
+              ]}
+              avoid={[
+                "Un contenu long ou un formulaire étendu → Drawer ou une page dédiée.",
+                "Un message non bloquant → Snackbar (transitoire) ou Banner/SectionMessage (inline).",
+                "Un petit complément contextuel ancré à un élément → Popover.",
+              ]}
+              best={[
+                "Titre clair + actions explicites en pied (ButtonGroup, action principale à droite).",
+                "`appearance=\"critical\"` pour une action destructrice ; `isDismissable` sauf décision obligatoire.",
+              ]}
+              accessibility={[
+                "Focus piégé dans la modale ; Échap ferme ; focus rendu au déclencheur à la fermeture.",
+                "Titre relié via aria (`aria-labelledby`) ; le contenu de fond est rendu inerte.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("4613:36336") },
   },

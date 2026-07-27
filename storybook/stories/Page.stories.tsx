@@ -20,6 +20,8 @@ import {
   Tag,
   Icon,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -34,6 +36,33 @@ const meta = {
   component: Page,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Structurer la coquille d'une page applicative (Page.Header + Page.Body) de façon cohérente.",
+                "Quand on veut un gabarit standard réutilisable pour toutes les pages.",
+              ]}
+              avoid={[
+                "Un simple bloc de contenu → Stack/Grid.",
+                "La navigation globale → SideNav/TopNav (à composer avec Page).",
+                "Des exemples de composition complets → voir PageTemplates.",
+              ]}
+              best={[
+                "Composer Page.Header/Body ; laisser la navigation vivre autour selon le layout.",
+                "Réutiliser le même gabarit sur toutes les pages pour la cohérence.",
+              ]}
+              accessibility={[
+                "Structurer avec des repères (`header`, `main`) et un seul `h1`.",
+                "Ordre de tabulation cohérent avec la mise en page.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "fullscreen",
     design: { type: "figma", url: figmaUrl("4559:6656") },
   },

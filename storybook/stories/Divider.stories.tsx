@@ -1,6 +1,8 @@
 // Divider — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Divider } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -15,6 +17,32 @@ const meta = {
   component: Divider,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              when={[
+                "Séparer visuellement deux groupes de contenu (sections d'une liste, blocs d'un formulaire).",
+                "orientation horizontal (entre blocs empilés) ou vertical (entre éléments d'une ligne).",
+              ]}
+              avoid={[
+                "Encadrer un bloc → une bordure (Card).",
+              ]}
+              best={[
+                "Utiliser avec parcimonie ; préférer l'espacement quand une séparation implicite suffit.",
+                "orientation cohérente avec la direction du contenu voisin.",
+                "Créer de l'espace : utiliser le `gap` d'un Stack/Cluster plutôt qu'un Divider.",
+              ]}
+              accessibility={[
+                "Décoratif par défaut (aria-hidden) ; un séparateur porteur de sens prend role=\"separator\".",
+                "Ne pas remplacer une structure de titres par des dividers.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("442:3941") },
   },

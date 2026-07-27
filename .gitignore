@@ -17,6 +17,10 @@
 # claude
 **/.claude/
 
+# notes perso / prompts (non versionnés)
+prompt-page-bar.md
+prompts-claude-code-ds.md
+
 # misc
 .env
 .env.local

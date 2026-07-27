@@ -2,6 +2,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Checkbox } from "@aexae/comete-design-system/components";
 import { expect, fn, userEvent, within } from "storybook/test";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -16,6 +18,45 @@ const meta = {
   component: Checkbox,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: <Checkbox label="J'accepte les conditions" />,
+                caption:
+                  "Option indépendante à cocher, validée avec le formulaire.",
+              }}
+              dontExample={{
+                example: (
+                  <Checkbox label="Activer les notifications" defaultChecked />
+                ),
+                caption: "Ne pas utiliser pour un réglage on/off à effet immédiat.",
+              }}
+              when={[
+                "Activer/désactiver une option indépendante (accepter des CGU, un réglage isolé).",
+                "Représenter un état partiel avec `isIndeterminate` (case « tout sélectionner » d'une liste).",
+                "Sélectionner un ou plusieurs items dans une liste (ex. sélection de lignes).",
+              ]}
+              avoid={[
+                "Un réglage à effet immédiat sans validation → Switch.",
+                "Un choix exclusif parmi plusieurs options → Radio/RadioGroup.",
+                "Plusieurs cases liées → les regrouper dans un CheckboxGroup.",
+              ]}
+              best={[
+                "Toujours un label explicite (ou `aria-label` si visuellement absent) ; `description` pour préciser.",
+                "`isInvalid` + message pour l'erreur ; `isRequired` pour les cases obligatoires.",
+              ]}
+              accessibility={[
+                "Toujours un `label` (ou `aria-label`) ; ne pas signaler l'erreur uniquement par la couleur.",
+                "L'état coché / indéterminé doit être annoncé aux lecteurs d'écran.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("11:309") },
   },

@@ -6,6 +6,8 @@ import {
   Tab,
   TabPanel,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Figma
@@ -23,6 +25,69 @@ const meta = {
   component: Tabs,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <Tabs>
+                    <TabList aria-label="Sections">
+                      <Tab id="d">Détails</Tab>
+                      <Tab id="a">Activité</Tab>
+                      <Tab id="s">Paramètres</Tab>
+                    </TabList>
+                    <TabPanel id="d">Détails de l&apos;entité.</TabPanel>
+                    <TabPanel id="a">Journal d&apos;activité.</TabPanel>
+                    <TabPanel id="s">Réglages.</TabPanel>
+                  </Tabs>
+                ),
+                caption: "Naviguer entre quelques vues de même niveau.",
+              }}
+              dontExample={{
+                example: (
+                  <Tabs>
+                    <TabList aria-label="Trop d'onglets">
+                      {Array.from({ length: 8 }, (_, i) => (
+                        <Tab key={i} id={`t${i}`}>
+                          Onglet {i + 1}
+                        </Tab>
+                      ))}
+                    </TabList>
+                    {Array.from({ length: 8 }, (_, i) => (
+                      <TabPanel key={i} id={`t${i}`}>
+                        Contenu {i + 1}
+                      </TabPanel>
+                    ))}
+                  </Tabs>
+                ),
+                caption: "Ne pas multiplier les onglets.",
+              }}
+              when={[
+                "Naviguer entre des vues de même niveau au sein d'un même contexte (détails / activité / paramètres).",
+                "Quand le contenu de chaque onglet est indépendant et consulté alternativement.",
+              ]}
+              avoid={[
+                "Empiler des sections repliables consultables ensemble → Accordion.",
+                "Une étape séquentielle obligatoire → Stepper.",
+                "Une navigation entre pages/routes → SideNav/TopNav.",
+                "Déclencher une action ponctuelle → Button.",
+              ]}
+              best={[
+                "Libellés courts ; un onglet actif par défaut ; éviter un trop grand nombre d'onglets (préférer un regroupement).",
+                "Ne pas imbriquer des Tabs dans des Tabs ; garder l'état d'onglet stable à la navigation.",
+              ]}
+              accessibility={[
+                "`TabList` porte un `aria-label` ; navigation au clavier par les flèches.",
+                "Associer chaque `Tab` (id) à son `TabPanel` correspondant.",
+                "L'état actif ne doit pas être porté par la seule couleur.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: {
       type: "figma",

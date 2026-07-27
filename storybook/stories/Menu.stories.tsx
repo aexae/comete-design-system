@@ -8,6 +8,8 @@ import {
   MenuSection,
   SubmenuTrigger,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Figma
@@ -77,6 +79,65 @@ const meta = {
   component: Menu,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <div style={{ maxWidth: 260 }}>
+                    <Menu aria-label="Actions">
+                      <MenuItem id="edit" iconBefore="Edit">
+                        Modifier
+                      </MenuItem>
+                      <MenuItem id="dup" iconBefore="ContentCopy">
+                        Dupliquer
+                      </MenuItem>
+                      <MenuItem id="del" iconBefore="Delete">
+                        Supprimer
+                      </MenuItem>
+                    </Menu>
+                  </div>
+                ),
+                caption: "Liste d'actions déclenchées depuis un bouton/icône.",
+              }}
+              dontExample={{
+                example: (
+                  <div style={{ maxWidth: 260 }}>
+                    <Menu aria-label="Données">
+                      <MenuItem id="1">Alpha — Actif</MenuItem>
+                      <MenuItem id="2">Beta — En attente</MenuItem>
+                      <MenuItem id="3">Gamma — Actif</MenuItem>
+                    </Menu>
+                  </div>
+                ),
+                caption: "Ne pas l'utiliser pour afficher des données.",
+              }}
+              when={[
+                "Regrouper des actions ou commandes déclenchées depuis un bouton/une icône (menu contextuel, « … »).",
+                "Sélectionner dans une liste d'actions, avec sections, séparateurs et sous-menus si besoin.",
+              ]}
+              avoid={[
+                "Choisir une valeur de formulaire → Select.",
+                "Naviguer entre des vues de même niveau → Tabs.",
+                "Afficher des données/entités → List.",
+              ]}
+              best={[
+                "Grouper par MenuSection avec séparateurs ; libellés = verbes d'action ; icônes optionnelles alignées.",
+                "Réserver le mode sélection (`single`/`multiple`) aux options d'affichage, pas aux actions.",
+                "`iconBefore` pour la reconnaissance visuelle, `iconAfter` (ChevronRight) pour signaler un sous-menu.",
+              ]}
+              accessibility={[
+                "`aria-label` sur le Menu ; navigation au clavier (flèches, saisie rapide, Échap).",
+                "Libellés = verbes d'action ; le mode sélection reste réservé aux options d'affichage.",
+                "L'icône seule ne suffit pas — chaque MenuItem doit garder un libellé textuel.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: {
       type: "figma",

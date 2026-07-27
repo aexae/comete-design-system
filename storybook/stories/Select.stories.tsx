@@ -1,8 +1,10 @@
 // Select — stories Storybook
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Select, Stack } from "@aexae/comete-design-system/components";
+import { Radio, RadioGroup, Select, Stack } from "@aexae/comete-design-system/components";
 import type { SelectItems } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -52,6 +54,60 @@ const meta = {
   component: Select,
   tags: ["autodocs"],
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <Select
+                    label="Pays"
+                    placeholder="Choisir un pays"
+                    items={COUNTRIES}
+                  />
+                ),
+                caption: "Sélecteur avec label et placeholder explicites.",
+              }}
+              dontExample={{
+                example: (
+                  <RadioGroup aria-label="Pays">
+                    <Radio value="fr" label="France" />
+                    <Radio value="be" label="Belgique" />
+                    <Radio value="ch" label="Suisse" />
+                    <Radio value="lu" label="Luxembourg" />
+                    <Radio value="mc" label="Monaco" />
+                    <Radio value="ca" label="Canada" />
+                    <Radio value="us" label="États-Unis" />
+                  </RadioGroup>
+                ),
+                caption:
+                  "Options nombreuses affichées en radios → préférer un Select.",
+              }}
+              when={[
+                "Choisir une valeur parmi une liste finie qui gagne à être repliée (pays, statut, catégorie).",
+                "Quand l'espace est limité ou que les options sont nombreuses (> ~6).",
+                "Quand la liste d'options ne nécessite pas d'être visible en permanence.",
+              ]}
+              avoid={[
+                "2 à 5 options qui tiennent à l'écran → RadioGroup (plus rapide à scanner).",
+                "Choix multiples → CheckboxGroup ou un multi-select.",
+                "Déclencher des actions → Menu.",
+              ]}
+              best={[
+                "Grouper les options longues (sections) ; `isDisabled` par option pour les indisponibles.",
+                "Un label explicite ; ordre logique (alpha, fréquence) ; valeur par défaut si pertinent.",
+                "Prévoir un placeholder indiquant l'action attendue (« Choisir un pays »).",
+              ]}
+              accessibility={[
+                "Un label explicite associé ; le menu est navigable au clavier (flèches, saisie rapide).",
+                "L'option sélectionnée est annoncée ; les options désactivées sont indiquées au-delà de la couleur.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("3499:51688") },
   },

@@ -3,6 +3,8 @@ import { AvatarGroup } from "@aexae/comete-design-system";
 import type { AvatarGroupProps, AvatarGroupItem } from "@aexae/comete-design-system";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // ----------------------------------------------------------------------
 // Figma
@@ -54,6 +56,59 @@ const meta: Meta<AvatarGroupProps> = {
     mode: "display",
   },
   parameters: {
+    docs: {
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <AvatarGroup
+                    size="small"
+                    items={INITIALS_ITEMS.slice(0, 3)}
+                    overflowItems={INITIALS_ITEMS.slice(3)}
+                  />
+                ),
+                caption:
+                  "Limiter les avatars visibles et laisser l'overflow (`+N`) gérer le reste. Taille homogène.",
+              }}
+              dontExample={{
+                example: (
+                  <AvatarGroup
+                    size="small"
+                    items={[
+                      ...INITIALS_ITEMS,
+                      { key: "f", initials: "AK", name: "Alicia Kern" },
+                      { key: "g", initials: "CM", name: "Chloé Meunier" },
+                      { key: "h", initials: "NB", name: "Noé Blanc" },
+                    ]}
+                  />
+                ),
+                caption:
+                  "Ne pas afficher un grand nombre d'avatars sans regroupement.",
+              }}
+              when={[
+                "Afficher un ensemble de personnes de façon compacte — participants, assignés, équipe.",
+                "Mode `display` (statique), `navigate` (cliquable) ou `select` selon l'interaction voulue.",
+              ]}
+              avoid={[
+                "Une seule personne → Avatar.",
+                "Une liste détaillée avec noms et actions → List.",
+              ]}
+              best={[
+                "Garder une taille d'avatar homogène dans un même groupe.",
+                "Fixer une limite visible cohérente (3-5) et laisser le `+N` ouvrir la liste complète.",
+                "Réserver `navigate` / `select` à un vrai besoin d'interaction.",
+              ]}
+              accessibility={[
+                "Fournir un `name` par item — lu par les lecteurs d'écran, sert aussi de tooltip.",
+                "Le compteur `+N` doit annoncer le nombre exact de personnes masquées.",
+              ]}
+            />
+          }
+        />
+      ),
+    },
     design: {
       type: "figma",
       url: figmaUrl("2726:20433"),
