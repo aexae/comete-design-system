@@ -38,7 +38,7 @@ const meta = {
               }}
               when={[
                 "Étiqueter ou catégoriser un élément (statut, type, mot-clé) de façon compacte et non interactive.",
-                "Afficher plusieurs attributs côte à côte (filtres appliqués, tags d'un contenu).",
+                "Afficher plusieurs attributs côte à côte (statuts, mots-clés, catégories).",
               ]}
               avoid={[
                 "Un compteur ou une pastille de notification → Badge.",

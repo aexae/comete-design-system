@@ -98,6 +98,7 @@ const meta: Meta<IconComponentProps> = {
               when={[
                 "Renforcer visuellement une action, un statut ou une étiquette par un pictogramme.",
                 "variant (outlined/filled/duotone) et color sémantique selon le contexte.",
+                "Buttons, menus, listes, tags — partout où un pictogramme renforce la compréhension de l'action ou du statut.",
               ]}
               avoid={[
                 "Une icône mise en avant sur une tuile colorée → IconTile.",
@@ -107,10 +108,12 @@ const meta: Meta<IconComponentProps> = {
               best={[
                 "Accompagner d'un texte, ou fournir un aria-label si l'icône est seule et signifiante.",
                 "Taille et couleur cohérentes avec le texte adjacent ; icône décorative → aria-hidden.",
+                "Choisir le `variant` adapté : `outlined` par défaut, `filled` pour les états actifs, `duotone` pour l'emphase.",
               ]}
               accessibility={[
                 "Icône seule signifiante → fournir un `aria-label` ; décorative → `aria-hidden`.",
                 "Taille et couleur cohérentes avec le texte adjacent (contraste suffisant).",
+                "Si l'icône est le seul contenu d'un bouton, le bouton parent doit porter un `aria-label`.",
               ]}
             />
           }

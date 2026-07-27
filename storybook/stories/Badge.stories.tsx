@@ -36,14 +36,14 @@ const meta = {
               avoid={[
                 "Étiqueter/catégoriser un contenu → Tag.",
                 "Un message informatif → SectionMessage/Banner.",
-                "Un grand nombre → tronquer (ex. 99+).",
+                "Un nombre > 99 → tronquer et afficher « 99+ ».",
               ]}
               best={[
                 "Placer en overlay sur l'icône/avatar concerné ; couleur sémantique (`critical` pour une alerte).",
                 "Contenu très court ; `importance` `high`/`medium`/`low` selon la saillance voulue.",
               ]}
               accessibility={[
-                "Annoncer le nombre avec son contexte (ex. « 3 notifications »).",
+                "Donner le contexte du nombre aux lecteurs d'écran via un `aria-label` sur l'élément porteur (ex. « 3 notifications non lues »).",
                 "`importance=\"low\"` (pastille sans chiffre) exige un libellé accessible sur l'élément parent.",
               ]}
             />

@@ -20,6 +20,7 @@ const meta = {
               when={[
                 "Disposer des éléments en grille régulière (cartes, galeries, tableaux de bord).",
                 "Quand on a besoin de colonnes/lignes alignées en 2 dimensions.",
+                "Dashboards, galeries de cartes, listings en tuiles responsive.",
               ]}
               avoid={[
                 "Un simple empilement 1D → Stack.",
@@ -29,6 +30,7 @@ const meta = {
               best={[
                 "gap via tokens ; définir les colonnes de façon responsive.",
                 "Garder des éléments d'hauteur cohérente ; éviter d'imbriquer trop de grilles.",
+                "Utiliser `minmax()` ou `auto-fill`/`auto-fit` pour un comportement responsive sans media queries.",
               ]}
               accessibility={[
                 "Layout sans sémantique : l'ordre DOM prime sur le placement visuel.",

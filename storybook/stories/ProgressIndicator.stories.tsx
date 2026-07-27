@@ -63,6 +63,7 @@ const meta = {
               best={[
                 "Garder un total lisible (quelques points) ; refléter l'index courant en synchro avec le contenu.",
                 "Combiner avec des boutons/gestes de navigation ; taille/espacement selon la densité.",
+                "Associer les dots à un geste de swipe ou des boutons précédent/suivant pour la navigation.",
               ]}
               accessibility={[
                 "Annoncer la position courante (« étape 2 sur 5 »).",

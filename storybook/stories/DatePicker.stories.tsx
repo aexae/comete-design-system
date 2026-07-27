@@ -31,6 +31,7 @@ const meta = {
               when={[
                 "Saisir ou choisir une date (ou une plage avec isRange) via un champ + calendrier.",
                 "isEditable pour la saisie clavier segmentée ; idéal dans un formulaire.",
+                "Formulaires nécessitant une date précise avec validation (réservation, échéance, naissance).",
               ]}
               avoid={[
                 "Choisir un mois/semaine/année entier → MonthPicker/WeekPicker/YearPicker.",
@@ -40,10 +41,12 @@ const meta = {
               best={[
                 "Toujours un label (via Field) ; fournir min/max et un défaut pertinent.",
                 "isRange pour les plages ; messages d'erreur clairs sur les dates invalides.",
+                "Accompagner d'une `description` indiquant le format attendu si nécessaire.",
               ]}
               accessibility={[
                 "Champ segmenté navigable au clavier ; label associé obligatoire.",
                 "Erreurs de date annoncées ; bornes min/max communiquées.",
+                "Les segments du champ sont navigables individuellement au clavier (flèches haut/bas).",
               ]}
             />
           }

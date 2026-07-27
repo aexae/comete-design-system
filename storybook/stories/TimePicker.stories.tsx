@@ -31,6 +31,7 @@ const meta = {
               when={[
                 "Saisir ou choisir une heure (champ segmenté), seule ou en complément d'une date.",
                 "hourCycle 12h/24h selon la locale.",
+                "Formulaires nécessitant une heure précise (rendez-vous, alarme, planification).",
               ]}
               avoid={[
                 "Une date → DatePicker.",
@@ -40,6 +41,7 @@ const meta = {
               best={[
                 "Label explicite (via Field) ; densité alignée sur les champs voisins.",
                 "Respecter la locale (hourCycle) ; messages d'erreur pour les heures invalides.",
+                "Associer au DatePicker quand date + heure sont requises ensemble.",
               ]}
               accessibility={[
                 "Champ segmenté navigable au clavier ; label associé obligatoire.",

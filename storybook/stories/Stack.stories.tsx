@@ -20,6 +20,7 @@ const meta = {
               when={[
                 "Empiler des éléments dans une seule direction (colonne ou ligne) avec un espacement régulier (gap).",
                 "Structurer un contenu vertical simple (formulaire, sections d'une carte).",
+                "Structurer les contenus de Card, les groupes de champs dans un formulaire, les sections de page.",
               ]}
               avoid={[
                 "Un enroulement multi-lignes d'éléments de tailles variées → Cluster.",
@@ -28,6 +29,7 @@ const meta = {
               best={[
                 "Choisir direction + gap parmi l'échelle de tokens ; aligner via align/justify plutôt qu'avec des marges.",
                 "Composer les Stack pour les hiérarchies (Stack de Stacks) au lieu d'espacements ad hoc.",
+                "Utiliser un `gap` issu des tokens d'espacement (`space100`, `space200`…) pour la cohérence.",
               ]}
               accessibility={[
                 "Layout sans sémantique : l'ordre visuel doit suivre l'ordre du DOM.",

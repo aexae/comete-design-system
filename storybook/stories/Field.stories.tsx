@@ -24,6 +24,7 @@ const meta = {
               when={[
                 "Habiller un contrôle de formulaire avec un label, une aide et un message d'erreur cohérents.",
                 "Autour de TextField, Select, DatePicker… pour uniformiser la structure de champ.",
+                "Uniformiser l'apparence et le comportement de tous les champs d'un formulaire.",
               ]}
               avoid={[
                 "Un contrôle sans label visible → aria-label directement.",
@@ -33,6 +34,7 @@ const meta = {
               best={[
                 "Toujours associer un label explicite ; `messageType` `critical`/`success`/`neutral` selon l'état.",
                 "`isRequired` pour signaler l'obligation ; garder le message concis.",
+                "Ne pas utiliser le placeholder comme substitut du label — il disparaît à la saisie.",
               ]}
               accessibility={[
                 "Le label est associé au contrôle (clic sur le label → focus) et le message lié via aria.",

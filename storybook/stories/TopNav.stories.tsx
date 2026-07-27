@@ -31,6 +31,7 @@ const meta = {
               when={[
                 "Barre supérieure globale : marque, navigation de haut niveau, compte/actions.",
                 "Quand un accès permanent à l'identité de l'app et aux actions globales est requis.",
+                "Applications desktop ou responsive nécessitant un accès permanent au branding et aux actions globales.",
               ]}
               avoid={[
                 "La navigation principale riche par sections → SideNav.",
@@ -40,6 +41,7 @@ const meta = {
               best={[
                 "Marque à gauche, actions/compte à droite ; limiter les items de premier niveau.",
                 "Cohérent sur toutes les pages ; regrouper les actions secondaires dans un Menu.",
+                "Sur mobile, regrouper les items dans un menu hamburger plutôt que de tronquer.",
               ]}
               accessibility={[
                 "Repère de navigation principal (`nav`/`banner`) avec un libellé explicite.",

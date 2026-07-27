@@ -1,7 +1,7 @@
 // Select — stories Storybook
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Select, Stack } from "@aexae/comete-design-system/components";
+import { Radio, RadioGroup, Select, Stack } from "@aexae/comete-design-system/components";
 import type { SelectItems } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
@@ -59,9 +59,35 @@ const meta = {
         <DocsTabsPage
           guidelines={
             <GuidelinesFlat
+              doExample={{
+                example: (
+                  <Select
+                    label="Pays"
+                    placeholder="Choisir un pays"
+                    items={COUNTRIES}
+                  />
+                ),
+                caption: "Sélecteur avec label et placeholder explicites.",
+              }}
+              dontExample={{
+                example: (
+                  <RadioGroup aria-label="Pays">
+                    <Radio value="fr" label="France" />
+                    <Radio value="be" label="Belgique" />
+                    <Radio value="ch" label="Suisse" />
+                    <Radio value="lu" label="Luxembourg" />
+                    <Radio value="mc" label="Monaco" />
+                    <Radio value="ca" label="Canada" />
+                    <Radio value="us" label="États-Unis" />
+                  </RadioGroup>
+                ),
+                caption:
+                  "Options nombreuses affichées en radios → préférer un Select.",
+              }}
               when={[
                 "Choisir une valeur parmi une liste finie qui gagne à être repliée (pays, statut, catégorie).",
                 "Quand l'espace est limité ou que les options sont nombreuses (> ~6).",
+                "Quand la liste d'options ne nécessite pas d'être visible en permanence.",
               ]}
               avoid={[
                 "2 à 5 options qui tiennent à l'écran → RadioGroup (plus rapide à scanner).",
@@ -71,6 +97,7 @@ const meta = {
               best={[
                 "Grouper les options longues (sections) ; `isDisabled` par option pour les indisponibles.",
                 "Un label explicite ; ordre logique (alpha, fréquence) ; valeur par défaut si pertinent.",
+                "Prévoir un placeholder indiquant l'action attendue (« Choisir un pays »).",
               ]}
               accessibility={[
                 "Un label explicite associé ; le menu est navigable au clavier (flèches, saisie rapide).",

@@ -52,6 +52,7 @@ const meta = {
               when={[
                 "Montrer l'avancement déterminé d'une tâche en % (téléchargement, remplissage, quota).",
                 "Quand la proportion est connue et mesurable.",
+                "Uploads, imports, installations — toute tâche dont le % d'achèvement est calculable.",
               ]}
               avoid={[
                 "Une attente de durée inconnue → un indicateur indéterminé (spinner).",
@@ -61,6 +62,7 @@ const meta = {
               best={[
                 "appearance auto pour dériver la couleur du contexte ; showLabel pour afficher la valeur.",
                 "Accompagner d'un libellé décrivant ce qui progresse ; valeur 0-100 réaliste.",
+                "Ne pas animer la barre en boucle — c'est réservé à l'état indéterminé.",
               ]}
               accessibility={[
                 "Fournir un libellé décrivant ce qui progresse ; la valeur est annoncée (aria-valuenow).",

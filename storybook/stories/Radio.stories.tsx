@@ -63,7 +63,7 @@ const meta = {
               ]}
               accessibility={[
                 "Le RadioGroup porte le label du groupe ; chaque Radio a un libellé court.",
-                "La sélection doit être perceptible autrement que par la seule couleur.",
+                "L'option sélectionnée est identifiable par la pastille remplie (l'indicateur interne), pas seulement par la couleur.",
               ]}
             />
           }

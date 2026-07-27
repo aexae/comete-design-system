@@ -25,6 +25,7 @@ const meta = {
               when={[
                 "Mettre en évidence un fragment technique inline (nom de variable, valeur, raccourci, clé).",
                 "Quand un texte doit se distinguer comme du code au sein d'une phrase.",
+                "Documentation technique inline (noms de props, valeurs de tokens, raccourcis clavier).",
               ]}
               avoid={[
                 "Un bloc de code multi-lignes → un bloc de code dédié.",
@@ -34,6 +35,7 @@ const meta = {
               best={[
                 "Réserver aux vrais fragments techniques ; garder le contenu court.",
                 "Intégrer dans le flux de Text pour la lisibilité.",
+                "Ne pas mélanger texte normal et code dans un même Tag ou Badge — réserver Code au contexte textuel.",
               ]}
               accessibility={[
                 "Rendu via `<code>` — sémantique de code inline préservée.",

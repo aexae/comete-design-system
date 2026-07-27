@@ -37,6 +37,7 @@ const meta = {
               when={[
                 "Activer/désactiver une option indépendante (accepter des CGU, un réglage isolé).",
                 "Représenter un état partiel avec `isIndeterminate` (case « tout sélectionner » d'une liste).",
+                "Sélectionner un ou plusieurs items dans une liste (ex. sélection de lignes).",
               ]}
               avoid={[
                 "Un réglage à effet immédiat sans validation → Switch.",

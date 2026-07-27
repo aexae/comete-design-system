@@ -304,6 +304,7 @@ const meta = {
               when={[
                 "Afficher un calendrier permanent (inline) pour sélectionner une date, une plage ou une semaine.",
                 "Quand la sélection visuelle sur la grille prime sur la saisie dans un champ.",
+                "Cas d'usage planning/agenda où l'utilisateur a besoin de voir le contexte des dates voisines.",
               ]}
               avoid={[
                 "Une saisie compacte dans un formulaire → DatePicker.",
@@ -313,6 +314,7 @@ const meta = {
               best={[
                 "appearance selon le besoin (date/week…) ; afficher 2 mois pour les plages larges.",
                 "Indiquer clairement la sélection et les dates indisponibles ; navigation mois/année accessible.",
+                "Indiquer visuellement la date du jour (`today`) même quand elle n'est pas sélectionnée.",
               ]}
               accessibility={[
                 "Grille navigable au clavier (flèches) ; date courante et sélection annoncées.",
