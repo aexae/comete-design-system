@@ -65,12 +65,6 @@ export interface PageHeaderProps {
    */
   title: ReactNode;
   /**
-   * Zone optionnelle affichée au-dessus du titre (breadcrumbs, fil
-   * d'ariane, indicateurs…). Ne porte aucune marge : le PageHeader gère
-   * l'espacement vertical.
-   */
-  breadcrumbs?: ReactNode;
-  /**
    * Zone alignée à gauche du titre. Typiquement utilisée pour héberger
    * un `<SideNav.Trigger />` discret quand la SideNav est cachée.
    */
@@ -119,12 +113,11 @@ export interface PageBodyProps {
  * typiquement dans le slot principal d'une AppShell.
  *
  * ```tsx
- * import { Page, Button, Breadcrumbs } from "@aexae/comete-design-system";
+ * import { Page, Button } from "@aexae/comete-design-system";
  *
  * <Page>
  *   <Page.Header
  *     title="Agents"
- *     breadcrumbs={<Breadcrumbs>...</Breadcrumbs>}
  *     trailing={<UserAvatar />}
  *   />
  *   <Page.Toolbar
@@ -204,16 +197,15 @@ PageBar.displayName = "Page.Bar";
 // Page.Header
 
 /**
- * Page.Header — titre de page, breadcrumbs optionnels et actions trailing.
+ * Page.Header — titre de page et actions trailing.
  * Le titre est rendu dans un `<h1>` pour la hiérarchie sémantique.
  *
  * @deprecated Utiliser `Page.Bar` (fusion de TopNav + Page.Header). `Page.Header`
  * reste disponible pour rétro-compatibilité mais sera retiré dans une version
- * ultérieure. `Page.Bar` ne propose plus de `breadcrumbs`.
+ * ultérieure.
  */
 function PageHeader({
   title,
-  breadcrumbs,
   leading,
   trailing,
   className,
@@ -221,9 +213,6 @@ function PageHeader({
   const classNames = [styles.header, className].filter(Boolean).join(" ");
   return (
     <header className={classNames}>
-      {breadcrumbs !== undefined && (
-        <div className={styles.breadcrumbs}>{breadcrumbs}</div>
-      )}
       <div className={styles.titleRow}>
         {leading !== undefined && (
           <div className={styles.leading}>{leading}</div>

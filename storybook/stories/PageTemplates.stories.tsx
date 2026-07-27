@@ -24,8 +24,6 @@ import {
   Tag,
   Text,
   Heading,
-  Breadcrumbs,
-  BreadcrumbItem,
   Divider,
   Icon,
   Tabs,
@@ -340,12 +338,6 @@ export const Base: Story = {
             <Page style={{ flex: 1, minHeight: 0 }}>
               <Page.Header
                 title="Accueil"
-                breadcrumbs={
-                  <Breadcrumbs>
-                    <BreadcrumbItem label="Espace manager" href="#" />
-                    <BreadcrumbItem label="Accueil" isCurrent />
-                  </Breadcrumbs>
-                }
               />
               <Page.Body>
                 <Stack gap="300">
@@ -519,13 +511,6 @@ export const Entity: Story = {
       <Page>
         <Page.Header
           title="Entité"
-          breadcrumbs={
-            <Breadcrumbs>
-              <BreadcrumbItem label="Espace manager" href="#" />
-              <BreadcrumbItem label="Contacts" href="#" />
-              <BreadcrumbItem label="Profil" isCurrent />
-            </Breadcrumbs>
-          }
           trailing={<Avatar size="medium" initials="AC" />}
         />
         <Page.Body>

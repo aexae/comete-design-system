@@ -46,22 +46,6 @@ describe("Page.Header", () => {
     expect(getByText("Custom")).toBeInTheDocument();
   });
 
-  it("should render breadcrumbs when provided", () => {
-    const { getByText, queryByText } = render(
-      <Page.Header
-        title="Title"
-        breadcrumbs={<span>Home / Section</span>}
-      />,
-    );
-    expect(getByText("Home / Section")).toBeInTheDocument();
-    expect(queryByText("not there")).toBeNull();
-  });
-
-  it("should NOT render breadcrumbs slot when omitted", () => {
-    const { container } = render(<Page.Header title="T" />);
-    expect(container.querySelector("[class*='breadcrumbs']")).toBeNull();
-  });
-
   it("should render trailing when provided", () => {
     const { getByText } = render(
       <Page.Header title="T" trailing={<button>Avatar</button>} />,

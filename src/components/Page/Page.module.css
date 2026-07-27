@@ -39,7 +39,7 @@
 }
 
 /* ==========================================================================
-   Page.Header — titre, breadcrumbs, actions trailing
+   Page.Header — titre, actions trailing
    ========================================================================== */
 
 .header {
@@ -49,10 +49,6 @@
   padding-block: var(--space200);
   padding-inline: var(--page-gutter);
   flex-shrink: 0;
-}
-
-.breadcrumbs {
-  min-width: 0;
 }
 
 /* Title row : leading shrink-0 + title flex-1 + trailing shrink-0 */
