@@ -9,6 +9,11 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Modifié
+
+- **BottomNav** : l'état sélectionné d'un `BottomNavItem` ne repose plus sur un
+  fond ; seuls la couleur du texte et celle de l'icône changent.
+
 ## [1.0.0-alpha.141] - 2026-07-15
 
 ### Modifié
