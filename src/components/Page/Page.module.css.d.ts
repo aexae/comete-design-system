@@ -2,7 +2,6 @@ declare const styles: {
   readonly "bar": string;
   readonly "barTitle": string;
   readonly "body": string;
-  readonly "breadcrumbs": string;
   readonly "compact": string;
   readonly "header": string;
   readonly "large": string;

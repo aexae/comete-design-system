@@ -9,6 +9,14 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Changements cassants (BREAKING)
+
+- **Page** : suppression de la prop `breadcrumbs` de `Page.Header`. Les breadcrumbs
+  ne font plus partie du gabarit de page (alignement avec `Page.Bar`, qui n'en
+  proposait déjà pas). Les consommateurs qui affichaient un fil d'Ariane doivent
+  désormais le composer eux-mêmes dans le contenu de la page (`Page.Body`) ou en
+  amont du `Page.Header`.
+
 ### Modifié
 
 - **BottomNav** : l'état sélectionné d'un `BottomNavItem` ne repose plus sur un
