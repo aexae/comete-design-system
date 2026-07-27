@@ -28,8 +28,6 @@ const meta = {
   component: BottomNavItem,
   tags: ["autodocs"],
   parameters: {
-    layout: "centered",
-    design: { type: "figma", url: figmaUrl("2524:18591") },
     docs: {
       page: () => (
         <DocsTabsPage
@@ -60,6 +58,8 @@ const meta = {
         />
       ),
     },
+    layout: "centered",
+    design: { type: "figma", url: figmaUrl("2524:18591") },
   },
   decorators: [
     (Story: () => ReactNode) => (
@@ -442,12 +442,8 @@ export const WithPopupRight: Story = {
 // de création rapide adaptées au travail sur site.
 
 const SCRIM_HEIGHT = 320; // hauteur du voile assombri qui remonte depuis la barre
-const FAB_SIZE = 56; // diamètre du FAB (rayon 28)
-const NOTCH_RADIUS = 32; // ménage un liseré de 4px autour du FAB
-const NOTCH_SLOT = NOTCH_RADIUS * 2; // largeur réservée au centre = largeur de l'encoche
-
-// Découpe circulaire au centre du bord supérieur de la barre (effet encoché).
-const NOTCH_MASK = `radial-gradient(circle ${NOTCH_RADIUS}px at 50% 0, transparent ${NOTCH_RADIUS - 1}px, #000 ${NOTCH_RADIUS}px)`;
+const FAB_SIZE = 56; // diamètre du bouton « + » central (FAB surélevé)
+const FAB_SLOT = FAB_SIZE + 12; // largeur réservée au centre (bouton + anneau + marge)
 
 interface MceAction {
   id: string;
@@ -631,22 +627,37 @@ function BottomNavFieldToolMce() {
         </>
       )}
 
-      {/* Barre basse — fond encoché + items (atténués si ouvert) + FAB */}
+      {/* Barre basse — fond plein + items (atténués si ouvert) + bouton + central */}
       <div style={{ position: "relative" }}>
-        {/* Couche de fond avec découpe circulaire (masque) */}
+        {/* Anneau (cradle) du + : cercle clair DERRIÈRE le bouton (premier enfant
+            → peint en dessous). Sa moitié basse est couverte par le fond de la
+            barre → l'anneau n'apparaît que sur la partie SUPÉRIEURE du +.
+            Épaisseur 6px (FAB + 2×6). */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: -((FAB_SIZE + 12) / 2),
+            transform: "translateX(-50%)",
+            width: FAB_SIZE + 12,
+            height: FAB_SIZE + 12,
+            borderRadius: "var(--radius-round)",
+            backgroundColor: "var(--background-default-default)",
+          }}
+        />
+        {/* Fond plein de la barre (reste solide même quand les items sont atténués) */}
         <div
           aria-hidden
           style={{
             position: "absolute",
             inset: 0,
             backgroundColor: "var(--background-surface-default)",
-            WebkitMaskImage: NOTCH_MASK,
-            maskImage: NOTCH_MASK,
           }}
         />
 
         {/* Items — atténués et non cliquables tant que le tiroir est ouvert.
-            Règle : exactement 2 items de chaque côté du FAB (2 + FAB + 2). */}
+            Règle : exactement 2 items de chaque côté du bouton + (2 + « + » + 2). */}
         <BottomNav
           style={{
             position: "relative",
@@ -668,8 +679,8 @@ function BottomNavFieldToolMce() {
             isSelected={activeItem === "Planning"}
             onClick={() => { setSelected("Planning"); }}
           />
-          {/* Réserve l'emplacement central (largeur de l'encoche) pour le FAB */}
-          <span aria-hidden style={{ flexGrow: 0, flexShrink: 0, flexBasis: NOTCH_SLOT }} />
+          {/* Réserve l'emplacement central pour le bouton + */}
+          <span aria-hidden style={{ flexGrow: 0, flexShrink: 0, flexBasis: FAB_SLOT }} />
           <BottomNavItem
             label="Rapports"
             icon="Assignment"
@@ -684,7 +695,9 @@ function BottomNavFieldToolMce() {
           />
         </BottomNav>
 
-        {/* FAB encoché — reste au-dessus de tout ; le + pivote de 45° en × */}
+        {/* Bouton « + » central — FAB surélevé qui dépasse au-dessus de la barre,
+            avec un anneau (cradle) qui le détache du fond. Le + pivote en × à
+            l'ouverture. */}
         <button
           type="button"
           aria-label={sheetOpen ? "Fermer les outils terrain" : "Ouvrir les outils terrain"}
@@ -703,12 +716,10 @@ function BottomNavFieldToolMce() {
             display: "grid",
             placeItems: "center",
             backgroundColor: "var(--background-brand-bold-default)",
-            boxShadow: "var(--elevation-medium)",
             cursor: "pointer",
             zIndex: 3,
           }}
         >
-          {/* Rotation CSS du + à 45° → ×. On ne change pas l'icône, on la tourne. */}
           <span
             style={{
               display: "grid",
@@ -720,18 +731,35 @@ function BottomNavFieldToolMce() {
             <Icon icon="Add" size={24} appearance="filled" color="inverted" />
           </span>
         </button>
+
+        {/* Home indicator dans la safe-area basse */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            left: "50%",
+            bottom: "var(--space100)",
+            transform: "translateX(-50%)",
+            width: 120,
+            height: 5,
+            borderRadius: "var(--radius-round)",
+            backgroundColor: "var(--background-neutral-bold-default)",
+            opacity: 0.4,
+            zIndex: 2,
+          }}
+        />
       </div>
     </div>
   );
 }
 
 /**
- * Outil terrain MCE — le bouton d'action central est **encoché** dans la barre
- * (découpe circulaire) et ouvre un **tiroir bas** proposant deux actions de
- * création rapide : scanner un équipement, signaler une anomalie.
+ * Outil terrain MCE — le bouton d'action central « + » est **contenu dans la
+ * barre** (centré, sans saillie) et ouvre un **tiroir bas** proposant deux
+ * actions de création rapide : scanner un équipement, signaler une anomalie.
  *
  * Comportement (pattern Material Design) :
- * - le FAB déclenche le tiroir et son `+` **pivote de 45° en ×** ; un second
+ * - le bouton déclenche le tiroir et son `+` **pivote de 45° en ×** ; un second
  *   appui referme ;
  * - le tiroir s'ouvre **collé au bord haut de la barre** (aucun espace) et
  *   remonte depuis celle-ci ;
@@ -741,16 +769,34 @@ function BottomNavFieldToolMce() {
  * - fermeture possible via le FAB (×), la **poignée** (tap / swipe vers le bas)
  *   ou le **scrim**.
  *
- * **Règle de composition (obligatoire)** : le FAB encoché doit toujours être
- * flanqué d'**exactement 2 items de chaque côté** (2 + FAB + 2). Ni plus, ni
- * moins — la symétrie garantit le centrage de l'encoche et un layout équilibré.
+ * **Règle de composition (obligatoire)** : le bouton « + » central doit toujours
+ * être flanqué d'**exactement 2 items de chaque côté** (2 + « + » + 2). Ni plus,
+ * ni moins — la symétrie garantit le centrage et un layout équilibré.
  */
 export const FieldToolMce: Story = {
-  name: "Field tool (notched FAB + bottom sheet)",
+  name: "Field tool (central + button + bottom sheet)",
   parameters: {
     controls: { disable: true },
     layout: "centered",
     design: { type: "figma", url: figmaUrl("2524:18591") },
   },
-  render: () => <BottomNavFieldToolMce />,
+  render: () => (
+    <div
+      style={{
+        // Écran léger : simple fond clair pour détacher la barre + laisser le
+        // « + » dépasser au-dessus. Focus sur la bottom nav, aucun chrome lourd.
+        // Barre volontairement étroite (~340px) pour resserrer les items,
+        // tout en gardant la répartition edge-to-edge.
+        width: 340,
+        margin: "0 auto",
+        borderRadius: "var(--radius200)",
+        overflow: "hidden",
+        backgroundColor: "var(--background-surface-elevation-sunken-default)",
+      }}
+    >
+      {/* petit espace d'écran pour que le + surélevé se détache */}
+      <div style={{ height: 72 }} />
+      <BottomNavFieldToolMce />
+    </div>
+  ),
 };
