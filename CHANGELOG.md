@@ -17,6 +17,11 @@ entre versions alpha.
   désormais le composer eux-mêmes dans le contenu de la page (`Page.Body`) ou en
   amont du `Page.Header`.
 
+### Modifié
+
+- **BottomNav** : l'état sélectionné d'un `BottomNavItem` ne repose plus sur un
+  fond ; seuls la couleur du texte et celle de l'icône changent.
+
 ## [1.0.0-alpha.141] - 2026-07-15
 
 ### Modifié

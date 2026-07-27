@@ -34,9 +34,8 @@
   pointer-events: none;
 }
 
-.item[data-selected]::before {
-  opacity: 1;
-}
+/* État sélectionné : PAS de fond — seuls le texte et l'icône changent de couleur
+   (le fond via ::before reste réservé à l'état ouvert aria-expanded). */
 
 .item[aria-expanded="true"]::before {
   opacity: 1;
@@ -229,10 +228,6 @@
 
 .item[data-selected] .label {
   color: var(--text-selected);
-}
-
-.item[data-selected] .badge {
-  --badge-cutout-color: var(--background-selected-subtlest-default);
 }
 
 /* ==========================================================================
