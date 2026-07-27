@@ -79,9 +79,43 @@ describe("Heading", () => {
     expect(screen.getByText("Title").className).toContain("color-default");
   });
 
-  it("should apply color-inverse", () => {
-    render(<Heading size="medium" color="inverse">Title</Heading>);
-    expect(screen.getByText("Title").className).toContain("color-inverse");
+  it("should apply color-inverted", () => {
+    render(<Heading size="medium" color="inverted">Title</Heading>);
+    expect(screen.getByText("Title").className).toContain("color-inverted");
+  });
+
+  // -------------------------------------------------------------------
+  // Align
+  // -------------------------------------------------------------------
+
+  it("should not apply an align class by default", () => {
+    render(<Heading size="medium">Title</Heading>);
+    expect(screen.getByText("Title").className).not.toContain("align-");
+  });
+
+  it("should apply align-center", () => {
+    render(<Heading size="medium" align="center">Title</Heading>);
+    expect(screen.getByText("Title").className).toContain("align-center");
+  });
+
+  // -------------------------------------------------------------------
+  // Italic
+  // -------------------------------------------------------------------
+
+  it("should apply italic class when italic", () => {
+    render(<Heading size="medium" italic>Title</Heading>);
+    expect(screen.getByText("Title").className).toContain("italic");
+  });
+
+  // -------------------------------------------------------------------
+  // maxLines truncation
+  // -------------------------------------------------------------------
+
+  it("should apply truncate class and WebkitLineClamp when maxLines is set", () => {
+    render(<Heading size="medium" maxLines={2}>Title</Heading>);
+    const el = screen.getByText("Title");
+    expect(el.className).toContain("truncate");
+    expect(el.style.webkitLineClamp).toBe("2");
   });
 
   // -------------------------------------------------------------------

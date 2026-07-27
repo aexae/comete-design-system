@@ -20,7 +20,7 @@ const meta = {
   component: Accordion,
   tags: ["autodocs"],
   parameters: {
-    layout: "padded",
+    layout: "centered",
     docs: {
       page: () => (
         <DocsTabsPage
@@ -118,7 +118,7 @@ const FAQ = [
   },
 ];
 
-const WRAP: React.CSSProperties = { maxWidth: 384 };
+const WRAP: React.CSSProperties = { width: 384 };
 
 // -----------------------------------------------------------------------
 // Stories

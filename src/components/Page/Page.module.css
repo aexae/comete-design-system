@@ -19,6 +19,11 @@
   min-height: 100%;
   width: 100%;
   min-width: 0;
+  /* Conteneur de requête (axe inline) : la Page.Bar choisit sa variante selon
+     la largeur RÉELLE de la Page, pas celle du viewport (cf. SideNav qui
+     réduit la zone disponible). `inline-size` ne contient que la largeur, la
+     hauteur reste pilotée par le flux/flex. */
+  container: page / inline-size;
 }
 
 @media (min-width: 600px) and (max-width: 1199px) {
@@ -87,6 +92,95 @@
   display: flex;
   align-items: center;
   gap: var(--space100);
+}
+
+/* ==========================================================================
+   Page.Bar — barre de page unifiée (fusion TopNav + Page.Header)
+   Zones leading / title / trailing. Variante `large` par défaut ; `compact`
+   (56px, épinglée) sous 768px ou forcée via .compact. Tokens uniquement.
+   ========================================================================== */
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space100);
+  padding-block: var(--space200);
+  padding-inline: var(--page-gutter);
+  flex-shrink: 0;
+}
+
+/* Titre — large par défaut (32px). Tronqué à l'ellipsis sur une ligne. */
+.barTitle {
+  flex: 1 0 0;
+  min-width: 0;
+  margin: 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui-xxl);
+  letter-spacing: var(--letter-spacing-negative-extra-tight);
+  color: var(--text-default);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* Évite le clip des jambages (g, y, p…) par overflow: hidden */
+  padding-block: var(--space025);
+}
+
+/* Compact — variante épinglée. Déclarations partagées par le défaut
+   responsive (Page < 768px) et le modificateur forcé .compact.
+   Container query : réagit à la largeur de la Page, pas du viewport. */
+@container page (max-width: 767px) {
+  .bar:not(.large) {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-index-sticky);
+    min-height: calc(var(--size600) + var(--space100));
+    padding-block: var(--space100);
+    /* safe-area top (encoche iOS) en plus du padding compact */
+    padding-top: calc(var(--space100) + env(safe-area-inset-top));
+    background-color: var(--background-surface-default);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .bar:not(.large) .barTitle {
+    font-size: var(--font-size-ui-m);
+    line-height: var(--line-height-ui-m);
+    letter-spacing: var(--letter-spacing-negative-tight);
+  }
+}
+
+.bar.compact {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-sticky);
+  min-height: calc(var(--size600) + var(--space100));
+  padding-block: var(--space100);
+  padding-top: calc(var(--space100) + env(safe-area-inset-top));
+  background-color: var(--background-surface-default);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.bar.compact .barTitle {
+  font-size: var(--font-size-ui-m);
+  line-height: var(--line-height-ui-m);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+/* Large forcée — neutralise les bribes compact même sous 768px. */
+.bar.large {
+  position: static;
+  min-height: auto;
+  padding-block: var(--space200);
+  padding-top: var(--space200);
+  background-color: transparent;
+  border-bottom: 0;
+}
+
+.bar.large .barTitle {
+  font-size: var(--font-size-ui-xxl);
+  line-height: var(--line-height-ui-xxl);
+  letter-spacing: var(--letter-spacing-negative-extra-tight);
 }
 
 /* ==========================================================================

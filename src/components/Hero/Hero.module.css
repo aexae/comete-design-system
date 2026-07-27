@@ -4,7 +4,34 @@
   margin: 0;
 }
 
-.color-default { color: var(--text-default); }
-.color-inverse { color: var(--text-inverted); }
+/* -----------------------------------------------------------------------
+ * Color
+ * --------------------------------------------------------------------- */
 
+.color-default { color: var(--text-default); }
+.color-inverted { color: var(--text-inverted); }
+
+/* -----------------------------------------------------------------------
+ * Align
+ * --------------------------------------------------------------------- */
+
+.align-start { text-align: start; }
+.align-center { text-align: center; }
+.align-end { text-align: end; }
+
+/* -----------------------------------------------------------------------
+ * Decoration
+ * --------------------------------------------------------------------- */
+
+.italic { font-style: italic; }
 .noWrap { white-space: nowrap; }
+
+/* -----------------------------------------------------------------------
+ * Truncation (maxLines)
+ * --------------------------------------------------------------------- */
+
+.truncate {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

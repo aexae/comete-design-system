@@ -9,12 +9,53 @@ import styles from "./Page.module.css";
 // Types publics
 
 export interface PageProps {
-  /** Sections de la page (typiquement Page.Header / Page.Toolbar / Page.Body). */
+  /** Sections de la page (typiquement Page.Bar / Page.Toolbar / Page.Body). */
   children: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Style inline additionnel. */
   style?: CSSProperties;
+}
+
+/**
+ * Variante d'affichage de la `Page.Bar`.
+ * - `large` — titre proéminent (32px), pour desktop/tablette.
+ * - `compact` — barre de 56px épinglée en haut (sticky), titre tronqué.
+ *
+ * Omise, la variante est **responsive** : compact sous 768px, large au-dessus.
+ * Les écrans consommateurs ne devraient normalement pas la forcer.
+ */
+export type PageBarSize = "large" | "compact";
+
+export interface PageBarProps {
+  /**
+   * Titre principal de la page (rendu dans un `<h1>`).
+   * Peut être un string ou du JSX pour des titres composés.
+   */
+  title: ReactNode;
+  /**
+   * Zone unique à gauche du titre. Une seule affordance de navigation à la
+   * fois (jamais deux) :
+   * - **page racine** → menu hamburger (typiquement `<SideNav.Trigger />`) ;
+   * - **page de détail** → bouton retour, qui *remplace* le hamburger.
+   *
+   * La visibilité du hamburger est **pilotée par l'app** : elle ne le rend que
+   * lorsque la SideNav est repliée (elle gère déjà cet état via son propre
+   * breakpoint). Sur desktop, SideNav persistante ⇒ pas de hamburger ici.
+   */
+  leading?: ReactNode;
+  /**
+   * Zone d'actions globales alignée à droite du titre : notifications,
+   * réglages, avatar utilisateur. Reste visible grâce au `flex-shrink: 0`.
+   */
+  trailing?: ReactNode;
+  /**
+   * Force la variante d'affichage. Par défaut (omise), la variante est choisie
+   * automatiquement selon le breakpoint (compact < 768px, large ≥ 768px).
+   */
+  size?: PageBarSize;
+  /** Classe CSS additionnelle. */
+  className?: string;
 }
 
 export interface PageHeaderProps {
@@ -104,11 +145,71 @@ export function Page({ children, className, style }: PageProps): ReactElement {
 Page.displayName = "Page";
 
 // -----------------------------------------------------------------------
+// Page.Bar
+
+/**
+ * Page.Bar — barre de page unifiée (fusion de TopNav + Page.Header).
+ *
+ * Trois zones : `leading` (une seule affordance nav — hamburger OU retour),
+ * `title` (obligatoire, rendu en `<h1>`) et `trailing` (actions globales :
+ * notifications, réglages, avatar).
+ *
+ * Le titre est **responsive** selon la largeur de la Page (via `@container`),
+ * sans que le consommateur ne passe `size` : `compact` (barre 56px épinglée,
+ * titre tronqué) sous 768px, `large` (titre 32px) au-dessus. `size` permet de
+ * forcer une variante si besoin.
+ *
+ * ```tsx
+ * <Page>
+ *   <Page.Bar
+ *     title="Accueil"
+ *     leading={<SideNav.Trigger />}
+ *     trailing={
+ *       <>
+ *         <Button appearance="subtle" iconBefore="Notifications" aria-label="Notifications" />
+ *         <Button appearance="subtle" iconBefore="Settings" aria-label="Réglages" />
+ *         <Avatar size="medium" initials="AC" />
+ *       </>
+ *     }
+ *   />
+ *   <Page.Toolbar start={<SearchField />} end={<Button color="brand">Nouveau</Button>} />
+ *   <Page.Body>…</Page.Body>
+ * </Page>
+ * ```
+ */
+function PageBar({
+  title,
+  leading,
+  trailing,
+  size,
+  className,
+}: PageBarProps): ReactElement {
+  const sizeClass =
+    size === "large" ? styles.large : size === "compact" ? styles.compact : undefined;
+  const classNames = [styles.bar, sizeClass, className].filter(Boolean).join(" ");
+  return (
+    <header className={classNames}>
+      {leading !== undefined && <div className={styles.leading}>{leading}</div>}
+      <h1 className={styles.barTitle}>{title}</h1>
+      {trailing !== undefined && (
+        <div className={styles.trailing}>{trailing}</div>
+      )}
+    </header>
+  );
+}
+
+PageBar.displayName = "Page.Bar";
+
+// -----------------------------------------------------------------------
 // Page.Header
 
 /**
  * Page.Header — titre de page, breadcrumbs optionnels et actions trailing.
  * Le titre est rendu dans un `<h1>` pour la hiérarchie sémantique.
+ *
+ * @deprecated Utiliser `Page.Bar` (fusion de TopNav + Page.Header). `Page.Header`
+ * reste disponible pour rétro-compatibilité mais sera retiré dans une version
+ * ultérieure. `Page.Bar` ne propose plus de `breadcrumbs`.
  */
 function PageHeader({
   title,
@@ -177,6 +278,7 @@ function PageBody({ children, className }: PageBodyProps): ReactElement {
 
 PageBody.displayName = "Page.Body";
 
+Page.Bar = PageBar;
 Page.Header = PageHeader;
 Page.Toolbar = PageToolbar;
 Page.Body = PageBody;
