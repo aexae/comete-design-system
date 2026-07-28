@@ -144,13 +144,13 @@ export const OversizedLogo: Story = {
     <MainCouranteShell
       nav={<MainCouranteNav />}
       logo={
-        <div
-          style={{
-            width: 160,
-            height: 160,
-            borderRadius: "var(--radius200)",
-            background: "var(--background-neutral-bold-default)",
-          }}
+        <img
+          alt="Logo 160×160"
+          width={160}
+          height={160}
+          src={`data:image/svg+xml,${encodeURIComponent(
+            '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><rect width="160" height="160" rx="24" fill="#334155"/></svg>',
+          )}`}
         />
       }
     />
