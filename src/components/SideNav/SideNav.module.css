@@ -1,39 +1,35 @@
 /* SideNav — Comete Design System
-   Pattern Jira : quand collapsed, la sidebar n'affiche que son trigger
-   (largeur ~48px). Au survol du collapsed, elle s'ouvre en OVERLAY au-
-   dessus du contenu (sans pousser la mise en page) pour permettre à
-   l'utilisateur de revoir la nav et la rouvrir d'un clic. Implémenté
-   avec un container externe qui réserve l'espace en flex et un `<nav>`
-   interne en `position: absolute` qui peut déborder. */
+   Pattern Jira : en mode replié (collapsed), la sidebar occupe 0px et
+   disparaît ; la réouverture se fait via `<SideNav.Trigger />` (placé côté
+   consommateur dans `Page.Header`). Au survol du Trigger (peek), la sidebar
+   s'affiche en OVERLAY par-dessus le contenu : le container garde une largeur
+   de 0 (le contenu principal NE bouge PAS), et la `<nav>` passe en
+   `position: absolute` puis glisse depuis la gauche (translateX -100% → 0)
+   avec une ombre portée. Pas de transition de largeur, donc aucun reflow ni
+   layout shift. En mode déployé (non replié), rien de tout ça : la nav est en
+   flux et pousse le contenu, comme un panneau latéral classique. */
 
 /* ------------------------------------------------------------------ */
-/* Container — flex child, contrôle l'espace réservé                  */
+/* Container — flex child ; porte la largeur en flux (déployé) et sert
+   de contexte de positionnement pour l'overlay de peek (replié).      */
 
 .container {
   position: relative;
   width: 240px;
   height: 100%;
   flex-shrink: 0;
-  overflow: hidden;
   transition: width var(--duration-normal) var(--easing-default);
 }
 
-/* Collapsed : aucun espace réservé en layout. Le toggle (re-open) est à
-   placer côté consommateur dans `Page.Header` via `<SideNav.Trigger />`. */
+/* Replié : aucune largeur réservée — le contenu principal occupe toute la
+   place. Reste ainsi même en peek (l'overlay ne repousse pas le contenu). */
 .container[data-collapsed] {
   width: 0;
 }
 
-/* Peek : container revient à 240px → la SideNav POUSSE le contenu, comme
-   en mode expanded mais temporaire. Pas d'overlay : le main content reste
-   visible à droite, jamais caché. */
-.container[data-collapsed][data-peeking] {
-  width: 240px;
-}
-
 /* ------------------------------------------------------------------ */
-/* SideNav — flex child à l'intérieur du container, pas d'overlay      */
-/* (le container porte la largeur ; la nav remplit le container).      */
+/* SideNav — en flux quand déployé (pousse le contenu) ; overlay glissant
+   quand replié.                                                        */
 
 .sideNav {
   width: 100%;
@@ -45,25 +41,102 @@
   border-right: 1px solid var(--border-subtle);
   overflow: hidden;
   box-sizing: border-box;
-  transition: padding var(--duration-normal) var(--easing-default);
 }
 
-/* Collapsed : container 0px → la nav est totalement masquée (overflow
-   hidden du container clippe le contenu). Pas de bordure ni de fond
-   visible. */
+/* Replié : la nav quitte le flux et devient un overlay. Masquée par défaut
+   (hors écran à gauche, transparente et non focusable), prête à glisser. Le
+   fond, la bordure et le padding de base sont conservés. */
 .sideNav[data-collapsed] {
-  padding: 0;
-  background: transparent;
-  border-right: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 240px;
+  z-index: var(--z-index-sticky);
+  transform: translateX(-100%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    transform var(--duration-normal) var(--easing-default),
+    opacity var(--duration-normal) var(--easing-default),
+    visibility var(--duration-normal) var(--easing-default);
 }
 
-/* Peek : on rétablit fond + bordure quand le container s'élargit à 240
-   (cf. .container[data-collapsed][data-peeking] plus bas). La nav
-   POUSSE le contenu (pas d'overlay) — le main content reste visible. */
+/* Peek : la nav glisse par-dessus le contenu (translateX 0) avec une ombre
+   portée. Le container garde width: 0 → le contenu principal ne bouge pas. */
 .sideNav[data-collapsed][data-peeking] {
-  padding: 0 var(--space100);
-  background: var(--background-surface-default);
-  border-right: 1px solid var(--border-subtle);
+  transform: translateX(0);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  box-shadow: var(--elevation-small);
+}
+
+/* ------------------------------------------------------------------ */
+/* Body — zone scrollable entre header et footer épinglés.
+   Seules les sections + items défilent ; header et footer restent fixes.   */
+
+.body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* Gouttière réservée en permanence : les items ne se décalent pas quand le
+     thumb apparaît au survol, et leur fond hover/selected s'arrête avant elle
+     (ne passe jamais sous la scrollbar). */
+  scrollbar-gutter: stable;
+
+  /* Firefox : scrollbar fine, thumb transparent au repos (transition douce
+     de la couleur, révélée au survol de la nav ci-dessous). */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color var(--duration-normal) var(--easing-default);
+
+  /* Indicateur de débordement — CSS pur (technique des scroll-shadows) :
+     un fondu discret apparaît en bas tant qu'il reste du contenu, et en haut
+     une fois défilé. Les calques `local` (masques couleur surface) suivent le
+     contenu et couvrent l'ombre aux extrémités ; les calques `scroll` (ombres
+     fixes) se révèlent quand on s'éloigne d'un bord. Sans support de
+     background-attachment, aucun effet — comportement inchangé. */
+  background:
+    linear-gradient(var(--background-surface-default) 30%, transparent) center top,
+    linear-gradient(transparent, var(--background-surface-default) 70%) center bottom,
+    radial-gradient(farthest-side at 50% 0, var(--border-subtle), transparent) center top,
+    radial-gradient(farthest-side at 50% 100%, var(--border-subtle), transparent) center bottom;
+  background-repeat: no-repeat;
+  background-size: 100% 24px, 100% 24px, 100% 10px, 100% 10px;
+  background-attachment: local, local, scroll, scroll;
+}
+
+/* Au survol de la nav ENTIÈRE (header/corps/footer), le thumb devient visible.
+   Le scroll reste fonctionnel en permanence ; seul l'affichage du thumb est
+   conditionné. Track toujours transparent. */
+.sideNav:hover .body {
+  scrollbar-color: var(--border-default) transparent;
+}
+
+.body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.body::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+  transition: background-color var(--duration-normal) var(--easing-default);
+}
+
+.sideNav:hover .body::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+}
+
+/* Survol du thumb lui-même : légèrement plus foncé. */
+.sideNav:hover .body::-webkit-scrollbar-thumb:hover {
+  background: var(--background-neutral-bold-default);
 }
 
 /* ------------------------------------------------------------------ */
@@ -75,12 +148,30 @@
   gap: var(--space150);
   min-height: 72px;
   padding: var(--space300) var(--space100) var(--space100) var(--space100);
+  flex-shrink: 0;
 }
 
+/* Slot logo — le contenu est libre (img, svg, <Logo>, div…). On borne la
+   hauteur à ~40px quel que soit le ReactNode fourni : un logo surdimensionné
+   (ex. 160px) est mis à l'échelle sans casser la hauteur de l'en-tête. */
 .headerLogo {
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  max-height: var(--size500);
+  /* Cap de largeur du slot : un logo large (wordmark) ne doit jamais évincer
+     le headerContent hors de la nav (le slot est en flex-shrink: 0). */
+  max-width: 60%;
+  overflow: hidden;
+}
+
+.headerLogo > *,
+.headerLogo img,
+.headerLogo svg {
+  max-height: var(--size500);
+  max-width: 100%;
+  width: auto;
+  object-fit: contain;
 }
 
 .headerContent {
@@ -255,11 +346,39 @@
 /* ------------------------------------------------------------------ */
 /* Footer                                                              */
 
+/* Footer — slot générique en bas de la nav (liens d'aide, version, compte,
+   marque…). NEUTRE : aucune opacité globale, pour ne pas griser du contenu
+   textuel (problème de contraste AA). La marque discrète passe par la classe
+   dédiée `.footerBrand` (via le sous-composant `SideNav.FooterBrand`). */
 .footer {
   display: flex;
   flex-direction: column;
   padding: var(--space200);
   margin-top: auto;
+  flex-shrink: 0;
+}
+
+/* Marque de pied discrète — opacité réduite, petite et centrée ; l'opacité
+   remonte au survol. À réserver au logo de marque, jamais au contenu
+   générique du footer. */
+.footerBrand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.55;
+  transition: opacity var(--duration-normal) var(--easing-default);
+}
+
+.footerBrand:hover {
+  opacity: 1;
+}
+
+.footerBrand > *,
+.footerBrand img,
+.footerBrand svg {
+  max-height: var(--size300);
+  width: auto;
+  object-fit: contain;
 }
 
 /* ------------------------------------------------------------------ */

@@ -54,6 +54,8 @@ export interface MainCouranteShellProps {
   body?: ReactNode;
   /** SideNav repliée au départ. @default false */
   initialCollapsed?: boolean;
+  /** Logo de marque passé à `SideNav.Header` (défaut : logo icône Comète). */
+  logo?: ReactNode;
 }
 
 /**
@@ -65,6 +67,7 @@ export function MainCouranteShell({
   nav,
   body = <p>Contenu principal</p>,
   initialCollapsed = false,
+  logo = <Logo product="cafe" format="icon" />,
 }: MainCouranteShellProps) {
   const [collapsed, setCollapsed] = useState(initialCollapsed);
   return (
@@ -84,13 +87,15 @@ export function MainCouranteShell({
         <div style={{ display: "flex", flex: 1, overflow: "hidden", position: "relative" }}>
           <SideNav>
             <SideNav.Header
-              logo={<Logo product="cafe" format="icon" />}
+              logo={logo}
               companyName="Pro Sécurité"
               description="Main Courante"
             />
             {nav}
             <SideNav.Footer>
-              <FooterLogo />
+              <SideNav.FooterBrand>
+                <FooterLogo />
+              </SideNav.FooterBrand>
             </SideNav.Footer>
           </SideNav>
           <Page.Body>{body}</Page.Body>

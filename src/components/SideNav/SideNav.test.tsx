@@ -376,4 +376,42 @@ describe("SideNav", () => {
       container.querySelector("[class*='emptyIcon']"),
     ).toBeInTheDocument();
   });
+
+  // SideNav.FooterBrand -------------------------------------------------
+
+  it("should wrap the brand mark in a dedicated footerBrand element", () => {
+    const { container, getByText } = render(
+      <SideNav>
+        <SideNav.Footer>
+          <SideNav.FooterBrand>
+            <span>Marque</span>
+          </SideNav.FooterBrand>
+        </SideNav.Footer>
+      </SideNav>,
+    );
+    const brand = container.querySelector("[class*='footerBrand']");
+    expect(brand).toBeInTheDocument();
+    expect(getByText("Marque")).toBeInTheDocument();
+  });
+
+  // Défilement interne --------------------------------------------------
+
+  it("should render sections/items in a scrollable body, header and footer pinned outside", () => {
+    const { container } = render(
+      <SideNav>
+        <SideNav.Header companyName="Ma marque" />
+        <SideNav.Section title="Navigation">
+          <SideNav.Item label="Accueil" iconBefore="Home" />
+        </SideNav.Section>
+        <SideNav.Footer>Pied de page</SideNav.Footer>
+      </SideNav>,
+    );
+    const body = container.querySelector("[class*='body']");
+    expect(body).toBeInTheDocument();
+    // Les items défilent dans le corps…
+    expect(body?.textContent).toContain("Accueil");
+    // …mais header et footer restent en dehors (épinglés).
+    expect(body?.textContent).not.toContain("Ma marque");
+    expect(body?.textContent).not.toContain("Pied de page");
+  });
 });

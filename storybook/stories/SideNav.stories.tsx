@@ -1,5 +1,6 @@
 // SideNav — story principale (composition complète)
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { within, userEvent, expect } from "storybook/test";
 import { SideNav } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
@@ -109,6 +110,113 @@ export const Empty: Story = {
           title="Aucune rubrique"
           description="Aucune rubrique n'est accessible pour votre profil."
         />
+      }
+    />
+  ),
+};
+
+/**
+ * **Peek au survol** — la SideNav est repliée ; survoler le `SideNav.Trigger`
+ * (dans le header) l'affiche en **overlay glissant** par-dessus le contenu.
+ * Le contenu principal (« Contenu principal », à droite) **ne bouge pas** : le
+ * container garde une largeur de 0. Le `play` survole le Trigger pour figer
+ * l'overlay, puis vérifie que le contenu n'a pas été décalé.
+ */
+export const Peek: Story = {
+  name: "Peek (survol du Trigger)",
+  args: { initialCollapsed: true },
+  render: (args) => (
+    <MainCouranteShell nav={<MainCouranteNav />} initialCollapsed={args.initialCollapsed} />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const main = canvasElement.querySelector("main");
+    const container = canvasElement.querySelector("nav")?.parentElement;
+    const mainLeftBefore = main?.getBoundingClientRect().left;
+
+    await userEvent.hover(canvas.getByRole("button", { name: /navigation/i }));
+
+    // Overlay (pas push) : le contenu principal n'a pas changé de position…
+    await expect(main?.getBoundingClientRect().left).toBe(mainLeftBefore);
+    // …et le container ne réserve toujours aucune largeur.
+    await expect(container?.getBoundingClientRect().width).toBe(0);
+  },
+};
+
+/**
+ * **Logo surdimensionné** — vérifie la contrainte de `SideNav.Header` : un logo
+ * de 160px fourni au slot est mis à l'échelle (hauteur bornée à ~40px), sans
+ * casser la hauteur de l'en-tête.
+ */
+export const OversizedLogo: Story = {
+  name: "Logo surdimensionné (contrainte)",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <MainCouranteShell
+      nav={<MainCouranteNav />}
+      logo={
+        <img
+          alt="Logo 160×160"
+          width={160}
+          height={160}
+          src={`data:image/svg+xml,${encodeURIComponent(
+            '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><rect width="160" height="160" rx="24" fill="#334155"/></svg>',
+          )}`}
+        />
+      }
+    />
+  ),
+};
+
+/**
+ * **Pied de marque** — `SideNav.Footer` affiche un logo discret (opacité
+ * réduite), centré en bas ; l'opacité remonte au survol. Visible ici au bas de
+ * la navigation déployée.
+ */
+export const BrandFooter: Story = {
+  name: "Pied de marque",
+  parameters: { controls: { disable: true } },
+  render: () => <MainCouranteShell nav={<MainCouranteNav />} />,
+};
+
+/**
+ * **Défilement interne** — beaucoup d'entrées : seul le corps (sections +
+ * items) défile, tandis que le header (marque) et le footer (comète link)
+ * restent épinglés. Réduis la hauteur du canvas pour voir le scroll apparaître.
+ */
+export const Scrollable: Story = {
+  name: "Scroll (contenu long)",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <MainCouranteShell
+      nav={
+        <>
+          <SideNav.Section title="Manager">
+            <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="/" />
+            <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
+            <SideNav.Item label="Sites" iconBefore="Site" href="/sites" />
+            <SideNav.Item label="Pointages" iconBefore="Clockings" href="/pointages" />
+            <SideNav.Item label="Plannings" iconBefore="CalendarMonth" href="/plannings" />
+            <SideNav.Item label="Vacations" iconBefore="EventAvailable" href="/vacations" />
+          </SideNav.Section>
+          <SideNav.Divider />
+          <SideNav.Section title="MCE">
+            <SideNav.Item label="MCE" iconBefore="MenuBook" href="/mce" />
+            <SideNav.Item label="Formulaires" iconBefore="FormEdit" href="/forms" />
+            <SideNav.Item label="Rapports" iconBefore="Assignment" href="/reports" />
+            <SideNav.Item label="Anomalies" iconBefore="Warning" href="/issues" />
+          </SideNav.Section>
+          <SideNav.Divider />
+          <SideNav.Section title="Administration">
+            <SideNav.Item label="Utilisateurs" iconBefore="Group" href="/users" />
+            <SideNav.Item label="Droits" iconBefore="ManageAccounts" href="/permissions" />
+            <SideNav.Item label="Licences" iconBefore="Key" href="/licences" />
+            <SideNav.Item label="Facturation" iconBefore="Payments" href="/billing" />
+            <SideNav.Item label="Intégrations" iconBefore="Extension" href="/integrations" />
+            <SideNav.Item label="Journaux" iconBefore="Description" href="/logs" />
+            <SideNav.Item label="Paramètres" iconBefore="Settings" href="/settings" />
+          </SideNav.Section>
+        </>
       }
     />
   ),
