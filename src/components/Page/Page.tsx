@@ -2,10 +2,18 @@
 // Gabarit de page : wrapper structurel + sous-composants pour le header,
 // la toolbar et le body. S'appuie sur le Figma "❖ Page header" et sur la
 // décomposition de la vue Page layout (node 4319:15827).
+import { createContext, useContext, useEffect } from "react";
 import type { CSSProperties, ReactElement, ReactNode } from "react";
+import { Avatar } from "../Avatar/index.js";
+import { Button } from "../Button/index.js";
 import { Skeleton } from "../Skeleton/index.js";
 import { DataStateMessage } from "../_states/DataStateMessage.js";
 import styles from "./Page.module.css";
+
+// `process` n'est pas typé ici (build DS avec `types: []`, sans @types/node).
+// Déclaration locale minimale ; le bundler du consommateur remplace
+// `process.env.NODE_ENV` à la compilation.
+declare const process: { env: { NODE_ENV?: string } };
 
 // -----------------------------------------------------------------------
 // Types publics
@@ -13,6 +21,18 @@ import styles from "./Page.module.css";
 export interface PageProps {
   /** Sections de la page (typiquement Page.Bar / Page.Toolbar / Page.Body). */
   children: ReactNode;
+  /**
+   * Actions globales portées par le layout et injectées dans le `trailing` de
+   * chaque `Page.Bar` : notifications, réglages, avatar. Définies **une seule
+   * fois** au niveau du gabarit — les pages n'ont pas à les répéter. Trois états :
+   *
+   * - **omise** → trio de démo par défaut (Notifications, Réglages, Avatar
+   *   placeholder) + un `console.warn` en développement, car aucune action
+   *   réelle n'est branchée ;
+   * - **`null`** → aucune action globale ;
+   * - **`ReactNode`** → les actions de l'app (vrais handlers, avatar réel).
+   */
+  globalActions?: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Style inline additionnel. */
@@ -47,8 +67,10 @@ export interface PageBarProps {
    */
   leading?: ReactNode;
   /**
-   * Zone d'actions globales alignée à droite du titre : notifications,
-   * réglages, avatar utilisateur. Reste visible grâce au `flex-shrink: 0`.
+   * Actions **spécifiques à la page**, ajoutées à droite du titre AVANT le trio
+   * global (notifications, réglages, avatar) porté par le layout `Page`. Le plus
+   * souvent inutile : les actions globales sont fournies une fois via
+   * `Page globalActions`. Reste visible grâce au `flex-shrink: 0`.
    */
   trailing?: ReactNode;
   /**
@@ -127,23 +149,53 @@ export interface PageBodyProps {
 }
 
 // -----------------------------------------------------------------------
+// Actions globales (portées par le layout)
+
+/**
+ * Trio d'actions globales par défaut : notifications, réglages, avatar.
+ * Placeholder — une app branche ses vraies actions via `Page globalActions`.
+ */
+function DefaultGlobalActions(): ReactElement {
+  return (
+    <>
+      <Button appearance="subtle" iconBefore="Notifications" aria-label="Notifications" />
+      <Button appearance="subtle" iconBefore="Settings" aria-label="Réglages" />
+      <Avatar size="medium" initials="AC" />
+    </>
+  );
+}
+
+interface PageContextValue {
+  /** Actions globales à injecter dans le `trailing` de `Page.Bar`. */
+  globalActions: ReactNode;
+}
+
+// Défaut hors <Page> : aucune action globale — c'est le layout `Page` qui les
+// porte. Une `Page.Bar` seule (sans `Page`) n'affiche donc pas le trio.
+const PageContext = createContext<PageContextValue>({
+  globalActions: null,
+});
+
+// -----------------------------------------------------------------------
 // Composant principal
 
 /**
  * Page — Comète Design System
  *
- * Gabarit de page : container flex vertical qui compose un `Page.Header`,
- * un `Page.Toolbar` optionnel et un `Page.Body` extensible. S'utilise
- * typiquement dans le slot principal d'une AppShell.
+ * Gabarit de page : container flex vertical qui compose une `Page.Bar`, un
+ * `Page.Toolbar` optionnel et un `Page.Body` extensible. S'utilise typiquement
+ * dans le slot principal d'une AppShell.
+ *
+ * Le layout **porte lui-même les actions globales** (notifications, réglages,
+ * avatar) : définies une seule fois via `globalActions`, elles sont injectées
+ * dans le `trailing` de chaque `Page.Bar`. Les pages n'ont pas à les répéter.
  *
  * ```tsx
  * import { Page, Button } from "@aexae/comete-design-system";
  *
- * <Page>
- *   <Page.Header
- *     title="Agents"
- *     trailing={<UserAvatar />}
- *   />
+ * // Les actions globales sont portées par le layout, une seule fois.
+ * <Page globalActions={<AppGlobalActions />}>
+ *   <Page.Bar title="Agents" leading={<SideNav.Trigger />} />
  *   <Page.Toolbar
  *     start={<><SearchField /><Button>Filtres</Button></>}
  *     end={<Button appearance="contained" color="comete">Nouvel agent</Button>}
@@ -154,9 +206,37 @@ export interface PageBodyProps {
  * </Page>
  * ```
  */
-export function Page({ children, className, style }: PageProps): ReactElement {
+export function Page({
+  children,
+  globalActions,
+  className,
+  style,
+}: PageProps): ReactElement {
   const classNames = [styles.page, className].filter(Boolean).join(" ");
-  return <div className={classNames} style={style}>{children}</div>;
+  const contextValue: PageContextValue = {
+    globalActions:
+      globalActions === undefined ? <DefaultGlobalActions /> : globalActions,
+  };
+  // En dev uniquement : prévenir une fois par montage que le placeholder de démo
+  // est affiché faute de prop `globalActions`.
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "production" && globalActions === undefined) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "Page : aucune prop globalActions fournie — le placeholder de démo est " +
+          "affiché. Passez globalActions={<VosActions />} ou globalActions={null} " +
+          "pour le désactiver.",
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return (
+    <PageContext.Provider value={contextValue}>
+      <div className={classNames} style={style}>
+        {children}
+      </div>
+    </PageContext.Provider>
+  );
 }
 
 Page.displayName = "Page";
@@ -168,8 +248,9 @@ Page.displayName = "Page";
  * Page.Bar — barre de page unifiée (fusion de TopNav + Page.Header).
  *
  * Trois zones : `leading` (une seule affordance nav — hamburger OU retour),
- * `title` (obligatoire, rendu en `<h1>`) et `trailing` (actions globales :
- * notifications, réglages, avatar).
+ * `title` (obligatoire, rendu en `<h1>`) et un `trailing` où le layout `Page`
+ * injecte les actions globales (notifications, réglages, avatar) ; la page peut
+ * y ajouter des actions spécifiques via `trailing`.
  *
  * Le titre est **responsive** selon la largeur de la Page (via `@container`),
  * sans que le consommateur ne passe `size` : `compact` (barre 56px épinglée,
@@ -177,18 +258,9 @@ Page.displayName = "Page";
  * forcer une variante si besoin.
  *
  * ```tsx
+ * // Le trio (notifications, réglages, avatar) est injecté par le layout Page.
  * <Page>
- *   <Page.Bar
- *     title="Accueil"
- *     leading={<SideNav.Trigger />}
- *     trailing={
- *       <>
- *         <Button appearance="subtle" iconBefore="Notifications" aria-label="Notifications" />
- *         <Button appearance="subtle" iconBefore="Settings" aria-label="Réglages" />
- *         <Avatar size="medium" initials="AC" />
- *       </>
- *     }
- *   />
+ *   <Page.Bar title="Accueil" leading={<SideNav.Trigger />} />
  *   <Page.Toolbar start={<SearchField />} end={<Button color="comete">Nouveau</Button>} />
  *   <Page.Body>…</Page.Body>
  * </Page>
@@ -201,15 +273,22 @@ function PageBar({
   size,
   className,
 }: PageBarProps): ReactElement {
+  const { globalActions } = useContext(PageContext);
   const sizeClass =
     size === "large" ? styles.large : size === "compact" ? styles.compact : undefined;
   const classNames = [styles.bar, sizeClass, className].filter(Boolean).join(" ");
+  // Le layout porte les actions globales : le `trailing` de la page (extras
+  // spécifiques) est rendu AVANT le trio global.
+  const hasTrailing = trailing !== undefined || globalActions != null;
   return (
     <header className={classNames}>
       {leading !== undefined && <div className={styles.leading}>{leading}</div>}
       <h1 className={styles.barTitle}>{title}</h1>
-      {trailing !== undefined && (
-        <div className={styles.trailing}>{trailing}</div>
+      {hasTrailing && (
+        <div className={styles.trailing}>
+          {trailing}
+          {globalActions}
+        </div>
       )}
     </header>
   );

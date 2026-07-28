@@ -150,6 +150,57 @@ describe("Page.Bar", () => {
   });
 });
 
+describe("Page — actions globales portées par le layout", () => {
+  it("injects the default global trio into Page.Bar when none provided", () => {
+    const { getByRole } = render(
+      <Page>
+        <Page.Bar title="Accueil" />
+      </Page>,
+    );
+    expect(getByRole("button", { name: "Notifications" })).toBeInTheDocument();
+    expect(getByRole("button", { name: "Réglages" })).toBeInTheDocument();
+  });
+
+  it("renders the trailing slot even when the page provides no trailing", () => {
+    const { container } = render(
+      <Page>
+        <Page.Bar title="Accueil" />
+      </Page>,
+    );
+    expect(container.querySelector("[class*='trailing']")).not.toBeNull();
+  });
+
+  it("lets Page.globalActions override the default trio", () => {
+    const { getByText, queryByRole } = render(
+      <Page globalActions={<button>Custom</button>}>
+        <Page.Bar title="Accueil" />
+      </Page>,
+    );
+    expect(getByText("Custom")).toBeInTheDocument();
+    expect(queryByRole("button", { name: "Notifications" })).toBeNull();
+  });
+
+  it("suppresses global actions when Page.globalActions is null", () => {
+    const { container, queryByRole } = render(
+      <Page globalActions={null}>
+        <Page.Bar title="Accueil" />
+      </Page>,
+    );
+    expect(queryByRole("button", { name: "Notifications" })).toBeNull();
+    expect(container.querySelector("[class*='trailing']")).toBeNull();
+  });
+
+  it("renders page-specific trailing alongside the layout global actions", () => {
+    const { getByText, getByRole } = render(
+      <Page>
+        <Page.Bar title="Accueil" trailing={<button>Extra</button>} />
+      </Page>,
+    );
+    expect(getByText("Extra")).toBeInTheDocument();
+    expect(getByRole("button", { name: "Notifications" })).toBeInTheDocument();
+  });
+});
+
 describe("Page.Toolbar", () => {
   it("should render start when provided", () => {
     const { getByText } = render(<Page.Toolbar start={<span>Search</span>} />);

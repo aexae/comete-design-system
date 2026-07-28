@@ -1,0 +1,11 @@
+/* Page stories — comportements responsives de la toolbar (démo).
+   Réagit au conteneur `page` (comme Page.Bar), pas au viewport. */
+
+/* Action secondaire (Exporter) : masquée sous le breakpoint compact — repliée
+   dans le menu débordement « ⋯ », comme la maquette Figma. Sélecteur
+   `button.hideUnderCompact` (0,1,1) pour battre `.button` (0,1,0) sans !important. */
+@container page (max-width: 767px) {
+  button.hideUnderCompact {
+    display: none;
+  }
+}

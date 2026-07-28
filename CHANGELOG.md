@@ -9,6 +9,24 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Ajouté
+
+- **Page** : prop `globalActions` — le layout porte lui-même les actions
+  globales (notifications, réglages, avatar) et les injecte dans le `trailing`
+  de chaque `Page.Bar` via contexte. Omise = trio de démo par défaut (+ `warn`
+  en dev) ; `null` = aucune ; `ReactNode` = actions de l'app.
+- **Button** : prop `collapseLabel` — réduit le bouton en **icône seule** (label
+  masqué, `aria-label` requis) sous ~768px du conteneur ancêtre (`@container`),
+  pour des toolbars responsives.
+
+### Modifié
+
+- **Page.Toolbar** : `flex-wrap` activé — la zone `end` passe sous la zone
+  `start` quand l'espace manque (plus de chevauchement des boutons sur mobile).
+- **Stories Page** : cadres device (desktop/tablette/mobile) via iframes,
+  toolbar alignée sur la maquette Figma (boutons `contained` gris, primaire
+  `comete`, Filtres icône seule / Exporter masqué sous compact).
+
 ## [1.0.0-alpha.144] - 2026-07-28
 
 ### Modifié

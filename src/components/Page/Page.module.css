@@ -186,6 +186,7 @@
 .toolbar {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--space100);
   padding-block: var(--space100);
   padding-inline: var(--page-gutter);
