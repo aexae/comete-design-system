@@ -9,6 +9,21 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.143] - 2026-07-28
+
+### Ajouté
+
+- **BrandProvider** (multi-tenant) : nouveau provider qui applique la **charte
+  couleur d'un client** au runtime à partir d'une seule couleur HEX. Il génère toute
+  la famille de tokens `brand-*` (rampe OKLCH à luminosité normalisée par rôle, clair
+  + sombre) et l'injecte, scopée à `[data-brand="<name>"]` ou à `:root`. Les éléments
+  interactifs (`comete-*`) ne sont pas affectés (École A). Exporté depuis
+  `@aexae/comete-design-system/providers`.
+- Utilitaires de theming exportés : `generateBrandTheme(seed)` et
+  `brandThemeToCss(seed, { scope })` (fonctions pures, sans dépendance externe).
+- Documentation : ADR `docs/adr/0001-theming-couleur-multi-tenant.md` et page
+  Storybook **Foundation/Couleur** (philosophie comète/brand/École A + démo live).
+
 ## [1.0.0-alpha.142] - 2026-07-28
 
 ### Changements cassants (BREAKING)
