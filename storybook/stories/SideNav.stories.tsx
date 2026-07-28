@@ -1,5 +1,6 @@
 // SideNav — story principale (composition complète)
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { within, userEvent } from "storybook/test";
 import { SideNav } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
@@ -112,4 +113,57 @@ export const Empty: Story = {
       }
     />
   ),
+};
+
+/**
+ * **Peek au survol** — la SideNav est repliée ; survoler le `SideNav.Trigger`
+ * (dans le header) la rouvre temporairement : elle POUSSE le contenu vers la
+ * droite (pas d'overlay). Le `play` survole le Trigger pour figer l'état peek.
+ */
+export const Peek: Story = {
+  name: "Peek (survol du Trigger)",
+  args: { initialCollapsed: true },
+  render: (args) => (
+    <MainCouranteShell nav={<MainCouranteNav />} initialCollapsed={args.initialCollapsed} />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.hover(canvas.getByRole("button", { name: /navigation/i }));
+  },
+};
+
+/**
+ * **Logo surdimensionné** — vérifie la contrainte de `SideNav.Header` : un logo
+ * de 160px fourni au slot est mis à l'échelle (hauteur bornée à ~40px), sans
+ * casser la hauteur de l'en-tête.
+ */
+export const OversizedLogo: Story = {
+  name: "Logo surdimensionné (contrainte)",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <MainCouranteShell
+      nav={<MainCouranteNav />}
+      logo={
+        <div
+          style={{
+            width: 160,
+            height: 160,
+            borderRadius: "var(--radius200)",
+            background: "var(--background-neutral-bold-default)",
+          }}
+        />
+      }
+    />
+  ),
+};
+
+/**
+ * **Pied de marque** — `SideNav.Footer` affiche un logo discret (opacité
+ * réduite), centré en bas ; l'opacité remonte au survol. Visible ici au bas de
+ * la navigation déployée.
+ */
+export const BrandFooter: Story = {
+  name: "Pied de marque",
+  parameters: { controls: { disable: true } },
+  render: () => <MainCouranteShell nav={<MainCouranteNav />} />,
 };
