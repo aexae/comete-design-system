@@ -58,6 +58,30 @@ const meta = {
                 "Cibles tactiles suffisamment grandes ; navigation possible au clavier.",
                 "Assurer un contraste suffisant entre l'icône active et les icônes inactives.",
               ]}
+              doExample={{
+                example: (
+                  <div style={{ width: "100%" }}>
+                    <BottomNav>
+                      <BottomNavItem label="Accueil" icon="Home" isSelected />
+                      <BottomNavItem label="Rapports" icon="Assignment" />
+                      <BottomNavItem label="Profil" icon="Person" />
+                    </BottomNav>
+                  </div>
+                ),
+                caption: "Libellés courts : lisibles d'un coup d'œil.",
+              }}
+              dontExample={{
+                example: (
+                  <div style={{ width: "100%" }}>
+                    <BottomNav>
+                      <BottomNavItem label="Accueil" icon="Home" isSelected />
+                      <BottomNavItem label="Rapports et analyses détaillés" icon="Assignment" />
+                      <BottomNavItem label="Profil" icon="Person" />
+                    </BottomNav>
+                  </div>
+                ),
+                caption: "Libellés trop longs : tronqués par « … », illisibles.",
+              }}
             />
           }
         />
@@ -256,7 +280,13 @@ function InteractiveBottomNav({
  * cohérent.
  */
 function PhoneScreen({ children }: { children: ReactNode }): ReactNode {
-  return <div className={css["screen"]}>{children}</div>;
+  return (
+    <div className={css["screen"]}>
+      {children}
+      {/* Home indicator iOS, comme dans la story field tool */}
+      <div aria-hidden className={css["homeIndicator"]} />
+    </div>
+  );
 }
 
 const FOUR_ITEMS: NavItemDef[] = [
@@ -311,20 +341,19 @@ export const FiveItems: NavStory = {
 };
 
 const LONG_LABEL_ITEMS: NavItemDef[] = [
-  { label: "Tableau de bord", icon: "Home" },
+  { label: "Accueil", icon: "Home" },
   { label: "Rapports et analyses détaillés", icon: "Assignment" },
   { label: "Planning des interventions", icon: "CalendarMonth" },
   { label: "Profil", icon: "Person" },
 ];
 
 /**
- * Libellés longs → **troncature ellipsis**. Le style du libellé tronque déjà ;
- * cette story le rend visible : dans une barre étroite chaque cellule est
- * contrainte et les libellés trop longs sont coupés par « … ». Interactive :
+ * **Garde-fou** : un libellé trop long est tronqué avec ellipsis. Cas à éviter
+ * en production — voir les guidelines, préférer un libellé court. Interactive :
  * cliquer un item l'active (ou via le contrôle « Item actif »).
  */
 export const LongLabel: NavStory = {
-  name: "Long label (ellipsis)",
+  name: "Long label (garde-fou — dégradation)",
   parameters: {
     controls: { include: ["active"] },
     design: { type: "figma", url: figmaUrl("2524:18591") },
@@ -332,7 +361,7 @@ export const LongLabel: NavStory = {
   argTypes: {
     active: { name: "Item actif", control: "radio", options: LONG_LABEL_ITEMS.map((i) => i.label) },
   },
-  args: { active: "Tableau de bord" },
+  args: { active: "Accueil" },
   render: (args) => (
     <PhoneScreen>
       <InteractiveBottomNav items={LONG_LABEL_ITEMS} active={args.active} />
@@ -520,44 +549,40 @@ function FieldToolRecipe(): ReactNode {
     <>
       {/* Barre basse — items + bouton d'action central (BottomNav.Action).
           Règle : exactement 2 items de chaque côté (2 + Action + 2) ; la barre
-          réserve l'emplacement central automatiquement. */}
-      <div className={css["barRegion"]}>
-        <BottomNav>
-          <BottomNavItem
-            label="Tournée"
-            icon="Map"
-            isSelected={activeItem === "Tournée"}
-            onClick={() => { setSelected("Tournée"); }}
-          />
-          <BottomNavItem
-            label="Planning"
-            icon="CalendarMonth"
-            isSelected={activeItem === "Planning"}
-            onClick={() => { setSelected("Planning"); }}
-          />
-          <BottomNav.Action
-            icon="Add"
-            aria-label={sheetOpen ? "Fermer les outils terrain" : "Ouvrir les outils terrain"}
-            isOpen={sheetOpen}
-            onPress={() => { setSheetOpen((o) => !o); }}
-          />
-          <BottomNavItem
-            label="Rapports"
-            icon="Assignment"
-            isSelected={activeItem === "Rapports"}
-            onClick={() => { setSelected("Rapports"); }}
-          />
-          <BottomNavItem
-            label="Profil"
-            icon="Person"
-            isSelected={activeItem === "Profil"}
-            onClick={() => { setSelected("Profil"); }}
-          />
-        </BottomNav>
-
-        {/* Home indicator dans la safe-area basse */}
-        <div aria-hidden className={css["homeIndicator"]} />
-      </div>
+          réserve l'emplacement central automatiquement. Le home indicator est
+          fourni par PhoneScreen. */}
+      <BottomNav>
+        <BottomNavItem
+          label="Tournée"
+          icon="Map"
+          isSelected={activeItem === "Tournée"}
+          onClick={() => { setSelected("Tournée"); }}
+        />
+        <BottomNavItem
+          label="Planning"
+          icon="CalendarMonth"
+          isSelected={activeItem === "Planning"}
+          onClick={() => { setSelected("Planning"); }}
+        />
+        <BottomNav.Action
+          icon="Add"
+          aria-label={sheetOpen ? "Fermer les outils terrain" : "Ouvrir les outils terrain"}
+          isOpen={sheetOpen}
+          onPress={() => { setSheetOpen((o) => !o); }}
+        />
+        <BottomNavItem
+          label="Rapports"
+          icon="Assignment"
+          isSelected={activeItem === "Rapports"}
+          onClick={() => { setSelected("Rapports"); }}
+        />
+        <BottomNavItem
+          label="Profil"
+          icon="Person"
+          isSelected={activeItem === "Profil"}
+          onClick={() => { setSelected("Profil"); }}
+        />
+      </BottomNav>
 
       {/* Tiroir bas = composant Drawer du DS : hauteur ajustée au contenu
           (size="auto"), scrim cliquable, handle draggable (swipeable). */}
