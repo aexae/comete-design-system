@@ -607,3 +607,50 @@ export const Dense: Story = {
     </List>
   ),
 };
+
+// -----------------------------------------------------------------------
+// États natifs (chargement / vide / erreur)
+//
+// Le consommateur passe `isLoading`, `isEmpty` ou `error` directement à
+// `List` — aucun état à composer à la main. Priorité : error > isLoading >
+// isEmpty > children.
+
+const noop = () => undefined;
+
+/** **Chargement** — items skeleton (avatar + 2 lignes), contexte « Membres ». */
+export const LoadingState: Story = {
+  name: "Loading",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <List aria-label="Membres (chargement)" isBordered isLoading skeletonItems={4} />
+  ),
+};
+
+/** **Vide** — état vide natif via `isEmpty` (illustration + message). */
+export const EmptyState: Story = {
+  name: "Empty",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <List
+      aria-label="Membres (vide)"
+      isBordered
+      isEmpty
+      emptyTitle="Aucun membre"
+      emptyDescription="Invitez des membres pour collaborer."
+    />
+  ),
+};
+
+/** **Erreur** — état erreur natif via `error` + bouton « Réessayer » (`onRetry`). */
+export const ErrorState: Story = {
+  name: "Error",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <List
+      aria-label="Membres (erreur)"
+      isBordered
+      error="Impossible de charger les membres."
+      onRetry={noop}
+    />
+  ),
+};

@@ -522,3 +522,60 @@ describe("TableView", () => {
     expect(view).toHaveStyle({ margin: "8px" });
   });
 });
+
+describe("TableBody — états natifs", () => {
+  it("should render skeleton rows when isLoading", () => {
+    const { container } = render(
+      <Table aria-label="t">
+        <TableBody isLoading columnCount={3} skeletonRows={4} />
+      </Table>,
+    );
+    expect(container.querySelectorAll("tbody tr")).toHaveLength(4);
+    // 4 lignes × 3 cellules, un Skeleton (role=status) par cellule
+    expect(screen.getAllByRole("status")).toHaveLength(12);
+  });
+
+  it("should render the empty state when isEmpty", () => {
+    render(
+      <Table aria-label="t">
+        <TableBody isEmpty columnCount={3} emptyTitle="Rien ici" />
+      </Table>,
+    );
+    expect(screen.getByText("Rien ici")).toBeInTheDocument();
+  });
+
+  it("should render the error state with a retry button", () => {
+    const onRetry = vi.fn();
+    render(
+      <Table aria-label="t">
+        <TableBody error="Boom" columnCount={3} onRetry={onRetry} />
+      </Table>,
+    );
+    expect(screen.getByText("Boom")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Réessayer" }));
+    expect(onRetry).toHaveBeenCalledOnce();
+  });
+
+  it("should prioritise error over loading and empty", () => {
+    render(
+      <Table aria-label="t">
+        <TableBody error isLoading isEmpty columnCount={2} />
+      </Table>,
+    );
+    expect(screen.getByText("Une erreur est survenue")).toBeInTheDocument();
+    expect(screen.queryByText("Aucune donnée")).toBeNull();
+  });
+
+  it("should render children when no state flag is set", () => {
+    render(
+      <Table aria-label="t">
+        <TableBody columnCount={1}>
+          <TableRow>
+            <TableCell>Contenu</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    expect(screen.getByText("Contenu")).toBeInTheDocument();
+  });
+});

@@ -285,4 +285,95 @@ describe("SideNav", () => {
     // Footer
     expect(screen.getByText("Powered by Comete")).toBeInTheDocument();
   });
+
+  // SideNav.ItemSkeleton ------------------------------------------------
+
+  it("should render skeleton placeholders in an item skeleton", () => {
+    const { container } = render(<SideNav.ItemSkeleton />);
+    expect(
+      container.querySelector("[class*='skeletonItem']"),
+    ).toBeInTheDocument();
+    // 1 pastille + 1 barre de label (pas de description par défaut)
+    expect(screen.getAllByRole("status")).toHaveLength(2);
+  });
+
+  it("should render a second line when hasDescription is set", () => {
+    render(<SideNav.ItemSkeleton hasDescription />);
+    // icône + label + description
+    expect(screen.getAllByRole("status")).toHaveLength(3);
+  });
+
+  // SideNav.Skeleton ----------------------------------------------------
+
+  it("should render the requested number of item skeletons", () => {
+    const { container } = render(
+      <SideNav>
+        <SideNav.Skeleton count={4} withSectionTitle={false} />
+      </SideNav>,
+    );
+    expect(
+      container.querySelectorAll("[class*='skeletonItemContent']"),
+    ).toHaveLength(4);
+  });
+
+  it("should render a section title placeholder by default", () => {
+    const { container } = render(
+      <SideNav>
+        <SideNav.Skeleton count={2} />
+      </SideNav>,
+    );
+    expect(
+      container.querySelector("[class*='skeletonSectionTitle']"),
+    ).toBeInTheDocument();
+  });
+
+  it("should render a header placeholder when withHeader is set", () => {
+    const { container } = render(
+      <SideNav>
+        <SideNav.Skeleton count={2} withHeader />
+      </SideNav>,
+    );
+    expect(
+      container.querySelector("[class*='skeletonHeader']"),
+    ).toBeInTheDocument();
+  });
+
+  // SideNav.Empty -------------------------------------------------------
+
+  it("should render the default empty title", () => {
+    render(
+      <SideNav>
+        <SideNav.Empty />
+      </SideNav>,
+    );
+    expect(screen.getByText("Aucun élément")).toBeInTheDocument();
+  });
+
+  it("should render a custom title, description and action", () => {
+    render(
+      <SideNav>
+        <SideNav.Empty
+          title="Aucun résultat"
+          description="Rien ne correspond."
+          action={<button>Réinitialiser</button>}
+        />
+      </SideNav>,
+    );
+    expect(screen.getByText("Aucun résultat")).toBeInTheDocument();
+    expect(screen.getByText("Rien ne correspond.")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Réinitialiser" }),
+    ).toBeInTheDocument();
+  });
+
+  it("should render an icon when provided", () => {
+    const { container } = render(
+      <SideNav>
+        <SideNav.Empty icon="Search" title="Aucun résultat" />
+      </SideNav>,
+    );
+    expect(
+      container.querySelector("[class*='emptyIcon']"),
+    ).toBeInTheDocument();
+  });
 });

@@ -10,6 +10,9 @@ declare const styles: {
   readonly "itemTextPrimary": string;
   readonly "itemTextSecondary": string;
   readonly "list": string;
+  readonly "skeletonRow": string;
+  readonly "skeletonText": string;
+  readonly "stateItem": string;
 };
 export = styles;
 

@@ -11,6 +11,15 @@ entre versions alpha.
 
 ### Ajouté
 
+- **États de données natifs** (chargement / vide / erreur) intégrés directement
+  aux composants de collection : `Table` (via `TableBody` : `isLoading`,
+  `skeletonRows`, `isEmpty`, `error`, `onRetry`, `columnCount`, slots
+  `emptyState`/`errorState`), `List` (mêmes props + `skeletonItems`) et
+  `Page.Body` (`isLoading`/`isEmpty`/`error`/`onRetry`). Le consommateur n'a plus
+  à composer ces états à la main ; rendu unifié via `InformativeState` +
+  illustrations `Empty` / `ConnexionError`.
+- **SideNav** : sous-composants `SideNav.Skeleton` (+ `SideNav.ItemSkeleton`) pour
+  l'état de chargement et `SideNav.Empty` pour l'état vide de la navigation.
 - **BottomNav.Action** : nouveau bouton d'action central (FAB encoché) pour la
   `BottomNav`. La barre réserve automatiquement l'emplacement central lorsqu'une
   `BottomNav.Action` est présente. Règle de composition : exactement 2 items de

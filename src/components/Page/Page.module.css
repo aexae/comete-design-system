@@ -229,3 +229,21 @@
   padding-block: var(--space100);
   padding-inline: var(--page-gutter);
 }
+
+/* États natifs (chargement / vide / erreur) --------------------------- */
+
+/* État vide/erreur : centre l'InformativeState dans toute la hauteur du body. */
+.bodyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding-block: var(--space600);
+}
+
+/* Squelette de contenu générique : quelques blocs empilés. */
+.bodySkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space300)
+}

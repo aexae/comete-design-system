@@ -11,6 +11,7 @@ declare const styles: {
   readonly "paginationLabel": string;
   readonly "paginationRowsPerPage": string;
   readonly "row": string;
+  readonly "stateCell": string;
   readonly "table": string;
   readonly "view": string;
   readonly "viewContent": string;

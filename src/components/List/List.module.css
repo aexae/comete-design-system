@@ -273,3 +273,28 @@
 .itemButton[data-disabled] .itemTextSecondary {
   color: var(--text-disabled);
 }
+
+/* ------------------------------------------------------------------ */
+/* États natifs (chargement / vide / erreur)                          */
+
+/* Ligne skeleton — pastille d'avatar + deux barres de texte. */
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space200);
+  width: 100%;
+}
+
+.skeletonText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space075);
+  flex: 1;
+  min-width: 0;
+}
+
+/* Item pleine largeur hébergeant l'état vide ou erreur (InformativeState). */
+.stateItem {
+  display: block;
+  padding: var(--space400) var(--space200);
+}

@@ -267,3 +267,13 @@
 .view[data-has-footer="true"] .body {
   border-bottom: none;
 }
+
+/* ------------------------------------------------------------------ */
+/* États natifs (chargement / vide / erreur)                          */
+
+/* Cellule pleine largeur hébergeant l'état vide ou erreur (InformativeState
+   centré). Padding généreux pour laisser respirer l'illustration. */
+.stateCell {
+  padding: var(--space400) var(--space300);
+  text-align: center;
+}

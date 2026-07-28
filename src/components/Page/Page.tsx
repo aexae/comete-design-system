@@ -3,6 +3,8 @@
 // la toolbar et le body. S'appuie sur le Figma "❖ Page header" et sur la
 // décomposition de la vue Page layout (node 4319:15827).
 import type { CSSProperties, ReactElement, ReactNode } from "react";
+import { Skeleton } from "../Skeleton/index.js";
+import { DataStateMessage } from "../_states/DataStateMessage.js";
 import styles from "./Page.module.css";
 
 // -----------------------------------------------------------------------
@@ -97,9 +99,31 @@ export interface PageToolbarProps {
 
 export interface PageBodyProps {
   /** Contenu principal de la page. */
-  children: ReactNode;
+  children?: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /**
+   * Affiche un squelette de contenu (skeleton) à la place des enfants.
+   * Priorité : `error` > `isLoading` > `isEmpty` > `children`.
+   */
+  isLoading?: boolean;
+  /** Affiche l'état vide (aucune donnée) à la place des enfants. */
+  isEmpty?: boolean;
+  /**
+   * État d'erreur. Falsy = pas d'erreur ; `true` = message générique ;
+   * une chaîne = message d'erreur personnalisé.
+   */
+  error?: boolean | string;
+  /** Callback "Réessayer" — affiche un bouton dans l'état d'erreur. */
+  onRetry?: () => void;
+  /** Titre de l'état vide (sinon libellé par défaut). */
+  emptyTitle?: string;
+  /** Description de l'état vide (sinon libellé par défaut). */
+  emptyDescription?: string;
+  /** Slot pour remplacer entièrement le contenu de l'état vide. */
+  emptyState?: ReactNode;
+  /** Slot pour remplacer entièrement le contenu de l'état d'erreur. */
+  errorState?: ReactNode;
 }
 
 // -----------------------------------------------------------------------
@@ -260,9 +284,59 @@ PageToolbar.displayName = "Page.Toolbar";
  * Page.Body — contenu principal de la page. Occupe tout l'espace vertical
  * restant et devient scrollable si nécessaire.
  */
-function PageBody({ children, className }: PageBodyProps): ReactElement {
+function PageBody({
+  children,
+  className,
+  isLoading = false,
+  isEmpty = false,
+  error = false,
+  onRetry,
+  emptyTitle,
+  emptyDescription,
+  emptyState,
+  errorState,
+}: PageBodyProps): ReactElement {
   const classNames = [styles.body, className].filter(Boolean).join(" ");
-  return <main className={classNames}>{children}</main>;
+
+  // Priorité : erreur > chargement > vide > contenu.
+  let content: ReactNode;
+  if (error) {
+    content = (
+      <div className={styles.bodyState}>
+        {errorState ?? (
+          <DataStateMessage
+            kind="error"
+            description={typeof error === "string" ? error : undefined}
+            onRetry={onRetry}
+          />
+        )}
+      </div>
+    );
+  } else if (isLoading) {
+    content = (
+      <div className={styles.bodySkeleton} role="status" aria-label="Chargement…">
+        <Skeleton height={28} width={240} radius={4} aria-label="" />
+        <Skeleton height={180} radius={8} aria-label="" />
+        <Skeleton height={180} radius={8} aria-label="" />
+      </div>
+    );
+  } else if (isEmpty) {
+    content = (
+      <div className={styles.bodyState}>
+        {emptyState ?? (
+          <DataStateMessage
+            kind="empty"
+            title={emptyTitle}
+            description={emptyDescription}
+          />
+        )}
+      </div>
+    );
+  } else {
+    content = children;
+  }
+
+  return <main className={classNames}>{content}</main>;
 }
 
 PageBody.displayName = "Page.Body";

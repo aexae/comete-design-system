@@ -8,6 +8,7 @@ import type { IconName } from "@naxit/comete-icons";
 import { Icon } from "../Icon/index.js";
 import { Button } from "../Button/index.js";
 import { Divider } from "../Divider/index.js";
+import { Skeleton } from "../Skeleton/index.js";
 import styles from "./SideNav.module.css";
 
 // -----------------------------------------------------------------------
@@ -97,6 +98,34 @@ export interface SideNavDividerProps {
 
 export interface SideNavFooterProps {
   children: ReactNode;
+  className?: string;
+}
+
+export interface SideNavItemSkeletonProps {
+  /** Ajoute une 2ᵉ ligne (placeholder de description). @default false */
+  hasDescription?: boolean;
+  className?: string;
+}
+
+export interface SideNavSkeletonProps {
+  /** Nombre de lignes d'items placeholder à afficher. @default 5 */
+  count?: number;
+  /** Affiche un placeholder de titre de section au-dessus des items. @default true */
+  withSectionTitle?: boolean;
+  /** Affiche un placeholder d'en-tête (logo + nom) en haut. @default false */
+  withHeader?: boolean;
+  className?: string;
+}
+
+export interface SideNavEmptyProps {
+  /** Titre de l'état vide. @default "Aucun élément" */
+  title?: string;
+  /** Description affichée sous le titre. */
+  description?: string;
+  /** Icône illustrative affichée au-dessus du titre. */
+  icon?: IconName;
+  /** Slot d'action (ex. un `<Button>`) affiché sous la description. */
+  action?: ReactNode;
   className?: string;
 }
 
@@ -263,6 +292,125 @@ export function SideNavFooter({
 }
 
 SideNavFooter.displayName = "SideNav.Footer";
+
+// -----------------------------------------------------------------------
+// SideNavItemSkeleton — placeholder d'un item pendant le chargement
+
+/**
+ * SideNav.ItemSkeleton — silhouette d'un `SideNav.Item` pendant le
+ * chargement (pastille d'icône + barre de label). Composable pour bâtir
+ * un état de chargement sur mesure, ou via `SideNav.Skeleton`.
+ */
+export function SideNavItemSkeleton({
+  hasDescription = false,
+  className,
+}: SideNavItemSkeletonProps): ReactElement {
+  return (
+    <div className={[styles.skeletonItem, className].filter(Boolean).join(" ")}>
+      <Skeleton shape="circle" height={24} aria-label="Chargement…" />
+      <span className={styles.skeletonItemContent}>
+        <Skeleton height={12} width="70%" radius={4} aria-label="Chargement…" />
+        {hasDescription && (
+          <Skeleton height={10} width="45%" radius={4} aria-label="Chargement…" />
+        )}
+      </span>
+    </div>
+  );
+}
+
+SideNavItemSkeleton.displayName = "SideNav.ItemSkeleton";
+
+// -----------------------------------------------------------------------
+// SideNavSkeleton — état de chargement complet (titre + N items)
+
+/**
+ * SideNav.Skeleton — état de chargement prêt à l'emploi : un placeholder de
+ * titre de section optionnel suivi de `count` lignes d'items. À rendre à la
+ * place des `SideNav.Section`/`SideNav.Item` tant que la navigation charge.
+ *
+ * ```tsx
+ * <SideNav>
+ *   <SideNav.Header logo={<Logo format="icon" />} companyName="…" />
+ *   {isLoading ? <SideNav.Skeleton count={6} /> : sections}
+ * </SideNav>
+ * ```
+ */
+export function SideNavSkeleton({
+  count = 5,
+  withSectionTitle = true,
+  withHeader = false,
+  className,
+}: SideNavSkeletonProps): ReactElement {
+  return (
+    <div className={[styles.section, className].filter(Boolean).join(" ")}>
+      {withHeader && (
+        <div className={styles.skeletonHeader}>
+          <Skeleton shape="circle" height={32} aria-label="Chargement…" />
+          <span className={styles.skeletonHeaderContent}>
+            <Skeleton height={12} width="60%" radius={4} aria-label="Chargement…" />
+            <Skeleton height={10} width="40%" radius={4} aria-label="Chargement…" />
+          </span>
+        </div>
+      )}
+      {withSectionTitle && (
+        <div className={styles.skeletonSectionTitle}>
+          <Skeleton height={8} width={72} radius={4} aria-label="Chargement…" />
+        </div>
+      )}
+      {Array.from({ length: count }, (_, i) => (
+        <SideNavItemSkeleton key={i} />
+      ))}
+    </div>
+  );
+}
+
+SideNavSkeleton.displayName = "SideNav.Skeleton";
+
+// -----------------------------------------------------------------------
+// SideNavEmpty — état vide
+
+/**
+ * SideNav.Empty — état vide compact affiché quand la navigation ne contient
+ * aucun élément (icône optionnelle + titre + description + action). À rendre
+ * à la place des `SideNav.Section`/`SideNav.Item`.
+ *
+ * ```tsx
+ * <SideNav>
+ *   <SideNav.Empty
+ *     icon="Search"
+ *     title="Aucun résultat"
+ *     description="Aucune entrée ne correspond à votre recherche."
+ *     action={<Button appearance="subtle" size="small">Réinitialiser</Button>}
+ *   />
+ * </SideNav>
+ * ```
+ */
+export function SideNavEmpty({
+  title = "Aucun élément",
+  description,
+  icon,
+  action,
+  className,
+}: SideNavEmptyProps): ReactElement {
+  return (
+    <div className={[styles.empty, className].filter(Boolean).join(" ")}>
+      {icon && (
+        <span className={styles.emptyIcon}>
+          <Icon icon={icon} size={24} appearance="outlined" color="subtle" />
+        </span>
+      )}
+      <span className={styles.emptyText}>
+        <span className={styles.emptyTitle}>{title}</span>
+        {description && (
+          <span className={styles.emptyDescription}>{description}</span>
+        )}
+      </span>
+      {action && <div className={styles.emptyAction}>{action}</div>}
+    </div>
+  );
+}
+
+SideNavEmpty.displayName = "SideNav.Empty";
 
 // -----------------------------------------------------------------------
 // SideNavTrigger — bouton standalone à placer dans une TopNav
@@ -433,6 +581,9 @@ SideNav.displayName = "SideNav";
 // Attach sub-components
 SideNav.Header = SideNavHeader;
 SideNav.Item = SideNavItem;
+SideNav.ItemSkeleton = SideNavItemSkeleton;
+SideNav.Skeleton = SideNavSkeleton;
+SideNav.Empty = SideNavEmpty;
 SideNav.Section = SideNavSection;
 SideNav.Divider = SideNavDivider;
 SideNav.Footer = SideNavFooter;

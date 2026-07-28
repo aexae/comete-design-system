@@ -877,3 +877,71 @@ export const WithPagination: Story = {
     );
   },
 };
+
+// -----------------------------------------------------------------------
+// États natifs (chargement / vide / erreur)
+//
+// Le consommateur ne compose pas ces états à la main : il passe `isLoading`,
+// `isEmpty` ou `error` à `TableBody` (+ `columnCount` pour l'empan). Priorité :
+// error > isLoading > isEmpty > children.
+
+const noop = () => undefined;
+
+/** En-tête commun aux stories d'états — mêmes colonnes que la story Default. */
+function StatesHead() {
+  return (
+    <TableHead>
+      <TableRow>
+        <TableHeaderCell>Title</TableHeaderCell>
+        <TableHeaderCell>Status</TableHeaderCell>
+        <TableHeaderCell>User</TableHeaderCell>
+        <TableHeaderCell>Key</TableHeaderCell>
+      </TableRow>
+    </TableHead>
+  );
+}
+
+/** **Chargement** — lignes skeleton via `isLoading` sur `TableBody`. */
+export const LoadingState: Story = {
+  name: "Loading",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <Table aria-label="Projets (chargement)">
+      <StatesHead />
+      <TableBody isLoading columnCount={4} skeletonRows={5} />
+    </Table>
+  ),
+};
+
+/** **Vide** — état vide natif via `isEmpty` (illustration + message). */
+export const EmptyState: Story = {
+  name: "Empty",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <Table aria-label="Projets (vide)">
+      <StatesHead />
+      <TableBody
+        isEmpty
+        columnCount={4}
+        emptyTitle="Aucun projet"
+        emptyDescription="Créez un premier projet pour commencer."
+      />
+    </Table>
+  ),
+};
+
+/** **Erreur** — état erreur natif via `error` + bouton « Réessayer » (`onRetry`). */
+export const ErrorState: Story = {
+  name: "Error",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <Table aria-label="Projets (erreur)">
+      <StatesHead />
+      <TableBody
+        columnCount={4}
+        error="Le chargement des projets a échoué."
+        onRetry={noop}
+      />
+    </Table>
+  ),
+};
