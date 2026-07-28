@@ -888,11 +888,15 @@ export const WithPagination: Story = {
 
 const noop = () => undefined;
 
-/** En-tête commun aux stories d'états — mêmes colonnes que la story Default. */
+/**
+ * En-tête commun aux stories d'états — mêmes colonnes que la story
+ * `WithPagination` (colonne `#` + Title / Status / User / Key).
+ */
 function StatesHead() {
   return (
     <TableHead>
       <TableRow>
+        <TableHeaderCell width={80}>#</TableHeaderCell>
         <TableHeaderCell>Title</TableHeaderCell>
         <TableHeaderCell>Status</TableHeaderCell>
         <TableHeaderCell>User</TableHeaderCell>
@@ -902,47 +906,65 @@ function StatesHead() {
   );
 }
 
-/** **Chargement** — lignes skeleton via `isLoading` sur `TableBody`. */
+/**
+ * **Chargement** — même gabarit qu'un listing paginé (5 colonnes + footer de
+ * pagination) : la coquille reste en place, seules les lignes passent en
+ * skeleton via `isLoading`.
+ */
 export const LoadingState: Story = {
   name: "Loading",
   parameters: { controls: { disable: true } },
   render: () => (
-    <Table aria-label="Projets (chargement)">
-      <StatesHead />
-      <TableBody isLoading columnCount={4} skeletonRows={5} />
-    </Table>
+    <div style={{ width: 640 }}>
+      <Table aria-label="Projets (chargement)" style={{ width: "100%" }}>
+        <StatesHead />
+        <TableBody isLoading columnCount={5} skeletonRows={10} />
+      </Table>
+      <TablePagination
+        count={200}
+        page={0}
+        rowsPerPage={10}
+        rowsPerPageOptions={[10, 25, 50]}
+        onPageChange={noop}
+        onRowsPerPageChange={noop}
+      />
+    </div>
   ),
 };
 
-/** **Vide** — état vide natif via `isEmpty` (illustration + message). */
+/** **Vide** — état vide natif via `isEmpty` (illustration + message), sur le même gabarit. */
 export const EmptyState: Story = {
   name: "Empty",
   parameters: { controls: { disable: true } },
   render: () => (
-    <Table aria-label="Projets (vide)">
-      <StatesHead />
-      <TableBody
-        isEmpty
-        columnCount={4}
-        emptyTitle="Aucun projet"
-        emptyDescription="Créez un premier projet pour commencer."
-      />
-    </Table>
+    <div style={{ width: 640 }}>
+      <Table aria-label="Projets (vide)" style={{ width: "100%" }}>
+        <StatesHead />
+        <TableBody
+          isEmpty
+          columnCount={5}
+          emptyTitle="Aucun projet"
+          emptyDescription="Créez un premier projet pour commencer."
+        />
+      </Table>
+    </div>
   ),
 };
 
-/** **Erreur** — état erreur natif via `error` + bouton « Réessayer » (`onRetry`). */
+/** **Erreur** — état erreur natif via `error` + bouton « Réessayer » (`onRetry`), sur le même gabarit. */
 export const ErrorState: Story = {
   name: "Error",
   parameters: { controls: { disable: true } },
   render: () => (
-    <Table aria-label="Projets (erreur)">
-      <StatesHead />
-      <TableBody
-        columnCount={4}
-        error="Le chargement des projets a échoué."
-        onRetry={noop}
-      />
-    </Table>
+    <div style={{ width: 640 }}>
+      <Table aria-label="Projets (erreur)" style={{ width: "100%" }}>
+        <StatesHead />
+        <TableBody
+          columnCount={5}
+          error="Le chargement des projets a échoué."
+          onRetry={noop}
+        />
+      </Table>
+    </div>
   ),
 };
