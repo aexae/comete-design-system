@@ -73,6 +73,17 @@
 }
 
 /* ------------------------------------------------------------------ */
+/* Body — zone scrollable entre header et footer épinglés.
+   Seules les sections + items défilent ; header et footer restent fixes.   */
+
+.body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ------------------------------------------------------------------ */
 /* Header                                                              */
 
 .header {
@@ -81,6 +92,7 @@
   gap: var(--space150);
   min-height: 72px;
   padding: var(--space300) var(--space100) var(--space100) var(--space100);
+  flex-shrink: 0;
 }
 
 /* Slot logo — le contenu est libre (img, svg, <Logo>, div…). On borne la
@@ -287,6 +299,7 @@
   flex-direction: column;
   padding: var(--space200);
   margin-top: auto;
+  flex-shrink: 0;
 }
 
 /* Marque de pied discrète — opacité réduite, petite et centrée ; l'opacité

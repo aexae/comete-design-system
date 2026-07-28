@@ -1,5 +1,7 @@
 // SideNav — Comete Design System
-import { createContext,
+import { Children,
+  createContext,
+  isValidElement,
   useContext,
   useEffect,
   useState,
@@ -632,6 +634,19 @@ export function SideNav({
   const { isCollapsed, isPeeking, setNavHover, setNavFocused, closePeek } =
     useContext(SideNavContext);
 
+  // Header et Footer restent épinglés en haut/bas ; tout le reste (sections +
+  // items) est regroupé dans un corps qui défile (overflow-y: auto). On
+  // partitionne les enfants pour ne pas imposer de wrapper au consommateur —
+  // l'API composable (Header + sections + Footer) reste inchangée.
+  const items = Children.toArray(children);
+  const isType = (child: ReactNode, type: unknown) =>
+    isValidElement(child) && child.type === type;
+  const header = items.filter((c) => isType(c, SideNavHeader));
+  const footer = items.filter((c) => isType(c, SideNavFooter));
+  const body = items.filter(
+    (c) => !isType(c, SideNavHeader) && !isType(c, SideNavFooter),
+  );
+
   return (
     <div
       className={styles.container}
@@ -654,7 +669,9 @@ export function SideNav({
         onBlurCapture={() => setNavFocused?.(false)}
         onClick={isPeeking ? () => closePeek?.() : undefined}
       >
-        {children}
+        {header}
+        <div className={styles.body}>{body}</div>
+        {footer}
       </nav>
     </div>
   );

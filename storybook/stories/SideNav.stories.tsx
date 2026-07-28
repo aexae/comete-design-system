@@ -178,3 +178,46 @@ export const BrandFooter: Story = {
   parameters: { controls: { disable: true } },
   render: () => <MainCouranteShell nav={<MainCouranteNav />} />,
 };
+
+/**
+ * **Défilement interne** — beaucoup d'entrées : seul le corps (sections +
+ * items) défile, tandis que le header (marque) et le footer (comète link)
+ * restent épinglés. Réduis la hauteur du canvas pour voir le scroll apparaître.
+ */
+export const Scrollable: Story = {
+  name: "Scroll (contenu long)",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <MainCouranteShell
+      nav={
+        <>
+          <SideNav.Section title="Manager">
+            <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="/" />
+            <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
+            <SideNav.Item label="Sites" iconBefore="Site" href="/sites" />
+            <SideNav.Item label="Pointages" iconBefore="Clockings" href="/pointages" />
+            <SideNav.Item label="Plannings" iconBefore="CalendarMonth" href="/plannings" />
+            <SideNav.Item label="Vacations" iconBefore="EventAvailable" href="/vacations" />
+          </SideNav.Section>
+          <SideNav.Divider />
+          <SideNav.Section title="MCE">
+            <SideNav.Item label="MCE" iconBefore="MenuBook" href="/mce" />
+            <SideNav.Item label="Formulaires" iconBefore="FormEdit" href="/forms" />
+            <SideNav.Item label="Rapports" iconBefore="Assignment" href="/reports" />
+            <SideNav.Item label="Anomalies" iconBefore="Warning" href="/issues" />
+          </SideNav.Section>
+          <SideNav.Divider />
+          <SideNav.Section title="Administration">
+            <SideNav.Item label="Utilisateurs" iconBefore="Group" href="/users" />
+            <SideNav.Item label="Droits" iconBefore="ManageAccounts" href="/permissions" />
+            <SideNav.Item label="Licences" iconBefore="Key" href="/licences" />
+            <SideNav.Item label="Facturation" iconBefore="Payments" href="/billing" />
+            <SideNav.Item label="Intégrations" iconBefore="Extension" href="/integrations" />
+            <SideNav.Item label="Journaux" iconBefore="Description" href="/logs" />
+            <SideNav.Item label="Paramètres" iconBefore="Settings" href="/settings" />
+          </SideNav.Section>
+        </>
+      }
+    />
+  ),
+};
