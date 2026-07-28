@@ -16,7 +16,7 @@ import styles from "./Drawer.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
-export type DrawerSize = "narrow" | "medium" | "wide" | "extended" | "full";
+export type DrawerSize = "narrow" | "medium" | "wide" | "extended" | "full" | "auto";
 
 export type { DrawerPlacement, DrawerStacking };
 
@@ -31,7 +31,10 @@ export interface DrawerProps {
   size?: DrawerSize | (string & {});
   /** Comportement de stacking entre drawers multiples. @default "overlay" */
   stacking?: DrawerStacking;
-  /** Active le geste swipe-to-close. @default false */
+  /**
+   * Affiche un handle en haut du drawer ; le glisser dans le sens de fermeture
+   * (≥ 40px, souris ou tactile) ferme le drawer. @default false
+   */
   swipeable?: boolean;
   /** Contenu du drawer. */
   children: ReactNode;
@@ -55,17 +58,25 @@ const STACK_INSET = 10;
 const STACK_SHADE = 0.06;
 
 // -----------------------------------------------------------------------
-// Swipe helpers
+// Swipe helpers — fermeture par drag du handle (pointer : souris + tactile)
 
-const SWIPE_THRESHOLD = 100;
+/** Drag (px) au-delà duquel relâcher le handle ferme le drawer. */
+const SWIPE_CLOSE_THRESHOLD = 40;
 
-function getSwipeAxis(placement: DrawerPlacement): "x" | "y" {
-  return placement === "left" || placement === "right" ? "x" : "y";
+/** Distance de drag dans le sens de FERMETURE (positif = vers la fermeture). */
+function closeDistance(placement: DrawerPlacement, dx: number, dy: number): number {
+  if (placement === "bottom") return dy;
+  if (placement === "top") return -dy;
+  if (placement === "right") return dx;
+  return -dx; // left
 }
 
-function getSwipeSign(placement: DrawerPlacement): 1 | -1 {
-  // Positive delta = swipe in close direction
-  return placement === "left" || placement === "top" ? -1 : 1;
+/** Transform de suivi pendant le drag, dans le sens de fermeture. */
+function closeTransform(placement: DrawerPlacement, dist: number): string {
+  if (placement === "top") return `translateY(${-dist}px)`;
+  if (placement === "left") return `translateX(${-dist}px)`;
+  if (placement === "right") return `translateX(${dist}px)`;
+  return `translateY(${dist}px)`; // bottom
 }
 
 // -----------------------------------------------------------------------
@@ -149,7 +160,7 @@ export function Drawer({
 
   // Size: preset class or custom CSS value
   const isPreset = SIZE_PRESETS.has(size);
-  const sizeClass = isPreset ? styles[size as DrawerSize] : undefined;
+  const sizeClass = isPreset ? styles[size as Exclude<DrawerSize, "auto">] : undefined;
   const customSizeStyle: CSSProperties | undefined = !isPreset
     ? buildCustomSizeStyle(placement, size)
     : undefined;
@@ -162,55 +173,44 @@ export function Drawer({
     className,
   ].filter(Boolean).join(" ");
 
-  // Swipe state
-  const swipeRef = useRef<{ startX: number; startY: number; dragging: boolean }>({
-    startX: 0, startY: 0, dragging: false,
+  // Drag du handle pour fermer (pointer events → souris + tactile).
+  const dragRef = useRef<{ x: number; y: number; dragging: boolean }>({
+    x: 0, y: 0, dragging: false,
   });
   const drawerRef = useRef<HTMLDivElement>(null);
 
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+  const handleDragStart = useCallback((e: React.PointerEvent) => {
     if (!swipeable) return;
-    const touch = e.touches[0];
-    if (!touch) return;
-    swipeRef.current = { startX: touch.clientX, startY: touch.clientY, dragging: true };
+    dragRef.current = { x: e.clientX, y: e.clientY, dragging: true };
+    e.currentTarget.setPointerCapture(e.pointerId);
   }, [swipeable]);
 
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!swipeable || !swipeRef.current.dragging || !drawerRef.current) return;
-    const touch = e.touches[0];
-    if (!touch) return;
-    const axis = getSwipeAxis(placement);
-    const sign = getSwipeSign(placement);
-    const delta = axis === "x"
-      ? (touch.clientX - swipeRef.current.startX) * sign
-      : (touch.clientY - swipeRef.current.startY) * sign;
-    // Only allow swiping in the close direction (negative delta)
-    if (delta >= 0) {
-      drawerRef.current.style.transform = "";
-      return;
-    }
-    const prop = axis === "x" ? "translateX" : "translateY";
-    drawerRef.current.style.transform = `${prop}(${delta / sign}px)`;
+  const handleDragMove = useCallback((e: React.PointerEvent) => {
+    if (!dragRef.current.dragging || !drawerRef.current) return;
+    const dist = closeDistance(
+      placement,
+      e.clientX - dragRef.current.x,
+      e.clientY - dragRef.current.y,
+    );
     drawerRef.current.style.transition = "none";
-  }, [swipeable, placement]);
+    // ne suit que dans le sens de fermeture
+    drawerRef.current.style.transform = dist > 0 ? closeTransform(placement, dist) : "";
+  }, [placement]);
 
-  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    if (!swipeable || !swipeRef.current.dragging || !drawerRef.current) return;
-    swipeRef.current.dragging = false;
-    const touch = e.changedTouches[0];
-    if (!touch) return;
-    const axis = getSwipeAxis(placement);
-    const sign = getSwipeSign(placement);
-    const delta = axis === "x"
-      ? (touch.clientX - swipeRef.current.startX) * sign
-      : (touch.clientY - swipeRef.current.startY) * sign;
-
+  const handleDragEnd = useCallback((e: React.PointerEvent) => {
+    if (!dragRef.current.dragging || !drawerRef.current) return;
+    dragRef.current.dragging = false;
+    const dist = closeDistance(
+      placement,
+      e.clientX - dragRef.current.x,
+      e.clientY - dragRef.current.y,
+    );
     drawerRef.current.style.transition = "";
-    if (delta < -SWIPE_THRESHOLD) {
+    drawerRef.current.style.transform = "";
+    if (dist >= SWIPE_CLOSE_THRESHOLD) {
       onOpenChange(false);
     }
-    drawerRef.current.style.transform = "";
-  }, [swipeable, placement, onOpenChange]);
+  }, [placement, onOpenChange]);
 
   // z-index increases per stack position so newer drawers appear on top
   const stackZIndex = myIndex >= 0 ? myIndex : 0;
@@ -235,11 +235,16 @@ export function Drawer({
             ...style,
           } as CSSProperties}
           aria-label={ariaLabel}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
         >
-          {swipeable && <div className={styles.swipeHandle} />}
+          {swipeable && (
+            <div
+              className={styles.swipeHandle}
+              onPointerDown={handleDragStart}
+              onPointerMove={handleDragMove}
+              onPointerUp={handleDragEnd}
+              onPointerCancel={handleDragEnd}
+            />
+          )}
           {children}
         </AriaDialog>
       </AriaModal>
@@ -338,7 +343,8 @@ function buildCustomSizeStyle(
   size: string,
 ): CSSProperties {
   const isHorizontal = placement === "left" || placement === "right";
-  const value = `calc(${size} + var(--_depth-inset))`;
+  // "auto" : hauteur/largeur ajustée au contenu — pas de calc (calc(auto + …) invalide).
+  const value = size === "auto" ? "auto" : `calc(${size} + var(--_depth-inset))`;
   return isHorizontal ? { width: value } : { height: value };
 }
 
@@ -349,6 +355,7 @@ const PRESET_TO_CSS: Record<DrawerSize, string> = {
   wide: "75%",
   extended: "90%",
   full: "100%",
+  auto: "auto",
 };
 
 function resolveSizeValue(size: string): string {

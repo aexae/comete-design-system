@@ -12,3 +12,9 @@
   /* padding-bottom: 24px — espace pour le home indicator iOS (safe area) */
   padding: var(--space050) var(--space050) var(--space300);
 }
+
+/* Emplacement central réservé au FAB (BottomNav.Action) : même largeur qu'une
+   cellule d'item (flex égal) → espacement uniforme entre items et FAB. */
+.spacer {
+  flex: 1 1 0;
+}
