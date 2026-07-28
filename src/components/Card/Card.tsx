@@ -8,6 +8,7 @@ import type { DragEvent,
 import { useEffect, useRef, useState } from "react";
 import { DragIndicator } from "@naxit/comete-icons";
 import { FocusRing } from "../FocusRing/FocusRing.js";
+import { Skeleton } from "../Skeleton/index.js";
 import styles from "./Card.module.css";
 
 // -----------------------------------------------------------------------
@@ -53,8 +54,8 @@ export interface CardProps {
    * @default "neutral"
    */
   color?: CardColor;
-  /** Contenu affiché à l'intérieur de la carte. */
-  children: ReactNode;
+  /** Contenu affiché à l'intérieur de la carte. Ignoré si `isLoading`. */
+  children?: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -69,6 +70,12 @@ export interface CardProps {
   isDisabled?: boolean;
   /** Affiche un anneau de sélection autour de la carte. @default false */
   isSelected?: boolean;
+  /**
+   * Affiche un **état de chargement** : le contenu (`children`) est remplacé par
+   * des squelettes, et la carte n'est ni actionnable ni draggable. Marque
+   * `aria-busy` et annonce le chargement via un `role="status"`. @default false
+   */
+  isLoading?: boolean;
 }
 
 // -----------------------------------------------------------------------
@@ -106,6 +113,7 @@ export function Card({
   onDragEnd: onDragEndProp,
   isDisabled = false,
   isSelected = false,
+  isLoading = false,
 }: CardProps): ReactElement {
   const [isDragging, setIsDragging] = useState(false);
   const [isFocusVisible, setIsFocusVisible] = useState(false);
@@ -113,8 +121,9 @@ export function Card({
   const dragPreviewRef = useRef<HTMLDivElement | null>(null);
   const hadKeyboardEvent = useRef(false);
 
-  const isActionable = onPress !== undefined && !isDisabled;
-  const isDraggable = (drag === "top" || drag === "left") && !isDisabled;
+  const isActionable = onPress !== undefined && !isDisabled && !isLoading;
+  const isDraggable =
+    (drag === "top" || drag === "left") && !isDisabled && !isLoading;
 
   useEffect(() => {
     if (!isActionable) return;
@@ -201,6 +210,7 @@ export function Card({
       onFocus={isActionable ? handleFocus : undefined}
       onBlur={isActionable ? handleBlur : undefined}
       aria-disabled={isDisabled || undefined}
+      aria-busy={isLoading || undefined}
       data-interactive={isActionable || undefined}
       data-dragging={isDragging || undefined}
       data-selected={isSelected || undefined}
@@ -225,7 +235,13 @@ export function Card({
           />
         </div>
       )}
-      {isDraggable ? (
+      {isLoading ? (
+        <div className={styles.skeleton} role="status" aria-label="Chargement…">
+          <Skeleton width="55%" height={18} aria-label="" />
+          <Skeleton height={14} aria-label="" />
+          <Skeleton width="80%" height={14} aria-label="" />
+        </div>
+      ) : isDraggable ? (
         <div className={styles.content}>{children}</div>
       ) : (
         children

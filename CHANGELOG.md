@@ -22,6 +22,9 @@ entre versions alpha.
   marque du footer avec un traitement discret (opacité réduite qui remonte au
   survol, taille bornée), en laissant `SideNav.Footer` neutre (pas d'opacité
   globale sur du contenu générique).
+- **Card** : prop `isLoading` — remplace le contenu (`children`) par des
+  squelettes ; carte marquée `aria-busy`, ni actionnable ni draggable pendant le
+  chargement. `children` devient optionnel.
 
 ### Modifié
 

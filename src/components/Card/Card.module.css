@@ -318,3 +318,14 @@
 .dragPreview.bold {
   background-color: var(--background-neutral-subtlest-default);
 }
+
+/* État de chargement (isLoading) : pile de squelettes avec gouttière interne.
+   `min-width` évite que la carte ne s'effondre quand le contenu réel (qui lui
+   donnait sa largeur) est remplacé par des squelettes en largeur %. */
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space100);
+  padding: var(--space200);
+  min-width: 200px;
+}
