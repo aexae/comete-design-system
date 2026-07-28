@@ -1,6 +1,12 @@
 declare const styles: {
   readonly "container": string;
   readonly "divider": string;
+  readonly "empty": string;
+  readonly "emptyAction": string;
+  readonly "emptyDescription": string;
+  readonly "emptyIcon": string;
+  readonly "emptyText": string;
+  readonly "emptyTitle": string;
   readonly "footer": string;
   readonly "header": string;
   readonly "headerAppName": string;
@@ -18,6 +24,11 @@ declare const styles: {
   readonly "section": string;
   readonly "sectionHeading": string;
   readonly "sideNav": string;
+  readonly "skeletonHeader": string;
+  readonly "skeletonHeaderContent": string;
+  readonly "skeletonItem": string;
+  readonly "skeletonItemContent": string;
+  readonly "skeletonSectionTitle": string;
 };
 export = styles;
 

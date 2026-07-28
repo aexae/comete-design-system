@@ -9,6 +9,8 @@ import {
   Button as AriaButton,
   type ButtonProps as AriaButtonProps,
 } from "react-aria-components";
+import { Skeleton } from "../Skeleton/index.js";
+import { DataStateMessage } from "../_states/DataStateMessage.js";
 import styles from "./List.module.css";
 
 // -----------------------------------------------------------------------
@@ -33,11 +35,35 @@ export interface ListProps {
   /** Styles inline additionnels. */
   style?: CSSProperties;
   /** Enfants : `ListHead`, `ListItem`, `ListItemButton`. */
-  children: ReactNode;
+  children?: ReactNode;
   /** Label accessible de la liste (utile quand il n'y a pas de `ListHead`). */
   "aria-label"?: string;
   /** ID d'un élément qui labellise la liste. */
   "aria-labelledby"?: string;
+  /**
+   * Affiche des items de chargement (skeleton) à la place du contenu.
+   * Priorité : `error` > `isLoading` > `isEmpty` > `children`.
+   */
+  isLoading?: boolean;
+  /** Nombre d'items skeleton affichés quand `isLoading`. @default 4 */
+  skeletonItems?: number;
+  /** Affiche l'état vide (aucune donnée) à la place du contenu. */
+  isEmpty?: boolean;
+  /**
+   * État d'erreur. Falsy = pas d'erreur ; `true` = message générique ;
+   * une chaîne = message d'erreur personnalisé.
+   */
+  error?: boolean | string;
+  /** Callback "Réessayer" — affiche un bouton dans l'état d'erreur. */
+  onRetry?: () => void;
+  /** Titre de l'état vide (sinon libellé par défaut). */
+  emptyTitle?: string;
+  /** Description de l'état vide (sinon libellé par défaut). */
+  emptyDescription?: string;
+  /** Slot pour remplacer entièrement le contenu de l'état vide. */
+  emptyState?: ReactNode;
+  /** Slot pour remplacer entièrement le contenu de l'état d'erreur. */
+  errorState?: ReactNode;
 }
 
 export interface ListHeadProps {
@@ -163,7 +189,58 @@ export function List({
   children,
   "aria-label": ariaLabel,
   "aria-labelledby": ariaLabelledBy,
+  isLoading = false,
+  skeletonItems = 4,
+  isEmpty = false,
+  error = false,
+  onRetry,
+  emptyTitle,
+  emptyDescription,
+  emptyState,
+  errorState,
 }: ListProps): ReactElement {
+  // Priorité : erreur > chargement > vide > contenu.
+  let content: ReactNode;
+  if (error) {
+    content = (
+      <li role="presentation" className={styles.stateItem}>
+        {errorState ?? (
+          <DataStateMessage
+            kind="error"
+            description={typeof error === "string" ? error : undefined}
+            onRetry={onRetry}
+          />
+        )}
+      </li>
+    );
+  } else if (isLoading) {
+    content = Array.from({ length: skeletonItems }, (_, i) => (
+      <li key={i} className={styles.item}>
+        <span className={styles.skeletonRow}>
+          <Skeleton shape="circle" height={40} aria-label="Chargement…" />
+          <span className={styles.skeletonText}>
+            <Skeleton height={14} width="60%" radius={4} aria-label="Chargement…" />
+            <Skeleton height={12} width="40%" radius={4} aria-label="Chargement…" />
+          </span>
+        </span>
+      </li>
+    ));
+  } else if (isEmpty) {
+    content = (
+      <li role="presentation" className={styles.stateItem}>
+        {emptyState ?? (
+          <DataStateMessage
+            kind="empty"
+            title={emptyTitle}
+            description={emptyDescription}
+          />
+        )}
+      </li>
+    );
+  } else {
+    content = children;
+  }
+
   return (
     <ul
       className={[styles.list, className].filter(Boolean).join(" ")}
@@ -173,7 +250,7 @@ export function List({
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledBy}
     >
-      {children}
+      {content}
     </ul>
   );
 }

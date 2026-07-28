@@ -307,3 +307,34 @@ describe("List", () => {
     expect(handlePress).not.toHaveBeenCalled();
   });
 });
+
+describe("List — états natifs", () => {
+  it("should render skeleton items when isLoading", () => {
+    const { container } = render(
+      <List aria-label="l" isLoading skeletonItems={3} />,
+    );
+    expect(container.querySelectorAll("ul > li")).toHaveLength(3);
+  });
+
+  it("should render the empty state when isEmpty", () => {
+    render(<List aria-label="l" isEmpty emptyTitle="Vide" />);
+    expect(screen.getByText("Vide")).toBeInTheDocument();
+  });
+
+  it("should render the error state with a retry button", () => {
+    const onRetry = vi.fn();
+    render(<List aria-label="l" error="Oups" onRetry={onRetry} />);
+    expect(screen.getByText("Oups")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Réessayer" }));
+    expect(onRetry).toHaveBeenCalledOnce();
+  });
+
+  it("should render children when no state flag is set", () => {
+    render(
+      <List aria-label="l">
+        <ListItem>Item</ListItem>
+      </List>,
+    );
+    expect(screen.getByText("Item")).toBeInTheDocument();
+  });
+});

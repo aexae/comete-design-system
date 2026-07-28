@@ -9,6 +9,18 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Ajouté
+
+- **États de données natifs** (chargement / vide / erreur) intégrés directement
+  aux composants de collection : `Table` (via `TableBody` : `isLoading`,
+  `skeletonRows`, `isEmpty`, `error`, `onRetry`, `columnCount`, slots
+  `emptyState`/`errorState`), `List` (mêmes props + `skeletonItems`) et
+  `Page.Body` (`isLoading`/`isEmpty`/`error`/`onRetry`). Le consommateur n'a plus
+  à composer ces états à la main ; rendu unifié via `InformativeState` +
+  illustrations `Empty` / `ConnexionError`.
+- **SideNav** : sous-composants `SideNav.Skeleton` (+ `SideNav.ItemSkeleton`) pour
+  l'état de chargement et `SideNav.Empty` pour l'état vide de la navigation.
+
 ### Changements cassants (BREAKING)
 
 - **Page** : suppression de la prop `breadcrumbs` de `Page.Header`. Les breadcrumbs

@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { render } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
+import { render, fireEvent } from "@testing-library/react";
 import { Page } from "./Page";
 
 describe("Page", () => {
@@ -239,5 +239,50 @@ describe("Page composition", () => {
     expect(getByText("Search")).toBeInTheDocument();
     expect(getByText("New")).toBeInTheDocument();
     expect(getByText("List of agents")).toBeInTheDocument();
+  });
+});
+
+describe("Page.Body — états natifs", () => {
+  it("should render a skeleton when isLoading", () => {
+    const { container } = render(
+      <Page>
+        <Page.Body isLoading />
+      </Page>,
+    );
+    expect(
+      container.querySelector("[class*='bodySkeleton']"),
+    ).toBeInTheDocument();
+  });
+
+  it("should render the empty state when isEmpty", () => {
+    const { getByText } = render(
+      <Page>
+        <Page.Body isEmpty emptyTitle="Vide" />
+      </Page>,
+    );
+    expect(getByText("Vide")).toBeInTheDocument();
+  });
+
+  it("should render the error state with a retry button", () => {
+    const onRetry = vi.fn();
+    const { getByText, getByRole } = render(
+      <Page>
+        <Page.Body error="Erreur X" onRetry={onRetry} />
+      </Page>,
+    );
+    expect(getByText("Erreur X")).toBeInTheDocument();
+    fireEvent.click(getByRole("button", { name: "Réessayer" }));
+    expect(onRetry).toHaveBeenCalledOnce();
+  });
+
+  it("should render children when no state flag is set", () => {
+    const { getByText } = render(
+      <Page>
+        <Page.Body>
+          <p>Contenu</p>
+        </Page.Body>
+      </Page>,
+    );
+    expect(getByText("Contenu")).toBeInTheDocument();
   });
 });

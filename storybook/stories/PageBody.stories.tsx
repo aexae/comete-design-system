@@ -207,3 +207,73 @@ export const FullWidth: Story = {
     </Gutters>
   ),
 };
+
+// -----------------------------------------------------------------------
+// États natifs (chargement / vide / erreur)
+//
+// Page.Body gère nativement les états : passer `isLoading`, `isEmpty` ou
+// `error`. On garde le même contexte « Agents » (Header + Toolbar) que les
+// autres stories ; seul le corps change d'état.
+
+const noop = () => undefined;
+
+/** En-tête + toolbar communs (contexte « Agents »). */
+function AgentsChrome() {
+  return (
+    <>
+      <Page.Header title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
+      <Page.Toolbar
+        start={
+          <Stack direction="row" gap="100" align="center">
+            <TextField aria-label="Rechercher" placeholder="Rechercher…" />
+            <Button appearance="subtle" iconBefore="FilterList">Filtres</Button>
+          </Stack>
+        }
+        end={<Button color="brand" iconBefore="Add">Nouvel agent</Button>}
+      />
+    </>
+  );
+}
+
+/** **Chargement** — squelette de contenu via `isLoading`. */
+export const LoadingState: Story = {
+  name: "Loading",
+  render: () => (
+    <Gutters>
+      <Page>
+        <AgentsChrome />
+        <Page.Body isLoading />
+      </Page>
+    </Gutters>
+  ),
+};
+
+/** **Vide** — état vide natif via `isEmpty` (illustration + message). */
+export const EmptyState: Story = {
+  name: "Empty",
+  render: () => (
+    <Gutters>
+      <Page>
+        <AgentsChrome />
+        <Page.Body
+          isEmpty
+          emptyTitle="Aucun agent"
+          emptyDescription="Ajoutez un premier agent pour commencer."
+        />
+      </Page>
+    </Gutters>
+  ),
+};
+
+/** **Erreur** — état erreur natif via `error` + bouton « Réessayer » (`onRetry`). */
+export const ErrorState: Story = {
+  name: "Error",
+  render: () => (
+    <Gutters>
+      <Page>
+        <AgentsChrome />
+        <Page.Body error="Le chargement des agents a échoué." onRetry={noop} />
+      </Page>
+    </Gutters>
+  ),
+};

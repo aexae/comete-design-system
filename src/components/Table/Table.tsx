@@ -7,6 +7,8 @@ import type { CSSProperties, ReactElement, ReactNode } from "react";
 import { Button } from "../Button/index.js";
 import { Icon } from "../Icon/index.js";
 import { Select } from "../Select/index.js";
+import { Skeleton } from "../Skeleton/index.js";
+import { DataStateMessage } from "../_states/DataStateMessage.js";
 import {
   DensityProvider,
   useDensity,
@@ -57,11 +59,41 @@ export interface TableHeadProps {
 
 export interface TableBodyProps {
   /** Contenu : les `TableRow` du corps du tableau. */
-  children: ReactNode;
+  children?: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
   style?: CSSProperties;
+  /**
+   * Nombre de colonnes du tableau — nécessaire pour l'empan (`colSpan`) des
+   * états vide/erreur et pour le nombre de cellules des lignes skeleton.
+   * @default 1
+   */
+  columnCount?: number;
+  /**
+   * Affiche des lignes de chargement (skeleton) à la place du contenu.
+   * Priorité : `error` > `isLoading` > `isEmpty` > `children`.
+   */
+  isLoading?: boolean;
+  /** Nombre de lignes skeleton affichées quand `isLoading`. @default 5 */
+  skeletonRows?: number;
+  /** Affiche l'état vide (aucune donnée) à la place du contenu. */
+  isEmpty?: boolean;
+  /**
+   * État d'erreur. Falsy = pas d'erreur ; `true` = message générique ;
+   * une chaîne = message d'erreur personnalisé.
+   */
+  error?: boolean | string;
+  /** Callback "Réessayer" — affiche un bouton dans l'état d'erreur. */
+  onRetry?: () => void;
+  /** Titre de l'état vide (sinon libellé par défaut). */
+  emptyTitle?: string;
+  /** Description de l'état vide (sinon libellé par défaut). */
+  emptyDescription?: string;
+  /** Slot pour remplacer entièrement le contenu de l'état vide. */
+  emptyState?: ReactNode;
+  /** Slot pour remplacer entièrement le contenu de l'état d'erreur. */
+  errorState?: ReactNode;
 }
 
 export interface TableRowProps {
@@ -277,18 +309,79 @@ export function TableHead({
 
 TableHead.displayName = "TableHead";
 
-/** TableBody — `<tbody>` contenant les lignes de données. */
+/**
+ * TableBody — `<tbody>` contenant les lignes de données.
+ *
+ * Gère nativement les états de chargement / vide / erreur : passer
+ * `isLoading`, `isEmpty` ou `error` affiche l'état correspondant à la place
+ * des lignes, sans que le consommateur ait à les composer. Fournir
+ * `columnCount` pour que l'empan et les lignes skeleton couvrent toutes les
+ * colonnes.
+ */
 export function TableBody({
   children,
   className,
   style,
+  columnCount = 1,
+  isLoading = false,
+  skeletonRows = 5,
+  isEmpty = false,
+  error = false,
+  onRetry,
+  emptyTitle,
+  emptyDescription,
+  emptyState,
+  errorState,
 }: TableBodyProps): ReactElement {
+  const bodyClassName = [styles.body, className].filter(Boolean).join(" ");
+
+  // Priorité : erreur > chargement > vide > contenu.
+  let content: ReactNode;
+  if (error) {
+    content = (
+      <tr>
+        <td colSpan={columnCount} className={styles.stateCell}>
+          {errorState ?? (
+            <DataStateMessage
+              kind="error"
+              description={typeof error === "string" ? error : undefined}
+              onRetry={onRetry}
+            />
+          )}
+        </td>
+      </tr>
+    );
+  } else if (isLoading) {
+    content = Array.from({ length: skeletonRows }, (_, rowIndex) => (
+      <tr key={rowIndex} className={styles.row}>
+        {Array.from({ length: Math.max(1, columnCount) }, (_, colIndex) => (
+          <td key={colIndex} className={styles.cell}>
+            <Skeleton height={16} radius={4} aria-label="Chargement…" />
+          </td>
+        ))}
+      </tr>
+    ));
+  } else if (isEmpty) {
+    content = (
+      <tr>
+        <td colSpan={columnCount} className={styles.stateCell}>
+          {emptyState ?? (
+            <DataStateMessage
+              kind="empty"
+              title={emptyTitle}
+              description={emptyDescription}
+            />
+          )}
+        </td>
+      </tr>
+    );
+  } else {
+    content = children;
+  }
+
   return (
-    <tbody
-      className={[styles.body, className].filter(Boolean).join(" ")}
-      style={style}
-    >
-      {children}
+    <tbody className={bodyClassName} style={style}>
+      {content}
     </tbody>
   );
 }
