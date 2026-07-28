@@ -24,6 +24,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le sélecteur de date permet de choisir une date via un champ de saisie couplé à un calendrier déroulant. Il garantit un format de date cohérent et réduit les erreurs de saisie." },
       page: () => (
         <DocsTabsPage
           guidelines={

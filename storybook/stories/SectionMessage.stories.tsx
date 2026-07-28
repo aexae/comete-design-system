@@ -36,6 +36,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le message de section affiche une information contextuelle, un avertissement ou une confirmation à l'intérieur d'une zone de contenu. Il se décline en plusieurs niveaux de sévérité pour adapter le ton au message." },
       page: () => (
         <DocsTabsPage
           guidelines={

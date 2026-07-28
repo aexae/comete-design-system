@@ -27,6 +27,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "La barre de page unifie le titre, la navigation et les actions globales dans un seul bandeau en haut de la page. Elle bascule automatiquement entre une variante large et une variante compacte épinglée selon la largeur d'écran, et remplace l'ancien duo TopNav + Page.Header." },
       page: () => (
         <DocsTabsPage
           guidelines={

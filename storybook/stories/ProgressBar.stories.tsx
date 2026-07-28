@@ -45,6 +45,7 @@ const meta = {
   },
   parameters: {
     docs: {
+      description: { component: "La barre de progression indique l'avancement d'une opération de manière linéaire et proportionnelle. Elle informe l'utilisateur du pourcentage accompli ou signale un traitement en cours lorsque la durée est indéterminée." },
       page: () => (
         <DocsTabsPage
           guidelines={

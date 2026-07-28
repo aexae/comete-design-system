@@ -22,6 +22,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "L'interrupteur permet d'activer ou de désactiver un réglage avec un effet immédiat. Il est privilégié par rapport à la case à cocher lorsque le changement prend effet sans validation supplémentaire." },
       page: () => (
         <DocsTabsPage
           guidelines={

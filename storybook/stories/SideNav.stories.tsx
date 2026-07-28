@@ -17,6 +17,7 @@ const meta: Meta<StoryArgs> = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "La navigation latérale affiche la structure hiérarchique de l'application dans un panneau vertical permanent ou repliable. Elle permet de naviguer entre les sections et sous-sections tout en visualisant la position courante." },
       page: () => (
         <DocsTabsPage
           guidelines={

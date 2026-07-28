@@ -27,6 +27,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le sélecteur d'année permet de choisir une année sans descendre au niveau du mois ou du jour. Il convient aux rapports annuels, filtres historiques et vues agrégées longue période." },
       page: () => (
         <DocsTabsPage
           guidelines={

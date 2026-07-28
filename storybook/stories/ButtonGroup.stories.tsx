@@ -19,6 +19,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le groupe de boutons rassemble des actions liées dans un ensemble cohérent, avec un espacement et un alignement uniformes. Il facilite la hiérarchie visuelle entre action principale et actions secondaires." },
       page: () => (
         <DocsTabsPage
           guidelines={

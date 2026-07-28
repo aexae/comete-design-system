@@ -80,6 +80,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le menu affiche une liste d'actions ou d'options dans un panneau contextuel déclenché par un bouton ou un clic droit. Il supporte les sous-menus, les sections et les états de sélection pour organiser des actions complexes." },
       page: () => (
         <DocsTabsPage
           guidelines={

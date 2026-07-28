@@ -18,6 +18,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Les tags sont de petites étiquettes qui catégorisent, filtrent ou identifient un élément par un mot-clé. Ils peuvent être interactifs pour permettre à l'utilisateur de les ajouter ou de les retirer." },
       page: () => (
         <DocsTabsPage
           guidelines={

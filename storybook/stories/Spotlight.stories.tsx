@@ -24,6 +24,7 @@ const meta: Meta<typeof Spotlight> = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le spotlight met en lumière un élément de l'interface en assombrissant le reste de la page, accompagné d'une bulle explicative. Il est utilisé dans les parcours guidés et les tutoriels d'onboarding." },
       page: () => (
         <DocsTabsPage
           guidelines={

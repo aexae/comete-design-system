@@ -33,6 +33,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "La barre de navigation inférieure offre un accès rapide aux sections principales d'une application mobile. Elle reste fixe en bas de l'écran et met en évidence la section active." },
       page: () => (
         <DocsTabsPage
           guidelines={

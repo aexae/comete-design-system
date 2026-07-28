@@ -25,6 +25,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le champ de texte permet à l'utilisateur de saisir et de modifier une valeur textuelle sur une ou plusieurs lignes. Il s'intègre au système de formulaires avec label, aide contextuelle et validation." },
       page: () => (
         <DocsTabsPage
           guidelines={

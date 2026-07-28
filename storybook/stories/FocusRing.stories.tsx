@@ -63,6 +63,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le focus ring affiche un contour visible autour de l'élément qui détient le focus clavier. Il garantit l'accessibilité en rendant la navigation au clavier perceptible pour tous les utilisateurs." },
       page: () => (
         <DocsTabsPage
           guidelines={

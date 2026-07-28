@@ -42,6 +42,7 @@ const meta = {
   },
   parameters: {
     docs: {
+      description: { component: "La modale est une fenêtre superposée qui interrompt le flux principal pour demander une confirmation, afficher un formulaire ou présenter un contenu critique. Elle bloque l'interaction avec la page sous-jacente jusqu'à sa fermeture." },
       page: () => (
         <DocsTabsPage
           guidelines={

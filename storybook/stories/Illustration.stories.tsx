@@ -46,6 +46,7 @@ const meta: Meta<IllustrationComponentProps> = {
   },
   parameters: {
     docs: {
+      description: { component: "Les illustrations sont des images vectorielles décoratives qui communiquent un concept ou un état de manière visuelle. Elles humanisent l'interface dans les écrans vides, les onboardings ou les messages d'état." },
       page: () => (
         <DocsTabsPage
           guidelines={

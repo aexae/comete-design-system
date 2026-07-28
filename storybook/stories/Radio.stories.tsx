@@ -19,6 +19,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Les boutons radio permettent de sélectionner une seule option dans un groupe de choix mutuellement exclusifs. Ils conviennent lorsque toutes les options doivent être visibles simultanément." },
       page: () => (
         <DocsTabsPage
           guidelines={

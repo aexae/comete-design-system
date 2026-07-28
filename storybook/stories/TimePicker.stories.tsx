@@ -24,6 +24,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le sélecteur d'heure permet de choisir une heure et des minutes via un champ de saisie ou un panneau déroulant. Il assure un format horaire cohérent et réduit les erreurs de saisie." },
       page: () => (
         <DocsTabsPage
           guidelines={

@@ -17,6 +17,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le conteneur d'input fournit le cadre visuel commun (bordure, fond, états focus/erreur/disabled) partagé par tous les champs de saisie du design system. Il garantit la cohérence visuelle entre TextField, Select, DatePicker et autres contrôles." },
       page: () => (
         <DocsTabsPage
           guidelines={

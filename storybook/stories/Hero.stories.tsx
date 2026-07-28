@@ -34,6 +34,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le hero est une section d'accroche pleine largeur placée en haut de page pour capter l'attention. Il combine généralement un titre, une description et une illustration ou un appel à l'action." },
       page: () => (
         <DocsTabsPage
           guidelines={

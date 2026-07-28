@@ -49,6 +49,7 @@ const meta = {
   },
   parameters: {
     docs: {
+      description: { component: "Le popup affiche un contenu court dans une bulle attachée à un élément déclencheur, comme un tooltip enrichi. Il se ferme automatiquement lorsque l'utilisateur clique ailleurs ou déplace le focus." },
       page: () => (
         <DocsTabsPage
           guidelines={

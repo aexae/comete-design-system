@@ -77,6 +77,7 @@ const meta: Meta<AvatarProps> = {
   },
   parameters: {
     docs: {
+      description: { component: "Les avatars représentent visuellement un utilisateur ou une entité par une photo, des initiales ou une icône. Ils identifient rapidement les personnes dans les listes, commentaires et en-têtes de profil." },
       page: () => (
         <DocsTabsPage
           guidelines={

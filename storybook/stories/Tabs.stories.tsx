@@ -26,6 +26,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Les onglets organisent le contenu en panneaux alternatifs accessibles depuis une barre de navigation horizontale. Ils permettent de basculer entre des vues liées sans quitter la page." },
       page: () => (
         <DocsTabsPage
           guidelines={

@@ -47,6 +47,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "L'icon tile encadre une icône dans un conteneur coloré avec une forme et un fond définis. Il met en valeur l'icône dans les listes de fonctionnalités, les cartes ou les états informatifs." },
       page: () => (
         <DocsTabsPage
           guidelines={

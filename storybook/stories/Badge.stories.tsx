@@ -17,6 +17,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Les badges sont de petits indicateurs numériques ou visuels rattachés à un élément pour signaler une quantité, un statut ou une notification non lue. Ils attirent l'attention sans interrompre le flux de lecture." },
       page: () => (
         <DocsTabsPage
           guidelines={

@@ -18,6 +18,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le composant code affiche des extraits de code source ou des valeurs techniques dans une police à chasse fixe. Il distingue visuellement le contenu technique du reste du texte." },
       page: () => (
         <DocsTabsPage
           guidelines={

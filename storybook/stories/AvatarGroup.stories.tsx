@@ -57,6 +57,7 @@ const meta: Meta<AvatarGroupProps> = {
   },
   parameters: {
     docs: {
+      description: { component: "Le groupe d'avatars affiche plusieurs avatars superposés pour représenter un ensemble d'utilisateurs. Il condense l'information en montrant les premiers membres et un compteur pour le reste." },
       page: () => (
         <DocsTabsPage
           guidelines={

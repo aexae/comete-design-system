@@ -42,6 +42,7 @@ const meta = {
   },
   parameters: {
     docs: {
+      description: { component: "L'indicateur de dépôt signale visuellement la zone de destination lors d'une opération de glisser-déposer. Il guide l'utilisateur en montrant précisément où l'élément sera inséré." },
       page: () => (
         <DocsTabsPage
           guidelines={

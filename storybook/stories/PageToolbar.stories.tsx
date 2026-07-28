@@ -32,6 +32,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "La barre d'outils regroupe, sous l'en-tête, les commandes agissant sur le contenu de la page : recherche et filtres d'un côté, actions groupées de l'autre. Elle est particulièrement adaptée aux pages de listing (tableaux, collections)." },
       page: () => (
         <DocsTabsPage
           guidelines={

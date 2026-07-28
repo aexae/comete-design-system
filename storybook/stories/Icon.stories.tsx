@@ -91,6 +91,7 @@ const meta: Meta<IconComponentProps> = {
   },
   parameters: {
     docs: {
+      description: { component: "Les icônes sont des symboles graphiques compacts qui renforcent la compréhension d'une action, d'un statut ou d'un concept. Elles accompagnent le texte pour améliorer la lisibilité et la rapidité de lecture." },
       page: () => (
         <DocsTabsPage
           guidelines={

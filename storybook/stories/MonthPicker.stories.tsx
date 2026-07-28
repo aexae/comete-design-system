@@ -27,6 +27,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le sélecteur de mois permet de choisir un mois et une année sans descendre au niveau du jour. Il convient aux rapports, filtres et vues agrégées par période mensuelle." },
       page: () => (
         <DocsTabsPage
           guidelines={

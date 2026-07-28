@@ -47,6 +47,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Les cartes regroupent des informations et des actions liées dans un conteneur délimité. Elles servent de points d'entrée vers un contenu plus détaillé et s'organisent facilement en grilles ou en listes." },
       page: () => (
         <DocsTabsPage
           guidelines={
