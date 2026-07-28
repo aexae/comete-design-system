@@ -19,15 +19,10 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-}
-
-/* ---- Région de la barre (ancre le home indicator) ---- */
-
-.barRegion {
   position: relative;
 }
 
-/* Home indicator iOS dans la safe-area basse. */
+/* Home indicator iOS dans la safe-area basse (ancré à l'écran). */
 .homeIndicator {
   position: absolute;
   left: 50%;
