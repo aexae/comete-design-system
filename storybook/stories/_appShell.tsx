@@ -93,7 +93,9 @@ export function MainCouranteShell({
             />
             {nav}
             <SideNav.Footer>
-              <FooterLogo />
+              <SideNav.FooterBrand>
+                <FooterLogo />
+              </SideNav.FooterBrand>
             </SideNav.Footer>
           </SideNav>
           <Page.Body>{body}</Page.Body>

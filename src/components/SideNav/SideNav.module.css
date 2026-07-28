@@ -88,6 +88,9 @@
   align-items: center;
   flex-shrink: 0;
   max-height: var(--size500);
+  /* Cap de largeur du slot : un logo large (wordmark) ne doit jamais évincer
+     le headerContent hors de la nav (le slot est en flex-shrink: 0). */
+  max-width: 60%;
   overflow: hidden;
 }
 
@@ -95,6 +98,7 @@
 .headerLogo img,
 .headerLogo svg {
   max-height: var(--size500);
+  max-width: 100%;
   width: auto;
   object-fit: contain;
 }
@@ -271,27 +275,35 @@
 /* ------------------------------------------------------------------ */
 /* Footer                                                              */
 
-/* Pied de marque — logo discret (opacité réduite), petit et centré, poussé
-   en bas via `margin-top: auto`. L'opacité remonte au survol pour rester
-   lisible à la demande sans attirer l'œil en permanence. */
+/* Footer — slot générique en bas de la nav (liens d'aide, version, compte,
+   marque…). NEUTRE : aucune opacité globale, pour ne pas griser du contenu
+   textuel (problème de contraste AA). La marque discrète passe par la classe
+   dédiée `.footerBrand` (via le sous-composant `SideNav.FooterBrand`). */
 .footer {
   display: flex;
   flex-direction: column;
-  align-items: center;
   padding: var(--space200);
   margin-top: auto;
+}
+
+/* Marque de pied discrète — opacité réduite, petite et centrée ; l'opacité
+   remonte au survol. À réserver au logo de marque, jamais au contenu
+   générique du footer. */
+.footerBrand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   opacity: 0.55;
   transition: opacity var(--duration-normal) var(--easing-default);
 }
 
-.footer:hover {
+.footerBrand:hover {
   opacity: 1;
 }
 
-/* Borne la hauteur du contenu du pied pour garder une marque discrète. */
-.footer > *,
-.footer img,
-.footer svg {
+.footerBrand > *,
+.footerBrand img,
+.footerBrand svg {
   max-height: var(--size300);
   width: auto;
   object-fit: contain;

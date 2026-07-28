@@ -8,6 +8,7 @@ declare const styles: {
   readonly "emptyText": string;
   readonly "emptyTitle": string;
   readonly "footer": string;
+  readonly "footerBrand": string;
   readonly "header": string;
   readonly "headerAppName": string;
   readonly "headerContent": string;

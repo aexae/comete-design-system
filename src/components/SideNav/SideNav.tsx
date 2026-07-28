@@ -101,6 +101,12 @@ export interface SideNavFooterProps {
   className?: string;
 }
 
+export interface SideNavFooterBrandProps {
+  /** Logo / marque à afficher discrètement. */
+  children: ReactNode;
+  className?: string;
+}
+
 export interface SideNavItemSkeletonProps {
   /** Ajoute une 2ᵉ ligne (placeholder de description). @default false */
   hasDescription?: boolean;
@@ -292,6 +298,36 @@ export function SideNavFooter({
 }
 
 SideNavFooter.displayName = "SideNav.Footer";
+
+// -----------------------------------------------------------------------
+// SideNavFooterBrand — marque discrète dans le footer
+
+/**
+ * SideNav.FooterBrand — enveloppe un logo de marque dans le `SideNav.Footer`
+ * avec un traitement discret (opacité réduite qui remonte au survol, taille
+ * bornée, centré). À réserver au logo de marque : le reste du footer (liens,
+ * version, compte…) doit rester neutre et pleinement contrasté.
+ *
+ * ```tsx
+ * <SideNav.Footer>
+ *   <SideNav.FooterBrand>
+ *     <Logo product="link" format="logo" />
+ *   </SideNav.FooterBrand>
+ * </SideNav.Footer>
+ * ```
+ */
+export function SideNavFooterBrand({
+  children,
+  className,
+}: SideNavFooterBrandProps): ReactElement {
+  return (
+    <div className={[styles.footerBrand, className].filter(Boolean).join(" ")}>
+      {children}
+    </div>
+  );
+}
+
+SideNavFooterBrand.displayName = "SideNav.FooterBrand";
 
 // -----------------------------------------------------------------------
 // SideNavItemSkeleton — placeholder d'un item pendant le chargement
@@ -587,5 +623,6 @@ SideNav.Empty = SideNavEmpty;
 SideNav.Section = SideNavSection;
 SideNav.Divider = SideNavDivider;
 SideNav.Footer = SideNavFooter;
+SideNav.FooterBrand = SideNavFooterBrand;
 SideNav.Trigger = SideNavTrigger;
 SideNav.Provider = SideNavProvider;

@@ -376,4 +376,21 @@ describe("SideNav", () => {
       container.querySelector("[class*='emptyIcon']"),
     ).toBeInTheDocument();
   });
+
+  // SideNav.FooterBrand -------------------------------------------------
+
+  it("should wrap the brand mark in a dedicated footerBrand element", () => {
+    const { container, getByText } = render(
+      <SideNav>
+        <SideNav.Footer>
+          <SideNav.FooterBrand>
+            <span>Marque</span>
+          </SideNav.FooterBrand>
+        </SideNav.Footer>
+      </SideNav>,
+    );
+    const brand = container.querySelector("[class*='footerBrand']");
+    expect(brand).toBeInTheDocument();
+    expect(getByText("Marque")).toBeInTheDocument();
+  });
 });
