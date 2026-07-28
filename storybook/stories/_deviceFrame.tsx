@@ -7,8 +7,12 @@
 import type { ReactElement } from "react";
 import { Text } from "@aexae/comete-design-system/components";
 
-/** URL canvas d'une story (mode iframe autonome). */
-export const storyUrl = (id: string) => `/iframe.html?id=${id}&viewMode=story`;
+/** URL canvas d'une story (mode iframe autonome).
+ *  Relative à la base du Storybook (pas de `/` initial) : fonctionne aussi
+ *  bien en local (servi à la racine) que sur un déploiement en sous-chemin
+ *  (GitHub Pages `…/comete-design-system/`), où un chemin absolu `/iframe.html`
+ *  pointerait vers la racine du domaine → 404. */
+export const storyUrl = (id: string) => `iframe.html?id=${id}&viewMode=story`;
 
 export interface DeviceFrameProps {
   /** ID de la story cible (ex. "layout-page--full-page-desktop-raw"). */
