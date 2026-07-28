@@ -81,6 +81,62 @@
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
+
+  /* Gouttière réservée en permanence : les items ne se décalent pas quand le
+     thumb apparaît au survol, et leur fond hover/selected s'arrête avant elle
+     (ne passe jamais sous la scrollbar). */
+  scrollbar-gutter: stable;
+
+  /* Firefox : scrollbar fine, thumb transparent au repos (transition douce
+     de la couleur, révélée au survol de la nav ci-dessous). */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color var(--duration-normal) var(--easing-default);
+
+  /* Indicateur de débordement — CSS pur (technique des scroll-shadows) :
+     un fondu discret apparaît en bas tant qu'il reste du contenu, et en haut
+     une fois défilé. Les calques `local` (masques couleur surface) suivent le
+     contenu et couvrent l'ombre aux extrémités ; les calques `scroll` (ombres
+     fixes) se révèlent quand on s'éloigne d'un bord. Sans support de
+     background-attachment, aucun effet — comportement inchangé. */
+  background:
+    linear-gradient(var(--background-surface-default) 30%, transparent) center top,
+    linear-gradient(transparent, var(--background-surface-default) 70%) center bottom,
+    radial-gradient(farthest-side at 50% 0, var(--border-default), transparent) center top,
+    radial-gradient(farthest-side at 50% 100%, var(--border-default), transparent) center bottom;
+  background-repeat: no-repeat;
+  background-size: 100% 24px, 100% 24px, 100% 10px, 100% 10px;
+  background-attachment: local, local, scroll, scroll;
+}
+
+/* Au survol de la nav ENTIÈRE (header/corps/footer), le thumb devient visible.
+   Le scroll reste fonctionnel en permanence ; seul l'affichage du thumb est
+   conditionné. Track toujours transparent. */
+.sideNav:hover .body {
+  scrollbar-color: var(--border-default) transparent;
+}
+
+.body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.body::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+  transition: background-color var(--duration-normal) var(--easing-default);
+}
+
+.sideNav:hover .body::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+}
+
+/* Survol du thumb lui-même : légèrement plus foncé. */
+.sideNav:hover .body::-webkit-scrollbar-thumb:hover {
+  background: var(--background-neutral-bold-default);
 }
 
 /* ------------------------------------------------------------------ */
