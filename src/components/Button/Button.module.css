@@ -619,3 +619,22 @@
   background-color: var(--background-selected-subtlest-pressed);
   color: var(--text-selected);
 }
+
+/* ==========================================================================
+   collapseLabel — bouton réductible en icône seule selon le conteneur.
+
+   Réagit au conteneur ancêtre le plus proche (@container sans nom : ex. la
+   `Page` qui déclare `container: page / inline-size`), PAS au viewport. Sous
+   ~768px, le label est masqué et le bouton devient un carré rond icône seule
+   (aligné sur .iconOnly). Le nom accessible est alors porté par `aria-label`
+   (obligatoire côté consommateur). ========================================== */
+@container (max-width: 767px) {
+  .collapsible .collapsibleLabel {
+    display: none;
+  }
+  .collapsible {
+    padding: 0;
+    border-radius: var(--radius-round);
+    min-width: var(--control-height-default, var(--size400));
+  }
+}

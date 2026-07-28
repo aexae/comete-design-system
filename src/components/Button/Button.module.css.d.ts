@@ -1,6 +1,8 @@
 declare const styles: {
   readonly "button": string;
   readonly "button-spinner-rotate": string;
+  readonly "collapsible": string;
+  readonly "collapsibleLabel": string;
   readonly "color-subtle": string;
   readonly "color-subtlest": string;
   readonly "comete": string;

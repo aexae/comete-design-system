@@ -169,4 +169,36 @@ describe("Button", () => {
       expect(ref.current).toBeInstanceOf(HTMLButtonElement);
     });
   });
+
+  describe("prop collapseLabel", () => {
+    it("wraps the label and applies the collapsible class", () => {
+      render(
+        <Button collapseLabel iconBefore="FilterList" aria-label="Filtres">
+          Filtres
+        </Button>,
+      );
+      const btn = screen.getByRole("button", { name: "Filtres" });
+      expect(btn).toHaveClass("collapsible");
+      const label = btn.querySelector("[class*='collapsibleLabel']");
+      expect(label?.textContent).toBe("Filtres");
+    });
+
+    it("keeps an accessible name from aria-label when the label is hidden", () => {
+      render(
+        <Button collapseLabel iconBefore="FilterList" aria-label="Filtres">
+          Filtres
+        </Button>,
+      );
+      expect(
+        screen.getByRole("button", { name: "Filtres" }),
+      ).toBeInTheDocument();
+    });
+
+    it("does not wrap the label when collapseLabel is not set", () => {
+      render(<Button iconBefore="FilterList">Filtres</Button>);
+      const btn = screen.getByRole("button", { name: "Filtres" });
+      expect(btn).not.toHaveClass("collapsible");
+      expect(btn.querySelector("[class*='collapsibleLabel']")).toBeNull();
+    });
+  });
 });

@@ -47,6 +47,14 @@ export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"
   isSelected?: boolean;
   /** Étire le bouton sur toute la largeur du parent. @default false */
   isFullWidth?: boolean;
+  /**
+   * Réduit le bouton en **icône seule** (label masqué) lorsque le conteneur
+   * ancêtre le plus proche (`@container`, ex. la `Page`) passe sous ~768px.
+   * Le label reste dans le DOM (infobulle desktop), mais **un `aria-label` est
+   * requis** pour conserver le nom accessible une fois réduit. Nécessite une
+   * icône (`iconBefore`/`iconAfter`). @default false
+   */
+  collapseLabel?: boolean;
   /** Additional CSS class names. */
   className?: string;
   /** Styles inline additionnels. */
@@ -123,6 +131,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       isLoading = false,
       isSelected = false,
       isFullWidth = false,
+      collapseLabel = false,
       className,
       style,
       children,
@@ -182,6 +191,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       colorClass,
       spacingClass,
       isIconOnly ? styles.iconOnly : undefined,
+      collapseLabel ? styles.collapsible : undefined,
       isLoading ? styles.loading : undefined,
       isFullWidth ? styles.fullWidth : undefined,
       className,
@@ -230,7 +240,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             {iconBefore && (
               <Icon icon={iconBefore} color={iconColor} className={styles.icon} />
             )}
-            {children}
+            {collapseLabel &&
+            children !== null &&
+            children !== undefined &&
+            children !== "" ? (
+              <span className={styles.collapsibleLabel}>{children}</span>
+            ) : (
+              children
+            )}
             {iconAfter && (
               <Icon icon={iconAfter} color={iconColor} className={styles.icon} />
             )}
