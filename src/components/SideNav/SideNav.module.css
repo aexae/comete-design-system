@@ -1,10 +1,13 @@
 /* SideNav — Comete Design System
-   Pattern Jira : quand collapsed, la sidebar n'affiche que son trigger
-   (largeur ~48px). Au survol du collapsed, elle s'ouvre en OVERLAY au-
-   dessus du contenu (sans pousser la mise en page) pour permettre à
-   l'utilisateur de revoir la nav et la rouvrir d'un clic. Implémenté
-   avec un container externe qui réserve l'espace en flex et un `<nav>`
-   interne en `position: absolute` qui peut déborder. */
+   Pattern Jira : en mode replié (collapsed), la sidebar occupe 0px et
+   disparaît complètement ; la réouverture se fait via `<SideNav.Trigger />`
+   (placé côté consommateur dans `Page.Header`). Au survol du Trigger (peek),
+   la sidebar revient temporairement à 240px et POUSSE le contenu vers la
+   droite — ce n'est PAS un overlay : le contenu principal reste visible, il
+   est simplement décalé. Le décalage est animé (transition de largeur du
+   container) pour éviter tout saut brutal.
+   Implémenté avec un container flex qui porte la largeur (0 ⇄ 240px, animée)
+   et un `<nav>` interne qui le remplit — aucun `position: absolute`. */
 
 /* ------------------------------------------------------------------ */
 /* Container — flex child, contrôle l'espace réservé                  */
@@ -77,10 +80,23 @@
   padding: var(--space300) var(--space100) var(--space100) var(--space100);
 }
 
+/* Slot logo — le contenu est libre (img, svg, <Logo>, div…). On borne la
+   hauteur à ~40px quel que soit le ReactNode fourni : un logo surdimensionné
+   (ex. 160px) est mis à l'échelle sans casser la hauteur de l'en-tête. */
 .headerLogo {
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  max-height: var(--size500);
+  overflow: hidden;
+}
+
+.headerLogo > *,
+.headerLogo img,
+.headerLogo svg {
+  max-height: var(--size500);
+  width: auto;
+  object-fit: contain;
 }
 
 .headerContent {
@@ -255,11 +271,30 @@
 /* ------------------------------------------------------------------ */
 /* Footer                                                              */
 
+/* Pied de marque — logo discret (opacité réduite), petit et centré, poussé
+   en bas via `margin-top: auto`. L'opacité remonte au survol pour rester
+   lisible à la demande sans attirer l'œil en permanence. */
 .footer {
   display: flex;
   flex-direction: column;
+  align-items: center;
   padding: var(--space200);
   margin-top: auto;
+  opacity: 0.55;
+  transition: opacity var(--duration-normal) var(--easing-default);
+}
+
+.footer:hover {
+  opacity: 1;
+}
+
+/* Borne la hauteur du contenu du pied pour garder une marque discrète. */
+.footer > *,
+.footer img,
+.footer svg {
+  max-height: var(--size300);
+  width: auto;
+  object-fit: contain;
 }
 
 /* ------------------------------------------------------------------ */
