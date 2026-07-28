@@ -1,6 +1,7 @@
 // SideNav — Comete Design System
 import { createContext,
   useContext,
+  useEffect,
   useState,
   type ReactElement,
   type ReactNode, type CSSProperties } from "react";
@@ -18,12 +19,16 @@ interface SideNavContextValue {
   isCollapsed: boolean;
   /** Toggle du mode collapsed. */
   onToggleCollapse?: () => void;
-  /** Vrai quand un peek est demandé (hover sur Trigger ou nav). */
+  /** Vrai quand la nav est affichée en overlay (peek). */
   isPeeking: boolean;
   /** Marque la zone Trigger (Page.Header.leading) comme survolée. */
   setTriggerHover?: (hovered: boolean) => void;
-  /** Marque la nav elle-même comme survolée. */
+  /** Marque la nav (overlay) comme survolée. */
   setNavHover?: (hovered: boolean) => void;
+  /** Marque le focus clavier comme présent à l'intérieur de la nav overlay. */
+  setNavFocused?: (focused: boolean) => void;
+  /** Ferme le peek immédiatement (ex. clic sur un item → navigation). */
+  closePeek?: () => void;
 }
 
 const SideNavContext = createContext<SideNavContextValue>({
@@ -457,9 +462,14 @@ SideNavEmpty.displayName = "SideNav.Empty";
  * `<SideNav>`).
  *
  * Comportement :
- * - **Click** : toggle l'état collapsed/expanded.
- * - **Hover en collapsed** : déclenche le peek — la SideNav s'ouvre en
- *   overlay par-dessus le contenu sans pousser la layout.
+ * - **Click / Enter** (clavier) : toggle replié/déployé. Le mode déployé est
+ *   en flux et pousse le contenu (panneau latéral classique).
+ * - **Hover** (pointeur, en replié) : déclenche le *peek* — la SideNav
+ *   s'affiche en **overlay glissant** par-dessus le contenu, **sans le
+ *   pousser** (le contenu ne bouge pas). Le peek reste ouvert tant que le
+ *   pointeur est sur le Trigger OU la nav, ou qu'un focus clavier est dans la
+ *   nav ; il se ferme après un court délai une fois hors des deux. Le peek est
+ *   une affordance *pointer-only* : au clavier, on déploie via Click/Enter.
  *
  * ```tsx
  * <SideNav.Provider isCollapsed={c} onCollapsedChange={setC}>
@@ -520,6 +530,10 @@ SideNavTrigger.displayName = "SideNav.Trigger";
  * </SideNav.Provider>
  * ```
  */
+/** Délai de tolérance avant fermeture du peek — évite les fermetures
+ *  accidentelles lors d'un déplacement en diagonale (Trigger → nav). */
+const PEEK_CLOSE_DELAY_MS = 200;
+
 export function SideNavProvider({
   children,
   isCollapsed: controlled,
@@ -529,14 +543,46 @@ export function SideNavProvider({
   const [internalCollapsed, setInternalCollapsed] = useState(defaultCollapsed);
   const [triggerHover, setTriggerHover] = useState(false);
   const [navHover, setNavHover] = useState(false);
+  const [navFocused, setNavFocused] = useState(false);
+  const [peekOpen, setPeekOpen] = useState(false);
 
   const isCollapsed = controlled ?? internalCollapsed;
+
+  // Le peek reste ouvert tant que le pointeur survole le Trigger OU la nav,
+  // ou qu'un focus clavier est à l'intérieur de la nav. Il ne se ferme que
+  // lorsque NI hover NI focus ne sont présents, après un court délai.
+  const wantOpen = triggerHover || navHover || navFocused;
+
+  useEffect(() => {
+    if (!isCollapsed) {
+      setPeekOpen(false);
+      return undefined;
+    }
+    if (wantOpen) {
+      setPeekOpen(true);
+      return undefined;
+    }
+    const timer = setTimeout(() => setPeekOpen(false), PEEK_CLOSE_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [wantOpen, isCollapsed]);
+
   const onToggleCollapse = () => {
     const next = !isCollapsed;
     setInternalCollapsed(next);
     onCollapsedChange?.(next);
   };
-  const isPeeking = isCollapsed && (triggerHover || navHover);
+
+  // Fermeture immédiate (clic sur un item → navigation). On remet aussi les
+  // drapeaux hover/focus à zéro pour que l'overlay reste fermé tant que le
+  // pointeur ne quitte pas puis ne revient pas sur la nav.
+  const closePeek = () => {
+    setTriggerHover(false);
+    setNavHover(false);
+    setNavFocused(false);
+    setPeekOpen(false);
+  };
+
+  const isPeeking = isCollapsed && peekOpen;
 
   return (
     <SideNavContext.Provider
@@ -546,6 +592,8 @@ export function SideNavProvider({
         isPeeking,
         setTriggerHover,
         setNavHover,
+        setNavFocused,
+        closePeek,
       }}
     >
       {children}
@@ -581,7 +629,8 @@ export function SideNav({
   className,
   style,
 }: SideNavProps): ReactElement {
-  const { isCollapsed, isPeeking, setNavHover } = useContext(SideNavContext);
+  const { isCollapsed, isPeeking, setNavHover, setNavFocused, closePeek } =
+    useContext(SideNavContext);
 
   return (
     <div
@@ -594,17 +643,16 @@ export function SideNav({
         className={[styles.sideNav, className].filter(Boolean).join(" ")}
         data-collapsed={isCollapsed || undefined}
         data-peeking={isPeeking || undefined}
-        /* Handlers actifs uniquement quand expanded ou en peek. En
-           collapsed-not-peeking la nav fait 0px et n'a pas de zone hover —
-           le hover sur le bord gauche NE déclenche PAS le peek (seul le
-           Trigger le fait). En peek, les handlers maintiennent l'overlay
-           ouvert tant que la souris est dessus. */
-        onMouseEnter={
-          !isCollapsed || isPeeking ? () => setNavHover?.(true) : undefined
-        }
-        onMouseLeave={
-          !isCollapsed || isPeeking ? () => setNavHover?.(false) : undefined
-        }
+        /* En collapsed, la nav est un overlay non focusable/non cliquable tant
+           qu'elle n'est pas en peek (pointer-events: none + visibility: hidden
+           via le CSS) — ces handlers ne s'y déclenchent donc pas. En peek, ils
+           maintiennent l'overlay ouvert tant que le pointeur OU le focus
+           clavier y sont. Un clic sur un item (navigation) ferme le peek. */
+        onMouseEnter={() => setNavHover?.(true)}
+        onMouseLeave={() => setNavHover?.(false)}
+        onFocusCapture={() => setNavFocused?.(true)}
+        onBlurCapture={() => setNavFocused?.(false)}
+        onClick={isPeeking ? () => closePeek?.() : undefined}
       >
         {children}
       </nav>

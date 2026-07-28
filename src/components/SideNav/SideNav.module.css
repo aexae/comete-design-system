@@ -1,42 +1,35 @@
 /* SideNav — Comete Design System
    Pattern Jira : en mode replié (collapsed), la sidebar occupe 0px et
-   disparaît complètement ; la réouverture se fait via `<SideNav.Trigger />`
-   (placé côté consommateur dans `Page.Header`). Au survol du Trigger (peek),
-   la sidebar revient temporairement à 240px et POUSSE le contenu vers la
-   droite — ce n'est PAS un overlay : le contenu principal reste visible, il
-   est simplement décalé. Le décalage est animé (transition de largeur du
-   container) pour éviter tout saut brutal.
-   Implémenté avec un container flex qui porte la largeur (0 ⇄ 240px, animée)
-   et un `<nav>` interne qui le remplit — aucun `position: absolute`. */
+   disparaît ; la réouverture se fait via `<SideNav.Trigger />` (placé côté
+   consommateur dans `Page.Header`). Au survol du Trigger (peek), la sidebar
+   s'affiche en OVERLAY par-dessus le contenu : le container garde une largeur
+   de 0 (le contenu principal NE bouge PAS), et la `<nav>` passe en
+   `position: absolute` puis glisse depuis la gauche (translateX -100% → 0)
+   avec une ombre portée. Pas de transition de largeur, donc aucun reflow ni
+   layout shift. En mode déployé (non replié), rien de tout ça : la nav est en
+   flux et pousse le contenu, comme un panneau latéral classique. */
 
 /* ------------------------------------------------------------------ */
-/* Container — flex child, contrôle l'espace réservé                  */
+/* Container — flex child ; porte la largeur en flux (déployé) et sert
+   de contexte de positionnement pour l'overlay de peek (replié).      */
 
 .container {
   position: relative;
   width: 240px;
   height: 100%;
   flex-shrink: 0;
-  overflow: hidden;
   transition: width var(--duration-normal) var(--easing-default);
 }
 
-/* Collapsed : aucun espace réservé en layout. Le toggle (re-open) est à
-   placer côté consommateur dans `Page.Header` via `<SideNav.Trigger />`. */
+/* Replié : aucune largeur réservée — le contenu principal occupe toute la
+   place. Reste ainsi même en peek (l'overlay ne repousse pas le contenu). */
 .container[data-collapsed] {
   width: 0;
 }
 
-/* Peek : container revient à 240px → la SideNav POUSSE le contenu, comme
-   en mode expanded mais temporaire. Pas d'overlay : le main content reste
-   visible à droite, jamais caché. */
-.container[data-collapsed][data-peeking] {
-  width: 240px;
-}
-
 /* ------------------------------------------------------------------ */
-/* SideNav — flex child à l'intérieur du container, pas d'overlay      */
-/* (le container porte la largeur ; la nav remplit le container).      */
+/* SideNav — en flux quand déployé (pousse le contenu) ; overlay glissant
+   quand replié.                                                        */
 
 .sideNav {
   width: 100%;
@@ -48,25 +41,35 @@
   border-right: 1px solid var(--border-subtle);
   overflow: hidden;
   box-sizing: border-box;
-  transition: padding var(--duration-normal) var(--easing-default);
 }
 
-/* Collapsed : container 0px → la nav est totalement masquée (overflow
-   hidden du container clippe le contenu). Pas de bordure ni de fond
-   visible. */
+/* Replié : la nav quitte le flux et devient un overlay. Masquée par défaut
+   (hors écran à gauche, transparente et non focusable), prête à glisser. Le
+   fond, la bordure et le padding de base sont conservés. */
 .sideNav[data-collapsed] {
-  padding: 0;
-  background: transparent;
-  border-right: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 240px;
+  z-index: var(--z-index-sticky);
+  transform: translateX(-100%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    transform var(--duration-normal) var(--easing-default),
+    opacity var(--duration-normal) var(--easing-default),
+    visibility var(--duration-normal) var(--easing-default);
 }
 
-/* Peek : on rétablit fond + bordure quand le container s'élargit à 240
-   (cf. .container[data-collapsed][data-peeking] plus bas). La nav
-   POUSSE le contenu (pas d'overlay) — le main content reste visible. */
+/* Peek : la nav glisse par-dessus le contenu (translateX 0) avec une ombre
+   portée. Le container garde width: 0 → le contenu principal ne bouge pas. */
 .sideNav[data-collapsed][data-peeking] {
-  padding: 0 var(--space100);
-  background: var(--background-surface-default);
-  border-right: 1px solid var(--border-subtle);
+  transform: translateX(0);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  box-shadow: var(--elevation-large);
 }
 
 /* ------------------------------------------------------------------ */

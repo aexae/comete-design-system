@@ -1,6 +1,6 @@
 // SideNav — story principale (composition complète)
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, userEvent } from "storybook/test";
+import { within, userEvent, expect } from "storybook/test";
 import { SideNav } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
@@ -117,8 +117,10 @@ export const Empty: Story = {
 
 /**
  * **Peek au survol** — la SideNav est repliée ; survoler le `SideNav.Trigger`
- * (dans le header) la rouvre temporairement : elle POUSSE le contenu vers la
- * droite (pas d'overlay). Le `play` survole le Trigger pour figer l'état peek.
+ * (dans le header) l'affiche en **overlay glissant** par-dessus le contenu.
+ * Le contenu principal (« Contenu principal », à droite) **ne bouge pas** : le
+ * container garde une largeur de 0. Le `play` survole le Trigger pour figer
+ * l'overlay, puis vérifie que le contenu n'a pas été décalé.
  */
 export const Peek: Story = {
   name: "Peek (survol du Trigger)",
@@ -128,7 +130,16 @@ export const Peek: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const main = canvasElement.querySelector("main");
+    const container = canvasElement.querySelector("nav")?.parentElement;
+    const mainLeftBefore = main?.getBoundingClientRect().left;
+
     await userEvent.hover(canvas.getByRole("button", { name: /navigation/i }));
+
+    // Overlay (pas push) : le contenu principal n'a pas changé de position…
+    await expect(main?.getBoundingClientRect().left).toBe(mainLeftBefore);
+    // …et le container ne réserve toujours aucune largeur.
+    await expect(container?.getBoundingClientRect().width).toBe(0);
   },
 };
 
