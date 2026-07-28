@@ -209,7 +209,7 @@ export const WithNavigationButtons: Story = {
         />
         <Button
           appearance="contained"
-          color="brand"
+          color="comete"
           onPress={() =>
             setSelected((prev) => Math.min(total - 1, prev + 1))
           }

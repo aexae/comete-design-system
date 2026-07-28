@@ -20,17 +20,60 @@ entre versions alpha.
   illustrations `Empty` / `ConnexionError`.
 - **SideNav** : sous-composants `SideNav.Skeleton` (+ `SideNav.ItemSkeleton`) pour
   l'état de chargement et `SideNav.Empty` pour l'état vide de la navigation.
+- **BottomNav.Action** : nouveau bouton d'action central (FAB encoché) pour la
+  `BottomNav`. La barre réserve automatiquement l'emplacement central lorsqu'une
+  `BottomNav.Action` est présente. Règle de composition : exactement 2 items de
+  chaque côté (2 + Action + 2). Un avertissement est émis en développement
+  au-delà de 5 items de navigation (l'Action ne compte pas).
+- **Drawer** : `size="auto"` (dimension ajustée au contenu) et fermeture par
+  **glissement du handle** (`swipeable`, tous placements, seuil 40px).
+
+## [1.0.0-alpha.143] - 2026-07-28
+
+### Ajouté
+
+- **BrandProvider** (multi-tenant) : nouveau provider qui applique la **charte
+  couleur d'un client** au runtime à partir d'une seule couleur HEX. Il génère toute
+  la famille de tokens `brand-*` (rampe OKLCH à luminosité normalisée par rôle, clair
+  + sombre) et l'injecte, scopée à `[data-brand="<name>"]` ou à `:root`. Les éléments
+  interactifs (`comete-*`) ne sont pas affectés (École A). Exporté depuis
+  `@aexae/comete-design-system/providers`.
+- Utilitaires de theming exportés : `generateBrandTheme(seed)` et
+  `brandThemeToCss(seed, { scope })` (fonctions pures, sans dépendance externe).
+- Documentation : ADR `docs/adr/0001-theming-couleur-multi-tenant.md` et page
+  Storybook **Foundation/Couleur** (philosophie comète/brand/École A + démo live).
+
+## [1.0.0-alpha.142] - 2026-07-28
 
 ### Changements cassants (BREAKING)
 
+- **Couleur — séparation `comete` / `brand`** : la famille de tokens `brand-*`
+  (bleu Comète) est renommée **`comete-*`** — couleur fixe, propriété du DS, jamais
+  surchargée par le client (elle porte les éléments interactifs et l'identité Comète).
+  Le nom **`brand-*`** désigne désormais la **charte couleur du client** (surchargeable
+  au runtime, défaut = bleu Comète). Requiert
+  `@aexae/comete-design-tokens@^0.13.0` (famille `comete-*` ajoutée, famille `client-*`
+  supprimée).
+- **Button**, **Tag**, **ProgressBar** : la valeur `brand` de `color` / `appearance`
+  devient `comete`.
+- **Card** : `color="brand"` (ancien bleu Comète) devient `color="comete"` ; l'ancienne
+  `color="client"` devient `color="brand"` (charte client).
 - **Page** : suppression de la prop `breadcrumbs` de `Page.Header`. Les breadcrumbs
   ne font plus partie du gabarit de page (alignement avec `Page.Bar`, qui n'en
   proposait déjà pas). Les consommateurs qui affichaient un fil d'Ariane doivent
   désormais le composer eux-mêmes dans le contenu de la page (`Page.Body`) ou en
   amont du `Page.Header`.
 
+### Ajouté
+
+- **Bleed**, **IconTile**, **Text** : nouvelle variante de couleur `brand` (charte
+  client), en complément de `comete` (bleu Comète fixe).
+
 ### Modifié
 
+- **Calendar** : la sélection (dates, plages, créneaux horaires) utilise désormais la
+  couleur fixe `comete-*` au lieu de `client-*` — les éléments interactifs ne suivent
+  pas la charte client.
 - **BottomNav** : l'état sélectionné d'un `BottomNavItem` ne repose plus sur un
   fond ; seuls la couleur du texte et celle de l'icône changent.
 

@@ -28,7 +28,7 @@ const figmaUrl = (nodeId: string) =>
 // -----------------------------------------------------------------------
 // Constants
 
-const ALL_COLORS: CardColor[] = ["neutral", "brand", "success", "warning", "critical", "information", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey", "client"];
+const ALL_COLORS: CardColor[] = ["neutral", "comete", "success", "warning", "critical", "information", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey", "brand"];
 const ALL_APPEARANCES: CardAppearance[] = ["outlined", "subtle", "bold"];
 
 // -----------------------------------------------------------------------
@@ -160,7 +160,7 @@ export const Subtle: Story = {
 
 /** Carte avec fond bold (texte inversé). */
 export const Bold: Story = {
-  args: { appearance: "bold", color: "brand" },
+  args: { appearance: "bold", color: "comete" },
 };
 
 /** Carte cliquable avec hover, press et focus ring. Vérifie que onPress est appelé au clic. */
@@ -226,7 +226,7 @@ export const RichContent: Story = {
         </CC>
       </Card>
 
-      <Card appearance="bold" color="brand">
+      <Card appearance="bold" color="comete">
         <CC>
           <Stack gap="100" align="center">
             <Icon icon="Star" size={24} />

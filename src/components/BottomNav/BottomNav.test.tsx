@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 import { BottomNav } from "./BottomNav";
 import { BottomNavItem } from "./BottomNavItem";
+import { BottomNavAction } from "./BottomNavAction";
 
 // -----------------------------------------------------------------------
 // BottomNav
@@ -26,6 +27,100 @@ describe("BottomNav", () => {
       </BottomNav>
     );
     expect(screen.getByTestId("child")).toBeInTheDocument();
+  });
+
+  it("should reserve a central spacer when a BottomNav.Action is present", () => {
+    const { container } = render(
+      <BottomNav>
+        <BottomNavItem label="A" icon="Home" />
+        <BottomNavItem label="B" icon="Home" />
+        <BottomNav.Action icon="Add" aria-label="Créer" />
+        <BottomNavItem label="C" icon="Home" />
+        <BottomNavItem label="D" icon="Home" />
+      </BottomNav>
+    );
+    expect(container.querySelector("[class*='spacer']")).toBeInTheDocument();
+    // 4 items + 1 action = 5 boutons
+    expect(screen.getAllByRole("button")).toHaveLength(5);
+    expect(screen.getByRole("button", { name: "Créer" })).toBeInTheDocument();
+  });
+
+  it("should NOT render a spacer without a BottomNav.Action", () => {
+    const { container } = render(
+      <BottomNav>
+        <BottomNavItem label="A" icon="Home" />
+        <BottomNavItem label="B" icon="Home" />
+      </BottomNav>
+    );
+    expect(container.querySelector("[class*='spacer']")).not.toBeInTheDocument();
+  });
+
+  it("should warn in dev when more than 5 navigation items are provided", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    render(
+      <BottomNav>
+        <BottomNavItem label="A" icon="Home" />
+        <BottomNavItem label="B" icon="Home" />
+        <BottomNavItem label="C" icon="Home" />
+        <BottomNavItem label="D" icon="Home" />
+        <BottomNavItem label="E" icon="Home" />
+        <BottomNavItem label="F" icon="Home" />
+      </BottomNav>
+    );
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("6 items"));
+    warn.mockRestore();
+  });
+
+  it("should not warn with 5 items (the BottomNav.Action is not counted)", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    render(
+      <BottomNav>
+        <BottomNavItem label="A" icon="Home" />
+        <BottomNavItem label="B" icon="Home" />
+        <BottomNav.Action icon="Add" aria-label="Créer" />
+        <BottomNavItem label="C" icon="Home" />
+        <BottomNavItem label="D" icon="Home" />
+        <BottomNavItem label="E" icon="Home" />
+      </BottomNav>
+    );
+    expect(warn).not.toHaveBeenCalled();
+    warn.mockRestore();
+  });
+});
+
+// -----------------------------------------------------------------------
+// BottomNav.Action
+
+describe("BottomNav.Action", () => {
+  it("should be attached as BottomNav.Action", () => {
+    expect(BottomNav.Action).toBe(BottomNavAction);
+  });
+
+  it("should render a button with its aria-label", () => {
+    render(<BottomNavAction icon="Add" aria-label="Créer" />);
+    expect(screen.getByRole("button", { name: "Créer" })).toBeInTheDocument();
+  });
+
+  it("should apply the action CSS class", () => {
+    render(<BottomNavAction icon="Add" aria-label="Créer" />);
+    expect(screen.getByRole("button")).toHaveClass("action");
+  });
+
+  it("should set aria-expanded=true when isOpen", () => {
+    render(<BottomNavAction icon="Add" aria-label="Fermer" isOpen />);
+    expect(screen.getByRole("button")).toHaveAttribute("aria-expanded", "true");
+  });
+
+  it("should not set aria-expanded when not open", () => {
+    render(<BottomNavAction icon="Add" aria-label="Créer" />);
+    expect(screen.getByRole("button")).not.toHaveAttribute("aria-expanded");
+  });
+
+  it("should call onPress when clicked", async () => {
+    const handlePress = vi.fn();
+    render(<BottomNavAction icon="Add" aria-label="Créer" onPress={handlePress} />);
+    await userEvent.click(screen.getByRole("button"));
+    expect(handlePress).toHaveBeenCalledTimes(1);
   });
 });
 

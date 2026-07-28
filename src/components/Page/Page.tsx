@@ -146,7 +146,7 @@ export interface PageBodyProps {
  *   />
  *   <Page.Toolbar
  *     start={<><SearchField /><Button>Filtres</Button></>}
- *     end={<Button appearance="contained" color="brand">Nouvel agent</Button>}
+ *     end={<Button appearance="contained" color="comete">Nouvel agent</Button>}
  *   />
  *   <Page.Body>
  *     {/* Liste, tableau, formulaire… *\/}
@@ -189,7 +189,7 @@ Page.displayName = "Page";
  *       </>
  *     }
  *   />
- *   <Page.Toolbar start={<SearchField />} end={<Button color="brand">Nouveau</Button>} />
+ *   <Page.Toolbar start={<SearchField />} end={<Button color="comete">Nouveau</Button>} />
  *   <Page.Body>…</Page.Body>
  * </Page>
  * ```

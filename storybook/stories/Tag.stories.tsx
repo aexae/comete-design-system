@@ -33,7 +33,7 @@ const meta = {
                   "Étiquettes courtes et non interactives, couleur sémantique.",
               }}
               dontExample={{
-                example: <Tag label="Enregistrer" color="brand" appearance="bold" />,
+                example: <Tag label="Enregistrer" color="comete" appearance="bold" />,
                 caption: "Ne pas détourner un Tag en action cliquable.",
               }}
               when={[
@@ -64,7 +64,7 @@ const meta = {
   argTypes: {
     color: {
       control: "select",
-      options: ["neutral", "brand", "success", "warning", "critical", "information", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey"],
+      options: ["neutral", "comete", "success", "warning", "critical", "information", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey"],
     },
     appearance: {
       control: "inline-radio",
@@ -104,7 +104,7 @@ export const AllColors: Story = {
   render: () => (
     <Cluster gap="100">
       <Tag label="Neutral" color="neutral" />
-      <Tag label="Brand" color="brand" />
+      <Tag label="Comete" color="comete" />
       <Tag label="Success" color="success" />
       <Tag label="Warning" color="warning" />
       <Tag label="Critical" color="critical" />
@@ -125,19 +125,19 @@ export const AllAppearances: Story = {
     <Stack gap="200">
       <Cluster gap="100">
         <Tag label="Bold" appearance="bold" />
-        <Tag label="Bold" appearance="bold" color="brand" />
+        <Tag label="Bold" appearance="bold" color="comete" />
         <Tag label="Bold" appearance="bold" color="success" />
         <Tag label="Bold" appearance="bold" color="critical" />
       </Cluster>
       <Cluster gap="100">
         <Tag label="Subtle" appearance="subtle" />
-        <Tag label="Subtle" appearance="subtle" color="brand" />
+        <Tag label="Subtle" appearance="subtle" color="comete" />
         <Tag label="Subtle" appearance="subtle" color="success" />
         <Tag label="Subtle" appearance="subtle" color="critical" />
       </Cluster>
       <Cluster gap="100">
         <Tag label="Outlined" appearance="outlined" />
-        <Tag label="Outlined" appearance="outlined" color="brand" />
+        <Tag label="Outlined" appearance="outlined" color="comete" />
         <Tag label="Outlined" appearance="outlined" color="success" />
         <Tag label="Outlined" appearance="outlined" color="critical" />
       </Cluster>
@@ -151,8 +151,8 @@ export const Shapes: Story = {
     <Cluster gap="100">
       <Tag label="Square" shape="square" />
       <Tag label="Rounded" shape="rounded" />
-      <Tag label="Square" shape="square" color="brand" />
-      <Tag label="Rounded" shape="rounded" color="brand" />
+      <Tag label="Square" shape="square" color="comete" />
+      <Tag label="Rounded" shape="rounded" color="comete" />
     </Cluster>
   ),
 };
@@ -198,7 +198,7 @@ export const WithElemBefore: Story = {
 export const Interactive: Story = {
   render: () => (
     <Cluster gap="100">
-      <Tag label="Cliquez-moi" color="brand" onPress={() => undefined} />
+      <Tag label="Cliquez-moi" color="comete" onPress={() => undefined} />
       <Tag label="Filtrer" color="neutral" appearance="outlined" onPress={() => undefined} />
     </Cluster>
   ),
@@ -211,7 +211,7 @@ export const RemovableFocusRing: Story = {
   render: () => (
     <Cluster gap="100">
       <Tag label="Neutral" onRemove={() => undefined} />
-      <Tag label="Brand" color="brand" onRemove={() => undefined} />
+      <Tag label="Comete" color="comete" onRemove={() => undefined} />
       <Tag label="Success" color="success" appearance="subtle" onRemove={() => undefined} />
       <Tag label="Outlined" appearance="outlined" onRemove={() => undefined} />
     </Cluster>
@@ -225,7 +225,7 @@ export const Disabled: Story = {
       <Tag label="Bold" appearance="bold" isDisabled />
       <Tag label="Subtle" appearance="subtle" isDisabled />
       <Tag label="Outlined" appearance="outlined" isDisabled />
-      <Tag label="Brand" color="brand" isDisabled />
+      <Tag label="Comete" color="comete" isDisabled />
     </Cluster>
   ),
 };
@@ -235,7 +235,7 @@ export const FullMatrix: Story = {
   name: "Full matrix",
   parameters: { design: { type: "figma", url: figmaUrl("2984:15878") } },
   render: () => {
-    const colors = ["neutral", "brand", "success", "warning", "critical", "information", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey"] as const;
+    const colors = ["neutral", "comete", "success", "warning", "critical", "information", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey"] as const;
     const appearances = ["bold", "subtle", "outlined"] as const;
     const shapes = ["square", "rounded"] as const;
     return (

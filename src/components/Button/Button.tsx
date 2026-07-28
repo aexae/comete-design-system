@@ -10,7 +10,7 @@ import styles from "./Button.module.css";
 // ----------------------------------------------------------------------
 
 export type ButtonAppearance = "contained" | "outlined" | "subtle" | "link" | "link-subtle";
-export type ButtonColor = "default" | "subtle" | "subtlest" | "brand" | "success" | "critical" | "warning" | "information";
+export type ButtonColor = "default" | "subtle" | "subtlest" | "comete" | "success" | "critical" | "warning" | "information";
 /**
  * Densité — dimension + padding + radius, échelle partagée avec les champs.
  * - `compact` — hauteur 24 px, radius 4 px, padding 0/4, icône 20 px (desktop dense)
@@ -59,7 +59,7 @@ export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"
 
 /**
  * Resolves the icon color token appropriate for a given button appearance + color.
- * Mirrors the Button CSS: bold backgrounds (contained.brand, .success, .critical,
+ * Mirrors the Button CSS: bold backgrounds (contained.comete, .success, .critical,
  * .information) use inverted text; all other combinations use semantic colors.
  *
  * @param appearance - Button visual appearance
@@ -73,8 +73,8 @@ function resolveIconColor(appearance: ButtonAppearance, color: ButtonColor): Ico
     if (color === "subtle" || color === "subtlest") return color;
     // NOTE: warning bold background is light/yellow — needs dark icons, not white
     if (color === "warning") return "on-warning";
-    // brand, success, critical, information render bold backgrounds with inverted (white) text
-    const invertedColors: readonly ButtonColor[] = ["brand", "success", "critical", "information"];
+    // comete, success, critical, information render bold backgrounds with inverted (white) text
+    const invertedColors: readonly ButtonColor[] = ["comete", "success", "critical", "information"];
     return invertedColors.includes(color) ? "inverted" : "default";
   }
 
@@ -83,7 +83,8 @@ function resolveIconColor(appearance: ButtonAppearance, color: ButtonColor): Ico
     default: "default",
     subtle: "subtle",
     subtlest: "subtlest",
-    brand: "brand",
+    // Button color "comete" → IconColor "brand" (le package d'icônes conserve le nom "brand")
+    comete: "brand",
     success: "success",
     critical: "critical",
     warning: "warning",
@@ -104,7 +105,7 @@ function resolveIconColor(appearance: ButtonAppearance, color: ButtonColor): Ico
  * ```tsx
  * import { Button } from "@aexae/comete-design-system";
  *
- * <Button color="brand">Enregistrer</Button>
+ * <Button color="comete">Enregistrer</Button>
  * <Button appearance="outlined" color="critical" iconBefore="Delete">
  *   Supprimer
  * </Button>
@@ -149,7 +150,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       default: styles.default,
       subtle: styles["color-subtle"],
       subtlest: styles["color-subtlest"],
-      brand: styles.brand,
+      comete: styles.comete,
       success: styles.success,
       critical: styles.critical,
       warning: styles.warning,

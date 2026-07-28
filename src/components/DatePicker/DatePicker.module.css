@@ -81,7 +81,7 @@
 }
 
 .segment[data-focused] {
-  background-color: var(--background-brand-bold-default);
+  background-color: var(--background-comete-bold-default);
   color: var(--text-inverted);
 }
 

@@ -19,7 +19,7 @@ export type CardAppearance = "outlined" | "subtle" | "bold";
 
 export type CardColor =
   | "neutral"
-  | "brand"
+  | "comete"
   | "success"
   | "warning"
   | "critical"
@@ -29,7 +29,7 @@ export type CardColor =
   | "accentTurquoise"
   | "accentMagenta"
   | "accentBlueGrey"
-  | "client";
+  | "brand";
 
 export interface CardProps {
   /**
@@ -89,8 +89,8 @@ export interface CardProps {
  * <Card appearance="subtle" color="success">
  *   <p>Fond subtlest success</p>
  * </Card>
- * <Card appearance="bold" color="brand">
- *   <p>Fond bold brand</p>
+ * <Card appearance="bold" color="comete">
+ *   <p>Fond bold comete</p>
  * </Card>
  * ```
  */

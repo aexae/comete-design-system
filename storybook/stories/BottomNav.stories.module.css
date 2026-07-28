@@ -1,0 +1,85 @@
+/* ==========================================================================
+   BottomNav stories — structure de la recette « outil terrain MCE ».
+   Les stories ne peuvent pas réutiliser les CSS modules internes du DS pour
+   leur mise en page ; la structure vit donc ici (100% tokens, zéro valeur en
+   dur hors géométries d'écran de démo), pas en inline style.
+   ========================================================================== */
+
+/* ---- Écran de démo (cadre téléphone : barre ancrée en bas) ----
+   Fond clair « sunken » avec la barre poussée en bas de l'écran (comme sur
+   mobile). L'espace vide au-dessus sert de contexte et laisse la place aux
+   éléments qui débordent vers le haut (FAB surélevé, popup « Plus »). */
+.screen {
+  width: 340px;
+  height: 560px;
+  margin: 0 auto;
+  border-radius: var(--radius200);
+  overflow: hidden;
+  background-color: var(--background-surface-elevation-sunken-default);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+}
+
+/* Home indicator iOS dans la safe-area basse (ancré à l'écran). */
+.homeIndicator {
+  position: absolute;
+  left: 50%;
+  bottom: var(--space100);
+  transform: translateX(-50%);
+  width: 120px;
+  height: 5px;
+  border-radius: var(--radius-round);
+  background-color: var(--background-neutral-bold-default);
+  opacity: 0.4;
+  z-index: 2;
+}
+
+/* ---- Contenu du tiroir : liste des actions ---- */
+
+.sheetActions {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ligne d'action (pastille icône + titre + description + chevron). */
+.actionRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space200);
+  width: 100%;
+  padding: var(--space150);
+  background: none;
+  border: none;
+  border-radius: var(--radius150);
+  cursor: pointer;
+  text-align: left;
+}
+
+.actionRow:hover {
+  background-color: var(--background-neutral-subtlest-default);
+}
+
+.actionRow:focus-visible {
+  outline: 2px solid var(--border-focused);
+  outline-offset: -2px;
+}
+
+.actionRowIcon {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: var(--size600);
+  height: var(--size600);
+  border-radius: var(--radius-round);
+  background-color: var(--background-brand-subtlest-default);
+}
+
+.actionRowText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space025);
+  flex: 1;
+  min-width: 0;
+}

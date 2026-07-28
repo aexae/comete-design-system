@@ -427,10 +427,10 @@ export const Collection: Story = {
             end={
               <ButtonGroup>
                 <span className={css["showOnDesktop"]}>
-                  <Button color="brand" iconBefore="Add">Nouvel agent</Button>
+                  <Button color="comete" iconBefore="Add">Nouvel agent</Button>
                 </span>
                 <span className={css["showOnMobileOnly"]}>
-                  <Button color="brand" iconBefore="Add" aria-label="Nouvel agent" />
+                  <Button color="comete" iconBefore="Add" aria-label="Nouvel agent" />
                 </span>
                 <span className={css["hideOnMobile"]}>
                   <Button appearance="subtle" iconBefore="Download">Exporter</Button>
@@ -487,7 +487,7 @@ export const Collection: Story = {
             <DrawerBody><FilterPanel showHeader={false} /></DrawerBody>
             <DrawerFooter>
               <Button appearance="subtle" onPress={() => setFiltersOpen(false)}>Réinitialiser</Button>
-              <Button color="brand" onPress={() => setFiltersOpen(false)}>Appliquer</Button>
+              <Button color="comete" onPress={() => setFiltersOpen(false)}>Appliquer</Button>
             </DrawerFooter>
           </Drawer>
         </Page>
@@ -565,7 +565,7 @@ export const Entity: Story = {
                     </Stack>
                   </Card>                  
                   <Cluster gap="100" justify="center">
-                    <Button appearance="contained" iconBefore="CalendarMonth" color="brand" >Planning</Button>
+                    <Button appearance="contained" iconBefore="CalendarMonth" color="comete" >Planning</Button>
                     <Button appearance="contained" iconBefore="Newspaper">Documents</Button>
                     <Button appearance="contained" iconBefore="History">Rapports</Button>
                   </Cluster>
@@ -718,7 +718,7 @@ export const Home: Story = {
                     <Text as="span" color="subtle">{"Vous avez 3 alertes et 30 vacations non affectées ce mois-ci."}</Text>
                   </Stack>
                   <Cluster gap="100">
-                    <Button color="brand" iconBefore="CalendarMonth">Planifier</Button>
+                    <Button color="comete" iconBefore="CalendarMonth">Planifier</Button>
                     <Button appearance="outlined" iconBefore="PersonAdd">Ajouter un agent</Button>
                     <Button appearance="outlined" iconBefore="Download">Exporter</Button>
                   </Cluster>
@@ -891,7 +891,7 @@ export const Settings: Story = {
                       <Heading size="small" as="span">Fonctions</Heading>
                       <Text as="span" color="subtle">Affinez les permissions au-delà des rôles.</Text>
                     </Stack>
-                    <Button color="brand" iconBefore="Add">Nouvelle fonction</Button>
+                    <Button color="comete" iconBefore="Add">Nouvelle fonction</Button>
                   </Cluster>
 
                   <div className={css["tableDesktopOnly"]}>
@@ -962,7 +962,7 @@ export const Settings: Story = {
                           </Grid.Col>
                           <Grid.Col>
                             <Field label=" ">
-                              <Button color="brand" iconBefore="Search">Vérifier</Button>
+                              <Button color="comete" iconBefore="Search">Vérifier</Button>
                             </Field>
                           </Grid.Col>
                         </Grid>

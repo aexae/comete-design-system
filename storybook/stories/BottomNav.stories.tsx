@@ -4,6 +4,9 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 import {
   BottomNav,
   BottomNavItem,
+  Drawer,
+  DrawerBody,
+  DrawerHeader,
   Icon,
   Menu,
   MenuItem,
@@ -13,6 +16,7 @@ import {
 import type { IconName } from "@naxit/comete-icons";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import css from "./BottomNav.stories.module.css";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -47,12 +51,37 @@ const meta = {
                 "3 à 5 items avec icône + libellé court ; un seul actif reflétant la vue courante.",
                 "Icônes explicites et cohérentes ; réserver le débordement à un menu « Plus ».",
                 "Masquer la BottomNav au scroll descendant pour gagner de l'espace, la réafficher au scroll montant.",
+                "Avec un bouton d'action central (BottomNav.Action) : exactement 2 items de chaque côté (2 + Action + 2).",
               ]}
               accessibility={[
                 "Chaque item a un libellé (visible ou `aria-label`) ; item courant via `aria-current`.",
                 "Cibles tactiles suffisamment grandes ; navigation possible au clavier.",
                 "Assurer un contraste suffisant entre l'icône active et les icônes inactives.",
               ]}
+              doExample={{
+                example: (
+                  <div style={{ width: "100%" }}>
+                    <BottomNav>
+                      <BottomNavItem label="Accueil" icon="Home" isSelected />
+                      <BottomNavItem label="Rapports" icon="Assignment" />
+                      <BottomNavItem label="Profil" icon="Person" />
+                    </BottomNav>
+                  </div>
+                ),
+                caption: "Libellés courts : lisibles d'un coup d'œil.",
+              }}
+              dontExample={{
+                example: (
+                  <div style={{ width: "100%" }}>
+                    <BottomNav>
+                      <BottomNavItem label="Accueil" icon="Home" isSelected />
+                      <BottomNavItem label="Rapports et analyses détaillés" icon="Assignment" />
+                      <BottomNavItem label="Profil" icon="Person" />
+                    </BottomNav>
+                  </div>
+                ),
+                caption: "Libellés trop longs : tronqués par « … », illisibles.",
+              }}
             />
           }
         />
@@ -204,135 +233,140 @@ export const WithBadge: Story = {
   ),
 };
 
-export const FullNav: Story = {
-  name: "Full navigation bar",
-  parameters: { design: { type: "figma", url: figmaUrl("2524:18591") } },
-  render: () => {
-    const items = [
-      { label: "Accueil", icon: "Home" as const },
-      { label: "Agenda", icon: "CalendarMonth" as const },
-      { label: "Notifications", icon: "Notifications" as const, badge: "5" },
-      { label: "Profil", icon: "Person" as const },
-      { label: "Missions", icon: "Star" as const },
-      { label: "Options", icon: "MoreHoriz" as const },
-    ];
-    const [selected, setSelected] = useState("Accueil");
-    return (
-      <BottomNav>
-        {items.map((item) => (
-          <BottomNavItem
-            key={item.label}
-            {...item}
-            isSelected={selected === item.label}
-            onClick={() => { setSelected(item.label); }}
-          />
-        ))}
-      </BottomNav>
-    );
-  },
-};
-
 // -----------------------------------------------------------------------
-// Popup example — item central "Créer" qui ouvre un menu d'actions au-dessus
+// Barres complètes interactives — un contrôle « Item actif » pilote l'item
+// sélectionné (cliquer un item l'active aussi ; un seul actif à la fois).
 
-function BottomNavWithPopup() {
-  const [selected, setSelected] = useState("Accueil");
-  const [popupOpen, setPopupOpen] = useState(false);
-  const popupRef = useRef<HTMLDivElement>(null);
+/** Story dont l'unique arg est l'item actif (non lié aux props BottomNavItem). */
+type NavStory = StoryObj<{ active: string }>;
 
-  // Ferme le popup au clic extérieur
+interface NavItemDef {
+  label: string;
+  icon: IconName;
+  badge?: string;
+}
+
+function InteractiveBottomNav({
+  items,
+  active,
+}: {
+  items: NavItemDef[];
+  active: string;
+}): ReactNode {
+  const [selected, setSelected] = useState(active);
+  // Le contrôle Storybook « Item actif » repositionne la sélection.
   useEffect(() => {
-    if (!popupOpen) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      if (popupRef.current && !popupRef.current.contains(e.target as Node)) {
-        setPopupOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [popupOpen]);
-
-  // Un seul item actif à la fois : quand le popup est ouvert, aucun item de
-  // page n'est "selected" (l'item Créer est l'actif via isOpen).
-  const activeItem = popupOpen ? null : selected;
-
+    setSelected(active);
+  }, [active]);
   return (
-    <div ref={popupRef} style={{ position: "relative", display: "flex", width: "100%" }}>
-      {popupOpen && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: "calc(100% + var(--space200))",
-            left: "50%",
-            transform: "translateX(-50%)",
-            minWidth: 280,
-            background: "var(--background-default-default)",
-            borderRadius: "var(--radius100)",
-            boxShadow: "var(--elevation-medium)",
-            zIndex: 10,
-            overflow: "hidden",
-          }}
-        >
-          <Menu
-            aria-label="Créer"
-            onAction={() => { setPopupOpen(false); }}
-          >
-            <MenuSection title="Créer">
-              <MenuItem id="event" iconBefore="CalendarMonth">Nouvel événement</MenuItem>
-              <MenuItem id="note" iconBefore="Notes">Nouvelle note</MenuItem>
-              <MenuItem id="comment" iconBefore="Comment">Nouveau commentaire</MenuItem>
-              <MenuItem id="photo" iconBefore="PhotoLibrary">Ajouter une photo</MenuItem>
-            </MenuSection>
-          </Menu>
-        </div>
-      )}
-      <BottomNav>
+    <BottomNav>
+      {items.map((item) => (
         <BottomNavItem
-          label="Accueil"
-          icon="Home"
-          isSelected={activeItem === "Accueil"}
-          onClick={() => { setSelected("Accueil"); setPopupOpen(false); }}
+          key={item.label}
+          label={item.label}
+          icon={item.icon}
+          badge={item.badge}
+          isSelected={selected === item.label}
+          onClick={() => { setSelected(item.label); }}
         />
-        <BottomNavItem
-          label="Agenda"
-          icon="CalendarMonth"
-          isSelected={activeItem === "Agenda"}
-          onClick={() => { setSelected("Agenda"); setPopupOpen(false); }}
-        />
-        <BottomNavItem
-          label="Créer"
-          icon="Add"
-          isOpen={popupOpen}
-          onClick={() => { setPopupOpen((o) => !o); }}
-        />
-        <BottomNavItem
-          label="Notifications"
-          icon="Notifications"
-          badge="5"
-          isSelected={activeItem === "Notifications"}
-          onClick={() => { setSelected("Notifications"); setPopupOpen(false); }}
-        />
-        <BottomNavItem
-          label="Profil"
-          icon="Person"
-          isSelected={activeItem === "Profil"}
-          onClick={() => { setSelected("Profil"); setPopupOpen(false); }}
-        />
-      </BottomNav>
-    </div>
+      ))}
+    </BottomNav>
   );
 }
 
 /**
- * L'item central "Créer" ouvre un popup d'actions au-dessus de la barre.
- * Cas d'usage typique : bouton "+" / FAB qui propose plusieurs types de création.
+ * Écran de démo (cadre téléphone) : place la barre en bas d'un fond clair, comme
+ * sur mobile. Utilisé par toutes les stories de barre complète pour un contexte
+ * cohérent.
  */
-export const WithPopup: Story = {
-  name: "With popup",
-  parameters: { design: { type: "figma", url: figmaUrl("2524:18591") } },
-  render: () => <BottomNavWithPopup />,
+function PhoneScreen({ children }: { children: ReactNode }): ReactNode {
+  return (
+    <div className={css["screen"]}>
+      {children}
+      {/* Home indicator iOS, comme dans la story field tool */}
+      <div aria-hidden className={css["homeIndicator"]} />
+    </div>
+  );
+}
+
+const FOUR_ITEMS: NavItemDef[] = [
+  { label: "Accueil", icon: "Home" },
+  { label: "Agenda", icon: "CalendarMonth" },
+  { label: "Notifications", icon: "Notifications", badge: "3" },
+  { label: "Profil", icon: "Person" },
+];
+
+const FIVE_ITEMS: NavItemDef[] = [
+  { label: "Accueil", icon: "Home" },
+  { label: "Agenda", icon: "CalendarMonth" },
+  { label: "Notifications", icon: "Notifications", badge: "5" },
+  { label: "Missions", icon: "Star" },
+  { label: "Profil", icon: "Person" },
+];
+
+/** Quatre items — contrôle « Item actif » pour activer chaque item. */
+export const FourItems: NavStory = {
+  name: "Four items",
+  parameters: {
+    controls: { include: ["active"] },
+    design: { type: "figma", url: figmaUrl("2524:18591") },
+  },
+  argTypes: {
+    active: { name: "Item actif", control: "radio", options: FOUR_ITEMS.map((i) => i.label) },
+  },
+  args: { active: "Accueil" },
+  render: (args) => (
+    <PhoneScreen>
+      <InteractiveBottomNav items={FOUR_ITEMS} active={args.active} />
+    </PhoneScreen>
+  ),
+};
+
+/** Cinq items (maximum recommandé) — contrôle « Item actif ». */
+export const FiveItems: NavStory = {
+  name: "Five items",
+  parameters: {
+    controls: { include: ["active"] },
+    design: { type: "figma", url: figmaUrl("2524:18591") },
+  },
+  argTypes: {
+    active: { name: "Item actif", control: "radio", options: FIVE_ITEMS.map((i) => i.label) },
+  },
+  args: { active: "Accueil" },
+  render: (args) => (
+    <PhoneScreen>
+      <InteractiveBottomNav items={FIVE_ITEMS} active={args.active} />
+    </PhoneScreen>
+  ),
+};
+
+const LONG_LABEL_ITEMS: NavItemDef[] = [
+  { label: "Accueil", icon: "Home" },
+  { label: "Rapports et analyses détaillés", icon: "Assignment" },
+  { label: "Planning des interventions", icon: "CalendarMonth" },
+  { label: "Profil", icon: "Person" },
+];
+
+/**
+ * **Garde-fou** : un libellé trop long est tronqué avec ellipsis. Cas à éviter
+ * en production — voir les guidelines, préférer un libellé court. Interactive :
+ * cliquer un item l'active (ou via le contrôle « Item actif »).
+ */
+export const LongLabel: NavStory = {
+  name: "Long label (garde-fou — dégradation)",
+  parameters: {
+    controls: { include: ["active"] },
+    design: { type: "figma", url: figmaUrl("2524:18591") },
+  },
+  argTypes: {
+    active: { name: "Item actif", control: "radio", options: LONG_LABEL_ITEMS.map((i) => i.label) },
+  },
+  args: { active: "Accueil" },
+  render: (args) => (
+    <PhoneScreen>
+      <InteractiveBottomNav items={LONG_LABEL_ITEMS} active={args.active} />
+    </PhoneScreen>
+  ),
 };
 
 // -----------------------------------------------------------------------
@@ -429,20 +463,23 @@ function BottomNavWithPopupRight() {
  */
 export const WithPopupRight: Story = {
   name: "With popup (right item)",
-  parameters: { design: { type: "figma", url: figmaUrl("2524:18591") } },
-  render: () => <BottomNavWithPopupRight />,
+  parameters: { layout: "centered", design: { type: "figma", url: figmaUrl("2524:18591") } },
+  render: () => (
+    <PhoneScreen>
+      <BottomNavWithPopupRight />
+    </PhoneScreen>
+  ),
 };
 
 // -----------------------------------------------------------------------
-// Outil terrain MCE — bouton d'action central encoché (FAB) + tiroir bas
+// Recette de référence « outil terrain MCE » — BottomNav.Action + Drawer
 //
-// Cas d'usage : application de terrain (Maîtrise du Cycle d'Exploitation)
-// où l'action primaire est mise en avant via un FAB encoché au centre de la
-// barre. Le FAB ouvre un tiroir bas ("bottom sheet") proposant deux actions
-// de création rapide adaptées au travail sur site.
-
-const SCRIM_HEIGHT = 320; // hauteur du voile assombri qui remonte depuis la barre
-const FAB_SIZE = 56; // diamètre du bouton « + » central (FAB surélevé)
+// Cas d'usage : application de terrain (Maîtrise du Cycle d'Exploitation) où
+// l'action primaire est un FAB central (`BottomNav.Action`) qui ouvre un tiroir
+// bas. Le tiroir EST le composant `Drawer` du DS (placement="bottom",
+// size="auto", swipeable) ; son CONTENU (2 actions) est un pattern de story — le
+// DS fournit le contenant. Toute la structure passe par le CSS module de la
+// story : aucun inline style de structure.
 
 interface MceAction {
   id: string;
@@ -466,7 +503,11 @@ const MCE_ACTIONS: MceAction[] = [
   },
 ];
 
-/** Ligne d'action du tiroir : pastille icône + titre + description + chevron. */
+/**
+ * Ligne d'action du tiroir — PATTERN de contenu démontré dans la story (pastille
+ * icône + titre + description + chevron). Ce n'est PAS un composant du DS : le DS
+ * fournit le contenant (`Drawer`) ; le contenu reste à la charge de l'app.
+ */
 function MceActionRow({
   icon,
   title,
@@ -479,37 +520,11 @@ function MceActionRow({
   onPress: () => void;
 }): ReactNode {
   return (
-    <button
-      type="button"
-      onClick={onPress}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "var(--space200)",
-        width: "100%",
-        padding: "var(--space150)",
-        background: "none",
-        border: "none",
-        borderRadius: "var(--radius150)",
-        cursor: "pointer",
-        textAlign: "left",
-      }}
-    >
-      <span
-        aria-hidden
-        style={{
-          flexShrink: 0,
-          display: "grid",
-          placeItems: "center",
-          width: "var(--size600)",
-          height: "var(--size600)",
-          borderRadius: "var(--radius-round)",
-          backgroundColor: "var(--background-brand-subtlest-default)",
-        }}
-      >
+    <button type="button" onClick={onPress} className={css["actionRow"]}>
+      <span aria-hidden className={css["actionRowIcon"]}>
         <Icon icon={icon} size={24} appearance="filled" color="brand" />
       </span>
-      <span style={{ display: "flex", flexDirection: "column", gap: "var(--space025)", flex: 1, minWidth: 0 }}>
+      <span className={css["actionRowText"]}>
         <Text size="medium" weight="bold" as="span">{title}</Text>
         <Text size="small" color="subtle" as="span">{description}</Text>
       </span>
@@ -518,259 +533,103 @@ function MceActionRow({
   );
 }
 
-function BottomNavFieldToolMce() {
+/**
+ * Recette MCE complète : barre encochée (`BottomNav.Action` central + 2 items
+ * de chaque côté) + tiroir `Drawer`.
+ */
+function FieldToolRecipe(): ReactNode {
   const [selected, setSelected] = useState("Tournée");
   const [sheetOpen, setSheetOpen] = useState(false);
-  const dragStartY = useRef<number | null>(null);
 
   // Un seul item actif : tiroir ouvert → aucun item de page n'est sélectionné.
   const activeItem = sheetOpen ? null : selected;
   const closeSheet = () => { setSheetOpen(false); };
 
   return (
-    <div style={{ position: "relative", width: "100%" }}>
-      {sheetOpen && (
-        <>
-          {/* Scrim — voile assombri collé au bord haut de la barre, remonte
-              depuis la nav et se ferme au tap. Ne recouvre jamais la barre.
-              À CONSERVER même si la story n'a pas de contenu : dans l'app réelle
-              (liste de sites, carte, planning), il signale l'état modal. */}
-          <button
-            type="button"
-            aria-label="Fermer les outils terrain"
-            onClick={closeSheet}
-            style={{
-              position: "absolute",
-              left: 0,
-              right: 0,
-              bottom: "100%",
-              height: SCRIM_HEIGHT,
-              padding: 0,
-              border: "none",
-              cursor: "pointer",
-              backgroundColor: "var(--blanket-default)",
-              zIndex: 1,
-            }}
-          />
-
-          {/* Tiroir bas — collé au bord haut de la barre (bottom: 100%) */}
-          <div
-            role="dialog"
-            aria-label="Outils terrain"
-            style={{
-              position: "absolute",
-              bottom: "100%",
-              left: 0,
-              right: 0,
-              zIndex: 2,
-              backgroundColor: "var(--background-surface-elevation-overlay-default)",
-              borderRadius: "var(--radius200) var(--radius200) 0 0",
-              boxShadow: "var(--elevation-large)",
-              overflow: "hidden",
-              // padding bas = dégagement pour le FAB qui empiète sur la barre
-              padding: `0 var(--space200) calc(${FAB_SIZE / 2}px + var(--space150))`,
-            }}
-          >
-            {/* Poignée — tap ou swipe vers le bas pour fermer */}
-            <button
-              type="button"
-              aria-label="Fermer"
-              onClick={closeSheet}
-              onPointerDown={(e) => { dragStartY.current = e.clientY; }}
-              onPointerMove={(e) => {
-                if (dragStartY.current !== null && e.clientY - dragStartY.current > 40) {
-                  dragStartY.current = null;
-                  setSheetOpen(false);
-                }
-              }}
-              onPointerUp={() => { dragStartY.current = null; }}
-              onPointerCancel={() => { dragStartY.current = null; }}
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                width: "100%",
-                padding: "var(--space100) 0 var(--space150)",
-                background: "none",
-                border: "none",
-                cursor: "grab",
-                touchAction: "none",
-              }}
-            >
-              <span
-                aria-hidden
-                style={{
-                  width: "var(--size400)",
-                  height: "var(--size050)",
-                  borderRadius: "var(--radius-round)",
-                  backgroundColor: "var(--background-neutral-bold-default)",
-                }}
-              />
-            </button>
-            {/* Titre */}
-            <div style={{ padding: "0 var(--space150) var(--space100)" }}>
-              <Text size="medium" weight="bold" as="div">Outils terrain</Text>
-            </div>
-            {/* Deux actions */}
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              {MCE_ACTIONS.map((action) => (
-                <MceActionRow
-                  key={action.id}
-                  icon={action.icon}
-                  title={action.title}
-                  description={action.description}
-                  onPress={closeSheet}
-                />
-              ))}
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* Barre basse — fond plein + items (atténués si ouvert) + bouton + central */}
-      <div style={{ position: "relative" }}>
-        {/* Anneau (cradle) du + : cercle clair DERRIÈRE le bouton (premier enfant
-            → peint en dessous). Sa moitié basse est couverte par le fond de la
-            barre → l'anneau n'apparaît que sur la partie SUPÉRIEURE du +.
-            Épaisseur 6px (FAB + 2×6). */}
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: -((FAB_SIZE + 12) / 2 - 14),
-            transform: "translateX(-50%)",
-            width: FAB_SIZE + 12,
-            height: FAB_SIZE + 12,
-            borderRadius: "var(--radius-round)",
-            backgroundColor: "var(--background-default-default)",
-          }}
+    <>
+      {/* Barre basse — items + bouton d'action central (BottomNav.Action).
+          Règle : exactement 2 items de chaque côté (2 + Action + 2) ; la barre
+          réserve l'emplacement central automatiquement. Le home indicator est
+          fourni par PhoneScreen. */}
+      <BottomNav>
+        <BottomNavItem
+          label="Tournée"
+          icon="Map"
+          isSelected={activeItem === "Tournée"}
+          onClick={() => { setSelected("Tournée"); }}
         />
-        {/* Fond plein de la barre (reste solide même quand les items sont atténués) */}
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundColor: "var(--background-surface-default)",
-          }}
+        <BottomNavItem
+          label="Planning"
+          icon="CalendarMonth"
+          isSelected={activeItem === "Planning"}
+          onClick={() => { setSelected("Planning"); }}
         />
-
-        {/* Items — atténués et non cliquables tant que le tiroir est ouvert.
-            Règle : exactement 2 items de chaque côté du bouton + (2 + « + » + 2). */}
-        <BottomNav
-          style={{
-            position: "relative",
-            background: "transparent",
-            opacity: sheetOpen ? 0.4 : 1,
-            pointerEvents: sheetOpen ? "none" : "auto",
-            transition: "opacity var(--duration-normal) var(--easing-default)",
-          }}
-        >
-          <BottomNavItem
-            label="Tournée"
-            icon="Map"
-            isSelected={activeItem === "Tournée"}
-            onClick={() => { setSelected("Tournée"); }}
-          />
-          <BottomNavItem
-            label="Planning"
-            icon="CalendarMonth"
-            isSelected={activeItem === "Planning"}
-            onClick={() => { setSelected("Planning"); }}
-          />
-          {/* Réserve l'emplacement central pour le bouton + */}
-          <span aria-hidden style={{ flex: "1 1 0" }} />
-          <BottomNavItem
-            label="Rapports"
-            icon="Assignment"
-            isSelected={activeItem === "Rapports"}
-            onClick={() => { setSelected("Rapports"); }}
-          />
-          <BottomNavItem
-            label="Profil"
-            icon="Person"
-            isSelected={activeItem === "Profil"}
-            onClick={() => { setSelected("Profil"); }}
-          />
-        </BottomNav>
-
-        {/* Bouton « + » central — FAB surélevé qui dépasse au-dessus de la barre,
-            avec un anneau (cradle) qui le détache du fond. Le + pivote en × à
-            l'ouverture. */}
-        <button
-          type="button"
+        <BottomNav.Action
+          icon="Add"
           aria-label={sheetOpen ? "Fermer les outils terrain" : "Ouvrir les outils terrain"}
-          aria-haspopup="dialog"
-          aria-expanded={sheetOpen}
-          onClick={() => { setSheetOpen((o) => !o); }}
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: -(FAB_SIZE / 2 - 14),
-            transform: "translateX(-50%)",
-            width: FAB_SIZE,
-            height: FAB_SIZE,
-            borderRadius: "var(--radius-round)",
-            border: "none",
-            display: "grid",
-            placeItems: "center",
-            backgroundColor: "var(--background-brand-bold-default)",
-            cursor: "pointer",
-            zIndex: 3,
-          }}
-        >
-          <span
-            style={{
-              display: "grid",
-              placeItems: "center",
-              transform: sheetOpen ? "rotate(45deg)" : "rotate(0deg)",
-              transition: "transform 200ms ease-out",
-            }}
-          >
-            <Icon icon="Add" size={28} appearance="filled" color="inverted" />
-          </span>
-        </button>
-
-        {/* Home indicator dans la safe-area basse */}
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            left: "50%",
-            bottom: "var(--space100)",
-            transform: "translateX(-50%)",
-            width: 120,
-            height: 5,
-            borderRadius: "var(--radius-round)",
-            backgroundColor: "var(--background-neutral-bold-default)",
-            opacity: 0.4,
-            zIndex: 2,
-          }}
+          isOpen={sheetOpen}
+          onPress={() => { setSheetOpen((o) => !o); }}
         />
-      </div>
-    </div>
+        <BottomNavItem
+          label="Rapports"
+          icon="Assignment"
+          isSelected={activeItem === "Rapports"}
+          onClick={() => { setSelected("Rapports"); }}
+        />
+        <BottomNavItem
+          label="Profil"
+          icon="Person"
+          isSelected={activeItem === "Profil"}
+          onClick={() => { setSelected("Profil"); }}
+        />
+      </BottomNav>
+
+      {/* Tiroir bas = composant Drawer du DS : hauteur ajustée au contenu
+          (size="auto"), scrim cliquable, handle draggable (swipeable). */}
+      <Drawer
+        isOpen={sheetOpen}
+        onOpenChange={setSheetOpen}
+        placement="bottom"
+        size="auto"
+        swipeable
+        aria-label="Outils terrain"
+      >
+        <DrawerHeader onClose={closeSheet}>Outils terrain</DrawerHeader>
+        <DrawerBody>
+          {/* Contenu = pattern de story (2 grosses actions), pas un composant DS */}
+          <div className={css["sheetActions"]}>
+            {MCE_ACTIONS.map((action) => (
+              <MceActionRow
+                key={action.id}
+                icon={action.icon}
+                title={action.title}
+                description={action.description}
+                onPress={closeSheet}
+              />
+            ))}
+          </div>
+        </DrawerBody>
+      </Drawer>
+    </>
   );
 }
 
 /**
- * Outil terrain MCE — le bouton d'action central « + » est **contenu dans la
- * barre** (centré, sans saillie) et ouvre un **tiroir bas** proposant deux
- * actions de création rapide : scanner un équipement, signaler une anomalie.
+ * Outil terrain MCE — **recette de référence**. Le bouton d'action central
+ * `BottomNav.Action` ouvre un **tiroir bas** (`Drawer`) proposant deux actions
+ * de création rapide : scanner un équipement, signaler une anomalie.
  *
- * Comportement (pattern Material Design) :
- * - le bouton déclenche le tiroir et son `+` **pivote de 45° en ×** ; un second
- *   appui referme ;
- * - le tiroir s'ouvre **collé au bord haut de la barre** (aucun espace) et
- *   remonte depuis celle-ci ;
- * - le **scrim** assombrit la zone au-dessus de la barre — la bottom nav reste
- *   visible dessous, mais **atténuée et non cliquable** tant que le tiroir est
- *   ouvert ; le scrim ne recouvre jamais la barre ni le FAB ;
- * - fermeture possible via le FAB (×), la **poignée** (tap / swipe vers le bas)
- *   ou le **scrim**.
+ * - le tiroir est le **composant `Drawer`** du DS (`placement="bottom"`,
+ *   `size="auto"` = hauteur ajustée au contenu, `swipeable` = handle) ; il gère
+ *   le **scrim cliquable** et la fermeture par **drag du handle vers le bas** ;
+ * - fermeture via le scrim, le handle (drag ≥ 40px) ou le bouton du header ;
+ * - le **contenu** du tiroir (2 actions : icône + titre + description + chevron)
+ *   est un **pattern de story**, pas un composant — le DS fournit le contenant ;
+ * - **aucun inline style de structure** : toute la mise en page vit dans le CSS
+ *   module de la story.
  *
- * **Règle de composition (obligatoire)** : le bouton « + » central doit toujours
- * être flanqué d'**exactement 2 items de chaque côté** (2 + « + » + 2). Ni plus,
- * ni moins — la symétrie garantit le centrage et un layout équilibré.
+ * **Règle de composition (obligatoire)** : le `BottomNav.Action` central doit
+ * toujours être flanqué d'**exactement 2 items de chaque côté** (2 + Action + 2).
  */
 export const FieldToolMce: Story = {
   name: "Field tool (central + button + bottom sheet)",
@@ -780,22 +639,8 @@ export const FieldToolMce: Story = {
     design: { type: "figma", url: figmaUrl("2524:18591") },
   },
   render: () => (
-    <div
-      style={{
-        // Écran léger : simple fond clair pour détacher la barre + laisser le
-        // « + » dépasser au-dessus. Focus sur la bottom nav, aucun chrome lourd.
-        // Barre volontairement étroite (~340px) pour resserrer les items,
-        // tout en gardant la répartition edge-to-edge.
-        width: 340,
-        margin: "0 auto",
-        borderRadius: "var(--radius200)",
-        overflow: "hidden",
-        backgroundColor: "var(--background-surface-elevation-sunken-default)",
-      }}
-    >
-      {/* petit espace d'écran pour que le + surélevé se détache */}
-      <div style={{ height: 72 }} />
-      <BottomNavFieldToolMce />
-    </div>
+    <PhoneScreen>
+      <FieldToolRecipe />
+    </PhoneScreen>
   ),
 };

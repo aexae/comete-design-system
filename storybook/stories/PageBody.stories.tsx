@@ -88,7 +88,7 @@ export const GridLayout: Story = {
               <Button appearance="subtle" iconBefore="FilterList">Filtres</Button>
             </Stack>
           }
-          end={<Button color="brand" iconBefore="Add">Nouvel agent</Button>}
+          end={<Button color="comete" iconBefore="Add">Nouvel agent</Button>}
         />
         <Page.Body>
           <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
@@ -184,7 +184,7 @@ export const FullWidth: Story = {
         <Page.Header title="Utilisateurs" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Toolbar
           start={<TextField aria-label="Rechercher" placeholder="Rechercher un utilisateur…" />}
-          end={<Button color="brand" iconBefore="PersonAdd">Inviter</Button>}
+          end={<Button color="comete" iconBefore="PersonAdd">Inviter</Button>}
         />
         <Page.Body>
           <Stack gap="200">
@@ -229,7 +229,7 @@ function AgentsChrome() {
             <Button appearance="subtle" iconBefore="FilterList">Filtres</Button>
           </Stack>
         }
-        end={<Button color="brand" iconBefore="Add">Nouvel agent</Button>}
+        end={<Button color="comete" iconBefore="Add">Nouvel agent</Button>}
       />
     </>
   );

@@ -84,7 +84,7 @@ describe("Bleed", () => {
   });
 
   it("should support all colors", () => {
-    const colors = ["neutral", "brand", "success", "warning", "critical", "information", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey", "subtlest", "subtler", "bold"] as const;
+    const colors = ["neutral", "comete", "brand", "success", "warning", "critical", "information", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey", "subtlest", "subtler", "bold"] as const;
     for (const c of colors) {
       const { container, unmount } = render(<Bleed color={c}>x</Bleed>);
       expect(container.firstElementChild?.classList.contains(c)).toBe(true);

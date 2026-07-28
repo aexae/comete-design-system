@@ -59,7 +59,7 @@ export function DataStateMessage({
   const resolvedActions =
     actions ??
     (onRetry ? (
-      <Button appearance="contained" color="brand" iconBefore="Autorenew" onPress={onRetry}>
+      <Button appearance="contained" color="comete" iconBefore="Autorenew" onPress={onRetry}>
         {retryLabel}
       </Button>
     ) : undefined);

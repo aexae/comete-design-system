@@ -6,6 +6,7 @@ declare const styles: {
   readonly "accentTurquoise": string;
   readonly "brand": string;
   readonly "circle": string;
+  readonly "comete": string;
   readonly "critical": string;
   readonly "iconTile": string;
   readonly "information": string;

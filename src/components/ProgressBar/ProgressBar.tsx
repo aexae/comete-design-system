@@ -6,7 +6,7 @@ import styles from "./ProgressBar.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
-export type ProgressBarAppearance = "critical" | "warning" | "information" | "brand" | "success";
+export type ProgressBarAppearance = "critical" | "warning" | "information" | "comete" | "success";
 
 export interface ProgressBarProps {
   /** Valeur de progression (0–100). @default 0 */

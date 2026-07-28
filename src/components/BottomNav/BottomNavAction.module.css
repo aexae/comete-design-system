@@ -1,0 +1,53 @@
+/* ==========================================================================
+   BottomNavAction — bouton d'action central (FAB) surélevé + anneau (cradle)
+   Couleurs / rayon via tokens. Les dimensions du FAB (56px) et son
+   dépassement n'ont pas de token dédié (cf. TopNav qui hardcode aussi 56px).
+   ========================================================================== */
+
+/* Bouton rond, centré horizontalement, surélevé (dépasse de 14px au-dessus
+   du bord haut de la barre). z au-dessus du cradle. */
+.action {
+  position: absolute;
+  left: 50%;
+  top: -14px;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-round);
+  border: none;
+  display: grid;
+  place-items: center;
+  background-color: var(--background-brand-bold-default);
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 2;
+}
+
+/* Anneau (cradle) : cercle légèrement plus grand (56 + 2×6 = 68px), placé
+   DERRIÈRE le bouton. Sa moitié basse recouvre le fond de la barre (même
+   couleur → invisible) ; seule sa moitié haute, au-dessus de la barre, se
+   détache → l'anneau n'apparaît que sur la partie SUPÉRIEURE du FAB. */
+.actionCradle {
+  position: absolute;
+  left: 50%;
+  top: -20px;
+  transform: translateX(-50%);
+  width: 68px;
+  height: 68px;
+  border-radius: var(--radius-round);
+  background-color: var(--background-default-default);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Icône : pivote de 45° quand l'action est ouverte (+ → ×). */
+.actionIcon {
+  display: grid;
+  place-items: center;
+  transition: transform var(--duration-normal) var(--easing-default);
+}
+
+.action[aria-expanded="true"] .actionIcon {
+  transform: rotate(45deg);
+}

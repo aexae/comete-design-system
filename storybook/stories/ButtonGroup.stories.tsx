@@ -27,7 +27,7 @@ const meta = {
                 example: (
                   <ButtonGroup aria-label="Actions">
                     <Button appearance="subtle">Annuler</Button>
-                    <Button color="brand">Confirmer</Button>
+                    <Button color="comete">Confirmer</Button>
                   </ButtonGroup>
                 ),
                 caption: "2 à 3 actions liées, action principale à droite.",
@@ -82,7 +82,7 @@ export const OneButton: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("4608:17255") } },
   render: () => (
     <ButtonGroup>
-      <Button color="brand">Confirmer</Button>
+      <Button color="comete">Confirmer</Button>
     </ButtonGroup>
   ),
 };
@@ -93,7 +93,7 @@ export const TwoButtons: Story = {
   render: () => (
     <ButtonGroup aria-label="Actions">
       <Button>Annuler</Button>
-      <Button color="brand">Confirmer</Button>
+      <Button color="comete">Confirmer</Button>
     </ButtonGroup>
   ),
 };
@@ -104,8 +104,8 @@ export const ThreeButtons: Story = {
   render: () => (
     <ButtonGroup aria-label="Actions du formulaire">
       <Button appearance="subtle">Annuler</Button>
-      <Button appearance="outlined" color="brand">Enregistrer en brouillon</Button>
-      <Button color="brand">Publier</Button>
+      <Button appearance="outlined" color="comete">Enregistrer en brouillon</Button>
+      <Button color="comete">Publier</Button>
     </ButtonGroup>
   ),
 };
@@ -117,7 +117,7 @@ export const MixedVariants: Story = {
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       <ButtonGroup>
         <Button appearance="outlined">Annuler</Button>
-        <Button appearance="contained" color="brand">Confirmer</Button>
+        <Button appearance="contained" color="comete">Confirmer</Button>
       </ButtonGroup>
       <ButtonGroup>
         <Button appearance="contained" color="default">Exporter</Button>
@@ -125,7 +125,7 @@ export const MixedVariants: Story = {
       </ButtonGroup>
       <ButtonGroup>
         <Button appearance="subtle">Ignorer</Button>
-        <Button appearance="subtle" color="brand">Enregistrer</Button>
+        <Button appearance="subtle" color="comete">Enregistrer</Button>
         <Button appearance="subtle" color="critical">Rejeter</Button>
       </ButtonGroup>
     </div>
@@ -139,11 +139,11 @@ export const AllSpacings: Story = {
     <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "flex-start" }}>
       <ButtonGroup aria-label="Actions default">
         <Button>Annuler</Button>
-        <Button color="brand">Confirmer</Button>
+        <Button color="comete">Confirmer</Button>
       </ButtonGroup>
       <ButtonGroup aria-label="Actions compact">
         <Button density="compact">Annuler</Button>
-        <Button density="compact" color="brand">Confirmer</Button>
+        <Button density="compact" color="comete">Confirmer</Button>
       </ButtonGroup>
     </div>
   ),
@@ -156,7 +156,7 @@ export const WithIcons: Story = {
     <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "flex-start" }}>
       <ButtonGroup aria-label="Navigation">
         <Button appearance="outlined" iconBefore="ChevronLeft">Précédent</Button>
-        <Button color="brand" iconAfter="ChevronRight">Suivant</Button>
+        <Button color="comete" iconAfter="ChevronRight">Suivant</Button>
       </ButtonGroup>
       <ButtonGroup aria-label="Actions">
         <Button appearance="subtle" iconBefore="Download">Télécharger</Button>
