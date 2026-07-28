@@ -18,6 +18,10 @@ entre versions alpha.
 - **Button** : prop `collapseLabel` — réduit le bouton en **icône seule** (label
   masqué, `aria-label` requis) sous ~768px du conteneur ancêtre (`@container`),
   pour des toolbars responsives.
+- **SideNav** : sous-composant `SideNav.FooterBrand` — enveloppe le logo de
+  marque du footer avec un traitement discret (opacité réduite qui remonte au
+  survol, taille bornée), en laissant `SideNav.Footer` neutre (pas d'opacité
+  globale sur du contenu générique).
 
 ### Modifié
 
@@ -26,6 +30,16 @@ entre versions alpha.
 - **Stories Page** : cadres device (desktop/tablette/mobile) via iframes,
   toolbar alignée sur la maquette Figma (boutons `contained` gris, primaire
   `comete`, Filtres icône seule / Exporter masqué sous compact).
+- **SideNav** : le *peek* (survol du Trigger en mode replié) s'affiche désormais
+  en **overlay glissant** par-dessus le contenu (translateX + ombre légère) au
+  lieu de pousser la mise en page — le contenu principal ne bouge plus. Il reste
+  ouvert tant que le pointeur/focus sont sur le Trigger ou la nav.
+- **SideNav** : corps interne **scrollable** (header et footer épinglés) ; la
+  scrollbar n'apparaît qu'au survol de la nav (gouttière réservée → aucun
+  décalage des items) et un indicateur de débordement discret signale le
+  contenu masqué.
+- **SideNav** : la hauteur du logo dans `SideNav.Header` est bornée (~40px, +
+  largeur) quel que soit le ReactNode fourni.
 
 ## [1.0.0-alpha.144] - 2026-07-28
 
