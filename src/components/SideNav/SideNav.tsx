@@ -4,6 +4,7 @@ import { Children,
   isValidElement,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactElement,
   type ReactNode, type CSSProperties } from "react";
@@ -647,6 +648,18 @@ export function SideNav({
     (c) => !isType(c, SideNavHeader) && !isType(c, SideNavFooter),
   );
 
+  // Fermeture du peek au clic sur un item : écouteur natif délégué sur la nav
+  // (plutôt qu'un `onClick` JSX, qui violerait les règles jsx-a11y sur un
+  // élément non-interactif). Actif uniquement quand la nav est en overlay.
+  const navRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = navRef.current;
+    if (!el || !isPeeking) return undefined;
+    const onClick = () => closePeek?.();
+    el.addEventListener("click", onClick);
+    return () => el.removeEventListener("click", onClick);
+  }, [isPeeking, closePeek]);
+
   return (
     <div
       className={styles.container}
@@ -655,6 +668,7 @@ export function SideNav({
       style={style}
     >
       <nav
+        ref={navRef}
         className={[styles.sideNav, className].filter(Boolean).join(" ")}
         data-collapsed={isCollapsed || undefined}
         data-peeking={isPeeking || undefined}
@@ -662,12 +676,12 @@ export function SideNav({
            qu'elle n'est pas en peek (pointer-events: none + visibility: hidden
            via le CSS) — ces handlers ne s'y déclenchent donc pas. En peek, ils
            maintiennent l'overlay ouvert tant que le pointeur OU le focus
-           clavier y sont. Un clic sur un item (navigation) ferme le peek. */
+           clavier y sont. Le clic sur un item (fermeture du peek) est géré par
+           un écouteur natif via `navRef`. */
         onMouseEnter={() => setNavHover?.(true)}
         onMouseLeave={() => setNavHover?.(false)}
         onFocusCapture={() => setNavFocused?.(true)}
         onBlurCapture={() => setNavFocused?.(false)}
-        onClick={isPeeking ? () => closePeek?.() : undefined}
       >
         {header}
         <div className={styles.body}>{body}</div>
