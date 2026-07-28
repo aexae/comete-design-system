@@ -9,6 +9,16 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Ajouté
+
+- **BottomNav.Action** : nouveau bouton d'action central (FAB encoché) pour la
+  `BottomNav`. La barre réserve automatiquement l'emplacement central lorsqu'une
+  `BottomNav.Action` est présente. Règle de composition : exactement 2 items de
+  chaque côté (2 + Action + 2). Un avertissement est émis en développement
+  au-delà de 5 items de navigation (l'Action ne compte pas).
+- **Drawer** : `size="auto"` (dimension ajustée au contenu) et fermeture par
+  **glissement du handle** (`swipeable`, tous placements, seuil 40px).
+
 ## [1.0.0-alpha.143] - 2026-07-28
 
 ### Ajouté
