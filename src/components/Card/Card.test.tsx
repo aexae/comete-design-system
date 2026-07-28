@@ -282,4 +282,32 @@ describe("Card", () => {
       expect(card).not.toHaveAttribute("data-dragging");
     });
   });
+
+  describe("prop isLoading", () => {
+    it("shows a loading skeleton (role=status) and sets aria-busy", () => {
+      const { container } = render(<Card isLoading>Contenu</Card>);
+      // Le wrapper nommé porte l'annonce ; les Skeleton internes sont muets.
+      expect(
+        screen.getByRole("status", { name: "Chargement…" }),
+      ).toBeInTheDocument();
+      expect(container.firstChild).toHaveAttribute("aria-busy", "true");
+    });
+
+    it("hides children when loading", () => {
+      render(<Card isLoading>Contenu réel</Card>);
+      expect(screen.queryByText("Contenu réel")).not.toBeInTheDocument();
+    });
+
+    it("is not actionable when loading (no button role, onPress not called)", () => {
+      const onPress = vi.fn();
+      render(
+        <Card isLoading onPress={onPress}>
+          x
+        </Card>,
+      );
+      expect(screen.queryByRole("button")).not.toBeInTheDocument();
+      fireEvent.click(screen.getByRole("status", { name: "Chargement…" }));
+      expect(onPress).not.toHaveBeenCalled();
+    });
+  });
 });

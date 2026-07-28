@@ -21,6 +21,7 @@ declare const styles: {
   readonly "dragPreview": string;
   readonly "dragTop": string;
   readonly "outlined": string;
+  readonly "skeleton": string;
   readonly "subtle": string;
 };
 export = styles;
