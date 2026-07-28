@@ -9,6 +9,15 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.144] - 2026-07-28
+
+### Modifié
+
+- **Button** (icon-only) : un bouton sans label (icône seule) est désormais
+  **circulaire** (`--radius-round`) et **parfaitement carré** (largeur = hauteur) à
+  toutes les densités — 24×24 (compact), 32×32 (default), 48×48 (touch), `inline`
+  couvert aussi. `padding: 0` + `min-width` égal au `min-height` de la densité.
+
 ### Ajouté
 
 - **États de données natifs** (chargement / vide / erreur) intégrés directement
