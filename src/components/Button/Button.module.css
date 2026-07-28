@@ -92,13 +92,30 @@
   --button-icon-size: var(--size200);
   min-height: var(--size250);
   padding: 0;
-  font-size: var(--font-size-ui-xs);
-  line-height: var(--line-height-ui-s);
+  font-size: var(--font-size-ui-s);
+  line-height: var(--line-height-ui-m);
 }
 
-/* Icon-only — padding horizontal réduit pour un bouton carré */
+/* Icon-only — bouton circulaire, toujours carré (width = height) à chaque densité.
+   padding: 0 pour que l'icône ne gonfle pas la boîte ; le carré vient du min-width
+   égal au min-height de la densité. Déclaré après les classes de densité → gagne
+   le border-radius/padding à spécificité égale ; les min-width composés (0,2,0)
+   priment sur la densité. */
 .iconOnly {
-  padding: var(--space025) var(--space050);
+  padding: 0;
+  border-radius: var(--radius-round);
+}
+.densityCompact.iconOnly {
+  min-width: var(--control-height-compact, var(--size300));
+}
+.densityDefault.iconOnly {
+  min-width: var(--control-height-default, var(--size400));
+}
+.densityTouch.iconOnly {
+  min-width: var(--control-height-touch, var(--size600));
+}
+.inline.iconOnly {
+  min-width: var(--size250);
 }
 
 /* Loading — spinner remplace le contenu */
@@ -534,7 +551,7 @@
 }
 
 /* ==========================================================================
-   Selected state — aligné Figma : fond `--background-selected-subtlest-default`
+   Selected state : fond `--background-selected-subtlest-default`
    et couleur texte `--text-selected` pour toutes les apparences/couleurs.
    Déclaré en dernier pour passer outre les règles de couleur (ordre de source).
    ========================================================================== */
