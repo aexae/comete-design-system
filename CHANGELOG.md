@@ -11,6 +11,33 @@ entre versions alpha.
 
 ### Ajouté
 
+- **Page** : prop `globalActions` — le layout porte lui-même les actions
+  globales (notifications, réglages, avatar) et les injecte dans le `trailing`
+  de chaque `Page.Bar` via contexte. Omise = trio de démo par défaut (+ `warn`
+  en dev) ; `null` = aucune ; `ReactNode` = actions de l'app.
+- **Button** : prop `collapseLabel` — réduit le bouton en **icône seule** (label
+  masqué, `aria-label` requis) sous ~768px du conteneur ancêtre (`@container`),
+  pour des toolbars responsives.
+
+### Modifié
+
+- **Page.Toolbar** : `flex-wrap` activé — la zone `end` passe sous la zone
+  `start` quand l'espace manque (plus de chevauchement des boutons sur mobile).
+- **Stories Page** : cadres device (desktop/tablette/mobile) via iframes,
+  toolbar alignée sur la maquette Figma (boutons `contained` gris, primaire
+  `comete`, Filtres icône seule / Exporter masqué sous compact).
+
+## [1.0.0-alpha.144] - 2026-07-28
+
+### Modifié
+
+- **Button** (icon-only) : un bouton sans label (icône seule) est désormais
+  **circulaire** (`--radius-round`) et **parfaitement carré** (largeur = hauteur) à
+  toutes les densités — 24×24 (compact), 32×32 (default), 48×48 (touch), `inline`
+  couvert aussi. `padding: 0` + `min-width` égal au `min-height` de la densité.
+
+### Ajouté
+
 - **États de données natifs** (chargement / vide / erreur) intégrés directement
   aux composants de collection : `Table` (via `TableBody` : `isLoading`,
   `skeletonRows`, `isEmpty`, `error`, `onRetry`, `columnCount`, slots

@@ -213,6 +213,24 @@ export const Link: Story = {
   },
 };
 
+/**
+ * `isInline` — cas spécial de composition inline : padding nul et hauteur
+ * minimale réduite, pour un bouton `link`/`link-subtle` inséré dans un paragraphe
+ * sans générer d'espace disgracieux dans le texte.
+ */
+export const InlineLink: Story = {
+  name: "Inline link (isInline)",
+  render: () => (
+    <p style={{ maxWidth: 420, lineHeight: 1.6 }}>
+      Consultez notre{" "}
+      <Button appearance="link" color="information" isInline>
+        politique de confidentialité
+      </Button>{" "}
+      avant de continuer. Le bouton reste dans le fil du texte, sans padding superflu.
+    </p>
+  ),
+};
+
 export const LinkSubtle: Story = {
   args: { appearance: "link-subtle", color: "default", children: "Voir les détails" },
   parameters: {
@@ -331,6 +349,25 @@ export const IconOnly: Story = {
   ),
 };
 
+/** Bouton icon-only à chaque densité : toujours circulaire et parfaitement carré
+ *  (width = height), quelle que soit la densité. */
+export const IconOnlyAllDensities: Story = {
+  name: "Icon only — All densities",
+  render: () => (
+    <div style={{ display: "flex", gap: 24, alignItems: "flex-end" }}>
+      {(["compact", "default", "touch"] as const).map((density) => (
+        <div
+          key={density}
+          style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "center" }}
+        >
+          <Button iconBefore="Add" color="comete" density={density} />
+          <span style={{ fontSize: 12, color: "var(--text-subtle)" }}>{density}</span>
+        </div>
+      ))}
+    </div>
+  ),
+};
+
 /** Bouton en état loading (spinner remplace le contenu) */
 export const Loading: Story = {
   render: () => (
@@ -372,24 +409,6 @@ export const AllVariants: Story = {
       <Button appearance="subtle" color="default">Subtle</Button>
       <Button appearance="link-subtle" color="default">Link Subtle</Button>
     </div>
-  ),
-};
-
-/**
- * `isInline` — cas spécial de composition inline : padding nul et hauteur
- * minimale réduite, pour un bouton `link`/`link-subtle` inséré dans un paragraphe
- * sans générer d'espace disgracieux dans le texte.
- */
-export const InlineLink: Story = {
-  name: "Inline link (isInline)",
-  render: () => (
-    <p style={{ maxWidth: 420, lineHeight: 1.6 }}>
-      Consultez notre{" "}
-      <Button appearance="link" color="information" isInline>
-        politique de confidentialité
-      </Button>{" "}
-      avant de continuer. Le bouton reste dans le fil du texte, sans padding superflu.
-    </p>
   ),
 };
 
