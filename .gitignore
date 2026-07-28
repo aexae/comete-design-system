@@ -4,8 +4,9 @@
 **/node_modules
 .pnpm-store
 
-# documentation
-/docs
+# documentation (docs générées ignorées, mais on versionne les ADR)
+/docs/*
+!/docs/adr
 
 # production
 **/build
