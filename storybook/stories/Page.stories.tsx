@@ -170,11 +170,12 @@ function ListingPage({ leading }: { leading?: React.ReactNode }) {
         start={
           <>
             {/* Placeholder court (Figma « Rechercher ») + min-width : le
-                placeholder ne doit JAMAIS être tronqué, même en mobile. */}
+                placeholder ne doit JAMAIS être tronqué, même en mobile.
+                max-width 240 : la recherche ne s'étire pas sur tout l'espace. */}
             <SearchField
               aria-label="Rechercher"
               placeholder="Rechercher"
-              style={{ minWidth: 160 }}
+              style={{ minWidth: 160, maxWidth: 240 }}
             />
             {/* Secondaire gris (contained neutral, Figma) + icône avant ;
                 icône seule (squared, alignée sur la toolbar) sous compact */}
