@@ -194,34 +194,34 @@ export const AllStates: StoryObj = {
 
       <CellPreview
         label="Sélectionné"
-        background="var(--background-client-subtlest-default)"
+        background="var(--background-comete-subtlest-default)"
         color="var(--text-information)"
       />
 
       <CellPreview
         label="Plage — début"
-        background="var(--border-brand-bold)"
+        background="var(--border-comete-bold)"
         borderRadius="var(--radius0375) 0 0 var(--radius0375)"
         color="var(--text-inverted)"
       />
 
       <CellPreview
         label="Plage — milieu"
-        background="var(--background-client-subtlest-hovered)"
+        background="var(--background-comete-subtlest-hovered)"
         borderRadius="0"
         color="var(--text-default)"
       />
 
       <CellPreview
         label="Plage — fin"
-        background="var(--border-brand-bold)"
+        background="var(--border-comete-bold)"
         borderRadius="0 var(--radius0375) var(--radius0375) 0"
         color="var(--text-inverted)"
       />
 
       <CellPreview
         label="Plage — seule"
-        background="var(--border-brand-bold)"
+        background="var(--border-comete-bold)"
         color="var(--text-inverted)"
       />
 

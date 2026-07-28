@@ -51,7 +51,8 @@
 
 /* Couleurs sémantiques (subtlest par défaut) */
 .neutral     { background-color: var(--background-neutral-subtlest-default); }
-.brand       { background-color: var(--background-brand-subtlest-default); }
+.comete       { background-color: var(--background-comete-subtlest-default); }
+.brand        { background-color: var(--background-brand-subtlest-default); }
 .success     { background-color: var(--background-success-subtlest-default); }
 .warning     { background-color: var(--background-warning-subtlest-default); }
 .critical    { background-color: var(--background-critical-subtlest-default); }
@@ -75,7 +76,8 @@
 .bordered.subtler     { border-color: var(--border-neutral); }
 .bordered.bold        { border-color: var(--border-neutral); }
 .bordered.neutral     { border-color: var(--border-neutral); }
-.bordered.brand       { border-color: var(--border-brand-bold); }
+.bordered.comete       { border-color: var(--border-comete-bold); }
+.bordered.brand        { border-color: var(--border-brand-bold); }
 .bordered.success     { border-color: var(--border-success-bold); }
 .bordered.warning     { border-color: var(--border-warning-bold); }
 .bordered.critical    { border-color: var(--border-critical-bold); }

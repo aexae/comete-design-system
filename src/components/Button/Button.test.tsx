@@ -45,7 +45,7 @@ describe("Button", () => {
   describe("prop color", () => {
     it.each([
       ["default"],
-      ["brand"],
+      ["comete"],
       ["success"],
       ["critical"],
       ["warning"],

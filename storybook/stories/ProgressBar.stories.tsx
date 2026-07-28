@@ -30,7 +30,7 @@ const meta = {
         "critical",
         "warning",
         "information",
-        "brand",
+        "comete",
         "success",
       ] satisfies (ProgressBarAppearance | "auto")[],
     },
@@ -122,9 +122,9 @@ export const Success: Story = {
   args: { value: 100 },
 };
 
-/** Apparence brand forcée manuellement. */
-export const Brand: Story = {
-  args: { value: 60, appearance: "brand" },
+/** Apparence comete forcée manuellement. */
+export const Comete: Story = {
+  args: { value: 60, appearance: "comete" },
 };
 
 /** Toutes les étapes de 0 à 100 (apparence auto). */

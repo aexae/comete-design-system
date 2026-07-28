@@ -111,7 +111,7 @@ button.cell:active:not([data-disabled]) {
 
 /* Sélection unique — pas une extrémité de plage */
 .cell[data-selected]:not([data-selection-start]):not([data-selection-end]) {
-  background-color: var(--background-client-subtlest-default);
+  background-color: var(--background-comete-subtlest-default);
 }
 
 .cell[data-selected]:not([data-selection-start]):not([data-selection-end]) .cellText {
@@ -126,7 +126,7 @@ button.cell:active:not([data-disabled]) {
 
 /* Plage — début */
 .cell[data-selection-start]:not([data-selection-end]) {
-  background-color: var(--border-brand-bold);
+  background-color: var(--border-comete-bold);
   border-radius: var(--radius0375) 0 0 var(--radius0375);
 }
 
@@ -136,7 +136,7 @@ button.cell:active:not([data-disabled]) {
 
 /* Plage — fin */
 .cell[data-selection-end]:not([data-selection-start]) {
-  background-color: var(--border-brand-bold);
+  background-color: var(--border-comete-bold);
   border-radius: 0 var(--radius0375) var(--radius0375) 0;
 }
 
@@ -146,7 +146,7 @@ button.cell:active:not([data-disabled]) {
 
 /* Plage — unique (start = end) */
 .cell[data-selection-start][data-selection-end] {
-  background-color: var(--border-brand-bold);
+  background-color: var(--border-comete-bold);
   border-radius: var(--radius0375);
 }
 
@@ -156,7 +156,7 @@ button.cell:active:not([data-disabled]) {
 
 /* Plage — milieu (selected, ni start ni end) — RangeCalendar uniquement */
 .cell[data-range-part] {
-  background-color: var(--background-client-subtlest-hovered);
+  background-color: var(--background-comete-subtlest-hovered);
   border-radius: 0;
 }
 

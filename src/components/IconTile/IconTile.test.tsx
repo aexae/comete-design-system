@@ -70,6 +70,7 @@ describe("IconTile", () => {
   it("should render all appearances", () => {
     const appearances = [
       "neutral",
+      "comete",
       "brand",
       "information",
       "success",

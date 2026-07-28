@@ -10,6 +10,7 @@ import styles from "./IconTile.module.css";
 
 export type IconTileAppearance =
   | "neutral"
+  | "comete"
   | "brand"
   | "information"
   | "success"
@@ -55,6 +56,7 @@ const ICON_SIZE_MAP: Record<IconTileSize, number> = {
 // Mapping appearance → couleur icône
 const ICON_COLOR_MAP: Record<IconTileAppearance, string> = {
   neutral: "default",
+  comete: "brand",
   brand: "brand",
   information: "information",
   success: "success",

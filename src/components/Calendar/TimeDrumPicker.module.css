@@ -21,7 +21,7 @@
   left: var(--space050);
   right: var(--space050);
   border-radius: var(--radius050);
-  background-color: var(--background-client-subtlest-default);
+  background-color: var(--background-comete-subtlest-default);
   pointer-events: none;
   z-index: 0;
 }

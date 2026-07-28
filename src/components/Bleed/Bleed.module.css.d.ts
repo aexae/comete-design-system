@@ -9,6 +9,7 @@ declare const styles: {
   readonly "bold": string;
   readonly "bordered": string;
   readonly "brand": string;
+  readonly "comete": string;
   readonly "critical": string;
   readonly "full": string;
   readonly "information": string;

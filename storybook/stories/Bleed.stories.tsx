@@ -65,7 +65,7 @@ const meta = {
     isBordered: { control: "boolean" },
     color: {
       control: "select",
-      options: [undefined, "neutral", "brand", "success", "warning", "critical", "information", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey", "subtlest", "subtler", "bold"],
+      options: [undefined, "neutral", "comete", "brand", "success", "warning", "critical", "information", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey", "subtlest", "subtler", "bold"],
     },
     inline: {
       control: "select",
@@ -123,7 +123,7 @@ function BleedBanner() {
 /** Story interactive : testez les props via le panneau Controls. */
 export const Default: Story = {
   args: {
-    color: "brand"
+    color: "comete"
   },
 
   parameters: { layout: "fullscreen" },
@@ -350,7 +350,7 @@ export const BleedDesktop: Story = {
                     Cette section traverse les gouttières de Page.
                     Elle va du bord gauche (après la SideNav) au bord droit du viewport.
                   </Text>
-                  <Button color="brand" iconBefore="Add">Action</Button>
+                  <Button color="comete" iconBefore="Add">Action</Button>
                 </Stack>
               </div>
             </Bleed>

@@ -263,11 +263,11 @@ function DefaultTourActions({
           </Button>
         )}
         {isLast ? (
-          <Button color="brand" onPress={onDone}>
+          <Button color="comete" onPress={onDone}>
             Terminer
           </Button>
         ) : (
-          <Button color="brand" onPress={onNext}>
+          <Button color="comete" onPress={onNext}>
             Suivant
           </Button>
         )}
@@ -401,7 +401,7 @@ export function Spotlight({
   } else {
     footerContent = (
       <ButtonGroup>
-        <Button color="brand" onPress={() => onOpenChange?.(false)}>
+        <Button color="comete" onPress={() => onOpenChange?.(false)}>
           OK
         </Button>
       </ButtonGroup>

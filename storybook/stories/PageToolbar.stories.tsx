@@ -89,7 +89,7 @@ export const Full: Story = {
           }
           end={
             <ButtonGroup>
-              <Button color="brand" iconBefore="Add">Nouvel agent</Button>
+              <Button color="comete" iconBefore="Add">Nouvel agent</Button>
               <Button appearance="subtle" iconBefore="Download">Exporter</Button>
               <Button appearance="subtle" iconBefore="MoreHoriz" aria-label="Plus" />
             </ButtonGroup>
@@ -133,7 +133,7 @@ export const ActionsOnly: Story = {
         <Page.Toolbar
           end={
             <ButtonGroup>
-              <Button color="brand" iconBefore="Add">Créer une vacation</Button>
+              <Button color="comete" iconBefore="Add">Créer une vacation</Button>
               <Button appearance="subtle" iconBefore="Download">Exporter PDF</Button>
             </ButtonGroup>
           }
@@ -188,7 +188,7 @@ export const WithActiveFilters: Story = {
           }
           end={
             <ButtonGroup>
-              <Button color="brand" iconBefore="Add">Nouvel agent</Button>
+              <Button color="comete" iconBefore="Add">Nouvel agent</Button>
             </ButtonGroup>
           }
         />

@@ -92,7 +92,7 @@
 
 /* Semaine unique sélectionnée */
 .weekRow[data-state="selected"] {
-  background-color: var(--background-client-subtlest-default);
+  background-color: var(--background-comete-subtlest-default);
 }
 
 .weekRow[data-state="selected"] .weekDayText,
@@ -103,7 +103,7 @@
 
 /* Début de plage */
 .weekRow[data-state="range-start"] {
-  background-color: var(--border-brand-bold);
+  background-color: var(--border-comete-bold);
 }
 
 .weekRow[data-state="range-start"] .weekDayText,
@@ -113,7 +113,7 @@
 
 /* Fin de plage */
 .weekRow[data-state="range-end"] {
-  background-color: var(--border-brand-bold);
+  background-color: var(--border-comete-bold);
 }
 
 .weekRow[data-state="range-end"] .weekDayText,
@@ -123,7 +123,7 @@
 
 /* Milieu de plage */
 .weekRow[data-state="range-part"] {
-  background-color: var(--background-client-subtlest-hovered);
+  background-color: var(--background-comete-subtlest-hovered);
   border-radius: 0;
 }
 

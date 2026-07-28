@@ -45,7 +45,7 @@ export interface InformativeStateProps {
  *   image={<Illustration illustration="Empty" size={128} />}
  *   actions={
  *     <ButtonGroup>
- *       <Button appearance="contained" color="brand">Créer</Button>
+ *       <Button appearance="contained" color="comete">Créer</Button>
  *     </ButtonGroup>
  *   }
  * />

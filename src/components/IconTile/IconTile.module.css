@@ -56,6 +56,10 @@
   background-color: var(--background-neutral-subtlest-default);
 }
 
+.comete {
+  background-color: var(--background-comete-subtlest-default);
+}
+
 .brand {
   background-color: var(--background-brand-subtlest-default);
 }

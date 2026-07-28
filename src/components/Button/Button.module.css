@@ -167,16 +167,16 @@
   background-color: var(--background-neutral-subtler-pressed);
 }
 
-/* — brand — */
-.contained.brand {
-  background-color: var(--background-brand-bold-default);
+/* — comete — */
+.contained.comete {
+  background-color: var(--background-comete-bold-default);
   color: var(--text-inverted);
 }
-.contained.brand:not([data-disabled])[data-hovered] {
-  background-color: var(--background-brand-bold-hovered);
+.contained.comete:not([data-disabled])[data-hovered] {
+  background-color: var(--background-comete-bold-hovered);
 }
-.contained.brand:not([data-disabled])[data-pressed] {
-  background-color: var(--background-brand-bold-pressed);
+.contained.comete:not([data-disabled])[data-pressed] {
+  background-color: var(--background-comete-bold-pressed);
 }
 
 /* — success — */
@@ -268,15 +268,15 @@
   background-color: var(--background-neutral-subtlest-pressed);
 }
 
-.outlined.brand {
-  border-color: var(--border-brand-bold);
-  color: var(--text-brand);
+.outlined.comete {
+  border-color: var(--border-comete-bold);
+  color: var(--text-comete);
 }
-.outlined.brand:not([data-disabled])[data-hovered] {
-  background-color: var(--background-brand-subtlest-hovered);
+.outlined.comete:not([data-disabled])[data-hovered] {
+  background-color: var(--background-comete-subtlest-hovered);
 }
-.outlined.brand:not([data-disabled])[data-pressed] {
-  background-color: var(--background-brand-subtlest-pressed);
+.outlined.comete:not([data-disabled])[data-pressed] {
+  background-color: var(--background-comete-subtlest-pressed);
 }
 
 .outlined.success {
@@ -362,14 +362,14 @@
   background-color: var(--background-neutral-subtlest-pressed);
 }
 
-.subtle.brand {
-  color: var(--text-brand);
+.subtle.comete {
+  color: var(--text-comete);
 }
-.subtle.brand:not([data-disabled])[data-hovered] {
-  background-color: var(--background-brand-subtlest-hovered);
+.subtle.comete:not([data-disabled])[data-hovered] {
+  background-color: var(--background-comete-subtlest-hovered);
 }
-.subtle.brand:not([data-disabled])[data-pressed] {
-  background-color: var(--background-brand-subtlest-pressed);
+.subtle.comete:not([data-disabled])[data-pressed] {
+  background-color: var(--background-comete-subtlest-pressed);
 }
 
 .subtle.success {
@@ -445,14 +445,14 @@
   color: var(--text-subtle);
 }
 
-.link.brand {
-  color: var(--text-brand);
+.link.comete {
+  color: var(--text-comete);
 }
-.link.brand:not([data-disabled])[data-hovered] {
-  background-color: var(--background-brand-subtlest-hovered);
+.link.comete:not([data-disabled])[data-hovered] {
+  background-color: var(--background-comete-subtlest-hovered);
 }
-.link.brand:not([data-disabled])[data-pressed] {
-  background-color: var(--background-brand-subtlest-pressed);
+.link.comete:not([data-disabled])[data-pressed] {
+  background-color: var(--background-comete-subtlest-pressed);
 }
 
 .link.success {
@@ -543,7 +543,7 @@
 .contained.default[data-selected],
 .contained.color-subtle[data-selected],
 .contained.color-subtlest[data-selected],
-.contained.brand[data-selected],
+.contained.comete[data-selected],
 .contained.success[data-selected],
 .contained.critical[data-selected],
 .contained.warning[data-selected],
@@ -556,7 +556,7 @@
 .outlined.default[data-selected],
 .outlined.color-subtle[data-selected],
 .outlined.color-subtlest[data-selected],
-.outlined.brand[data-selected],
+.outlined.comete[data-selected],
 .outlined.success[data-selected],
 .outlined.critical[data-selected],
 .outlined.warning[data-selected],
@@ -569,7 +569,7 @@
 .subtle.default[data-selected],
 .subtle.color-subtle[data-selected],
 .subtle.color-subtlest[data-selected],
-.subtle.brand[data-selected],
+.subtle.comete[data-selected],
 .subtle.success[data-selected],
 .subtle.critical[data-selected],
 .subtle.warning[data-selected],

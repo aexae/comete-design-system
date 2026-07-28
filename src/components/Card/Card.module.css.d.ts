@@ -7,7 +7,7 @@ declare const styles: {
   readonly "color-accentTeal": string;
   readonly "color-accentTurquoise": string;
   readonly "color-brand": string;
-  readonly "color-client": string;
+  readonly "color-comete": string;
   readonly "color-critical": string;
   readonly "color-information": string;
   readonly "color-neutral": string;

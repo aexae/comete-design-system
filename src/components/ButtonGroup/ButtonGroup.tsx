@@ -31,7 +31,7 @@ export interface ButtonGroupProps {
  * ```tsx
  * <ButtonGroup aria-label="Actions">
  *   <Button appearance="contained" color="default">Annuler</Button>
- *   <Button appearance="contained" color="brand">Confirmer</Button>
+ *   <Button appearance="contained" color="comete">Confirmer</Button>
  * </ButtonGroup>
  * ```
  *

@@ -9,6 +9,7 @@ import styles from "./Bleed.module.css";
 
 export type BleedColor =
   | "neutral"
+  | "comete"
   | "brand"
   | "success"
   | "warning"

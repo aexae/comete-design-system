@@ -13,6 +13,7 @@
 .color-subtlest { color: var(--text-subtlest); }
 .color-disabled { color: var(--text-disabled); }
 .color-inverted { color: var(--text-inverted); }
+.color-comete { color: var(--text-comete); }
 .color-brand { color: var(--text-brand); }
 .color-accentPurple { color: var(--text-accent-purple); }
 .color-accentTeal { color: var(--text-accent-teal); }

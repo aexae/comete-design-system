@@ -8,6 +8,7 @@ declare const styles: {
   readonly "color-accentTeal": string;
   readonly "color-accentTurquoise": string;
   readonly "color-brand": string;
+  readonly "color-comete": string;
   readonly "color-critical": string;
   readonly "color-default": string;
   readonly "color-disabled": string;
