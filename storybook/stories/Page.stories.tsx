@@ -156,8 +156,10 @@ export const LongTitle: Story = {
  * global (notifications, réglages, avatar) est injecté par le layout `Page`.
  * `Page.Toolbar` : `start` = recherche + filtres, `end` = action primaire +
  * secondaire + menu débordement. Sous le breakpoint du conteneur : « Filtres »
- * passe en **icône seule** (`collapseLabel`, `aria-label` conservé), « Exporter »
- * est **masqué** (replié dans « ⋯ ») et l'action **primaire** garde son libellé.
+ * ET l'action **primaire** passent en **icône seule** (`collapseLabel` : « + »
+ * pour « Nouvel agent », `aria-label` conservé) et « Exporter » est **masqué**
+ * (replié dans « ⋯ »). Les icônes seules de la toolbar sont **squared**
+ * (`shape="square"`) pour rester alignées sur les boutons à label.
  * `Page.Body` = grille de cartes responsive.
  */
 function ListingPage({ leading }: { leading?: React.ReactNode }) {
@@ -175,22 +177,30 @@ function ListingPage({ leading }: { leading?: React.ReactNode }) {
               style={{ minWidth: 160 }}
             />
             {/* Secondaire gris (contained neutral, Figma) + icône avant ;
-                icône seule (ronde) sous compact */}
-            <Button collapseLabel iconBefore="Tune" aria-label="Filtres">
+                icône seule (squared, alignée sur la toolbar) sous compact */}
+            <Button collapseLabel shape="square" iconBefore="Tune" aria-label="Filtres">
               Filtres
             </Button>
           </>
         }
         end={
           <ButtonGroup>
-            {/* Action primaire — comète (navy), garde son libellé */}
-            <Button color="comete" iconBefore="Add">
+            {/* Action primaire — comète (navy) ; en compact, se réduit en
+                icône seule « + » (squared) pour libérer la place */}
+            <Button
+              color="comete"
+              iconBefore="Add"
+              collapseLabel
+              shape="square"
+              aria-label="Nouvel agent"
+            >
               Nouvel agent
             </Button>
             {/* Action secondaire — gris ; masquée sous compact (repliée dans « ⋯ ») */}
             <Button className={css["hideUnderCompact"]}>Exporter</Button>
-            {/* Menu débordement — gris, icône seule */}
-            <Button iconBefore="MoreHoriz" aria-label="Plus d'actions" />
+            {/* Menu débordement — gris, icône seule squared (alignée sur les
+                boutons à label de la toolbar, pas ronde) */}
+            <Button shape="square" iconBefore="MoreHoriz" aria-label="Plus d'actions" />
           </ButtonGroup>
         }
       />

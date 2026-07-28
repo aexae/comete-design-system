@@ -22,6 +22,10 @@ entre versions alpha.
   marque du footer avec un traitement discret (opacité réduite qui remonte au
   survol, taille bornée), en laissant `SideNav.Footer` neutre (pas d'opacité
   globale sur du contenu générique).
+- **Button** : prop `shape` (`"round"` (défaut) | `"square"`) — contrôle la forme
+  du rendu **icône seule** (icon-only ou `collapseLabel` réduit). `square`
+  reprend les coins arrondis standard de la densité, pour aligner un bouton
+  icône seule sur les boutons à label adjacents (ex. dans une toolbar).
 
 ### Modifié
 
