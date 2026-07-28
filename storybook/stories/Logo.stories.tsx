@@ -59,6 +59,7 @@ const meta = {
   },
   parameters: {
     docs: {
+      description: { component: "Le composant logo affiche l'identité visuelle de la marque dans les dimensions et les couleurs normalisées du design system. Il garantit un usage cohérent du logo sur tous les points de contact." },
       page: () => (
         <DocsTabsPage
           guidelines={

@@ -46,6 +46,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Les snackbars affichent un message bref et temporaire en bas de l'écran pour confirmer une action ou signaler un événement. Ils disparaissent automatiquement et peuvent proposer une action corrective comme « Annuler »." },
       page: () => (
         <DocsTabsPage
           guidelines={

@@ -54,6 +54,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "L'état informatif affiche un message contextuel accompagné d'une illustration lorsqu'il n'y a aucun contenu à montrer. Il guide l'utilisateur en proposant une explication et souvent une action corrective." },
       page: () => (
         <DocsTabsPage
           guidelines={

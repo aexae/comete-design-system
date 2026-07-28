@@ -57,6 +57,7 @@ const meta = {
   },
   parameters: {
     docs: {
+      description: { component: "Le drawer est un panneau latéral qui coulisse depuis le bord de l'écran pour afficher du contenu secondaire ou des actions contextuelles. Il préserve le contexte de la page principale tout en offrant un espace dédié." },
       page: () => (
         <DocsTabsPage
           guidelines={

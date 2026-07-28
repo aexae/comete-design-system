@@ -18,6 +18,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le séparateur est une ligne horizontale ou verticale qui délimite visuellement des groupes de contenu ou des sections. Il apporte de la structure sans ajouter de poids visuel." },
       page: () => (
         <DocsTabsPage
           guidelines={

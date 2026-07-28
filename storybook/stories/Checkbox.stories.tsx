@@ -19,6 +19,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Les cases à cocher permettent de sélectionner une ou plusieurs options dans une liste. Elles conviennent aux choix non exclusifs et aux formulaires nécessitant un consentement explicite." },
       page: () => (
         <DocsTabsPage
           guidelines={

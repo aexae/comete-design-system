@@ -297,6 +297,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le calendrier affiche une grille de dates permettant la consultation et la sélection de jours, semaines ou périodes. Il sert de base aux sélecteurs de dates et aux vues de planification." },
       page: () => (
         <DocsTabsPage
           guidelines={

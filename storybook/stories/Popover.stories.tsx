@@ -20,6 +20,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le popover affiche un contenu riche dans un panneau flottant ancré à un élément déclencheur. Contrairement au tooltip, il peut contenir des éléments interactifs et reste ouvert jusqu'à fermeture explicite." },
       page: () => (
         <DocsTabsPage
           guidelines={

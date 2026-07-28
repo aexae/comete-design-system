@@ -28,6 +28,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Les listes affichent un ensemble d'éléments verticaux liés, chacun pouvant contenir du texte, des icônes ou des avatars. Elles structurent le contenu en groupes ordonnés ou non ordonnés, avec la possibilité de rendre chaque élément interactif." },
       page: () => (
         <DocsTabsPage
           guidelines={

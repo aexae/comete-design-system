@@ -69,6 +69,7 @@ const meta: Meta<ButtonProps> = {
   },
   parameters: {
     docs: {
+      description: { component: "Les boutons déclenchent des actions ou des événements lorsque l'utilisateur interagit avec eux. Ils se déclinent en plusieurs variantes pour hiérarchiser les actions principales, secondaires et tertiaires." },
       page: () => (
         <DocsTabsPage
           guidelines={

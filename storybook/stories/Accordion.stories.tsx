@@ -22,6 +22,7 @@ const meta = {
   parameters: {
     layout: "centered",
     docs: {
+      description: { component: "Les accordéons sont des listes d'en-têtes qui se déploient et se replient pour révéler des blocs de contenu cachés. Ils permettent de réduire le défilement et de raccourcir les pages." },
       page: () => (
         <DocsTabsPage
           guidelines={

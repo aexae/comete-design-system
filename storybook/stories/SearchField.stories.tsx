@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Champ de recherche standardisé. Encapsule TextField avec les conventions du DS : icône `EditorSearch`, clearable, placeholder et aria-label par défaut.",
+          "Le champ de recherche permet à l'utilisateur de saisir un terme pour filtrer ou rechercher du contenu. Il intègre une icône de recherche, un bouton d'effacement et supporte la recherche en temps réel.",
       },
       page: () => (
         <DocsTabsPage

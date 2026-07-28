@@ -28,6 +28,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "L'en-tête de page affiche le titre d'une page applicative, ses actions principales et, optionnellement, une affordance de navigation (retour ou menu). Pour une barre combinant titre et navigation responsive, préférer désormais Page.Bar." },
       page: () => (
         <DocsTabsPage
           guidelines={

@@ -24,6 +24,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "La barre de navigation supérieure affiche les liens et actions globales de l'application dans un bandeau horizontal fixe. Elle contient généralement le logo, la recherche et les contrôles utilisateur." },
       page: () => (
         <DocsTabsPage
           guidelines={

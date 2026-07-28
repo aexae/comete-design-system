@@ -32,6 +32,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le bleed permet à un élément de déborder au-delà des marges de son conteneur parent. Il est utile pour étendre une image ou un fond de bord à bord sans rompre la grille de mise en page." },
       page: () => (
         <DocsTabsPage
           guidelines={

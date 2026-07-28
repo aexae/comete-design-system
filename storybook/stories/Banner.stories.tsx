@@ -19,6 +19,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Les bannières affichent un message contextuel important en haut de page ou d'une section. Elles servent à communiquer des informations globales, des alertes système ou des actions requises." },
       page: () => (
         <DocsTabsPage
           guidelines={

@@ -27,6 +27,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le composant page structure la mise en page globale en organisant l'en-tête, le contenu principal et les barres latérales. Il gère les points de rupture et assure une disposition cohérente sur tous les écrans." },
       page: () => (
         <DocsTabsPage
           guidelines={

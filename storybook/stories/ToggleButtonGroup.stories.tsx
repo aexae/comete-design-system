@@ -24,6 +24,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le groupe de boutons bascule permet de sélectionner une ou plusieurs options dans un ensemble compact de boutons. Il convient aux filtres, aux changements de vue et aux options mutuellement exclusives ou cumulatives." },
       page: () => (
         <DocsTabsPage
           guidelines={

@@ -48,6 +48,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "L'indicateur de progression circulaire signale qu'une opération est en cours de traitement. Il convient aux chargements localisés ou aux états d'attente dans un espace restreint." },
       page: () => (
         <DocsTabsPage
           guidelines={

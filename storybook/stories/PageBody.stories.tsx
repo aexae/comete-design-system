@@ -35,6 +35,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le corps de page est la zone de contenu principale, placée sous l'en-tête et la barre d'outils. Il accueille le contenu métier — grilles de cartes, colonnes ou tableaux — dans un flux vertical cohérent avec les marges du gabarit." },
       page: () => (
         <DocsTabsPage
           guidelines={

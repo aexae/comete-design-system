@@ -34,6 +34,7 @@ const meta = {
   },
   parameters: {
     docs: {
+      description: { component: "Les squelettes sont des formes de substitution animées qui occupent l'espace du contenu pendant son chargement. Ils réduisent la perception d'attente en préfigurant la mise en page finale." },
       page: () => (
         <DocsTabsPage
           guidelines={

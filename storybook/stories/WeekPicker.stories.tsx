@@ -27,6 +27,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le sélecteur de semaine permet de choisir une semaine calendaire complète en un seul clic. Il convient aux plannings, tableaux de bord et rapports hebdomadaires." },
       page: () => (
         <DocsTabsPage
           guidelines={

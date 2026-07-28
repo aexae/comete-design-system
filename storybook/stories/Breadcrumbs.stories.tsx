@@ -60,6 +60,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le fil d'Ariane affiche le chemin de navigation hiérarchique menant à la page courante. Il permet à l'utilisateur de remonter facilement dans l'arborescence du site." },
       page: () => (
         <DocsTabsPage
           guidelines={

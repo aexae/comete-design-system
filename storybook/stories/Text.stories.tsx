@@ -18,6 +18,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le composant text affiche du contenu textuel avec les styles typographiques normalisés du design system. Il garantit la cohérence des tailles, graisses et interlignes à travers l'interface." },
       page: () => (
         <DocsTabsPage
           guidelines={

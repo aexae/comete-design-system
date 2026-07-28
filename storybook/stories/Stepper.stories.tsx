@@ -26,6 +26,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le stepper affiche la progression à travers une séquence d'étapes numérotées. Il indique l'étape courante, les étapes complétées et celles à venir dans un processus multi-étapes." },
       page: () => (
         <DocsTabsPage
           guidelines={

@@ -34,6 +34,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le heading affiche un titre hiérarchique (h1 à h6) avec les styles typographiques du design system. Il structure le contenu et facilite la navigation par les technologies d'assistance." },
       page: () => (
         <DocsTabsPage
           guidelines={

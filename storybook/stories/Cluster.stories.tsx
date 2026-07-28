@@ -13,6 +13,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le cluster dispose ses éléments enfants sur un axe horizontal avec retour à la ligne automatique et espacement régulier. Il est idéal pour aligner des tags, badges ou boutons dont le nombre peut varier." },
       page: () => (
         <DocsTabsPage
           guidelines={

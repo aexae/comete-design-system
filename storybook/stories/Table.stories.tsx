@@ -35,6 +35,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Les tableaux organisent des données structurées en lignes et colonnes pour faciliter la comparaison et l'analyse. Ils supportent le tri, la pagination et la sélection pour manipuler de grands jeux de données." },
       page: () => (
         <DocsTabsPage
           guidelines={

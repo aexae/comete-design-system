@@ -13,6 +13,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le stack empile ses éléments enfants verticalement ou horizontalement avec un espacement régulier. C'est le composant de mise en page fondamental pour organiser du contenu dans une direction unique." },
       page: () => (
         <DocsTabsPage
           guidelines={

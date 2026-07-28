@@ -55,6 +55,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
+      description: { component: "Le sélecteur permet de choisir une valeur parmi une liste d'options dans un menu déroulant. Il convient lorsque l'espace est limité ou que le nombre d'options dépasse ce qu'un groupe de radios peut afficher confortablement." },
       page: () => (
         <DocsTabsPage
           guidelines={
