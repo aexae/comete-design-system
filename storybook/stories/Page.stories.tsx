@@ -13,7 +13,6 @@ import {
 import { expect, within } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
-import { DeviceFrame } from "./_deviceFrame";
 import css from "./Page.stories.module.css";
 
 const FIGMA_FILE =
@@ -168,8 +167,15 @@ function ListingPage({ leading }: { leading?: React.ReactNode }) {
       <Page.Toolbar
         start={
           <>
-            <SearchField aria-label="Rechercher" placeholder="Rechercher un agent…" />
-            {/* Secondaire gris (contained défaut) + icône Tune ; icône seule sous compact */}
+            {/* Placeholder court (Figma « Rechercher ») + min-width : le
+                placeholder ne doit JAMAIS être tronqué, même en mobile. */}
+            <SearchField
+              aria-label="Rechercher"
+              placeholder="Rechercher"
+              style={{ minWidth: 160 }}
+            />
+            {/* Secondaire gris (contained neutral, Figma) + icône avant ;
+                icône seule (ronde) sous compact */}
             <Button collapseLabel iconBefore="Tune" aria-label="Filtres">
               Filtres
             </Button>
@@ -210,27 +216,17 @@ const HAMBURGER = (
   <Button appearance="subtle" iconBefore="Menu" aria-label="Ouvrir le menu" />
 );
 
-// -----------------------------------------------------------------------
-// Pages « nues » — cibles des iframes des cadres device. Masquées de la sidebar
-// et des docs (!dev, !autodocs) : on ne les consulte qu'à travers un cadre.
-
-export const FullPageDesktopRaw: Story = {
-  name: "Full page — desktop (raw)",
-  tags: ["!dev", "!autodocs"],
-  parameters: { controls: { disable: true }, layout: "fullscreen" },
-  render: () => <ListingPage />,
-};
-
-export const FullPageTabletRaw: Story = {
-  name: "Full page — tablette (raw)",
-  tags: ["!dev", "!autodocs"],
-  parameters: { controls: { disable: true }, layout: "fullscreen" },
-  render: () => <ListingPage leading={HAMBURGER} />,
-};
-
-export const FullPageMobileRaw: Story = {
-  name: "Full page — mobile (raw)",
-  tags: ["!dev", "!autodocs"],
+/**
+ * **Full page — responsive.** Une seule story : changer le viewport via la
+ * barre d'outils Storybook (desktop / tablette / mobile) fait réagir la vraie
+ * page — Grid (media queries), Page.Bar (`@container` : large ⇄ compacte
+ * épinglée) et Page.Toolbar (wrap, « Filtres » en icône seule ronde,
+ * « Exporter » replié dans « ⋯ »). Le placeholder « Rechercher » n'est jamais
+ * tronqué (min-width sur le champ). Le hamburger est montré en permanence pour
+ * la démo — en contexte réel, l'app ne le rend que SideNav repliée.
+ */
+export const FullPage: Story = {
+  name: "Full page (responsive)",
   parameters: { controls: { disable: true }, layout: "fullscreen" },
   render: () => <ListingPage leading={HAMBURGER} />,
   // a11y : tout bouton réduit en icône seule DOIT conserver un aria-label.
@@ -244,60 +240,6 @@ export const FullPageMobileRaw: Story = {
       );
     }
   },
-};
-
-// -----------------------------------------------------------------------
-// Cadres device — UN cadre par story (chaque iframe = un vrai viewport)
-
-/** Desktop — cadre fenêtre 1280 : 3 colonnes, barre large, pas de hamburger. */
-export const FullPageDesktop: Story = {
-  name: "Full page — desktop",
-  parameters: { controls: { disable: true }, layout: "centered" },
-  render: () => (
-    <DeviceFrame
-      storyId="layout-page--full-page-desktop-raw"
-      width={1280}
-      height={760}
-      scale={0.5}
-      variant="browser"
-      label="Desktop ≥ 1024"
-      note="Grille 3 colonnes · barre large · toolbar sur une ligne · pas de hamburger."
-    />
-  ),
-};
-
-/** Tablette — cadre fenêtre 768 : 2 colonnes, barre large, hamburger visible. */
-export const FullPageTablet: Story = {
-  name: "Full page — tablette",
-  parameters: { controls: { disable: true }, layout: "centered" },
-  render: () => (
-    <DeviceFrame
-      storyId="layout-page--full-page-tablet-raw"
-      width={768}
-      height={720}
-      scale={0.55}
-      variant="browser"
-      label="Tablette 768"
-      note="Grille 2 colonnes · barre large · hamburger visible."
-    />
-  ),
-};
-
-/** Mobile — cadre téléphone 375 : 1 colonne, barre compacte épinglée, toolbar qui wrappe, boutons secondaires en icône seule. */
-export const FullPageMobile: Story = {
-  name: "Full page — mobile",
-  parameters: { controls: { disable: true }, layout: "centered" },
-  render: () => (
-    <DeviceFrame
-      storyId="layout-page--full-page-mobile-raw"
-      width={375}
-      height={720}
-      scale={0.8}
-      variant="phone"
-      label="Mobile 375"
-      note="Grille 1 colonne · barre compacte épinglée · Filtres en icône seule · Exporter masqué (⋯) · hamburger."
-    />
-  ),
 };
 
 // -----------------------------------------------------------------------
