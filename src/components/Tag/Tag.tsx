@@ -10,7 +10,7 @@ import styles from "./Tag.module.css";
 
 export type TagColor =
   | "neutral"
-  | "brand"
+  | "comete"
   | "success"
   | "warning"
   | "critical"

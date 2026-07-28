@@ -125,7 +125,7 @@ function PulseRender() {
 
   return (
     <div style={{ padding: 100 }}>
-      <Button ref={targetRef} color="brand" onPress={() => setIsOpen(true)}>
+      <Button ref={targetRef} color="comete" onPress={() => setIsOpen(true)}>
         Essayer maintenant
       </Button>
       <Spotlight
@@ -223,7 +223,7 @@ function TourRender() {
       </Stack>
 
       <div style={{ marginTop: 24 }}>
-        <Button color="brand" onPress={() => setStep(0)}>
+        <Button color="comete" onPress={() => setStep(0)}>
           Lancer le tour guidé
         </Button>
       </div>

@@ -72,7 +72,7 @@ const meta = {
                       }
                       actions={
                         <ButtonGroup>
-                          <Button appearance="contained" color="brand">
+                          <Button appearance="contained" color="comete">
                             Réinitialiser
                           </Button>
                         </ButtonGroup>
@@ -192,7 +192,7 @@ function InformativeStateStory(args: InformativeStateStoryArgs) {
           {args.secondaryAction}
         </Button>
       )}
-      <Button appearance="contained" color="brand">
+      <Button appearance="contained" color="comete">
         {args.primaryAction}
       </Button>
     </ButtonGroup>
@@ -307,7 +307,7 @@ export const AllVariants: Story = {
         image={<Illustration illustration="Empty" size={128} />}
         actions={
           <ButtonGroup aria-label="Actions — Complet">
-            <Button color="brand">Action</Button>
+            <Button color="comete">Action</Button>
           </ButtonGroup>
         }
       />
@@ -316,7 +316,7 @@ export const AllVariants: Story = {
         description="Description et action uniquement."
         actions={
           <ButtonGroup aria-label="Actions — Sans illustration">
-            <Button color="brand">Action</Button>
+            <Button color="comete">Action</Button>
           </ButtonGroup>
         }
       />
@@ -325,7 +325,7 @@ export const AllVariants: Story = {
         image={<Illustration illustration="Empty" size={128} />}
         actions={
           <ButtonGroup aria-label="Actions — Sans description">
-            <Button color="brand">Action</Button>
+            <Button color="comete">Action</Button>
           </ButtonGroup>
         }
       />
@@ -342,7 +342,7 @@ export const AllVariants: Story = {
         actions={
           <ButtonGroup aria-label="Actions — Vide">
             <Button appearance="subtle">Annuler</Button>
-            <Button color="brand">Créer</Button>
+            <Button color="comete">Créer</Button>
           </ButtonGroup>
         }
       />

@@ -229,7 +229,7 @@ export const WithToolbar: Story = {
           start={
             <SearchField aria-label="Rechercher" placeholder="Rechercher un agent…" />
           }
-          end={<Button color="brand" iconBefore="Add">Nouvel agent</Button>}
+          end={<Button color="comete" iconBefore="Add">Nouvel agent</Button>}
         />
         <Page.Body>
           <p>Liste des agents…</p>

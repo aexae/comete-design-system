@@ -113,7 +113,7 @@ function ModalStory({
       ? "critical"
       : appearance === "warning"
         ? "warning"
-        : "brand";
+        : "comete";
 
   return (
     <>

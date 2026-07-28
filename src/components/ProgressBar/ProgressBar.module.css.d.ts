@@ -1,5 +1,5 @@
 declare const styles: {
-  readonly "brand": string;
+  readonly "comete": string;
   readonly "critical": string;
   readonly "fill": string;
   readonly "information": string;

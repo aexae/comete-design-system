@@ -182,12 +182,12 @@ button.stepContent:not(:disabled):hover .label:not([data-status="error"]) {
 }
 
 .indicator[data-status="active"] {
-  background-color: var(--background-brand-bold-default);
+  background-color: var(--background-comete-bold-default);
   color: var(--text-inverted);
 }
 
 .indicator[data-status="completed"] {
-  background-color: var(--background-brand-bold-default);
+  background-color: var(--background-comete-bold-default);
   color: var(--text-inverted);
 }
 
@@ -291,5 +291,5 @@ button.stepContent:not(:disabled):hover .label:not([data-status="error"]) {
 }
 
 .connector[data-status="completed"] {
-  background-color: var(--background-brand-bold-default);
+  background-color: var(--background-comete-bold-default);
 }

@@ -129,10 +129,10 @@ describe("ProgressBar", () => {
   // -----------------------------------------------------------------------
   // Manual appearance override
 
-  it("should allow forcing brand appearance", () => {
-    const { container } = render(<ProgressBar value={10} appearance="brand" />);
+  it("should allow forcing comete appearance", () => {
+    const { container } = render(<ProgressBar value={10} appearance="comete" />);
     const fill = container.querySelector(`.fill`);
-    expect(fill?.classList.contains("brand")).toBe(true);
+    expect(fill?.classList.contains("comete")).toBe(true);
   });
 
   it("should allow forcing success appearance on low value", () => {

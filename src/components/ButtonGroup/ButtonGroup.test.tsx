@@ -67,7 +67,7 @@ describe("ButtonGroup", () => {
       render(
         <ButtonGroup>
           <Button>Annuler</Button>
-          <Button color="brand">Confirmer</Button>
+          <Button color="comete">Confirmer</Button>
           <Button color="critical">Supprimer</Button>
         </ButtonGroup>
       );

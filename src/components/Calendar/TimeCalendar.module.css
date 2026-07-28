@@ -55,13 +55,13 @@
 }
 
 .timeOption[data-selected] {
-  background-color: var(--background-brand-bold-default);
+  background-color: var(--background-comete-bold-default);
   color: var(--text-inverted);
   font-weight: var(--font-weight-medium);
 }
 
 .timeOption[data-selected]:hover:not(:disabled) {
-  background-color: var(--background-brand-bold-hovered);
+  background-color: var(--background-comete-bold-hovered);
 }
 
 .timeOption:disabled {

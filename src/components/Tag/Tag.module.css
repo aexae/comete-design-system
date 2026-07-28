@@ -67,12 +67,12 @@
 .bold.neutral.interactive:hover { background: var(--background-neutral-bold-hovered); }
 .bold.neutral.interactive:active { background: var(--background-neutral-bold-pressed); }
 
-.bold.brand {
-  background: var(--background-brand-bold-default);
+.bold.comete {
+  background: var(--background-comete-bold-default);
   color: var(--text-inverted);
 }
-.bold.brand.interactive:hover { background: var(--background-brand-bold-hovered); }
-.bold.brand.interactive:active { background: var(--background-brand-bold-pressed); }
+.bold.comete.interactive:hover { background: var(--background-comete-bold-hovered); }
+.bold.comete.interactive:active { background: var(--background-comete-bold-pressed); }
 
 .bold.success {
   background: var(--background-success-bold-default);
@@ -148,12 +148,12 @@
 .subtle.neutral.interactive:hover { background: var(--background-neutral-subtler-hovered); }
 .subtle.neutral.interactive:active { background: var(--background-neutral-subtler-pressed); }
 
-.subtle.brand {
-  background: var(--background-brand-subtlest-default);
-  color: var(--text-brand);
+.subtle.comete {
+  background: var(--background-comete-subtlest-default);
+  color: var(--text-comete);
 }
-.subtle.brand.interactive:hover { background: var(--background-brand-subtlest-hovered); }
-.subtle.brand.interactive:active { background: var(--background-brand-subtlest-pressed); }
+.subtle.comete.interactive:hover { background: var(--background-comete-subtlest-hovered); }
+.subtle.comete.interactive:active { background: var(--background-comete-subtlest-pressed); }
 
 .subtle.success {
   background: var(--background-success-subtlest-default);
@@ -230,13 +230,13 @@
 .outlined.neutral.interactive:hover { background: var(--background-neutral-subtlest-hovered); }
 .outlined.neutral.interactive:active { background: var(--background-neutral-subtlest-pressed); }
 
-.outlined.brand {
+.outlined.comete {
   background: transparent;
-  border-color: var(--border-brand-bold);
-  color: var(--text-brand);
+  border-color: var(--border-comete-bold);
+  color: var(--text-comete);
 }
-.outlined.brand.interactive:hover { background: var(--background-brand-subtlest-hovered); }
-.outlined.brand.interactive:active { background: var(--background-brand-subtlest-pressed); }
+.outlined.comete.interactive:hover { background: var(--background-comete-subtlest-hovered); }
+.outlined.comete.interactive:active { background: var(--background-comete-subtlest-pressed); }
 
 .outlined.success {
   background: transparent;

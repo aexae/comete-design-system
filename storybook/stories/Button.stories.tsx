@@ -26,7 +26,7 @@ const meta: Meta<ButtonProps> = {
     },
     color: {
       control: "select",
-      options: ["default", "subtle", "subtlest", "brand", "success", "critical", "warning", "information"],
+      options: ["default", "subtle", "subtlest", "comete", "success", "critical", "warning", "information"],
     },
     density: {
       control: "select",
@@ -125,8 +125,8 @@ export const Default: Story = {
   },
 };
 
-export const Brand: Story = {
-  args: { color: "brand", children: "Enregistrer" },
+export const Comete: Story = {
+  args: { color: "comete", children: "Enregistrer" },
   parameters: {
     design: {
       type: "figma",
@@ -183,7 +183,7 @@ export const Information: Story = {
 // ----------------------------------------------------------------------
 
 export const Outlined: Story = {
-  args: { appearance: "outlined", color: "brand", children: "Annuler" },
+  args: { appearance: "outlined", color: "comete", children: "Annuler" },
   parameters: {
     design: {
       type: "figma",
@@ -193,7 +193,7 @@ export const Outlined: Story = {
 };
 
 export const Subtle: Story = {
-  args: { appearance: "subtle", color: "brand", children: "Voir plus" },
+  args: { appearance: "subtle", color: "comete", children: "Voir plus" },
   parameters: {
     design: {
       type: "figma",
@@ -203,7 +203,7 @@ export const Subtle: Story = {
 };
 
 export const Link: Story = {
-  args: { appearance: "link", color: "brand", children: "En savoir plus" },
+  args: { appearance: "link", color: "comete", children: "En savoir plus" },
   parameters: {
     design: {
       type: "figma",
@@ -225,7 +225,7 @@ export const LinkSubtle: Story = {
 // ----------------------------------------------------------------------
 
 export const Compact: Story = {
-  args: { density: "compact", color: "brand", children: "Compact" },
+  args: { density: "compact", color: "comete", children: "Compact" },
 };
 
 export const Inline: Story = {
@@ -235,7 +235,7 @@ export const Inline: Story = {
 // ----------------------------------------------------------------------
 
 export const Disabled: Story = {
-  args: { isDisabled: true, color: "brand", children: "Désactivé" },
+  args: { isDisabled: true, color: "comete", children: "Désactivé" },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole("button");
@@ -247,14 +247,14 @@ export const Disabled: Story = {
 
 /** Bouton en état sélectionné — style visuel persistant (ex : toggle actif) */
 export const Selected: Story = {
-  args: { isSelected: true, color: "brand", children: "Sélectionné" },
+  args: { isSelected: true, color: "comete", children: "Sélectionné" },
 };
 
 // ----------------------------------------------------------------------
 
 /** Vérifie la navigation clavier : Tab pour focus, Enter pour déclencher onPress */
 export const KeyboardNavigation: Story = {
-  args: { color: "brand", children: "Action clavier" },
+  args: { color: "comete", children: "Action clavier" },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole("button");
@@ -271,7 +271,7 @@ export const KeyboardNavigation: Story = {
 /** Icône avant le label */
 export const WithIconBefore: Story = {
   args: {
-    color: "brand",
+    color: "comete",
     children: "Enregistrer",
     iconBefore: "Lock",
   },
@@ -280,7 +280,7 @@ export const WithIconBefore: Story = {
 /** Icône après le label */
 export const WithIconAfter: Story = {
   args: {
-    color: "brand",
+    color: "comete",
     children: "Continuer",
     iconAfter: "ChevronRight",
   },
@@ -295,7 +295,7 @@ export const IconAllColors: Story = {
           "default",
           "subtle",
           "subtlest",
-          "brand",
+          "comete",
           "success",
           "critical",
           "warning",
@@ -323,7 +323,7 @@ export const IconOnly: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
       <Button iconBefore="Image" color="default" density="compact" />
-      <Button iconBefore="Lock" color="brand" />
+      <Button iconBefore="Lock" color="comete" />
       <Button iconBefore="Check" color="success" appearance="outlined" />
       <Button iconBefore="Image" color="critical" appearance="subtle" />
     </div>
@@ -335,9 +335,9 @@ export const Loading: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
       <Button color="default" isLoading>Default</Button>
-      <Button color="brand" isLoading>Brand</Button>
+      <Button color="comete" isLoading>Comete</Button>
       <Button color="success" isLoading>Success</Button>
-      <Button appearance="outlined" color="brand" isLoading>Outlined</Button>
+      <Button appearance="outlined" color="comete" isLoading>Outlined</Button>
       <Button appearance="subtle" color="default" isLoading>Subtle</Button>
     </div>
   ),
@@ -352,7 +352,7 @@ export const AllColors: Story = {
       <Button color="default" appearance={args.appearance}>Default</Button>
       <Button color="subtle" appearance={args.appearance}>Subtle</Button>
       <Button color="subtlest" appearance={args.appearance}>Subtlest</Button>
-      <Button color="brand" appearance={args.appearance}>Brand</Button>
+      <Button color="comete" appearance={args.appearance}>Comete</Button>
       <Button color="success" appearance={args.appearance}>Success</Button>
       <Button color="critical" appearance={args.appearance}>Critical</Button>
       <Button color="warning" appearance={args.appearance}>Warning</Button>
@@ -361,7 +361,7 @@ export const AllColors: Story = {
   ),
 };
 
-/** All variants for the brand color */
+/** All variants for the comete color */
 export const AllVariants: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -396,15 +396,15 @@ export const AllDensities: Story = {
   name: "All densities",
   render: () => (
     <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-      <Button density="compact" color="brand">Compact · 24</Button>
-      <Button density="default" color="brand">Default · 32</Button>
-      <Button density="touch" color="brand">Touch · 48</Button>
+      <Button density="compact" color="comete">Compact · 24</Button>
+      <Button density="default" color="comete">Default · 32</Button>
+      <Button density="touch" color="comete">Touch · 48</Button>
     </div>
   ),
 };
 
 export const Touch: Story = {
-  args: { density: "touch", color: "brand", children: "Cible tactile" },
+  args: { density: "touch", color: "comete", children: "Cible tactile" },
 };
 
 export const TouchViaProvider: Story = {
@@ -412,7 +412,7 @@ export const TouchViaProvider: Story = {
   render: () => (
     <DensityProvider density="touch">
       <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-        <Button color="brand">Hérite touch</Button>
+        <Button color="comete">Hérite touch</Button>
         <Button appearance="outlined">Hérite touch</Button>
         {/* override local : repasse en compact malgré le provider */}
         <Button density="compact">Override compact</Button>

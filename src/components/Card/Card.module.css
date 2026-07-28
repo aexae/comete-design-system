@@ -51,10 +51,10 @@
 .subtle.color-neutral   { background-color: var(--background-neutral-subtler-default); }
 .bold.color-neutral     { background-color: var(--background-neutral-bold-default); }
 
-/* ---- brand ---- */
-.outlined.color-brand { border-color: var(--border-brand-bold); }
-.subtle.color-brand   { background-color: var(--background-brand-subtlest-default); }
-.bold.color-brand     { background-color: var(--background-brand-bold-default); }
+/* ---- comete ---- */
+.outlined.color-comete { border-color: var(--border-comete-bold); }
+.subtle.color-comete   { background-color: var(--background-comete-subtlest-default); }
+.bold.color-comete     { background-color: var(--background-comete-bold-default); }
 
 /* ---- success ---- */
 .outlined.color-success { border-color: var(--border-success-bold); }
@@ -110,10 +110,10 @@
 .subtle.color-accentBlueGrey   { background-color: var(--background-accent-blue-grey-subtlest-default); }
 .bold.color-accentBlueGrey     { background-color: var(--background-accent-blue-grey-bold-default); }
 
-/* ---- client (pas de border-client token → on utilise le bold background) ---- */
-.outlined.color-client { border-color: var(--background-client-bold-default); }
-.subtle.color-client   { background-color: var(--background-client-subtlest-default); }
-.bold.color-client     { background-color: var(--background-client-bold-default); }
+/* ---- brand (charte client, défaut = navy Comète) ---- */
+.outlined.color-brand { border-color: var(--border-brand-bold); }
+.subtle.color-brand   { background-color: var(--background-brand-subtlest-default); }
+.bold.color-brand     { background-color: var(--background-brand-bold-default); }
 
 /* ==========================================================================
    Layout drag
@@ -195,7 +195,7 @@
 /* ---- Hover background : subtle ---- */
 
 .subtle.color-neutral[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-neutral-subtler-hovered); }
-.subtle.color-brand[data-interactive]:not([data-dragging]):hover       { background-color: var(--background-brand-subtlest-hovered); }
+.subtle.color-comete[data-interactive]:not([data-dragging]):hover       { background-color: var(--background-comete-subtlest-hovered); }
 .subtle.color-success[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-success-subtlest-hovered); }
 .subtle.color-warning[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-warning-subtlest-hovered); }
 .subtle.color-critical[data-interactive]:not([data-dragging]):hover    { background-color: var(--background-critical-subtlest-hovered); }
@@ -205,12 +205,12 @@
 .subtle.color-accentTurquoise[data-interactive]:not([data-dragging]):hover  { background-color: var(--background-accent-turquoise-subtlest-hovered); }
 .subtle.color-accentMagenta[data-interactive]:not([data-dragging]):hover    { background-color: var(--background-accent-magenta-subtlest-hovered); }
 .subtle.color-accentBlueGrey[data-interactive]:not([data-dragging]):hover   { background-color: var(--background-accent-blue-grey-subtlest-hovered); }
-.subtle.color-client[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-client-subtlest-hovered); }
+.subtle.color-brand[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-brand-subtlest-hovered); }
 
 /* ---- Hover background : bold ---- */
 
 .bold.color-neutral[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-neutral-bold-hovered); }
-.bold.color-brand[data-interactive]:not([data-dragging]):hover       { background-color: var(--background-brand-bold-hovered); }
+.bold.color-comete[data-interactive]:not([data-dragging]):hover       { background-color: var(--background-comete-bold-hovered); }
 .bold.color-success[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-success-bold-hovered); }
 .bold.color-warning[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-warning-bold-hovered); }
 .bold.color-critical[data-interactive]:not([data-dragging]):hover    { background-color: var(--background-critical-bold-hovered); }
@@ -220,7 +220,7 @@
 .bold.color-accentTurquoise[data-interactive]:not([data-dragging]):hover  { background-color: var(--background-accent-turquoise-bold-hovered); }
 .bold.color-accentMagenta[data-interactive]:not([data-dragging]):hover    { background-color: var(--background-accent-magenta-bold-hovered); }
 .bold.color-accentBlueGrey[data-interactive]:not([data-dragging]):hover   { background-color: var(--background-accent-blue-grey-bold-hovered); }
-.bold.color-client[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-client-bold-hovered); }
+.bold.color-brand[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-brand-bold-hovered); }
 
 /* ---- Pressed ---- */
 
@@ -234,7 +234,7 @@
 }
 
 .subtle.color-neutral[data-interactive]:not([data-dragging]):active     { background-color: var(--background-neutral-subtler-pressed); }
-.subtle.color-brand[data-interactive]:not([data-dragging]):active       { background-color: var(--background-brand-subtlest-pressed); }
+.subtle.color-comete[data-interactive]:not([data-dragging]):active       { background-color: var(--background-comete-subtlest-pressed); }
 .subtle.color-success[data-interactive]:not([data-dragging]):active     { background-color: var(--background-success-subtlest-pressed); }
 .subtle.color-warning[data-interactive]:not([data-dragging]):active     { background-color: var(--background-warning-subtlest-pressed); }
 .subtle.color-critical[data-interactive]:not([data-dragging]):active    { background-color: var(--background-critical-subtlest-pressed); }
@@ -244,10 +244,10 @@
 .subtle.color-accentTurquoise[data-interactive]:not([data-dragging]):active  { background-color: var(--background-accent-turquoise-subtlest-pressed); }
 .subtle.color-accentMagenta[data-interactive]:not([data-dragging]):active    { background-color: var(--background-accent-magenta-subtlest-pressed); }
 .subtle.color-accentBlueGrey[data-interactive]:not([data-dragging]):active   { background-color: var(--background-accent-blue-grey-subtlest-pressed); }
-.subtle.color-client[data-interactive]:not([data-dragging]):active      { background-color: var(--background-client-subtlest-pressed); }
+.subtle.color-brand[data-interactive]:not([data-dragging]):active      { background-color: var(--background-brand-subtlest-pressed); }
 
 .bold.color-neutral[data-interactive]:not([data-dragging]):active     { background-color: var(--background-neutral-bold-pressed); }
-.bold.color-brand[data-interactive]:not([data-dragging]):active       { background-color: var(--background-brand-bold-pressed); }
+.bold.color-comete[data-interactive]:not([data-dragging]):active       { background-color: var(--background-comete-bold-pressed); }
 .bold.color-success[data-interactive]:not([data-dragging]):active     { background-color: var(--background-success-bold-pressed); }
 .bold.color-warning[data-interactive]:not([data-dragging]):active     { background-color: var(--background-warning-bold-pressed); }
 .bold.color-critical[data-interactive]:not([data-dragging]):active    { background-color: var(--background-critical-bold-pressed); }
@@ -257,7 +257,7 @@
 .bold.color-accentTurquoise[data-interactive]:not([data-dragging]):active  { background-color: var(--background-accent-turquoise-bold-pressed); }
 .bold.color-accentMagenta[data-interactive]:not([data-dragging]):active    { background-color: var(--background-accent-magenta-bold-pressed); }
 .bold.color-accentBlueGrey[data-interactive]:not([data-dragging]):active   { background-color: var(--background-accent-blue-grey-bold-pressed); }
-.bold.color-client[data-interactive]:not([data-dragging]):active      { background-color: var(--background-client-bold-pressed); }
+.bold.color-brand[data-interactive]:not([data-dragging]):active      { background-color: var(--background-brand-bold-pressed); }
 
 /* Focus visible — géré par le composant FocusRing */
 .card[data-interactive]:focus-visible {

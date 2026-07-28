@@ -9,16 +9,37 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.142] - 2026-07-28
+
 ### Changements cassants (BREAKING)
 
+- **Couleur — séparation `comete` / `brand`** : la famille de tokens `brand-*`
+  (bleu Comète) est renommée **`comete-*`** — couleur fixe, propriété du DS, jamais
+  surchargée par le client (elle porte les éléments interactifs et l'identité Comète).
+  Le nom **`brand-*`** désigne désormais la **charte couleur du client** (surchargeable
+  au runtime, défaut = bleu Comète). Requiert
+  `@aexae/comete-design-tokens@^0.13.0` (famille `comete-*` ajoutée, famille `client-*`
+  supprimée).
+- **Button**, **Tag**, **ProgressBar** : la valeur `brand` de `color` / `appearance`
+  devient `comete`.
+- **Card** : `color="brand"` (ancien bleu Comète) devient `color="comete"` ; l'ancienne
+  `color="client"` devient `color="brand"` (charte client).
 - **Page** : suppression de la prop `breadcrumbs` de `Page.Header`. Les breadcrumbs
   ne font plus partie du gabarit de page (alignement avec `Page.Bar`, qui n'en
   proposait déjà pas). Les consommateurs qui affichaient un fil d'Ariane doivent
   désormais le composer eux-mêmes dans le contenu de la page (`Page.Body`) ou en
   amont du `Page.Header`.
 
+### Ajouté
+
+- **Bleed**, **IconTile**, **Text** : nouvelle variante de couleur `brand` (charte
+  client), en complément de `comete` (bleu Comète fixe).
+
 ### Modifié
 
+- **Calendar** : la sélection (dates, plages, créneaux horaires) utilise désormais la
+  couleur fixe `comete-*` au lieu de `client-*` — les éléments interactifs ne suivent
+  pas la charte client.
 - **BottomNav** : l'état sélectionné d'un `BottomNavItem` ne repose plus sur un
   fond ; seuls la couleur du texte et celle de l'icône changent.
 
