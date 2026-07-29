@@ -6,7 +6,7 @@ import {
   Avatar,
   Button,
   ButtonGroup,
-  TextField,
+  SearchField,
   Stack,
   Badge,
   Cluster,
@@ -14,6 +14,7 @@ import {
 } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import css from "./Page.stories.module.css";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -38,7 +39,7 @@ const meta = {
           guidelines={
             <GuidelinesFlat
               when={[
-                "Barre d'outils sous l'en-tête : recherche et filtres (`start`), actions (`end`).",
+                "Barre d'outils sous l'en-tête : recherche (`search`), filtres (`start`), actions (`end`).",
                 "Pour les pages de listing nécessitant recherche, filtres et actions groupées.",
               ]}
               avoid={[
@@ -46,12 +47,12 @@ const meta = {
                 "La navigation entre sections → Tabs.",
               ]}
               best={[
-                "Regrouper recherche + filtres dans `start`, actions principales dans `end`.",
-                "Laisser les deux zones passer à la ligne quand la largeur est insuffisante.",
+                "Mettre la recherche dans `search`, les filtres dans `start`, les actions dans `end`.",
+                "Sous le breakpoint, réduire les boutons en icône seule (`collapseLabel`) et laisser la recherche se comprimer — la barre reste sur une seule ligne.",
               ]}
               accessibility={[
                 "Chaque champ de recherche a un label (`aria-label`).",
-                "Les boutons icône seule ont un `aria-label` explicite.",
+                "Les boutons réduits en icône seule conservent un `aria-label` explicite.",
               ]}
             />
           }
@@ -70,10 +71,12 @@ type Story = StoryObj<typeof Page>;
 // Stories
 
 /**
- * **Toolbar — Complète** : recherche + filtres (start) et actions (end).
- * Pattern standard des pages de listing. Le start contient la recherche et les
- * filtres, le end contient les actions principales. Les deux zones wrap
- * automatiquement quand la largeur est insuffisante.
+ * **Toolbar — Complète** : recherche (`search`), filtres (`start`) et actions
+ * (`end`). Pattern standard des pages de listing, aligné sur la maquette Figma.
+ * La barre reste sur **une seule ligne** : sous le breakpoint du conteneur
+ * (`page`, ~768px), « Filtres » et l'action primaire se réduisent en icône
+ * seule (`collapseLabel`, `shape="square"`), « Exporter » est masqué (repli dans
+ * « ⋯ ») et la recherche se comprime — jamais de seconde rangée.
  */
 export const Full: Story = {
   name: "Full (search + filters + actions)",
@@ -82,13 +85,25 @@ export const Full: Story = {
       <Page>
         <Page.Header title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Toolbar
-          search={<TextField aria-label="Rechercher" placeholder="Rechercher un agent…" />}
-          start={<Button appearance="subtle" iconBefore="FilterList">Filtres</Button>}
+          search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
+          start={
+            <Button collapseLabel shape="square" iconBefore="Tune" aria-label="Filtres">
+              Filtres
+            </Button>
+          }
           end={
             <ButtonGroup>
-              <Button color="comete" iconBefore="Add">Nouvel agent</Button>
-              <Button appearance="subtle" iconBefore="Download">Exporter</Button>
-              <Button appearance="subtle" iconBefore="MoreHoriz" aria-label="Plus" />
+              <Button
+                color="comete"
+                iconBefore="Add"
+                collapseLabel
+                shape="square"
+                aria-label="Nouvel agent"
+              >
+                Nouvel agent
+              </Button>
+              <Button className={css["hideUnderCompact"]}>Exporter</Button>
+              <Button shape="square" iconBefore="MoreHoriz" aria-label="Plus d'actions" />
             </ButtonGroup>
           }
         />
@@ -109,7 +124,7 @@ export const SearchOnly: Story = {
       <Page>
         <Page.Header title="Main courante" />
         <Page.Toolbar
-          search={<TextField aria-label="Rechercher" placeholder="Rechercher une entrée…" />}
+          search={<SearchField aria-label="Rechercher" placeholder="Rechercher une entrée…" />}
         />
         <Divider />
       </Page>
@@ -177,11 +192,23 @@ export const WithActiveFilters: Story = {
       <Page>
         <Page.Header title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Toolbar
-          search={<TextField aria-label="Rechercher" placeholder="Rechercher…" />}
-          start={<Button appearance="subtle" iconBefore="FilterList">Filtres</Button>}
+          search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
+          start={
+            <Button collapseLabel shape="square" iconBefore="Tune" aria-label="Filtres">
+              Filtres
+            </Button>
+          }
           end={
             <ButtonGroup>
-              <Button color="comete" iconBefore="Add">Nouvel agent</Button>
+              <Button
+                color="comete"
+                iconBefore="Add"
+                collapseLabel
+                shape="square"
+                aria-label="Nouvel agent"
+              >
+                Nouvel agent
+              </Button>
             </ButtonGroup>
           }
         />
