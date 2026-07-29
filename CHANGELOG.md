@@ -26,14 +26,23 @@ entre versions alpha.
   du rendu **icône seule** (icon-only ou `collapseLabel` réduit). `square`
   reprend les coins arrondis standard de la densité, pour aligner un bouton
   icône seule sur les boutons à label adjacents (ex. dans une toolbar).
+- **Page.Toolbar** : slot dédié `search` (en plus de `start` / `end`) — le
+  champ de recherche est traité à part par le layout : borné 160–240px au-dessus
+  de 480px, et **pleine largeur sur sa propre rangée** sous 480px. Optionnel,
+  rétrocompatible (sans lui, comportement inchangé).
 
 ### Modifié
 
-- **Page.Toolbar** : `flex-wrap` activé — la zone `end` passe sous la zone
-  `start` quand l'espace manque (plus de chevauchement des boutons sur mobile).
-- **Stories Page** : cadres device (desktop/tablette/mobile) via iframes,
-  toolbar alignée sur la maquette Figma (boutons `contained` gris, primaire
-  `comete`, Filtres icône seule / Exporter masqué sous compact).
+- **Page.Toolbar** : layout responsive à deux seuils (container `page`, pas le
+  viewport). ≥ 768px : une ligne, libellés complets. 480–767px : une ligne, les
+  boutons `collapseLabel` en icône seule, la recherche compressée avec un
+  plancher (~200px) pour rester utilisable. < 480px : **deux rangées** —
+  recherche pleine largeur (rangée 1), actions groupées à droite (rangée 2).
+  Remplace le simple `flex-wrap` (qui dégradait par débordement subi).
+- **Stories Page** : une seule story « Full page (responsive) » pilotée par
+  l'addon Viewport (au lieu de cadres device en iframes) ; toolbar alignée sur
+  la maquette Figma (recherche « Rechercher », Filtres/⋯ en icône seule
+  `square`, primaire `comete` réductible en « + », Exporter masqué sous compact).
 - **SideNav** : le *peek* (survol du Trigger en mode replié) s'affiche désormais
   en **overlay glissant** par-dessus le contenu (translateX + ombre légère) au
   lieu de pousser la mise en page — le contenu principal ne bouge plus. Il reste

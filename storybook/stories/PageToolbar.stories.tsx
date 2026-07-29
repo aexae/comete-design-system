@@ -82,12 +82,8 @@ export const Full: Story = {
       <Page>
         <Page.Header title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Toolbar
-          start={
-            <Stack direction="row" gap="100" align="center">
-              <TextField aria-label="Rechercher" placeholder="Rechercher un agent…" />
-              <Button appearance="subtle" iconBefore="FilterList">Filtres</Button>
-            </Stack>
-          }
+          search={<TextField aria-label="Rechercher" placeholder="Rechercher un agent…" />}
+          start={<Button appearance="subtle" iconBefore="FilterList">Filtres</Button>}
           end={
             <ButtonGroup>
               <Button color="comete" iconBefore="Add">Nouvel agent</Button>
@@ -113,7 +109,7 @@ export const SearchOnly: Story = {
       <Page>
         <Page.Header title="Main courante" />
         <Page.Toolbar
-          start={<TextField aria-label="Rechercher" placeholder="Rechercher une entrée…" />}
+          search={<TextField aria-label="Rechercher" placeholder="Rechercher une entrée…" />}
         />
         <Divider />
       </Page>
@@ -181,12 +177,8 @@ export const WithActiveFilters: Story = {
       <Page>
         <Page.Header title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Toolbar
-          start={
-            <Stack direction="row" gap="100" align="center">
-              <TextField aria-label="Rechercher" placeholder="Rechercher…" />
-              <Button appearance="subtle" iconBefore="FilterList">Filtres</Button>
-            </Stack>
-          }
+          search={<TextField aria-label="Rechercher" placeholder="Rechercher…" />}
+          start={<Button appearance="subtle" iconBefore="FilterList">Filtres</Button>}
           end={
             <ButtonGroup>
               <Button color="comete" iconBefore="Add">Nouvel agent</Button>

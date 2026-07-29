@@ -89,12 +89,8 @@ export const Default: Story = {
           trailing={<Avatar initials="AC" />}
         />
         <Page.Toolbar
-          start={
-            <>
-              <SearchField aria-label="Rechercher" placeholder="Rechercher" />
-              <Button iconBefore="Tune">Filtres</Button>
-            </>
-          }
+          search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
+          start={<Button iconBefore="Tune">Filtres</Button>}
           end={
             <ButtonGroup>
               <Button color="comete" iconBefore="Add">Nouvel agent</Button>
@@ -167,22 +163,16 @@ function ListingPage({ leading }: { leading?: React.ReactNode }) {
     <Page style={{ minHeight: "100vh" }}>
       <Page.Bar title="Agents" leading={leading} />
       <Page.Toolbar
+        /* Slot dédié : le layout borne le champ (160–240px), le compresse avec
+           un plancher entre 480 et 767px, et le passe en PLEINE LARGEUR sur sa
+           propre rangée sous 480px — le placeholder n'est jamais tronqué. */
+        search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
         start={
-          <>
-            {/* Placeholder court (Figma « Rechercher ») + min-width : le
-                placeholder ne doit JAMAIS être tronqué, même en mobile.
-                max-width 240 : la recherche ne s'étire pas sur tout l'espace. */}
-            <SearchField
-              aria-label="Rechercher"
-              placeholder="Rechercher"
-              style={{ minWidth: 160, maxWidth: 240 }}
-            />
-            {/* Secondaire gris (contained neutral, Figma) + icône avant ;
-                icône seule (squared, alignée sur la toolbar) sous compact */}
-            <Button collapseLabel shape="square" iconBefore="Tune" aria-label="Filtres">
-              Filtres
-            </Button>
-          </>
+          /* Secondaire gris (contained neutral, Figma) + icône avant ;
+             icône seule (squared, alignée sur la toolbar) sous compact */
+          <Button collapseLabel shape="square" iconBefore="Tune" aria-label="Filtres">
+            Filtres
+          </Button>
         }
         end={
           <ButtonGroup>
@@ -253,6 +243,36 @@ export const FullPage: Story = {
   },
 };
 
+/**
+ * **Full page — mobile (2 rangées)** : viewport téléphone par défaut. Sous
+ * 480px (container `page`), la toolbar passe en **2 rangées** : rangée 1 = la
+ * recherche en pleine largeur, rangée 2 = Filtres + « + » + « ⋯ » regroupés à
+ * droite. Le `play` vérifie que le champ occupe ≥ 90 % de la toolbar.
+ */
+export const FullPageMobile: Story = {
+  name: "Full page — mobile (2 rangées)",
+  parameters: { controls: { disable: true }, layout: "fullscreen" },
+  globals: { viewport: { value: "iphonex", isRotated: false } },
+  render: () => <ListingPage leading={HAMBURGER} />,
+  play: async ({ canvasElement }) => {
+    const search = canvasElement.querySelector<HTMLInputElement>(
+      'input[placeholder="Rechercher"]',
+    );
+    // .toolbarSearch (wrapper du slot) → son parent est la toolbar elle-même.
+    const toolbar = search?.closest<HTMLElement>(
+      "[class*='toolbarSearch']",
+    )?.parentElement;
+    if (!search || !toolbar) throw new Error("recherche ou toolbar introuvable");
+    // Le viewport de la story n'est pas garanti par tous les runners →
+    // n'asserter le layout 2 rangées que si le container est bien < 480px.
+    const toolbarWidth = toolbar.getBoundingClientRect().width;
+    if (toolbarWidth < 480) {
+      const ratio = search.getBoundingClientRect().width / toolbarWidth;
+      await expect(ratio).toBeGreaterThanOrEqual(0.9);
+    }
+  },
+};
+
 // -----------------------------------------------------------------------
 // Contrat : action primaire contained/comete (fond non transparent)
 
@@ -298,7 +318,7 @@ export const StickyBarBehaviour: Story = {
         leading={<Button appearance="subtle" iconBefore="Menu" aria-label="Ouvrir le menu" />}
       />
       <Page.Toolbar
-        start={<SearchField aria-label="Rechercher" placeholder="Rechercher…" />}
+        search={<SearchField aria-label="Rechercher" placeholder="Rechercher…" />}
         end={
           <Button appearance="contained" color="comete" iconBefore="Add">
             Nouvel agent

@@ -105,8 +105,16 @@ export interface PageHeaderProps {
 
 export interface PageToolbarProps {
   /**
-   * Zone de contrôles à gauche (recherche, filtres, segment de tabs,
-   * compteurs). Les enfants wrap si la largeur est insuffisante.
+   * Champ de recherche de la toolbar (typiquement un `SearchField`). Slot
+   * dédié pour que le layout puisse le traiter à part : rendu en tête de la
+   * toolbar (avant `start`), borné en largeur (~160–240px) au-dessus de
+   * 480px, et **pleine largeur sur sa propre rangée** sous 480px (container
+   * `page`). Optionnel — sans lui, la toolbar se comporte comme avant.
+   */
+  search?: ReactNode;
+  /**
+   * Zone de contrôles à gauche (filtres, segment de tabs, compteurs).
+   * Les enfants wrap si la largeur est insuffisante.
    */
   start?: ReactNode;
   /**
@@ -338,7 +346,22 @@ PageHeader.displayName = "Page.Header";
  * Page.Toolbar — ligne d'outils de page (recherche, filtres, actions).
  * `start` est poussé à gauche, `end` aligné à droite.
  */
+/**
+ * Page.Toolbar — barre d'outils sous l'en-tête. Trois slots : `search`
+ * (champ de recherche, traité à part par le layout), `start` (filtres,
+ * contrôles) et `end` (actions, poussées à droite).
+ *
+ * Responsive à deux seuils (container `page`, pas le viewport) :
+ * - **≥ 768px** — une ligne : recherche puis `start` à gauche, `end` à
+ *   droite, libellés complets.
+ * - **480–767px** — une ligne : les boutons `collapseLabel` passent en icône
+ *   seule (seuil 767 existant) ; la recherche se compresse avec un plancher
+ *   (~200px) pour rester utilisable.
+ * - **< 480px** — deux rangées : la recherche prend toute la largeur
+ *   (rangée 1), puis `start` + `end` regroupés à droite (rangée 2).
+ */
 function PageToolbar({
+  search,
   start,
   end,
   className,
@@ -346,6 +369,9 @@ function PageToolbar({
   const classNames = [styles.toolbar, className].filter(Boolean).join(" ");
   return (
     <div className={classNames}>
+      {search !== undefined && (
+        <div className={styles.toolbarSearch}>{search}</div>
+      )}
       {start !== undefined && (
         <div className={styles.toolbarStart}>{start}</div>
       )}
