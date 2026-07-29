@@ -7,10 +7,13 @@ import {
   Button,
   ButtonGroup,
   SearchField,
-  Stack,
   Badge,
   Cluster,
   Divider,
+  Menu,
+  MenuItem,
+  MenuPopover,
+  MenuTrigger,
 } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
@@ -181,9 +184,12 @@ export const None: Story = {
 };
 
 /**
- * **Toolbar — Filtres actifs avec badges**.
- * Après application de filtres, la toolbar montre les filtres actifs
- * sous forme de badges avec un bouton de réinitialisation.
+ * **Toolbar — Filtres appliqués**. Sous la toolbar, une rangée de filtres
+ * déroulants (`MenuTrigger` + `Button` à chevron). Un filtre **appliqué**
+ * s'affiche en surbrillance (`color="comete"`) avec le nombre de valeurs
+ * sélectionnées (`Badge`) ; les filtres non appliqués restent neutres
+ * (`outlined`). Le bouton « Filtres » (réglages avancés) reste **près de la
+ * recherche**, dans la toolbar.
  */
 export const WithActiveFilters: Story = {
   name: "With active filters",
@@ -212,14 +218,53 @@ export const WithActiveFilters: Story = {
             </ButtonGroup>
           }
         />
-        <Stack gap="100" direction="row" align="center">
-          <Cluster gap="075">
-            <Badge label="Ile de France" appearance="neutral" importance="medium" />
-            <Badge label="CDI" appearance="neutral" importance="medium" />
-            <Badge label="Agent N3E3" appearance="neutral" importance="medium" />
-          </Cluster>
-          <Button appearance="link" density="compact">Réinitialiser</Button>
-        </Stack>
+        {/* Rangée de filtres : appliqué = surbrillance + compteur, sinon neutre */}
+        <Cluster gap="075">
+          <MenuTrigger>
+            <Button color="comete" iconAfter="KeyboardArrowDown">
+              Sites
+              <Badge label="3" appearance="information-inverted" importance="high" />
+            </Button>
+            <MenuPopover width={220}>
+              <Menu aria-label="Filtrer par site">
+                <MenuItem id="idf">Île-de-France</MenuItem>
+                <MenuItem id="paris">Paris Centre</MenuItem>
+                <MenuItem id="lyon">Lyon</MenuItem>
+                <MenuItem id="marseille">Marseille</MenuItem>
+              </Menu>
+            </MenuPopover>
+          </MenuTrigger>
+
+          <MenuTrigger>
+            <Button appearance="outlined" iconAfter="KeyboardArrowDown">
+              Types
+            </Button>
+            <MenuPopover width={220}>
+              <Menu aria-label="Filtrer par type de contrat">
+                <MenuItem id="cdi">CDI</MenuItem>
+                <MenuItem id="cdd">CDD</MenuItem>
+                <MenuItem id="interim">Intérim</MenuItem>
+              </Menu>
+            </MenuPopover>
+          </MenuTrigger>
+
+          <MenuTrigger>
+            <Button appearance="outlined" iconAfter="KeyboardArrowDown">
+              Dates
+            </Button>
+            <MenuPopover width={220}>
+              <Menu aria-label="Filtrer par période">
+                <MenuItem id="7">7 derniers jours</MenuItem>
+                <MenuItem id="30">30 derniers jours</MenuItem>
+                <MenuItem id="custom">Personnalisé…</MenuItem>
+              </Menu>
+            </MenuPopover>
+          </MenuTrigger>
+
+          <Button appearance="link" density="compact">
+            Réinitialiser
+          </Button>
+        </Cluster>
         <Divider />
       </Page>
     </Gutters>
