@@ -138,10 +138,14 @@ export const Disabled: Story = {
 /** Dans un Field avec label. */
 export const WithField: Story = {
   name: "With Field wrapper",
-  render: () => (
+  args: {
+    "aria-label": "Heure de début",
+    defaultValue: new Time(9, 0),
+  },
+  render: (args) => (
     <div style={{ width: 200 }}>
       <Field label="Heure de début" isRequired>
-        <TimePicker aria-label="Heure de début" defaultValue={new Time(9, 0)} />
+        <TimePicker {...args} />
       </Field>
     </div>
   ),

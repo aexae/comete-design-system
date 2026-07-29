@@ -107,9 +107,12 @@ export const Checked: Story = {
 
 /** Sans label — utiliser `aria-label` pour l'accessibilité. */
 export const WithoutLabel: Story = {
-  render: () => (
-    <Switch aria-label="Activer les notifications" defaultChecked />
-  ),
+  args: {
+    "aria-label": "Activer les notifications",
+    defaultChecked: true,
+    children: "",
+  },
+  render: (args) => <Switch {...args} />,
 };
 
 /** Contrôlé — le parent gère l'état. */

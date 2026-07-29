@@ -143,11 +143,14 @@ export const AsOverride: Story = {
 };
 
 export const Inverted: Story = {
-  render: () => (
+  args: {
+    color: "inverted",
+    size: "large",
+    children: "Titre inversé sur fond sombre",
+  },
+  render: (args) => (
     <div style={{ background: "var(--background-neutral-bold-default)", padding: 24, borderRadius: 8 }}>
-      <Heading size="large" color="inverted">
-        Titre inversé sur fond sombre
-      </Heading>
+      <Heading {...args} />
     </div>
   ),
 };
@@ -163,20 +166,23 @@ export const Align: Story = {
 };
 
 export const Italic: Story = {
-  render: () => (
-    <Heading size="large" italic>
-      Titre en italique
-    </Heading>
-  ),
+  args: {
+    italic: true,
+    size: "large",
+    children: "Titre en italique",
+  },
 };
 
 export const MaxLines: Story = {
-  render: () => (
+  args: {
+    maxLines: 2,
+    size: "medium",
+    children:
+      "Un titre de section particulièrement long qui dépasse la largeur disponible et se retrouve tronqué proprement après deux lignes avec une ellipse.",
+  },
+  render: (args) => (
     <div style={{ maxWidth: 360 }}>
-      <Heading size="medium" maxLines={2}>
-        Un titre de section particulièrement long qui dépasse la largeur disponible
-        et se retrouve tronqué proprement après deux lignes avec une ellipse.
-      </Heading>
+      <Heading {...args} />
     </div>
   ),
 };

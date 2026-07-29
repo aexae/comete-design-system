@@ -220,13 +220,16 @@ export const Link: Story = {
  */
 export const InlineLink: Story = {
   name: "Inline link (isInline)",
-  render: () => (
+  args: {
+    isInline: true,
+    appearance: "link",
+    color: "information",
+    children: "politique de confidentialité",
+  },
+  render: (args) => (
     <p style={{ maxWidth: 420, lineHeight: 1.6 }}>
-      Consultez notre{" "}
-      <Button appearance="link" color="information" isInline>
-        politique de confidentialité
-      </Button>{" "}
-      avant de continuer. Le bouton reste dans le fil du texte, sans padding superflu.
+      Consultez notre <Button {...args} /> avant de continuer. Le bouton reste
+      dans le fil du texte, sans padding superflu.
     </p>
   ),
 };
@@ -339,14 +342,8 @@ export const IconAllColors: Story = {
 /** Bouton icon-only (sans label) */
 export const IconOnly: Story = {
   name: "Icon only",
-  render: () => (
-    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Button iconBefore="Image" color="default" density="compact" />
-      <Button iconBefore="Lock" color="comete" />
-      <Button iconBefore="Check" color="success" appearance="outlined" />
-      <Button iconBefore="Image" color="critical" appearance="subtle" />
-    </div>
-  ),
+  args: { iconBefore: "Image", color: "comete", children: "" },
+  render: (args) => <Button {...args} />,
 };
 
 /** Bouton icon-only à chaque densité : toujours circulaire et parfaitement carré
@@ -370,15 +367,7 @@ export const IconOnlyAllDensities: Story = {
 
 /** Bouton en état loading (spinner remplace le contenu) */
 export const Loading: Story = {
-  render: () => (
-    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Button color="default" isLoading>Default</Button>
-      <Button color="comete" isLoading>Comete</Button>
-      <Button color="success" isLoading>Success</Button>
-      <Button appearance="outlined" color="comete" isLoading>Outlined</Button>
-      <Button appearance="subtle" color="default" isLoading>Subtle</Button>
-    </div>
-  ),
+  args: { isLoading: true, color: "comete", children: "Enregistrer" },
 };
 
 // ----------------------------------------------------------------------

@@ -131,10 +131,11 @@ export const Default: Story = {
 
 /** Taille small. */
 export const Small: Story = {
-  render: () => (
+  args: { size: "small" },
+  render: (args) => (
     <ToggleButtonGroup
+      {...args}
       aria-label="Options"
-      size="small"
       defaultSelectedKeys={["a"]}
     >
       <ToggleButton id="a">Option A</ToggleButton>
@@ -146,10 +147,11 @@ export const Small: Story = {
 
 /** Taille large. */
 export const Large: Story = {
-  render: () => (
+  args: { size: "large" },
+  render: (args) => (
     <ToggleButtonGroup
+      {...args}
       aria-label="Options"
-      size="large"
       defaultSelectedKeys={["a"]}
     >
       <ToggleButton id="a">Option A</ToggleButton>
@@ -185,12 +187,9 @@ export const AllSizes: Story = {
 
 /** Avec un bouton pré-sélectionné. */
 export const Selected: Story = {
-  render: () => (
-    <ToggleButtonGroup
-      aria-label="Alignment"
-      selectionMode="single"
-      defaultSelectedKeys={["center"]}
-    >
+  args: { selectionMode: "single", defaultSelectedKeys: ["center"] },
+  render: (args) => (
+    <ToggleButtonGroup {...args} aria-label="Alignment">
       <ToggleButton id="left">Left</ToggleButton>
       <ToggleButton id="center">Center</ToggleButton>
       <ToggleButton id="right">Right</ToggleButton>
@@ -201,12 +200,9 @@ export const Selected: Story = {
 /** Mode sélection multiple. */
 export const Multiple: Story = {
   name: "Multiple selection",
-  render: () => (
-    <ToggleButtonGroup
-      aria-label="Formatting"
-      selectionMode="multiple"
-      defaultSelectedKeys={["bold", "italic"]}
-    >
+  args: { selectionMode: "multiple", defaultSelectedKeys: ["bold", "italic"] },
+  render: (args) => (
+    <ToggleButtonGroup {...args} aria-label="Formatting">
       <ToggleButton id="bold">Bold</ToggleButton>
       <ToggleButton id="italic">Italic</ToggleButton>
       <ToggleButton id="underline">Underline</ToggleButton>
@@ -217,8 +213,9 @@ export const Multiple: Story = {
 
 /** Tous les boutons du groupe sont désactivés. */
 export const Disabled: Story = {
-  render: () => (
-    <ToggleButtonGroup aria-label="Options" isDisabled>
+  args: { isDisabled: true },
+  render: (args) => (
+    <ToggleButtonGroup {...args} aria-label="Options">
       <ToggleButton id="a">Option A</ToggleButton>
       <ToggleButton id="b">Option B</ToggleButton>
       <ToggleButton id="c">Option C</ToggleButton>
@@ -229,12 +226,9 @@ export const Disabled: Story = {
 /** Un bouton individuel désactivé dans le groupe. */
 export const IndividualDisabled: Story = {
   name: "Individual disabled",
-  render: () => (
-    <ToggleButtonGroup
-      aria-label="Options"
-      selectionMode="single"
-      defaultSelectedKeys={["a"]}
-    >
+  args: { selectionMode: "single" },
+  render: (args) => (
+    <ToggleButtonGroup {...args} aria-label="Options" defaultSelectedKeys={["a"]}>
       <ToggleButton id="a">Option A</ToggleButton>
       <ToggleButton id="b" isDisabled>
         Option B
@@ -247,12 +241,9 @@ export const IndividualDisabled: Story = {
 /** Avec des icônes avant le label. */
 export const WithIconBefore: Story = {
   name: "Icon before",
-  render: () => (
-    <ToggleButtonGroup
-      aria-label="View"
-      selectionMode="single"
-      defaultSelectedKeys={["list"]}
-    >
+  args: { selectionMode: "single" },
+  render: (args) => (
+    <ToggleButtonGroup {...args} aria-label="View" defaultSelectedKeys={["list"]}>
       <ToggleButton id="list" iconBefore="List">
         List
       </ToggleButton>
@@ -269,12 +260,9 @@ export const WithIconBefore: Story = {
 /** Avec des icônes après le label. */
 export const WithIconAfter: Story = {
   name: "Icon after",
-  render: () => (
-    <ToggleButtonGroup
-      aria-label="Sort"
-      selectionMode="single"
-      defaultSelectedKeys={["asc"]}
-    >
+  args: { selectionMode: "single" },
+  render: (args) => (
+    <ToggleButtonGroup {...args} aria-label="Sort" defaultSelectedKeys={["asc"]}>
       <ToggleButton id="asc" iconAfter="ArrowDropUp">
         Ascending
       </ToggleButton>
@@ -291,12 +279,9 @@ export const WithIconAfter: Story = {
  */
 export const IconsOnly: Story = {
   name: "Icons only",
-  render: () => (
-    <ToggleButtonGroup
-      aria-label="Text alignment"
-      selectionMode="single"
-      defaultSelectedKeys={["left"]}
-    >
+  args: { selectionMode: "single" },
+  render: (args) => (
+    <ToggleButtonGroup {...args} aria-label="Text alignment" defaultSelectedKeys={["left"]}>
       <ToggleButton id="left" iconBefore="FormatAlignLeft" aria-label="Align left" />
       <ToggleButton id="center" iconBefore="FormatAlignCenter" aria-label="Align center" />
       <ToggleButton id="right" iconBefore="FormatAlignRight" aria-label="Align right" />
@@ -308,12 +293,9 @@ export const IconsOnly: Story = {
 /** Avec un badge sur certains boutons. */
 export const WithBadge: Story = {
   name: "With badge",
-  render: () => (
-    <ToggleButtonGroup
-      aria-label="Filters"
-      selectionMode="single"
-      defaultSelectedKeys={["all"]}
-    >
+  args: { selectionMode: "single" },
+  render: (args) => (
+    <ToggleButtonGroup {...args} aria-label="Filters" defaultSelectedKeys={["all"]}>
       <ToggleButton id="all" badge="128">
         All
       </ToggleButton>

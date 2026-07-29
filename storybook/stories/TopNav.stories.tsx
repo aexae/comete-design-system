@@ -22,6 +22,14 @@ const meta = {
   title: "Navigation/TopNav",
   component: TopNav,
   tags: ["autodocs"],
+  argTypes: {
+    appName: { control: "text" },
+    title: { control: "text" },
+  },
+  args: {
+    appName: "Pro Sécurité",
+    title: "Accueil",
+  },
   parameters: {
     docs: {
       description: { component: "La barre de navigation supérieure affiche les liens et actions globales de l'application dans un bandeau horizontal fixe. Elle contient généralement le logo, la recherche et les contrôles utilisateur." },
@@ -73,17 +81,15 @@ type Story = StoryObj<typeof meta>;
 
 /** Desktop/tablet : logo + nom + actions. Réduire le viewport pour voir le mode mobile. */
 export const Default: Story = {
-    decorators: [
-      () => (
-        <div style={{ background: "var(--black-4)", height: "100vh", width: "100vw"}}>
-          <TopNav logo={<Logo size={24} format="icon" product="link" />} appName="Pro Sécurité" title="Accueil">
-            <Button iconBefore="Search" appearance="subtle" density="compact" />
-            <Avatar initials="AC" size="medium" />
-          </TopNav>
-        </div>                                                                                        
-      ),                                                          
-    ],
-  };
+  render: (args) => (
+    <div style={{ background: "var(--black-4)", height: "100vh", width: "100vw" }}>
+      <TopNav logo={<Logo size={24} format="icon" product="link" />} {...args}>
+        <Button iconBefore="Search" appearance="subtle" density="compact" />
+        <Avatar initials="AC" size="medium" />
+      </TopNav>
+    </div>
+  ),
+};
 
 /** Mobile avec back button. Réduire le viewport sous 600px. */
 export const WithBack: Story = {
