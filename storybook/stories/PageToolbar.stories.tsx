@@ -185,11 +185,12 @@ export const None: Story = {
 
 /**
  * **Toolbar — Filtres appliqués**. Sous la toolbar, une rangée de filtres
- * déroulants (`MenuTrigger` + `Button` à chevron). Un filtre **appliqué**
- * s'affiche en surbrillance (`color="comete"`) avec le nombre de valeurs
- * sélectionnées (`Badge`) ; les filtres non appliqués restent neutres
- * (`outlined`). Le bouton « Filtres » (réglages avancés) reste **près de la
- * recherche**, dans la toolbar.
+ * déroulants (`MenuTrigger` + `Button`). Un filtre **appliqué** s'affiche en
+ * surbrillance (`color="comete"`) avec le nombre de valeurs sélectionnées
+ * (`Badge`) et une **croix** (`iconAfter="Close"`) pour le retirer ; un filtre
+ * non appliqué reste neutre (`outlined`) avec une **flèche** de déroulement.
+ * Dès qu'un filtre est appliqué, le bouton « Filtres » de la toolbar (près de
+ * la recherche) passe lui aussi en état actif (`color="comete"`).
  */
 export const WithActiveFilters: Story = {
   name: "With active filters",
@@ -200,7 +201,15 @@ export const WithActiveFilters: Story = {
         <Page.Toolbar
           search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
           start={
-            <Button collapseLabel shape="square" iconBefore="Tune" aria-label="Filtres">
+            /* Des filtres sont appliqués → le bouton « Filtres » est en état
+               actif (`color="comete"`), comme les filtres appliqués ci-dessous. */
+            <Button
+              color="comete"
+              collapseLabel
+              shape="square"
+              iconBefore="Tune"
+              aria-label="Filtres"
+            >
               Filtres
             </Button>
           }
@@ -218,10 +227,12 @@ export const WithActiveFilters: Story = {
             </ButtonGroup>
           }
         />
-        {/* Rangée de filtres : appliqué = surbrillance + compteur, sinon neutre */}
+        {/* Rangée de filtres. Appliqué → surbrillance `comete` + compteur, et
+            l'icône passe de la flèche (ouvrir) à une croix (retirer le filtre).
+            Non appliqué → neutre (`outlined`) avec flèche de déroulement. */}
         <Cluster gap="075">
           <MenuTrigger>
-            <Button color="comete" iconAfter="KeyboardArrowDown">
+            <Button color="comete" iconAfter="Close">
               Sites
               <Badge label="3" appearance="information-inverted" importance="high" />
             </Button>
@@ -260,10 +271,6 @@ export const WithActiveFilters: Story = {
               </Menu>
             </MenuPopover>
           </MenuTrigger>
-
-          <Button appearance="link" density="compact">
-            Réinitialiser
-          </Button>
         </Cluster>
         <Divider />
       </Page>
