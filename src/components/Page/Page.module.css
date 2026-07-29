@@ -180,13 +180,16 @@
 }
 
 /* ==========================================================================
-   Page.Toolbar — start + end alignés avec wrap automatique
+   Page.Toolbar — search + start (gauche) et end (droite) sur une seule ligne
    ========================================================================== */
 
 .toolbar {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  /* `nowrap` : les actions ne passent jamais sur une seconde rangée. Quand la
+     place manque, c'est la recherche qui se comprime (jusqu'à son plancher de
+     160px), pas la mise en page qui se casse. */
+  flex-wrap: nowrap;
   gap: var(--space100);
   padding-block: var(--space100);
   padding-inline: var(--page-gutter);
@@ -194,9 +197,11 @@
 }
 
 /* Slot search — rendu en tête de la toolbar (avant `start`). Le champ est
-   borné 160–240px : jamais plus étroit que son placeholder, jamais
-   envahissant. Largeurs structurelles en px (comme la SideNav à 240px et
-   les seuils de container query) — l'échelle de tokens n'a pas ces crans. */
+   borné 160–240px : il se comprime jusqu'à 160px (le placeholder « Rechercher »
+   reste lisible) quand la place manque, et ne dépasse jamais 240px. Reste sur
+   la même ligne que les actions à toutes les largeurs — pas de passage en
+   rangée séparée. Largeurs structurelles en px (comme la SideNav à 240px) —
+   l'échelle de tokens n'a pas ces crans. */
 .toolbarSearch {
   display: flex;
   align-items: center;
@@ -209,12 +214,14 @@
   max-width: 240px;
 }
 
+/* `start` garde sa largeur de contenu (boutons jamais écrasés). C'est la
+   recherche qui absorbe la compression ; `end` (margin-left: auto) reste à
+   droite. */
 .toolbarStart {
   display: flex;
   align-items: center;
   gap: var(--space100);
-  flex: 1;
-  min-width: 0;
+  flex: 0 0 auto;
 }
 
 /* `end` pousse sa zone à droite tant que start + end tiennent
@@ -227,43 +234,6 @@
   margin-left: auto;
   min-width: 0;
   flex-shrink: 0;
-}
-
-/* 480–767px (container page) : toujours une seule ligne — les boutons
-   `collapseLabel` sont déjà en icône seule (seuil 767) ; la recherche se
-   compresse mais garde un plancher pour rester utilisable. */
-@container page (max-width: 767px) {
-  .toolbarSearch > * {
-    min-width: 200px;
-  }
-}
-
-/* < 480px (container page) : layout 2 rangées — rangée 1 : la recherche en
-   pleine largeur (flex-basis 100% pousse le reste à la ligne via le
-   flex-wrap de la toolbar) ; rangée 2 : start + end regroupés à droite. */
-@container page (max-width: 480px) {
-  .toolbarSearch {
-    flex: 1 1 100%;
-  }
-
-  .toolbarSearch > * {
-    width: 100%;
-    min-width: 0;
-    max-width: none;
-  }
-
-  /* Le premier bloc de la rangée 2 porte `margin-left: auto` (tout à droite).
-     `start` s'il existe, sinon `end` garde le sien (base). */
-  .toolbarStart {
-    flex: 0 0 auto;
-    margin-left: auto;
-  }
-
-  /* Si `start` précède `end`, ils sont accolés (gap du conteneur) au lieu
-     d'être séparés par un second `margin-left: auto`. */
-  .toolbarStart + .toolbarEnd {
-    margin-left: 0;
-  }
 }
 
 /* ==========================================================================

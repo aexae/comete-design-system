@@ -27,18 +27,17 @@ entre versions alpha.
   reprend les coins arrondis standard de la densité, pour aligner un bouton
   icône seule sur les boutons à label adjacents (ex. dans une toolbar).
 - **Page.Toolbar** : slot dédié `search` (en plus de `start` / `end`) — le
-  champ de recherche est traité à part par le layout : borné 160–240px au-dessus
-  de 480px, et **pleine largeur sur sa propre rangée** sous 480px. Optionnel,
+  champ de recherche est traité à part par le layout et borné 160–240px : il se
+  comprime jusqu'à 160px (placeholder préservé) quand la place manque, sans
+  jamais tronquer ni descendre sur une seconde rangée. Optionnel,
   rétrocompatible (sans lui, comportement inchangé).
 
 ### Modifié
 
-- **Page.Toolbar** : layout responsive à deux seuils (container `page`, pas le
-  viewport). ≥ 768px : une ligne, libellés complets. 480–767px : une ligne, les
-  boutons `collapseLabel` en icône seule, la recherche compressée avec un
-  plancher (~200px) pour rester utilisable. < 480px : **deux rangées** —
-  recherche pleine largeur (rangée 1), actions groupées à droite (rangée 2).
-  Remplace le simple `flex-wrap` (qui dégradait par débordement subi).
+- **Page.Toolbar** : la barre reste sur **une seule ligne** à toutes les
+  largeurs. Sous 768px (container `page`), les boutons `collapseLabel` passent
+  en icône seule et la recherche se comprime jusqu'à son plancher — les actions
+  ne passent plus jamais sur une seconde rangée.
 - **Stories Page** : une seule story « Full page (responsive) » pilotée par
   l'addon Viewport (au lieu de cadres device en iframes) ; toolbar alignée sur
   la maquette Figma (recherche « Rechercher », Filtres/⋯ en icône seule

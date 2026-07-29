@@ -244,13 +244,13 @@ export const FullPage: Story = {
 };
 
 /**
- * **Full page — mobile (2 rangées)** : viewport téléphone par défaut. Sous
- * 480px (container `page`), la toolbar passe en **2 rangées** : rangée 1 = la
- * recherche en pleine largeur, rangée 2 = Filtres + « + » + « ⋯ » regroupés à
- * droite. Le `play` vérifie que le champ occupe ≥ 90 % de la toolbar.
+ * **Full page — mobile** : viewport téléphone par défaut. La toolbar reste sur
+ * **une seule ligne** : boutons en icône seule et recherche comprimée (jusqu'à
+ * 160px, placeholder préservé) — jamais de passage sur une seconde rangée. Le
+ * `play` vérifie que recherche et actions partagent la même rangée.
  */
 export const FullPageMobile: Story = {
-  name: "Full page — mobile (2 rangées)",
+  name: "Full page — mobile",
   parameters: { controls: { disable: true }, layout: "fullscreen" },
   globals: { viewport: { value: "iphonex", isRotated: false } },
   render: () => <ListingPage leading={HAMBURGER} />,
@@ -258,18 +258,20 @@ export const FullPageMobile: Story = {
     const search = canvasElement.querySelector<HTMLInputElement>(
       'input[placeholder="Rechercher"]',
     );
-    // .toolbarSearch (wrapper du slot) → son parent est la toolbar elle-même.
     const toolbar = search?.closest<HTMLElement>(
       "[class*='toolbarSearch']",
     )?.parentElement;
-    if (!search || !toolbar) throw new Error("recherche ou toolbar introuvable");
-    // Le viewport de la story n'est pas garanti par tous les runners →
-    // n'asserter le layout 2 rangées que si le container est bien < 480px.
-    const toolbarWidth = toolbar.getBoundingClientRect().width;
-    if (toolbarWidth < 480) {
-      const ratio = search.getBoundingClientRect().width / toolbarWidth;
-      await expect(ratio).toBeGreaterThanOrEqual(0.9);
+    const end = toolbar?.querySelector<HTMLElement>("[class*='toolbarEnd']");
+    if (!search || !toolbar || !end) {
+      throw new Error("recherche, toolbar ou actions introuvables");
     }
+    // Une seule rangée : le centre vertical de la recherche et des actions
+    // doit coïncider (tolérance pour les hauteurs d'éléments différentes).
+    const searchRect = search.getBoundingClientRect();
+    const endRect = end.getBoundingClientRect();
+    const searchCenter = searchRect.top + searchRect.height / 2;
+    const endCenter = endRect.top + endRect.height / 2;
+    await expect(Math.abs(searchCenter - endCenter)).toBeLessThan(20);
   },
 };
 

@@ -107,9 +107,10 @@ export interface PageToolbarProps {
   /**
    * Champ de recherche de la toolbar (typiquement un `SearchField`). Slot
    * dédié pour que le layout puisse le traiter à part : rendu en tête de la
-   * toolbar (avant `start`), borné en largeur (~160–240px) au-dessus de
-   * 480px, et **pleine largeur sur sa propre rangée** sous 480px (container
-   * `page`). Optionnel — sans lui, la toolbar se comporte comme avant.
+   * toolbar (avant `start`) et borné en largeur (160–240px) — il se comprime
+   * jusqu'à 160px quand la place manque, sans tronquer son placeholder, et
+   * reste sur la même ligne que les actions. Optionnel — sans lui, la toolbar
+   * se comporte comme avant.
    */
   search?: ReactNode;
   /**
@@ -351,14 +352,11 @@ PageHeader.displayName = "Page.Header";
  * (champ de recherche, traité à part par le layout), `start` (filtres,
  * contrôles) et `end` (actions, poussées à droite).
  *
- * Responsive à deux seuils (container `page`, pas le viewport) :
- * - **≥ 768px** — une ligne : recherche puis `start` à gauche, `end` à
- *   droite, libellés complets.
- * - **480–767px** — une ligne : les boutons `collapseLabel` passent en icône
- *   seule (seuil 767 existant) ; la recherche se compresse avec un plancher
- *   (~200px) pour rester utilisable.
- * - **< 480px** — deux rangées : la recherche prend toute la largeur
- *   (rangée 1), puis `start` + `end` regroupés à droite (rangée 2).
+ * Sur une seule ligne à toutes les largeurs : recherche puis `start` à
+ * gauche, `end` à droite. Sous 768px (container `page`), les boutons
+ * `collapseLabel` passent en icône seule et la recherche se comprime jusqu'à
+ * son plancher (160px, placeholder préservé) — sans jamais descendre sur une
+ * seconde rangée.
  */
 function PageToolbar({
   search,
