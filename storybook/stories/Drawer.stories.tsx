@@ -257,7 +257,8 @@ function SizeDemo({ size }: { size: DrawerSize }) {
 
 /** Fullscreen. */
 export const Fullscreen: Story = {
-  render: () => {
+  args: { size: "full" },
+  render: (args) => {
     const [isOpen, setIsOpen] = useState(false);
     return (
       <div style={{ padding: 24 }}>
@@ -265,7 +266,9 @@ export const Fullscreen: Story = {
         <Drawer
           isOpen={isOpen}
           onOpenChange={setIsOpen}
-          size="full"
+          size={args.size}
+          placement={args.placement}
+          swipeable={args.swipeable}
           aria-label="Drawer fullscreen"
         >
           <DrawerHeader onClose={() => setIsOpen(false)}>Fullscreen</DrawerHeader>
@@ -281,7 +284,15 @@ export const Fullscreen: Story = {
 /** Structure complète : Header + Body + Footer. */
 export const WithStructure: Story = {
   name: "With structure",
-  render: () => <DrawerStory placement="right" size="wide" />,
+  args: { placement: "right", size: "wide" },
+  render: (args) => (
+    <DrawerStory
+      placement={args.placement}
+      size={args.size}
+      stacking={args.stacking}
+      swipeable={args.swipeable}
+    />
+  ),
 };
 
 /** Drawers stackés en mode overlay — chaque drawer peut en ouvrir un autre. */
@@ -396,7 +407,8 @@ function PushableDrawer({
 
 /** Swipeable (mobile). */
 export const Swipeable: Story = {
-  render: () => {
+  args: { swipeable: true, placement: "bottom" },
+  render: (args) => {
     const [isOpen, setIsOpen] = useState(false);
     return (
       <div style={{ padding: 24 }}>
@@ -404,9 +416,9 @@ export const Swipeable: Story = {
         <Drawer
           isOpen={isOpen}
           onOpenChange={setIsOpen}
-          placement="bottom"
-          size="medium"
-          swipeable
+          placement={args.placement}
+          size={args.size}
+          swipeable={args.swipeable}
           aria-label="Drawer swipeable"
         >
           <DrawerHeader onClose={() => setIsOpen(false)}>

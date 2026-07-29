@@ -131,11 +131,14 @@ export const AllSizes: Story = {
 };
 
 export const Inverted: Story = {
-  render: () => (
+  args: {
+    color: "inverted",
+    size: "large",
+    children: "Texte inversé sur fond sombre",
+  },
+  render: (args) => (
     <div style={{ background: "var(--background-neutral-bold-default)", padding: 32, borderRadius: 8 }}>
-      <Hero size="large" color="inverted">
-        Texte inversé sur fond sombre
-      </Hero>
+      <Hero {...args} />
     </div>
   ),
 };
@@ -151,20 +154,23 @@ export const Align: Story = {
 };
 
 export const Italic: Story = {
-  render: () => (
-    <Hero size="large" italic>
-      Donnez vie à vos données.
-    </Hero>
-  ),
+  args: {
+    italic: true,
+    size: "large",
+    children: "Donnez vie à vos données.",
+  },
 };
 
 export const MaxLines: Story = {
-  render: () => (
+  args: {
+    maxLines: 2,
+    size: "small",
+    children:
+      "Un titre d’accroche très long qui dépasse largement la largeur disponible et se retrouve tronqué proprement après deux lignes avec des points de suspension.",
+  },
+  render: (args) => (
     <div style={{ maxWidth: 480 }}>
-      <Hero size="small" maxLines={2}>
-        Un titre d’accroche très long qui dépasse largement la largeur disponible
-        et se retrouve tronqué proprement après deux lignes avec des points de suspension.
-      </Hero>
+      <Hero {...args} />
     </div>
   ),
 };

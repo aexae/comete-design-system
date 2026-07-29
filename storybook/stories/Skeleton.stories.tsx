@@ -181,7 +181,7 @@ export const TitleParagraph: Story = {
 
 /** Image / média (vignette, hero…). */
 export const Image: Story = {
-  render: () => <Skeleton width={320} height={200} radius={8} />,
+  args: { width: 320, height: 200, radius: 8 },
 };
 
 // -----------------------------------------------------------------------

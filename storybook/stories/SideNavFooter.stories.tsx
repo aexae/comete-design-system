@@ -96,3 +96,29 @@ export const WithText: Story = {
     },
   },
 };
+
+/**
+ * Pied de marque — `SideNav.FooterBrand` (placé dans `SideNav.Footer`) affiche un
+ * logo discret (opacité réduite qui remonte au survol), centré en bas de la nav.
+ */
+export const BrandLogo: Story = {
+  name: "Brand logo (FooterBrand)",
+  args: {
+    children: (
+      <SideNav.FooterBrand>
+        <Logo size={14} />
+      </SideNav.FooterBrand>
+    ),
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: `<SideNav.Footer>
+  <SideNav.FooterBrand>
+    <Logo size={14} />
+  </SideNav.FooterBrand>
+</SideNav.Footer>`,
+      },
+    },
+  },
+};

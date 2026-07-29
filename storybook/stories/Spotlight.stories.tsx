@@ -88,7 +88,14 @@ type Story = StoryObj<typeof Spotlight>;
 // -----------------------------------------------------------------------
 // 1. Default — simple spotlight
 
-function DefaultRender() {
+function DefaultRender(args: {
+  placement?: SpotlightPlacement;
+  offset?: number;
+  targetPadding?: number;
+  targetBorderRadius?: number;
+  pulse?: boolean;
+  width?: number;
+}) {
   const targetRef = useRef<HTMLButtonElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -102,7 +109,12 @@ function DefaultRender() {
         title="Nouvelle fonctionnalité"
         isOpen={isOpen}
         onOpenChange={setIsOpen}
-        placement="bottom"
+        placement={args.placement}
+        offset={args.offset}
+        targetPadding={args.targetPadding}
+        targetBorderRadius={args.targetBorderRadius}
+        pulse={args.pulse}
+        width={args.width}
       >
         <Text size="small">
           Cette fonctionnalité vous permet de gérer vos projets plus
@@ -114,7 +126,8 @@ function DefaultRender() {
 }
 
 export const Default: Story = {
-  render: () => <DefaultRender />,
+  args: { placement: "bottom" },
+  render: (args) => <DefaultRender {...args} />,
 };
 
 // -----------------------------------------------------------------------

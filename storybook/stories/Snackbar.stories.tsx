@@ -282,14 +282,15 @@ export const Appearances: Story = {
 // WithActionAndClose — anatomie complète (statique).
 
 export const WithActionAndClose: Story = {
-  render: () => (
+  args: { appearance: "success", children: "Élément supprimé." },
+  render: (args) => (
     <div style={{ maxWidth: 440 }}>
       <Snackbar
-        appearance="success"
+        appearance={args.appearance}
         action={{ label: "Annuler", onPress: () => undefined }}
         onClose={() => undefined}
       >
-        Élément supprimé.
+        {args.children}
       </Snackbar>
     </div>
   ),
