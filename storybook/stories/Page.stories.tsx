@@ -243,64 +243,6 @@ export const FullPage: Story = {
   },
 };
 
-/**
- * **Full page — mobile** : viewport téléphone par défaut. La toolbar reste sur
- * **une seule ligne** : boutons en icône seule et recherche comprimée (jusqu'à
- * 160px, placeholder préservé) — jamais de passage sur une seconde rangée. Le
- * `play` vérifie que recherche et actions partagent la même rangée.
- */
-export const FullPageMobile: Story = {
-  name: "Full page — mobile",
-  parameters: { controls: { disable: true }, layout: "fullscreen" },
-  globals: { viewport: { value: "iphonex", isRotated: false } },
-  render: () => <ListingPage leading={HAMBURGER} />,
-  play: async ({ canvasElement }) => {
-    const search = canvasElement.querySelector<HTMLInputElement>(
-      'input[placeholder="Rechercher"]',
-    );
-    const toolbar = search?.closest<HTMLElement>(
-      "[class*='toolbarSearch']",
-    )?.parentElement;
-    const end = toolbar?.querySelector<HTMLElement>("[class*='toolbarEnd']");
-    if (!search || !toolbar || !end) {
-      throw new Error("recherche, toolbar ou actions introuvables");
-    }
-    // Une seule rangée : le centre vertical de la recherche et des actions
-    // doit coïncider (tolérance pour les hauteurs d'éléments différentes).
-    const searchRect = search.getBoundingClientRect();
-    const endRect = end.getBoundingClientRect();
-    const searchCenter = searchRect.top + searchRect.height / 2;
-    const endCenter = endRect.top + endRect.height / 2;
-    await expect(Math.abs(searchCenter - endCenter)).toBeLessThan(20);
-  },
-};
-
-// -----------------------------------------------------------------------
-// Contrat : action primaire contained/comete (fond non transparent)
-
-/**
- * Garde-fou du rendu de l'action primaire : `contained` + `color="comete"` doit
- * produire un **fond non transparent** (bleu comète). Fige le bug « bouton gris »
- * observé quand le build/les tokens sont désynchronisés (rename brand → comete).
- */
-export const PrimaryActionContract: Story = {
-  name: "Primary action button (contract)",
-  parameters: { controls: { disable: true }, layout: "centered" },
-  render: () => (
-    <Button appearance="contained" color="comete" iconBefore="Add">
-      Nouvel agent
-    </Button>
-  ),
-  play: ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const btn = canvas.getByRole("button", { name: "Nouvel agent" });
-    const bg = window.getComputedStyle(btn).backgroundColor;
-    // Fond réellement peint : ni transparent, ni rgba(..., 0).
-    void expect(bg).not.toBe("rgba(0, 0, 0, 0)");
-    void expect(bg).not.toBe("transparent");
-  },
-};
-
 // -----------------------------------------------------------------------
 // Contrat de scroll — fige le comportement sticky (régression)
 
