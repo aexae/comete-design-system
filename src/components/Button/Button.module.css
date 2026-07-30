@@ -118,6 +118,22 @@
   min-width: var(--size250);
 }
 
+/* Opt-out de la forme ronde (shape="square") : l'icon-only reprend le radius
+   de sa densité pour rester aligné avec les boutons à label adjacents (ex.
+   toolbar). Spécificité (0,3,0) > .iconOnly (0,1,0). */
+.densityCompact.shapeSquare.iconOnly {
+  border-radius: var(--control-radius-compact, var(--radius050));
+}
+.densityDefault.shapeSquare.iconOnly {
+  border-radius: var(--control-radius-default, var(--radius075));
+}
+.densityTouch.shapeSquare.iconOnly {
+  border-radius: var(--control-radius-touch, var(--radius100));
+}
+.inline.shapeSquare.iconOnly {
+  border-radius: var(--radius0375);
+}
+
 /* Loading — spinner remplace le contenu */
 .loading {
   pointer-events: none;
@@ -636,5 +652,9 @@
     padding: 0;
     border-radius: var(--radius-round);
     min-width: var(--control-height-default, var(--size400));
+  }
+  /* shape="square" : le réduit garde les coins arrondis standard. */
+  .collapsible.shapeSquare {
+    border-radius: var(--control-radius-default, var(--radius075));
   }
 }

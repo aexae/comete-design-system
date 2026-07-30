@@ -11,6 +11,7 @@ import styles from "./Button.module.css";
 
 export type ButtonAppearance = "contained" | "outlined" | "subtle" | "link" | "link-subtle";
 export type ButtonColor = "default" | "subtle" | "subtlest" | "comete" | "success" | "critical" | "warning" | "information";
+export type ButtonShape = "round" | "square";
 /**
  * Densité — dimension + padding + radius, échelle partagée avec les champs.
  * - `compact` — hauteur 24 px, radius 4 px, padding 0/4, icône 20 px (desktop dense)
@@ -55,6 +56,14 @@ export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"
    * icône (`iconBefore`/`iconAfter`). @default false
    */
   collapseLabel?: boolean;
+  /**
+   * Forme du bouton en rendu **icône seule** (icon-only, ou `collapseLabel`
+   * réduit). `round` = cercle (défaut) ; `square` = coins arrondis standard de
+   * la densité, pour rester aligné avec les boutons à label adjacents (ex.
+   * dans une toolbar). Sans effet sur un bouton avec label visible.
+   * @default "round"
+   */
+  shape?: ButtonShape;
   /** Additional CSS class names. */
   className?: string;
   /** Styles inline additionnels. */
@@ -132,6 +141,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       isSelected = false,
       isFullWidth = false,
       collapseLabel = false,
+      shape = "round",
       className,
       style,
       children,
@@ -192,6 +202,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       spacingClass,
       isIconOnly ? styles.iconOnly : undefined,
       collapseLabel ? styles.collapsible : undefined,
+      shape === "square" ? styles.shapeSquare : undefined,
       isLoading ? styles.loading : undefined,
       isFullWidth ? styles.fullWidth : undefined,
       className,

@@ -22,17 +22,29 @@ entre versions alpha.
   marque du footer avec un traitement discret (opacité réduite qui remonte au
   survol, taille bornée), en laissant `SideNav.Footer` neutre (pas d'opacité
   globale sur du contenu générique).
+- **Button** : prop `shape` (`"round"` (défaut) | `"square"`) — contrôle la forme
+  du rendu **icône seule** (icon-only ou `collapseLabel` réduit). `square`
+  reprend les coins arrondis standard de la densité, pour aligner un bouton
+  icône seule sur les boutons à label adjacents (ex. dans une toolbar).
+- **Page.Toolbar** : slot dédié `search` (en plus de `start` / `end`) — le
+  champ de recherche est traité à part par le layout et borné 160–240px : il se
+  comprime jusqu'à 160px (placeholder préservé) quand la place manque, sans
+  jamais tronquer ni descendre sur une seconde rangée. Optionnel,
+  rétrocompatible (sans lui, comportement inchangé).
 - **Card** : prop `isLoading` — remplace le contenu (`children`) par des
   squelettes ; carte marquée `aria-busy`, ni actionnable ni draggable pendant le
   chargement. `children` devient optionnel.
 
 ### Modifié
 
-- **Page.Toolbar** : `flex-wrap` activé — la zone `end` passe sous la zone
-  `start` quand l'espace manque (plus de chevauchement des boutons sur mobile).
-- **Stories Page** : cadres device (desktop/tablette/mobile) via iframes,
-  toolbar alignée sur la maquette Figma (boutons `contained` gris, primaire
-  `comete`, Filtres icône seule / Exporter masqué sous compact).
+- **Page.Toolbar** : la barre reste sur **une seule ligne** à toutes les
+  largeurs. Sous 768px (container `page`), les boutons `collapseLabel` passent
+  en icône seule et la recherche se comprime jusqu'à son plancher — les actions
+  ne passent plus jamais sur une seconde rangée.
+- **Stories Page** : une seule story « Full page (responsive) » pilotée par
+  l'addon Viewport (au lieu de cadres device en iframes) ; toolbar alignée sur
+  la maquette Figma (recherche « Rechercher », Filtres/⋯ en icône seule
+  `square`, primaire `comete` réductible en « + », Exporter masqué sous compact).
 - **SideNav** : le *peek* (survol du Trigger en mode replié) s'affiche désormais
   en **overlay glissant** par-dessus le contenu (translateX + ombre légère) au
   lieu de pousser la mise en page — le contenu principal ne bouge plus. Il reste
