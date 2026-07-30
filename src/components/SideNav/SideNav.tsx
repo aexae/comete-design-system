@@ -457,7 +457,7 @@ export function SideNavEmpty({
 SideNavEmpty.displayName = "SideNav.Empty";
 
 // -----------------------------------------------------------------------
-// SideNavTrigger — bouton standalone à placer dans une TopNav
+// SideNavTrigger — bouton standalone à placer dans le `leading` d'une Page.Bar
 
 /**
  * SideNav.Trigger — bouton de toggle à placer dans `Page.Header.leading`.

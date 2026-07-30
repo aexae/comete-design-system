@@ -90,7 +90,7 @@ const meta = {
                 "Quand l'arborescence a plusieurs niveaux et que le contexte de position aide l'utilisateur.",
               ]}
               avoid={[
-                "La navigation principale → SideNav/TopNav.",
+                "La navigation principale → SideNav/Page.Bar.",
                 "Un parcours séquentiel → Stepper.",
               ]}
               best={[

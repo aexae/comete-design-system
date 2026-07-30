@@ -39,7 +39,6 @@ import {
   MonthPicker,
   Banner,
   SideNav,
-  TopNav,
   Logo,
   useSideNav,
 } from "@aexae/comete-design-system/components";
@@ -97,7 +96,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Exemples de compositions de page complètes (listes, détails, tableaux de bord) assemblées à partir des composants du DS. Utilisez ces gabarits comme point de départ à copier/adapter, en composant Page avec SideNav/TopNav, Grid, Card, etc. Rappel : Banner au-dessus du layout (alerte globale), SectionMessage à l'intérieur du contenu.",
+          "Exemples de compositions de page complètes (listes, détails, tableaux de bord) assemblées à partir des composants du DS. Utilisez ces gabarits comme point de départ à copier/adapter, en composant Page avec SideNav/Page.Bar, Grid, Card, etc. Rappel : Banner au-dessus du layout (alerte globale), SectionMessage à l'intérieur du contenu.",
       },
     },
   },
@@ -256,15 +255,15 @@ const AGENTS = [
 ];
 
 /**
- * **Base** — Structure de base : Banner + SideNav + TopNav + Page.
+ * **Base** — Structure de base : Banner + SideNav + Page (avec Page.Bar).
  *
  * - Banner globale en haut du viewport
  * - SideNav à gauche (avec collapse/expand)
- * - TopNav à droite du SideNav
- * - Page.Header + Page.Body dans la zone principale
+ * - Page.Bar + Page.Body dans la zone principale (le SideNav.Trigger vit dans le
+ *   `leading` de la Page.Bar ; les actions globales via `Page globalActions`)
  */
 export const Base: Story = {
-  name: "Base (Banner + SideNav + TopNav)",
+  name: "Base (Banner + SideNav + Page.Bar)",
   parameters: { design: { type: "figma", url: figmaUrl("4319:15827") } },
   render: function BaseStory() {
     const [collapsed, setCollapsed] = useState(false);
@@ -283,25 +282,7 @@ export const Base: Story = {
           <Button appearance="link" isInline>En savoir plus</Button>
         </Banner>
 
-        {/* TopNav — pleine largeur, au-dessus de la SideNav. Le SideNav.Trigger
-            est passé via le slot `logo` pour apparaître à gauche de la TopNav,
-            jamais recouvert par le peek overlay (qui vit dans la zone flex en
-            dessous). */}
-        <TopNav
-          logo={
-            <>
-              <SideNav.Trigger />
-              <Logo product="mycomete" format="icon" />
-            </>
-          }
-          appName="Pro Sécurité"
-          title="Accueil"
-        >
-          <Button appearance="subtle" density="compact" iconBefore="Notifications" aria-label="Notifications" />
-          <Avatar size="medium" initials="AC" />
-        </TopNav>
-
-        {/* Zone sous le header : SideNav + contenu côte à côte. La nav en
+        {/* Zone principale : SideNav + contenu côte à côte. La nav en
             peek (overlay absolute) ne déborde QUE dans cette zone. */}
         <div style={{ display: "flex", flex: 1, minHeight: 0, position: "relative" }}>
           {/* SideNav */}
@@ -335,16 +316,22 @@ export const Base: Story = {
 
           {/* Page */}
           <div style={{ flex: 1, minWidth: 0 }}>
-            <Page style={{ flex: 1, minHeight: 0 }}>
-              <Page.Header
-                title="Accueil"
-              />
+            <Page
+              globalActions={
+                <>
+                  <Button appearance="subtle" density="compact" iconBefore="Notifications" aria-label="Notifications" />
+                  <Avatar size="medium" initials="AC" />
+                </>
+              }
+              style={{ flex: 1, minHeight: 0 }}
+            >
+              <Page.Bar title="Accueil" leading={<SideNav.Trigger />} />
               <Page.Body>
                 <Stack gap="300">
                   <Text as="span" color="subtle">
                     Structure de base du layout applicatif. La Banner est au-dessus de tout,
-                    le SideNav occupe toute la hauteur sous la banner, le TopNav et la Page
-                    occupent l&apos;espace restant à droite.
+                    le SideNav occupe toute la hauteur sous la banner, et la Page (avec sa
+                    Page.Bar) occupe l&apos;espace restant à droite.
                   </Text>
 
                   <Grid gap="200">

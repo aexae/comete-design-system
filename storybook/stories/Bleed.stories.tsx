@@ -10,7 +10,6 @@ import {
   Heading,
   Text,
   Divider,
-  TopNav,
   SideNav,
   Logo,
   BottomNav,
@@ -154,10 +153,10 @@ export const Default: Story = {
 };
 
 // -----------------------------------------------------------------------
-// 1. MOBILE — TopNav + Page + BottomNav
+// 1. MOBILE — Page.Bar + Page + BottomNav
 
 /**
- * **BleedMobile** — Layout mobile complet avec TopNav et BottomNav.
+ * **BleedMobile** — Layout mobile complet avec Page.Bar et BottomNav.
  *
  * Le `<Bleed isFull>` traverse les gouttières de `<Page>` pour aller
  * bord-à-bord dans la zone de contenu. En mobile, cela correspond
@@ -168,18 +167,19 @@ export const Default: Story = {
  * - `<Bleed isFull>` atteint les bords du viewport
  */
 export const BleedMobile: Story = {
-  name: "Mobile (TopNav + BottomNav)",
+  name: "Mobile (Page.Bar + BottomNav)",
   parameters: {
     layout: "centered",
     chromatic: { viewports: [375] },
   },
   render: () => (
     <div style={{ width: 402, height: 874, border: "3px solid var(--border-default)", borderRadius: "58px", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-      <TopNav title="Accueil" onBack={() => undefined}>
-        <Avatar size="small" initials="AC" />
-      </TopNav>
-
-      <Page style={{ flex: 1, minHeight: 0 }}>
+      <Page globalActions={<Avatar size="small" initials="AC" />} style={{ flex: 1, minHeight: 0 }}>
+        <Page.Bar
+          size="compact"
+          title="Accueil"
+          leading={<Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Retour" />}
+        />
         <Page.Body>
           <Stack gap="200">
             <Heading size="medium" as="span">Bonjour Axel</Heading>

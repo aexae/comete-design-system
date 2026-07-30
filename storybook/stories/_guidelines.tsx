@@ -81,7 +81,6 @@ const COMPONENT_DOC_IDS: Record<string, string> = {
   TextField: "components-textfield",
   TimePicker: "components-timepicker",
   ToggleButtonGroup: "components-togglebuttongroup",
-  TopNav: "navigation-topnav",
   WeekPicker: "components-weekpicker",
   YearPicker: "components-yearpicker",
   // Sous-composants / API composée → page du parent

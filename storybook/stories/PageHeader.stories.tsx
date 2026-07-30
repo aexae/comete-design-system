@@ -38,7 +38,7 @@ const meta = {
                 "Pour ancrer le titre et le contexte en haut d'une Page.",
               ]}
               avoid={[
-                "La barre supérieure globale de l'application → TopNav.",
+                "La barre supérieure globale de l'application → Page.Bar.",
                 "Un en-tête de menu latéral → SideNav.",
                 "Une barre de page unifiée titre + navigation → Page.Bar.",
               ]}

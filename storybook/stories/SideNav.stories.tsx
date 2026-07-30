@@ -29,7 +29,7 @@ const meta: Meta<StoryArgs> = {
               ]}
               avoid={[
                 "Une navigation d'app mobile → BottomNav.",
-                "Une barre supérieure globale (marque, compte, actions) → TopNav.",
+                "Une barre supérieure globale (marque, compte, actions) → Page.Bar.",
                 "Naviguer entre vues d'une même page → Tabs.",
               ]}
               best={[

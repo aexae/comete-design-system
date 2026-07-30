@@ -35,7 +35,6 @@ export * from "./ModalDialog";
 export * from "./MonthPicker";
 export * from "./Page";
 export * from "./SideNav";
-export * from "./TopNav";
 export * from "./Popover";
 export * from "./ProgressBar";
 export * from "./ProgressIndicator";

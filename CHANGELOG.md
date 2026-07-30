@@ -9,6 +9,15 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.145] - 2026-07-30
+
+### Changements cassants (BREAKING)
+
+- **TopNav** : composant **supprimé** (relicat d'avant `Page.Bar`). Il faisait
+  doublon avec `Page.Bar`, la barre de page unifiée qui remplace l'ancien duo
+  TopNav + Page.Header. Migration : utiliser `Page.Bar` (titre + `leading` pour
+  l'affordance de navigation + actions globales via `Page globalActions`).
+
 ### Ajouté
 
 - **Page** : prop `globalActions` — le layout porte lui-même les actions
