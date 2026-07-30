@@ -180,25 +180,48 @@
 }
 
 /* ==========================================================================
-   Page.Toolbar — start + end alignés avec wrap automatique
+   Page.Toolbar — search + start (gauche) et end (droite) sur une seule ligne
    ========================================================================== */
 
 .toolbar {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  /* `nowrap` : les actions ne passent jamais sur une seconde rangée. Quand la
+     place manque, c'est la recherche qui se comprime (jusqu'à son plancher de
+     160px), pas la mise en page qui se casse. */
+  flex-wrap: nowrap;
   gap: var(--space100);
   padding-block: var(--space100);
   padding-inline: var(--page-gutter);
   flex-shrink: 0;
 }
 
+/* Slot search — rendu en tête de la toolbar (avant `start`). Le champ est
+   borné 160–240px : il se comprime jusqu'à 160px (le placeholder « Rechercher »
+   reste lisible) quand la place manque, et ne dépasse jamais 240px. Reste sur
+   la même ligne que les actions à toutes les largeurs — pas de passage en
+   rangée séparée. Largeurs structurelles en px (comme la SideNav à 240px) —
+   l'échelle de tokens n'a pas ces crans. */
+.toolbarSearch {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.toolbarSearch > * {
+  flex: 1 1 auto;
+  min-width: 160px;
+  max-width: 240px;
+}
+
+/* `start` garde sa largeur de contenu (boutons jamais écrasés). C'est la
+   recherche qui absorbe la compression ; `end` (margin-left: auto) reste à
+   droite. */
 .toolbarStart {
   display: flex;
   align-items: center;
   gap: var(--space100);
-  flex: 1;
-  min-width: 0;
+  flex: 0 0 auto;
 }
 
 /* `end` pousse sa zone à droite tant que start + end tiennent

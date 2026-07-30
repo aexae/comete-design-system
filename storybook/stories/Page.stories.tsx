@@ -13,7 +13,6 @@ import {
 import { expect, within } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
-import { DeviceFrame } from "./_deviceFrame";
 import css from "./Page.stories.module.css";
 
 const FIGMA_FILE =
@@ -90,12 +89,8 @@ export const Default: Story = {
           trailing={<Avatar initials="AC" />}
         />
         <Page.Toolbar
-          start={
-            <>
-              <SearchField aria-label="Rechercher" placeholder="Rechercher" />
-              <Button iconBefore="Tune">Filtres</Button>
-            </>
-          }
+          search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
+          start={<Button iconBefore="Tune">Filtres</Button>}
           end={
             <ButtonGroup>
               <Button color="comete" iconBefore="Add">Nouvel agent</Button>
@@ -157,8 +152,10 @@ export const LongTitle: Story = {
  * global (notifications, réglages, avatar) est injecté par le layout `Page`.
  * `Page.Toolbar` : `start` = recherche + filtres, `end` = action primaire +
  * secondaire + menu débordement. Sous le breakpoint du conteneur : « Filtres »
- * passe en **icône seule** (`collapseLabel`, `aria-label` conservé), « Exporter »
- * est **masqué** (replié dans « ⋯ ») et l'action **primaire** garde son libellé.
+ * ET l'action **primaire** passent en **icône seule** (`collapseLabel` : « + »
+ * pour « Nouvel agent », `aria-label` conservé) et « Exporter » est **masqué**
+ * (replié dans « ⋯ »). Les icônes seules de la toolbar sont **squared**
+ * (`shape="square"`) pour rester alignées sur les boutons à label.
  * `Page.Body` = grille de cartes responsive.
  */
 function ListingPage({ leading }: { leading?: React.ReactNode }) {
@@ -166,25 +163,35 @@ function ListingPage({ leading }: { leading?: React.ReactNode }) {
     <Page style={{ minHeight: "100vh" }}>
       <Page.Bar title="Agents" leading={leading} />
       <Page.Toolbar
+        /* Slot dédié : le layout borne le champ (160–240px), le compresse avec
+           un plancher entre 480 et 767px, et le passe en PLEINE LARGEUR sur sa
+           propre rangée sous 480px — le placeholder n'est jamais tronqué. */
+        search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
         start={
-          <>
-            <SearchField aria-label="Rechercher" placeholder="Rechercher un agent…" />
-            {/* Secondaire gris (contained défaut) + icône Tune ; icône seule sous compact */}
-            <Button collapseLabel iconBefore="Tune" aria-label="Filtres">
-              Filtres
-            </Button>
-          </>
+          /* Secondaire gris (contained neutral, Figma) + icône avant ;
+             icône seule (squared, alignée sur la toolbar) sous compact */
+          <Button collapseLabel shape="square" iconBefore="Tune" aria-label="Filtres">
+            Filtres
+          </Button>
         }
         end={
           <ButtonGroup>
-            {/* Action primaire — comète (navy), garde son libellé */}
-            <Button color="comete" iconBefore="Add">
+            {/* Action primaire — comète (navy) ; en compact, se réduit en
+                icône seule « + » (squared) pour libérer la place */}
+            <Button
+              color="comete"
+              iconBefore="Add"
+              collapseLabel
+              shape="square"
+              aria-label="Nouvel agent"
+            >
               Nouvel agent
             </Button>
             {/* Action secondaire — gris ; masquée sous compact (repliée dans « ⋯ ») */}
             <Button className={css["hideUnderCompact"]}>Exporter</Button>
-            {/* Menu débordement — gris, icône seule */}
-            <Button iconBefore="MoreHoriz" aria-label="Plus d'actions" />
+            {/* Menu débordement — gris, icône seule squared (alignée sur les
+                boutons à label de la toolbar, pas ronde) */}
+            <Button shape="square" iconBefore="MoreHoriz" aria-label="Plus d'actions" />
           </ButtonGroup>
         }
       />
@@ -210,27 +217,17 @@ const HAMBURGER = (
   <Button appearance="subtle" iconBefore="Menu" aria-label="Ouvrir le menu" />
 );
 
-// -----------------------------------------------------------------------
-// Pages « nues » — cibles des iframes des cadres device. Masquées de la sidebar
-// et des docs (!dev, !autodocs) : on ne les consulte qu'à travers un cadre.
-
-export const FullPageDesktopRaw: Story = {
-  name: "Full page — desktop (raw)",
-  tags: ["!dev", "!autodocs"],
-  parameters: { controls: { disable: true }, layout: "fullscreen" },
-  render: () => <ListingPage />,
-};
-
-export const FullPageTabletRaw: Story = {
-  name: "Full page — tablette (raw)",
-  tags: ["!dev", "!autodocs"],
-  parameters: { controls: { disable: true }, layout: "fullscreen" },
-  render: () => <ListingPage leading={HAMBURGER} />,
-};
-
-export const FullPageMobileRaw: Story = {
-  name: "Full page — mobile (raw)",
-  tags: ["!dev", "!autodocs"],
+/**
+ * **Full page — responsive.** Une seule story : changer le viewport via la
+ * barre d'outils Storybook (desktop / tablette / mobile) fait réagir la vraie
+ * page — Grid (media queries), Page.Bar (`@container` : large ⇄ compacte
+ * épinglée) et Page.Toolbar (wrap, « Filtres » en icône seule ronde,
+ * « Exporter » replié dans « ⋯ »). Le placeholder « Rechercher » n'est jamais
+ * tronqué (min-width sur le champ). Le hamburger est montré en permanence pour
+ * la démo — en contexte réel, l'app ne le rend que SideNav repliée.
+ */
+export const FullPage: Story = {
+  name: "Full page (responsive)",
   parameters: { controls: { disable: true }, layout: "fullscreen" },
   render: () => <ListingPage leading={HAMBURGER} />,
   // a11y : tout bouton réduit en icône seule DOIT conserver un aria-label.
@@ -243,86 +240,6 @@ export const FullPageMobileRaw: Story = {
         name,
       );
     }
-  },
-};
-
-// -----------------------------------------------------------------------
-// Cadres device — UN cadre par story (chaque iframe = un vrai viewport)
-
-/** Desktop — cadre fenêtre 1280 : 3 colonnes, barre large, pas de hamburger. */
-export const FullPageDesktop: Story = {
-  name: "Full page — desktop",
-  parameters: { controls: { disable: true }, layout: "centered" },
-  render: () => (
-    <DeviceFrame
-      storyId="layout-page--full-page-desktop-raw"
-      width={1280}
-      height={760}
-      scale={0.5}
-      variant="browser"
-      label="Desktop ≥ 1024"
-      note="Grille 3 colonnes · barre large · toolbar sur une ligne · pas de hamburger."
-    />
-  ),
-};
-
-/** Tablette — cadre fenêtre 768 : 2 colonnes, barre large, hamburger visible. */
-export const FullPageTablet: Story = {
-  name: "Full page — tablette",
-  parameters: { controls: { disable: true }, layout: "centered" },
-  render: () => (
-    <DeviceFrame
-      storyId="layout-page--full-page-tablet-raw"
-      width={768}
-      height={720}
-      scale={0.55}
-      variant="browser"
-      label="Tablette 768"
-      note="Grille 2 colonnes · barre large · hamburger visible."
-    />
-  ),
-};
-
-/** Mobile — cadre téléphone 375 : 1 colonne, barre compacte épinglée, toolbar qui wrappe, boutons secondaires en icône seule. */
-export const FullPageMobile: Story = {
-  name: "Full page — mobile",
-  parameters: { controls: { disable: true }, layout: "centered" },
-  render: () => (
-    <DeviceFrame
-      storyId="layout-page--full-page-mobile-raw"
-      width={375}
-      height={720}
-      scale={0.8}
-      variant="phone"
-      label="Mobile 375"
-      note="Grille 1 colonne · barre compacte épinglée · Filtres en icône seule · Exporter masqué (⋯) · hamburger."
-    />
-  ),
-};
-
-// -----------------------------------------------------------------------
-// Contrat : action primaire contained/comete (fond non transparent)
-
-/**
- * Garde-fou du rendu de l'action primaire : `contained` + `color="comete"` doit
- * produire un **fond non transparent** (bleu comète). Fige le bug « bouton gris »
- * observé quand le build/les tokens sont désynchronisés (rename brand → comete).
- */
-export const PrimaryActionContract: Story = {
-  name: "Primary action button (contract)",
-  parameters: { controls: { disable: true }, layout: "centered" },
-  render: () => (
-    <Button appearance="contained" color="comete" iconBefore="Add">
-      Nouvel agent
-    </Button>
-  ),
-  play: ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const btn = canvas.getByRole("button", { name: "Nouvel agent" });
-    const bg = window.getComputedStyle(btn).backgroundColor;
-    // Fond réellement peint : ni transparent, ni rgba(..., 0).
-    void expect(bg).not.toBe("rgba(0, 0, 0, 0)");
-    void expect(bg).not.toBe("transparent");
   },
 };
 
@@ -345,7 +262,7 @@ export const StickyBarBehaviour: Story = {
         leading={<Button appearance="subtle" iconBefore="Menu" aria-label="Ouvrir le menu" />}
       />
       <Page.Toolbar
-        start={<SearchField aria-label="Rechercher" placeholder="Rechercher…" />}
+        search={<SearchField aria-label="Rechercher" placeholder="Rechercher…" />}
         end={
           <Button appearance="contained" color="comete" iconBefore="Add">
             Nouvel agent

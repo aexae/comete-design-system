@@ -13,6 +13,7 @@ declare const styles: {
   readonly "titleRow": string;
   readonly "toolbar": string;
   readonly "toolbarEnd": string;
+  readonly "toolbarSearch": string;
   readonly "toolbarStart": string;
   readonly "trailing": string;
 };

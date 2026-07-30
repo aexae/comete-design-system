@@ -21,6 +21,7 @@ declare const styles: {
   readonly "link-subtle": string;
   readonly "loading": string;
   readonly "outlined": string;
+  readonly "shapeSquare": string;
   readonly "spinner": string;
   readonly "subtle": string;
   readonly "success": string;

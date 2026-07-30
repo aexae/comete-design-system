@@ -201,4 +201,31 @@ describe("Button", () => {
       expect(btn.querySelector("[class*='collapsibleLabel']")).toBeNull();
     });
   });
+
+  describe("shape", () => {
+    it("should default to round (no shapeSquare class)", () => {
+      render(<Button iconBefore="MoreHoriz" aria-label="Plus" />);
+      expect(screen.getByRole("button", { name: "Plus" })).not.toHaveClass(
+        "shapeSquare",
+      );
+    });
+
+    it("should apply the shapeSquare class when shape=square", () => {
+      render(<Button iconBefore="MoreHoriz" aria-label="Plus" shape="square" />);
+      expect(screen.getByRole("button", { name: "Plus" })).toHaveClass(
+        "shapeSquare",
+      );
+    });
+
+    it("should combine shapeSquare with collapseLabel", () => {
+      render(
+        <Button iconBefore="Add" collapseLabel shape="square" aria-label="Nouvel agent">
+          Nouvel agent
+        </Button>,
+      );
+      const btn = screen.getByRole("button", { name: "Nouvel agent" });
+      expect(btn).toHaveClass("shapeSquare");
+      expect(btn).toHaveClass("collapsible");
+    });
+  });
 });

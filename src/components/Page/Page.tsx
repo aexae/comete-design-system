@@ -105,8 +105,17 @@ export interface PageHeaderProps {
 
 export interface PageToolbarProps {
   /**
-   * Zone de contrôles à gauche (recherche, filtres, segment de tabs,
-   * compteurs). Les enfants wrap si la largeur est insuffisante.
+   * Champ de recherche de la toolbar (typiquement un `SearchField`). Slot
+   * dédié pour que le layout puisse le traiter à part : rendu en tête de la
+   * toolbar (avant `start`) et borné en largeur (160–240px) — il se comprime
+   * jusqu'à 160px quand la place manque, sans tronquer son placeholder, et
+   * reste sur la même ligne que les actions. Optionnel — sans lui, la toolbar
+   * se comporte comme avant.
+   */
+  search?: ReactNode;
+  /**
+   * Zone de contrôles à gauche (filtres, segment de tabs, compteurs).
+   * Les enfants wrap si la largeur est insuffisante.
    */
   start?: ReactNode;
   /**
@@ -338,7 +347,19 @@ PageHeader.displayName = "Page.Header";
  * Page.Toolbar — ligne d'outils de page (recherche, filtres, actions).
  * `start` est poussé à gauche, `end` aligné à droite.
  */
+/**
+ * Page.Toolbar — barre d'outils sous l'en-tête. Trois slots : `search`
+ * (champ de recherche, traité à part par le layout), `start` (filtres,
+ * contrôles) et `end` (actions, poussées à droite).
+ *
+ * Sur une seule ligne à toutes les largeurs : recherche puis `start` à
+ * gauche, `end` à droite. Sous 768px (container `page`), les boutons
+ * `collapseLabel` passent en icône seule et la recherche se comprime jusqu'à
+ * son plancher (160px, placeholder préservé) — sans jamais descendre sur une
+ * seconde rangée.
+ */
 function PageToolbar({
+  search,
   start,
   end,
   className,
@@ -346,6 +367,9 @@ function PageToolbar({
   const classNames = [styles.toolbar, className].filter(Boolean).join(" ");
   return (
     <div className={classNames}>
+      {search !== undefined && (
+        <div className={styles.toolbarSearch}>{search}</div>
+      )}
       {start !== undefined && (
         <div className={styles.toolbarStart}>{start}</div>
       )}

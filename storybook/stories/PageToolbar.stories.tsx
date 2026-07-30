@@ -6,14 +6,18 @@ import {
   Avatar,
   Button,
   ButtonGroup,
-  TextField,
-  Stack,
+  SearchField,
   Badge,
   Cluster,
   Divider,
+  Menu,
+  MenuItem,
+  MenuPopover,
+  MenuTrigger,
 } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import css from "./Page.stories.module.css";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -38,7 +42,7 @@ const meta = {
           guidelines={
             <GuidelinesFlat
               when={[
-                "Barre d'outils sous l'en-tête : recherche et filtres (`start`), actions (`end`).",
+                "Barre d'outils sous l'en-tête : recherche (`search`), filtres (`start`), actions (`end`).",
                 "Pour les pages de listing nécessitant recherche, filtres et actions groupées.",
               ]}
               avoid={[
@@ -46,12 +50,12 @@ const meta = {
                 "La navigation entre sections → Tabs.",
               ]}
               best={[
-                "Regrouper recherche + filtres dans `start`, actions principales dans `end`.",
-                "Laisser les deux zones passer à la ligne quand la largeur est insuffisante.",
+                "Mettre la recherche dans `search`, les filtres dans `start`, les actions dans `end`.",
+                "Sous le breakpoint, réduire les boutons en icône seule (`collapseLabel`) et laisser la recherche se comprimer — la barre reste sur une seule ligne.",
               ]}
               accessibility={[
                 "Chaque champ de recherche a un label (`aria-label`).",
-                "Les boutons icône seule ont un `aria-label` explicite.",
+                "Les boutons réduits en icône seule conservent un `aria-label` explicite.",
               ]}
             />
           }
@@ -70,10 +74,12 @@ type Story = StoryObj<typeof Page>;
 // Stories
 
 /**
- * **Toolbar — Complète** : recherche + filtres (start) et actions (end).
- * Pattern standard des pages de listing. Le start contient la recherche et les
- * filtres, le end contient les actions principales. Les deux zones wrap
- * automatiquement quand la largeur est insuffisante.
+ * **Toolbar — Complète** : recherche (`search`), filtres (`start`) et actions
+ * (`end`). Pattern standard des pages de listing, aligné sur la maquette Figma.
+ * La barre reste sur **une seule ligne** : sous le breakpoint du conteneur
+ * (`page`, ~768px), « Filtres » et l'action primaire se réduisent en icône
+ * seule (`collapseLabel`, `shape="square"`), « Exporter » est masqué (repli dans
+ * « ⋯ ») et la recherche se comprime — jamais de seconde rangée.
  */
 export const Full: Story = {
   name: "Full (search + filters + actions)",
@@ -82,17 +88,25 @@ export const Full: Story = {
       <Page>
         <Page.Header title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Toolbar
+          search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
           start={
-            <Stack direction="row" gap="100" align="center">
-              <TextField aria-label="Rechercher" placeholder="Rechercher un agent…" />
-              <Button appearance="subtle" iconBefore="FilterList">Filtres</Button>
-            </Stack>
+            <Button collapseLabel shape="square" iconBefore="Tune" aria-label="Filtres">
+              Filtres
+            </Button>
           }
           end={
             <ButtonGroup>
-              <Button color="comete" iconBefore="Add">Nouvel agent</Button>
-              <Button appearance="subtle" iconBefore="Download">Exporter</Button>
-              <Button appearance="subtle" iconBefore="MoreHoriz" aria-label="Plus" />
+              <Button
+                color="comete"
+                iconBefore="Add"
+                collapseLabel
+                shape="square"
+                aria-label="Nouvel agent"
+              >
+                Nouvel agent
+              </Button>
+              <Button className={css["hideUnderCompact"]}>Exporter</Button>
+              <Button shape="square" iconBefore="MoreHoriz" aria-label="Plus d'actions" />
             </ButtonGroup>
           }
         />
@@ -113,7 +127,7 @@ export const SearchOnly: Story = {
       <Page>
         <Page.Header title="Main courante" />
         <Page.Toolbar
-          start={<TextField aria-label="Rechercher" placeholder="Rechercher une entrée…" />}
+          search={<SearchField aria-label="Rechercher" placeholder="Rechercher une entrée…" />}
         />
         <Divider />
       </Page>
@@ -170,9 +184,13 @@ export const None: Story = {
 };
 
 /**
- * **Toolbar — Filtres actifs avec badges**.
- * Après application de filtres, la toolbar montre les filtres actifs
- * sous forme de badges avec un bouton de réinitialisation.
+ * **Toolbar — Filtres appliqués**. Sous la toolbar, une rangée de filtres
+ * déroulants (`MenuTrigger` + `Button`). Un filtre **appliqué** s'affiche en
+ * surbrillance (`color="comete"`) avec le nombre de valeurs sélectionnées
+ * (`Badge`) et une **croix** (`iconAfter="Close"`) pour le retirer ; un filtre
+ * non appliqué reste neutre (`outlined`) avec une **flèche** de déroulement.
+ * Dès qu'un filtre est appliqué, le bouton « Filtres » de la toolbar (près de
+ * la recherche) passe lui aussi en état actif (`color="comete"`).
  */
 export const WithActiveFilters: Story = {
   name: "With active filters",
@@ -181,26 +199,79 @@ export const WithActiveFilters: Story = {
       <Page>
         <Page.Header title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Toolbar
+          search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
           start={
-            <Stack direction="row" gap="100" align="center">
-              <TextField aria-label="Rechercher" placeholder="Rechercher…" />
-              <Button appearance="subtle" iconBefore="FilterList">Filtres</Button>
-            </Stack>
+            /* Des filtres sont appliqués → le bouton « Filtres » est en état
+               actif (`color="comete"`), comme les filtres appliqués ci-dessous. */
+            <Button
+              color="comete"
+              collapseLabel
+              shape="square"
+              iconBefore="Tune"
+              aria-label="Filtres"
+            >
+              Filtres
+            </Button>
           }
           end={
             <ButtonGroup>
-              <Button color="comete" iconBefore="Add">Nouvel agent</Button>
+              <Button
+                color="comete"
+                iconBefore="Add"
+                collapseLabel
+                shape="square"
+                aria-label="Nouvel agent"
+              >
+                Nouvel agent
+              </Button>
             </ButtonGroup>
           }
         />
-        <Stack gap="100" direction="row" align="center">
-          <Cluster gap="075">
-            <Badge label="Ile de France" appearance="neutral" importance="medium" />
-            <Badge label="CDI" appearance="neutral" importance="medium" />
-            <Badge label="Agent N3E3" appearance="neutral" importance="medium" />
-          </Cluster>
-          <Button appearance="link" density="compact">Réinitialiser</Button>
-        </Stack>
+        {/* Rangée de filtres. Appliqué → surbrillance `comete` + compteur, et
+            l'icône passe de la flèche (ouvrir) à une croix (retirer le filtre).
+            Non appliqué → neutre (`outlined`) avec flèche de déroulement. */}
+        <Cluster gap="075">
+          <MenuTrigger>
+            <Button color="comete" iconAfter="Close">
+              Sites
+              <Badge label="3" appearance="information-inverted" importance="high" />
+            </Button>
+            <MenuPopover width={220}>
+              <Menu aria-label="Filtrer par site">
+                <MenuItem id="idf">Île-de-France</MenuItem>
+                <MenuItem id="paris">Paris Centre</MenuItem>
+                <MenuItem id="lyon">Lyon</MenuItem>
+                <MenuItem id="marseille">Marseille</MenuItem>
+              </Menu>
+            </MenuPopover>
+          </MenuTrigger>
+
+          <MenuTrigger>
+            <Button appearance="outlined" iconAfter="KeyboardArrowDown">
+              Types
+            </Button>
+            <MenuPopover width={220}>
+              <Menu aria-label="Filtrer par type de contrat">
+                <MenuItem id="cdi">CDI</MenuItem>
+                <MenuItem id="cdd">CDD</MenuItem>
+                <MenuItem id="interim">Intérim</MenuItem>
+              </Menu>
+            </MenuPopover>
+          </MenuTrigger>
+
+          <MenuTrigger>
+            <Button appearance="outlined" iconAfter="KeyboardArrowDown">
+              Dates
+            </Button>
+            <MenuPopover width={220}>
+              <Menu aria-label="Filtrer par période">
+                <MenuItem id="7">7 derniers jours</MenuItem>
+                <MenuItem id="30">30 derniers jours</MenuItem>
+                <MenuItem id="custom">Personnalisé…</MenuItem>
+              </Menu>
+            </MenuPopover>
+          </MenuTrigger>
+        </Cluster>
         <Divider />
       </Page>
     </Gutters>
