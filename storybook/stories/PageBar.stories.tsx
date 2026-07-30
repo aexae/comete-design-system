@@ -121,8 +121,8 @@ const barFiller = Array.from({ length: 24 }, (_, i) => (
 export const Large: Story = {
   render: () => (
     <Gutters>
-      <Page>
-        <Page.Bar size="large" title="Accueil" trailing={<BarActions />} />
+      <Page globalActions={<BarActions />}>
+        <Page.Bar size="large" title="Accueil" />
         <Page.Body>
           <p>Contenu de la page…</p>
         </Page.Body>
@@ -159,13 +159,12 @@ export const RootResponsive: Story = {
         borderRadius: "var(--radius200)",
       }}
     >
-      <Page style={{ height: "100%" }}>
+      <Page globalActions={<BarActions />} style={{ height: "100%" }}>
         <Page.Bar
           title="Accueil"
           leading={
             <Button appearance="subtle" iconBefore="Menu" aria-label="Ouvrir le menu" />
           }
-          trailing={<BarActions />}
         />
         <Page.Body>{barFiller}</Page.Body>
       </Page>
@@ -181,14 +180,13 @@ export const Compact: Story = {
   name: "Compact (pinned)",
   render: () => (
     <ScrollFrame>
-      <Page style={{ height: "100%" }}>
+      <Page globalActions={<BarActions />} style={{ height: "100%" }}>
         <Page.Bar
           size="compact"
           title="Fiche agent"
           leading={
             <Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Retour" />
           }
-          trailing={<BarActions />}
         />
         <Page.Body>{barFiller}</Page.Body>
       </Page>
@@ -204,11 +202,10 @@ export const LongTitle: Story = {
   name: "Long title (ellipsis)",
   render: () => (
     <ScrollFrame>
-      <Page style={{ height: "100%" }}>
+      <Page globalActions={<BarActions />} style={{ height: "100%" }}>
         <Page.Bar
           size="compact"
           title="Un titre de page extrêmement long qui doit être tronqué avec une ellipse quand l'espace disponible n'est pas suffisant"
-          trailing={<BarActions />}
         />
         <Page.Body>{barFiller}</Page.Body>
       </Page>
@@ -224,8 +221,8 @@ export const WithToolbar: Story = {
   name: "With toolbar",
   render: () => (
     <Gutters>
-      <Page>
-        <Page.Bar size="large" title="Agents" trailing={<BarActions />} />
+      <Page globalActions={<BarActions />}>
+        <Page.Bar size="large" title="Agents" />
         <Page.Toolbar
           start={
             <SearchField aria-label="Rechercher" placeholder="Rechercher un agent…" />
@@ -247,11 +244,10 @@ export const WithoutToolbar: Story = {
   name: "Without toolbar",
   render: () => (
     <Gutters>
-      <Page>
+      <Page globalActions={<Avatar size="medium" initials="AC" />}>
         <Page.Bar
           size="large"
           title="Paramètres du compte"
-          trailing={<Avatar size="medium" initials="AC" />}
         />
         <Page.Body>
           <p>Contenu de la page…</p>

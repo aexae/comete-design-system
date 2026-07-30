@@ -40,7 +40,7 @@ const meta = {
               ]}
               avoid={[
                 "Un simple bloc de contenu → Stack/Grid.",
-                "La navigation globale → SideNav/TopNav (à composer avec Page).",
+                "La navigation globale → SideNav/Page.Bar (à composer avec Page).",
                 "Des exemples de composition complets → voir PageTemplates.",
               ]}
               best={[

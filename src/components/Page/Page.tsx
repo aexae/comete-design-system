@@ -254,7 +254,7 @@ Page.displayName = "Page";
 // Page.Bar
 
 /**
- * Page.Bar — barre de page unifiée (fusion de TopNav + Page.Header).
+ * Page.Bar — barre de page unifiée (titre + navigation + actions globales).
  *
  * Trois zones : `leading` (une seule affordance nav — hamburger OU retour),
  * `title` (obligatoire, rendu en `<h1>`) et un `trailing` où le layout `Page`
@@ -312,7 +312,7 @@ PageBar.displayName = "Page.Bar";
  * Page.Header — titre de page et actions trailing.
  * Le titre est rendu dans un `<h1>` pour la hiérarchie sémantique.
  *
- * @deprecated Utiliser `Page.Bar` (fusion de TopNav + Page.Header). `Page.Header`
+ * @deprecated Utiliser `Page.Bar` (barre de page unifiée). `Page.Header`
  * reste disponible pour rétro-compatibilité mais sera retiré dans une version
  * ultérieure.
  */
