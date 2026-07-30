@@ -37,7 +37,7 @@ const meta = {
                 "Quand une barre responsive unique (large ⇄ compacte épinglée) est souhaitée.",
               ]}
               avoid={[
-                "Un simple en-tête de titre sans navigation → Page.Header.",
+                "Un en-tête de titre seul → `Page.Bar` sans `leading` (pas de composant séparé).",
                 "La navigation latérale → SideNav.",
               ]}
               best={[

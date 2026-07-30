@@ -85,8 +85,8 @@ export const Full: Story = {
   name: "Full (search + filters + actions)",
   render: () => (
     <Gutters>
-      <Page>
-        <Page.Header title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
+      <Page globalActions={null}>
+        <Page.Bar title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Toolbar
           search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
           start={
@@ -124,8 +124,8 @@ export const SearchOnly: Story = {
   name: "Search only",
   render: () => (
     <Gutters>
-      <Page>
-        <Page.Header title="Main courante" />
+      <Page globalActions={null}>
+        <Page.Bar title="Main courante" />
         <Page.Toolbar
           search={<SearchField aria-label="Rechercher" placeholder="Rechercher une entrée…" />}
         />
@@ -143,8 +143,8 @@ export const ActionsOnly: Story = {
   name: "Actions only",
   render: () => (
     <Gutters>
-      <Page>
-        <Page.Header title="Planning du site" />
+      <Page globalActions={null}>
+        <Page.Bar title="Planning du site" />
         <Page.Toolbar
           end={
             <ButtonGroup>
@@ -161,14 +161,14 @@ export const ActionsOnly: Story = {
 
 /**
  * **Toolbar — Absente** : la toolbar est optionnelle. Certaines pages
- * (détail, réglages, formulaire) composent Header + Body sans `Page.Toolbar`.
+ * (détail, réglages, formulaire) composent Bar + Body sans `Page.Toolbar`.
  */
 export const None: Story = {
   name: "None (sans toolbar)",
   render: () => (
     <Gutters>
-      <Page>
-        <Page.Header
+      <Page globalActions={null}>
+        <Page.Bar
           title="Paramètres du compte"
           trailing={<Avatar size="medium" initials="AC" />}
         />
@@ -196,8 +196,8 @@ export const WithActiveFilters: Story = {
   name: "With active filters",
   render: () => (
     <Gutters>
-      <Page>
-        <Page.Header title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
+      <Page globalActions={null}>
+        <Page.Bar title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Toolbar
           search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
           start={

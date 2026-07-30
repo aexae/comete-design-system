@@ -1,7 +1,7 @@
 /* ==========================================================================
    BottomNavAction — bouton d'action central (FAB) surélevé + anneau (cradle)
    Couleurs / rayon via tokens. Les dimensions du FAB (56px) et son
-   dépassement n'ont pas de token dédié (cf. TopNav qui hardcode aussi 56px).
+   dépassement n'ont pas de token dédié.
    ========================================================================== */
 
 /* Bouton rond, centré horizontalement, surélevé (dépasse de 14px au-dessus

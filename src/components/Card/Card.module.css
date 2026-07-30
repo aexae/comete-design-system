@@ -22,10 +22,10 @@
   border: var(--size0125) solid;
 }
 
-/* Subtle — fond subtlest, élévation xsmall */
+/* Subtle — fond subtlest, sans élévation au repos (l'élévation apparaît au
+   hover/press pour les cartes actionnables). */
 .subtle {
   border: none;
-  box-shadow: var(--elevation-xsmall);
 }
 
 /* Bold — fond bold, élévation xsmall, texte inversé */

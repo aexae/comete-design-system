@@ -5,12 +5,9 @@ declare const styles: {
   readonly "bodySkeleton": string;
   readonly "bodyState": string;
   readonly "compact": string;
-  readonly "header": string;
   readonly "large": string;
   readonly "leading": string;
   readonly "page": string;
-  readonly "title": string;
-  readonly "titleRow": string;
   readonly "toolbar": string;
   readonly "toolbarEnd": string;
   readonly "toolbarSearch": string;

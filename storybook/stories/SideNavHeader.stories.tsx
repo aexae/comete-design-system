@@ -46,7 +46,7 @@ const meta = {
               ]}
               avoid={[
                 "Une barre supérieure globale → Page.Bar.",
-                "Un en-tête de page → Page.Header.",
+                "Un en-tête de page → Page.Bar.",
                 "Un item de navigation → SideNavItem.",
               ]}
               best={[

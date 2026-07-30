@@ -45,7 +45,7 @@ const meta = {
                 "Pour héberger le contenu métier (grille de cartes, colonnes, tableau…).",
               ]}
               avoid={[
-                "L'en-tête de page → Page.Header.",
+                "L'en-tête de page → Page.Bar.",
                 "La barre d'actions et de recherche → Page.Toolbar.",
               ]}
               best={[
@@ -80,8 +80,8 @@ export const GridLayout: Story = {
   name: "Grid layout",
   render: () => (
     <Gutters>
-      <Page>
-        <Page.Header title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
+      <Page globalActions={null}>
+        <Page.Bar title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Toolbar
           start={
             <Stack direction="row" gap="100" align="center">
@@ -125,8 +125,8 @@ export const SidebarLayout: Story = {
   name: "Sidebar layout",
   render: () => (
     <Gutters>
-      <Page>
-        <Page.Header
+      <Page globalActions={null}>
+        <Page.Bar
           title="Fiche agent"
           trailing={<Avatar size="medium" initials="AC" />}
         />
@@ -181,8 +181,8 @@ export const FullWidth: Story = {
   name: "Full width",
   render: () => (
     <Gutters>
-      <Page>
-        <Page.Header title="Utilisateurs" trailing={<Avatar size="medium" initials="AC" />} />
+      <Page globalActions={null}>
+        <Page.Bar title="Utilisateurs" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Toolbar
           start={<TextField aria-label="Rechercher" placeholder="Rechercher un utilisateur…" />}
           end={<Button color="comete" iconBefore="PersonAdd">Inviter</Button>}
@@ -222,7 +222,7 @@ const noop = () => undefined;
 function AgentsChrome() {
   return (
     <>
-      <Page.Header title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
+      <Page.Bar title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
       <Page.Toolbar
         start={
           <Stack direction="row" gap="100" align="center">
@@ -241,7 +241,7 @@ export const LoadingState: Story = {
   name: "Loading",
   render: () => (
     <Gutters>
-      <Page>
+      <Page globalActions={null}>
         <AgentsChrome />
         <Page.Body isLoading />
       </Page>
@@ -254,7 +254,7 @@ export const EmptyState: Story = {
   name: "Empty",
   render: () => (
     <Gutters>
-      <Page>
+      <Page globalActions={null}>
         <AgentsChrome />
         <Page.Body
           isEmpty
@@ -271,7 +271,7 @@ export const ErrorState: Story = {
   name: "Error",
   render: () => (
     <Gutters>
-      <Page>
+      <Page globalActions={null}>
         <AgentsChrome />
         <Page.Body error="Le chargement des agents a échoué." onRetry={noop} />
       </Page>

@@ -25,6 +25,13 @@ export interface SkeletonProps {
   radius?: number | string;
   /** Label accessible pour les lecteurs d'écran. @default "Chargement…" */
   "aria-label"?: string;
+  /**
+   * Décoratif : masque le skeleton aux lecteurs d'écran (`aria-hidden`) et
+   * n'émet **aucune** région live. À utiliser quand plusieurs skeletons sont
+   * regroupés sous une **seule** région d'état parente, pour éviter les
+   * annonces redondantes. @default false
+   */
+  decorative?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -55,6 +62,7 @@ export function Skeleton({
   height = 20,
   radius,
   "aria-label": ariaLabel = "Chargement…",
+  decorative = false,
   className,
   style: styleProp,
 }: SkeletonProps): ReactElement {
@@ -85,10 +93,11 @@ export function Skeleton({
     <div
       className={classNames}
       style={style}
-      role="status"
-      aria-busy="true"
-      aria-live="polite"
-      aria-label={ariaLabel}
+      role={decorative ? undefined : "status"}
+      aria-hidden={decorative || undefined}
+      aria-busy={decorative ? undefined : true}
+      aria-live={decorative ? undefined : "polite"}
+      aria-label={decorative ? undefined : ariaLabel}
     />
   );
 }

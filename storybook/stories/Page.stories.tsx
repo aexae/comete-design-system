@@ -35,7 +35,7 @@ const meta = {
           guidelines={
             <GuidelinesFlat
               when={[
-                "Structurer la coquille d'une page applicative (Page.Header + Page.Body) de façon cohérente.",
+                "Structurer la coquille d'une page applicative (Page.Bar + Page.Body) de façon cohérente.",
                 "Quand on veut un gabarit standard réutilisable pour toutes les pages.",
               ]}
               avoid={[
@@ -44,7 +44,7 @@ const meta = {
                 "Des exemples de composition complets → voir PageTemplates.",
               ]}
               best={[
-                "Composer Page.Header/Body ; laisser la navigation vivre autour selon le layout.",
+                "Composer Page.Bar/Body ; laisser la navigation vivre autour selon le layout.",
                 "Réutiliser le même gabarit sur toutes les pages pour la cohérence.",
               ]}
               accessibility={[
@@ -83,8 +83,8 @@ export const Default: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("4559:6522") } },
   render: () => (
     <Gutters>
-      <Page>
-        <Page.Header
+      <Page globalActions={null}>
+        <Page.Bar
           title="Agents"
           trailing={<Avatar initials="AC" />}
         />
@@ -127,8 +127,8 @@ export const LongTitle: Story = {
   name: "Long title (ellipsis)",
   render: () => (
     <Gutters>
-      <Page>
-        <Page.Header
+      <Page globalActions={null}>
+        <Page.Bar
           title="Un titre de page extrêmement long qui doit être tronqué avec une ellipse quand l'espace disponible n'est pas suffisant"
           trailing={<Avatar initials="AC" />}
         />

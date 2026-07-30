@@ -1,5 +1,5 @@
 // Coquille applicative "Main Courante" partagée par les stories SideNav.
-// Reproduit le template réel de l'app : Page.Header "Accueil" + trigger,
+// Reproduit le template réel de l'app : Page.Bar "Accueil" + trigger,
 // SideNav (marque Pro Sécurité + slot de navigation + footer comète link) et
 // Page.Body. Fichier NON indexé par Storybook (pas de suffixe .stories).
 import { useState, type ReactNode } from "react";
@@ -81,7 +81,7 @@ export function MainCouranteShell({
         }}
       >
         {/* Header pleine largeur — jamais recouvert par la nav */}
-        <Page.Header title="Accueil" leading={<SideNav.Trigger />} />
+        <Page.Bar title="Accueil" leading={<SideNav.Trigger />} />
 
         {/* Zone sous le header : SideNav + contenu côte à côte */}
         <div style={{ display: "flex", flex: 1, overflow: "hidden", position: "relative" }}>
