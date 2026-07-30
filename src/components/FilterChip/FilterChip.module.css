@@ -45,6 +45,15 @@
   flex-shrink: 0;
 }
 
+/* Valeur unique affichée (« Label : Valeur ») — tronquée pour éviter que la
+   chip ne s'étire indéfiniment. */
+.value {
+  max-width: 16ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* ---- Inactive : pilule outlined ---- */
 .chipInactive {
   background: var(--background-surface-default);

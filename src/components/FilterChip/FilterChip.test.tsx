@@ -73,6 +73,41 @@ describe("FilterChip", () => {
       ).toBeInTheDocument();
     });
 
+    it("should show « Label : Valeur » when count === 1 and valueLabel is given", () => {
+      render(
+        <FilterChip label="Types" count={1} valueLabel="Intrusion" onApply={() => {}}>
+          {options}
+        </FilterChip>,
+      );
+      const chip = screen.getByRole("button", {
+        name: "Types, filtré sur Intrusion",
+      });
+      expect(chip).toBeInTheDocument();
+      expect(chip.textContent).toContain("Intrusion");
+    });
+
+    it("should fall back to the counter when count === 1 without valueLabel", () => {
+      render(
+        <FilterChip label="Types" count={1} onApply={() => {}}>
+          {options}
+        </FilterChip>,
+      );
+      expect(
+        screen.getByRole("button", { name: "Types, 1 filtre actif" }),
+      ).toBeInTheDocument();
+    });
+
+    it("should show the counter (not the value) when count >= 2", () => {
+      render(
+        <FilterChip label="Types" count={2} valueLabel="Intrusion" onApply={() => {}}>
+          {options}
+        </FilterChip>,
+      );
+      const chip = screen.getByRole("button", { name: "Types, 2 filtres actifs" });
+      expect(chip).toBeInTheDocument();
+      expect(chip.textContent).not.toContain("Intrusion");
+    });
+
     it("should honor the isActive override regardless of count", () => {
       render(
         <FilterChip label="Dates" isActive count={0} onApply={() => {}}>

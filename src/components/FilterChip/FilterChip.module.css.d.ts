@@ -10,6 +10,7 @@ declare const styles: {
   readonly "panel": string;
   readonly "panelBody": string;
   readonly "panelFooter": string;
+  readonly "value": string;
 };
 export = styles;
 

@@ -36,6 +36,14 @@ export interface FilterChipProps {
    * Par défaut, dérivé de `count > 0`.
    */
   isActive?: boolean;
+  /**
+   * Libellé de la **valeur unique** sélectionnée. Quand `count === 1` et que
+   * `valueLabel` est fourni, la chip affiche « Label : Valeur » (ex.
+   * « Types : Intrusion ») au lieu du compteur — règle validée : 1 valeur →
+   * la valeur, ≥ 2 → le compteur. Le composant ne connaissant pas les options,
+   * c'est au consommateur de fournir ce libellé. Tronqué en ellipsis si long.
+   */
+  valueLabel?: string;
   /** Contenu du panneau : options de la facette (checkboxes, radios, dates…). */
   children: ReactNode;
   /** Appelé au clic sur « Appliquer » (commit de la sélection en cours). */
@@ -107,6 +115,7 @@ export function FilterChip({
   label,
   count = 0,
   isActive,
+  valueLabel,
   children,
   onApply,
   onReset,
@@ -132,9 +141,14 @@ export function FilterChip({
   const rootRef = useRef<HTMLDivElement>(null);
   const isNarrow = useContainerIsNarrow(rootRef);
 
-  const accessibleName = active
-    ? `${label}, ${count} filtre${count > 1 ? "s" : ""} actif${count > 1 ? "s" : ""}`
-    : label;
+  // Règle valeur / compteur : 1 valeur (avec libellé) → « Label : Valeur »,
+  // sinon compteur. Le nom accessible suit la même logique.
+  const showValue = count === 1 && !!valueLabel;
+  const accessibleName = !active
+    ? label
+    : showValue
+      ? `${label}, filtré sur ${valueLabel}`
+      : `${label}, ${count} filtre${count > 1 ? "s" : ""} actif${count > 1 ? "s" : ""}`;
 
   // Corps de la chip. `aria-haspopup`/`aria-expanded` posés explicitement (le
   // DialogTrigger de Popup ne pose pas `haspopup`). `managed` = chemin bottom
@@ -148,12 +162,16 @@ export function FilterChip({
       {...(managed ? { onPress: () => setOpen(true) } : {})}
     >
       <span className={styles.label}>{label}</span>
-      {active ? (
+      {!active ? (
+        <Icon icon="KeyboardArrowDown" size={16} className={styles.chevron} />
+      ) : showValue ? (
+        <span className={styles.value} aria-hidden="true">
+          : {valueLabel}
+        </span>
+      ) : (
         <span className={styles.count} aria-hidden="true">
           {count}
         </span>
-      ) : (
-        <Icon icon="KeyboardArrowDown" size={16} className={styles.chevron} />
       )}
     </AriaButton>
   );
