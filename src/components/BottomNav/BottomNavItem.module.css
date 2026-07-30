@@ -101,97 +101,6 @@
 }
 
 /* ==========================================================================
-   Morph icons — Add (+ → Cancel) et MoreHoriz (⋯ → Cancel)
-   Phase 1 : le SVG inline morph (rotate / translate+scale).
-   Phase 2 : le vrai Cancel Icon (morphTarget) fade-in par dessus.
-   ========================================================================== */
-
-/* SVG morph — positionné au centre du wrapper */
-
-.morphIcon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: var(--size300);
-  height: var(--size300);
-  transform: translate(-50%, -50%);
-  color: var(--icon-subtlest);
-  /* Fermeture : fade-in immédiat (pas de delay) */
-  transition: opacity 100ms var(--easing-default) 0ms,
-              color var(--duration-fast) var(--easing-default);
-}
-
-.item[data-selected] .morphIcon {
-  color: var(--icon-selected);
-}
-
-.item[aria-expanded="true"] .morphIcon {
-  color: var(--icon-selected);
-  /* Ouverture : fade-out retardé (après l'animation morph) */
-  opacity: 0;
-  transition: opacity 100ms var(--easing-default) var(--duration-fast),
-              color var(--duration-fast) var(--easing-default);
-}
-
-.item[data-disabled] .morphIcon {
-  color: var(--icon-disabled);
-}
-
-/* Cancel Icon overlay — prend le relais à la fin du morph */
-
-.morphTarget {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  /* Fermeture : fade-out immédiat */
-  transition: opacity 100ms var(--easing-default) 0ms;
-}
-
-.item[aria-expanded="true"] .morphTarget {
-  opacity: 1;
-  /* Ouverture : fade-in retardé (après l'animation morph) */
-  transition: opacity 100ms var(--easing-default) var(--duration-fast);
-}
-
-/* --- Add : rotation 45° du plus → croix ------------------------------- */
-
-.addCross {
-  transform-origin: 12px 12px;
-  transition: transform var(--duration-fast) var(--easing-default);
-}
-
-.item[aria-expanded="true"] .addCross {
-  transform: rotate(45deg);
-}
-
-/* --- MoreHoriz : 3 dots → croix (translate + scale + rotate) ---------- */
-
-.moreDot1,
-.moreDot2,
-.moreDot3 {
-  transform-box: fill-box;
-  transform-origin: center;
-  transition: transform var(--duration-fast) var(--easing-default),
-              opacity var(--duration-fast) var(--easing-default);
-}
-
-.item[aria-expanded="true"] .moreDot1 {
-  transform: translateX(6px) rotate(45deg) scaleX(0.5) scaleY(3.5);
-}
-
-.item[aria-expanded="true"] .moreDot2 {
-  opacity: 0;
-  transform: scale(0);
-}
-
-.item[aria-expanded="true"] .moreDot3 {
-  transform: translateX(-6px) rotate(-45deg) scaleX(0.5) scaleY(3.5);
-}
-
-/* ==========================================================================
    Badge
    ========================================================================== */
 
@@ -217,9 +126,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: color var(--duration-fast) var(--easing-default),
-              opacity var(--duration-fast) var(--easing-default),
-              max-height var(--duration-fast) var(--easing-default);
+  transition: color var(--duration-fast) var(--easing-default);
 }
 
 /* ==========================================================================
@@ -244,10 +151,6 @@
   justify-content: center;
 }
 
-.item[aria-expanded="true"] .badge {
-  --badge-cutout-color: var(--background-surface-default);
-}
-
 /* ==========================================================================
    État disabled — déclaré en dernier pour passer outre les autres états
    ========================================================================== */
@@ -257,9 +160,6 @@
   opacity: var(--opacity-disabled);
 }
 
-.item[data-disabled] .content {
-  background-color: transparent;
-}
 
 .item[data-disabled] .label {
   color: var(--text-disabled);

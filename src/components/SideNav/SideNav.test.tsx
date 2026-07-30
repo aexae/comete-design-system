@@ -293,14 +293,16 @@ describe("SideNav", () => {
     expect(
       container.querySelector("[class*='skeletonItem']"),
     ).toBeInTheDocument();
-    // 1 pastille + 1 barre de label (pas de description par défaut)
-    expect(screen.getAllByRole("status")).toHaveLength(2);
+    // 1 pastille + 1 barre de label (pas de description par défaut). Les
+    // skeletons sont décoratifs (aria-hidden) — annoncés une seule fois par le
+    // conteneur SideNav.Skeleton parent, pas individuellement.
+    expect(container.querySelectorAll('[aria-hidden="true"]')).toHaveLength(2);
   });
 
   it("should render a second line when hasDescription is set", () => {
-    render(<SideNav.ItemSkeleton hasDescription />);
+    const { container } = render(<SideNav.ItemSkeleton hasDescription />);
     // icône + label + description
-    expect(screen.getAllByRole("status")).toHaveLength(3);
+    expect(container.querySelectorAll('[aria-hidden="true"]')).toHaveLength(3);
   });
 
   // SideNav.Skeleton ----------------------------------------------------

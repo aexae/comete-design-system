@@ -91,7 +91,6 @@ const COMPONENT_DOC_IDS: Record<string, string> = {
   SideNavItem: "navigation-sidenav-item",
   SideNavSection: "navigation-sidenav-section",
   DrawerHeader: "components-drawer",
-  "Page.Header": "layout-page",
   "Page.Body": "layout-page",
 };
 

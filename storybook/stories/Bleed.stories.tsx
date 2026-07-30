@@ -130,8 +130,8 @@ export const Default: Story = {
 
   render: (args) => (
     <div style={{ display: "flex", height: "100vh" }}>
-      <Page style={{ flex: 1 }}>
-        <Page.Header title="Bleed playground" />
+      <Page globalActions={null} style={{ flex: 1 }}>
+        <Page.Bar title="Bleed playground" />
         <Page.Body>
           <Stack gap="200">
             <Text as="span" color="subtle">
@@ -284,8 +284,8 @@ export const BleedDesktop: Story = {
         </SideNav.Footer>
       </SideNav>
 
-      <Page style={{ flex: 1, minHeight: 0 }}>
-        <Page.Header
+      <Page globalActions={null} style={{ flex: 1, minHeight: 0 }}>
+        <Page.Bar
           title="Accueil"
           trailing={
             <Stack direction="row" gap="100" align="center">

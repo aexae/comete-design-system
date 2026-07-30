@@ -26,6 +26,12 @@ export interface BottomNavProps {
   className?: string;
   /** Styles inline additionnels. */
   style?: React.CSSProperties;
+  /**
+   * Nom accessible du repère de navigation (`<nav>`). Utile quand plusieurs
+   * `<nav>` coexistent, pour que les lecteurs d'écran les distinguent.
+   * @default "Navigation principale"
+   */
+  "aria-label"?: string;
 }
 
 // -----------------------------------------------------------------------
@@ -53,7 +59,12 @@ export interface BottomNavProps {
  * </BottomNav>
  * ```
  */
-export function BottomNav({ children, className, style }: BottomNavProps): ReactElement {
+export function BottomNav({
+  children,
+  className,
+  style,
+  "aria-label": ariaLabel = "Navigation principale",
+}: BottomNavProps): ReactElement {
   const all = Children.toArray(children);
   const action = all.find(
     (child) => isValidElement(child) && child.type === BottomNavAction,
@@ -77,15 +88,18 @@ export function BottomNav({ children, className, style }: BottomNavProps): React
     <>
       {items.slice(0, mid)}
       <span aria-hidden className={styles.spacer} />
-      {items.slice(mid)}
+      {/* Action centrale : placée au milieu du flux DOM pour que l'ordre de
+          lecture (lecteur d'écran) corresponde à sa position visuelle. Elle est
+          en position absolue (overlay), donc l'ordre n'affecte pas la mise en page. */}
       {action}
+      {items.slice(mid)}
     </>
   ) : (
     children
   );
 
   return (
-    <nav className={[styles.nav, className].filter(Boolean).join(" ")} style={style}>
+    <nav aria-label={ariaLabel} className={[styles.nav, className].filter(Boolean).join(" ")} style={style}>
       {content}
     </nav>
   );

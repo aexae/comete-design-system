@@ -395,8 +395,8 @@ export const Collection: Story = {
   render: function CollectionStory() {
     const [filtersOpen, setFiltersOpen] = useState(false);
     return (
-      <Page>
-          <Page.Header title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
+      <Page globalActions={null}>
+          <Page.Bar title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
           <Page.Toolbar
             start={
               <>
@@ -495,8 +495,8 @@ export const Entity: Story = {
   name: "Entity (fiche détail)",
   parameters: { design: { type: "figma", url: figmaUrl("4577:13694") } },
   render: () => (
-      <Page>
-        <Page.Header
+      <Page globalActions={null}>
+        <Page.Bar
           title="Entité"
           trailing={<Avatar size="medium" initials="AC" />}
         />
@@ -682,8 +682,8 @@ export const Home: Story = {
   name: "Home (Accueil)",
   parameters: { design: { type: "figma", url: figmaUrl("4587:24160") } },
   render: () => (
-      <Page>
-        <Page.Header
+      <Page globalActions={null}>
+        <Page.Bar
           title="Accueil"
           trailing={
             <Stack direction="row" gap="150" align="center">
@@ -825,8 +825,8 @@ export const Settings: Story = {
   name: "Settings (paramètres)",
   parameters: { design: { type: "figma", url: figmaUrl("4577:13694") } },
   render: () => (
-      <Page>
-        <Page.Header title="Permissions" trailing={<Avatar size="medium" initials="AC" />} />
+      <Page globalActions={null}>
+        <Page.Bar title="Permissions" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Body>
           <Tabs>
             <TabList>

@@ -2,8 +2,10 @@
 import { Children,
   createContext,
   isValidElement,
+  useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ReactElement,
@@ -24,7 +26,7 @@ interface SideNavContextValue {
   onToggleCollapse?: () => void;
   /** Vrai quand la nav est affichée en overlay (peek). */
   isPeeking: boolean;
-  /** Marque la zone Trigger (Page.Header.leading) comme survolée. */
+  /** Marque la zone Trigger (Page.Bar.leading) comme survolée. */
   setTriggerHover?: (hovered: boolean) => void;
   /** Marque la nav (overlay) comme survolée. */
   setNavHover?: (hovered: boolean) => void;
@@ -52,6 +54,12 @@ export interface SideNavProps {
   className?: string;
   /** Styles inline additionnels. */
   style?: CSSProperties;
+  /**
+   * Nom accessible du repère de navigation (`<nav>`). Indispensable quand
+   * plusieurs `<nav>` coexistent, pour que les lecteurs d'écran les distinguent.
+   * @default "Navigation principale"
+   */
+  "aria-label"?: string;
 }
 
 export interface SideNavProviderProps {
@@ -169,7 +177,7 @@ export function SideNavHeader({
         </div>
       )}
       {/* Pas de bouton collapse ici — le toggle est exclusivement géré par
-          `<SideNav.Trigger />` dans `Page.Header.leading`. */}
+          `<SideNav.Trigger />` dans `Page.Bar.leading`. */}
     </div>
   );
 }
@@ -351,11 +359,11 @@ export function SideNavItemSkeleton({
 }: SideNavItemSkeletonProps): ReactElement {
   return (
     <div className={[styles.skeletonItem, className].filter(Boolean).join(" ")}>
-      <Skeleton shape="circle" height={24} aria-label="Chargement…" />
+      <Skeleton shape="circle" height={24} decorative />
       <span className={styles.skeletonItemContent}>
-        <Skeleton height={12} width="70%" radius={4} aria-label="Chargement…" />
+        <Skeleton height={12} width="70%" radius={4} decorative />
         {hasDescription && (
-          <Skeleton height={10} width="45%" radius={4} aria-label="Chargement…" />
+          <Skeleton height={10} width="45%" radius={4} decorative />
         )}
       </span>
     </div>
@@ -386,19 +394,25 @@ export function SideNavSkeleton({
   className,
 }: SideNavSkeletonProps): ReactElement {
   return (
-    <div className={[styles.section, className].filter(Boolean).join(" ")}>
+    <div
+      className={[styles.section, className].filter(Boolean).join(" ")}
+      role="status"
+      aria-busy="true"
+      aria-live="polite"
+      aria-label="Chargement de la navigation"
+    >
       {withHeader && (
         <div className={styles.skeletonHeader}>
-          <Skeleton shape="circle" height={32} aria-label="Chargement…" />
+          <Skeleton shape="circle" height={32} decorative />
           <span className={styles.skeletonHeaderContent}>
-            <Skeleton height={12} width="60%" radius={4} aria-label="Chargement…" />
-            <Skeleton height={10} width="40%" radius={4} aria-label="Chargement…" />
+            <Skeleton height={12} width="60%" radius={4} decorative />
+            <Skeleton height={10} width="40%" radius={4} decorative />
           </span>
         </div>
       )}
       {withSectionTitle && (
         <div className={styles.skeletonSectionTitle}>
-          <Skeleton height={8} width={72} radius={4} aria-label="Chargement…" />
+          <Skeleton height={8} width={72} radius={4} decorative />
         </div>
       )}
       {Array.from({ length: count }, (_, i) => (
@@ -460,7 +474,7 @@ SideNavEmpty.displayName = "SideNav.Empty";
 // SideNavTrigger — bouton standalone à placer dans le `leading` d'une Page.Bar
 
 /**
- * SideNav.Trigger — bouton de toggle à placer dans `Page.Header.leading`.
+ * SideNav.Trigger — bouton de toggle à placer dans `Page.Bar.leading`.
  * Lit son état depuis le `<SideNav.Provider>` parent (commun avec la
  * `<SideNav>`).
  *
@@ -478,7 +492,7 @@ SideNavEmpty.displayName = "SideNav.Empty";
  * <SideNav.Provider isCollapsed={c} onCollapsedChange={setC}>
  *   <SideNav>...</SideNav>
  *   <Page>
- *     <Page.Header leading={<SideNav.Trigger />} />
+ *     <Page.Bar leading={<SideNav.Trigger />} />
  *   </Page>
  * </SideNav.Provider>
  * ```
@@ -497,6 +511,7 @@ export function SideNavTrigger({
       onPress={onToggleCollapse}
       onHoverStart={() => setTriggerHover?.(true)}
       onHoverEnd={() => setTriggerHover?.(false)}
+      aria-expanded={!isCollapsed}
       aria-label={isCollapsed ? "Développer la navigation" : "Réduire la navigation"}
       className={className}
     />
@@ -527,7 +542,7 @@ SideNavTrigger.displayName = "SideNav.Trigger";
  *       <SideNav.Section title="...">...</SideNav.Section>
  *     </SideNav>
  *     <Page>
- *       <Page.Header leading={<SideNav.Trigger />} title="..." />
+ *       <Page.Bar leading={<SideNav.Trigger />} title="..." />
  *     </Page>
  *   </div>
  * </SideNav.Provider>
@@ -569,38 +584,42 @@ export function SideNavProvider({
     return () => clearTimeout(timer);
   }, [wantOpen, isCollapsed]);
 
-  const onToggleCollapse = () => {
+  const onToggleCollapse = useCallback(() => {
     const next = !isCollapsed;
     setInternalCollapsed(next);
     onCollapsedChange?.(next);
-  };
+  }, [isCollapsed, onCollapsedChange]);
 
   // Fermeture immédiate (clic sur un item → navigation). On remet aussi les
   // drapeaux hover/focus à zéro pour que l'overlay reste fermé tant que le
   // pointeur ne quitte pas puis ne revient pas sur la nav.
-  const closePeek = () => {
+  const closePeek = useCallback(() => {
     setTriggerHover(false);
     setNavHover(false);
     setNavFocused(false);
     setPeekOpen(false);
-  };
+  }, []);
 
   const isPeeking = isCollapsed && peekOpen;
 
+  // Valeur de contexte mémoïsée : le Provider re-render à chaque micro-changement
+  // d'état hover/focus pendant un survol — sans ça, tous les consommateurs
+  // (`SideNav`, `SideNav.Trigger`, `useSideNav`) re-render à chaque frame.
+  const value = useMemo(
+    () => ({
+      isCollapsed,
+      onToggleCollapse,
+      isPeeking,
+      setTriggerHover,
+      setNavHover,
+      setNavFocused,
+      closePeek,
+    }),
+    [isCollapsed, onToggleCollapse, isPeeking, closePeek],
+  );
+
   return (
-    <SideNavContext.Provider
-      value={{
-        isCollapsed,
-        onToggleCollapse,
-        isPeeking,
-        setTriggerHover,
-        setNavHover,
-        setNavFocused,
-        closePeek,
-      }}
-    >
-      {children}
-    </SideNavContext.Provider>
+    <SideNavContext.Provider value={value}>{children}</SideNavContext.Provider>
   );
 }
 
@@ -631,6 +650,7 @@ export function SideNav({
   children,
   className,
   style,
+  "aria-label": ariaLabel = "Navigation principale",
 }: SideNavProps): ReactElement {
   const { isCollapsed, isPeeking, setNavHover, setNavFocused, closePeek } =
     useContext(SideNavContext);
@@ -639,14 +659,18 @@ export function SideNav({
   // items) est regroupé dans un corps qui défile (overflow-y: auto). On
   // partitionne les enfants pour ne pas imposer de wrapper au consommateur —
   // l'API composable (Header + sections + Footer) reste inchangée.
-  const items = Children.toArray(children);
-  const isType = (child: ReactNode, type: unknown) =>
-    isValidElement(child) && child.type === type;
-  const header = items.filter((c) => isType(c, SideNavHeader));
-  const footer = items.filter((c) => isType(c, SideNavFooter));
-  const body = items.filter(
-    (c) => !isType(c, SideNavHeader) && !isType(c, SideNavFooter),
-  );
+  const { header, footer, body } = useMemo(() => {
+    const items = Children.toArray(children);
+    const isType = (child: ReactNode, type: unknown) =>
+      isValidElement(child) && child.type === type;
+    return {
+      header: items.filter((c) => isType(c, SideNavHeader)),
+      footer: items.filter((c) => isType(c, SideNavFooter)),
+      body: items.filter(
+        (c) => !isType(c, SideNavHeader) && !isType(c, SideNavFooter),
+      ),
+    };
+  }, [children]);
 
   // Fermeture du peek au clic sur un item : écouteur natif délégué sur la nav
   // (plutôt qu'un `onClick` JSX, qui violerait les règles jsx-a11y sur un
@@ -664,11 +688,11 @@ export function SideNav({
     <div
       className={styles.container}
       data-collapsed={isCollapsed || undefined}
-      data-peeking={isPeeking || undefined}
       style={style}
     >
       <nav
         ref={navRef}
+        aria-label={ariaLabel}
         className={[styles.sideNav, className].filter(Boolean).join(" ")}
         data-collapsed={isCollapsed || undefined}
         data-peeking={isPeeking || undefined}
@@ -681,7 +705,13 @@ export function SideNav({
         onMouseEnter={() => setNavHover?.(true)}
         onMouseLeave={() => setNavHover?.(false)}
         onFocusCapture={() => setNavFocused?.(true)}
-        onBlurCapture={() => setNavFocused?.(false)}
+        onBlurCapture={(e) => {
+          // Ne remet à false que si le focus quitte réellement la nav (pas un
+          // simple déplacement entre items).
+          if (!e.currentTarget.contains(e.relatedTarget)) {
+            setNavFocused?.(false);
+          }
+        }}
       >
         {header}
         <div className={styles.body}>{body}</div>

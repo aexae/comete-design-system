@@ -1,6 +1,6 @@
 /* ==========================================================================
    Page — Comète Design System
-   Gabarit de page : container flex vertical + sous-sections Header /
+   Gabarit de page : container flex vertical + sous-sections Bar /
    Toolbar / Body. Tokens uniquement, aucune valeur hardcodée.
    Spec Figma : node 4559:6656 (❖ Page header).
 
@@ -38,49 +38,11 @@
   }
 }
 
-/* ==========================================================================
-   Page.Header — titre, actions trailing
-   ========================================================================== */
-
-.header {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space050);
-  padding-block: var(--space200);
-  padding-inline: var(--page-gutter);
-  flex-shrink: 0;
-}
-
-/* Title row : leading shrink-0 + title flex-1 + trailing shrink-0 */
-.titleRow {
-  display: flex;
-  align-items: center;
-  gap: var(--space100);
-  min-width: 0;
-}
-
+/* Slot `leading` (partagé par Page.Bar) : affordance de navigation à gauche du titre. */
 .leading {
   flex-shrink: 0;
   display: flex;
   align-items: center;
-}
-
-.title {
-  flex: 1 0 0;
-  min-width: 0;
-  margin: 0;
-  font-family: var(--font-family-primary);
-  font-size: var(--font-size-ui-xxl);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-ui-xxl);
-  letter-spacing: var(--letter-spacing-negative-extra-tight);
-  color: var(--text-default);
-  /* Ellipsize long titles on narrow viewports */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  /* Prevent descenders (g, y, p…) from being clipped by overflow:hidden */
-  padding-block: 2px;
 }
 
 .trailing {
@@ -91,7 +53,7 @@
 }
 
 /* ==========================================================================
-   Page.Bar — barre de page unifiée (fusion TopNav + Page.Header)
+   Page.Bar — barre de page unifiée
    Zones leading / title / trailing. Variante `large` par défaut ; `compact`
    (56px, épinglée) sous 768px ou forcée via .compact. Tokens uniquement.
    ========================================================================== */
@@ -103,6 +65,16 @@
   padding-block: var(--space200);
   padding-inline: var(--page-gutter);
   flex-shrink: 0;
+
+  /* Métriques de la variante compacte — SOURCE UNIQUE, consommée à la fois par
+     la variante responsive (@container < 768px) et par le modificateur forcé
+     `.bar.compact`, pour éviter toute dérive entre les deux. */
+  --bar-compact-min-height: calc(var(--size600) + var(--space100));
+  --bar-compact-pad-block: var(--space100);
+  --bar-compact-pad-top: calc(var(--space100) + env(safe-area-inset-top));
+  --bar-compact-title-size: var(--font-size-ui-m);
+  --bar-compact-title-line: var(--line-height-ui-m);
+  --bar-compact-title-tracking: var(--letter-spacing-negative-tight);
 }
 
 /* Titre — large par défaut (32px). Tronqué à l'ellipsis sur une ligne. */
@@ -131,18 +103,18 @@
     position: sticky;
     top: 0;
     z-index: var(--z-index-sticky);
-    min-height: calc(var(--size600) + var(--space100));
-    padding-block: var(--space100);
+    min-height: var(--bar-compact-min-height);
+    padding-block: var(--bar-compact-pad-block);
     /* safe-area top (encoche iOS) en plus du padding compact */
-    padding-top: calc(var(--space100) + env(safe-area-inset-top));
+    padding-top: var(--bar-compact-pad-top);
     background-color: var(--background-surface-default);
     border-bottom: 1px solid var(--border-subtle);
   }
 
   .bar:not(.large) .barTitle {
-    font-size: var(--font-size-ui-m);
-    line-height: var(--line-height-ui-m);
-    letter-spacing: var(--letter-spacing-negative-tight);
+    font-size: var(--bar-compact-title-size);
+    line-height: var(--bar-compact-title-line);
+    letter-spacing: var(--bar-compact-title-tracking);
   }
 }
 
@@ -150,17 +122,17 @@
   position: sticky;
   top: 0;
   z-index: var(--z-index-sticky);
-  min-height: calc(var(--size600) + var(--space100));
-  padding-block: var(--space100);
-  padding-top: calc(var(--space100) + env(safe-area-inset-top));
+  min-height: var(--bar-compact-min-height);
+  padding-block: var(--bar-compact-pad-block);
+  padding-top: var(--bar-compact-pad-top);
   background-color: var(--background-surface-default);
   border-bottom: 1px solid var(--border-subtle);
 }
 
 .bar.compact .barTitle {
-  font-size: var(--font-size-ui-m);
-  line-height: var(--line-height-ui-m);
-  letter-spacing: var(--letter-spacing-negative-tight);
+  font-size: var(--bar-compact-title-size);
+  line-height: var(--bar-compact-title-line);
+  letter-spacing: var(--bar-compact-title-tracking);
 }
 
 /* Large forcée — neutralise les bribes compact même sous 768px. */
