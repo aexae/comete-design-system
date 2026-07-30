@@ -130,6 +130,22 @@
   flex-direction: column;
   gap: var(--space150);
   padding: var(--space200);
+  /* Liste longue (> ~15 options) : le panneau se plafonne et défile plutôt que
+     de dépasser l'écran. Scrollbar TOUJOURS visible (fine) pour que
+     l'utilisateur — surtout mobile — comprenne qu'il peut défiler. */
+  max-height: min(50vh, 360px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-default) transparent;
+}
+
+.panelBody::-webkit-scrollbar {
+  width: 8px;
+}
+
+.panelBody::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: var(--radius100);
 }
 
 .panelFooter {
