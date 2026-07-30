@@ -1,5 +1,5 @@
 // FilterChip / FilterChipRow — stories du pattern « filtres rapides » (chips).
-import { useState, type ReactElement } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, userEvent, expect, waitFor } from "storybook/test";
 import {
@@ -12,10 +12,13 @@ import {
   Radio,
   Drawer,
   Button,
+  Badge,
+  Icon,
   Heading,
 } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import css from "./FilterChip.stories.module.css";
 
 // -----------------------------------------------------------------------
 // Facettes de démo
@@ -26,7 +29,10 @@ interface Option {
 }
 interface FacetDef {
   id: string;
+  /** Libellé court affiché sur la chip. */
   label: string;
+  /** Libellé long affiché dans le panneau complet (défaut : `label`). */
+  panelLabel?: string;
   /** Multi (checkboxes) ou simple (radios). */
   multi: boolean;
   /** Épinglée (toujours visible) ou temporaire (visible si active). */
@@ -46,38 +52,63 @@ const TYPES: Option[] = [
   { value: "ronde", label: "Ronde" },
 ];
 const DATES: Option[] = [
+  { value: "hier", label: "Hier" },
   { value: "7", label: "7 derniers jours" },
   { value: "30", label: "30 derniers jours" },
-  { value: "custom", label: "Personnalisé…" },
 ];
 const STATUTS: Option[] = [
   { value: "ouvert", label: "Ouvert" },
-  { value: "clos", label: "Clos" },
+  { value: "cloture", label: "Clôturé" },
 ];
-const PRIORITES: Option[] = [
+const IMPORTANCE: Option[] = [
   { value: "haute", label: "Haute" },
+  { value: "moyenne", label: "Moyenne" },
   { value: "basse", label: "Basse" },
+];
+const GROUPES: Option[] = [
+  { value: "g1", label: "Groupe A" },
+  { value: "g2", label: "Groupe B" },
+  { value: "g3", label: "Groupe C" },
 ];
 const AGENTS: Option[] = [
   { value: "a1", label: "Agent 1" },
   { value: "a2", label: "Agent 2" },
 ];
+// Liste longue (> 15) pour démontrer le défilement du panneau.
+const MANY_SITES: Option[] = Array.from({ length: 22 }, (_, i) => ({
+  value: `s${i + 1}`,
+  label: `Site ${i + 1}`,
+}));
 
 const FACETS: FacetDef[] = [
   { id: "sites", label: "Sites", multi: true, pinned: true, options: SITES },
-  { id: "types", label: "Types", multi: true, pinned: true, options: TYPES },
-  { id: "dates", label: "Dates", multi: false, pinned: true, options: DATES },
-  { id: "statut", label: "Statut", multi: true, pinned: false, options: STATUTS },
-  { id: "priorite", label: "Priorité", multi: false, pinned: false, options: PRIORITES },
-  { id: "agent", label: "Agent", multi: true, pinned: false, options: AGENTS },
+  { id: "types", label: "Types", panelLabel: "Types d'évènements", multi: true, pinned: true, options: TYPES },
+  { id: "dates", label: "Date", multi: false, pinned: true, options: DATES },
+  { id: "statut", label: "Statut", multi: false, pinned: false, options: STATUTS },
+  { id: "importance", label: "Importance", multi: true, pinned: false, options: IMPORTANCE },
+  { id: "groupes", label: "Groupes", multi: true, pinned: false, options: GROUPES },
+  { id: "agents", label: "Agents", multi: true, pinned: false, options: AGENTS },
 ];
 
 type Applied = Record<string, string[]>;
 const countAll = (applied: Applied) =>
   Object.values(applied).reduce((n, v) => n + v.length, 0);
 
+/** Détecte un viewport étroit (mobile) — le panneau complet s'ouvre alors en bas. */
+function useIsNarrowViewport(): boolean {
+  const [narrow, setNarrow] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 480px)");
+    const update = () => setNarrow(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  return narrow;
+}
+
 // -----------------------------------------------------------------------
-// FacetChip — une facette contrôlée. Gère instant (applique dans onChange) ou
+// FacetChip — une facette contrôlée. Instant (applique dans onChange) ou
 // différé (brouillon + Appliquer) selon `mode`.
 
 function FacetChip({
@@ -97,11 +128,9 @@ function FacetChip({
   const [open, setOpen] = useState(defaultOpen);
   const isDeferred = mode === "deferred";
 
-  // Source des cases : brouillon en différé, appliqué en instantané.
   const groupValue = isDeferred ? draft : applied;
   const onGroupChange = isDeferred ? setDraft : onApplied;
 
-  // Libellé de la valeur unique (dérivé de l'appliqué).
   const valueLabel =
     applied.length === 1
       ? facet.options.find((o) => o.value === applied[0])?.label
@@ -133,7 +162,7 @@ function FacetChip({
       applyMode={mode}
       isOpen={open}
       onOpenChange={(next) => {
-        if (next && isDeferred) setDraft(applied); // pré-remplit le brouillon
+        if (next && isDeferred) setDraft(applied);
         setOpen(next);
       }}
       onApply={
@@ -154,55 +183,101 @@ function FacetChip({
 }
 
 // -----------------------------------------------------------------------
-// Panneau complet (mock D13) — permet d'activer TOUTES les facettes, y compris
-// non épinglées : c'est ainsi qu'une chip temporaire apparaît.
+// Panneau complet (mock D13) — liste maître des facettes façon maquette MCE.
+// Droite en desktop, bas en mobile. Cliquer une facette l'active/désactive
+// (mock : le vrai D13 ouvrirait un détail avec les options).
 
 function AllFiltersDrawer({
   applied,
   onApplied,
+  onClearAll,
   isOpen,
   onOpenChange,
 }: {
   applied: Applied;
   onApplied: (id: string, values: string[]) => void;
+  onClearAll: () => void;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
 }): ReactElement {
-  const secondary = FACETS.filter((f) => !f.pinned);
-  const activeIds = secondary
-    .filter((f) => (applied[f.id]?.length ?? 0) > 0)
-    .map((f) => f.id);
+  const isNarrow = useIsNarrowViewport();
+
+  const summaryOf = (f: FacetDef): { count: number } | { text: string } | null => {
+    const vals = applied[f.id] ?? [];
+    if (vals.length === 0) return null;
+    if (!f.multi) {
+      return { text: f.options.find((o) => o.value === vals[0])?.label ?? "" };
+    }
+    return { count: vals.length };
+  };
+
   return (
     <Drawer
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      placement="right"
-      size="narrow"
-      aria-label="Tous les filtres"
+      placement={isNarrow ? "bottom" : "right"}
+      size={isNarrow ? "85vh" : "medium"}
+      aria-label="Filtres"
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)", padding: "var(--space300)" }}>
-        <Heading size="small" as="h2">
-          Tous les filtres
-        </Heading>
-        <CheckboxGroup
-          aria-label="Facettes secondaires"
-          value={activeIds}
-          onChange={(ids) => {
-            secondary.forEach((f) => {
-              const nowActive = ids.includes(f.id);
-              const wasActive = (applied[f.id]?.length ?? 0) > 0;
-              if (nowActive && !wasActive) onApplied(f.id, [f.options[0].value]);
-              if (!nowActive && wasActive) onApplied(f.id, []);
-            });
-          }}
-        >
-          {secondary.map((f) => (
-            <Checkbox key={f.id} value={f.id} label={f.label} />
-          ))}
-        </CheckboxGroup>
-        <Button color="comete" onPress={() => onOpenChange(false)}>
-          Fermer
-        </Button>
+      <div className={css["panel"]}>
+        <div className={css["header"]}>
+          <Heading size="small" as="h2" className={css["headerTitle"]}>
+            Filtres
+          </Heading>
+          <Button
+            appearance="subtle"
+            iconBefore="Close"
+            aria-label="Fermer"
+            onPress={() => onOpenChange(false)}
+          />
+        </div>
+
+        <div className={css["list"]}>
+          {FACETS.map((f) => {
+            const summary = summaryOf(f);
+            return (
+              <button
+                key={f.id}
+                type="button"
+                className={css["row"]}
+                onClick={() => {
+                  const active = (applied[f.id]?.length ?? 0) > 0;
+                  onApplied(f.id, active ? [] : [f.options[0].value]);
+                }}
+              >
+                <span className={css["rowLabel"]}>{f.panelLabel ?? f.label}</span>
+                {summary && "count" in summary && (
+                  <Badge
+                    label={String(summary.count)}
+                    appearance="information"
+                    importance="high"
+                  />
+                )}
+                {summary && "text" in summary && (
+                  <span className={css["rowValue"]}>{summary.text}</span>
+                )}
+                <Icon icon="ChevronRight" size={20} color="subtle" />
+              </button>
+            );
+          })}
+        </div>
+
+        <div className={css["footer"]}>
+          <div>
+            <Checkbox label="Mémoriser mes filtres" />
+            <div className={css["memorizeDescription"]}>
+              Retrouvez cette sélection à votre prochaine visite.
+            </div>
+          </div>
+          <div className={css["footerActions"]}>
+            <Button appearance="outlined" onPress={onClearAll}>
+              Effacer les filtres
+            </Button>
+            <Button color="comete" onPress={() => onOpenChange(false)}>
+              Appliquer
+            </Button>
+          </div>
+        </div>
       </div>
     </Drawer>
   );
@@ -252,6 +327,7 @@ function FilterBar({
       <AllFiltersDrawer
         applied={applied}
         onApplied={setFacet}
+        onClearAll={() => setApplied({})}
         isOpen={drawerOpen}
         onOpenChange={setDrawerOpen}
       />
@@ -271,26 +347,26 @@ const meta = {
     docs: {
       description: {
         component:
-          "Filtres rapides façon listing : une rangée de chips, une chip par facette. Complète le panneau de filtres complet (Drawer) — les chips couvrent les 2–4 facettes les plus utilisées.",
+          "Filtres rapides façon listing : une rangée de chips (une par facette) doublée d'un panneau complet (Drawer). Les chips couvrent les 2–4 facettes les plus utilisées ; le panneau complet donne accès à toutes les facettes.",
       },
       page: () => (
         <DocsTabsPage
           guidelines={
             <GuidelinesFlat
               when={[
-                "Exposer les 2–4 facettes les plus fréquentes en accès direct (au-delà : le Drawer complet).",
-                "Listings où le Drawer complet ralentit les filtrages courants.",
+                "Exposer les 2–4 facettes les plus fréquentes en accès direct (au-delà : le panneau complet).",
+                "Listings où le panneau complet ralentit les filtrages courants.",
               ]}
               avoid={[
                 "Plus de 4 facettes épinglées — un `console.warn` le signale en dev.",
                 "Une chip par valeur sélectionnée : une chip = une facette (valeur unique affichée, sinon compteur).",
-                "Des libellés de facette longs : viser 1 mot.",
+                "Des libellés de facette longs sur la chip : viser 1 mot.",
               ]}
               best={[
                 "Règle d'affichage : 0 valeur → chevron ; 1 → « Label : Valeur » ; ≥ 2 → « Label (n) ».",
                 "Invariant : la rangée montre TOUJOURS tout ce qui filtre — une facette non épinglée mais active apparaît en chip temporaire (jamais de filtre actif caché).",
                 "Application : instantanée en popover (desktop), différée en bottom sheet (mobile) — surchargeable via `applyMode`.",
-                "La croix (×) efface toute la facette ; le bouton « Filtres » porte le total et ouvre le panneau complet.",
+                "Panneau complet : Drawer à droite en desktop, en bas (bottom sheet) en mobile. Liste défilante, scrollbar visible.",
               ]}
               accessibility={[
                 "La chip est un bouton `aria-haspopup=\"dialog\"` + `aria-expanded` ; le compteur/valeur est annoncé.",
@@ -313,7 +389,7 @@ type Story = StoryObj<typeof FilterChip>;
 /**
  * **Rangée** : 3 facettes épinglées illustrant la règle valeur/compteur —
  * « Sites » avec 3 valeurs (compteur), « Types » avec 1 valeur
- * (« Types : Intrusion »), « Dates » vide (chevron). Bouton « Filtres » à droite.
+ * (« Types : Intrusion »), « Date » vide (chevron). Bouton « Filtres » à droite.
  */
 export const Row: Story = {
   name: "Rangée (valeur / compteur)",
@@ -345,22 +421,20 @@ export const InstantApply: Story = {
     const body = within(document.body);
     await userEvent.click(canvas.getByRole("button", { name: "Types" }));
     await userEvent.click(await body.findByRole("checkbox", { name: "Intrusion" }));
-    // Appliqué sans « Appliquer » → la chip devient active (croix présente)…
     await waitFor(() =>
       expect(
         canvas.getByRole("button", { name: "Effacer le filtre Types" }),
       ).toBeInTheDocument(),
     );
-    // …et il n'y a pas de bouton « Appliquer », le panneau reste ouvert.
     await expect(body.queryByRole("button", { name: "Appliquer" })).not.toBeInTheDocument();
     await expect(body.getByRole("dialog")).toBeInTheDocument();
   },
 };
 
 /**
- * **Chips temporaires** : 6 facettes, 3 épinglées. Activer une facette
- * secondaire dans le panneau complet fait apparaître sa chip ; l'effacer la
- * fait disparaître — la rangée reflète toujours l'état de filtrage.
+ * **Chips temporaires** : 6 facettes secondaires en plus des épinglées. Activer
+ * une facette dans le panneau complet fait apparaître sa chip temporaire ;
+ * l'effacer la fait disparaître — la rangée reflète toujours l'état de filtrage.
  */
 export const TemporaryChips: Story = {
   name: "Chips temporaires (play)",
@@ -369,30 +443,61 @@ export const TemporaryChips: Story = {
     const canvas = within(canvasElement);
     const body = within(document.body);
 
-    // Pas de chip « Priorité » au départ (facette secondaire inactive).
-    await expect(canvas.queryByRole("button", { name: /Priorité/ })).not.toBeInTheDocument();
+    // Pas de chip « Groupes » au départ (facette secondaire inactive).
+    await expect(canvas.queryByRole("button", { name: /Groupes/ })).not.toBeInTheDocument();
 
-    // Ouvrir le panneau complet, activer « Priorité », fermer.
+    // Ouvrir le panneau complet, activer « Groupes », appliquer (ferme).
     await userEvent.click(canvas.getByRole("button", { name: /Filtres/ }));
-    await userEvent.click(await body.findByRole("checkbox", { name: "Priorité" }));
-    await userEvent.click(body.getByRole("button", { name: "Fermer" }));
+    await userEvent.click(await body.findByRole("button", { name: "Groupes" }));
+    await userEvent.click(body.getByRole("button", { name: "Appliquer" }));
 
-    // La chip temporaire « Priorité » apparaît dans la rangée…
-    const tempChip = await canvas.findByRole("button", { name: /^Priorité/ });
+    // La chip temporaire « Groupes » apparaît dans la rangée…
+    const tempChip = await canvas.findByRole("button", { name: /^Groupes/ });
     await expect(tempChip).toBeInTheDocument();
 
     // …puis on l'efface → elle disparaît.
-    await userEvent.click(canvas.getByRole("button", { name: "Effacer le filtre Priorité" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Effacer le filtre Groupes" }));
     await waitFor(() =>
-      expect(canvas.queryByRole("button", { name: /^Priorité/ })).not.toBeInTheDocument(),
+      expect(canvas.queryByRole("button", { name: /^Groupes/ })).not.toBeInTheDocument(),
+    );
+  },
+};
+
+/**
+ * **Liste longue (> 15 options)** : le panneau de la facette se plafonne et
+ * défile, avec une scrollbar visible (indispensable sur mobile pour signaler
+ * qu'il y a plus de contenu). Ici « Sites » compte 22 options.
+ */
+export const ManyOptions: Story = {
+  name: "Liste longue (scroll)",
+  render: function ManyOptionsStory() {
+    const [applied, setApplied] = useState<string[]>([]);
+    const [open, setOpen] = useState(true);
+    return (
+      <FilterChip
+        label="Sites"
+        count={applied.length}
+        applyMode="instant"
+        isOpen={open}
+        onOpenChange={setOpen}
+        onReset={() => setApplied([])}
+        onClear={() => setApplied([])}
+      >
+        <CheckboxGroup aria-label="Sites" value={applied} onChange={setApplied}>
+          {MANY_SITES.map((o) => (
+            <Checkbox key={o.value} value={o.value} label={o.label} />
+          ))}
+        </CheckboxGroup>
+      </FilterChip>
     );
   },
 };
 
 /**
  * **Mobile** : viewport téléphone. La rangée passe en scroll horizontal (fondu
- * à droite) et le panneau d'une facette s'ouvre en **bottom sheet**
- * (`Drawer size="auto"`, hauteur cadrée sur le contenu) en mode différé.
+ * à droite), le panneau d'une facette s'ouvre en **bottom sheet**
+ * (`Drawer size="auto"`) en différé, et le **panneau complet** s'ouvre lui aussi
+ * en bas (bouton « Filtres »), liste défilante à scrollbar visible.
  */
 export const Mobile: Story = {
   name: "Mobile (scroll + bottom sheet)",
