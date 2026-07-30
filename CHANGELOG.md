@@ -11,6 +11,14 @@ entre versions alpha.
 
 ### Ajouté
 
+- **FilterChip** : nouvel organisme de **filtres rapides** (chips façon listing).
+  Une chip = une facette : inactive (`outlined` + chevron) ou active
+  (`contained` + compteur + croix de retrait, cible clavier distincte). Le corps
+  ouvre un panneau (popover desktop, **bottom sheet** sous 480px) avec pied
+  « Réinitialiser » / « Appliquer » (application explicite, pas au fil de l'eau).
+  État contrôlé côté consommateur (`label`/`count`/`isActive`/`onApply`/
+  `onReset`/`onClear`). Complète le Drawer de filtres complet — il ne le
+  remplace pas.
 - **Page** : prop `globalActions` — le layout porte lui-même les actions
   globales (notifications, réglages, avatar) et les injecte dans le `trailing`
   de chaque `Page.Bar` via contexte. Omise = trio de démo par défaut (+ `warn`
