@@ -134,10 +134,10 @@ describe("FilterChip", () => {
   });
 
   describe("panneau (popover)", () => {
-    it("should open the panel and call onApply from « Appliquer »", async () => {
+    it("should open the panel and call onApply from « Appliquer » (deferred)", async () => {
       const onApply = vi.fn();
       render(
-        <FilterChip label="Types" onApply={onApply}>
+        <FilterChip label="Types" applyMode="deferred" onApply={onApply}>
           {options}
         </FilterChip>,
       );
@@ -172,6 +172,44 @@ describe("FilterChip", () => {
       expect(reset).toBeEnabled();
       await userEvent.click(reset);
       expect(onReset).toHaveBeenCalledOnce();
+    });
+  });
+
+  describe("applyMode", () => {
+    it("should NOT render « Appliquer » in instant mode", async () => {
+      render(
+        <FilterChip label="Types" applyMode="instant" onApply={() => {}}>
+          {options}
+        </FilterChip>,
+      );
+      await userEvent.click(screen.getByRole("button", { name: "Types" }));
+      await screen.findByRole("button", { name: "Réinitialiser" });
+      expect(
+        screen.queryByRole("button", { name: "Appliquer" }),
+      ).not.toBeInTheDocument();
+    });
+
+    it("should render « Appliquer » in deferred mode", async () => {
+      render(
+        <FilterChip label="Types" applyMode="deferred" onApply={() => {}}>
+          {options}
+        </FilterChip>,
+      );
+      await userEvent.click(screen.getByRole("button", { name: "Types" }));
+      expect(
+        await screen.findByRole("button", { name: "Appliquer" }),
+      ).toBeInTheDocument();
+    });
+
+    it("should use « Réinitialiser » activation from canReset (deferred draft)", async () => {
+      // En différé, l'activation suit `canReset` (le brouillon), pas l'appliqué.
+      render(
+        <FilterChip label="Types" applyMode="deferred" canReset onApply={() => {}}>
+          {options}
+        </FilterChip>,
+      );
+      await userEvent.click(screen.getByRole("button", { name: "Types" }));
+      expect(await screen.findByRole("button", { name: "Réinitialiser" })).toBeEnabled();
     });
   });
 });

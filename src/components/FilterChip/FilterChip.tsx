@@ -1,9 +1,10 @@
 // FilterChip — Comète Design System
 // Filtre rapide (chip) façon listing Back Market : une chip = une facette.
 // Inactive → pilule outlined + chevron ; active → pilule contained (fond
-// sombre) + compteur + croix de retrait. Le corps de la chip ouvre un panneau
-// (popover desktop / bottom sheet mobile) avec les options de la facette et un
-// pied « Réinitialiser » / « Appliquer » (pas d'application au fil de l'eau).
+// sombre) + valeur (1) ou compteur (≥ 2) + croix de retrait. Le corps de la
+// chip ouvre un panneau (popover desktop / bottom sheet mobile) avec les
+// options de la facette. Application instantanée (popover) ou différée
+// (bottom sheet) selon `applyMode` — cf. la prop.
 //
 // L'état des filtres reste chez le consommateur (controlled) : FilterChip ne
 // gère QUE l'ouverture du panneau et le rendu ; il expose `onApply`, `onReset`
@@ -46,9 +47,31 @@ export interface FilterChipProps {
   valueLabel?: string;
   /** Contenu du panneau : options de la facette (checkboxes, radios, dates…). */
   children: ReactNode;
-  /** Appelé au clic sur « Appliquer » (commit de la sélection en cours). */
-  onApply: () => void;
-  /** Appelé au clic sur « Réinitialiser » dans le pied du panneau. */
+  /**
+   * Mode d'application :
+   * - `"instant"` — chaque changement dans `children` s'applique immédiatement
+   *   (le consommateur applique dans son `onChange`). Pas de bouton
+   *   « Appliquer » ; le pied ne garde que « Réinitialiser ». Fermeture par
+   *   clic hors zone / Échap / re-clic (rien à confirmer).
+   * - `"deferred"` — brouillon : les changements ne s'appliquent qu'au clic sur
+   *   « Appliquer » ; Échap/clic-hors jettent le brouillon.
+   *
+   * Défaut automatique : `"instant"` en popover (desktop), `"deferred"` en
+   * bottom sheet (mobile). À forcer si besoin (ex. `"deferred"` partout quand
+   * le backend est lent). Instantané = itération rapide sur données locales ;
+   * différé = requêtes coûteuses ou panneau qui masque les résultats.
+   */
+  applyMode?: "instant" | "deferred";
+  /**
+   * Appelé au clic sur « Appliquer » (mode différé uniquement — commit du
+   * brouillon). Inutile en mode instantané.
+   */
+  onApply?: () => void;
+  /**
+   * Appelé au clic sur « Réinitialiser ». En différé, vide le **brouillon** (il
+   * faut encore « Appliquer » pour confirmer — comportement Back Market) ; en
+   * instantané, efface directement les valeurs appliquées.
+   */
   onReset?: () => void;
   /**
    * Appelé au clic sur la croix (×) : efface TOUTES les valeurs de la facette
@@ -56,8 +79,9 @@ export interface FilterChipProps {
    */
   onClear?: () => void;
   /**
-   * Active le bouton « Réinitialiser » du panneau. Par défaut, dérivé de
-   * `isActive` (rien d'appliqué → rien à réinitialiser).
+   * Active le bouton « Réinitialiser ». **Requis en mode différé** : le
+   * brouillon vit chez le consommateur, passez `canReset={draft.length > 0}`.
+   * En mode instantané, dérivé de l'état actif (brouillon = appliqué).
    */
   canReset?: boolean;
   /** État ouvert contrôlé du panneau (sinon géré en interne). */
@@ -117,6 +141,7 @@ export function FilterChip({
   isActive,
   valueLabel,
   children,
+  applyMode,
   onApply,
   onReset,
   onClear,
@@ -140,6 +165,10 @@ export function FilterChip({
 
   const rootRef = useRef<HTMLDivElement>(null);
   const isNarrow = useContainerIsNarrow(rootRef);
+
+  // Mode d'application : instantané en popover, différé en bottom sheet — sauf
+  // override explicite du consommateur.
+  const mode = applyMode ?? (isNarrow ? "deferred" : "instant");
 
   // Règle valeur / compteur : 1 valeur (avec libellé) → « Label : Valeur »,
   // sinon compteur. Le nom accessible suit la même logique.
@@ -188,16 +217,20 @@ export function FilterChip({
         >
           {resetLabel}
         </Button>
-        <Button
-          color="comete"
-          density="compact"
-          onPress={() => {
-            onApply();
-            setOpen(false);
-          }}
-        >
-          {applyLabel}
-        </Button>
+        {/* « Appliquer » uniquement en différé : en instantané tout est déjà
+            appliqué (le consommateur applique dans son onChange). */}
+        {mode === "deferred" && (
+          <Button
+            color="comete"
+            density="compact"
+            onPress={() => {
+              onApply?.();
+              setOpen(false);
+            }}
+          >
+            {applyLabel}
+          </Button>
+        )}
       </div>
     </div>
   );
