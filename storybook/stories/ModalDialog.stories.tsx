@@ -159,31 +159,35 @@ export const Default: Story = {
 /** Modale warning. */
 export const Warning: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("4616:7324") } },
-  render: () => <ModalStory appearance="warning" />,
+  args: { appearance: "warning" },
+  render: (args) => <ModalStory {...args} />,
 };
 
 /** Modale critical. */
 export const Critical: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("4616:7370") } },
-  render: () => <ModalStory appearance="critical" />,
+  args: { appearance: "critical" },
+  render: (args) => <ModalStory {...args} />,
 };
 
 /** Modale xsmall. */
 export const XSmall: Story = {
   name: "Width xsmall",
-  render: () => <ModalStory width="xsmall" />,
+  args: { width: "xsmall" },
+  render: (args) => <ModalStory {...args} />,
 };
 
 /** Modale xlarge. */
 export const XLarge: Story = {
   name: "Width xlarge",
-  render: () => <ModalStory width="xlarge" />,
+  args: { width: "xlarge" },
+  render: (args) => <ModalStory {...args} />,
 };
 
 /** Avec bouton close. */
 export const WithClose: Story = {
   name: "With close button",
-  render: () => <ModalStory showClose />,
+  render: (args) => <ModalStory {...args} showClose />,
 };
 
 /** Toutes les apparences. */

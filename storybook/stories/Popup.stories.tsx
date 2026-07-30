@@ -144,9 +144,10 @@ export const Default: Story = {
 export const TopLeft: Story = {
   name: "Top left",
   parameters: { design: { type: "figma", url: figmaUrl("3255:9382") } },
-  render: () => (
+  args: { placement: "top-left" },
+  render: (args) => (
     <div style={{ paddingTop: 120 }}>
-      <Popup trigger={<Button>Top left</Button>} placement="top-left">
+      <Popup trigger={<Button>Top left</Button>} placement={args.placement} offset={args.offset}>
         <p style={{ margin: 0 }}>Popup en haut à gauche</p>
       </Popup>
     </div>
@@ -157,8 +158,9 @@ export const TopLeft: Story = {
 export const BottomRight: Story = {
   name: "Bottom right",
   parameters: { design: { type: "figma", url: figmaUrl("3255:9412") } },
-  render: () => (
-    <Popup trigger={<Button>Bottom right</Button>} placement="bottom-right">
+  args: { placement: "bottom-right" },
+  render: (args) => (
+    <Popup trigger={<Button>Bottom right</Button>} placement={args.placement} offset={args.offset}>
       <p style={{ margin: 0 }}>Popup en bas à droite</p>
     </Popup>
   ),

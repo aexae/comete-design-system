@@ -1,7 +1,7 @@
 // SideNav — story principale (composition complète)
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, userEvent, expect } from "storybook/test";
-import { SideNav } from "@aexae/comete-design-system/components";
+import { SideNav, Logo } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 import { MainCouranteShell, MainCouranteNav } from "./_appShell";
@@ -57,11 +57,29 @@ const meta: Meta<StoryArgs> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Composition complète : SideNav.Provider + SideNav + Page avec Trigger
- *  dans Page.Header.leading. Expanded par défaut. */
+/** SideNav autonome : `SideNav.Provider` + `SideNav` (Header + corps + Footer),
+ *  hors contexte de Page. C'est l'élément `<SideNav>` qui porte la largeur de 240px.
+ *  Déployée par défaut. */
 export const Default: Story = {
-  render: (args) => (
-    <MainCouranteShell nav={<MainCouranteNav />} initialCollapsed={args.initialCollapsed} />
+  render: () => (
+    <SideNav.Provider>
+      {/* `.sidenav` fait `height: 100%` → le parent doit avoir une hauteur définie. */}
+      <div style={{ display: "flex", height: "100vh" }}>
+        <SideNav>
+          <SideNav.Header
+            logo={<Logo product="cafe" format="icon" />}
+            companyName="Pro Sécurité"
+            description="Main Courante"
+          />
+          <MainCouranteNav />
+          <SideNav.Footer>
+            <SideNav.FooterBrand>
+              <Logo size={14} />
+            </SideNav.FooterBrand>
+          </SideNav.Footer>
+        </SideNav>
+      </div>
+    </SideNav.Provider>
   ),
 };
 
@@ -169,9 +187,9 @@ export const OversizedLogo: Story = {
 };
 
 /**
- * **Pied de marque** — `SideNav.Footer` affiche un logo discret (opacité
- * réduite), centré en bas ; l'opacité remonte au survol. Visible ici au bas de
- * la navigation déployée.
+ * **Pied de marque** — `SideNav.FooterBrand` (dans `SideNav.Footer`) affiche un
+ * logo discret (opacité réduite), centré en bas ; l'opacité remonte au survol.
+ * Visible ici au bas de la navigation déployée.
  */
 export const BrandFooter: Story = {
   name: "Pied de marque",

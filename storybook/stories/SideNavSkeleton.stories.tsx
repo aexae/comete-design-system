@@ -86,3 +86,21 @@ export const MultipleSections: Story = {
     </>
   ),
 };
+
+/**
+ * Brique unitaire — `SideNav.ItemSkeleton` : la silhouette d'un seul item
+ * (pastille d'icône + barre de label, `hasDescription` pour une 2ᵉ ligne).
+ * À composer manuellement pour un état de chargement sur mesure, ou via
+ * `SideNav.Skeleton` qui en empile plusieurs.
+ */
+export const ItemSkeletons: Story = {
+  name: "Item skeleton (unitaire)",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <>
+      <SideNav.ItemSkeleton />
+      <SideNav.ItemSkeleton />
+      <SideNav.ItemSkeleton hasDescription />
+    </>
+  ),
+};

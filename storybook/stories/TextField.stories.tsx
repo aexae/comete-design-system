@@ -152,10 +152,15 @@ export const Disabled: Story = {
 /** TextField dans un Field avec label et message. */
 export const WithField: Story = {
   name: "With Field wrapper",
-  render: () => (
+  args: {
+    "aria-label": "Email",
+    placeholder: "nom@example.com",
+    type: "email",
+  },
+  render: (args) => (
     <div style={{ width: 280 }}>
       <Field label="Email" isRequired>
-        <TextField aria-label="Email" placeholder="nom@example.com" type="email" />
+        <TextField {...args} />
       </Field>
     </div>
   ),

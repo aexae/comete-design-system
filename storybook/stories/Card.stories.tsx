@@ -240,6 +240,26 @@ export const RichContent: Story = {
   ),
 };
 
+/**
+ * État de **chargement** via la prop `isLoading` : le contenu (`children`) est
+ * remplacé par des squelettes, la carte n'est ni actionnable ni draggable et est
+ * marquée `aria-busy` (`role="status"` annonce le chargement). Bascule
+ * `isLoading` dans les contrôles pour voir le contenu réel.
+ */
+export const Loading: Story = {
+  args: { isLoading: true },
+  render: (args) => (
+    <Card {...args}>
+      <CC>
+        <Stack gap="075">
+          <Heading size="xsmall" as="span">Carrefour Market</Heading>
+          <Text size="small" as="span" color="subtlest">Vindémia Distribution</Text>
+        </Stack>
+      </CC>
+    </Card>
+  ),
+};
+
 // -----------------------------------------------------------------------
 // Play function — navigation clavier
 

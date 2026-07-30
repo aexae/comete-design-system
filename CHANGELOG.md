@@ -31,6 +31,9 @@ entre versions alpha.
   comprime jusqu'à 160px (placeholder préservé) quand la place manque, sans
   jamais tronquer ni descendre sur une seconde rangée. Optionnel,
   rétrocompatible (sans lui, comportement inchangé).
+- **Card** : prop `isLoading` — remplace le contenu (`children`) par des
+  squelettes ; carte marquée `aria-busy`, ni actionnable ni draggable pendant le
+  chargement. `children` devient optionnel.
 
 ### Modifié
 
