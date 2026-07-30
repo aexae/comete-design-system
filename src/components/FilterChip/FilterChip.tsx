@@ -136,19 +136,16 @@ export function FilterChip({
     ? `${label}, ${count} filtre${count > 1 ? "s" : ""} actif${count > 1 ? "s" : ""}`
     : label;
 
-  // Corps de la chip. `managed` = on gère nous-mêmes press + aria (chemin
-  // bottom sheet) ; sinon DialogTrigger (Popup) les câble automatiquement.
+  // Corps de la chip. `aria-haspopup`/`aria-expanded` posés explicitement (le
+  // DialogTrigger de Popup ne pose pas `haspopup`). `managed` = chemin bottom
+  // sheet : on ouvre nous-mêmes ; en desktop c'est DialogTrigger qui gère le press.
   const bodyButton = (managed: boolean) => (
     <AriaButton
       className={styles.body}
       aria-label={accessibleName}
-      {...(managed
-        ? {
-            "aria-haspopup": "dialog" as const,
-            "aria-expanded": open,
-            onPress: () => setOpen(true),
-          }
-        : {})}
+      aria-haspopup="dialog"
+      aria-expanded={open}
+      {...(managed ? { onPress: () => setOpen(true) } : {})}
     >
       <span className={styles.label}>{label}</span>
       {active ? (
