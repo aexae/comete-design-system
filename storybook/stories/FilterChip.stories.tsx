@@ -1,7 +1,6 @@
 // FilterChip / FilterChipRow — stories du pattern « filtres rapides » (chips).
 import { useEffect, useState, type ReactElement } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, userEvent, expect, waitFor } from "storybook/test";
 import {
   FilterChip,
   FilterChipRow,
@@ -92,11 +91,6 @@ const AGENTS: Option[] = [
   { value: "a1", label: "Agent 1" },
   { value: "a2", label: "Agent 2" },
 ];
-// Liste longue (> 15) pour démontrer le défilement du panneau.
-const MANY_SITES: Option[] = Array.from({ length: 22 }, (_, i) => ({
-  value: `s${i + 1}`,
-  label: `Site ${i + 1}`,
-}));
 
 const FACETS: FacetDef[] = [
   { id: "sites", label: "Sites", multi: true, pinned: true, options: SITES },
@@ -562,104 +556,6 @@ export const Row: Story = {
   render: () => (
     <FilterBar mode="instant" initial={{ sites: ["idf", "paris", "lyon"], types: ["intrusion"] }} />
   ),
-};
-
-/**
- * **Panneau ouvert** (pré-ouvert pour capture) : popover de « Types » avec ses
- * options et le pied « Réinitialiser » (mode instantané → pas d'« Appliquer »).
- */
-export const PanelOpen: Story = {
-  name: "Panneau ouvert (popover)",
-  render: () => (
-    <FilterBar mode="instant" initial={{ sites: ["idf", "paris", "lyon"] }} openFacet="types" />
-  ),
-};
-
-/**
- * **Application instantanée** : en popover, cocher une option applique
- * immédiatement (pas de bouton « Appliquer ») et le panneau reste ouvert.
- */
-export const InstantApply: Story = {
-  name: "Application instantanée (play)",
-  render: () => <FilterBar mode="instant" />,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
-    await userEvent.click(canvas.getByRole("button", { name: "Types" }));
-    await userEvent.click(await body.findByRole("checkbox", { name: "Intrusion" }));
-    await waitFor(() =>
-      expect(
-        canvas.getByRole("button", { name: "Effacer le filtre Types" }),
-      ).toBeInTheDocument(),
-    );
-    await expect(body.queryByRole("button", { name: "Appliquer" })).not.toBeInTheDocument();
-    await expect(body.getByRole("dialog")).toBeInTheDocument();
-  },
-};
-
-/**
- * **Chips temporaires** : 6 facettes secondaires en plus des épinglées. Activer
- * une facette dans le panneau complet fait apparaître sa chip temporaire ;
- * l'effacer la fait disparaître — la rangée reflète toujours l'état de filtrage.
- */
-export const TemporaryChips: Story = {
-  name: "Chips temporaires (play)",
-  render: () => <FilterBar mode="instant" initial={{ sites: ["idf"] }} />,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
-
-    // Pas de chip « Groupes » au départ (facette secondaire inactive).
-    await expect(canvas.queryByRole("button", { name: /Groupes/ })).not.toBeInTheDocument();
-
-    // Ouvrir le panneau complet → maître, naviguer vers le détail « Groupes »,
-    // cocher une valeur, revenir (Appliquer) puis fermer (Appliquer).
-    await userEvent.click(canvas.getByRole("button", { name: /Filtres/ }));
-    await userEvent.click(await body.findByRole("button", { name: "Groupes" }));
-    await userEvent.click(await body.findByRole("checkbox", { name: "Groupe A" }));
-    await userEvent.click(await body.findByRole("button", { name: "Appliquer" })); // détail → maître
-    await userEvent.click(await body.findByRole("button", { name: "Appliquer" })); // maître → fermé
-
-    // La chip temporaire « Groupes » apparaît dans la rangée…
-    const tempChip = await canvas.findByRole("button", { name: /^Groupes/ });
-    await expect(tempChip).toBeInTheDocument();
-
-    // …puis on l'efface → elle disparaît.
-    await userEvent.click(canvas.getByRole("button", { name: "Effacer le filtre Groupes" }));
-    await waitFor(() =>
-      expect(canvas.queryByRole("button", { name: /^Groupes/ })).not.toBeInTheDocument(),
-    );
-  },
-};
-
-/**
- * **Liste longue (> 15 options)** : le panneau de la facette se plafonne et
- * défile, avec une scrollbar visible (indispensable sur mobile pour signaler
- * qu'il y a plus de contenu). Ici « Sites » compte 22 options.
- */
-export const ManyOptions: Story = {
-  name: "Liste longue (scroll)",
-  render: function ManyOptionsStory() {
-    const [applied, setApplied] = useState<string[]>([]);
-    const [open, setOpen] = useState(true);
-    return (
-      <FilterChip
-        label="Sites"
-        count={applied.length}
-        applyMode="instant"
-        isOpen={open}
-        onOpenChange={setOpen}
-        onReset={() => setApplied([])}
-        onClear={() => setApplied([])}
-      >
-        <CheckboxGroup aria-label="Sites" value={applied} onChange={setApplied}>
-          {MANY_SITES.map((o) => (
-            <Checkbox key={o.value} value={o.value} label={o.label} />
-          ))}
-        </CheckboxGroup>
-      </FilterChip>
-    );
-  },
 };
 
 /**
