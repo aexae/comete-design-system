@@ -22,6 +22,31 @@
   min-width: 0;
 }
 
+/* Bouton retour de la vue détail — porte l'icône SVG fournie par le design. */
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size400);
+  height: var(--size400);
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius075);
+  cursor: pointer;
+  color: var(--text-default);
+  flex-shrink: 0;
+}
+
+.backButton:hover {
+  background: var(--background-neutral-subtlest-hovered);
+}
+
+.backButton:focus-visible {
+  outline: 2px solid var(--border-focused);
+  outline-offset: 2px;
+}
+
 /* Liste maître des facettes — défile si > ~15 lignes ; scrollbar fine visible. */
 .list {
   flex: 1 1 auto;

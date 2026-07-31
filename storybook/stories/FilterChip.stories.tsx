@@ -45,6 +45,20 @@ const SITES: Option[] = [
   { value: "paris", label: "Paris Centre" },
   { value: "lyon", label: "Lyon" },
   { value: "marseille", label: "Marseille" },
+  { value: "bordeaux", label: "Bordeaux" },
+  { value: "lille", label: "Lille" },
+  { value: "nantes", label: "Nantes" },
+  { value: "toulouse", label: "Toulouse" },
+  { value: "nice", label: "Nice" },
+  { value: "strasbourg", label: "Strasbourg" },
+  { value: "rennes", label: "Rennes" },
+  { value: "grenoble", label: "Grenoble" },
+  { value: "montpellier", label: "Montpellier" },
+  { value: "dijon", label: "Dijon" },
+  { value: "angers", label: "Angers" },
+  { value: "reims", label: "Reims" },
+  { value: "tours", label: "Tours" },
+  { value: "brest", label: "Brest" },
 ];
 const TYPES: Option[] = [
   { value: "intrusion", label: "Intrusion" },
@@ -141,6 +155,28 @@ function DateFacetContent({
         ))}
       </RadioGroup>
     </div>
+  );
+}
+
+// Icône « retour » de la vue détail — SVG fourni par le design (chevron fin),
+// `currentColor` pour hériter de la couleur du bouton.
+function BackIcon(): ReactElement {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        fill="currentColor"
+        fillRule="evenodd"
+        d="m7.442 11.161 7.344-7.356a1.186 1.186 0 1 1 1.677 1.678L9.95 12.009l6.558 6.512A1.186 1.186 0 0 1 14.83 20.2l-7.388-7.342a1.2 1.2 0 0 1 0-1.694z"
+        clipRule="evenodd"
+      />
+    </svg>
   );
 }
 
@@ -319,12 +355,14 @@ function AllFiltersDrawer({
         {detailFacet ? (
           <>
             <div className={css["header"]}>
-              <Button
-                appearance="subtle"
-                iconBefore="ArrowBack"
+              <button
+                type="button"
+                className={css["backButton"]}
                 aria-label="Retour"
-                onPress={() => setDetailId(null)}
-              />
+                onClick={() => setDetailId(null)}
+              >
+                <BackIcon />
+              </button>
               <Heading size="small" as="h2" className={css["headerTitle"]}>
                 {detailFacet.panelLabel ?? detailFacet.label}
               </Heading>
