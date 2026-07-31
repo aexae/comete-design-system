@@ -142,11 +142,19 @@
 .panelBodyScroll {
   max-height: 55vh;
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border-default) transparent;
   /* Sous le DrawerHeader (mobile) : pas de padding haut en plus, sinon l'écart
      titre ↔ recherche cumule le padding du header et celui du corps. */
   padding-top: 0;
+  /* Scrollbar transparente au repos, révélée au survol / focus de la zone
+     (sur tactile, la scrollbar overlay native apparaît au défilement). */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color var(--duration-fast) var(--easing-default);
+}
+
+.panelBodyScroll:hover,
+.panelBodyScroll:focus-within {
+  scrollbar-color: var(--border-default) transparent;
 }
 
 .panelBodyScroll::-webkit-scrollbar {
@@ -154,8 +162,14 @@
 }
 
 .panelBodyScroll::-webkit-scrollbar-thumb {
-  background: var(--border-default);
+  background: transparent;
   border-radius: var(--radius100);
+  transition: background-color var(--duration-fast) var(--easing-default);
+}
+
+.panelBodyScroll:hover::-webkit-scrollbar-thumb,
+.panelBodyScroll:focus-within::-webkit-scrollbar-thumb {
+  background: var(--border-default);
 }
 
 /* Footer épinglé pendant le défilement du conteneur (sticky), avec un fond

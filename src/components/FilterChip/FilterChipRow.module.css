@@ -23,11 +23,18 @@
   .row {
     flex-wrap: nowrap;
     overflow-x: auto;
-    /* Scrollbar horizontale VISIBLE (fine) : indique clairement à
-       l'utilisateur mobile que la rangée défile latéralement. */
-    scrollbar-width: thin;
-    scrollbar-color: var(--border-default) transparent;
     padding-bottom: var(--space050);
+    /* Scrollbar horizontale transparente au repos, révélée au survol / focus
+       de la rangée (sur tactile, la scrollbar overlay native apparaît au
+       défilement). */
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color var(--duration-fast) var(--easing-default);
+  }
+
+  .row:hover,
+  .row:focus-within {
+    scrollbar-color: var(--border-default) transparent;
   }
 
   .row::-webkit-scrollbar {
@@ -35,8 +42,14 @@
   }
 
   .row::-webkit-scrollbar-thumb {
-    background: var(--border-default);
+    background: transparent;
     border-radius: var(--radius100);
+    transition: background-color var(--duration-fast) var(--easing-default);
+  }
+
+  .row:hover::-webkit-scrollbar-thumb,
+  .row:focus-within::-webkit-scrollbar-thumb {
+    background: var(--border-default);
   }
 
   .row::-webkit-scrollbar-track {
