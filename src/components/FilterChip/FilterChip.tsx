@@ -19,7 +19,7 @@ import {
 } from "react";
 import { Button as AriaButton } from "react-aria-components";
 import { Popup } from "../Popup/Popup.js";
-import { Drawer } from "../Drawer/Drawer.js";
+import { Drawer, DrawerHeader } from "../Drawer/Drawer.js";
 import { Button } from "../Button/Button.js";
 import { Icon } from "../Icon/Icon.js";
 import styles from "./FilterChip.module.css";
@@ -262,8 +262,10 @@ export function FilterChip({
             onOpenChange={setOpen}
             placement="bottom"
             size="auto"
-            aria-label={`Filtrer par ${label}`}
           >
+            {/* Titre du bottom sheet (le `DrawerHeader` porte le nom accessible
+                via son slot title → plus besoin d'`aria-label` sur le Drawer). */}
+            <DrawerHeader onClose={() => setOpen(false)}>{label}</DrawerHeader>
             {panel}
           </Drawer>
         </>
