@@ -9,6 +9,7 @@ declare const styles: {
   readonly "label": string;
   readonly "panel": string;
   readonly "panelBody": string;
+  readonly "panelBodyScroll": string;
   readonly "panelFooter": string;
   readonly "value": string;
 };

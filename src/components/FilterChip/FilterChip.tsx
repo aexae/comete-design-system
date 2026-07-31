@@ -207,7 +207,16 @@ export function FilterChip({
 
   const panel = (
     <div className={styles.panel}>
-      <div className={styles.panelBody}>{children}</div>
+      {/* En mobile (Drawer), le corps porte lui-même le scroll (le Drawer ne
+          plafonne pas) ; en desktop, c'est le popover qui défile. Un seul
+          scroller dans les deux cas. */}
+      <div
+        className={[styles.panelBody, isNarrow ? styles.panelBodyScroll : ""]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        {children}
+      </div>
       <div className={styles.panelFooter}>
         <Button
           appearance="subtle"

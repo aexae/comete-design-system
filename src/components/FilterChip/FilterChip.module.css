@@ -125,29 +125,38 @@
   max-width: 100%;
 }
 
+/* Le corps ne défile PAS lui-même : c'est le conteneur (popover en desktop,
+   Drawer en mobile) qui gère l'unique scroll — évite une double scrollbar
+   (le popover a overflow-x:hidden, donc overflow-y:visible y est coercé en
+   auto : on ne peut pas le désactiver, on ne double donc pas le scroll). */
 .panelBody {
   display: flex;
   flex-direction: column;
   gap: var(--space150);
   padding: var(--space200);
-  /* Liste longue (> ~15 options) : le panneau se plafonne et défile plutôt que
-     de dépasser l'écran. Scrollbar TOUJOURS visible (fine) pour que
-     l'utilisateur — surtout mobile — comprenne qu'il peut défiler. */
-  max-height: min(50vh, 360px);
+}
+
+/* Mobile (bottom sheet) : le corps plafonne et défile lui-même, avec une
+   scrollbar fine VISIBLE (l'utilisateur mobile doit comprendre qu'il peut
+   défiler). Le footer, frère du corps, reste sous la zone défilante. */
+.panelBodyScroll {
+  max-height: 55vh;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--border-default) transparent;
 }
 
-.panelBody::-webkit-scrollbar {
+.panelBodyScroll::-webkit-scrollbar {
   width: 8px;
 }
 
-.panelBody::-webkit-scrollbar-thumb {
+.panelBodyScroll::-webkit-scrollbar-thumb {
   background: var(--border-default);
   border-radius: var(--radius100);
 }
 
+/* Footer épinglé pendant le défilement du conteneur (sticky), avec un fond
+   opaque pour couvrir la liste qui défile dessous. */
 .panelFooter {
   display: flex;
   align-items: center;
@@ -155,4 +164,7 @@
   gap: var(--space100);
   padding: var(--space150) var(--space200);
   border-top: 1px solid var(--border-subtle);
+  position: sticky;
+  bottom: 0;
+  background: var(--background-surface-default);
 }
