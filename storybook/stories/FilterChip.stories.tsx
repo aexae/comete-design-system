@@ -216,7 +216,7 @@ function AllFiltersDrawer({
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       placement={isNarrow ? "bottom" : "right"}
-      size={isNarrow ? "85vh" : "medium"}
+      size={isNarrow ? "85vh" : "narrow"}
       aria-label="Filtres"
     >
       <div className={css["panel"]}>
