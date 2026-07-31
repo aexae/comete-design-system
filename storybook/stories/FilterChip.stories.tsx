@@ -13,7 +13,6 @@ import {
   TextField,
   Drawer,
   Button,
-  Badge,
   Icon,
   Heading,
 } from "@aexae/comete-design-system/components";
@@ -145,6 +144,70 @@ function DateFacetContent({
   );
 }
 
+// Contenu d'une facette (cases / radios / date), avec recherche optionnelle.
+// Partagé par la chip (popover) et le détail du panneau complet.
+function FacetContent({
+  facet,
+  value,
+  onChange,
+  withSearch = false,
+}: {
+  facet: FacetDef;
+  value: string[];
+  onChange: (values: string[]) => void;
+  withSearch?: boolean;
+}): ReactElement {
+  const [query, setQuery] = useState("");
+
+  if (facet.id === "dates") {
+    return (
+      <DateFacetContent
+        value={value[0] ?? ""}
+        onChange={(v) => onChange(v ? [v] : [])}
+        options={facet.options}
+      />
+    );
+  }
+
+  const filtered =
+    withSearch && query.trim()
+      ? facet.options.filter((o) =>
+          o.label.toLowerCase().includes(query.trim().toLowerCase()),
+        )
+      : facet.options;
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--space150)" }}>
+      {withSearch && (
+        <TextField
+          aria-label={`Rechercher : ${facet.label}`}
+          placeholder={facet.label}
+          value={query}
+          onChange={setQuery}
+          elemAfter={<Icon icon="Search" size={20} color="subtle" />}
+        />
+      )}
+      {facet.multi ? (
+        <CheckboxGroup aria-label={facet.label} value={value} onChange={onChange}>
+          {filtered.map((o) => (
+            <Checkbox key={o.value} value={o.value} label={o.label} />
+          ))}
+        </CheckboxGroup>
+      ) : (
+        <RadioGroup
+          aria-label={facet.label}
+          value={value[0] ?? ""}
+          onChange={(v) => onChange(v ? [v] : [])}
+        >
+          {filtered.map((o) => (
+            <Radio key={o.value} value={o.value} label={o.label} />
+          ))}
+        </RadioGroup>
+      )}
+    </div>
+  );
+}
+
 // -----------------------------------------------------------------------
 // FacetChip — une facette contrôlée. Instant (applique dans onChange) ou
 // différé (brouillon + Appliquer) selon `mode`.
@@ -174,30 +237,9 @@ function FacetChip({
       ? facet.options.find((o) => o.value === applied[0])?.label
       : undefined;
 
-  const content =
-    facet.id === "dates" ? (
-      <DateFacetContent
-        value={groupValue[0] ?? ""}
-        onChange={(v) => onGroupChange(v ? [v] : [])}
-        options={facet.options}
-      />
-    ) : facet.multi ? (
-      <CheckboxGroup aria-label={facet.label} value={groupValue} onChange={onGroupChange}>
-        {facet.options.map((o) => (
-          <Checkbox key={o.value} value={o.value} label={o.label} />
-        ))}
-      </CheckboxGroup>
-    ) : (
-      <RadioGroup
-        aria-label={facet.label}
-        value={groupValue[0] ?? ""}
-        onChange={(v) => onGroupChange(v ? [v] : [])}
-      >
-        {facet.options.map((o) => (
-          <Radio key={o.value} value={o.value} label={o.label} />
-        ))}
-      </RadioGroup>
-    );
+  const content = (
+    <FacetContent facet={facet} value={groupValue} onChange={onGroupChange} />
+  );
 
   return (
     <FilterChip
@@ -228,9 +270,10 @@ function FacetChip({
 }
 
 // -----------------------------------------------------------------------
-// Panneau complet (mock D13) — liste maître des facettes façon maquette MCE.
-// Droite en desktop, bas en mobile. Cliquer une facette l'active/désactive
-// (mock : le vrai D13 ouvrirait un détail avec les options).
+// Panneau complet (mock D13) — vrai MAÎTRE-DÉTAIL façon maquette MCE.
+// Maître : liste des facettes (libellé + valeurs en toutes lettres + chevron).
+// Détail : clic sur une facette → vue dédiée (retour ←, titre, recherche,
+// options). Droite en desktop, bas (bottom sheet) en mobile.
 
 function AllFiltersDrawer({
   applied,
@@ -246,14 +289,22 @@ function AllFiltersDrawer({
   onOpenChange: (open: boolean) => void;
 }): ReactElement {
   const isNarrow = useIsNarrowViewport();
+  const [detailId, setDetailId] = useState<string | null>(null);
+  // À la fermeture, on repart toujours de la vue maître.
+  useEffect(() => {
+    if (!isOpen) setDetailId(null);
+  }, [isOpen]);
 
-  const summaryOf = (f: FacetDef): { count: number } | { text: string } | null => {
+  const detailFacet = detailId ? FACETS.find((f) => f.id === detailId) ?? null : null;
+
+  // Résumé de la ligne maître : les valeurs sélectionnées EN TOUTES LETTRES.
+  const summaryText = (f: FacetDef): string | null => {
     const vals = applied[f.id] ?? [];
     if (vals.length === 0) return null;
-    if (!f.multi) {
-      return { text: f.options.find((o) => o.value === vals[0])?.label ?? "" };
-    }
-    return { count: vals.length };
+    return vals
+      .map((v) => f.options.find((o) => o.value === v)?.label)
+      .filter(Boolean)
+      .join(", ");
   };
 
   return (
@@ -265,64 +316,90 @@ function AllFiltersDrawer({
       aria-label="Filtres"
     >
       <div className={css["panel"]}>
-        <div className={css["header"]}>
-          <Heading size="small" as="h2" className={css["headerTitle"]}>
-            Filtres
-          </Heading>
-          <Button
-            appearance="subtle"
-            iconBefore="Close"
-            aria-label="Fermer"
-            onPress={() => onOpenChange(false)}
-          />
-        </div>
-
-        <div className={css["list"]}>
-          {FACETS.map((f) => {
-            const summary = summaryOf(f);
-            return (
-              <button
-                key={f.id}
-                type="button"
-                className={css["row"]}
-                onClick={() => {
-                  const active = (applied[f.id]?.length ?? 0) > 0;
-                  onApplied(f.id, active ? [] : [f.options[0].value]);
-                }}
-              >
-                <span className={css["rowLabel"]}>{f.panelLabel ?? f.label}</span>
-                {summary && "count" in summary && (
-                  <Badge
-                    label={String(summary.count)}
-                    appearance="information"
-                    importance="high"
-                  />
-                )}
-                {summary && "text" in summary && (
-                  <span className={css["rowValue"]}>{summary.text}</span>
-                )}
-                <Icon icon="ChevronRight" size={20} color="subtle" />
-              </button>
-            );
-          })}
-        </div>
-
-        <div className={css["footer"]}>
-          <div>
-            <Checkbox label="Mémoriser mes filtres" />
-            <div className={css["memorizeDescription"]}>
-              Retrouvez cette sélection à votre prochaine visite.
+        {detailFacet ? (
+          <>
+            <div className={css["header"]}>
+              <Button
+                appearance="subtle"
+                iconBefore="ArrowBack"
+                aria-label="Retour"
+                onPress={() => setDetailId(null)}
+              />
+              <Heading size="small" as="h2" className={css["headerTitle"]}>
+                {detailFacet.panelLabel ?? detailFacet.label}
+              </Heading>
             </div>
-          </div>
-          <div className={css["footerActions"]}>
-            <Button appearance="outlined" onPress={onClearAll}>
-              Effacer les filtres
-            </Button>
-            <Button color="comete" onPress={() => onOpenChange(false)}>
-              Appliquer
-            </Button>
-          </div>
-        </div>
+
+            <div className={css["detailBody"]}>
+              <FacetContent
+                facet={detailFacet}
+                value={applied[detailFacet.id] ?? []}
+                onChange={(v) => onApplied(detailFacet.id, v)}
+                withSearch={detailFacet.multi}
+              />
+            </div>
+
+            <div className={css["footer"]}>
+              <div className={css["footerActions"]}>
+                <Button appearance="outlined" onPress={() => onApplied(detailFacet.id, [])}>
+                  Effacer
+                </Button>
+                <Button color="comete" onPress={() => setDetailId(null)}>
+                  Appliquer
+                </Button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={css["header"]}>
+              <Heading size="small" as="h2" className={css["headerTitle"]}>
+                Filtres
+              </Heading>
+              <Button
+                appearance="subtle"
+                iconBefore="Close"
+                aria-label="Fermer"
+                onPress={() => onOpenChange(false)}
+              />
+            </div>
+
+            <div className={css["list"]}>
+              {FACETS.map((f) => {
+                const summary = summaryText(f);
+                return (
+                  <button
+                    key={f.id}
+                    type="button"
+                    className={css["row"]}
+                    onClick={() => setDetailId(f.id)}
+                  >
+                    <span className={css["rowLabel"]}>{f.panelLabel ?? f.label}</span>
+                    {summary && <span className={css["rowValue"]}>{summary}</span>}
+                    <Icon icon="ChevronRight" size={20} color="subtle" />
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className={css["footer"]}>
+              <div>
+                <Checkbox label="Mémoriser mes filtres" />
+                <div className={css["memorizeDescription"]}>
+                  Retrouvez cette sélection à votre prochaine visite.
+                </div>
+              </div>
+              <div className={css["footerActions"]}>
+                <Button appearance="outlined" onPress={onClearAll}>
+                  Effacer les filtres
+                </Button>
+                <Button color="comete" onPress={() => onOpenChange(false)}>
+                  Appliquer
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </Drawer>
   );
@@ -491,10 +568,13 @@ export const TemporaryChips: Story = {
     // Pas de chip « Groupes » au départ (facette secondaire inactive).
     await expect(canvas.queryByRole("button", { name: /Groupes/ })).not.toBeInTheDocument();
 
-    // Ouvrir le panneau complet, activer « Groupes », appliquer (ferme).
+    // Ouvrir le panneau complet → maître, naviguer vers le détail « Groupes »,
+    // cocher une valeur, revenir (Appliquer) puis fermer (Appliquer).
     await userEvent.click(canvas.getByRole("button", { name: /Filtres/ }));
     await userEvent.click(await body.findByRole("button", { name: "Groupes" }));
-    await userEvent.click(body.getByRole("button", { name: "Appliquer" }));
+    await userEvent.click(await body.findByRole("checkbox", { name: "Groupe A" }));
+    await userEvent.click(await body.findByRole("button", { name: "Appliquer" })); // détail → maître
+    await userEvent.click(await body.findByRole("button", { name: "Appliquer" })); // maître → fermé
 
     // La chip temporaire « Groupes » apparaît dans la rangée…
     const tempChip = await canvas.findByRole("button", { name: /^Groupes/ });

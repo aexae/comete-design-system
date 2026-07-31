@@ -68,6 +68,29 @@
 
 .rowValue {
   color: var(--text-subtle);
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Corps de la vue détail (options d'une facette) — défilant, scrollbar visible. */
+.detailBody {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space300);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-default) transparent;
+}
+
+.detailBody::-webkit-scrollbar {
+  width: 8px;
+}
+
+.detailBody::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: var(--radius100);
 }
 
 .footer {
