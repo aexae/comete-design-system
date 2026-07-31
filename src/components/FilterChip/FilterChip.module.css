@@ -144,6 +144,9 @@
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--border-default) transparent;
+  /* Sous le DrawerHeader (mobile) : pas de padding haut en plus, sinon l'écart
+     titre ↔ recherche cumule le padding du header et celui du corps. */
+  padding-top: 0;
 }
 
 .panelBodyScroll::-webkit-scrollbar {
