@@ -180,18 +180,17 @@ function BackIcon(): ReactElement {
   );
 }
 
-// Contenu d'une facette (cases / radios / date), avec recherche optionnelle.
-// Partagé par la chip (popover) et le détail du panneau complet.
+// Contenu d'une facette. Multi → recherche + « Tout sélectionner » + cases ;
+// simple → radios ; date → contenu dédié. Partagé par la chip (popover) et le
+// détail du panneau complet.
 function FacetContent({
   facet,
   value,
   onChange,
-  withSearch = false,
 }: {
   facet: FacetDef;
   value: string[];
   onChange: (values: string[]) => void;
-  withSearch?: boolean;
 }): ReactElement {
   const [query, setQuery] = useState("");
 
@@ -205,41 +204,49 @@ function FacetContent({
     );
   }
 
-  const filtered =
-    withSearch && query.trim()
-      ? facet.options.filter((o) =>
-          o.label.toLowerCase().includes(query.trim().toLowerCase()),
-        )
-      : facet.options;
+  if (!facet.multi) {
+    return (
+      <RadioGroup
+        aria-label={facet.label}
+        value={value[0] ?? ""}
+        onChange={(v) => onChange(v ? [v] : [])}
+      >
+        {facet.options.map((o) => (
+          <Radio key={o.value} value={o.value} label={o.label} />
+        ))}
+      </RadioGroup>
+    );
+  }
+
+  const filtered = query.trim()
+    ? facet.options.filter((o) =>
+        o.label.toLowerCase().includes(query.trim().toLowerCase()),
+      )
+    : facet.options;
+  const allValues = facet.options.map((o) => o.value);
+  const allSelected = allValues.length > 0 && value.length === allValues.length;
+  const partiallySelected = value.length > 0 && !allSelected;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "var(--space150)" }}>
-      {withSearch && (
-        <TextField
-          aria-label={`Rechercher : ${facet.label}`}
-          placeholder={facet.label}
-          value={query}
-          onChange={setQuery}
-          elemAfter={<Icon icon="Search" size={20} color="subtle" />}
-        />
-      )}
-      {facet.multi ? (
-        <CheckboxGroup aria-label={facet.label} value={value} onChange={onChange}>
-          {filtered.map((o) => (
-            <Checkbox key={o.value} value={o.value} label={o.label} />
-          ))}
-        </CheckboxGroup>
-      ) : (
-        <RadioGroup
-          aria-label={facet.label}
-          value={value[0] ?? ""}
-          onChange={(v) => onChange(v ? [v] : [])}
-        >
-          {filtered.map((o) => (
-            <Radio key={o.value} value={o.value} label={o.label} />
-          ))}
-        </RadioGroup>
-      )}
+      <TextField
+        aria-label={`Rechercher : ${facet.label}`}
+        placeholder={facet.label}
+        value={query}
+        onChange={setQuery}
+        elemAfter={<Icon icon="Search" size={20} color="subtle" />}
+      />
+      <Checkbox
+        label="Tout sélectionner"
+        isChecked={allSelected}
+        isIndeterminate={partiallySelected}
+        onChange={(checked) => onChange(checked ? allValues : [])}
+      />
+      <CheckboxGroup aria-label={facet.label} value={value} onChange={onChange}>
+        {filtered.map((o) => (
+          <Checkbox key={o.value} value={o.value} label={o.label} />
+        ))}
+      </CheckboxGroup>
     </div>
   );
 }
@@ -373,7 +380,6 @@ function AllFiltersDrawer({
                 facet={detailFacet}
                 value={applied[detailFacet.id] ?? []}
                 onChange={(v) => onApplied(detailFacet.id, v)}
-                withSearch={detailFacet.multi}
               />
             </div>
 
