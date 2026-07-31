@@ -10,6 +10,7 @@ import {
   Checkbox,
   RadioGroup,
   Radio,
+  TextField,
   Drawer,
   Button,
   Badge,
@@ -51,10 +52,14 @@ const TYPES: Option[] = [
   { value: "incendie", label: "Incendie" },
   { value: "ronde", label: "Ronde" },
 ];
+// Propositions de date — exactement celles de la maquette MCE.
 const DATES: Option[] = [
   { value: "hier", label: "Hier" },
-  { value: "7", label: "7 derniers jours" },
-  { value: "30", label: "30 derniers jours" },
+  { value: "semaine", label: "Cette semaine" },
+  { value: "7j", label: "Les 7 derniers jours" },
+  { value: "30j", label: "Les 30 derniers jours" },
+  { value: "mois", label: "Ce mois" },
+  { value: "mois-dernier", label: "Le mois dernier" },
 ];
 const STATUTS: Option[] = [
   { value: "ouvert", label: "Ouvert" },
@@ -107,6 +112,39 @@ function useIsNarrowViewport(): boolean {
   return narrow;
 }
 
+// Contenu de la facette Date — « Période personnalisée » (plage) + « Période »
+// en radios, exactement comme la maquette MCE.
+function DateFacetContent({
+  value,
+  onChange,
+  options,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  options: Option[];
+}): ReactElement {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
+        <span style={{ fontSize: "var(--font-size-ui-xs)", color: "var(--text-subtle)" }}>
+          Période personnalisée
+        </span>
+        <TextField
+          aria-label="Période personnalisée"
+          placeholder="JJ/MM/AAAA – JJ/MM/AAAA"
+          isReadOnly
+          elemAfter={<Icon icon="CalendarMonth" size={20} color="subtle" />}
+        />
+      </div>
+      <RadioGroup aria-label="Période" value={value} onChange={onChange}>
+        {options.map((o) => (
+          <Radio key={o.value} value={o.value} label={o.label} />
+        ))}
+      </RadioGroup>
+    </div>
+  );
+}
+
 // -----------------------------------------------------------------------
 // FacetChip — une facette contrôlée. Instant (applique dans onChange) ou
 // différé (brouillon + Appliquer) selon `mode`.
@@ -136,23 +174,30 @@ function FacetChip({
       ? facet.options.find((o) => o.value === applied[0])?.label
       : undefined;
 
-  const content = facet.multi ? (
-    <CheckboxGroup aria-label={facet.label} value={groupValue} onChange={onGroupChange}>
-      {facet.options.map((o) => (
-        <Checkbox key={o.value} value={o.value} label={o.label} />
-      ))}
-    </CheckboxGroup>
-  ) : (
-    <RadioGroup
-      aria-label={facet.label}
-      value={groupValue[0] ?? ""}
-      onChange={(v) => onGroupChange(v ? [v] : [])}
-    >
-      {facet.options.map((o) => (
-        <Radio key={o.value} value={o.value} label={o.label} />
-      ))}
-    </RadioGroup>
-  );
+  const content =
+    facet.id === "dates" ? (
+      <DateFacetContent
+        value={groupValue[0] ?? ""}
+        onChange={(v) => onGroupChange(v ? [v] : [])}
+        options={facet.options}
+      />
+    ) : facet.multi ? (
+      <CheckboxGroup aria-label={facet.label} value={groupValue} onChange={onGroupChange}>
+        {facet.options.map((o) => (
+          <Checkbox key={o.value} value={o.value} label={o.label} />
+        ))}
+      </CheckboxGroup>
+    ) : (
+      <RadioGroup
+        aria-label={facet.label}
+        value={groupValue[0] ?? ""}
+        onChange={(v) => onGroupChange(v ? [v] : [])}
+      >
+        {facet.options.map((o) => (
+          <Radio key={o.value} value={o.value} label={o.label} />
+        ))}
+      </RadioGroup>
+    );
 
   return (
     <FilterChip
