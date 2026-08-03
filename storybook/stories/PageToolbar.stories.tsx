@@ -114,8 +114,9 @@ export const Full: Story = {
 };
 
 /**
- * **Toolbar — Start seul** : recherche sans actions à droite.
- * Pour les pages avec une barre de recherche simple (main courante, logs…).
+ * **Toolbar — Recherche + filtres (sans actions)** : recherche et rangée de
+ * filtres rapides (`FilterChip`), sans actions à droite. Pour les pages de
+ * listing en consultation (main courante, logs…).
  */
 export const SearchOnly: Story = {
   name: "Search only",
@@ -126,6 +127,10 @@ export const SearchOnly: Story = {
         <Page.Toolbar
           search={<SearchField aria-label="Rechercher" placeholder="Rechercher une entrée…" />}
         />
+        {/* Filtres rapides alignés sur la recherche (gouttière de page). */}
+        <div style={{ paddingInline: "var(--page-gutter)" }}>
+          <FilterBar initial={{ sites: ["idf", "paris", "lyon"] }} />
+        </div>
         <Divider />
       </Page>
     </Gutters>
