@@ -354,7 +354,6 @@ const LONG_LABEL_ITEMS: NavItemDef[] = [
  * cliquer un item l'active (ou via le contrôle « Item actif »).
  */
 export const LongLabel: NavStory = {
-  name: "Long label (garde-fou — dégradation)",
   parameters: {
     controls: { include: ["active"] },
     design: { type: "figma", url: figmaUrl("2524:18591") },
@@ -633,7 +632,7 @@ function FieldToolRecipe(): ReactNode {
  * toujours être flanqué d'**exactement 2 items de chaque côté** (2 + Action + 2).
  */
 export const FieldToolMce: Story = {
-  name: "Field tool (central + button + bottom sheet)",
+  name: "With FAB",
   parameters: {
     controls: { disable: true },
     layout: "centered",
