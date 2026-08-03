@@ -1,6 +1,7 @@
 // BottomNav — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { type ReactNode, useEffect, useRef, useState } from "react";
+import { within, userEvent, expect, waitFor } from "storybook/test";
 import {
   BottomNav,
   BottomNavItem,
@@ -643,4 +644,28 @@ export const FieldToolMce: Story = {
       <FieldToolRecipe />
     </PhoneScreen>
   ),
+  // Le FAB central (BottomNav.Action) ouvre le tiroir (aria-expanded → true) ;
+  // Échap le referme ; l'item sélectionné porte aria-current="page".
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(document.body);
+
+    // Item sélectionné au repos : aria-current="page".
+    const tournee = canvas.getByRole("button", { name: "Tournée" });
+    await expect(tournee).toHaveAttribute("aria-current", "page");
+
+    // Clic sur l'Action → ouvre le tiroir (Drawer) et passe aria-expanded=true.
+    const action = canvas.getByRole("button", { name: /outils terrain/i });
+    await expect(action).not.toHaveAttribute("aria-expanded");
+    await userEvent.click(action);
+    await expect(action).toHaveAttribute("aria-expanded", "true");
+    await expect(await body.findByRole("dialog")).toBeInTheDocument();
+
+    // Échap ferme le tiroir : aria-expanded retombe et le dialog disparaît.
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(action).not.toHaveAttribute("aria-expanded"));
+    await waitFor(() =>
+      expect(body.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
+  },
 };
