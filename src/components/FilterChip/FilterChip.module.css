@@ -1,0 +1,187 @@
+/* FilterChip — pilule de filtre rapide.
+   Inactive : outlined + chevron. Active : contained (fond neutre bold) +
+   compteur clair + croix. Le corps et la croix sont deux boutons distincts
+   (deux stops de Tab) à l'intérieur d'une même pilule. Tokens uniquement. */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-round);
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+/* Corps de la chip : bouton déclencheur du panneau. */
+.body {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space075);
+  min-width: 0;
+  height: var(--size400);
+  padding: 0 var(--space150);
+  border: none;
+  background: transparent;
+  border-radius: inherit;
+  cursor: pointer;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xs);
+  color: inherit;
+}
+
+.body[data-focus-visible] {
+  outline: 2px solid var(--border-focused);
+  outline-offset: 2px;
+}
+
+.label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron {
+  flex-shrink: 0;
+}
+
+/* Valeur unique affichée (« Label : Valeur ») — tronquée pour éviter que la
+   chip ne s'étire indéfiniment. */
+.value {
+  max-width: 16ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---- Inactive : pilule outlined ---- */
+.chipInactive {
+  background: var(--background-surface-default);
+  border: 1px solid var(--border-default);
+  color: var(--text-default);
+}
+
+.chipInactive:hover {
+  background: var(--background-neutral-subtlest-hovered);
+}
+
+/* ---- Active : pilule contained (fond sombre) ---- */
+.chipActive {
+  background: var(--background-neutral-bold-default);
+  border: 1px solid var(--background-neutral-bold-default);
+  color: var(--text-inverted);
+}
+
+.chipActive:hover {
+  background: var(--background-neutral-bold-hovered);
+  border-color: var(--background-neutral-bold-hovered);
+}
+
+/* Compteur : pastille claire sur le fond sombre. */
+.count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--size250);
+  height: var(--size250);
+  padding: 0 var(--space050);
+  border-radius: var(--radius-round);
+  background: var(--background-default-default);
+  color: var(--text-default);
+  font-size: var(--font-size-ui-xxs);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+}
+
+/* Croix : cible de clic/Tab distincte, dans la pilule active. */
+.clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: var(--size400);
+  padding: 0 var(--space125) 0 var(--space025);
+  border: none;
+  background: transparent;
+  border-radius: inherit;
+  cursor: pointer;
+  color: var(--icon-inverted);
+}
+
+.clear:hover {
+  color: var(--text-inverted);
+}
+
+.clear[data-focus-visible] {
+  outline: 2px solid var(--border-focused);
+  outline-offset: 2px;
+}
+
+/* ---- Panneau (popover ET bottom sheet) ---- */
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-width: var(--size3200);
+  max-width: 100%;
+}
+
+/* Le corps ne défile PAS lui-même : c'est le conteneur (popover en desktop,
+   Drawer en mobile) qui gère l'unique scroll — évite une double scrollbar
+   (le popover a overflow-x:hidden, donc overflow-y:visible y est coercé en
+   auto : on ne peut pas le désactiver, on ne double donc pas le scroll). */
+.panelBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space150);
+  padding: var(--space200);
+}
+
+/* Mobile (bottom sheet) : le corps plafonne et défile lui-même, avec une
+   scrollbar fine VISIBLE (l'utilisateur mobile doit comprendre qu'il peut
+   défiler). Le footer, frère du corps, reste sous la zone défilante. */
+.panelBodyScroll {
+  max-height: 55vh;
+  overflow-y: auto;
+  /* Sous le DrawerHeader (mobile) : pas de padding haut en plus, sinon l'écart
+     titre ↔ recherche cumule le padding du header et celui du corps. */
+  padding-top: 0;
+  /* Scrollbar transparente au repos, révélée au survol / focus de la zone
+     (sur tactile, la scrollbar overlay native apparaît au défilement). */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color var(--duration-fast) var(--easing-default);
+}
+
+.panelBodyScroll:hover,
+.panelBodyScroll:focus-within {
+  scrollbar-color: var(--border-default) transparent;
+}
+
+.panelBodyScroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.panelBodyScroll::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: var(--radius100);
+  transition: background-color var(--duration-fast) var(--easing-default);
+}
+
+.panelBodyScroll:hover::-webkit-scrollbar-thumb,
+.panelBodyScroll:focus-within::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+}
+
+/* Footer épinglé pendant le défilement du conteneur (sticky), avec un fond
+   opaque pour couvrir la liste qui défile dessous. */
+.panelFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space100);
+  padding: var(--space150) var(--space200);
+  border-top: 1px solid var(--border-subtle);
+  position: sticky;
+  bottom: 0;
+  background: var(--background-surface-default);
+}

@@ -10,13 +10,10 @@ import {
   Badge,
   Cluster,
   Divider,
-  Menu,
-  MenuItem,
-  MenuPopover,
-  MenuTrigger,
 } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { FilterBar } from "./_filterDemo";
 import css from "./Page.stories.module.css";
 
 const FIGMA_FILE =
@@ -74,12 +71,14 @@ type Story = StoryObj<typeof Page>;
 // Stories
 
 /**
- * **Toolbar — Complète** : recherche (`search`), filtres (`start`) et actions
- * (`end`). Pattern standard des pages de listing, aligné sur la maquette Figma.
- * La barre reste sur **une seule ligne** : sous le breakpoint du conteneur
- * (`page`, ~768px), « Filtres » et l'action primaire se réduisent en icône
- * seule (`collapseLabel`, `shape="square"`), « Exporter » est masqué (repli dans
- * « ⋯ ») et la recherche se comprime — jamais de seconde rangée.
+ * **Toolbar — Complète** : recherche + rangée de filtres rapides (`FilterChip`)
+ * + actions. La barre reste sur **une seule ligne** : sous le breakpoint du
+ * conteneur (`page`, ~768px), l'action primaire se réduit en icône seule
+ * (`collapseLabel`, `shape="square"`), « Exporter » est masqué (repli dans
+ * « ⋯ ») et la recherche se comprime. La rangée de filtres (composant
+ * `FilterChip` / `FilterChipRow`) est alignée sur la recherche et passe en
+ * scroll horizontal sous le breakpoint ; le bouton « Filtres » ouvre le
+ * panneau complet.
  */
 export const Full: Story = {
   name: "Full (search + filters + actions)",
@@ -89,11 +88,6 @@ export const Full: Story = {
         <Page.Bar title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Toolbar
           search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
-          start={
-            <Button collapseLabel shape="square" iconBefore="Tune" aria-label="Filtres">
-              Filtres
-            </Button>
-          }
           end={
             <ButtonGroup>
               <Button
@@ -110,6 +104,11 @@ export const Full: Story = {
             </ButtonGroup>
           }
         />
+        {/* Filtres rapides (FilterChip / FilterChipRow) alignés sur la recherche.
+            Aucun filtre appliqué au départ (chips épinglées inactives). */}
+        <div style={{ paddingInline: "var(--page-gutter)" }}>
+          <FilterBar />
+        </div>
         <Divider />
       </Page>
     </Gutters>
@@ -117,8 +116,9 @@ export const Full: Story = {
 };
 
 /**
- * **Toolbar — Start seul** : recherche sans actions à droite.
- * Pour les pages avec une barre de recherche simple (main courante, logs…).
+ * **Toolbar — Recherche + filtres (sans actions)** : recherche et rangée de
+ * filtres rapides (`FilterChip`), sans actions à droite. Pour les pages de
+ * listing en consultation (main courante, logs…).
  */
 export const SearchOnly: Story = {
   name: "Search only",
@@ -129,6 +129,10 @@ export const SearchOnly: Story = {
         <Page.Toolbar
           search={<SearchField aria-label="Rechercher" placeholder="Rechercher une entrée…" />}
         />
+        {/* Filtres rapides alignés sur la recherche (gouttière de page). */}
+        <div style={{ paddingInline: "var(--page-gutter)" }}>
+          <FilterBar initial={{ sites: ["idf", "paris", "lyon"] }} />
+        </div>
         <Divider />
       </Page>
     </Gutters>
@@ -184,13 +188,11 @@ export const None: Story = {
 };
 
 /**
- * **Toolbar — Filtres appliqués**. Sous la toolbar, une rangée de filtres
- * déroulants (`MenuTrigger` + `Button`). Un filtre **appliqué** s'affiche en
- * surbrillance (`color="comete"`) avec le nombre de valeurs sélectionnées
- * (`Badge`) et une **croix** (`iconAfter="Close"`) pour le retirer ; un filtre
- * non appliqué reste neutre (`outlined`) avec une **flèche** de déroulement.
- * Dès qu'un filtre est appliqué, le bouton « Filtres » de la toolbar (près de
- * la recherche) passe lui aussi en état actif (`color="comete"`).
+ * **Toolbar — Filtres appliqués** : sous la barre, la rangée de filtres rapides
+ * est composée avec le composant **`FilterChip`** (via `FilterChipRow`). Chaque
+ * chip affiche la valeur (1 sélection) ou le compteur (≥ 2) et s'efface via sa
+ * croix ; le bouton « Filtres » de la rangée ouvre le **panneau complet**
+ * (Drawer). Voir la story dédiée `Components/FilterChip` pour tout le détail.
  */
 export const WithActiveFilters: Story = {
   name: "With active filters",
@@ -200,19 +202,6 @@ export const WithActiveFilters: Story = {
         <Page.Bar title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Toolbar
           search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
-          start={
-            /* Des filtres sont appliqués → le bouton « Filtres » est en état
-               actif (`color="comete"`), comme les filtres appliqués ci-dessous. */
-            <Button
-              color="comete"
-              collapseLabel
-              shape="square"
-              iconBefore="Tune"
-              aria-label="Filtres"
-            >
-              Filtres
-            </Button>
-          }
           end={
             <ButtonGroup>
               <Button
@@ -227,51 +216,11 @@ export const WithActiveFilters: Story = {
             </ButtonGroup>
           }
         />
-        {/* Rangée de filtres. Appliqué → surbrillance `comete` + compteur, et
-            l'icône passe de la flèche (ouvrir) à une croix (retirer le filtre).
-            Non appliqué → neutre (`outlined`) avec flèche de déroulement. */}
-        <Cluster gap="075">
-          <MenuTrigger>
-            <Button color="comete" iconAfter="Close">
-              Sites
-              <Badge label="3" appearance="information-inverted" importance="high" />
-            </Button>
-            <MenuPopover width={220}>
-              <Menu aria-label="Filtrer par site">
-                <MenuItem id="idf">Île-de-France</MenuItem>
-                <MenuItem id="paris">Paris Centre</MenuItem>
-                <MenuItem id="lyon">Lyon</MenuItem>
-                <MenuItem id="marseille">Marseille</MenuItem>
-              </Menu>
-            </MenuPopover>
-          </MenuTrigger>
-
-          <MenuTrigger>
-            <Button appearance="outlined" iconAfter="KeyboardArrowDown">
-              Types
-            </Button>
-            <MenuPopover width={220}>
-              <Menu aria-label="Filtrer par type de contrat">
-                <MenuItem id="cdi">CDI</MenuItem>
-                <MenuItem id="cdd">CDD</MenuItem>
-                <MenuItem id="interim">Intérim</MenuItem>
-              </Menu>
-            </MenuPopover>
-          </MenuTrigger>
-
-          <MenuTrigger>
-            <Button appearance="outlined" iconAfter="KeyboardArrowDown">
-              Dates
-            </Button>
-            <MenuPopover width={220}>
-              <Menu aria-label="Filtrer par période">
-                <MenuItem id="7">7 derniers jours</MenuItem>
-                <MenuItem id="30">30 derniers jours</MenuItem>
-                <MenuItem id="custom">Personnalisé…</MenuItem>
-              </Menu>
-            </MenuPopover>
-          </MenuTrigger>
-        </Cluster>
+        {/* Rangée de filtres rapides = composant FilterChip / FilterChipRow.
+            Alignée sur la toolbar/recherche via la gouttière de page. */}
+        <div style={{ paddingInline: "var(--page-gutter)" }}>
+          <FilterBar initial={{ sites: ["idf", "paris", "lyon"], types: ["intrusion"] }} />
+        </div>
         <Divider />
       </Page>
     </Gutters>

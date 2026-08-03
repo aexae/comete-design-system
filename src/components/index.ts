@@ -17,6 +17,7 @@ export * from "./DatePicker";
 export * from "./Divider";
 export * from "./DropIndicator";
 export * from "./Field";
+export * from "./FilterChip";
 export * from "./FocusRing";
 export * from "./Grid";
 export * from "./Heading";

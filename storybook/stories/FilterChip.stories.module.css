@@ -1,0 +1,139 @@
+/* Panneau complet de filtres (mock D13) — liste maître façon maquette MCE.
+   Droite en desktop, bas en mobile ; liste scrollable avec scrollbar TOUJOURS
+   visible (l'utilisateur mobile doit comprendre qu'il peut défiler). */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space150);
+  padding: var(--space300) var(--space300) var(--space200);
+  flex-shrink: 0;
+}
+
+.headerTitle {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Bouton retour de la vue détail — porte l'icône SVG fournie par le design. */
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size400);
+  height: var(--size400);
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius075);
+  cursor: pointer;
+  color: var(--text-default);
+  flex-shrink: 0;
+}
+
+.backButton:hover {
+  background: var(--background-neutral-subtlest-hovered);
+}
+
+.backButton:focus-visible {
+  outline: 2px solid var(--border-focused);
+  outline-offset: 2px;
+}
+
+/* Liste maître des facettes — défile si > ~15 lignes ; scrollbar fine visible. */
+.list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-default) transparent;
+}
+
+.list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.list::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: var(--radius100);
+}
+
+/* Ligne « facette » : libellé à gauche, valeur/compteur + chevron à droite. */
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space150);
+  width: 100%;
+  padding: var(--space200) var(--space300);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-subtle);
+  cursor: pointer;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-s);
+  color: var(--text-default);
+  text-align: start;
+}
+
+.row:hover {
+  background: var(--background-neutral-subtlest-hovered);
+}
+
+.rowLabel {
+  flex: 1;
+  min-width: 0;
+}
+
+.rowValue {
+  color: var(--text-subtle);
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Corps de la vue détail (options d'une facette) — défilant, scrollbar visible. */
+.detailBody {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space300);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-default) transparent;
+}
+
+.detailBody::-webkit-scrollbar {
+  width: 8px;
+}
+
+.detailBody::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: var(--radius100);
+}
+
+.footer {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space200);
+  padding: var(--space300);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.memorizeDescription {
+  color: var(--text-subtlest);
+  font-size: var(--font-size-ui-xs);
+}
+
+.footerActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space100);
+}

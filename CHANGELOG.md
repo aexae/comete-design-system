@@ -52,6 +52,17 @@ entre versions alpha.
 
 ### Ajouté
 
+- **FilterChip** / **FilterChipRow** : nouvel organisme de **filtres rapides**
+  (chips façon listing). Une chip = une facette : inactive (`outlined` +
+  chevron), 1 valeur (`contained` + « Label : Valeur » via `valueLabel`), ≥ 2
+  valeurs (`contained` + compteur) ; croix de retrait (cible clavier distincte).
+  Le corps ouvre un panneau — **popover desktop** (application instantanée) ou
+  **bottom sheet** mobile `size="auto"` (différée) selon `applyMode` (auto ou
+  forcé). `FilterChipRow` compose la rangée : chips épinglées + chips
+  **temporaires** (facettes actives non épinglées) + bouton « Filtres » à badge
+  total ouvrant le panneau complet — invariant : jamais de filtre actif caché.
+  État contrôlé côté consommateur. Complète le Drawer de filtres, ne le
+  remplace pas.
 - **Page** : prop `globalActions` — le layout porte lui-même les actions
   globales (notifications, réglages, avatar) et les injecte dans le `trailing`
   de chaque `Page.Bar` via contexte. Omise = trio de démo par défaut (+ `warn`
