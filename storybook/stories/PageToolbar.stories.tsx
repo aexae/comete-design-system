@@ -209,8 +209,11 @@ export const WithActiveFilters: Story = {
             </ButtonGroup>
           }
         />
-        {/* Rangée de filtres rapides = composant FilterChip / FilterChipRow. */}
-        <FilterBar initial={{ sites: ["idf", "paris", "lyon"], types: ["intrusion"] }} />
+        {/* Rangée de filtres rapides = composant FilterChip / FilterChipRow.
+            Alignée sur la toolbar/recherche via la gouttière de page. */}
+        <div style={{ paddingInline: "var(--page-gutter)" }}>
+          <FilterBar initial={{ sites: ["idf", "paris", "lyon"], types: ["intrusion"] }} />
+        </div>
         <Divider />
       </Page>
     </Gutters>
