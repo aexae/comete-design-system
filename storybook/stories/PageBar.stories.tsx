@@ -7,6 +7,7 @@
 // largeur du canvas Storybook).
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
+import { within, expect } from "storybook/test";
 import {
   Page,
   Avatar,
@@ -129,6 +130,13 @@ export const Large: Story = {
       </Page>
     </Gutters>
   ),
+  // Le titre est rendu dans un `<h1>` unique (repère de titre de page).
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const h1s = canvas.getAllByRole("heading", { level: 1 });
+    await expect(h1s).toHaveLength(1);
+    await expect(h1s[0]).toHaveTextContent("Accueil");
+  },
 };
 
 /**
@@ -192,6 +200,18 @@ export const Compact: Story = {
       </Page>
     </ScrollFrame>
   ),
+  // Les zones `leading` (retour) et `trailing` (actions globales injectées par
+  // le layout Page) sont bien rendues de part et d'autre du titre.
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // leading
+    await expect(canvas.getByRole("button", { name: "Retour" })).toBeInTheDocument();
+    // trailing (globalActions)
+    await expect(
+      canvas.getByRole("button", { name: "Notifications" }),
+    ).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Réglages" })).toBeInTheDocument();
+  },
 };
 
 /**
@@ -211,6 +231,23 @@ export const LongTitle: Story = {
       </Page>
     </ScrollFrame>
   ),
+  // En compact, le titre long est tronqué (ellipsis sur une ligne) tout en
+  // conservant son nom accessible complet.
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const h1 = canvas.getByRole("heading", { level: 1 });
+    // Contrat de troncature : ellipsis sur une seule ligne.
+    const cs = getComputedStyle(h1);
+    await expect(cs.textOverflow).toBe("ellipsis");
+    await expect(cs.whiteSpace).toBe("nowrap");
+    await expect(cs.overflowX).toBe("hidden");
+    // Le contenu déborde réellement (titre plus large que la boîte visible).
+    await expect(h1.scrollWidth).toBeGreaterThan(h1.clientWidth);
+    // Nom accessible complet préservé malgré la coupe visuelle.
+    await expect(h1).toHaveTextContent(
+      "Un titre de page extrêmement long qui doit être tronqué",
+    );
+  },
 };
 
 /**

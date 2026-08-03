@@ -1,6 +1,7 @@
 // Page.Body — stories isolées du sous-composant
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
+import { within, userEvent, expect, fn } from "storybook/test";
 import {
   Page,
   Avatar,
@@ -216,8 +217,6 @@ export const FullWidth: Story = {
 // `error`. On garde le même contexte « Agents » (Header + Toolbar) que les
 // autres stories ; seul le corps change d'état.
 
-const noop = () => undefined;
-
 /** En-tête + toolbar communs (contexte « Agents »). */
 function AgentsChrome() {
   return (
@@ -247,6 +246,14 @@ export const LoadingState: Story = {
       </Page>
     </Gutters>
   ),
+  // L'état de chargement expose un repère `role="status"` (annonce lecteur
+  // d'écran). Ciblé par son nom accessible pour le distinguer des skeletons.
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      canvas.getByRole("status", { name: "Chargement…" }),
+    ).toBeInTheDocument();
+  },
 };
 
 /** **Vide** — état vide natif via `isEmpty` (illustration + message). */
@@ -267,14 +274,22 @@ export const EmptyState: Story = {
 };
 
 /** **Erreur** — état erreur natif via `error` + bouton « Réessayer » (`onRetry`). */
+const onRetry = fn();
 export const ErrorState: Story = {
   name: "Error",
   render: () => (
     <Gutters>
       <Page globalActions={null}>
         <AgentsChrome />
-        <Page.Body error="Le chargement des agents a échoué." onRetry={noop} />
+        <Page.Body error="Le chargement des agents a échoué." onRetry={onRetry} />
       </Page>
     </Gutters>
   ),
+  // Le bouton « Réessayer » déclenche le callback `onRetry`.
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    onRetry.mockClear();
+    await userEvent.click(canvas.getByRole("button", { name: "Réessayer" }));
+    await expect(onRetry).toHaveBeenCalledOnce();
+  },
 };

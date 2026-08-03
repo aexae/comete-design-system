@@ -81,6 +81,39 @@ export const Default: Story = {
       </div>
     </SideNav.Provider>
   ),
+  // Navigation clavier : Tab passe d'un item à l'autre, Enter active l'item
+  // focalisé. La navigation réelle (href) est interceptée pour ne pas quitter
+  // la story.
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    let clickedLink: HTMLAnchorElement | null = null;
+    const onClickCapture = (e: Event) => {
+      const anchor = (e.target as HTMLElement).closest("a");
+      if (anchor) {
+        clickedLink = anchor;
+        e.preventDefault();
+      }
+    };
+    canvasElement.addEventListener("click", onClickCapture, true);
+    try {
+      // Tab entre dans la nav → premier item focusable.
+      await userEvent.tab();
+      const accueil = canvas.getByRole("link", { name: "Accueil" });
+      await expect(accueil).toHaveFocus();
+      // Tab suivant → item suivant (déplacement clavier entre items).
+      await userEvent.tab();
+      const agents = canvas.getByRole("link", { name: "Agents" });
+      await expect(agents).toHaveFocus();
+      // Enter active l'item focalisé (clic synthétisé sur le lien).
+      await userEvent.keyboard("{Enter}");
+      await expect(clickedLink).toBe(agents);
+    } finally {
+      canvasElement.removeEventListener("click", onClickCapture, true);
+    }
+    // Nettoyage : retirer le focus clavier pour ne pas laisser d'anneau de
+    // focus dans le snapshot visuel (baseline = story au repos).
+    (document.activeElement as HTMLElement | null)?.blur();
+  },
 };
 
 /** Mode réduit : la SideNav est totalement invisible. Le Trigger dans
@@ -90,6 +123,17 @@ export const Collapsed: Story = {
   render: (args) => (
     <MainCouranteShell nav={<MainCouranteNav />} initialCollapsed={args.initialCollapsed} />
   ),
+  // Le Trigger déplie / replie la navigation : son `aria-expanded` reflète
+  // l'état (false = replié, true = déployé) et bascule à chaque clic.
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole("button", { name: /navigation/i });
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await userEvent.click(trigger);
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await userEvent.click(trigger);
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+  },
 };
 
 /**
@@ -238,4 +282,26 @@ export const Scrollable: Story = {
       }
     />
   ),
+  // Contenu long : le premier ET le dernier item restent focusables au clavier
+  // (aucun item n'est piégé hors de l'ordre de tabulation par le défilement).
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const links = canvas.getAllByRole("link");
+    const first = links[0];
+    const last = links[links.length - 1];
+    first.focus();
+    await expect(first).toHaveFocus();
+    await expect(first).toHaveTextContent("Accueil");
+    last.focus();
+    await expect(last).toHaveFocus();
+    await expect(last).toHaveTextContent("Paramètres");
+    // Nettoyage : rendre le focus et remettre le défilement en haut pour ne
+    // pas altérer le snapshot visuel (baseline = liste non défilée).
+    (document.activeElement as HTMLElement | null)?.blur();
+    let scroller: HTMLElement | null = last;
+    while (scroller && scroller.scrollHeight <= scroller.clientHeight) {
+      scroller = scroller.parentElement;
+    }
+    if (scroller) scroller.scrollTop = 0;
+  },
 };

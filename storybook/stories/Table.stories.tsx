@@ -1,6 +1,7 @@
 // Table — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useMemo, useState } from "react";
+import { within, userEvent, expect, fn } from "storybook/test";
 import {
   Avatar,
   Button,
@@ -952,6 +953,7 @@ export const EmptyState: Story = {
 };
 
 /** **Erreur** — état erreur natif via `error` + bouton « Réessayer » (`onRetry`), sur le même gabarit. */
+const onRetry = fn();
 export const ErrorState: Story = {
   name: "Error",
   parameters: { controls: { disable: true } },
@@ -962,9 +964,16 @@ export const ErrorState: Story = {
         <TableBody
           columnCount={5}
           error="Le chargement des projets a échoué."
-          onRetry={noop}
+          onRetry={onRetry}
         />
       </Table>
     </div>
   ),
+  // Le bouton « Réessayer » de l'état d'erreur déclenche le callback `onRetry`.
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    onRetry.mockClear();
+    await userEvent.click(canvas.getByRole("button", { name: "Réessayer" }));
+    await expect(onRetry).toHaveBeenCalledOnce();
+  },
 };
