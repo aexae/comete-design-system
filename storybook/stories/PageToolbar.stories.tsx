@@ -104,9 +104,10 @@ export const Full: Story = {
             </ButtonGroup>
           }
         />
-        {/* Filtres rapides (FilterChip / FilterChipRow) alignés sur la recherche. */}
+        {/* Filtres rapides (FilterChip / FilterChipRow) alignés sur la recherche.
+            Aucun filtre appliqué au départ (chips épinglées inactives). */}
         <div style={{ paddingInline: "var(--page-gutter)" }}>
-          <FilterBar initial={{ sites: ["idf", "paris", "lyon"], types: ["intrusion"] }} />
+          <FilterBar />
         </div>
         <Divider />
       </Page>
