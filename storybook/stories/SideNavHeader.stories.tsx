@@ -45,8 +45,8 @@ const meta = {
                 "Pour ancrer l'identité en tête du menu latéral.",
               ]}
               avoid={[
-                "Une barre supérieure globale → TopNav.",
-                "Un en-tête de page → Page.Header.",
+                "Une barre supérieure globale → Page.Bar.",
+                "Un en-tête de page → Page.Bar.",
                 "Un item de navigation → SideNavItem.",
               ]}
               best={[

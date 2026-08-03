@@ -9,6 +9,47 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.146] - 2026-07-30
+
+### Changements cassants (BREAKING)
+
+- **Page.Header** : composant **supprimé** (était `@deprecated`). C'était un
+  sous-ensemble strict de `Page.Bar` (titre + `leading` + `trailing`), sans les
+  variantes responsive ni l'intégration des actions globales du layout. Migration :
+  remplacer `<Page.Header title leading trailing />` par `<Page.Bar title leading
+  trailing />` ; pour un en-tête sans le trio d'actions globales, poser
+  `globalActions={null}` sur la `Page`.
+
+### Ajouté
+
+- **Skeleton** : prop `decorative` — masque le skeleton aux lecteurs d'écran
+  (`aria-hidden`, aucune région live), pour regrouper plusieurs skeletons sous une
+  **seule** région d'état parente.
+- **SideNav** et **BottomNav** : prop `aria-label` sur le repère `<nav>`
+  (défaut « Navigation principale ») — indispensable quand plusieurs `nav`
+  coexistent.
+
+### Modifié
+
+- **Card** : l'apparence `subtle` n'a plus d'ombre **au repos** (l'élévation
+  n'apparaît qu'au hover/press pour les cartes actionnables). `bold` inchangé.
+- **SideNav** : `SideNav.Trigger` expose `aria-expanded` ; `SideNav.Skeleton`
+  n'émet plus qu'**une seule** région `role="status"` (au lieu d'une par
+  placeholder) ; valeurs de contexte mémoïsées (moins de re-renders au survol).
+- **BottomNav** : la `BottomNav.Action` centrale est réordonnée au centre du flux
+  DOM (ordre de lecture = position visuelle).
+- **Page** : valeur de contexte mémoïsée ; nettoyage de CSS/props/commentaires
+  morts (reliquats de TopNav / Page.Header) dans Page, SideNav, BottomNav.
+
+## [1.0.0-alpha.145] - 2026-07-30
+
+### Changements cassants (BREAKING)
+
+- **TopNav** : composant **supprimé** (relicat d'avant `Page.Bar`). Il faisait
+  doublon avec `Page.Bar`, la barre de page unifiée qui remplace l'ancien duo
+  TopNav + Page.Header. Migration : utiliser `Page.Bar` (titre + `leading` pour
+  l'affordance de navigation + actions globales via `Page globalActions`).
+
 ### Ajouté
 
 - **FilterChip** / **FilterChipRow** : nouvel organisme de **filtres rapides**

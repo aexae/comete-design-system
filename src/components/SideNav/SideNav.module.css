@@ -1,7 +1,7 @@
 /* SideNav — Comete Design System
    Pattern Jira : en mode replié (collapsed), la sidebar occupe 0px et
    disparaît ; la réouverture se fait via `<SideNav.Trigger />` (placé côté
-   consommateur dans `Page.Header`). Au survol du Trigger (peek), la sidebar
+   consommateur dans `Page.Bar`). Au survol du Trigger (peek), la sidebar
    s'affiche en OVERLAY par-dessus le contenu : le container garde une largeur
    de 0 (le contenu principal NE bouge PAS), et la `<nav>` passe en
    `position: absolute` puis glisse depuis la gauche (translateX -100% → 0)
@@ -477,5 +477,5 @@
 
 /* Mode collapsed : la sidebar est invisible (width 0 + overflow hidden).
    Aucun besoin de masquer le contenu individuellement — l'overflow s'en
-   charge. Le consommateur place `<SideNav.Trigger />` dans sa TopNav pour
+   charge. Le consommateur place `<SideNav.Trigger />` dans le `leading` de sa `Page.Bar` pour
    rouvrir. */

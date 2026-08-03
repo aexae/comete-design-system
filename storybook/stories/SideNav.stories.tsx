@@ -29,7 +29,7 @@ const meta: Meta<StoryArgs> = {
               ]}
               avoid={[
                 "Une navigation d'app mobile → BottomNav.",
-                "Une barre supérieure globale (marque, compte, actions) → TopNav.",
+                "Une barre supérieure globale (marque, compte, actions) → Page.Bar.",
                 "Naviguer entre vues d'une même page → Tabs.",
               ]}
               best={[
@@ -84,7 +84,7 @@ export const Default: Story = {
 };
 
 /** Mode réduit : la SideNav est totalement invisible. Le Trigger dans
- *  `Page.Header.leading` permet de rouvrir (click) ou de peek (hover). */
+ *  `Page.Bar.leading` permet de rouvrir (click) ou de peek (hover). */
 export const Collapsed: Story = {
   args: { initialCollapsed: true },
   render: (args) => (

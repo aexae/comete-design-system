@@ -45,7 +45,7 @@ const meta = {
               ]}
               avoid={[
                 "Un desktop avec navigation riche → SideNav.",
-                "Une barre globale marque/compte → TopNav.",
+                "Une barre globale marque/compte → Page.Bar.",
                 "Plus de 5 destinations → regrouper via un item « Plus » (Menu).",
               ]}
               best={[

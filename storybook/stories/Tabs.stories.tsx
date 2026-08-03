@@ -72,7 +72,7 @@ const meta = {
               avoid={[
                 "Empiler des sections repliables consultables ensemble → Accordion.",
                 "Une étape séquentielle obligatoire → Stepper.",
-                "Une navigation entre pages/routes → SideNav/TopNav.",
+                "Une navigation entre pages/routes → SideNav/Page.Bar.",
                 "Déclencher une action ponctuelle → Button.",
               ]}
               best={[

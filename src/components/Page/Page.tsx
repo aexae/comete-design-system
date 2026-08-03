@@ -2,7 +2,7 @@
 // Gabarit de page : wrapper structurel + sous-composants pour le header,
 // la toolbar et le body. S'appuie sur le Figma "❖ Page header" et sur la
 // décomposition de la vue Page layout (node 4319:15827).
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useContext, useEffect, useMemo } from "react";
 import type { CSSProperties, ReactElement, ReactNode } from "react";
 import { Avatar } from "../Avatar/index.js";
 import { Button } from "../Button/index.js";
@@ -78,27 +78,6 @@ export interface PageBarProps {
    * automatiquement selon le breakpoint (compact < 768px, large ≥ 768px).
    */
   size?: PageBarSize;
-  /** Classe CSS additionnelle. */
-  className?: string;
-}
-
-export interface PageHeaderProps {
-  /**
-   * Titre principal de la page (rendu dans un `<h1>`).
-   * Peut être un string ou du JSX pour des titres composés.
-   */
-  title: ReactNode;
-  /**
-   * Zone alignée à gauche du titre. Typiquement utilisée pour héberger
-   * un `<SideNav.Trigger />` discret quand la SideNav est cachée.
-   */
-  leading?: ReactNode;
-  /**
-   * Zone d'actions alignée à droite du titre (avatar utilisateur,
-   * boutons d'action rapides, menu "…"). Sur mobile, reste visible à
-   * droite du titre grâce au `flex-shrink: 0`.
-   */
-  trailing?: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
 }
@@ -222,10 +201,13 @@ export function Page({
   style,
 }: PageProps): ReactElement {
   const classNames = [styles.page, className].filter(Boolean).join(" ");
-  const contextValue: PageContextValue = {
-    globalActions:
-      globalActions === undefined ? <DefaultGlobalActions /> : globalActions,
-  };
+  const contextValue = useMemo<PageContextValue>(
+    () => ({
+      globalActions:
+        globalActions === undefined ? <DefaultGlobalActions /> : globalActions,
+    }),
+    [globalActions],
+  );
   // En dev uniquement : prévenir une fois par montage que le placeholder de démo
   // est affiché faute de prop `globalActions`.
   useEffect(() => {
@@ -254,7 +236,7 @@ Page.displayName = "Page";
 // Page.Bar
 
 /**
- * Page.Bar — barre de page unifiée (fusion de TopNav + Page.Header).
+ * Page.Bar — barre de page unifiée (titre + navigation + actions globales).
  *
  * Trois zones : `leading` (une seule affordance nav — hamburger OU retour),
  * `title` (obligatoire, rendu en `<h1>`) et un `trailing` où le layout `Page`
@@ -304,41 +286,6 @@ function PageBar({
 }
 
 PageBar.displayName = "Page.Bar";
-
-// -----------------------------------------------------------------------
-// Page.Header
-
-/**
- * Page.Header — titre de page et actions trailing.
- * Le titre est rendu dans un `<h1>` pour la hiérarchie sémantique.
- *
- * @deprecated Utiliser `Page.Bar` (fusion de TopNav + Page.Header). `Page.Header`
- * reste disponible pour rétro-compatibilité mais sera retiré dans une version
- * ultérieure.
- */
-function PageHeader({
-  title,
-  leading,
-  trailing,
-  className,
-}: PageHeaderProps): ReactElement {
-  const classNames = [styles.header, className].filter(Boolean).join(" ");
-  return (
-    <header className={classNames}>
-      <div className={styles.titleRow}>
-        {leading !== undefined && (
-          <div className={styles.leading}>{leading}</div>
-        )}
-        <h1 className={styles.title}>{title}</h1>
-        {trailing !== undefined && (
-          <div className={styles.trailing}>{trailing}</div>
-        )}
-      </div>
-    </header>
-  );
-}
-
-PageHeader.displayName = "Page.Header";
 
 // -----------------------------------------------------------------------
 // Page.Toolbar
@@ -445,6 +392,5 @@ function PageBody({
 PageBody.displayName = "Page.Body";
 
 Page.Bar = PageBar;
-Page.Header = PageHeader;
 Page.Toolbar = PageToolbar;
 Page.Body = PageBody;

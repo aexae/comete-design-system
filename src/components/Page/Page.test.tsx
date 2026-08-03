@@ -31,53 +31,6 @@ describe("Page", () => {
   });
 });
 
-describe("Page.Header", () => {
-  it("should render the title in an h1", () => {
-    const { getByRole } = render(<Page.Header title="My page" />);
-    const h1 = getByRole("heading", { level: 1 });
-    expect(h1).toBeInTheDocument();
-    expect(h1.textContent).toBe("My page");
-  });
-
-  it("should render a ReactNode title", () => {
-    const { getByText } = render(
-      <Page.Header title={<span data-testid="custom-title">Custom</span>} />,
-    );
-    expect(getByText("Custom")).toBeInTheDocument();
-  });
-
-  it("should render trailing when provided", () => {
-    const { getByText } = render(
-      <Page.Header title="T" trailing={<button>Avatar</button>} />,
-    );
-    expect(getByText("Avatar")).toBeInTheDocument();
-  });
-
-  it("should NOT render trailing slot when omitted", () => {
-    const { container } = render(<Page.Header title="T" />);
-    expect(container.querySelector("[class*='trailing']")).toBeNull();
-  });
-
-  it("should include the base header class", () => {
-    const { container } = render(<Page.Header title="T" />);
-    expect((container.firstChild as HTMLElement).className).toContain(
-      "header",
-    );
-  });
-
-  it("should render a <header> element", () => {
-    const { container } = render(<Page.Header title="T" />);
-    expect((container.firstChild as HTMLElement).tagName).toBe("HEADER");
-  });
-
-  it("should include custom className", () => {
-    const { container } = render(
-      <Page.Header title="T" className="custom" />,
-    );
-    expect((container.firstChild as HTMLElement).className).toContain("custom");
-  });
-});
-
 describe("Page.Bar", () => {
   it("should render the title in an h1", () => {
     const { getByRole } = render(<Page.Bar title="My page" />);
@@ -276,10 +229,10 @@ describe("Page.Body", () => {
 });
 
 describe("Page composition", () => {
-  it("should render Header + Toolbar + Body together", () => {
+  it("should render Bar + Toolbar + Body together", () => {
     const { getByRole, getByText } = render(
-      <Page>
-        <Page.Header title="Agents" trailing={<button>A</button>} />
+      <Page globalActions={null}>
+        <Page.Bar title="Agents" trailing={<button>A</button>} />
         <Page.Toolbar start={<span>Search</span>} end={<span>New</span>} />
         <Page.Body>
           <p>List of agents</p>
