@@ -71,12 +71,14 @@ type Story = StoryObj<typeof Page>;
 // Stories
 
 /**
- * **Toolbar — Complète** : recherche (`search`), filtres (`start`) et actions
- * (`end`). Pattern standard des pages de listing, aligné sur la maquette Figma.
- * La barre reste sur **une seule ligne** : sous le breakpoint du conteneur
- * (`page`, ~768px), « Filtres » et l'action primaire se réduisent en icône
- * seule (`collapseLabel`, `shape="square"`), « Exporter » est masqué (repli dans
- * « ⋯ ») et la recherche se comprime — jamais de seconde rangée.
+ * **Toolbar — Complète** : recherche + rangée de filtres rapides (`FilterChip`)
+ * + actions. La barre reste sur **une seule ligne** : sous le breakpoint du
+ * conteneur (`page`, ~768px), l'action primaire se réduit en icône seule
+ * (`collapseLabel`, `shape="square"`), « Exporter » est masqué (repli dans
+ * « ⋯ ») et la recherche se comprime. La rangée de filtres (composant
+ * `FilterChip` / `FilterChipRow`) est alignée sur la recherche et passe en
+ * scroll horizontal sous le breakpoint ; le bouton « Filtres » ouvre le
+ * panneau complet.
  */
 export const Full: Story = {
   name: "Full (search + filters + actions)",
@@ -86,11 +88,6 @@ export const Full: Story = {
         <Page.Header title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Toolbar
           search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
-          start={
-            <Button collapseLabel shape="square" iconBefore="Tune" aria-label="Filtres">
-              Filtres
-            </Button>
-          }
           end={
             <ButtonGroup>
               <Button
@@ -107,6 +104,10 @@ export const Full: Story = {
             </ButtonGroup>
           }
         />
+        {/* Filtres rapides (FilterChip / FilterChipRow) alignés sur la recherche. */}
+        <div style={{ paddingInline: "var(--page-gutter)" }}>
+          <FilterBar initial={{ sites: ["idf", "paris", "lyon"], types: ["intrusion"] }} />
+        </div>
         <Divider />
       </Page>
     </Gutters>
