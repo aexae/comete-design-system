@@ -9,6 +9,16 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.147] - 2026-08-04
+
+### Corrigé
+
+- **BottomNav** : le FAB central (`BottomNav.Action`) est désormais **parfaitement
+  centré** — `.nav` passe en `box-sizing: border-box` (il débordait de 8px de son
+  conteneur, décalant la barre). Les libellés d'items utilisent toute la largeur de
+  la cellule (retrait du padding horizontal) → plus de troncature des libellés
+  courants (ex. « Main courante »).
+
 ## [1.0.0-alpha.146] - 2026-07-30
 
 ### Changements cassants (BREAKING)

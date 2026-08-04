@@ -51,7 +51,9 @@
   align-items: center;
   justify-content: start;
   gap: var(--space025);
-  padding: var(--space100) var(--space050);
+  /* Pas de padding horizontal : le label dispose de toute la largeur de la
+     cellule (comme dans Figma), pour éviter de tronquer des libellés courants. */
+  padding: var(--space100) 0;
   flex-grow: 1;
 }
 
