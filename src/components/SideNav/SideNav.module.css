@@ -14,6 +14,11 @@
    de contexte de positionnement pour l'overlay de peek (replié).      */
 
 .container {
+  /* Géométrie partagée de la colonne d'icônes (rail ET peek) : garantit que
+     l'icône est centrée dans la même largeur dans les deux rendus, donc qu'elle
+     ne bouge pas pendant l'expansion du peek. */
+  --sidenav-rail-width: 56px;
+
   position: relative;
   width: 240px;
   height: 100%;
@@ -21,8 +26,14 @@
   transition: width var(--duration-normal) var(--easing-default);
 }
 
-/* Replié : aucune largeur réservée — le contenu principal occupe toute la
-   place. Reste ainsi même en peek (l'overlay ne repousse pas le contenu). */
+/* Rail : largeur réduite à la colonne d'icônes. Le contenu principal occupe le
+   reste ; en peek, le container garde 56px (l'overlay ne pousse pas). */
+.container[data-mode="rail"] {
+  width: var(--sidenav-rail-width);
+}
+
+/* Replié (hidden) : aucune largeur réservée — le contenu principal occupe toute
+   la place. Reste ainsi même en peek (l'overlay ne repousse pas le contenu). */
 .container[data-collapsed] {
   width: 0;
 }
@@ -475,7 +486,69 @@
   margin-top: var(--space100);
 }
 
-/* Mode collapsed : la sidebar est invisible (width 0 + overflow hidden).
-   Aucun besoin de masquer le contenu individuellement — l'overflow s'en
-   charge. Le consommateur place `<SideNav.Trigger />` dans le `leading` de sa `Page.Bar` pour
-   rouvrir. */
+/* Mode collapsed (hidden) : la sidebar est invisible (width 0 + overflow
+   hidden). Aucun besoin de masquer le contenu individuellement — l'overflow
+   s'en charge. Le consommateur place `<SideNav.Trigger />` dans le `leading` de
+   sa `Page.Bar` pour rouvrir (cas mobile). */
+
+/* ------------------------------------------------------------------ */
+/* Rail (mode icônes, 56px)                                            */
+/*
+   Toutes les règles « rail » ci-dessous sont scopées `:not([data-peeking])` :
+   en peek, la nav retrouve EXACTEMENT le rendu déployé (libellés, titres de
+   section, marque complète) et s'élargit — cf. section Peek. L'icône reste
+   centrée dans la colonne de `--sidenav-rail-width`, identique au peek, donc
+   elle ne bouge pas pendant l'expansion. */
+
+.sideNav[data-mode="rail"] {
+  /* La colonne de 56px porte elle-même le centrage : plus de gouttière. */
+  padding-inline: 0;
+}
+
+/* Header : logo seul, centré ; nom + description masqués. */
+.sideNav[data-mode="rail"]:not([data-peeking]) .header {
+  justify-content: center;
+  gap: 0;
+  padding-inline: 0;
+}
+
+.sideNav[data-mode="rail"]:not([data-peeking]) .headerContent {
+  display: none;
+}
+
+.sideNav[data-mode="rail"]:not([data-peeking]) .headerLogo {
+  max-width: 100%;
+  justify-content: center;
+}
+
+/* Items : icône seule centrée dans une cible de 40×40 (dans la colonne 56px).
+   L'état sélectionné (fond accent) est conservé, en pastille centrée. */
+.sideNav[data-mode="rail"]:not([data-peeking]) .item {
+  width: 40px;
+  height: 40px;
+  margin-inline: auto;
+  padding: 0;
+  gap: 0;
+  justify-content: center;
+}
+
+.sideNav[data-mode="rail"]:not([data-peeking]) .itemContent,
+.sideNav[data-mode="rail"]:not([data-peeking]) .iconAfter {
+  display: none;
+}
+
+/* Sections : le titre disparaît ; les séparateurs explicites deviennent une
+   barre courte centrée (26px) marquant la frontière entre groupes. */
+.sideNav[data-mode="rail"]:not([data-peeking]) .sectionHeading {
+  display: none;
+}
+
+.sideNav[data-mode="rail"]:not([data-peeking]) .divider {
+  width: 26px;
+  margin-inline: auto;
+}
+
+/* Pied de marque : réduit (le libellé n'apparaît qu'en peek/déployé). */
+.sideNav[data-mode="rail"]:not([data-peeking]) .footer {
+  padding-inline: 0;
+}
