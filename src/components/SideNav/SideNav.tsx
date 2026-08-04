@@ -581,7 +581,8 @@ SideNavEmpty.displayName = "SideNav.Empty";
  *   une affordance *pointer-only* : au clavier, on déploie via Click/Enter.
  *
  * ```tsx
- * <SideNav.Provider isCollapsed={c} onCollapsedChange={setC}>
+ * // Cas mobile : mode "hidden" + hamburger dans la Page.Bar.
+ * <SideNav.Provider mode={open ? "expanded" : "hidden"} onModeChange={...}>
  *   <SideNav>...</SideNav>
  *   <Page>
  *     <Page.Bar leading={<SideNav.Trigger />} />
@@ -616,26 +617,41 @@ SideNavTrigger.displayName = "SideNav.Trigger";
 // SideNav.Provider — détient le state partagé (isCollapsed, peek)
 
 /**
- * SideNav.Provider — wrapper à placer **au-dessus** de la `<SideNav>` ET
- * du `<Page>` qui contient le `<SideNav.Trigger />`. Détient le state
- * partagé (collapsed + peek hover) pour que les deux puissent se
- * coordonner.
+ * SideNav.Provider — wrapper à placer **au-dessus** de la `<SideNav>` (et, en
+ * cas mobile, du `<Page>` qui contient le `<SideNav.Trigger />`). Détient le
+ * state partagé (`mode` + peek hover) pour que la nav, la tête de rail et le
+ * peek se coordonnent.
  *
- * Mode controlled : passer `isCollapsed` + `onCollapsedChange`.
- * Mode uncontrolled : passer `defaultCollapsed`.
+ * Mode controlled : passer `mode` + `onModeChange`.
+ * Mode uncontrolled : passer `defaultMode` (défaut `"expanded"`).
+ * (Alias dépréciés : `isCollapsed`/`defaultCollapsed`/`onCollapsedChange` →
+ * mappés sur `"hidden"`.)
+ *
+ * ### Responsive (recommandation — le DS ne pose aucune media query, l'app décide)
+ * - **≥ 1024px** : `expanded` par défaut ; l'utilisateur peut basculer en
+ *   `rail` (bouton dans la nav ou `Ctrl/Cmd+Shift+E`), choix **persisté par
+ *   l'app**.
+ * - **768–1024px** : `rail` recommandé par défaut (wayfinding permanent, place
+ *   maximale au contenu).
+ * - **< 768px** : `hidden` + hamburger (`SideNav.Trigger`) dans
+ *   `Page.Bar.leading`, ouvrant la navigation dans un `Drawer placement="left"`
+ *   (recette illustrée par la story *MobileDrawer* — non codée dans le DS).
+ *
+ * Choisir **rail** pour des utilisateurs quotidiens (repères de navigation
+ * toujours visibles) ; **hidden** pour un focus maximal sur le contenu.
  *
  * ```tsx
- * const [collapsed, setCollapsed] = useState(false);
+ * const [mode, setMode] = useState<SideNavMode>("expanded");
  *
- * <SideNav.Provider isCollapsed={collapsed} onCollapsedChange={setCollapsed}>
+ * <SideNav.Provider mode={mode} onModeChange={setMode}>
  *   <div style={{ display: "flex" }}>
  *     <SideNav>
- *       <SideNav.Header ... />
- *       <SideNav.Section title="...">...</SideNav.Section>
+ *       <SideNav.Header logo={<Logo format="icon" />} companyName="…" />
+ *       <SideNav.Section title="…">
+ *         <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="/" />
+ *       </SideNav.Section>
  *     </SideNav>
- *     <Page>
- *       <Page.Bar leading={<SideNav.Trigger />} title="..." />
- *     </Page>
+ *     <Page>…</Page>
  *   </div>
  * </SideNav.Provider>
  * ```

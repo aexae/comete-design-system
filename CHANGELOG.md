@@ -9,6 +9,27 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Ajouté
+
+- **SideNav** : troisième état **rail** (56px, icônes seules) via une API `mode`
+  (`"expanded" | "rail" | "hidden"`) sur `SideNav.Provider`
+  (`mode`/`defaultMode`/`onModeChange`). Le **peek** au survol du rail s'anime
+  désormais en **grandissement de largeur** (56 → 240px) par-dessus le contenu,
+  avec la colonne d'icônes alignée au pixel (custom property
+  `--sidenav-rail-width`). Le bouton de bascule vit dans la nav (header / tête de
+  rail / header du peek) ; raccourci clavier `Ctrl/Cmd+Shift+E` (expanded ⇄ rail,
+  désactivable via `enableShortcut`). En mode rail, `SideNav.Item` requiert une
+  icône (`iconBefore`) — un `console.warn` le signale en dev. Type `SideNavMode`
+  exporté.
+
+### Déprécié
+
+- **SideNav.Provider** : `isCollapsed` / `defaultCollapsed` / `onCollapsedChange`
+  → utiliser `mode` / `defaultMode` / `onModeChange` (`true` correspond à
+  `"hidden"`). Les alias restent fonctionnels.
+- **SideNav.Trigger** : déprécié sur desktop (remplacé par le rail) ; réservé
+  désormais au cas `hidden`/mobile (hamburger ouvrant la nav en `Drawer`).
+
 ## [1.0.0-alpha.164] - 2026-10-13
 
 ### Ajouté
