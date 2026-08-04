@@ -14,6 +14,7 @@ export {
   useSideNav,
 } from "./SideNav";
 export type {
+  SideNavMode,
   SideNavProps,
   SideNavHeaderProps,
   SideNavItemProps,

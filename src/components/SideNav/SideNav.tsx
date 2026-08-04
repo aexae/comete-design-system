@@ -17,18 +17,42 @@ import { Divider } from "../Divider/index.js";
 import { Skeleton } from "../Skeleton/index.js";
 import styles from "./SideNav.module.css";
 
+// `process` n'est pas typé ici (le DS build avec `types: []`, sans @types/node).
+// Déclaration locale minimale : le bundler du consommateur remplace
+// `process.env.NODE_ENV` par une constante à la compilation.
+declare const process: { env: { NODE_ENV?: string } };
+
 // -----------------------------------------------------------------------
 // Context partagé (couvre SideNav + SideNav.Trigger + SideNavHeader)
 
+/**
+ * Mode d'affichage de la navigation latérale.
+ * - `expanded` — panneau complet 240px (logo + libellés + sections nommées).
+ * - `rail` — rail 56px, icônes seules ; survol → peek (grandissement en largeur).
+ * - `hidden` — masquée (largeur 0) ; réouverture via `SideNav.Trigger` (mobile).
+ */
+export type SideNavMode = "expanded" | "rail" | "hidden";
+
 interface SideNavContextValue {
+  /** Mode d'affichage courant. */
+  mode: SideNavMode;
+  /** Change le mode (déployer / rail / masquer). */
+  setMode?: (mode: SideNavMode) => void;
+  /**
+   * @deprecated Utiliser `mode` (`mode === "hidden"`). Conservé pour les
+   * consommateurs et le `SideNav.Trigger` existants.
+   */
   isCollapsed: boolean;
-  /** Toggle du mode collapsed. */
+  /** @deprecated Toggle hidden ⇄ expanded (piloté par `SideNav.Trigger`). */
   onToggleCollapse?: () => void;
   /** Vrai quand la nav est affichée en overlay (peek). */
   isPeeking: boolean;
   /** Marque la zone Trigger (Page.Bar.leading) comme survolée. */
   setTriggerHover?: (hovered: boolean) => void;
-  /** Marque la nav (overlay) comme survolée. */
+  /**
+   * Marque la nav comme survolée. En mode rail, survoler la nav (= le rail)
+   * est le déclencheur du peek ; en mode hidden, c'est le Trigger.
+   */
   setNavHover?: (hovered: boolean) => void;
   /** Marque le focus clavier comme présent à l'intérieur de la nav overlay. */
   setNavFocused?: (focused: boolean) => void;
@@ -37,6 +61,7 @@ interface SideNavContextValue {
 }
 
 const SideNavContext = createContext<SideNavContextValue>({
+  mode: "expanded",
   isCollapsed: false,
   isPeeking: false,
 });
@@ -64,11 +89,31 @@ export interface SideNavProps {
 
 export interface SideNavProviderProps {
   children: ReactNode;
-  /** Mode réduit (controlled). */
+  /** Mode d'affichage (controlled) : `expanded` | `rail` | `hidden`. */
+  mode?: SideNavMode;
+  /** Mode d'affichage initial (uncontrolled). @default "expanded" */
+  defaultMode?: SideNavMode;
+  /** Callback déclenché à chaque changement de mode. */
+  onModeChange?: (mode: SideNavMode) => void;
+  /**
+   * Active le raccourci clavier global `Ctrl/Cmd+Shift+E` qui bascule
+   * `expanded` ⇄ `rail`. @default true
+   */
+  enableShortcut?: boolean;
+  /**
+   * @deprecated Utiliser `mode` (`true` → `"hidden"`, `false` → `"expanded"`).
+   * Mode réduit (controlled) — conservé pour rétrocompatibilité.
+   */
   isCollapsed?: boolean;
-  /** Mode réduit initial (uncontrolled). @default false */
+  /**
+   * @deprecated Utiliser `defaultMode` (`true` → `"hidden"`).
+   * Mode réduit initial (uncontrolled).
+   */
   defaultCollapsed?: boolean;
-  /** Callback déclenché à chaque changement de l'état collapsed. */
+  /**
+   * @deprecated Utiliser `onModeChange`. Reçoit `true` quand le mode devient
+   * `"hidden"`, `false` sinon.
+   */
   onCollapsedChange?: (collapsed: boolean) => void;
 }
 
@@ -198,6 +243,21 @@ export function SideNavItem({
   onClick,
   className,
 }: SideNavItemProps): ReactElement {
+  const { mode } = useContext(SideNavContext);
+  const isRail = mode === "rail";
+
+  // En rail, un item sans icône est invisible (seule l'icône est rendue) : on
+  // le signale en développement.
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "production" && isRail && !iconBefore) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `SideNav.Item « ${label} » : une icône (\`iconBefore\`) est requise en ` +
+          `mode rail — sans elle, l'item est invisible.`,
+      );
+    }
+  }, [isRail, iconBefore, label]);
+
   const iconColor = isDisabled ? "disabled" : isSelected ? "selected" : "subtle";
   const iconAppearance = isSelected ? "filled" : "outlined";
 
@@ -242,6 +302,10 @@ export function SideNavItem({
   const ariaProps = {
     "aria-current": isSelected ? ("page" as const) : undefined,
     "aria-disabled": isDisabled || undefined,
+    // En rail, le libellé est masqué : nom accessible obligatoire + tooltip
+    // natif au survol. En déployé, le texte visible suffit.
+    "aria-label": isRail ? label : undefined,
+    title: isRail ? label : undefined,
     onClick: isDisabled ? undefined : onClick,
   };
 
@@ -552,43 +616,95 @@ SideNavTrigger.displayName = "SideNav.Trigger";
  *  accidentelles lors d'un déplacement en diagonale (Trigger → nav). */
 const PEEK_CLOSE_DELAY_MS = 200;
 
+/** Délai d'intention avant ouverture du peek en mode rail (évite les
+ *  déclenchements en simple traversée du rail). */
+const PEEK_OPEN_DELAY_MS = 110;
+
 export function SideNavProvider({
   children,
-  isCollapsed: controlled,
-  defaultCollapsed = false,
+  mode: controlledMode,
+  defaultMode,
+  onModeChange,
+  enableShortcut = true,
+  isCollapsed: legacyControlled,
+  defaultCollapsed,
   onCollapsedChange,
 }: SideNavProviderProps): ReactElement {
-  const [internalCollapsed, setInternalCollapsed] = useState(defaultCollapsed);
+  // Mode contrôlé : `mode` prioritaire ; sinon alias booléen déprécié
+  // `isCollapsed` (true → hidden). Mode initial (uncontrolled) : `defaultMode`,
+  // sinon alias `defaultCollapsed`, sinon "expanded".
+  const controlled: SideNavMode | undefined =
+    controlledMode ??
+    (legacyControlled === undefined
+      ? undefined
+      : legacyControlled
+        ? "hidden"
+        : "expanded");
+  const initialMode: SideNavMode =
+    defaultMode ?? (defaultCollapsed ? "hidden" : "expanded");
+
+  const [internalMode, setInternalMode] = useState<SideNavMode>(initialMode);
   const [triggerHover, setTriggerHover] = useState(false);
   const [navHover, setNavHover] = useState(false);
   const [navFocused, setNavFocused] = useState(false);
   const [peekOpen, setPeekOpen] = useState(false);
 
-  const isCollapsed = controlled ?? internalCollapsed;
+  const mode = controlled ?? internalMode;
+  const isCollapsed = mode === "hidden";
 
-  // Le peek reste ouvert tant que le pointeur survole le Trigger OU la nav,
-  // ou qu'un focus clavier est à l'intérieur de la nav. Il ne se ferme que
-  // lorsque NI hover NI focus ne sont présents, après un court délai.
+  const setMode = useCallback(
+    (next: SideNavMode) => {
+      setInternalMode(next);
+      onModeChange?.(next);
+      onCollapsedChange?.(next === "hidden");
+    },
+    [onModeChange, onCollapsedChange],
+  );
+
+  // Le peek concerne le rail (survol du rail = survol de la nav) et l'ancien
+  // mode hidden (survol du Trigger). Il reste ouvert tant que le pointeur
+  // survole le déclencheur OU la nav, ou qu'un focus clavier est dans la nav.
+  // Ouverture différée en rail (délai d'intention), fermeture différée dans les
+  // deux cas (tolérance). `triggerHover` ne vaut true qu'en mode hidden.
+  const canPeek = mode === "rail" || mode === "hidden";
   const wantOpen = triggerHover || navHover || navFocused;
 
   useEffect(() => {
-    if (!isCollapsed) {
+    if (!canPeek) {
       setPeekOpen(false);
       return undefined;
     }
     if (wantOpen) {
+      // Rail : petit délai d'intention avant ouverture. Hidden : immédiat
+      // (comportement historique du Trigger).
+      if (mode === "rail" && !peekOpen) {
+        const openTimer = setTimeout(() => setPeekOpen(true), PEEK_OPEN_DELAY_MS);
+        return () => clearTimeout(openTimer);
+      }
       setPeekOpen(true);
       return undefined;
     }
     const timer = setTimeout(() => setPeekOpen(false), PEEK_CLOSE_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [wantOpen, isCollapsed]);
+  }, [wantOpen, canPeek, mode, peekOpen]);
 
+  // Legacy : le Trigger bascule hidden ⇄ expanded.
   const onToggleCollapse = useCallback(() => {
-    const next = !isCollapsed;
-    setInternalCollapsed(next);
-    onCollapsedChange?.(next);
-  }, [isCollapsed, onCollapsedChange]);
+    setMode(isCollapsed ? "expanded" : "hidden");
+  }, [isCollapsed, setMode]);
+
+  // Raccourci clavier global : Ctrl/Cmd+Shift+E bascule expanded ⇄ rail.
+  useEffect(() => {
+    if (!enableShortcut) return undefined;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === "E" || e.key === "e")) {
+        e.preventDefault();
+        setMode(mode === "expanded" ? "rail" : "expanded");
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [enableShortcut, mode, setMode]);
 
   // Fermeture immédiate (clic sur un item → navigation). On remet aussi les
   // drapeaux hover/focus à zéro pour que l'overlay reste fermé tant que le
@@ -600,13 +716,15 @@ export function SideNavProvider({
     setPeekOpen(false);
   }, []);
 
-  const isPeeking = isCollapsed && peekOpen;
+  const isPeeking = canPeek && peekOpen;
 
   // Valeur de contexte mémoïsée : le Provider re-render à chaque micro-changement
   // d'état hover/focus pendant un survol — sans ça, tous les consommateurs
   // (`SideNav`, `SideNav.Trigger`, `useSideNav`) re-render à chaque frame.
   const value = useMemo(
     () => ({
+      mode,
+      setMode,
       isCollapsed,
       onToggleCollapse,
       isPeeking,
@@ -615,7 +733,7 @@ export function SideNavProvider({
       setNavFocused,
       closePeek,
     }),
-    [isCollapsed, onToggleCollapse, isPeeking, closePeek],
+    [mode, setMode, isCollapsed, onToggleCollapse, isPeeking, closePeek],
   );
 
   return (
@@ -652,7 +770,7 @@ export function SideNav({
   style,
   "aria-label": ariaLabel = "Navigation principale",
 }: SideNavProps): ReactElement {
-  const { isCollapsed, isPeeking, setNavHover, setNavFocused, closePeek } =
+  const { mode, isCollapsed, isPeeking, setNavHover, setNavFocused, closePeek } =
     useContext(SideNavContext);
 
   // Header et Footer restent épinglés en haut/bas ; tout le reste (sections +
@@ -687,6 +805,7 @@ export function SideNav({
   return (
     <div
       className={styles.container}
+      data-mode={mode}
       data-collapsed={isCollapsed || undefined}
       style={style}
     >
@@ -694,6 +813,7 @@ export function SideNav({
         ref={navRef}
         aria-label={ariaLabel}
         className={[styles.sideNav, className].filter(Boolean).join(" ")}
+        data-mode={mode}
         data-collapsed={isCollapsed || undefined}
         data-peeking={isPeeking || undefined}
         /* En collapsed, la nav est un overlay non focusable/non cliquable tant
