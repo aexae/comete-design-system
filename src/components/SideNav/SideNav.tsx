@@ -210,6 +210,18 @@ export function SideNavHeader({
   description,
   className,
 }: SideNavHeaderProps): ReactElement {
+  const { mode, setMode } = useContext(SideNavContext);
+  // Le bouton de bascule vit DANS la nav (décision produit). Rendu seulement
+  // sous un `SideNav.Provider` (setMode disponible) et hors mode hidden (là,
+  // c'est le `SideNav.Trigger` mobile qui rouvre). En rail comme en peek
+  // (mode === "rail"), il déploie ; en expanded, il réduit en rail.
+  const showToggle = Boolean(setMode) && mode !== "hidden";
+  const willExpand = mode === "rail";
+  const toggleIcon = willExpand ? "LeftPanelOpen" : "LeftPanelClose";
+  const toggleLabel = willExpand
+    ? "Déployer la navigation"
+    : "Réduire la navigation";
+
   return (
     <div className={[styles.header, className].filter(Boolean).join(" ")}>
       {logo && <span className={styles.headerLogo}>{logo}</span>}
@@ -221,8 +233,19 @@ export function SideNavHeader({
           )}
         </div>
       )}
-      {/* Pas de bouton collapse ici — le toggle est exclusivement géré par
-          `<SideNav.Trigger />` dans `Page.Bar.leading`. */}
+      {showToggle && (
+        // `title` (tooltip natif avec le raccourci) porté par l'enveloppe : le
+        // Button du DS n'expose pas `title` ; l'`aria-label` reste sur le bouton.
+        <span className={styles.headerToggle} title={`${toggleLabel} (Ctrl+Shift+E)`}>
+          <Button
+            appearance="subtle"
+            color="subtlest"
+            iconBefore={toggleIcon}
+            onPress={() => setMode?.(willExpand ? "expanded" : "rail")}
+            aria-label={toggleLabel}
+          />
+        </span>
+      )}
     </div>
   );
 }
@@ -541,6 +564,11 @@ SideNavEmpty.displayName = "SideNav.Empty";
  * SideNav.Trigger — bouton de toggle à placer dans `Page.Bar.leading`.
  * Lit son état depuis le `<SideNav.Provider>` parent (commun avec la
  * `<SideNav>`).
+ *
+ * @deprecated Sur desktop, le **rail** (mode `"rail"`) remplace ce Trigger : la
+ * bascule vit désormais dans la nav (header / tête de rail / header du peek).
+ * Réservez `SideNav.Trigger` au cas **`hidden`/mobile** — hamburger dans
+ * `Page.Bar.leading` qui rouvre la navigation (voir la story MobileDrawer).
  *
  * Comportement :
  * - **Click / Enter** (clavier) : toggle replié/déployé. Le mode déployé est

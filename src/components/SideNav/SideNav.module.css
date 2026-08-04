@@ -214,6 +214,13 @@
   text-overflow: ellipsis;
 }
 
+/* Bouton de bascule (replier/déployer) — poussé à droite en déployé/peek,
+   centré en rail (cf. section Rail). */
+.headerToggle {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
 /* ------------------------------------------------------------------ */
 /* Item                                                                */
 
@@ -505,20 +512,21 @@
   padding-inline: 0;
 }
 
-/* Header : logo seul, centré ; nom + description masqués. */
+/* Header en rail : seul le bouton « déployer » subsiste, centré (la marque est
+   représentée par le pied de marque en bas). Logo + nom + description masqués. */
 .sideNav[data-mode="rail"]:not([data-peeking]) .header {
   justify-content: center;
   gap: 0;
   padding-inline: 0;
 }
 
-.sideNav[data-mode="rail"]:not([data-peeking]) .headerContent {
+.sideNav[data-mode="rail"]:not([data-peeking]) .headerContent,
+.sideNav[data-mode="rail"]:not([data-peeking]) .headerLogo {
   display: none;
 }
 
-.sideNav[data-mode="rail"]:not([data-peeking]) .headerLogo {
-  max-width: 100%;
-  justify-content: center;
+.sideNav[data-mode="rail"]:not([data-peeking]) .headerToggle {
+  margin: 0 auto;
 }
 
 /* Items : icône seule centrée dans une cible de 40×40 (dans la colonne 56px).
