@@ -510,6 +510,58 @@
 .sideNav[data-mode="rail"] {
   /* La colonne de 56px porte elle-même le centrage : plus de gouttière. */
   padding-inline: 0;
+  /* Largeur explicite en px (et non 100%) pour que le peek anime `width`
+     de 56 → 240 (interpolation entre deux longueurs px). */
+  width: var(--sidenav-rail-width);
+  transition:
+    width var(--duration-normal) var(--easing-default),
+    box-shadow var(--duration-normal) var(--easing-default);
+}
+
+/* Peek : la nav quitte le flux et GRANDIT de 56 → 240px par-dessus le contenu
+   (le rail « grandit »), avec une ombre portée. Le container garde 56px → le
+   contenu principal ne bouge pas. Les icônes (colonne 56px partagée) restent
+   fixes ; seuls les libellés apparaissent (cf. fondu ci-dessous). */
+.sideNav[data-mode="rail"][data-peeking] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 240px;
+  z-index: var(--z-index-sticky);
+  box-shadow: var(--elevation-small);
+}
+
+/* Libellés (items, titres de section, nom de marque) : fondu + léger glissement
+   avec un court délai après le début de l'expansion. */
+.sideNav[data-mode="rail"][data-peeking] .itemContent,
+.sideNav[data-mode="rail"][data-peeking] .itemTitle,
+.sideNav[data-mode="rail"][data-peeking] .sectionHeading,
+.sideNav[data-mode="rail"][data-peeking] .headerContent {
+  animation: sidenav-peek-label var(--duration-normal) var(--easing-default) 60ms both;
+}
+
+@keyframes sidenav-peek-label {
+  from {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Respect des préférences de mouvement réduit : pas d'animation de libellé. */
+@media (prefers-reduced-motion: reduce) {
+  .sideNav[data-mode="rail"] {
+    transition: none;
+  }
+  .sideNav[data-mode="rail"][data-peeking] .itemContent,
+  .sideNav[data-mode="rail"][data-peeking] .itemTitle,
+  .sideNav[data-mode="rail"][data-peeking] .sectionHeading,
+  .sideNav[data-mode="rail"][data-peeking] .headerContent {
+    animation: none;
+  }
 }
 
 /* Header en rail : seul le bouton « déployer » subsiste, centré (la marque est
@@ -529,17 +581,24 @@
   margin: 0 auto;
 }
 
-/* Items : icône seule centrée dans une cible de 40×40 (dans la colonne 56px).
-   L'état sélectionné (fond accent) est conservé, en pastille centrée. */
-.sideNav[data-mode="rail"]:not([data-peeking]) .item {
-  width: 40px;
-  height: 40px;
-  margin-inline: auto;
+/* Colonne d'icônes partagée rail ↔ peek : l'icône est centrée dans une cellule
+   de `--sidenav-rail-width` dans les DEUX rendus (rail et peek). C'est la
+   contrainte structurante : pendant l'expansion du peek, l'icône ne bouge pas.
+   S'applique donc à tout le mode rail (peek inclus). */
+.sideNav[data-mode="rail"] .item {
   padding: 0;
   gap: 0;
+}
+
+.sideNav[data-mode="rail"] .iconBefore {
+  flex: 0 0 var(--sidenav-rail-width);
+  display: flex;
+  align-items: center;
   justify-content: center;
 }
 
+/* Rail hors peek : icône seule (libellé + iconAfter masqués). L'état
+   sélectionné (fond accent) reste rendu sur la colonne. */
 .sideNav[data-mode="rail"]:not([data-peeking]) .itemContent,
 .sideNav[data-mode="rail"]:not([data-peeking]) .iconAfter {
   display: none;

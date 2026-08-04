@@ -825,9 +825,18 @@ export function SideNav({
   useEffect(() => {
     const el = navRef.current;
     if (!el || !isPeeking) return undefined;
+    // Clic sur un item → navigation puis fermeture du peek.
     const onClick = () => closePeek?.();
+    // Échap → fermeture du peek.
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closePeek?.();
+    };
     el.addEventListener("click", onClick);
-    return () => el.removeEventListener("click", onClick);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      el.removeEventListener("click", onClick);
+      document.removeEventListener("keydown", onKeyDown);
+    };
   }, [isPeeking, closePeek]);
 
   return (
