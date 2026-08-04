@@ -539,7 +539,7 @@ function MceActionRow({
  * de chaque côté) + tiroir `Drawer`.
  */
 function FieldToolRecipe(): ReactNode {
-  const [selected, setSelected] = useState("Tournée");
+  const [selected, setSelected] = useState("Accueil");
   const [sheetOpen, setSheetOpen] = useState(false);
 
   // Un seul item actif : tiroir ouvert → aucun item de page n'est sélectionné.
@@ -554,16 +554,16 @@ function FieldToolRecipe(): ReactNode {
           fourni par PhoneScreen. */}
       <BottomNav>
         <BottomNavItem
-          label="Tournée"
-          icon="Map"
-          isSelected={activeItem === "Tournée"}
-          onClick={() => { setSelected("Tournée"); }}
+          label="Accueil"
+          icon="Home"
+          isSelected={activeItem === "Accueil"}
+          onClick={() => { setSelected("Accueil"); }}
         />
         <BottomNavItem
-          label="Planning"
-          icon="CalendarMonth"
-          isSelected={activeItem === "Planning"}
-          onClick={() => { setSelected("Planning"); }}
+          label="Main courante"
+          icon="MenuBook"
+          isSelected={activeItem === "Main courante"}
+          onClick={() => { setSelected("Main courante"); }}
         />
         <BottomNav.Action
           icon="Add"
@@ -572,16 +572,16 @@ function FieldToolRecipe(): ReactNode {
           onPress={() => { setSheetOpen((o) => !o); }}
         />
         <BottomNavItem
-          label="Rapports"
-          icon="Assignment"
-          isSelected={activeItem === "Rapports"}
-          onClick={() => { setSelected("Rapports"); }}
+          label="Planning"
+          icon="CalendarClock"
+          isSelected={activeItem === "Planning"}
+          onClick={() => { setSelected("Planning"); }}
         />
         <BottomNavItem
-          label="Profil"
-          icon="Person"
-          isSelected={activeItem === "Profil"}
-          onClick={() => { setSelected("Profil"); }}
+          label="Plus"
+          icon="MoreHoriz"
+          isSelected={activeItem === "Plus"}
+          onClick={() => { setSelected("Plus"); }}
         />
       </BottomNav>
 
@@ -651,8 +651,8 @@ export const FieldToolMce: Story = {
     const body = within(document.body);
 
     // Item sélectionné au repos : aria-current="page".
-    const tournee = canvas.getByRole("button", { name: "Tournée" });
-    await expect(tournee).toHaveAttribute("aria-current", "page");
+    const accueil = canvas.getByRole("button", { name: "Accueil" });
+    await expect(accueil).toHaveAttribute("aria-current", "page");
 
     // Clic sur l'Action → ouvre le tiroir (Drawer) et passe aria-expanded=true.
     const action = canvas.getByRole("button", { name: /outils terrain/i });

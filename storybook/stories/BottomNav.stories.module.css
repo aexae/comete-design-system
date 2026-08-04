@@ -10,7 +10,7 @@
    mobile). L'espace vide au-dessus sert de contexte et laisse la place aux
    éléments qui débordent vers le haut (FAB surélevé, popup « Plus »). */
 .screen {
-  width: 340px;
+  width: 390px;
   height: 560px;
   margin: 0 auto;
   border-radius: var(--radius200);

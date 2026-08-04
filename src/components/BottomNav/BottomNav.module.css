@@ -8,6 +8,9 @@
   position: relative;
   display: flex;
   width: 100%;
+  /* border-box : le padding est inclus dans width:100% → la barre ne déborde
+     pas de son conteneur et le FAB (left:50%) reste parfaitement centré. */
+  box-sizing: border-box;
   background-color: var(--background-surface-default);
   /* padding-bottom: 24px — espace pour le home indicator iOS (safe area) */
   padding: var(--space050) var(--space050) var(--space300);

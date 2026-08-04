@@ -314,8 +314,9 @@ export const Base: Story = {
             </SideNav.Footer>
           </SideNav>
 
-          {/* Page */}
-          <div style={{ flex: 1, minWidth: 0 }}>
+          {/* Page — wrapper en flex column pour propager une hauteur définie
+              jusqu'à la Page.Body (sinon un enfant en height:100% ne se résout pas). */}
+          <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
             <Page
               globalActions={
                 <>
@@ -326,50 +327,35 @@ export const Base: Story = {
               style={{ flex: 1, minHeight: 0 }}
             >
               <Page.Bar title="Accueil" leading={<SideNav.Trigger />} />
+              <Page.Toolbar
+                search={
+                  <SearchField
+                    aria-label="Rechercher"
+                    placeholder="Rechercher…"
+                    density="compact"
+                  />
+                }
+                end={
+                  <Button color="comete" iconBefore="Add">
+                    Nouveau
+                  </Button>
+                }
+              />
               <Page.Body>
-                <Stack gap="300">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100%",
+                    background: "var(--background-neutral-subtlest-default)",
+                    borderRadius: "var(--radius200)",
+                  }}
+                >
                   <Text as="span" color="subtle">
-                    Structure de base du layout applicatif. La Banner est au-dessus de tout,
-                    le SideNav occupe toute la hauteur sous la banner, et la Page (avec sa
-                    Page.Bar) occupe l&apos;espace restant à droite.
+                    Contenu de la page
                   </Text>
-
-                  <Grid gap="200">
-                    <Grid.Col span={{ mobile: 12, tablet: 6, desktop: 4 }}>
-                      <Card appearance="outlined">
-                        <CC>
-                          <Stack gap="100">
-                            <IconTile icon="Agent" appearance="brand" size="small" />
-                            <Heading size="xsmall" as="span">42 agents</Heading>
-                            <Text size="small" as="span" color="subtlest">Actifs ce mois</Text>
-                          </Stack>
-                        </CC>
-                      </Card>
-                    </Grid.Col>
-                    <Grid.Col span={{ mobile: 12, tablet: 6, desktop: 4 }}>
-                      <Card appearance="outlined">
-                        <CC>
-                          <Stack gap="100">
-                            <IconTile icon="LocationOn" appearance="success" size="small" />
-                            <Heading size="xsmall" as="span">12 sites</Heading>
-                            <Text size="small" as="span" color="subtlest">Couverture 100%</Text>
-                          </Stack>
-                        </CC>
-                      </Card>
-                    </Grid.Col>
-                    <Grid.Col span={{ mobile: 12, tablet: 6, desktop: 4 }}>
-                      <Card appearance="outlined">
-                        <CC>
-                          <Stack gap="100">
-                            <IconTile icon="Notifications" appearance="warning" size="small" />
-                            <Heading size="xsmall" as="span">3 alertes</Heading>
-                            <Text size="small" as="span" color="subtlest">À traiter</Text>
-                          </Stack>
-                        </CC>
-                      </Card>
-                    </Grid.Col>
-                  </Grid>
-                </Stack>
+                </div>
               </Page.Body>
             </Page>
           </div>
