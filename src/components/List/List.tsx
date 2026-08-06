@@ -16,6 +16,13 @@ import styles from "./List.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
+/**
+ * Espacement vertical entre les items (`row-gap`), tokenisé. Sépare les lignes
+ * **sans filet** (dividers) — l'air fait la séparation. Distinct de `isDense`
+ * qui, lui, joue sur le *padding interne* des items.
+ */
+export type ListGap = "100" | "150" | "200";
+
 export interface ListProps {
   /**
    * Densité de la liste. `dense` réduit le padding vertical des items —
@@ -23,6 +30,12 @@ export interface ListProps {
    * @default false
    */
   isDense?: boolean;
+  /**
+   * Espacement vertical **entre** les items (`row-gap`, en tokens d'espace).
+   * Sépare les lignes sans divider. Orthogonal à `isDense` (padding interne).
+   * Omis = items jointifs (comportement historique).
+   */
+  gap?: ListGap;
   /**
    * Encadre la liste d'une bordure subtle + border-radius. Utile en
    * autonome (paramètres, cards) ; à désactiver quand la List est déjà
@@ -184,6 +197,7 @@ export interface ListItemSecondaryActionProps {
 export function List({
   isDense = false,
   isBordered = false,
+  gap,
   className,
   style,
   children,
@@ -247,6 +261,7 @@ export function List({
       style={style}
       data-dense={isDense || undefined}
       data-bordered={isBordered || undefined}
+      data-gap={gap}
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledBy}
     >

@@ -17,6 +17,20 @@
   width: 100%;
 }
 
+/* Espacement vertical entre items (prop `gap`) — séparation sans filet.
+   S'applique en `row-gap` (le `.list` est un flex column). */
+.list[data-gap="100"] {
+  row-gap: var(--space100);
+}
+
+.list[data-gap="150"] {
+  row-gap: var(--space150);
+}
+
+.list[data-gap="200"] {
+  row-gap: var(--space200);
+}
+
 /* Variante encadrée : bordure subtle + coins arrondis. `overflow: hidden`
    pour clipper le fond hover/selected des items sur les coins arrondis. */
 .list[data-bordered] {

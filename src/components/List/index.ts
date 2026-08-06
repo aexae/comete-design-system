@@ -10,6 +10,7 @@ export {
 } from "./List";
 export type {
   ListProps,
+  ListGap,
   ListHeadProps,
   ListItemProps,
   ListItemButtonProps,
