@@ -15,6 +15,32 @@ import { themes } from "storybook/theming";
 import { INITIAL_VIEWPORTS } from 'storybook/viewport';
 
 // ----------------------------------------------------------------------
+// Presets viewport Comète — nommés selon nos usages métier (sécurité privée).
+// Proposés en tête de la liste, avant les presets Storybook par défaut.
+// NB : ce sont des tailles de canvas Storybook (config outillage), pas des
+// design tokens. Les *breakpoints* responsives des composants (ex. Table
+// `hideBelow` : 480 / 768 / 1024) devraient à terme vivre en tokens
+// `--breakpoint-*` dans @aexae/comete-design-tokens (aucun n'existe à ce jour).
+
+const COMETE_VIEWPORTS = {
+  cometeMobileAgent: {
+    name: "Mobile agent (Link / On Time)",
+    styles: { width: "375px", height: "667px" },
+    type: "mobile" as const,
+  },
+  cometeTabletManager: {
+    name: "Tablette manager",
+    styles: { width: "768px", height: "1024px" },
+    type: "tablet" as const,
+  },
+  cometeDesktopExploitation: {
+    name: "Desktop exploitation",
+    styles: { width: "1440px", height: "900px" },
+    type: "desktop" as const,
+  },
+};
+
+// ----------------------------------------------------------------------
 
 const withThemeProvider: Decorator = (Story) => {
   const [globals] = useGlobals(); // eslint-disable-line react-hooks/rules-of-hooks
@@ -82,7 +108,7 @@ const preview: Preview = {
       test: "todo",
     },
     viewport: {
-      options: INITIAL_VIEWPORTS,
+      options: { ...COMETE_VIEWPORTS, ...INITIAL_VIEWPORTS },
     },
     layout: "centered",
     controls: {

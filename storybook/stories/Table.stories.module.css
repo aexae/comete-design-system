@@ -1,23 +1,43 @@
-/* Trailing de la liste compacte (recette repli téléphone) : heure puis statut,
-   sur une grille constante pour que l'heure reste alignée verticalement quelle
-   que soit la largeur du tag (« Hors ligne » plus large qu'« Actif »).
-   Colonne statut de largeur fixe (calée à droite) → l'heure (calée à droite
-   dans sa colonne) a un bord droit constant d'une ligne à l'autre. */
+/* Trailing de la liste compacte (recette repli téléphone).
+   Placé DANS le ListItemButton, en frère flex du texte : le texte est en
+   `flex: 1` (fill) et pousse le trailing à droite (pas de réserve fixe d'un
+   ListItemSecondaryAction absolu).
+   Anatomie : bloc vertical [avatar + heure] AU-DESSUS du [statut], puis chevron.
+   L'emplacement du statut est réservé (min-height) même sans tag → l'heure
+   reste sur la ligne du haut et les chevrons restent alignés d'une ligne à
+   l'autre (le trailing est calé à droite, largeur constante à droite). */
 .trailing {
-  display: grid;
-  grid-template-columns: auto 104px;
+  flex-shrink: 0;
+  display: flex;
   align-items: center;
-  column-gap: var(--space100);
+  gap: var(--space150);
 }
 
-.trailingTime {
-  justify-self: end;
-  text-align: right;
+.trailingStack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space025);
+}
+
+.trailingWhen {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space050);
   white-space: nowrap;
   color: var(--text-subtle);
-  font-size: var(--font-size-ui-xs);
+  font-size: var(--font-size-ui-xxs);
 }
 
+/* Ligne du statut — réservée même vide (alignement heure/chevron constant). */
 .trailingStatus {
-  justify-self: end;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: var(--size300);
+}
+
+.trailingChevron {
+  display: inline-flex;
+  align-items: center;
 }
