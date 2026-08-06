@@ -22,5 +22,6 @@ export type {
   TableViewProps,
   TableSelectionBarProps,
   TableAlign,
+  TableHideBelow,
   TableSortDirection,
 } from "./Table";

@@ -1,0 +1,23 @@
+/* Trailing de la liste compacte (recette repli téléphone) : heure puis statut,
+   sur une grille constante pour que l'heure reste alignée verticalement quelle
+   que soit la largeur du tag (« Hors ligne » plus large qu'« Actif »).
+   Colonne statut de largeur fixe (calée à droite) → l'heure (calée à droite
+   dans sa colonne) a un bord droit constant d'une ligne à l'autre. */
+.trailing {
+  display: grid;
+  grid-template-columns: auto 104px;
+  align-items: center;
+  column-gap: var(--space100);
+}
+
+.trailingTime {
+  justify-self: end;
+  text-align: right;
+  white-space: nowrap;
+  color: var(--text-subtle);
+  font-size: var(--font-size-ui-xs);
+}
+
+.trailingStatus {
+  justify-self: end;
+}

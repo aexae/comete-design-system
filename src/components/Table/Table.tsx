@@ -23,6 +23,15 @@ import styles from "./Table.module.css";
 export type TableAlign = "left" | "center" | "right";
 
 /**
+ * Seuil de masquage responsive d'une colonne, exprimé en largeur du
+ * **container** de la table (pas du viewport) :
+ * - `sm` — masquée sous ~480px de container ;
+ * - `md` — masquée sous ~768px ;
+ * - `lg` — masquée sous ~1024px.
+ */
+export type TableHideBelow = "sm" | "md" | "lg";
+
+/**
  * État de tri d'une colonne :
  * - `default`     — colonne non triée (icône double flèche)
  * - `ascending`   — tri croissant (flèche haut)
@@ -55,6 +64,18 @@ export interface TableProps {
    * pixels ; string = valeur CSS (ex. `"70vh"`).
    */
   maxHeight?: number | string;
+  /**
+   * Active les **colonnes responsives** (`hideBelow`) : enveloppe le tableau
+   * dans un *query container* (`container-type: inline-size`) que les cellules
+   * `hideBelow` interrogent. À poser dès qu'une cellule utilise `hideBelow`.
+   *
+   * ⚠️ Le query container doit vivre dans un **contexte de largeur définie**
+   * (flux bloc, colonne flex/grid, largeur explicite) — pas dans un parent
+   * *shrink-to-fit* (ex. centrage `width: max-content`), où la containment le
+   * ferait s'effondrer. Sans `responsive`, le tableau est rendu tel quel (aucun
+   * conteneur, aucun impact de mise en page). @default false
+   */
+  responsive?: boolean;
   /** Label accessible du tableau. */
   "aria-label"?: string;
   /** ID d'un élément qui labellise le tableau. */
@@ -164,6 +185,20 @@ export interface TableCellProps {
    * `colSpan` HTML natif — étend la cellule sur plusieurs colonnes.
    */
   colSpan?: number;
+  /**
+   * Masque la colonne en dessous d'une largeur de **container** (dégradation
+   * desktop → tablette, via container queries — jamais de media query
+   * viewport). Voir {@link TableHideBelow}. Nécessite la prop `responsive` sur
+   * la `Table` (qui établit le query container).
+   *
+   * **Contrainte compositionnelle** : à poser sur la cellule d'en-tête ET sur
+   * chaque cellule du corps de la MÊME colonne (sinon décalage). Ne jamais
+   * poser sur la colonne de sélection ni la colonne d'actions. Une info
+   * masquée doit rester atteignable (ligne cliquable vers le détail, ou vue
+   * cartes) ; sous ~600px de container, préférer une liste compacte (`List`)
+   * à une table compressée.
+   */
+  hideBelow?: TableHideBelow;
 }
 
 export interface TableHeaderCellProps extends TableCellProps {
@@ -325,6 +360,7 @@ function TableRoot({
   children,
   stickyHeader = false,
   maxHeight,
+  responsive = false,
   "aria-label": ariaLabel,
   "aria-labelledby": ariaLabelledBy,
 }: TableProps): ReactElement {
@@ -341,12 +377,24 @@ function TableRoot({
       {children}
     </table>
   );
-  // `maxHeight` → conteneur de défilement borné (c'est lui, et non un wrapper
-  // ad hoc côté consommateur, qui porte la hauteur + `overflow`). L'en-tête
-  // collant (`stickyHeader`) se colle relativement à ce conteneur.
+  // Le tableau n'est enveloppé QUE s'il y a une raison :
+  // - `responsive` → query container (`container-type`) pour les colonnes
+  //   `hideBelow` (largeur du container, pas du viewport) ;
+  // - `maxHeight` → conteneur de défilement borné (l'en-tête collant se colle
+  //   relativement à lui).
+  // Sinon la table est rendue telle quelle : aucun wrapper, donc AUCUN impact
+  // de mise en page (une containment inline-size s'effondrerait en contexte
+  // shrink-to-fit, ex. `layout: centered`).
+  const wrapperClasses = [
+    responsive ? styles.queryContainer : undefined,
+    maxHeight !== undefined ? styles.scrollContainer : undefined,
+  ].filter(Boolean);
   const framed =
-    maxHeight !== undefined ? (
-      <div className={styles.scrollContainer} style={{ maxHeight }}>
+    wrapperClasses.length > 0 ? (
+      <div
+        className={wrapperClasses.join(" ")}
+        style={maxHeight !== undefined ? { maxHeight } : undefined}
+      >
         {tableEl}
       </div>
     ) : (
@@ -530,6 +578,7 @@ export function TableCell({
   className,
   style,
   colSpan,
+  hideBelow,
 }: TableCellProps): ReactElement {
   const mergedStyle: CSSProperties = width !== undefined ? { ...style, width } : (style ?? {});
   return (
@@ -537,6 +586,7 @@ export function TableCell({
       className={[styles.cell, className].filter(Boolean).join(" ")}
       style={mergedStyle}
       data-align={align}
+      data-hide-below={hideBelow}
       colSpan={colSpan}
     >
       {children}
@@ -566,6 +616,7 @@ export function TableHeaderCell({
   sortDirection = "default",
   onSortChange,
   isActionColumn = false,
+  hideBelow,
 }: TableHeaderCellProps): ReactElement {
   const mergedStyle: CSSProperties = width !== undefined ? { ...style, width } : (style ?? {});
   // Colonne d'actions : centrée par défaut (l'alignement par défaut "left"
@@ -610,6 +661,7 @@ export function TableHeaderCell({
       className={[styles.headerCell, className].filter(Boolean).join(" ")}
       style={mergedStyle}
       data-align={resolvedAlign}
+      data-hide-below={hideBelow}
       data-sortable={isSortable || undefined}
       data-sort-direction={isSortable ? sortDirection : undefined}
       aria-sort={ariaSort}

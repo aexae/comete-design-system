@@ -740,3 +740,86 @@ describe("Table.SelectionBar", () => {
     expect(screen.getByText("5 sélection(s)")).toBeInTheDocument();
   });
 });
+
+describe("Table — colonnes responsives (hideBelow)", () => {
+  it("should set data-hide-below on a header cell", () => {
+    render(
+      <Table aria-label="t">
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell hideBelow="md">Site</TableHeaderCell>
+          </TableRow>
+        </TableHead>
+      </Table>,
+    );
+    expect(screen.getByRole("columnheader", { name: "Site" })).toHaveAttribute(
+      "data-hide-below",
+      "md",
+    );
+  });
+
+  it("should set data-hide-below on a body cell", () => {
+    const { container } = render(
+      <Table aria-label="t">
+        <TableBody>
+          <TableRow>
+            <TableCell hideBelow="lg">06 12 34 56 78</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    expect(container.querySelector("td")).toHaveAttribute(
+      "data-hide-below",
+      "lg",
+    );
+  });
+
+  it("should not set data-hide-below when the prop is absent (régression)", () => {
+    const { container } = render(
+      <Table aria-label="t">
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell>Agent</TableHeaderCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell>DUPONT</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    expect(container.querySelector("th")).not.toHaveAttribute("data-hide-below");
+    expect(container.querySelector("td")).not.toHaveAttribute("data-hide-below");
+  });
+
+  it("should NOT wrap the table by default (no layout impact)", () => {
+    const { container } = render(
+      <Table aria-label="t">
+        <TableBody>
+          <TableRow>
+            <TableCell>x</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    expect(container.querySelector("[class*='queryContainer']")).toBeNull();
+    // La table est rendue telle quelle (enfant direct de la racine de rendu).
+    expect(container.firstElementChild?.tagName).toBe("TABLE");
+  });
+
+  it("should wrap the table in a named query container when responsive", () => {
+    const { container } = render(
+      <Table aria-label="t" responsive>
+        <TableBody>
+          <TableRow>
+            <TableCell>x</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    const wrapper = container.querySelector("[class*='queryContainer']");
+    expect(wrapper).toBeInTheDocument();
+    expect(wrapper).toContainElement(container.querySelector("table"));
+  });
+});
