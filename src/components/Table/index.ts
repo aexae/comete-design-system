@@ -7,6 +7,7 @@ export {
   TableHeaderCell,
   TablePagination,
   TableView,
+  TableSelectionBar,
 } from "./Table";
 export type {
   TableComponent,
@@ -19,6 +20,7 @@ export type {
   TablePaginationProps,
   TablePaginationLabelInfo,
   TableViewProps,
+  TableSelectionBarProps,
   TableAlign,
   TableSortDirection,
 } from "./Table";

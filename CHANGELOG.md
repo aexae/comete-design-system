@@ -9,6 +9,34 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Ajouté
+
+- **Table** : nouveaux états et API absorbant des patterns jusqu'ici story-only :
+  - `TableBody isNoResults` (+ `noResultsTitle`/`noResultsDescription`/
+    `noResultsAction`/`noResultsState`) — état « aucun résultat » (recherche/
+    filtre sans correspondance), distinct de `isEmpty` (aucune donnée). Nouveau
+    `kind: "noResults"` sur l'état de données interne.
+  - `Table.SelectionBar` (export `TableSelectionBar`) — barre contextuelle
+    « N lignes sélectionnées » + actions groupées (`count`, `onClear`,
+    `children`, `label`), masquée quand `count` vaut 0, compteur annoncé
+    (`aria-live`).
+  - `Table` : props `stickyHeader` (en-tête collant) et `maxHeight` (conteneur
+    de défilement borné) — remplacent le wrapper + styles inline de la story.
+  - `TableHeaderCell isActionColumn` — nom accessible masqué (« Actions ») pour
+    la colonne d'actions, au lieu d'un placeholder vide (`&nbsp;`) inaccessible.
+
+### Modifié
+
+- **Table** : les flèches de tri des en-têtes triables ne s'affichent plus qu'au
+  **survol** (et au focus clavier) ; la colonne actuellement triée garde sa
+  flèche visible.
+
+### Documentation
+
+- Ajout de `CONTRIBUTING.md` — règle « une story peut détenir de l'état, jamais
+  de la mécanique » (les API manquantes repérées en story s'absorbent dans le
+  composant avant merge).
+
 ## [1.0.0-alpha.147] - 2026-08-04
 
 ### Corrigé
