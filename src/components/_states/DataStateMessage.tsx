@@ -7,7 +7,7 @@ import { InformativeState } from "../InformativeState/index.js";
 import { Illustration } from "../Illustration/index.js";
 import { Button } from "../Button/index.js";
 
-export type DataStateKind = "empty" | "error";
+export type DataStateKind = "empty" | "noResults" | "error";
 
 export interface DataStateMessageProps {
   /** Nature de l'état. */
@@ -33,6 +33,11 @@ const DEFAULTS: Record<
   empty: {
     title: "Aucune donnée",
     description: "Il n'y a rien à afficher pour le moment.",
+    illustration: "Empty",
+  },
+  noResults: {
+    title: "Aucun résultat",
+    description: "Aucun élément ne correspond à votre recherche.",
     illustration: "Empty",
   },
   error: {

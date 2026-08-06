@@ -358,11 +358,9 @@ export const RichCells: Story = {
           <TableHeaderCell>User</TableHeaderCell>
           <TableHeaderCell>Status</TableHeaderCell>
           <TableHeaderCell>Key</TableHeaderCell>
-          <TableHeaderCell width={60} align="center">
-            {/* Colonne d'actions — pas de label pour ne pas encombrer
-                l'entête ; l'aria-label du bouton d'action décrit l'intention. */}
-            &nbsp;
-          </TableHeaderCell>
+          {/* Colonne d'actions : pas de libellé visible mais un nom accessible
+              (« Actions »), au lieu d'un placeholder vide inaccessible. */}
+          <TableHeaderCell width={60} isActionColumn>Actions</TableHeaderCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -591,9 +589,7 @@ export const AllInOne: Story = {
             >
               Key
             </TableHeaderCell>
-            <TableHeaderCell width={60} align="center">
-              &nbsp;
-            </TableHeaderCell>
+            <TableHeaderCell width={60} isActionColumn>Actions</TableHeaderCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -653,32 +649,14 @@ export const SelectionToolbar: Story = {
     const [selected, setSelected] = useState<Set<string>>(new Set(["1", "2"]));
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "var(--space150)" }}>
-        {selected.size > 0 && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "var(--space150)",
-              padding: "var(--space100) var(--space150)",
-              background: "var(--background-neutral-subtlest-default)",
-              borderRadius: "var(--radius050)",
-            }}
-          >
-            <span
-              style={{
-                color: "var(--text-default)",
-                fontSize: "var(--font-size-ui-xs)",
-                flexGrow: 1
-              }}
-            >
-              {selected.size} ligne{selected.size > 1 ? "s" : ""} sélectionnée
-              {selected.size > 1 ? "s" : ""}
-            </span>
-            <Button appearance="subtle" iconBefore="Delete">
-              Supprimer
-            </Button>
-          </div>
-        )}
+        <Table.SelectionBar
+          count={selected.size}
+          onClear={() => setSelected(new Set())}
+        >
+          <Button appearance="subtle" iconBefore="Delete">
+            Supprimer
+          </Button>
+        </Table.SelectionBar>
         <Table {...args} aria-label="Table avec toolbar">
           <TableHead>
             <TableRow>
@@ -772,55 +750,39 @@ const LARGE_DATASET: LargeRow[] = Array.from({ length: 200 }, (_, i) => ({
  */
 export const Virtualized: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("4765:3311") } },
-  render: (args) => {
-    // REASON: en HTML les `background` sur <thead>/<tr> ne sont pas peints —
-    // seules les cellules <th>/<td> peignent. Pour un header sticky, on
-    // rend chaque <th> collant ET on lui donne un background solide, sinon
-    // les lignes du body transparaissent en scroll.
-    const stickyHeaderStyle = {
-      position: "sticky" as const,
-      top: 0,
-      zIndex: 1,
-      background: "var(--background-surface-default)",
-    };
-    return (
-      <div
-        style={{
-          maxHeight: 400,
-          overflow: "auto",
-          border: "1px solid var(--border-subtle)",
-          borderRadius: "var(--radius-100)",
-        }}
-      >
-        <Table {...args} aria-label="Large dataset — 200 lignes">
-          <TableHead>
-            <TableRow>
-              <TableHeaderCell width={80} style={stickyHeaderStyle}>
-                #
-              </TableHeaderCell>
-              <TableHeaderCell style={stickyHeaderStyle}>Title</TableHeaderCell>
-              <TableHeaderCell style={stickyHeaderStyle}>Status</TableHeaderCell>
-              <TableHeaderCell style={stickyHeaderStyle}>User</TableHeaderCell>
-              <TableHeaderCell style={stickyHeaderStyle}>Key</TableHeaderCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {LARGE_DATASET.map((r) => (
-              <TableRow key={r.id}>
-                <TableCell>{r.id}</TableCell>
-                <TableCell>{r.title}</TableCell>
-                <TableCell>
-                  <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
-                </TableCell>
-                <TableCell>{r.user}</TableCell>
-                <TableCell>{r.key}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    );
-  },
+  render: (args) => (
+    // En-tête collant + hauteur bornée gérés nativement par la Table
+    // (`stickyHeader` + `maxHeight`) — plus de wrapper ni de styles inline.
+    <Table
+      {...args}
+      aria-label="Large dataset — 200 lignes"
+      stickyHeader
+      maxHeight={400}
+    >
+      <TableHead>
+        <TableRow>
+          <TableHeaderCell width={80}>#</TableHeaderCell>
+          <TableHeaderCell>Title</TableHeaderCell>
+          <TableHeaderCell>Status</TableHeaderCell>
+          <TableHeaderCell>User</TableHeaderCell>
+          <TableHeaderCell>Key</TableHeaderCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {LARGE_DATASET.map((r) => (
+          <TableRow key={r.id}>
+            <TableCell>{r.id}</TableCell>
+            <TableCell>{r.title}</TableCell>
+            <TableCell>
+              <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
+            </TableCell>
+            <TableCell>{r.user}</TableCell>
+            <TableCell>{r.key}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  ),
 };
 
 /**
@@ -946,6 +908,32 @@ export const EmptyState: Story = {
           columnCount={5}
           emptyTitle="Aucun projet"
           emptyDescription="Créez un premier projet pour commencer."
+        />
+      </Table>
+    </div>
+  ),
+};
+
+/**
+ * **Aucun résultat** — une recherche/un filtre ne renvoie rien (`isNoResults`),
+ * distinct de l'état vide (aucune donnée du tout) : le libellé invite à ajuster
+ * la recherche, avec une action « Réinitialiser les filtres ».
+ */
+export const NoResultsState: Story = {
+  name: "No results",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <div style={{ width: 640 }}>
+      <Table aria-label="Projets (aucun résultat)" style={{ width: "100%" }}>
+        <StatesHead />
+        <TableBody
+          isNoResults
+          columnCount={5}
+          noResultsAction={
+            <Button appearance="subtle" iconBefore="Autorenew">
+              Réinitialiser les filtres
+            </Button>
+          }
         />
       </Table>
     </div>

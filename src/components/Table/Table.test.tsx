@@ -10,6 +10,7 @@ import {
   TablePagination,
   TableRow,
   TableView,
+  TableSelectionBar,
   type TableSortDirection,
 } from "./Table";
 
@@ -544,6 +545,47 @@ describe("TableBody — états natifs", () => {
     expect(screen.getByText("Rien ici")).toBeInTheDocument();
   });
 
+  it("should render the no-results state with default title and an action", () => {
+    render(
+      <Table aria-label="t">
+        <TableBody
+          isNoResults
+          columnCount={3}
+          noResultsAction={<button>Réinitialiser les filtres</button>}
+        />
+      </Table>,
+    );
+    expect(screen.getByText("Aucun résultat")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Réinitialiser les filtres" }),
+    ).toBeInTheDocument();
+  });
+
+  it("should render a custom no-results title and description", () => {
+    render(
+      <Table aria-label="t">
+        <TableBody
+          isNoResults
+          columnCount={3}
+          noResultsTitle="Rien ne correspond"
+          noResultsDescription="Ajustez vos filtres."
+        />
+      </Table>,
+    );
+    expect(screen.getByText("Rien ne correspond")).toBeInTheDocument();
+    expect(screen.getByText("Ajustez vos filtres.")).toBeInTheDocument();
+  });
+
+  it("should prioritise empty over no-results", () => {
+    render(
+      <Table aria-label="t">
+        <TableBody isEmpty isNoResults columnCount={2} />
+      </Table>,
+    );
+    expect(screen.getByText("Aucune donnée")).toBeInTheDocument();
+    expect(screen.queryByText("Aucun résultat")).toBeNull();
+  });
+
   it("should render the error state with a retry button", () => {
     const onRetry = vi.fn();
     render(
@@ -577,5 +619,124 @@ describe("TableBody — états natifs", () => {
       </Table>,
     );
     expect(screen.getByText("Contenu")).toBeInTheDocument();
+  });
+});
+
+describe("TableHeaderCell — colonne d'actions", () => {
+  it("should expose an accessible name for an action column instead of an empty placeholder", () => {
+    render(
+      <Table aria-label="t">
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell>User</TableHeaderCell>
+            <TableHeaderCell isActionColumn>Actions</TableHeaderCell>
+          </TableRow>
+        </TableHead>
+      </Table>,
+    );
+    expect(
+      screen.getByRole("columnheader", { name: "Actions" }),
+    ).toBeInTheDocument();
+  });
+
+  it("should default the action column to a hidden name when no children given", () => {
+    render(
+      <Table aria-label="t">
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell isActionColumn />
+          </TableRow>
+        </TableHead>
+      </Table>,
+    );
+    expect(
+      screen.getByRole("columnheader", { name: "Actions" }),
+    ).toBeInTheDocument();
+  });
+});
+
+describe("Table — stickyHeader / maxHeight", () => {
+  it("should mark the table as sticky-header when stickyHeader is set", () => {
+    const { container } = render(
+      <Table aria-label="t" stickyHeader>
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell>A</TableHeaderCell>
+          </TableRow>
+        </TableHead>
+      </Table>,
+    );
+    expect(container.querySelector("table")).toHaveAttribute(
+      "data-sticky-header",
+    );
+  });
+
+  it("should wrap the table in a bounded scroll container when maxHeight is set", () => {
+    const { container } = render(
+      <Table aria-label="t" maxHeight={300}>
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell>A</TableHeaderCell>
+          </TableRow>
+        </TableHead>
+      </Table>,
+    );
+    const scroller = container.querySelector("[class*='scrollContainer']");
+    expect(scroller).toBeInTheDocument();
+    expect(scroller).toContainElement(container.querySelector("table"));
+    expect(scroller).toHaveStyle({ maxHeight: "300px" });
+  });
+
+  it("should not create a scroll container without maxHeight", () => {
+    const { container } = render(
+      <Table aria-label="t">
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell>A</TableHeaderCell>
+          </TableRow>
+        </TableHead>
+      </Table>,
+    );
+    expect(
+      container.querySelector("[class*='scrollContainer']"),
+    ).toBeNull();
+  });
+});
+
+describe("Table.SelectionBar", () => {
+  it("should render a pluralized count and bulk actions", () => {
+    render(
+      <TableSelectionBar count={3}>
+        <button>Supprimer</button>
+      </TableSelectionBar>,
+    );
+    expect(screen.getByText("3 lignes sélectionnées")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Supprimer" }),
+    ).toBeInTheDocument();
+  });
+
+  it("should render a singular label for one selected row", () => {
+    render(<TableSelectionBar count={1} />);
+    expect(screen.getByText("1 ligne sélectionnée")).toBeInTheDocument();
+  });
+
+  it("should render nothing when count is 0", () => {
+    const { container } = render(<TableSelectionBar count={0} />);
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  it("should render a clear button that calls onClear", () => {
+    const onClear = vi.fn();
+    render(<TableSelectionBar count={2} onClear={onClear} />);
+    fireEvent.click(screen.getByRole("button", { name: "Tout désélectionner" }));
+    expect(onClear).toHaveBeenCalledOnce();
+  });
+
+  it("should accept a custom label", () => {
+    render(
+      <TableSelectionBar count={5} label={(n) => `${n} sélection(s)`} />,
+    );
+    expect(screen.getByText("5 sélection(s)")).toBeInTheDocument();
   });
 });

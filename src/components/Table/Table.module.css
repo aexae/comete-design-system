@@ -18,6 +18,14 @@
   border-spacing: 0;
 }
 
+/* Conteneur de défilement (prop `maxHeight`) — borne la hauteur et rend le
+   corps défilant. Cadre discret pour marquer la zone bornée. */
+.scrollContainer {
+  overflow: auto;
+  border: var(--size0125) solid var(--border-subtle);
+  border-radius: var(--radius100);
+}
+
 /* --------------------------------------------------------------------------
    <thead>
    -------------------------------------------------------------------------- */
@@ -25,6 +33,17 @@
 .head {
   /* Divider fin (1px) entre thead et tbody. */
   border-bottom: var(--size0125) solid var(--border-default);
+}
+
+/* En-tête collant (prop `stickyHeader`) — chaque `<th>` colle en haut de la
+   zone de défilement. En HTML, `background` sur `<thead>`/`<tr>` n'est pas
+   peint : on rend chaque cellule collante ET on lui donne un fond opaque,
+   sinon les lignes du corps transparaissent au défilement. */
+.table[data-sticky-header] .headerCell {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--background-surface-default);
 }
 
 /* --------------------------------------------------------------------------
@@ -156,14 +175,27 @@
   white-space: nowrap;
 }
 
-/* Icône de tri — legerement plus sombre quand un tri est actif. */
+/* Icône de tri — masquée au repos, révélée au survol du header (et au focus
+   clavier, pour l'affordance accessible). L'espace reste réservé (opacity, pas
+   display) → aucun décalage du libellé à l'apparition. La colonne ACTUELLEMENT
+   triée garde sa flèche visible en permanence (indicateur d'état de tri). */
 .headerSortIcon {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   color: var(--icon-subtle);
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--easing-default);
 }
 
+.headerCell[data-sortable]:hover .headerSortIcon,
+.headerCell[data-sortable]:focus-visible .headerSortIcon,
+.headerCell[data-sort-direction="ascending"] .headerSortIcon,
+.headerCell[data-sort-direction="descending"] .headerSortIcon {
+  opacity: 1;
+}
+
+/* Tri actif — flèche plus sombre. */
 .headerCell[data-sort-direction="ascending"] .headerSortIcon,
 .headerCell[data-sort-direction="descending"] .headerSortIcon {
   color: var(--icon-default);
@@ -276,4 +308,29 @@
 .stateCell {
   padding: var(--space400) var(--space300);
   text-align: center;
+}
+
+/* ------------------------------------------------------------------ */
+/* TableSelectionBar — barre contextuelle « N lignes sélectionnées »   */
+
+.selectionBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space150);
+  padding: var(--space100) var(--space150);
+  background: var(--background-neutral-subtlest-default);
+  border-radius: var(--radius050);
+}
+
+.selectionBarCount {
+  flex-grow: 1;
+  min-width: 0;
+  font-size: var(--font-size-ui-xs);
+  color: var(--text-default);
+}
+
+.selectionBarActions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space100);
 }

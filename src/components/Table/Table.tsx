@@ -4,6 +4,7 @@
 // contexte `Density` — chaque `TableCell` / `TableHeaderCell` ajuste sa
 // hauteur, son padding et son typographie en conséquence.
 import type { CSSProperties, ReactElement, ReactNode } from "react";
+import { VisuallyHidden } from "react-aria-components";
 import { Button } from "../Button/index.js";
 import { Icon } from "../Icon/index.js";
 import { Select } from "../Select/index.js";
@@ -42,6 +43,18 @@ export interface TableProps {
   style?: CSSProperties;
   /** Contenu : `TableHead` + `TableBody` (et éventuellement `TableFooter`). */
   children: ReactNode;
+  /**
+   * Rend l'en-tête (`thead`) **collant** en haut de la zone de défilement
+   * (`position: sticky`) — l'en-tête reste visible pendant le scroll du corps.
+   * À combiner avec `maxHeight`. @default false
+   */
+  stickyHeader?: boolean;
+  /**
+   * Borne la hauteur du tableau et le rend **défilant** : le tableau est
+   * enveloppé dans un conteneur de défilement à hauteur maximale. Nombre =
+   * pixels ; string = valeur CSS (ex. `"70vh"`).
+   */
+  maxHeight?: number | string;
   /** Label accessible du tableau. */
   "aria-label"?: string;
   /** ID d'un élément qui labellise le tableau. */
@@ -72,13 +85,19 @@ export interface TableBodyProps {
   columnCount?: number;
   /**
    * Affiche des lignes de chargement (skeleton) à la place du contenu.
-   * Priorité : `error` > `isLoading` > `isEmpty` > `children`.
+   * Priorité : `error` > `isLoading` > `isEmpty` > `isNoResults` > `children`.
    */
   isLoading?: boolean;
   /** Nombre de lignes skeleton affichées quand `isLoading`. @default 5 */
   skeletonRows?: number;
-  /** Affiche l'état vide (aucune donnée) à la place du contenu. */
+  /** Affiche l'état vide (aucune donnée du tout) à la place du contenu. */
   isEmpty?: boolean;
+  /**
+   * Affiche l'état « aucun résultat » (une recherche/un filtre ne renvoie
+   * rien) à la place du contenu — distinct de `isEmpty` (aucune donnée du
+   * tout) : le libellé invite à ajuster la recherche plutôt qu'à créer.
+   */
+  isNoResults?: boolean;
   /**
    * État d'erreur. Falsy = pas d'erreur ; `true` = message générique ;
    * une chaîne = message d'erreur personnalisé.
@@ -92,6 +111,17 @@ export interface TableBodyProps {
   emptyDescription?: string;
   /** Slot pour remplacer entièrement le contenu de l'état vide. */
   emptyState?: ReactNode;
+  /** Titre de l'état « aucun résultat » (sinon libellé par défaut). */
+  noResultsTitle?: string;
+  /** Description de l'état « aucun résultat » (sinon libellé par défaut). */
+  noResultsDescription?: string;
+  /**
+   * Action de l'état « aucun résultat » (typiquement « Réinitialiser les
+   * filtres »). Rendue sous la description.
+   */
+  noResultsAction?: ReactNode;
+  /** Slot pour remplacer entièrement le contenu de l'état « aucun résultat ». */
+  noResultsState?: ReactNode;
   /** Slot pour remplacer entièrement le contenu de l'état d'erreur. */
   errorState?: ReactNode;
 }
@@ -152,6 +182,38 @@ export interface TableHeaderCellProps extends TableCellProps {
    * décide du nouvel état à appliquer.
    */
   onSortChange?: (nextDirection: TableSortDirection) => void;
+  /**
+   * Colonne d'actions (boutons de ligne) : l'en-tête n'a pas de libellé
+   * visible mais conserve un **nom accessible** (rendu masqué visuellement),
+   * au lieu d'un placeholder vide (`&nbsp;`) inaccessible. Le nom accessible
+   * vient des `children` (sinon « Actions »). Aligné au centre par défaut.
+   * @default false
+   */
+  isActionColumn?: boolean;
+}
+
+export interface TableSelectionBarProps {
+  /**
+   * Nombre de lignes sélectionnées. Pilote le libellé pluralisé. La barre ne
+   * rend rien quand `count` vaut 0 (elle apparaît dès qu'il y a une sélection).
+   */
+  count: number;
+  /** Actions groupées (boutons) affichées à droite (supprimer, exporter…). */
+  children?: ReactNode;
+  /**
+   * Callback de désélection globale — rend un bouton « Tout désélectionner »
+   * avant les actions.
+   */
+  onClear?: () => void;
+  /**
+   * Libellé personnalisé (reçoit le compte). Par défaut :
+   * « N ligne(s) sélectionnée(s) ».
+   */
+  label?: (count: number) => string;
+  /** Classe CSS additionnelle. */
+  className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
 }
 
 export interface TablePaginationLabelInfo {
@@ -261,6 +323,8 @@ function TableRoot({
   className,
   style,
   children,
+  stickyHeader = false,
+  maxHeight,
   "aria-label": ariaLabel,
   "aria-labelledby": ariaLabelledBy,
 }: TableProps): ReactElement {
@@ -270,19 +334,31 @@ function TableRoot({
       className={[styles.table, className].filter(Boolean).join(" ")}
       style={style}
       data-density={effectiveDensity}
+      data-sticky-header={stickyHeader || undefined}
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledBy}
     >
       {children}
     </table>
   );
+  // `maxHeight` → conteneur de défilement borné (c'est lui, et non un wrapper
+  // ad hoc côté consommateur, qui porte la hauteur + `overflow`). L'en-tête
+  // collant (`stickyHeader`) se colle relativement à ce conteneur.
+  const framed =
+    maxHeight !== undefined ? (
+      <div className={styles.scrollContainer} style={{ maxHeight }}>
+        {tableEl}
+      </div>
+    ) : (
+      tableEl
+    );
   // Wrappe dans un DensityProvider explicite pour que les cellules qui
   // liraient elles-mêmes le contexte (rare, mais possible) voient la
   // même valeur que ce qu'on projette via data-density.
   return density ? (
-    <DensityProvider density={density}>{tableEl}</DensityProvider>
+    <DensityProvider density={density}>{framed}</DensityProvider>
   ) : (
-    tableEl
+    framed
   );
 }
 
@@ -312,11 +388,12 @@ TableHead.displayName = "TableHead";
 /**
  * TableBody — `<tbody>` contenant les lignes de données.
  *
- * Gère nativement les états de chargement / vide / erreur : passer
- * `isLoading`, `isEmpty` ou `error` affiche l'état correspondant à la place
- * des lignes, sans que le consommateur ait à les composer. Fournir
- * `columnCount` pour que l'empan et les lignes skeleton couvrent toutes les
- * colonnes.
+ * Gère nativement les états de chargement / vide / aucun résultat / erreur :
+ * passer `isLoading`, `isEmpty`, `isNoResults` ou `error` affiche l'état
+ * correspondant à la place des lignes, sans que le consommateur ait à les
+ * composer. `isEmpty` = aucune donnée du tout ; `isNoResults` = une
+ * recherche/un filtre ne renvoie rien. Fournir `columnCount` pour que l'empan
+ * et les lignes skeleton couvrent toutes les colonnes.
  */
 export function TableBody({
   children,
@@ -326,16 +403,21 @@ export function TableBody({
   isLoading = false,
   skeletonRows = 5,
   isEmpty = false,
+  isNoResults = false,
   error = false,
   onRetry,
   emptyTitle,
   emptyDescription,
   emptyState,
+  noResultsTitle,
+  noResultsDescription,
+  noResultsAction,
+  noResultsState,
   errorState,
 }: TableBodyProps): ReactElement {
   const bodyClassName = [styles.body, className].filter(Boolean).join(" ");
 
-  // Priorité : erreur > chargement > vide > contenu.
+  // Priorité : erreur > chargement > vide > aucun résultat > contenu.
   let content: ReactNode;
   if (error) {
     content = (
@@ -370,6 +452,21 @@ export function TableBody({
               kind="empty"
               title={emptyTitle}
               description={emptyDescription}
+            />
+          )}
+        </td>
+      </tr>
+    );
+  } else if (isNoResults) {
+    content = (
+      <tr>
+        <td colSpan={columnCount} className={styles.stateCell}>
+          {noResultsState ?? (
+            <DataStateMessage
+              kind="noResults"
+              title={noResultsTitle}
+              description={noResultsDescription}
+              actions={noResultsAction}
             />
           )}
         </td>
@@ -468,8 +565,13 @@ export function TableHeaderCell({
   isSortable = false,
   sortDirection = "default",
   onSortChange,
+  isActionColumn = false,
 }: TableHeaderCellProps): ReactElement {
   const mergedStyle: CSSProperties = width !== undefined ? { ...style, width } : (style ?? {});
+  // Colonne d'actions : centrée par défaut (l'alignement par défaut "left"
+  // n'a pas de sens pour une colonne d'icônes d'action).
+  const resolvedAlign: TableAlign =
+    isActionColumn && align === "left" ? "center" : align;
 
   const handleClick = () => {
     if (!isSortable || !onSortChange) return;
@@ -507,7 +609,7 @@ export function TableHeaderCell({
       scope="col"
       className={[styles.headerCell, className].filter(Boolean).join(" ")}
       style={mergedStyle}
-      data-align={align}
+      data-align={resolvedAlign}
       data-sortable={isSortable || undefined}
       data-sort-direction={isSortable ? sortDirection : undefined}
       aria-sort={ariaSort}
@@ -517,14 +619,20 @@ export function TableHeaderCell({
       onClick={handleClick}
       onKeyDown={handleKeyDown}
     >
-      <span className={styles.headerContent}>
-        <span className={styles.headerLabel}>{children}</span>
-        {isSortable && (
-          <span className={styles.headerSortIcon} aria-hidden="true">
-            <Icon icon={sortIcon} size={16} />
-          </span>
-        )}
-      </span>
+      {isActionColumn ? (
+        // Pas de libellé visible, mais un nom accessible (masqué visuellement)
+        // — jamais de placeholder vide inaccessible.
+        <VisuallyHidden>{children ?? "Actions"}</VisuallyHidden>
+      ) : (
+        <span className={styles.headerContent}>
+          <span className={styles.headerLabel}>{children}</span>
+          {isSortable && (
+            <span className={styles.headerSortIcon} aria-hidden="true">
+              <Icon icon={sortIcon} size={16} />
+            </span>
+          )}
+        </span>
+      )}
     </th>
   );
 }
@@ -675,6 +783,63 @@ export function TableView({
 TableView.displayName = "TableView";
 
 // -----------------------------------------------------------------------
+// TableSelectionBar
+
+/**
+ * TableSelectionBar — barre d'actions contextuelle affichée au-dessus du
+ * tableau quand des lignes sont sélectionnées (« N lignes sélectionnées » +
+ * actions groupées). Ne rend rien quand `count` vaut 0.
+ *
+ * ```tsx
+ * <Table.SelectionBar count={selected.size} onClear={() => setSelected(new Set())}>
+ *   <Button appearance="subtle" iconBefore="Delete">Supprimer</Button>
+ * </Table.SelectionBar>
+ * <Table aria-label="…">…</Table>
+ * ```
+ */
+export function TableSelectionBar({
+  count,
+  children,
+  onClear,
+  label,
+  className,
+  style,
+}: TableSelectionBarProps): ReactElement | null {
+  if (count <= 0) return null;
+
+  const text = label
+    ? label(count)
+    : `${count} ligne${count > 1 ? "s" : ""} sélectionnée${count > 1 ? "s" : ""}`;
+
+  return (
+    <div
+      className={[styles.selectionBar, className].filter(Boolean).join(" ")}
+      style={style}
+      role="region"
+      aria-label="Actions de sélection"
+    >
+      {/* aria-live : le changement du nombre de lignes sélectionnées est
+          annoncé aux lecteurs d'écran. */}
+      <span className={styles.selectionBarCount} aria-live="polite">
+        {text}
+      </span>
+      {(onClear || children) && (
+        <div className={styles.selectionBarActions}>
+          {onClear && (
+            <Button appearance="subtle" onPress={onClear}>
+              Tout désélectionner
+            </Button>
+          )}
+          {children}
+        </div>
+      )}
+    </div>
+  );
+}
+
+TableSelectionBar.displayName = "TableSelectionBar";
+
+// -----------------------------------------------------------------------
 // Compound API — expose `Table.View` en plus de l'export nommé `TableView`.
 
 /**
@@ -687,6 +852,11 @@ export interface TableComponent {
   displayName?: string;
   /** Vue haut niveau avec en-tête, pagination et gestion du tri. */
   View: typeof TableView;
+  /** Barre d'actions contextuelle « N lignes sélectionnées ». */
+  SelectionBar: typeof TableSelectionBar;
 }
 
-export const Table: TableComponent = Object.assign(TableRoot, { View: TableView });
+export const Table: TableComponent = Object.assign(TableRoot, {
+  View: TableView,
+  SelectionBar: TableSelectionBar,
+});
