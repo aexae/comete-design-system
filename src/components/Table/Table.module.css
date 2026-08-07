@@ -42,25 +42,26 @@
 
 /* Colonnes responsives (`hideBelow`) — dégradation desktop → tablette par
    CONTAINER QUERIES (aucune media query viewport). Les conditions @container
-   n'acceptent pas `var()` : les trois seuils sont donc centralisés ici, une
-   seule fois chacun (sm 480 / md 768 / lg 1024). Le `display: none` sur <th>
-   ET <td> (border-collapse) fait disparaître la colonne proprement : pas de
-   colonne fantôme ni de décalage. */
-@container table (max-width: 480px) {
+   n'acceptent pas `var()` : les trois seuils reflètent donc « en dur » la
+   source unique `BREAKPOINTS` (src/tokens/breakpoints.ts) — sm 600 / md 900 /
+   lg 1200. La synchro CSS ↔ constantes est garantie par breakpoints.test.ts.
+   Le `display: none` sur <th> ET <td> (border-collapse) fait disparaître la
+   colonne proprement : pas de colonne fantôme ni de décalage. */
+@container table (max-width: 600px) {
   .headerCell[data-hide-below="sm"],
   .cell[data-hide-below="sm"] {
     display: none;
   }
 }
 
-@container table (max-width: 768px) {
+@container table (max-width: 900px) {
   .headerCell[data-hide-below="md"],
   .cell[data-hide-below="md"] {
     display: none;
   }
 }
 
-@container table (max-width: 1024px) {
+@container table (max-width: 1200px) {
   .headerCell[data-hide-below="lg"],
   .cell[data-hide-below="lg"] {
     display: none;

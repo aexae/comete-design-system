@@ -24,10 +24,11 @@ export type TableAlign = "left" | "center" | "right";
 
 /**
  * Seuil de masquage responsive d'une colonne, exprimé en largeur du
- * **container** de la table (pas du viewport) :
- * - `sm` — masquée sous ~480px de container ;
- * - `md` — masquée sous ~768px ;
- * - `lg` — masquée sous ~1024px.
+ * **container** de la table (pas du viewport). Valeurs alignées sur la source
+ * unique `BREAKPOINTS` (src/tokens/breakpoints.ts) :
+ * - `sm` — masquée sous 600px de container ;
+ * - `md` — masquée sous 900px ;
+ * - `lg` — masquée sous 1200px.
  */
 export type TableHideBelow = "sm" | "md" | "lg";
 

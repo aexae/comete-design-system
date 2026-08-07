@@ -46,12 +46,22 @@ entre versions alpha.
   (`TableRow isSelected` + `Checkbox` + `Table.SelectionBar`) est inchangée.
   Types `UseTableSelectionOptions` / `UseTableSelectionResult` exportés
   (via `@aexae/comete-design-system` et `@aexae/comete-design-system/hooks`).
+- **`BREAKPOINTS`** — source unique des breakpoints responsives du DS
+  (`sm: 600`, `md: 900`, `lg: 1200`), exportée depuis
+  `@aexae/comete-design-system` (+ type `Breakpoint`). `Grid` (media queries
+  viewport) et `Table` (`hideBelow`, container queries) reflètent désormais ces
+  valeurs ; une garde de test (`breakpoints.test.ts`) empêche toute dérive entre
+  les constantes et le CSS.
 
 ### Modifié
 
 - **Table** : les flèches de tri des en-têtes triables ne s'affichent plus qu'au
   **survol** (et au focus clavier) ; la colonne actuellement triée garde sa
   flèche visible.
+- **Table** (`hideBelow`) : seuils de masquage des colonnes **alignés sur la
+  source unique `BREAKPOINTS`** — `sm 480→600`, `md 768→900`, `lg 1024→1200`.
+  Cohérence avec les breakpoints de `Grid` (600/1200) ; l'API (`"sm"|"md"|"lg"`)
+  est inchangée, seuls les seuils (largeur de container) bougent.
 
 ### Documentation
 
