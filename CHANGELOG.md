@@ -31,6 +31,10 @@ entre versions alpha.
     Activé par la prop **`responsive`** sur `Table` (opt-in — établit le query
     container ; sans elle, aucun wrapper ni impact de mise en page). Type
     `TableHideBelow` exporté.
+- **List** : prop `gap` (`"100" | "150" | "200"`) — espacement vertical entre
+  items (`row-gap`), pour une séparation « sans filet » (sans dividers).
+  Orthogonale à `isDense` (qui agit sur le padding interne). Type `ListGap`
+  exporté.
 
 ### Modifié
 
