@@ -1180,10 +1180,10 @@ const RESPONSIVE_DOC_ROWS: Array<{
   preset: string;
   comportement: string;
 }> = [
-  { bp: "≥ 1024px", preset: "Desktop exploitation (1440)", comportement: "Toutes les colonnes (Agent, Statut, Site, Début, Fin)." },
-  { bp: "768 – 1024px", preset: "Tablette manager (768)", comportement: "Colonnes de confort masquées (hideBelow=\"lg\", ex. Fin)." },
-  { bp: "480 – 768px", preset: "—", comportement: "Colonnes de contexte aussi masquées (hideBelow=\"md\", ex. Site/Début)." },
-  { bp: "< ~600px", preset: "Mobile agent (375)", comportement: "Repli en liste compacte (List) plutôt qu'une table comprimée." },
+  { bp: "≥ 1200px (lg)", preset: "Desktop exploitation (1440)", comportement: "Toutes les colonnes visibles (identifiant + confort + contexte)." },
+  { bp: "900 – 1200px", preset: "—", comportement: "Colonnes de confort masquées (hideBelow=\"lg\")." },
+  { bp: "600 – 900px (md)", preset: "Tablette manager (768)", comportement: "Colonnes de contexte aussi masquées (hideBelow=\"md\")." },
+  { bp: "< 600px (sm)", preset: "Mobile agent (375)", comportement: "Colonnes secondaires masquées (hideBelow=\"sm\") ; sous ce seuil, préférer le repli en liste compacte (List)." },
 ];
 
 function ResponsiveDocSection(): ReactNode {

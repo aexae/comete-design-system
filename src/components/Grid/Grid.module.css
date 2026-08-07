@@ -4,6 +4,11 @@
    Les variables `--_grid-cols-{bp}` / `--_col-span-{bp}` / `--_col-start-{bp}`
    sont injectées par le composant. Cascade : chaque breakpoint hérite
    du précédent si non défini.
+
+   Seuils : `tablet` = 600px (= BREAKPOINTS.sm), `desktop` = 1200px
+   (= BREAKPOINTS.lg) — cf. la source unique src/tokens/breakpoints.ts. Une
+   media query n'acceptant pas `var()`, ces valeurs sont reflétées « en dur »
+   ici ; la synchro est garantie par src/tokens/breakpoints.test.ts.
    ========================================================================== */
 
 .grid {
