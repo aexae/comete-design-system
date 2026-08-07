@@ -18,12 +18,53 @@
   border-spacing: 0;
 }
 
+/* QUERY CONTAINER (prop `responsive`) — enveloppe qui porte
+   `container-type: inline-size` + nom `table`. Les colonnes responsives
+   (`hideBelow`) interrogent CE conteneur → la largeur disponible de la table,
+   jamais le viewport. `inline-size` ne contient que l'axe horizontal (scroll +
+   en-tête collant intacts). Opt-in car la containment inline-size s'effondre
+   en contexte shrink-to-fit (centrage `width: max-content`) : n'activer que
+   dans un contexte de largeur définie (flux bloc, colonne flex/grid). */
+.queryContainer {
+  container-type: inline-size;
+  container-name: table;
+}
+
 /* Conteneur de défilement (prop `maxHeight`) — borne la hauteur et rend le
-   corps défilant. Cadre discret pour marquer la zone bornée. */
+   corps défilant. Cadre discret pour marquer la zone bornée. Pas de
+   containment (compatible avec tout contexte). Composable avec
+   `.queryContainer`. */
 .scrollContainer {
   overflow: auto;
   border: var(--size0125) solid var(--border-subtle);
   border-radius: var(--radius100);
+}
+
+/* Colonnes responsives (`hideBelow`) — dégradation desktop → tablette par
+   CONTAINER QUERIES (aucune media query viewport). Les conditions @container
+   n'acceptent pas `var()` : les trois seuils sont donc centralisés ici, une
+   seule fois chacun (sm 480 / md 768 / lg 1024). Le `display: none` sur <th>
+   ET <td> (border-collapse) fait disparaître la colonne proprement : pas de
+   colonne fantôme ni de décalage. */
+@container table (max-width: 480px) {
+  .headerCell[data-hide-below="sm"],
+  .cell[data-hide-below="sm"] {
+    display: none;
+  }
+}
+
+@container table (max-width: 768px) {
+  .headerCell[data-hide-below="md"],
+  .cell[data-hide-below="md"] {
+    display: none;
+  }
+}
+
+@container table (max-width: 1024px) {
+  .headerCell[data-hide-below="lg"],
+  .cell[data-hide-below="lg"] {
+    display: none;
+  }
 }
 
 /* --------------------------------------------------------------------------

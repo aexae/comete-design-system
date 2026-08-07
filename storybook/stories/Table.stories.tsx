@@ -1,11 +1,16 @@
 // Table — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useMemo, useState } from "react";
+import type { ReactNode } from "react";
 import { within, userEvent, expect, fn } from "storybook/test";
 import {
   Avatar,
   Button,
   Checkbox,
+  Icon,
+  List,
+  ListItemButton,
+  ListItemText,
   Table,
   TableBody,
   TableCell,
@@ -14,10 +19,12 @@ import {
   TablePagination,
   TableRow,
   Tag,
+  Text,
   type TableSortDirection,
 } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import css from "./Table.stories.module.css";
 
 // -----------------------------------------------------------------------
 // Figma links
@@ -40,6 +47,7 @@ const meta = {
       page: () => (
         <DocsTabsPage
           guidelines={
+            <>
             <GuidelinesFlat
               doExample={{
                 example: (
@@ -107,13 +115,20 @@ const meta = {
                 "Aligner les nombres à droite (`align=\"right\"`) et le texte à gauche.",
                 "Colonnes triables via `isSortable` + `aria-sort` ; densité `compact` pour les vues denses.",
                 "Le divider bas disparaît quand un footer/pagination est présent (géré par Table.View).",
-                "Sur mobile étroit, repenser le contenu en cartes plutôt qu'en colonnes.",
+                "Responsive (`hideBelow`, container queries) : `<Table responsive>` (établit le query container ; requiert une largeur définie, pas un parent shrink-to-fit). Priorisez — identifiant + donnée clé toujours visibles (jamais de `hideBelow`), colonnes de contexte en `md`, colonnes de confort en `lg`. Poser `hideBelow` sur l'en-tête ET chaque cellule de la même colonne.",
+                "Une info masquée doit rester accessible : ligne cliquable vers le détail, ou vue cartes. Le tri d'une colonne masquée reste actif côté données — au consommateur de décider s'il le réinitialise.",
+                "Sous ~600px de container, ne compressez PAS la table : passez en liste compacte (`List` : titre en primary, site/méta en secondary, tag de statut + heure en trailing — le pattern Main courante mobile). Une table à 2 colonnes tronquées rend moins service qu'une ligne de liste dense. Les cartes sont la vue alternative (bascule liste/cartes), pas le repli par défaut. La story *Responsive columns* montre cette limite (600px = 2 colonnes étirées) ; la story *Table → List* montre le repli.",
+                "En liste (repli étroit), il n'y a plus d'en-têtes : le tri passe dans un contrôle « Trier par » au-dessus de la liste ; la sélection multiple par case par ligne ou appui long (à brancher sur le hook de sélection).",
+                "Statut → couleur (D12) : Actif → success, Pause → warning, Hors ligne → neutral. En méta compacte, l'heure seule aujourd'hui, et uniquement le jour (« Hier ») pour un jour antérieur — pour ne pas fausser la fraîcheur.",
               ]}
               accessibility={[
                 "En-têtes de colonnes (TableHeaderCell) reliés aux cellules ; navigation au clavier.",
                 "`align=\"right\"` pour les nombres ; l'état de tri est annoncé (`aria-sort`).",
+                "Jamais de `hideBelow` sur la colonne de sélection ni la colonne d'actions (elles restent toujours visibles).",
               ]}
             />
+            <ResponsiveDocSection />
+            </>
           }
         />
       ),
@@ -965,3 +980,303 @@ export const ErrorState: Story = {
     await expect(onRetry).toHaveBeenCalledOnce();
   },
 };
+
+// -----------------------------------------------------------------------
+// Main Courante — jeu d'événements pour la recette de repli téléphone
+// (Table → List). Éprouve la recette : noms longs (ellipsis), « Ronde »
+// répétés (l'heure discrimine), fraîcheur aujourd'hui/hier/avant-hier/plus
+// ancien, statuts variés + lignes sans statut, sites de longueurs variées.
+
+type EventStatus = "En cours" | "Planifiée" | "Terminée" | "Absent";
+
+const EVENT_STATUS_COLOR: Record<
+  EventStatus,
+  "success" | "information" | "neutral" | "critical"
+> = {
+  "En cours": "success",
+  Planifiée: "information",
+  Terminée: "neutral",
+  Absent: "critical",
+};
+
+interface McEvent {
+  id: string;
+  agent: string;
+  type: string;
+  site: string;
+  /** 0 = aujourd'hui, 1 = hier, 2 = avant-hier, ≥ 3 = plus ancien (`shortDate`). */
+  dayOffset: 0 | 1 | 2 | 3 | 4;
+  time: string;
+  /** Requis quand `dayOffset` ≥ 3 (ex. « 02/08 »). */
+  shortDate?: string;
+  /**
+   * Statut de l'événement. **Optionnel** : une entrée de main courante peut
+   * n'avoir AUCUN statut (log informationnel) — ce n'est pas une donnée
+   * manquante. L'emplacement du tag reste réservé (alignement), simplement vide.
+   */
+  statut?: EventStatus;
+}
+
+const MC_EVENTS: McEvent[] = [
+  { id: "1", agent: "DUPONT Marie", type: "Ronde", site: "Hall d'accueil", dayOffset: 0, time: "14:05", statut: "En cours" },
+  { id: "2", agent: "MARTIN Bob", type: "Ronde", site: "Quai de livraison Nord", dayOffset: 0, time: "13:40", statut: "En cours" },
+  { id: "3", agent: "CHEN Alice", type: "Ronde", site: "Parking souterrain niveau -2", dayOffset: 0, time: "13:12" },
+  { id: "4", agent: "NGUYEN Paul", type: "Intrusion détectée en zone de stockage réfrigérée", site: "Entrepôt frigorifique B", dayOffset: 0, time: "12:58", statut: "En cours" },
+  { id: "5", agent: "CLAIRE Sophie", type: "Contrôle d'accès", site: "Tourniquet Est", dayOffset: 0, time: "11:30", statut: "Terminée" },
+  { id: "6", agent: "DIALLO Amadou", type: "Levée de doute", site: "Local technique", dayOffset: 0, time: "10:15", statut: "Terminée" },
+  { id: "7", agent: "PETIT Léa", type: "Ouverture de site", site: "Siège — Bâtiment principal", dayOffset: 0, time: "06:02", statut: "Terminée" },
+  { id: "8", agent: "MOREAU Hugo", type: "Ronde", site: "Toiture terrasse", dayOffset: 1, time: "22:40", statut: "En cours" },
+  { id: "9", agent: "GARCIA Inès", type: "Vérification alarme incendie déclenchée cuisine collective", site: "Réfectoire", dayOffset: 1, time: "21:05", statut: "Absent" },
+  { id: "10", agent: "ROUX Théo", type: "Contrôle d'accès", site: "Hall", dayOffset: 1, time: "18:20" },
+  { id: "11", agent: "FONTAINE Sarah", type: "Fermeture de site", site: "Plateforme logistique Sud-Est — Bâtiment C", dayOffset: 1, time: "19:45", statut: "Terminée" },
+  { id: "12", agent: "LEROY Marc", type: "Ronde", site: "Zone parking visiteurs", dayOffset: 2, time: "23:10", statut: "Terminée" },
+  { id: "13", agent: "BONNET Julie", type: "Intervention", site: "Poste de garde", dayOffset: 2, time: "03:30", statut: "Absent" },
+  { id: "14", agent: "GIRARD Yanis", type: "Vacation de nuit planifiée", site: "Site Est", dayOffset: 3, time: "08:00", shortDate: "02/08", statut: "Planifiée" },
+  { id: "15", agent: "LAMBERT Nour", type: "Maintenance préventive du système de vidéosurveillance périmétrique", site: "Datacenter", dayOffset: 4, time: "09:15", shortDate: "01/08", statut: "Planifiée" },
+  { id: "16", agent: "FAURE Camille", type: "Ouverture de site", site: "Annexe", dayOffset: 0, time: "05:58", statut: "Terminée" },
+];
+
+/**
+ * Heure/jour compact (liste) : heure seule aujourd'hui ; « Hier » /
+ * « Avant-hier » ; date courte au-delà. Jamais l'heure seule pour un jour
+ * passé (fraîcheur — « 22:10 » sans jour laisserait croire à du récent).
+ */
+const compactWhen = (e: McEvent) =>
+  e.dayOffset === 0
+    ? e.time
+    : e.dayOffset === 1
+      ? "Hier"
+      : e.dayOffset === 2
+        ? "Avant-hier"
+        : (e.shortDate ?? e.time);
+
+/** Tag de statut d'événement — rien si l'événement n'a pas de statut. */
+function EventStatusTag({ statut }: { statut?: EventStatus }) {
+  if (!statut) return null;
+  return (
+    <Tag
+      label={statut}
+      color={EVENT_STATUS_COLOR[statut]}
+      appearance="subtle"
+      shape="rounded"
+    />
+  );
+}
+
+/** Initiales de l'agent pour l'avatar (« DUPONT Marie » → « DM »). */
+const agentInitials = (name: string) =>
+  name
+    .split(" ")
+    .map((part) => part.charAt(0))
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+/** Action Storybook « ouvrir le détail » — partagée par les items de liste. */
+const onOpenDetail = fn();
+
+/**
+ * **Table → List (repli téléphone)** — sous ~600px de container, on ne compresse
+ * pas la table : on bascule en `List`. Cette recette montre le **résultat du
+ * repli** sur la donnée `MC_EVENTS` — la liste compacte « Main courante mobile »
+ * (type d'événement en primary, site en secondary ; avatar + heure + tag de
+ * statut + chevron en trailing).
+ *
+ * Points de fidélité :
+ * - **Espacement sans filet** : `List gap="150"` — la séparation des lignes se
+ *   fait par l'air, pas par des dividers.
+ * - **Trailing uniforme** (contrepartie du sans-divider) : anatomie identique
+ *   sur toutes les lignes — `[avatar] [heure] · [statut] · [chevron]` sur une
+ *   grille à colonnes fixes. L'**emplacement du statut est réservé même sans
+ *   statut** (colonne de largeur fixe, calée sur « Terminée ») ; un événement
+ *   sans statut = *aucun statut* (log informationnel), pas une donnée manquante
+ *   → emplacement vide. Les **chevrons sont alignés au pixel** et centrés sur la
+ *   hauteur totale de l'item ; hauteur d'item constante (primary/secondary en
+ *   ellipsis, 2 lignes).
+ * - **Fraîcheur** : heure seule aujourd'hui ; « Hier » / « Avant-hier » ; date
+ *   courte au-delà (jamais l'heure seule pour un jour passé).
+ * - **Cas éprouvés** : noms d'événements longs (ellipsis), « Ronde » répétés
+ *   (l'heure discrimine), sites de longueurs variées, statuts variés + lignes
+ *   sans statut.
+ *
+ * Clic vers le détail : `ListItemButton` (vrai bouton, clavier + focus natifs),
+ * `onPress` (action Storybook), chevron **décoratif** en fin de ligne.
+ *
+ * **Guideline** : si les lignes de la table (large) sont cliquables, les items du
+ * repli liste le sont aussi — **même destination, même geste** ; jamais le hover
+ * comme seul signal.
+ */
+export const TableToListRecipe: Story = {
+  name: "Table → List (repli téléphone)",
+  parameters: { controls: { disable: true }, layout: "fullscreen" },
+  render: () => (
+    <div style={{ width: 360, padding: "var(--space200)" }}>
+      <Text size="small" color="subtle" as="p">Étroit — liste compacte (cliquable)</Text>
+      <List aria-label="Main courante — liste compacte" gap="150">
+        {MC_EVENTS.map((e) => (
+          // Ligne cliquable = ListItemButton (bouton natif, clavier + focus).
+          <ListItemButton key={e.id} onPress={() => { onOpenDetail(e.id); }}>
+            {/* Infos importantes : type (titre) + site (sous-titre). En fill
+                (flex:1) → pousse le trailing à droite. */}
+            <ListItemText primary={e.type} secondary={e.site} />
+            {/* Trailing DANS le bouton (frère flex du texte, pas un
+                ListItemSecondaryAction absolu) → texte en fill. Bloc vertical :
+                avatar + heure AU-DESSUS du statut ; chevron décoratif à droite.
+                Ligne de statut réservée (min-height) même sans tag. */}
+            <span className={css["trailing"]}>
+              <span className={css["trailingStack"]}>
+                <span className={css["trailingWhen"]}>
+                  <Avatar size="xsmall" initials={agentInitials(e.agent)} />
+                  {compactWhen(e)}
+                </span>
+                <span className={css["trailingStatus"]}>
+                  <EventStatusTag statut={e.statut} />
+                </span>
+              </span>
+              <Icon
+                icon="ChevronRight"
+                color="subtle"
+                size={16}
+                className={css["trailingChevron"]}
+              />
+            </span>
+          </ListItemButton>
+        ))}
+      </List>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const list = canvas.getByRole("list");
+
+    // 1) Clic sur un item → l'action « ouvrir le détail » est appelée.
+    onOpenDetail.mockClear();
+    await userEvent.click(canvas.getByRole("button", { name: /Toiture terrasse/ }));
+    await expect(onOpenDetail).toHaveBeenCalledOnce();
+
+    const spread = (values: number[]) =>
+      Math.max(...values) - Math.min(...values);
+
+    // 2) Tous les chevrons ont le même x (colonnes fixes du trailing).
+    const chevronX = Array.from(
+      list.querySelectorAll('[class*="trailingChevron"]'),
+    ).map((c) => c.getBoundingClientRect().x);
+    await expect(chevronX.length).toBe(MC_EVENTS.length);
+    await expect(spread(chevronX)).toBeLessThanOrEqual(1);
+
+    // 3) Hauteur d'item constante malgré le contenu variable.
+    const heights = Array.from(list.querySelectorAll("li")).map(
+      (li) => li.getBoundingClientRect().height,
+    );
+    await expect(spread(heights)).toBeLessThanOrEqual(1);
+  },
+};
+
+// -----------------------------------------------------------------------
+// Section de doc « Comportement responsive » — injectée dans l'onglet
+// Guidelines (à côté de GuidelinesFlat) via le meta. Texte + tableau
+// breakpoint → comportement. Illustré par la recette « Table → List
+// (repli téléphone) ».
+
+const RESPONSIVE_DOC_ROWS: Array<{
+  bp: string;
+  preset: string;
+  comportement: string;
+}> = [
+  { bp: "≥ 1024px", preset: "Desktop exploitation (1440)", comportement: "Toutes les colonnes (Agent, Statut, Site, Début, Fin)." },
+  { bp: "768 – 1024px", preset: "Tablette manager (768)", comportement: "Colonnes de confort masquées (hideBelow=\"lg\", ex. Fin)." },
+  { bp: "480 – 768px", preset: "—", comportement: "Colonnes de contexte aussi masquées (hideBelow=\"md\", ex. Site/Début)." },
+  { bp: "< ~600px", preset: "Mobile agent (375)", comportement: "Repli en liste compacte (List) plutôt qu'une table comprimée." },
+];
+
+function ResponsiveDocSection(): ReactNode {
+  const cellStyle = {
+    padding: "var(--space150) var(--space200)",
+    borderBottom: "1px solid var(--border-subtle)",
+    fontFamily: "var(--font-family-primary)",
+    fontSize: "var(--font-size-ui-xs)",
+    lineHeight: "var(--line-height-ui-m)",
+    color: "var(--text-default)",
+    textAlign: "start" as const,
+    verticalAlign: "top" as const,
+  };
+  return (
+    <section style={{ maxWidth: 760, paddingTop: "var(--space400)" }}>
+      <h3
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "var(--space100)",
+          margin: 0,
+          fontFamily: "var(--font-family-primary)",
+          fontSize: "var(--font-size-ui-s)",
+          fontWeight: "var(--font-weight-semibold)",
+          color: "var(--text-default)",
+        }}
+      >
+        <span
+          style={{
+            width: 8,
+            height: 8,
+            borderRadius: "50%",
+            background: "var(--text-information)",
+            display: "inline-block",
+          }}
+        />
+        Comportement responsive
+      </h3>
+      <p
+        style={{
+          margin: "var(--space150) 0 var(--space200)",
+          fontFamily: "var(--font-family-primary)",
+          fontSize: "var(--font-size-ui-xs)",
+          lineHeight: "var(--line-height-ui-m)",
+          color: "var(--text-subtle)",
+        }}
+      >
+        La dégradation est pilotée par <strong>container queries</strong> (la
+        largeur du conteneur de la table, pas le viewport) : poser{" "}
+        <code>responsive</code> sur la <code>Table</code> puis <code>hideBelow</code>{" "}
+        (<code>&quot;sm&quot;</code>/<code>&quot;md&quot;</code>/
+        <code>&quot;lg&quot;</code>) sur l&apos;en-tête ET chaque cellule d&apos;une
+        colonne. Les identifiants et la donnée clé ne sont jamais masqués ; sous
+        ~600px on bascule en liste compacte. Les presets viewport « Mobile agent
+        / Tablette manager / Desktop exploitation » (barre d&apos;outils Viewport)
+        permettent d&apos;éprouver chaque palier ; la recette{" "}
+        <em>Table → List (repli téléphone)</em> illustre le repli en liste.
+      </p>
+      <table
+        style={{
+          width: "100%",
+          borderCollapse: "collapse",
+          border: "1px solid var(--border-subtle)",
+          borderRadius: "var(--radius200)",
+          overflow: "hidden",
+        }}
+      >
+        <thead>
+          <tr>
+            <th style={{ ...cellStyle, fontWeight: "var(--font-weight-semibold)", background: "var(--background-neutral-subtlest-default)" }}>
+              Largeur de container
+            </th>
+            <th style={{ ...cellStyle, fontWeight: "var(--font-weight-semibold)", background: "var(--background-neutral-subtlest-default)" }}>
+              Preset viewport
+            </th>
+            <th style={{ ...cellStyle, fontWeight: "var(--font-weight-semibold)", background: "var(--background-neutral-subtlest-default)" }}>
+              Comportement
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {RESPONSIVE_DOC_ROWS.map((row) => (
+            <tr key={row.bp}>
+              <td style={cellStyle}>{row.bp}</td>
+              <td style={cellStyle}>{row.preset}</td>
+              <td style={cellStyle}>{row.comportement}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+  );
+}

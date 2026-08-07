@@ -10,6 +10,7 @@ declare const styles: {
   readonly "paginationControls": string;
   readonly "paginationLabel": string;
   readonly "paginationRowsPerPage": string;
+  readonly "queryContainer": string;
   readonly "row": string;
   readonly "scrollContainer": string;
   readonly "selectionBar": string;

@@ -53,6 +53,25 @@ describe("List", () => {
     expect(screen.getByRole("list")).not.toHaveAttribute("data-dense");
   });
 
+  it("should apply data-gap when gap is set", () => {
+    render(
+      <List aria-label="spaced" gap="150">
+        <ListItem>A</ListItem>
+        <ListItem>B</ListItem>
+      </List>,
+    );
+    expect(screen.getByRole("list")).toHaveAttribute("data-gap", "150");
+  });
+
+  it("should NOT apply data-gap by default", () => {
+    render(
+      <List aria-label="joined">
+        <ListItem>A</ListItem>
+      </List>,
+    );
+    expect(screen.getByRole("list")).not.toHaveAttribute("data-gap");
+  });
+
   it("should merge custom className on the list root", () => {
     render(
       <List aria-label="x" className="custom">

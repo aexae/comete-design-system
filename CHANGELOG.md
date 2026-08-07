@@ -24,6 +24,17 @@ entre versions alpha.
     de défilement borné) — remplacent le wrapper + styles inline de la story.
   - `TableHeaderCell isActionColumn` — nom accessible masqué (« Actions ») pour
     la colonne d'actions, au lieu d'un placeholder vide (`&nbsp;`) inaccessible.
+  - `hideBelow` (`"sm" | "md" | "lg"`) sur `TableHeaderCell` ET `TableCell` —
+    colonnes responsives par **container queries** (largeur du container, pas
+    du viewport) : dégradation desktop → tablette. À poser sur l'en-tête ET
+    chaque cellule de la même colonne ; jamais sur la sélection ni les actions.
+    Activé par la prop **`responsive`** sur `Table` (opt-in — établit le query
+    container ; sans elle, aucun wrapper ni impact de mise en page). Type
+    `TableHideBelow` exporté.
+- **List** : prop `gap` (`"100" | "150" | "200"`) — espacement vertical entre
+  items (`row-gap`), pour une séparation « sans filet » (sans dividers).
+  Orthogonale à `isDense` (qui agit sur le padding interne). Type `ListGap`
+  exporté.
 
 ### Modifié
 
