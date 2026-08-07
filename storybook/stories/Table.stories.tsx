@@ -22,6 +22,7 @@ import {
   Text,
   type TableSortDirection,
 } from "@aexae/comete-design-system/components";
+import { useTableSelection } from "@aexae/comete-design-system/hooks";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 import css from "./Table.stories.module.css";
@@ -295,35 +296,19 @@ export const Sortable: Story = {
 export const WithSelection: Story = {
   name: "With selection",
   render: function SelectionStory(args) {
-    const [selected, setSelected] = useState<Set<string>>(new Set(["1", "3"]));
-    const allSelected = selected.size === ROWS.length;
-    const someSelected = selected.size > 0 && !allSelected;
-
-    const toggleOne = (id: string) => {
-      setSelected((prev) => {
-        const next = new Set(prev);
-        if (next.has(id)) next.delete(id);
-        else next.add(id);
-        return next;
-      });
-    };
-
-    const toggleAll = () => {
-      if (allSelected) setSelected(new Set());
-      else setSelected(new Set(ROWS.map((r) => r.id)));
-    };
+    // Tout l'état de sélection (Set, toggle, tout-sélectionner, indeterminate)
+    // vient de `useTableSelection` — la story ne réécrit plus ce boilerplate.
+    const selection = useTableSelection({
+      keys: ROWS.map((r) => r.id),
+      defaultSelectedKeys: ["1", "3"],
+    });
 
     return (
       <Table {...args} aria-label="Sélection multiple">
         <TableHead>
           <TableRow>
             <TableHeaderCell width={40}>
-              <Checkbox
-                aria-label={allSelected ? "Tout désélectionner" : "Tout sélectionner"}
-                isChecked={allSelected}
-                isIndeterminate={someSelected}
-                onChange={toggleAll}
-              />
+              <Checkbox {...selection.getSelectAllProps()} />
             </TableHeaderCell>
             <TableHeaderCell>Title</TableHeaderCell>
             <TableHeaderCell>Status</TableHeaderCell>
@@ -331,32 +316,79 @@ export const WithSelection: Story = {
           </TableRow>
         </TableHead>
         <TableBody>
-          {ROWS.map((r) => {
-            const isSelected = selected.has(r.id);
-            return (
-              <TableRow key={r.id} isSelected={isSelected}>
-                <TableCell>
-                  <Checkbox
-                    aria-label={`Sélectionner ${r.title}`}
-                    isChecked={isSelected}
-                    onChange={() => toggleOne(r.id)}
-                  />
-                </TableCell>
-                <TableCell>{r.title}</TableCell>
-                <TableCell>
-                  <Tag
-                    label={r.status}
-                    appearance={STATUS_APPEARANCE[r.status]}
-                    shape="rounded"
-                  />
-                </TableCell>
-                <TableCell>{r.user}</TableCell>
-              </TableRow>
-            );
-          })}
+          {ROWS.map((r) => (
+            // Clic sur toute la ligne = toggle (amélioration pointeur ;
+            // la Checkbox reste le contrôle clavier, cf. getRowClickProps).
+            <TableRow
+              key={r.id}
+              isSelected={selection.isSelected(r.id)}
+              {...selection.getRowClickProps(r.id)}
+            >
+              <TableCell>
+                <Checkbox
+                  {...selection.getRowCheckboxProps(r.id, `Sélectionner ${r.title}`)}
+                />
+              </TableCell>
+              <TableCell>{r.title}</TableCell>
+              <TableCell>
+                <Tag
+                  label={r.status}
+                  appearance={STATUS_APPEARANCE[r.status]}
+                  shape="rounded"
+                />
+              </TableCell>
+              <TableCell>{r.user}</TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     );
+  },
+  // Preuve d'intégration du hook `useTableSelection` (câblage Checkbox
+  // d'en-tête ↔ lignes ↔ TableRow isSelected). S'exécute en Browser Mode.
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const bodyRows = () =>
+      canvas.getAllByRole("row").filter((r) => r.querySelector("td"));
+
+    // État initial : 2/4 sélectionnées (["1","3"]) → en-tête indeterminate,
+    // libellé « Tout sélectionner ».
+    const header = () =>
+      canvas.getByRole("checkbox", { name: "Tout sélectionner" });
+    await expect(header()).toBeInTheDocument();
+
+    // Clic « tout sélectionner » → toutes les lignes du corps sélectionnées,
+    // l'en-tête bascule sur « Tout désélectionner ».
+    await userEvent.click(header());
+    for (const r of bodyRows()) {
+      await expect(r).toHaveAttribute("aria-selected", "true");
+    }
+    await expect(
+      canvas.getByRole("checkbox", { name: "Tout désélectionner" }),
+    ).toBeInTheDocument();
+
+    // Re-clic → plus aucune ligne sélectionnée.
+    await userEvent.click(
+      canvas.getByRole("checkbox", { name: "Tout désélectionner" }),
+    );
+    for (const r of bodyRows()) {
+      await expect(r).not.toHaveAttribute("aria-selected");
+    }
+
+    // Clic sur le CORPS d'une ligne (pas la case) → la ligne se sélectionne
+    // (getRowClickProps) et sa case reflète l'état.
+    const firstRow = bodyRows()[0];
+    if (!firstRow) throw new Error("aucune ligne de données");
+    const titleCell = within(firstRow).getAllByRole("cell")[1];
+    if (!titleCell) throw new Error("cellule titre absente");
+    await userEvent.click(titleCell);
+    await expect(firstRow).toHaveAttribute("aria-selected", "true");
+    await expect(within(firstRow).getByRole("checkbox")).toBeChecked();
+
+    // Clic sur la CASE de cette même ligne → un SEUL toggle (le onClick de
+    // ligne ignore le clic sur la case) → la ligne se désélectionne.
+    await userEvent.click(within(firstRow).getByRole("checkbox"));
+    await expect(firstRow).not.toHaveAttribute("aria-selected");
   },
 };
 
@@ -535,7 +567,7 @@ export const AllInOne: Story = {
   name: "All-in-one",
   render: function AllInOneStory(args) {
     type Column = "title" | "user" | "key";
-    const [selected, setSelected] = useState<Set<string>>(new Set());
+    const selection = useTableSelection({ keys: ROWS.map((r) => r.id) });
     const [sortColumn, setSortColumn] = useState<Column | null>(null);
     const [direction, setDirection] = useState<TableSortDirection>("default");
 
@@ -562,24 +594,12 @@ export const AllInOne: Story = {
     const dir = (col: Column): TableSortDirection =>
       sortColumn === col ? direction : "default";
 
-    const allSelected = selected.size === ROWS.length;
-    const someSelected = selected.size > 0 && !allSelected;
-
     return (
       <Table {...args} aria-label="Utilisateurs">
         <TableHead>
           <TableRow>
             <TableHeaderCell width={40}>
-              <Checkbox
-                aria-label={allSelected ? "Tout désélectionner" : "Tout sélectionner"}
-                isChecked={allSelected}
-                isIndeterminate={someSelected}
-                onChange={() =>
-                  setSelected(
-                    allSelected ? new Set() : new Set(ROWS.map((r) => r.id)),
-                  )
-                }
-              />
+              <Checkbox {...selection.getSelectAllProps()} />
             </TableHeaderCell>
             <TableHeaderCell
               isSortable
@@ -608,45 +628,39 @@ export const AllInOne: Story = {
           </TableRow>
         </TableHead>
         <TableBody>
-          {sorted.map((r) => {
-            const isSelected = selected.has(r.id);
-            return (
-              <TableRow key={r.id} isSelected={isSelected}>
-                <TableCell>
-                  <Checkbox
-                    aria-label={`Sélectionner ${r.title}`}
-                    isChecked={isSelected}
-                    onChange={() => {
-                      setSelected((prev) => {
-                        const next = new Set(prev);
-                        if (next.has(r.id)) next.delete(r.id);
-                        else next.add(r.id);
-                        return next;
-                      });
-                    }}
-                  />
-                </TableCell>
-                <TableCell>{r.title}</TableCell>
-                <TableCell>
-                  <Tag
-                    label={r.status}
-                    appearance={STATUS_APPEARANCE[r.status]}
-                    shape="rounded"
-                  />
-                </TableCell>
-                <TableCell>{r.user}</TableCell>
-                <TableCell align="right">{r.key}</TableCell>
-                <TableCell align="center">
-                  <Button
-                    appearance="subtle"
-                    density="compact"
-                    iconBefore="MoreVert"
-                    aria-label={`Actions pour ${r.title}`}
-                  />
-                </TableCell>
-              </TableRow>
-            );
-          })}
+          {sorted.map((r) => (
+            // Clic sur toute la ligne = toggle. Le bouton d'actions (MoreVert)
+            // n'est pas capté (getRowClickProps ignore les contrôles interactifs).
+            <TableRow
+              key={r.id}
+              isSelected={selection.isSelected(r.id)}
+              {...selection.getRowClickProps(r.id)}
+            >
+              <TableCell>
+                <Checkbox
+                  {...selection.getRowCheckboxProps(r.id, `Sélectionner ${r.title}`)}
+                />
+              </TableCell>
+              <TableCell>{r.title}</TableCell>
+              <TableCell>
+                <Tag
+                  label={r.status}
+                  appearance={STATUS_APPEARANCE[r.status]}
+                  shape="rounded"
+                />
+              </TableCell>
+              <TableCell>{r.user}</TableCell>
+              <TableCell align="right">{r.key}</TableCell>
+              <TableCell align="center">
+                <Button
+                  appearance="subtle"
+                  density="compact"
+                  iconBefore="MoreVert"
+                  aria-label={`Actions pour ${r.title}`}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     );
@@ -661,12 +675,15 @@ export const AllInOne: Story = {
 export const SelectionToolbar: Story = {
   name: "Selection toolbar",
   render: function ToolbarStory(args) {
-    const [selected, setSelected] = useState<Set<string>>(new Set(["1", "2"]));
+    const selection = useTableSelection({
+      keys: ROWS.map((r) => r.id),
+      defaultSelectedKeys: ["1", "2"],
+    });
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "var(--space150)" }}>
         <Table.SelectionBar
-          count={selected.size}
-          onClear={() => setSelected(new Set())}
+          count={selection.selectedCount}
+          onClear={selection.clear}
         >
           <Button appearance="subtle" iconBefore="Delete">
             Supprimer
@@ -676,20 +693,7 @@ export const SelectionToolbar: Story = {
           <TableHead>
             <TableRow>
               <TableHeaderCell width={40}>
-                <Checkbox
-                  aria-label="Tout sélectionner"
-                  isChecked={selected.size === ROWS.length}
-                  isIndeterminate={
-                    selected.size > 0 && selected.size < ROWS.length
-                  }
-                  onChange={() =>
-                    setSelected(
-                      selected.size === ROWS.length
-                        ? new Set()
-                        : new Set(ROWS.map((r) => r.id)),
-                    )
-                  }
-                />
+                <Checkbox {...selection.getSelectAllProps()} />
               </TableHeaderCell>
               <TableHeaderCell>Title</TableHeaderCell>
               <TableHeaderCell>Status</TableHeaderCell>
@@ -697,36 +701,29 @@ export const SelectionToolbar: Story = {
             </TableRow>
           </TableHead>
           <TableBody>
-            {ROWS.map((r) => {
-              const isSelected = selected.has(r.id);
-              return (
-                <TableRow key={r.id} isSelected={isSelected}>
-                  <TableCell>
-                    <Checkbox
-                      aria-label={`Sélectionner ${r.title}`}
-                      isChecked={isSelected}
-                      onChange={() => {
-                        setSelected((prev) => {
-                          const next = new Set(prev);
-                          if (next.has(r.id)) next.delete(r.id);
-                          else next.add(r.id);
-                          return next;
-                        });
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>{r.title}</TableCell>
-                  <TableCell>
-                    <Tag
-                      label={r.status}
-                      appearance={STATUS_APPEARANCE[r.status]}
-                      shape="rounded"
-                    />
-                  </TableCell>
-                  <TableCell>{r.user}</TableCell>
-                </TableRow>
-              );
-            })}
+            {ROWS.map((r) => (
+              // Clic sur toute la ligne = toggle (cohérent avec With selection).
+              <TableRow
+                key={r.id}
+                isSelected={selection.isSelected(r.id)}
+                {...selection.getRowClickProps(r.id)}
+              >
+                <TableCell>
+                  <Checkbox
+                    {...selection.getRowCheckboxProps(r.id, `Sélectionner ${r.title}`)}
+                  />
+                </TableCell>
+                <TableCell>{r.title}</TableCell>
+                <TableCell>
+                  <Tag
+                    label={r.status}
+                    appearance={STATUS_APPEARANCE[r.status]}
+                    shape="rounded"
+                  />
+                </TableCell>
+                <TableCell>{r.user}</TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>
