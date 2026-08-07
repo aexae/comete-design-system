@@ -35,6 +35,17 @@ entre versions alpha.
   items (`row-gap`), pour une séparation « sans filet » (sans dividers).
   Orthogonale à `isDense` (qui agit sur le padding interne). Type `ListGap`
   exporté.
+- **`useTableSelection`** — hook de sélection de lignes pour `Table` (contrôlé
+  ou non) : gère l'ensemble des clés sélectionnées, le toggle par ligne, le
+  « tout sélectionner » à **périmètre page courante** et l'état **indeterminate**.
+  Fournit des prop-getters `getSelectAllProps()` / `getRowCheckboxProps(key, label?)`
+  à étaler sur les `Checkbox` d'en-tête et de ligne, plus `getRowClickProps(key)`
+  pour rendre **toute la ligne** cliquable (amélioration pointeur ; ignore les
+  clics sur la case pour éviter le double toggle). Supprime le boilerplate
+  d'état que chaque consommateur réécrivait ; la sélection composable existante
+  (`TableRow isSelected` + `Checkbox` + `Table.SelectionBar`) est inchangée.
+  Types `UseTableSelectionOptions` / `UseTableSelectionResult` exportés
+  (via `@aexae/comete-design-system` et `@aexae/comete-design-system/hooks`).
 
 ### Modifié
 
