@@ -9,10 +9,8 @@ import {
   Checkbox,
   Icon,
   List,
-  ListItem,
   ListItemButton,
   ListItemText,
-  ListItemSecondaryAction,
   Table,
   TableBody,
   TableCell,
@@ -984,58 +982,10 @@ export const ErrorState: Story = {
 };
 
 // -----------------------------------------------------------------------
-// Colonnes responsives (hideBelow) + recette de repli téléphone (Table → List)
-
-type MceStatus = "Actif" | "Pause" | "Hors ligne";
-
-// D12 — mapping statut → couleur sémantique du Tag (démonstration vivante ;
-// le tableau de correspondance de référence vit dans la story du Tag).
-const STATUS_TAG_COLOR: Record<MceStatus, "success" | "warning" | "neutral"> = {
-  Actif: "success",
-  Pause: "warning",
-  "Hors ligne": "neutral",
-};
-
-interface MceRow {
-  id: string;
-  agent: string;
-  status: MceStatus;
-  site: string;
-  type: string;
-  day: "Aujourd'hui" | "Hier";
-  time: string;
-  phone: string;
-}
-
-const MCE_ROWS: MceRow[] = [
-  { id: "1", agent: "DUPONT Marie", status: "Actif", site: "Tour Nord", type: "Ronde", day: "Aujourd'hui", time: "14:05", phone: "06 12 34 56 78" },
-  { id: "2", agent: "MARTIN Bob", status: "Pause", site: "Entrepôt B", type: "Vacation", day: "Aujourd'hui", time: "13:40", phone: "06 22 33 44 55" },
-  { id: "3", agent: "CHEN Alice", status: "Actif", site: "Site Est", type: "Ronde", day: "Aujourd'hui", time: "13:58", phone: "06 98 76 54 32" },
-  { id: "4", agent: "CLAIRE Sophie", status: "Hors ligne", site: "Tour Sud", type: "Intervention", day: "Hier", time: "22:10", phone: "06 11 22 33 44" },
-];
-
-/** Libellé « dernière ronde » complet (table ResponsiveColumns) : jour + heure. */
-const fullRound = (r: MceRow) => `${r.day} ${r.time}`;
-
-/** Tag de statut coloré (D12) réutilisé par les deux stories responsives. */
-function StatusTag({ status }: { status: MceStatus }) {
-  return (
-    <Tag
-      label={status}
-      color={STATUS_TAG_COLOR[status]}
-      appearance="subtle"
-      shape="rounded"
-    />
-  );
-}
-
-// -----------------------------------------------------------------------
-// Main Courante — jeu d'événements pour la recette de repli (liste + table
-// jumelle). Volontairement distinct des données ResponsiveColumns (qui garde
-// un petit jeu focalisé sur le masquage de colonnes). Éprouve la recette :
-// noms longs (ellipsis), « Ronde » répétés (l'heure discrimine), fraîcheur
-// aujourd'hui/hier/avant-hier/plus ancien, statuts variés + lignes sans statut,
-// sites de longueurs variées.
+// Main Courante — jeu d'événements pour la recette de repli téléphone
+// (Table → List). Éprouve la recette : noms longs (ellipsis), « Ronde »
+// répétés (l'heure discrimine), fraîcheur aujourd'hui/hier/avant-hier/plus
+// ancien, statuts variés + lignes sans statut, sites de longueurs variées.
 
 type EventStatus = "En cours" | "Planifiée" | "Terminée" | "Absent";
 
@@ -1100,16 +1050,6 @@ const compactWhen = (e: McEvent) =>
         ? "Avant-hier"
         : (e.shortDate ?? e.time);
 
-/** Libellé complet (table jumelle) : jour + heure. */
-const fullWhen = (e: McEvent) =>
-  e.dayOffset === 0
-    ? `Aujourd'hui ${e.time}`
-    : e.dayOffset === 1
-      ? `Hier ${e.time}`
-      : e.dayOffset === 2
-        ? `Avant-hier ${e.time}`
-        : `${e.shortDate ?? ""} ${e.time}`.trim();
-
 /** Tag de statut d'événement — rien si l'événement n'a pas de statut. */
 function EventStatusTag({ statut }: { statut?: EventStatus }) {
   if (!statut) return null;
@@ -1122,110 +1062,6 @@ function EventStatusTag({ statut }: { statut?: EventStatus }) {
     />
   );
 }
-
-/** Une instance de table responsive rendue à une largeur de container donnée. */
-function ResponsiveTable({ width }: { width: number }) {
-  return (
-    // flexShrink:0 → la largeur de démo est honorée (le container query dépend
-    // de cette largeur exacte ; sans ça un canvas étroit rétrécirait la table).
-    <div style={{ width, flexShrink: 0 }}>
-      <Text size="small" color="subtle" as="p">{`Container ${width}px`}</Text>
-      <Table
-        aria-label={`Agents — container ${width}px`}
-        style={{ width: "100%" }}
-        responsive
-      >
-        <TableHead>
-          <TableRow>
-            <TableHeaderCell>Agent</TableHeaderCell>
-            <TableHeaderCell>Statut</TableHeaderCell>
-            <TableHeaderCell hideBelow="md">Site</TableHeaderCell>
-            <TableHeaderCell hideBelow="md">Type</TableHeaderCell>
-            <TableHeaderCell hideBelow="lg">Dernière ronde</TableHeaderCell>
-            <TableHeaderCell hideBelow="lg">Téléphone</TableHeaderCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {MCE_ROWS.map((r) => (
-            <TableRow key={r.id}>
-              <TableCell>{r.agent}</TableCell>
-              <TableCell>
-                <StatusTag status={r.status} />
-              </TableCell>
-              <TableCell hideBelow="md">{r.site}</TableCell>
-              <TableCell hideBelow="md">{r.type}</TableCell>
-              <TableCell hideBelow="lg">{fullRound(r)}</TableCell>
-              <TableCell hideBelow="lg">{r.phone}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
-  );
-}
-
-/**
- * **Colonnes responsives** — priorité de colonnes via `hideBelow` (container
- * queries). Mêmes 6 colonnes rendues à **trois largeurs de container** dans un
- * seul canvas (1100 / 900 / 600) → 6 / 4 / 2 colonnes, SANS changer de
- * viewport : c'est l'avantage des container queries. « Agent » et « Statut »
- * (identifiant + donnée clé) n'ont jamais de `hideBelow` ; « Site »/« Type »
- * sont en `md` ; « Dernière ronde »/« Téléphone » (confort) en `lg`. Les tags
- * de statut illustrent le mapping couleur (D12) : Actif → success, Pause →
- * warning, Hors ligne → neutral.
- *
- * À **600px il ne reste que 2 colonnes étirées** (grand vide à droite) : c'est
- * la **limite** de la dégradation par colonnes — sous ~600px de container, ne
- * pas garder une table à 2 colonnes mais **basculer en liste compacte** (voir
- * la story *Table → List* et les guidelines).
- */
-export const ResponsiveColumns: Story = {
-  name: "Responsive columns (hideBelow)",
-  parameters: { controls: { disable: true }, layout: "fullscreen" },
-  render: () => (
-    <div
-      style={{
-        display: "flex",
-        gap: "var(--space300)",
-        alignItems: "flex-start",
-        flexWrap: "wrap",
-        padding: "var(--space200)",
-      }}
-    >
-      {[1100, 900, 600].map((w) => (
-        <ResponsiveTable key={w} width={w} />
-      ))}
-    </div>
-  ),
-  // À 900px de container : les colonnes `lg` sont masquées (display:none via
-  // container query), les `md` restent visibles, et chaque ligne du corps
-  // expose le MÊME nombre de cellules visibles que l'en-tête (invariant
-  // header/lignes). 900 est choisi dans la bande [768, 1024) — 700 y était
-  // équivalent mais ne montre pas que `md` reste visible.
-  play: async ({ canvasElement }) => {
-    const table = within(canvasElement).getByRole("table", {
-      name: /container 900px/,
-    });
-
-    const lgCells = Array.from(table.querySelectorAll('[data-hide-below="lg"]'));
-    await expect(lgCells.length).toBeGreaterThan(0);
-    for (const c of lgCells) {
-      await expect(getComputedStyle(c).display).toBe("none");
-    }
-    for (const c of Array.from(table.querySelectorAll('[data-hide-below="md"]'))) {
-      await expect(getComputedStyle(c).display).not.toBe("none");
-    }
-
-    const visibleCount = (row: Element) =>
-      [...row.children].filter((c) => getComputedStyle(c).display !== "none")
-        .length;
-    const headerVisible = visibleCount(table.querySelector("thead tr") as Element);
-    await expect(headerVisible).toBe(4); // 2 essentielles + 2 md
-    for (const r of Array.from(table.querySelectorAll("tbody tr"))) {
-      await expect(visibleCount(r)).toBe(headerVisible);
-    }
-  },
-};
 
 /** Initiales de l'agent pour l'avatar (« DUPONT Marie » → « DM »). */
 const agentInitials = (name: string) =>
@@ -1240,11 +1076,11 @@ const agentInitials = (name: string) =>
 const onOpenDetail = fn();
 
 /**
- * **Table → List (repli téléphone)** — la MÊME donnée (`MC_EVENTS`) en **table**
- * (large, toutes colonnes) et en **liste compacte** (étroit). Sous ~600px de
- * container, on ne compresse pas la table : on passe en `List` (type
- * d'événement en primary, site en secondary ; avatar + heure + tag de statut +
- * chevron en trailing) — le pattern Main courante mobile.
+ * **Table → List (repli téléphone)** — sous ~600px de container, on ne compresse
+ * pas la table : on bascule en `List`. Cette recette montre le **résultat du
+ * repli** sur la donnée `MC_EVENTS` — la liste compacte « Main courante mobile »
+ * (type d'événement en primary, site en secondary ; avatar + heure + tag de
+ * statut + chevron en trailing).
  *
  * Points de fidélité :
  * - **Espacement sans filet** : `List gap="150"` — la séparation des lignes se
@@ -1263,99 +1099,50 @@ const onOpenDetail = fn();
  *   (l'heure discrimine), sites de longueurs variées, statuts variés + lignes
  *   sans statut.
  *
- * Clic vers le détail :
- * - **Liste** : `ListItemButton` (vrai bouton, clavier + focus natifs), `onPress`
- *   (action Storybook), chevron **décoratif** en fin de ligne.
- * - **Table** : les `TableRow` ne sont **pas** rendues cliquables ici — voir le
- *   `@todo` ci-dessous.
+ * Clic vers le détail : `ListItemButton` (vrai bouton, clavier + focus natifs),
+ * `onPress` (action Storybook), chevron **décoratif** en fin de ligne.
  *
- * **Guideline** : si les lignes de la table sont cliquables, les items du repli
- * liste le sont aussi — **même destination, même geste** ; jamais le hover
+ * **Guideline** : si les lignes de la table (large) sont cliquables, les items du
+ * repli liste le sont aussi — **même destination, même geste** ; jamais le hover
  * comme seul signal.
- *
- * @todo Clic-ligne côté table à brancher sur la future API `TableRow`
- * `href`/`onPress` (élément interactif réel dans la cellule primaire). Le
- * `onClick` actuel de `TableRow` pose `data-clickable` + `cursor` sans
- * tabIndex/rôle/clavier — défaut a11y connu, corrigé dans une demande dédiée.
  */
 export const TableToListRecipe: Story = {
   name: "Table → List (repli téléphone)",
   parameters: { controls: { disable: true }, layout: "fullscreen" },
   render: () => (
-    <div
-      style={{
-        display: "flex",
-        gap: "var(--space400)",
-        alignItems: "flex-start",
-        flexWrap: "wrap",
-        padding: "var(--space200)",
-      }}
-    >
-      <div style={{ width: 820, flexShrink: 0 }}>
-        <Text size="small" color="subtle" as="p">Large — table</Text>
-        {/* @todo lignes cliquables côté table : future API TableRow href/onPress
-            (cf. JSDoc) — non cliquable pour l'instant (défaut a11y du onClick). */}
-        <Table aria-label="Main courante — table (large)" style={{ width: "100%" }}>
-          <TableHead>
-            <TableRow>
-              <TableHeaderCell>Agent</TableHeaderCell>
-              <TableHeaderCell>Type</TableHeaderCell>
-              <TableHeaderCell>Site</TableHeaderCell>
-              <TableHeaderCell>Statut</TableHeaderCell>
-              <TableHeaderCell>Quand</TableHeaderCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {MC_EVENTS.map((e) => (
-              <TableRow key={e.id}>
-                <TableCell>{e.agent}</TableCell>
-                <TableCell>{e.type}</TableCell>
-                <TableCell>{e.site}</TableCell>
-                <TableCell>
-                  <EventStatusTag statut={e.statut} />
-                </TableCell>
-                <TableCell>{fullWhen(e)}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-      <div style={{ width: 360, flexShrink: 0 }}>
-        <Text size="small" color="subtle" as="p">Étroit — liste compacte (cliquable)</Text>
-        <List aria-label="Main courante — liste compacte" gap="150">
-          {MC_EVENTS.map((e) => (
-            // Ligne cliquable = ListItemButton (bouton natif, clavier + focus).
-            // Trailing = ListItemSecondaryAction (sœur du bouton, centrée sur la
-            // hauteur de l'item), grille à colonnes fixes → chevrons alignés.
-            <ListItemButton key={e.id} onPress={() => { onOpenDetail(e.id); }}>
-              {/* Infos importantes : type (titre) + site (sous-titre). En fill
-                  (flex:1) → pousse le trailing à droite. */}
-              <ListItemText primary={e.type} secondary={e.site} />
-              {/* Trailing DANS le bouton (frère flex du texte, pas un
-                  ListItemSecondaryAction absolu) → texte en fill. Bloc vertical :
-                  avatar + heure AU-DESSUS du statut ; chevron décoratif à droite.
-                  Ligne de statut réservée (min-height) même sans tag. */}
-              <span className={css["trailing"]}>
-                <span className={css["trailingStack"]}>
-                  <span className={css["trailingWhen"]}>
-                    <Avatar size="xsmall" initials={agentInitials(e.agent)} />
-                    {compactWhen(e)}
-                  </span>
-                  <span className={css["trailingStatus"]}>
-                    <EventStatusTag statut={e.statut} />
-                  </span>
+    <div style={{ width: 360, padding: "var(--space200)" }}>
+      <Text size="small" color="subtle" as="p">Étroit — liste compacte (cliquable)</Text>
+      <List aria-label="Main courante — liste compacte" gap="150">
+        {MC_EVENTS.map((e) => (
+          // Ligne cliquable = ListItemButton (bouton natif, clavier + focus).
+          <ListItemButton key={e.id} onPress={() => { onOpenDetail(e.id); }}>
+            {/* Infos importantes : type (titre) + site (sous-titre). En fill
+                (flex:1) → pousse le trailing à droite. */}
+            <ListItemText primary={e.type} secondary={e.site} />
+            {/* Trailing DANS le bouton (frère flex du texte, pas un
+                ListItemSecondaryAction absolu) → texte en fill. Bloc vertical :
+                avatar + heure AU-DESSUS du statut ; chevron décoratif à droite.
+                Ligne de statut réservée (min-height) même sans tag. */}
+            <span className={css["trailing"]}>
+              <span className={css["trailingStack"]}>
+                <span className={css["trailingWhen"]}>
+                  <Avatar size="xsmall" initials={agentInitials(e.agent)} />
+                  {compactWhen(e)}
                 </span>
-                <Icon
-                  icon="ChevronRight"
-                  color="subtle"
-                  size={16}
-                  className={css["trailingChevron"]}
-                />
+                <span className={css["trailingStatus"]}>
+                  <EventStatusTag statut={e.statut} />
+                </span>
               </span>
-            </ListItemButton>
-          ))}
-        </List>
-      </div>
+              <Icon
+                icon="ChevronRight"
+                color="subtle"
+                size={16}
+                className={css["trailingChevron"]}
+              />
+            </span>
+          </ListItemButton>
+        ))}
+      </List>
     </div>
   ),
   play: async ({ canvasElement }) => {
@@ -1386,172 +1173,10 @@ export const TableToListRecipe: Story = {
 };
 
 // -----------------------------------------------------------------------
-// Comportement responsive par viewport (presets Comète) — planning de
-// vacations (sécurité privée). Chaque story force une largeur métier ; le
-// comportement (colonnes masquées / repli liste) est celui, RÉEL, des
-// container queries `responsive` + `hideBelow` du composant : la table remplit
-// le viewport (layout fullscreen) → la largeur du container ≈ le viewport.
-
-type VacationStatus = "Planifiée" | "En cours" | "Terminée" | "Absent";
-
-const VACATION_STATUS_COLOR: Record<
-  VacationStatus,
-  "information" | "success" | "neutral" | "critical"
-> = {
-  Planifiée: "information",
-  "En cours": "success",
-  Terminée: "neutral",
-  Absent: "critical",
-};
-
-interface Vacation {
-  id: string;
-  agent: string;
-  site: string;
-  debut: string;
-  fin: string;
-  statut: VacationStatus;
-}
-
-const VACATIONS: Vacation[] = [
-  { id: "1", agent: "DUPONT Marie", site: "Tour Nord", debut: "06:00", fin: "14:00", statut: "En cours" },
-  { id: "2", agent: "MARTIN Bob", site: "Entrepôt B", debut: "14:00", fin: "22:00", statut: "Planifiée" },
-  { id: "3", agent: "CHEN Alice", site: "Site Est", debut: "22:00", fin: "06:00", statut: "Planifiée" },
-  { id: "4", agent: "CLAIRE Sophie", site: "Tour Sud", debut: "08:00", fin: "16:00", statut: "Absent" },
-  { id: "5", agent: "NGUYEN Paul", site: "Accueil Siège", debut: "09:00", fin: "17:00", statut: "Terminée" },
-];
-
-function VacationTag({ statut }: { statut: VacationStatus }) {
-  return (
-    <Tag
-      label={statut}
-      color={VACATION_STATUS_COLOR[statut]}
-      appearance="subtle"
-      shape="rounded"
-    />
-  );
-}
-
-/**
- * Table plein-large du planning : `responsive` active le query container, et
- * `hideBelow` priorise les colonnes — Agent + Statut toujours visibles ; Site
- * et Début en `md` ; Fin (confort) en `lg`.
- */
-function VacationTable() {
-  return (
-    <Table responsive aria-label="Planning de vacations" style={{ width: "100%" }}>
-      <TableHead>
-        <TableRow>
-          <TableHeaderCell>Agent</TableHeaderCell>
-          <TableHeaderCell>Statut</TableHeaderCell>
-          <TableHeaderCell hideBelow="md">Site</TableHeaderCell>
-          <TableHeaderCell hideBelow="md">Début</TableHeaderCell>
-          <TableHeaderCell hideBelow="lg">Fin</TableHeaderCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {VACATIONS.map((v) => (
-          <TableRow key={v.id}>
-            <TableCell>{v.agent}</TableCell>
-            <TableCell>
-              <VacationTag statut={v.statut} />
-            </TableCell>
-            <TableCell hideBelow="md">{v.site}</TableCell>
-            <TableCell hideBelow="md">{v.debut}</TableCell>
-            <TableCell hideBelow="lg">{v.fin}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  );
-}
-
-/** Repli mobile (< ~600px) : liste compacte plutôt qu'une table comprimée. */
-function VacationList() {
-  return (
-    <List aria-label="Planning de vacations (liste)">
-      {VACATIONS.map((v) => (
-        <ListItem key={v.id}>
-          <ListItemText
-            primary={v.agent}
-            secondary={`${v.site} · ${v.debut}–${v.fin}`}
-          />
-          <ListItemSecondaryAction>
-            <VacationTag statut={v.statut} />
-          </ListItemSecondaryAction>
-        </ListItem>
-      ))}
-    </List>
-  );
-}
-
-function ResponsiveFrame({ children }: { children: ReactNode }) {
-  return <div style={{ padding: "var(--space200)" }}>{children}</div>;
-}
-
-/**
- * **Desktop exploitation (1440)** — toutes les colonnes visibles (Agent, Statut,
- * Site, Début, Fin).
- */
-export const TableDesktop: Story = {
-  name: "Responsive — Desktop exploitation",
-  globals: { viewport: { value: "cometeDesktopExploitation" } },
-  parameters: {
-    layout: "fullscreen",
-    controls: { disable: true },
-    chromatic: { modes: { "Desktop exploitation": { viewport: "cometeDesktopExploitation" } } },
-  },
-  render: () => (
-    <ResponsiveFrame>
-      <VacationTable />
-    </ResponsiveFrame>
-  ),
-};
-
-/**
- * **Tablette manager (768)** — la colonne de confort `Fin` (`hideBelow="lg"`)
- * disparaît ; Agent / Statut / Site / Début restent.
- */
-export const TableTablette: Story = {
-  name: "Responsive — Tablette manager",
-  globals: { viewport: { value: "cometeTabletManager" } },
-  parameters: {
-    layout: "fullscreen",
-    controls: { disable: true },
-    chromatic: { modes: { "Tablette manager": { viewport: "cometeTabletManager" } } },
-  },
-  render: () => (
-    <ResponsiveFrame>
-      <VacationTable />
-    </ResponsiveFrame>
-  ),
-};
-
-/**
- * **Mobile agent (375)** — sous ~600px on ne comprime pas la table : repli en
- * **liste compacte** (agent + site · créneau + tag de statut), le pattern
- * terrain Link / On Time.
- */
-export const TableMobile: Story = {
-  name: "Responsive — Mobile agent",
-  globals: { viewport: { value: "cometeMobileAgent" } },
-  parameters: {
-    layout: "fullscreen",
-    controls: { disable: true },
-    chromatic: { modes: { "Mobile agent": { viewport: "cometeMobileAgent" } } },
-  },
-  render: () => (
-    <ResponsiveFrame>
-      <VacationList />
-    </ResponsiveFrame>
-  ),
-};
-
-// -----------------------------------------------------------------------
 // Section de doc « Comportement responsive » — injectée dans l'onglet
 // Guidelines (à côté de GuidelinesFlat) via le meta. Texte + tableau
-// breakpoint → comportement. Les stories Responsive apparaissent dans l'onglet
-// Code (autodocs).
+// breakpoint → comportement. Illustré par la recette « Table → List
+// (repli téléphone) ».
 
 const RESPONSIVE_DOC_ROWS: Array<{
   bp: string;
@@ -1617,7 +1242,8 @@ function ResponsiveDocSection(): ReactNode {
         colonne. Les identifiants et la donnée clé ne sont jamais masqués ; sous
         ~600px on bascule en liste compacte. Les presets viewport « Mobile agent
         / Tablette manager / Desktop exploitation » (barre d&apos;outils Viewport)
-        illustrent chaque palier — voir les stories <em>Responsive — …</em>.
+        permettent d&apos;éprouver chaque palier ; la recette{" "}
+        <em>Table → List (repli téléphone)</em> illustre le repli en liste.
       </p>
       <table
         style={{
