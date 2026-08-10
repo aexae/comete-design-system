@@ -22,6 +22,8 @@ import type {
   TagCategoryColor,
   TagStatusColor,
 } from "@aexae/comete-design-system/components";
+import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 
@@ -31,9 +33,54 @@ const meta = {
   parameters: {
     layout: "padded",
     docs: {
+      // La doctrine (l'axe, les 4 règles, le hors-périmètre) vit dans l'onglet
+      // Guidelines ; les stories ne portent que la démonstration visuelle.
+      page: () => (
+        <DocsTabsPage
+          guidelines={
+            <GuidelinesFlat
+              doExample={{
+                example: (
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <Tag label="En cours" color="information" />
+                    <Tag label="Terminé" color="success" />
+                  </div>
+                ),
+                caption:
+                  "`information` = une étape en cours, `success` = l'état souhaité est atteint.",
+              }}
+              dontExample={{
+                example: (
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <Tag label="En cours" color="success" />
+                    <Tag label="Terminé" color="neutral" />
+                  </div>
+                ),
+                caption:
+                  "Le vert ne récompense pas une activité, et le gris est réservé à ce qui n'a pas commencé ou est archivé.",
+              }}
+              best={[
+                "L'axe, dans l'ordre : `neutral` (pas commencé, brouillon, archivé, sans objet), `information` (en cours, déroulement normal), `warning` (action, décision ou échéance attendue), `success` (l'état souhaité est atteint), `critical` (échec, refus, annulation).",
+                "Qualifier le jeu de statuts AVANT de le mapper. *Progression* (Brouillon → En cours → Terminé) : l'état souhaité est l'arrivée, l'étape courante est `information`. *Cycle de vie* (Actif / Suspendu / Archivé) : l'état souhaité est le régime nominal, donc `Actif` est `success`. Le critère — cet état se termine-t-il de lui-même quand le travail est fait ?",
+                "`critical` = ça a raté ou ça a été refusé, le résultat est acquis. `warning` = l'issue est ouverte, quelqu'un doit décider — ce qui inclut les interruptions réversibles. Le rouge doit rester rare pour signaler.",
+                "Règle 1 — une couleur = un sens, jamais un objet. Deux objets de nature différente dans le même état portent la même couleur. On ne réserve pas une couleur à un domaine.",
+                "Règle 2 — un tag = une dimension. Deux dimensions indépendantes se lisent sur deux éléments (un tag + une icône), jamais dans une teinte composite.",
+                "Règle 4 — discret par défaut, l'emphase réservée à `critical`, et rare. Chaque composant l'applique avec son levier : `appearance` pour Tag, `importance` pour Badge, aucun pour SectionMessage et Banner — dont l'intensité tient au rôle. Pour ceux-là, choisir le composant c'est choisir l'intensité : on ne promeut pas un statut en Banner pour le faire remarquer.",
+                "Les couleurs catégorielles (`comete`, `accent*`) ne portent jamais un statut : une catégorie n'a pas d'axe bon/mauvais. Typer les mappings sur `TagStatusColor` pour que le compilateur le garantisse.",
+                "Ne jamais coder une couleur en dur au point d'usage — elle vient d'un mapping centralisé dans la couche produit. La liste des statuts métier ne vit pas dans le design system.",
+                "Portée : l'axe vaut pour Tag, Badge, IconTile, SectionMessage, Banner, Snackbar et ProgressBar. Trois écarts restent non tranchés (`announcement` sur Banner, `discovery` sur Snackbar, le mode `auto` de ProgressBar) — voir l'ADR 0002.",
+              ]}
+              accessibility={[
+                "Règle 3 — le libellé porte le sens, la couleur le renforce. Jamais de tag sans texte, jamais de pastille seule : sinon l'information est inaccessible aux daltoniens, invisible en impression noir et blanc, et indéchiffrable pour qui découvre l'écran.",
+                "Une seconde dimension se porte par un élément accessible (icône avec `aria-label`), pas par une nuance de la couleur du premier.",
+              ]}
+            />
+          }
+        />
+      ),
       description: {
         component:
-          "Sémantique des couleurs de statut pour TOUT le design system — Tag, Badge, IconTile, SectionMessage, Banner, Snackbar, ProgressBar, Text et Icon. Le Tag est seulement l'endroit où la distinction statut / catégorie est typée aujourd'hui ; l'axe, lui, ne lui appartient pas. Ce que chaque couleur veut dire, et ce qu'elle ne veut pas dire. Cinq sens — neutral (pas commencé, archivé, sans objet), information (en cours, déroulement normal), warning (action ou décision attendue), success (l'état souhaité est atteint), critical (échec, refus, annulation). Deux lectures de cet axe : progression (des étapes vers une fin) et cycle de vie (un régime nominal durable) — d'où « En cours » en information mais « Actif » en success. Les couleurs catégorielles (comete, accent*) ne portent jamais un statut. Voir docs/adr/0002-semantique-couleurs-statut.md. La liste des statuts métier et leur mapping ne vivent pas dans le design system : les libellés de cette page sont génériques et non normatifs.",
+          "Ce que chaque couleur d'état veut dire, et ce qu'elle ne veut pas dire. Cinq sens sur un axe unique — neutral, information, warning, success, critical — valables pour TOUT le design system (Tag, Badge, IconTile, SectionMessage, Banner, Snackbar, ProgressBar), et non pour le seul Tag. Les stories ci-dessous démontrent ; la doctrine, les quatre règles et le hors-périmètre sont dans l'onglet Guidelines. Référence complète : docs/adr/0002-semantique-couleurs-statut.md.",
       },
     },
   },
@@ -224,40 +271,13 @@ function Exemple({
 // -----------------------------------------------------------------------
 
 /**
- * L'axe — les cinq sens dans l'ordre de progression. C'est la référence : toute
- * couleur de statut, dans n'importe quel écran, se ramène à une de ces cinq
- * cases.
- *
- * Deux points contre-intuitifs, tranchés par l'ADR 0002 : **« en cours » est
- * `information`, pas `success`** (le vert marque l'état souhaité atteint,
- * il ne signale pas une activité), et **« terminé » est `success`, pas
- * `neutral`** (le gris est réservé à ce qui n'a pas commencé ou qui est archivé).
+ * La référence : toute couleur de statut, dans n'importe quel écran, se ramène
+ * à une de ces cinq cases. Le raisonnement et les règles sont dans l'onglet
+ * **Guidelines**.
  */
 export const Axe: Story = {
   render: () => (
     <Stack gap="300" style={{ maxWidth: 860 }}>
-      <Stack gap="100">
-        <Heading size="large" as="h1">
-          Statut
-        </Heading>
-        <Text color="subtle">
-          Cinq couleurs, un seul axe : de « rien à en attendre » à « l&apos;état
-          souhaité est atteint », avec ce qui attend une décision d&apos;un côté
-          et ce qui a échoué de l&apos;autre. Deux lectures possibles de cet axe
-          — <em>progression</em> et <em>cycle de vie</em> — détaillées dans la
-          story suivante.
-        </Text>
-        <Text color="subtle">
-          <strong>Cet axe vaut pour tout le design system</strong>, pas pour le
-          seul <code>Tag</code> : <code>Badge</code>, <code>IconTile</code>,{" "}
-          <code>SectionMessage</code>, <code>Banner</code>,{" "}
-          <code>Snackbar</code> et <code>ProgressBar</code> exposent les mêmes
-          couleurs et leur doivent le même sens. Les <code>Tag</code> ci-dessous
-          ne sont qu&apos;un support de démonstration — voir{" "}
-          <em>Un axe, plusieurs composants</em>.
-        </Text>
-      </Stack>
-
       <Section title="Les cinq sens">
         <Stack gap="150">
           {AXE.map((s) => (
@@ -290,11 +310,8 @@ export const Axe: Story = {
         </Stack>
       </Section>
 
-      <Text size="small" color="subtlest">
-        Les libellés ci-dessus sont des exemples <strong>génériques</strong>. La
-        liste des statuts métier et leur correspondance exacte ne vivent pas
-        dans le design system : c&apos;est une couche produit, versionnée
-        séparément. Voir <code>docs/adr/0002-semantique-couleurs-statut.md</code>.
+      <Text size="xsmall" color="subtlest">
+        Libellés génériques, non normatifs — le DS ignore le domaine.
       </Text>
     </Stack>
   ),
@@ -309,17 +326,9 @@ export const Axe: Story = {
 };
 
 /**
- * `success` ne veut pas dire « terminé » : il veut dire **l&apos;état souhaité
- * est atteint**. Deux jeux de statuts peuvent donc placer leur vert à des
- * endroits différents de l&apos;axe.
- *
- * **Le piège** : « En cours » (progression) est `information`, alors que
- * « Actif » (cycle de vie) est `success`. Les deux libellés se ressemblent,
- * leur couleur diffère — et c&apos;est correct.
- *
- * Le critère : *cet état se termine-t-il de lui-même quand le travail est
- * fait ?* Oui → étape transitoire, `information`. Non, c&apos;est l&apos;état
- * dans lequel on veut que l&apos;objet demeure → régime nominal, `success`.
+ * Le piège : « En cours » (progression) est `information`, « Actif » (cycle de
+ * vie) est `success`. Les libellés se ressemblent, la couleur diffère — et
+ * c&apos;est correct. Le critère de tri est dans l&apos;onglet **Guidelines**.
  */
 export const ProgressionVsCycleDeVie: Story = {
   name: "Progression vs cycle de vie",
@@ -359,12 +368,9 @@ export const ProgressionVsCycleDeVie: Story = {
         </Stack>
       </Stack>
 
-      <Text size="small" color="subtle">
-        Un cycle de vie n&apos;a pas d&apos;<code>information</code> : il
-        n&apos;a aucune étape transitoire. Ce n&apos;est pas un manque à combler
-        — on n&apos;invente pas un statut pour remplir une couleur. Un jeu qui
-        mélange les deux lectures cache en général deux dimensions (voir{" "}
-        <em>Deux dimensions</em>).
+      <Text size="xsmall" color="subtlest">
+        Un cycle de vie n&apos;a pas d&apos;<code>information</code> — pas
+        d&apos;étape transitoire à décrire.
       </Text>
     </Stack>
   ),
@@ -391,20 +397,9 @@ export const ProgressionVsCycleDeVie: Story = {
 };
 
 /**
- * **L&apos;axe n&apos;appartient pas au `Tag`.** Neuf composants du DS exposent
- * tout ou partie des cinq couleurs sémantiques — `Tag`, `Badge`, `IconTile`,
- * `SectionMessage`, `Banner`, `Snackbar`, `ProgressBar`, et `Text` / `Icon` qui
- * les portent sans les décider.
- *
- * Un même sens garde donc la même couleur quel que soit le composant qui le
- * rend : c&apos;est le corollaire de la règle 1 (*une couleur = un sens, jamais
- * un objet*) appliqué au design system lui-même. Le `Tag` est seulement
- * l&apos;endroit où la distinction est **typée** aujourd&apos;hui
- * (`TagStatusColor` / `TagCategoryColor`).
- *
- * Trois écarts restent **non tranchés** — `Banner` expose `announcement`,
- * `Snackbar` expose `discovery`, et le mode `auto` de `ProgressBar` code sa
- * propre sémantique. Voir la section « Points laissés ouverts » de l&apos;ADR.
+ * L&apos;axe n&apos;appartient pas au `Tag` : le même sens garde la même
+ * couleur quel que soit le composant qui le rend. Portée exacte et écarts non
+ * tranchés dans l&apos;onglet **Guidelines**.
  */
 export const UnAxePlusieursComposants: Story = {
   name: "Un axe, plusieurs composants",
@@ -439,11 +434,9 @@ export const UnAxePlusieursComposants: Story = {
         </Banner>
       </Section>
 
-      <Text size="small" color="subtlest">
+      <Text size="xsmall" color="subtlest">
         Seul le <code>Tag</code> type aujourd&apos;hui la frontière statut /
-        catégorie (<code>TagStatusColor</code> vs <code>TagCategoryColor</code>).
-        Étendre ce typage aux autres composants est un travail d&apos;API à
-        part : l&apos;ADR pose la doctrine, il ne renomme pas huit unions.
+        catégorie.
       </Text>
     </Stack>
   ),
@@ -459,14 +452,9 @@ export const UnAxePlusieursComposants: Story = {
 };
 
 /**
- * Statut ≠ catégorie. À gauche, les cinq couleurs sémantiques : elles situent un
- * objet sur l&apos;axe bon/mauvais. À droite, les couleurs catégorielles
- * (`comete` + les cinq `accent*`) : elles classent — rôle, secteur, code
- * d&apos;activité, métier — sans porter de jugement.
- *
- * **Un accent n&apos;est jamais un statut.** Un secteur n&apos;est ni réussi ni
- * raté. C&apos;est le corollaire de l&apos;ADR 0001, qui qualifie déjà
- * `--*-accent-<couleur>-*` de namespace catégoriel décoratif.
+ * Un accent n&apos;est jamais un statut : un secteur n&apos;est ni réussi ni
+ * raté. À gauche ce qui situe sur l&apos;axe, à droite ce qui classe sans
+ * juger.
  */
 export const CategorieVsStatut: Story = {
   name: "Catégorie vs statut",
@@ -508,22 +496,11 @@ export const CategorieVsStatut: Story = {
             <Badge appearance="accentBlueGrey" label="B" />
           </Cluster>
           <Text size="xsmall" as="span" color="subtle">
-            Rôle, secteur, code d&apos;activité, métier. Aucun axe bon/mauvais.
-            Les accents existent aussi sur <code>Badge</code>,{" "}
-            <code>IconTile</code> et <code>SectionMessage</code> — la frontière
-            statut / catégorie est la même partout.
+            Rôle, secteur, code d&apos;activité, métier. Aucun axe bon/mauvais —
+            et la même frontière sur <code>Badge</code> et <code>IconTile</code>.
           </Text>
         </Stack>
       </Stack>
-
-      <Text size="small" color="subtle">
-        <strong>Les accents ne sont jamais un statut.</strong> Utiliser
-        <code> accentPurple</code> pour dire « en attente » remet en circulation
-        une couleur dont personne ne connaît le sens, et prive la catégorisation
-        d&apos;une de ses teintes. Le typage rend la règle vérifiable :
-        <code> TagStatusColor</code> d&apos;un côté, <code>TagCategoryColor</code>{" "}
-        de l&apos;autre.
-      </Text>
     </Stack>
   ),
   // Garde-fou : la colonne « catégorisation » ne doit utiliser AUCUNE des cinq
@@ -547,25 +524,14 @@ export const CategorieVsStatut: Story = {
 };
 
 /**
- * Un tag = une dimension. Deux dimensions indépendantes se lisent sur **deux
- * éléments** — un tag de statut + une icône —, jamais dans une couleur
- * composite.
- *
- * À droite, la version fautive : les deux sens sont écrasés dans une seule
- * teinte. On ne sait plus si l&apos;orange dit « une action est attendue » ou
- * « un signalement est présent », et le nombre de cas à définir croît comme le
- * **produit** des deux dimensions au lieu de leur somme.
+ * Un même objet, deux informations indépendantes : où il en est (l&apos;axe) et
+ * s&apos;il est signalé. Elles se lisent sur deux éléments, jamais dans une
+ * teinte composite.
  */
 export const DeuxDimensions: Story = {
   name: "Deux dimensions",
   render: () => (
     <Stack gap="200" style={{ maxWidth: 860 }}>
-      <Text color="subtle">
-        Un même objet porte ici deux informations indépendantes : où il en est
-        (dimension 1 — l&apos;axe) et s&apos;il est signalé (dimension 2 —
-        binaire, orthogonale).
-      </Text>
-
       <Stack direction="row" gap="200" wrap align="stretch">
         <Exemple
           ton="ok"
@@ -606,15 +572,9 @@ export const DeuxDimensions: Story = {
 };
 
 /**
- * **L&apos;emphase est un budget, pas un style.** La règle 4 ne parle pas de
- * `subtle` et `bold` — ce sont les noms que le `Tag` donne à son levier. Elle
- * dit : *discret par défaut, l&apos;emphase réservée à `critical`, et rare*.
- *
- * Chaque composant applique cette règle avec le levier dont il dispose — et
- * plusieurs n&apos;en ont aucun, parce que leur intensité est fixée par leur
- * rôle. Pour ceux-là, **choisir le composant, c&apos;est choisir
- * l&apos;intensité** : on ne promeut pas un statut en `Banner` pour le faire
- * remarquer.
+ * L&apos;emphase est un budget, pas un style : discret par défaut, réservée à
+ * `critical`, et rare. Chaque composant l&apos;applique avec le levier dont il
+ * dispose — et plusieurs n&apos;en ont aucun.
  */
 export const Emphase: Story = {
   name: "Emphase (par composant)",
