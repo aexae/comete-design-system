@@ -85,18 +85,22 @@ entre versions alpha.
   inclut les interruptions réversibles. Acte l'exclusion des couleurs
   catégorielles (`comete`, `accent*`) du vocabulaire de statut et quatre règles
   d'usage (une couleur = un sens ; un tag = une dimension ; le libellé porte le
-  sens ; `subtle` par défaut). Écrit explicitement le **hors périmètre** : la
+  sens ; discret par défaut, l'emphase réservée à `critical` — chaque composant
+  l'appliquant avec le levier dont il dispose, `appearance` pour `Tag`,
+  `importance` pour `Badge`, aucun pour `SectionMessage` et `Banner` dont
+  l'intensité tient à leur rôle). Écrit explicitement le **hors périmètre** : la
   liste des statuts métier et leur mapping ne vivent pas dans le DS mais dans
   une couche produit versionnée séparément.
   L'ADR recense les composants concernés et laisse **trois écarts
   explicitement non tranchés** : `Banner.appearance = "announcement"`,
   `Snackbar.appearance = "discovery"` et le mode `auto` de `ProgressBar`, qui
   code sa propre sémantique (`critical ≤ 20`, `warning 21–99`, `success 100`).
-- **Story `Foundation/Statut`** — page de référence de l'axe : les cinq sens,
-  progression vs cycle de vie, un axe / plusieurs composants, statut vs
-  catégorisation, l'illustration « un tag = une dimension », et les règles
-  d'apparence. Vocabulaire strictement générique (le DS ignore le domaine).
-  `Foundation/Couleur` y renvoie.
+- **Story `Foundation/Statut`** — page de référence de l'axe, en six stories :
+  les cinq sens, progression vs cycle de vie, un axe / plusieurs composants
+  (le même sens rendu par `Tag`, `Badge`, `IconTile`, `SectionMessage` et
+  `Banner`), statut vs catégorisation, « un tag = une dimension », et l'emphase
+  levier par levier. Vocabulaire strictement générique (le DS ignore le
+  domaine). `Foundation/Couleur` y renvoie.
 - Ajout de `CONTRIBUTING.md` — règle « une story peut détenir de l'état, jamais
   de la mécanique » (les API manquantes repérées en story s'absorbent dans le
   composant avant merge).
