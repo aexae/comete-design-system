@@ -1,0 +1,16 @@
+# Normalisation des fins de ligne : LF dans le dépôt (eol=lf), auto-détection
+# du binaire (git n'altère pas les fichiers qu'il détecte binaires).
+* text=auto eol=lf
+
+# Sécurise explicitement les binaires courants (git ne doit jamais y toucher
+# aux fins de ligne ni tenter de diff).
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.eot   binary
+*.otf   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
