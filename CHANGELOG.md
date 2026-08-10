@@ -52,6 +52,12 @@ entre versions alpha.
   viewport) et `Table` (`hideBelow`, container queries) reflètent désormais ces
   valeurs ; une garde de test (`breakpoints.test.ts`) empêche toute dérive entre
   les constantes et le CSS.
+- **Tag** : types `TagStatusColor` (`neutral` | `information` | `warning` |
+  `success` | `critical`) et `TagCategoryColor` (`comete` + les cinq `accent*`)
+  exportés. `TagColor` reste leur union — **non cassant**, tout code existant
+  compile à l'identique. Le découpage rend la doctrine de l'ADR 0002 visible à
+  l'autocomplétion et permet de typer un mapping statut → couleur de façon que
+  le compilateur interdise d'y glisser une couleur catégorielle.
 
 ### Modifié
 
@@ -65,6 +71,32 @@ entre versions alpha.
 
 ### Documentation
 
+- **ADR 0002 — sémantique des couleurs de statut**
+  (`docs/adr/0002-semantique-couleurs-statut.md`), de portée **DS entière**
+  (`Tag`, `Badge`, `IconTile`, `SectionMessage`, `Banner`, `Snackbar`,
+  `ProgressBar`, `Text`, `Icon`) : acte l'axe unique des cinq
+  sens — `neutral` (pas commencé, archivé), `information` (étape en cours),
+  `warning` (action ou décision attendue), `success` (**l'état souhaité est
+  atteint**), `critical` (échec ou refus). Distingue les **deux lectures** de
+  cet axe : *progression* (l'état souhaité est l'arrivée → l'étape courante est
+  `information`) et *cycle de vie* (l'état souhaité est le régime nominal →
+  `Actif` est `success`). Pose le critère `critical` / `warning` : `critical` =
+  ça a raté ou ça a été refusé ; `warning` = quelqu'un doit décider, ce qui
+  inclut les interruptions réversibles. Acte l'exclusion des couleurs
+  catégorielles (`comete`, `accent*`) du vocabulaire de statut et quatre règles
+  d'usage (une couleur = un sens ; un tag = une dimension ; le libellé porte le
+  sens ; `subtle` par défaut). Écrit explicitement le **hors périmètre** : la
+  liste des statuts métier et leur mapping ne vivent pas dans le DS mais dans
+  une couche produit versionnée séparément.
+  L'ADR recense les composants concernés et laisse **trois écarts
+  explicitement non tranchés** : `Banner.appearance = "announcement"`,
+  `Snackbar.appearance = "discovery"` et le mode `auto` de `ProgressBar`, qui
+  code sa propre sémantique (`critical ≤ 20`, `warning 21–99`, `success 100`).
+- **Story `Foundation/Statut`** — page de référence de l'axe : les cinq sens,
+  progression vs cycle de vie, un axe / plusieurs composants, statut vs
+  catégorisation, l'illustration « un tag = une dimension », et les règles
+  d'apparence. Vocabulaire strictement générique (le DS ignore le domaine).
+  `Foundation/Couleur` y renvoie.
 - Ajout de `CONTRIBUTING.md` — règle « une story peut détenir de l'état, jamais
   de la mécanique » (les API manquantes repérées en story s'absorbent dans le
   composant avant merge).

@@ -24,7 +24,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Philosophie couleur du design system : la couleur fixe de l'éditeur (comète) est séparée de la charte couleur du client (brand). Les éléments interactifs ne suivent jamais la charte client (École A). Le BrandProvider applique une charte client au runtime à partir d'une seule couleur HEX. Voir docs/adr/0001-theming-couleur-multi-tenant.md.",
+          "Philosophie couleur du design system : la couleur fixe de l'éditeur (comète) est séparée de la charte couleur du client (brand). Les éléments interactifs ne suivent jamais la charte client (École A). Le BrandProvider applique une charte client au runtime à partir d'une seule couleur HEX. Voir docs/adr/0001-theming-couleur-multi-tenant.md. Le sens des couleurs d'état (neutral, information, warning, success, critical) et la frontière entre statut et catégorisation sont traités à part : voir Foundation/Statut et docs/adr/0002-semantique-couleurs-statut.md.",
       },
     },
   },
@@ -113,6 +113,15 @@ export const Philosophie: Story = {
           <Text size="small" color="subtlest">
             (<code>accent-&lt;couleur&gt;</code> — teal, purple, magenta… — est un
             troisième système, purement catégoriel/décoratif, indépendant.)
+          </Text>
+          <Text size="small" color="subtlest">
+            Les couleurs d&apos;<strong>état</strong> (<code>neutral</code>,{" "}
+            <code>information</code>, <code>warning</code>, <code>success</code>,{" "}
+            <code>critical</code>) forment un quatrième système, avec son propre
+            axe de sens : voir <strong>Foundation/Statut</strong> et{" "}
+            <code>docs/adr/0002-semantique-couleurs-statut.md</code>. C&apos;est
+            là qu&apos;est actée l&apos;exclusion des accents du vocabulaire de
+            statut.
           </Text>
         </Stack>
       </Section>
