@@ -2,10 +2,23 @@
    Placé DANS le ListItemButton, en frère flex du texte : le texte est en
    `flex: 1` (fill) et pousse le trailing à droite (pas de réserve fixe d'un
    ListItemSecondaryAction absolu).
-   Anatomie : bloc vertical [avatar + heure] AU-DESSUS du [statut], puis chevron.
+   Anatomie : bloc vertical [avatar + heure] AU-DESSUS du [statut].
    L'emplacement du statut est réservé (min-height) même sans tag → l'heure
-   reste sur la ligne du haut et les chevrons restent alignés d'une ligne à
-   l'autre (le trailing est calé à droite, largeur constante à droite). */
+   reste sur la ligne du haut et le trailing est calé à droite d'une ligne à
+   l'autre (largeur constante à droite). */
+/* Dividers entre les lignes (hairline) — remplacent l'espacement « sans
+   filet ». Tracés en `::before` absolu (le wrapper `.itemButtonWrapper` de
+   List est `position: relative`) → ils n'ajoutent pas de hauteur aux items,
+   donc la hauteur de ligne reste constante. Pas de trait au-dessus du 1er. */
+.dividedList > li + li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-top: var(--size0125) solid var(--border-subtle);
+}
+
 .trailing {
   flex-shrink: 0;
   display: flex;
@@ -17,27 +30,22 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: var(--space025);
+  gap: var(--space075);
 }
 
 .trailingWhen {
   display: inline-flex;
   align-items: center;
-  gap: var(--space050);
+  gap: var(--space075);
   white-space: nowrap;
   color: var(--text-subtle);
   font-size: var(--font-size-ui-xxs);
 }
 
-/* Ligne du statut — réservée même vide (alignement heure/chevron constant). */
+/* Ligne du statut — réservée même vide (alignement du trailing constant). */
 .trailingStatus {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   min-height: var(--size300);
-}
-
-.trailingChevron {
-  display: inline-flex;
-  align-items: center;
 }

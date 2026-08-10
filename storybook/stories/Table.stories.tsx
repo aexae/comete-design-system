@@ -6,8 +6,9 @@ import { within, userEvent, expect, fn } from "storybook/test";
 import {
   Avatar,
   Button,
+  Card,
   Checkbox,
-  Icon,
+  Grid,
   List,
   ListItemButton,
   ListItemText,
@@ -20,7 +21,10 @@ import {
   TableRow,
   Tag,
   Text,
+  ToggleButton,
+  ToggleButtonGroup,
   type TableSortDirection,
+  type TagStatusColor,
 } from "@aexae/comete-design-system/components";
 import { useTableSelection } from "@aexae/comete-design-system/hooks";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
@@ -120,7 +124,9 @@ const meta = {
                 "Une info masquée doit rester accessible : ligne cliquable vers le détail, ou vue cartes. Le tri d'une colonne masquée reste actif côté données — au consommateur de décider s'il le réinitialise.",
                 "Sous ~600px de container, ne compressez PAS la table : passez en liste compacte (`List` : titre en primary, site/méta en secondary, tag de statut + heure en trailing — le pattern Main courante mobile). Une table à 2 colonnes tronquées rend moins service qu'une ligne de liste dense. Les cartes sont la vue alternative (bascule liste/cartes), pas le repli par défaut. La story *Responsive columns* montre cette limite (600px = 2 colonnes étirées) ; la story *Table → List* montre le repli.",
                 "En liste (repli étroit), il n'y a plus d'en-têtes : le tri passe dans un contrôle « Trier par » au-dessus de la liste ; la sélection multiple par case par ligne ou appui long (à brancher sur le hook de sélection).",
-                "Statut → couleur (D12) : Actif → success, Pause → warning, Hors ligne → neutral. En méta compacte, l'heure seule aujourd'hui, et uniquement le jour (« Hier ») pour un jour antérieur — pour ne pas fausser la fraîcheur.",
+                "Statut → couleur : ne pas coder la couleur en dur dans la cellule ; passer par un mapping centralisé, typé `TagStatusColor`, et suivre l'axe de l'ADR 0002 — `neutral` (pas commencé, archivé), `information` (étape en cours), `warning` (action ou décision attendue), `success` (l'état souhaité est atteint), `critical` (échec ou refus). Qualifier d'abord le jeu de statuts : sur une *progression* l'état courant est `information`, sur un *cycle de vie* le régime nominal est `success`. Voir la page Foundation/Statut.",
+                "Les mappings statut → couleur des stories de cette page sont des données de démonstration, non normatives : le mapping métier réel vit dans la couche produit, pas dans le DS.",
+                "En méta compacte, l'heure seule aujourd'hui, et uniquement le jour (« Hier ») pour un jour antérieur — pour ne pas fausser la fraîcheur.",
               ]}
               accessibility={[
                 "En-têtes de colonnes (TableHeaderCell) reliés aux cellules ; navigation au clavier.",
@@ -171,6 +177,36 @@ const STATUS_APPEARANCE: Record<Row["status"], "subtle" | "bold"> = {
   Actif: "subtle",
   "En attente": "subtle",
   Suspendu: "subtle",
+};
+
+/** Statuts d'événement de la main courante (recette de repli téléphone). */
+type EventStatus = "En cours" | "Planifiée" | "Terminée" | "Absent";
+
+// DONNÉES DE DÉMONSTRATION — NON NORMATIVES.
+// Map unique partagée par toutes les stories de cette page. Elle ne fait PAS
+// autorité : le mapping métier réel (« valeur d'API → libellé + couleur +
+// icône ») vit dans la couche produit, partagée entre applications et
+// versionnée séparément — pas dans le design system, qui ignore le domaine.
+// La seule chose normative est l'AXE de l'ADR 0002
+// (docs/adr/0002-semantique-couleurs-statut.md), dont ces valeurs sont une
+// application.
+//
+// Les deux jeux illustrent au passage les deux lectures de l'axe :
+//   - cycle de vie (Actif / En attente / Suspendu) — l'état souhaité est le
+//     régime nominal, donc `Actif` est `success` ;
+//   - progression (Planifiée → En cours → Terminée) — l'état souhaité est
+//     l'arrivée, donc l'étape courante est `information`, pas `success`.
+// D'où « Actif » en vert mais « En cours » en bleu : c'est voulu.
+const DEMO_STATUS_COLOR: Record<Row["status"] | EventStatus, TagStatusColor> = {
+  // Cycle de vie
+  Actif: "success", // régime nominal atteint
+  "En attente": "warning", // quelqu'un doit décider
+  Suspendu: "warning", // interruption réversible — PAS `critical`
+  // Progression
+  Planifiée: "neutral", // pas commencé
+  "En cours": "information", // étape transitoire — PAS `success`
+  Terminée: "success", // arrivée — PAS `neutral`
+  Absent: "critical", // ça a raté
 };
 
 // -----------------------------------------------------------------------
@@ -984,18 +1020,6 @@ export const ErrorState: Story = {
 // répétés (l'heure discrimine), fraîcheur aujourd'hui/hier/avant-hier/plus
 // ancien, statuts variés + lignes sans statut, sites de longueurs variées.
 
-type EventStatus = "En cours" | "Planifiée" | "Terminée" | "Absent";
-
-const EVENT_STATUS_COLOR: Record<
-  EventStatus,
-  "success" | "information" | "neutral" | "critical"
-> = {
-  "En cours": "success",
-  Planifiée: "information",
-  Terminée: "neutral",
-  Absent: "critical",
-};
-
 interface McEvent {
   id: string;
   agent: string;
@@ -1053,9 +1077,9 @@ function EventStatusTag({ statut }: { statut?: EventStatus }) {
   return (
     <Tag
       label={statut}
-      color={EVENT_STATUS_COLOR[statut]}
+      color={DEMO_STATUS_COLOR[statut]}
       appearance="subtle"
-      shape="rounded"
+      shape="square"
     />
   );
 }
@@ -1077,19 +1101,18 @@ const onOpenDetail = fn();
  * pas la table : on bascule en `List`. Cette recette montre le **résultat du
  * repli** sur la donnée `MC_EVENTS` — la liste compacte « Main courante mobile »
  * (type d'événement en primary, site en secondary ; avatar + heure + tag de
- * statut + chevron en trailing).
+ * statut en trailing).
  *
  * Points de fidélité :
- * - **Espacement sans filet** : `List gap="150"` — la séparation des lignes se
- *   fait par l'air, pas par des dividers.
+ * - **Séparation par dividers** : une hairline (`::before` layout-neutre) entre
+ *   les lignes — les items sont jointifs (pas de `gap`), le trait ne modifie
+ *   pas la hauteur de ligne. (Alternative « sans filet » : `List gap`.)
  * - **Trailing uniforme** (contrepartie du sans-divider) : anatomie identique
- *   sur toutes les lignes — `[avatar] [heure] · [statut] · [chevron]` sur une
- *   grille à colonnes fixes. L'**emplacement du statut est réservé même sans
- *   statut** (colonne de largeur fixe, calée sur « Terminée ») ; un événement
- *   sans statut = *aucun statut* (log informationnel), pas une donnée manquante
- *   → emplacement vide. Les **chevrons sont alignés au pixel** et centrés sur la
- *   hauteur totale de l'item ; hauteur d'item constante (primary/secondary en
- *   ellipsis, 2 lignes).
+ *   sur toutes les lignes — `[avatar] [heure] · [statut]` calé à droite. L'
+ *   **emplacement du statut est réservé même sans statut** (hauteur fixe, calée
+ *   sur « Terminée ») ; un événement sans statut = *aucun statut* (log
+ *   informationnel), pas une donnée manquante → emplacement vide. Hauteur
+ *   d'item constante (primary/secondary en ellipsis, 2 lignes).
  * - **Fraîcheur** : heure seule aujourd'hui ; « Hier » / « Avant-hier » ; date
  *   courte au-delà (jamais l'heure seule pour un jour passé).
  * - **Cas éprouvés** : noms d'événements longs (ellipsis), « Ronde » répétés
@@ -1097,7 +1120,7 @@ const onOpenDetail = fn();
  *   sans statut.
  *
  * Clic vers le détail : `ListItemButton` (vrai bouton, clavier + focus natifs),
- * `onPress` (action Storybook), chevron **décoratif** en fin de ligne.
+ * `onPress` (action Storybook) sur toute la ligne.
  *
  * **Guideline** : si les lignes de la table (large) sont cliquables, les items du
  * repli liste le sont aussi — **même destination, même geste** ; jamais le hover
@@ -1109,17 +1132,32 @@ export const TableToListRecipe: Story = {
   render: () => (
     <div style={{ width: 360, padding: "var(--space200)" }}>
       <Text size="small" color="subtle" as="p">Étroit — liste compacte (cliquable)</Text>
-      <List aria-label="Main courante — liste compacte" gap="150">
+      <List
+        aria-label="Main courante — liste compacte"
+        className={css["dividedList"]}
+      >
         {MC_EVENTS.map((e) => (
           // Ligne cliquable = ListItemButton (bouton natif, clavier + focus).
           <ListItemButton key={e.id} onPress={() => { onOpenDetail(e.id); }}>
-            {/* Infos importantes : type (titre) + site (sous-titre). En fill
-                (flex:1) → pousse le trailing à droite. */}
-            <ListItemText primary={e.type} secondary={e.site} />
+            {/* Infos importantes : type (titre, body/M/medium) + site
+                (sous-titre, body/S/regular). En fill (flex:1) → pousse le
+                trailing à droite. */}
+            <ListItemText
+              primary={
+                <Text as="span" size="medium" weight="medium">
+                  {e.type}
+                </Text>
+              }
+              secondary={
+                <Text as="span" size="small" color="subtle">
+                  {e.site}
+                </Text>
+              }
+            />
             {/* Trailing DANS le bouton (frère flex du texte, pas un
                 ListItemSecondaryAction absolu) → texte en fill. Bloc vertical :
-                avatar + heure AU-DESSUS du statut ; chevron décoratif à droite.
-                Ligne de statut réservée (min-height) même sans tag. */}
+                avatar + heure AU-DESSUS du statut. Ligne de statut réservée
+                (min-height) même sans tag. */}
             <span className={css["trailing"]}>
               <span className={css["trailingStack"]}>
                 <span className={css["trailingWhen"]}>
@@ -1130,12 +1168,6 @@ export const TableToListRecipe: Story = {
                   <EventStatusTag statut={e.statut} />
                 </span>
               </span>
-              <Icon
-                icon="ChevronRight"
-                color="subtle"
-                size={16}
-                className={css["trailingChevron"]}
-              />
             </span>
           </ListItemButton>
         ))}
@@ -1154,14 +1186,7 @@ export const TableToListRecipe: Story = {
     const spread = (values: number[]) =>
       Math.max(...values) - Math.min(...values);
 
-    // 2) Tous les chevrons ont le même x (colonnes fixes du trailing).
-    const chevronX = Array.from(
-      list.querySelectorAll('[class*="trailingChevron"]'),
-    ).map((c) => c.getBoundingClientRect().x);
-    await expect(chevronX.length).toBe(MC_EVENTS.length);
-    await expect(spread(chevronX)).toBeLessThanOrEqual(1);
-
-    // 3) Hauteur d'item constante malgré le contenu variable.
+    // 2) Hauteur d'item constante malgré le contenu variable.
     const heights = Array.from(list.querySelectorAll("li")).map(
       (li) => li.getBoundingClientRect().height,
     );
@@ -1277,3 +1302,155 @@ function ResponsiveDocSection(): ReactNode {
     </section>
   );
 }
+
+// -----------------------------------------------------------------------
+// Recettes (stories de référence à copier)
+
+// =======================================================================
+// RECETTE — Table ↔ cartes (bascule liste / grille)
+// =======================================================================
+//
+// Mêmes données (ROWS) rendues soit en `Table`, soit en grille de `Card`, avec
+// un `ToggleButtonGroup` (icônes liste / grille) dans le header du
+// `Table.View`. La carte est un `Card` du DS (titre + 2 métadonnées + `Tag` de
+// statut) — aucune carte maison. Bascule via `useState`.
+
+function TableCardRecipe({ initialView }: { initialView: "table" | "cards" }) {
+  const [view, setView] = useState<"table" | "cards">(initialView);
+
+  return (
+    <div style={{ padding: "var(--space200)" }}>
+      <Table.View
+        header={
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "var(--space150)",
+              width: "100%",
+            }}
+          >
+            <Text weight="medium">Projets</Text>
+            <span style={{ flex: 1 }} />
+            <ToggleButtonGroup
+              aria-label="Affichage"
+              selectionMode="single"
+              selectedKeys={[view]}
+              onSelectionChange={(keys) => {
+                if (keys !== "all") {
+                  const k = [...keys][0];
+                  if (k === "table" || k === "cards") setView(k);
+                }
+              }}
+            >
+              <ToggleButton
+                id="table"
+                iconBefore="List"
+                aria-label="Vue liste"
+              />
+              <ToggleButton
+                id="cards"
+                iconBefore="Category"
+                aria-label="Vue cartes"
+              />
+            </ToggleButtonGroup>
+          </div>
+        }
+      >
+        {view === "table" ? (
+          <Table aria-label="Projets (vue liste)">
+            <TableHead>
+              <TableRow>
+                <TableHeaderCell>Projet</TableHeaderCell>
+                <TableHeaderCell>Statut</TableHeaderCell>
+                <TableHeaderCell>Responsable</TableHeaderCell>
+                <TableHeaderCell align="right">Code</TableHeaderCell>
+              </TableRow>
+            </TableHead>
+            <TableBody columnCount={4}>
+              {ROWS.map((r) => (
+                <TableRow key={r.id}>
+                  <TableCell>{r.title}</TableCell>
+                  <TableCell>
+                    <Tag
+                      label={r.status}
+                      color={DEMO_STATUS_COLOR[r.status]}
+                      appearance="subtle"
+                      shape="rounded"
+                    />
+                  </TableCell>
+                  <TableCell>{r.user}</TableCell>
+                  <TableCell align="right">{r.key}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="300">
+            {ROWS.map((r) => (
+              <Card key={r.id} appearance="outlined">
+                {/* Card = surface nue (aucun padding interne) → on pade le
+                    contenu ici. */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "var(--space100)",
+                    padding: "var(--space200)",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: "var(--space150)",
+                    }}
+                  >
+                    <Text weight="medium">{r.title}</Text>
+                    <Tag
+                      label={r.status}
+                      color={DEMO_STATUS_COLOR[r.status]}
+                      appearance="subtle"
+                      shape="rounded"
+                    />
+                  </div>
+                  <Text size="small" color="subtle">
+                    Responsable · {r.user}
+                  </Text>
+                  <Text size="small" color="subtle">
+                    Code · {r.key}
+                  </Text>
+                </div>
+              </Card>
+            ))}
+          </Grid>
+        )}
+      </Table.View>
+    </div>
+  );
+}
+
+/**
+ * **Recette — Table ↔ cartes (bascule)** — mêmes données en `Table` ou en
+ * grille de `Card`, bascule via le `ToggleButtonGroup` (liste / grille) du
+ * header. Démarre en vue liste.
+ */
+export const TableCardsToggleRecipe: Story = {
+  name: "Recette — Table ↔ cartes (bascule)",
+  parameters: { controls: { disable: true }, layout: "fullscreen" },
+  render: () => <TableCardRecipe initialView="table" />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // Départ en vue liste → un tableau est présent.
+    await expect(canvas.getByRole("table")).toBeInTheDocument();
+    // Bascule en vue cartes → plus de tableau, les cartes apparaissent.
+    // (ToggleButtonGroup en selectionMode single = radiogroup → rôle "radio".)
+    await userEvent.click(canvas.getByRole("radio", { name: "Vue cartes" }));
+    await expect(canvas.queryByRole("table")).not.toBeInTheDocument();
+    await expect(canvas.getByText("Alpha project")).toBeInTheDocument();
+    // Retour en vue liste.
+    await userEvent.click(canvas.getByRole("radio", { name: "Vue liste" }));
+    await expect(canvas.getByRole("table")).toBeInTheDocument();
+  },
+};
