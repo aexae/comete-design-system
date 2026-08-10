@@ -209,10 +209,17 @@ function renderInline(text: string): ReactNode[] {
 }
 
 export interface GuidelinesProps {
-  /** Quand utiliser le composant. */
-  when: string[];
-  /** Quand l'éviter — format « raison → Composant » pour lier l'alternative. */
-  avoid: string[];
+  /**
+   * Quand utiliser le composant. Optionnel — les pages de doctrine
+   * (`Foundation/*`) n'ont pas de « quand l'utiliser » : elles énoncent une
+   * règle, pas un choix de composant.
+   */
+  when?: string[];
+  /**
+   * Quand l'éviter — format « raison → Composant » pour lier l'alternative.
+   * Optionnel, même raison que `when`.
+   */
+  avoid?: string[];
   /** Bonnes pratiques (optionnel). */
   best?: string[];
   /** Points d'accessibilité (optionnel) — affichés dans un encart. */
@@ -289,10 +296,10 @@ export function Guidelines({ when, avoid, best }: GuidelinesProps): ReactElement
           ) : null}
         </TabList>
         <TabPanel id="when">
-          <GuidelineList items={when} icon="CheckCircle" color="success" />
+          <GuidelineList items={when ?? []} icon="CheckCircle" color="success" />
         </TabPanel>
         <TabPanel id="avoid">
-          <GuidelineList items={avoid} icon="Block" color="critical" />
+          <GuidelineList items={avoid ?? []} icon="Block" color="critical" />
         </TabPanel>
         {best ? (
           <TabPanel id="best">
@@ -595,39 +602,43 @@ export function GuidelinesFlat({
         </div>
       ) : null}
 
-      <section>
-        <SectionHeading dot="var(--text-success)">
-          Quand l&apos;utiliser
-        </SectionHeading>
-        <BulletList items={when} />
-      </section>
+      {when && when.length > 0 ? (
+        <section>
+          <SectionHeading dot="var(--text-success)">
+            Quand l&apos;utiliser
+          </SectionHeading>
+          <BulletList items={when} />
+        </section>
+      ) : null}
 
-      <section>
-        <SectionHeading dot="var(--text-information)">
-          Plutôt utiliser
-        </SectionHeading>
-        <p
-          style={{
-            margin: "var(--space150) 0 var(--space100)",
-            fontFamily: "var(--font-family-primary)",
-            fontSize: "var(--font-size-ui-xs)",
-            color: "var(--text-subtle)",
-          }}
-        >
-          Dans ces cas, un autre composant est plus adapté :
-        </p>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "var(--space100)",
-          }}
-        >
-          {avoid.map((it, i) => (
-            <AltRow key={i} item={it} />
-          ))}
-        </div>
-      </section>
+      {avoid && avoid.length > 0 ? (
+        <section>
+          <SectionHeading dot="var(--text-information)">
+            Plutôt utiliser
+          </SectionHeading>
+          <p
+            style={{
+              margin: "var(--space150) 0 var(--space100)",
+              fontFamily: "var(--font-family-primary)",
+              fontSize: "var(--font-size-ui-xs)",
+              color: "var(--text-subtle)",
+            }}
+          >
+            Dans ces cas, un autre composant est plus adapté :
+          </p>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--space100)",
+            }}
+          >
+            {avoid.map((it, i) => (
+              <AltRow key={i} item={it} />
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       {best ? (
         <section>
