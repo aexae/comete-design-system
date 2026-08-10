@@ -8,18 +8,52 @@ import styles from "./Tag.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
-export type TagColor =
+/**
+ * Couleurs **sémantiques** — expriment l'état d'un objet, sur un axe unique :
+ *
+ * - `neutral` — pas commencé, brouillon, archivé, sans objet
+ * - `information` — en cours, déroulement normal
+ * - `warning` — action, décision ou échéance attendue
+ * - `success` — l'état souhaité est atteint
+ * - `critical` — échec, refus, annulation
+ *
+ * L'axe se lit de deux façons, à qualifier avant tout mapping :
+ * - **progression** (`Brouillon` → `En cours` → `Terminé`) — l'état souhaité
+ *   est l'arrivée, donc l'étape courante est `information`, jamais `success` ;
+ * - **cycle de vie** (`Actif` / `Suspendu` / `Archivé`) — l'état souhaité est
+ *   le régime nominal, donc `Actif` est bien `success`.
+ *
+ * Deux frontières faciles à rater : « terminé » est `success` et non `neutral`
+ * (le gris est réservé à ce qui n'a pas commencé ou est archivé) ; une
+ * interruption réversible est `warning` et non `critical` (`critical` = ça a
+ * raté ou ça a été refusé).
+ *
+ * Voir `docs/adr/0002-semantique-couleurs-statut.md`.
+ */
+export type TagStatusColor =
   | "neutral"
-  | "comete"
-  | "success"
-  | "warning"
-  | "critical"
   | "information"
+  | "warning"
+  | "success"
+  | "critical";
+
+/**
+ * Couleurs **catégorielles** — classent sans porter de jugement (rôle, secteur,
+ * code d'activité, métier). **Jamais un statut** : une catégorie n'a pas d'axe
+ * bon/mauvais.
+ *
+ * Voir `docs/adr/0002-semantique-couleurs-statut.md`.
+ */
+export type TagCategoryColor =
+  | "comete"
   | "accentPurple"
   | "accentTeal"
   | "accentTurquoise"
   | "accentMagenta"
   | "accentBlueGrey";
+
+/** Union complète des couleurs acceptées par le `Tag`. */
+export type TagColor = TagStatusColor | TagCategoryColor;
 
 export type TagAppearance = "bold" | "subtle" | "outlined";
 
@@ -28,7 +62,16 @@ export type TagShape = "square" | "rounded";
 export interface TagProps {
   /** Texte affiché dans le tag. */
   label: string;
-  /** Couleur sémantique du tag. @default "neutral" */
+  /**
+   * Couleur du tag.
+   *
+   * Pour un **statut**, utiliser une {@link TagStatusColor} ; les couleurs
+   * catégorielles ({@link TagCategoryColor}) ne portent pas d'état. Le sens de
+   * chaque couleur est fixé par `docs/adr/0002-semantique-couleurs-statut.md`
+   * (story `Foundation/Statut`) — ne pas le redéfinir écran par écran.
+   *
+   * @default "neutral"
+   */
   color?: TagColor;
   /** Style visuel : rempli (bold), léger (subtle) ou bordé (outlined). @default "subtle" */
   appearance?: TagAppearance;
@@ -57,12 +100,20 @@ export interface TagProps {
  * Tag — Comète Design System
  *
  * Étiquette compacte pour catégoriser, filtrer ou identifier du contenu.
- * Supporte 7 couleurs × 3 apparences × 2 formes.
+ * Supporte 11 couleurs × 3 apparences × 2 formes.
+ *
+ * Deux familles de couleurs, à ne pas mélanger (ADR 0002) :
+ * {@link TagStatusColor} pour un **état**, {@link TagCategoryColor} pour une
+ * **catégorie**.
  *
  * ```tsx
- * <Tag label="CDI" color="success" />
- * <Tag label="Agent" color="neutral" appearance="bold" />
- * <Tag label="Urgent" color="critical" onRemove={() => remove()} />
+ * // Statut — l'axe de l'ADR 0002
+ * <Tag label="En cours" color="information" />
+ * <Tag label="Terminé" color="success" />
+ * <Tag label="Annulé" color="critical" appearance="bold" />
+ *
+ * // Catégorie — aucun jugement bon/mauvais
+ * <Tag label="CDI" color="accentTeal" appearance="outlined" />
  * ```
  */
 export function Tag({

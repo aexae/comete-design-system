@@ -26,16 +26,22 @@ const meta = {
               doExample={{
                 example: (
                   <div style={{ display: "flex", gap: 8 }}>
-                    <Tag label="Actif" color="success" />
-                    <Tag label="Brouillon" color="neutral" />
+                    <Tag label="En cours" color="information" />
+                    <Tag label="Terminé" color="success" />
                   </div>
                 ),
                 caption:
-                  "Étiquettes courtes et non interactives, couleur sémantique.",
+                  "Un sens par couleur, sur l'axe de l'ADR 0002 : `information` = en cours, `success` = terminé conforme.",
               }}
               dontExample={{
-                example: <Tag label="Enregistrer" color="comete" appearance="bold" />,
-                caption: "Ne pas détourner un Tag en action cliquable.",
+                example: (
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <Tag label="En cours" color="success" />
+                    <Tag label="Terminé" color="neutral" />
+                  </div>
+                ),
+                caption:
+                  "Ne pas mettre « en cours » en vert : le vert récompense un aboutissement, pas une activité — et « terminé » ne se grise pas.",
               }}
               when={[
                 "Étiqueter ou catégoriser un élément (statut, type, mot-clé) de façon compacte et non interactive.",
@@ -47,11 +53,18 @@ const meta = {
                 "Un message d'état sur une section → SectionMessage.",
               ]}
               best={[
-                "Libellé court (1-2 mots) ; couleur sémantique cohérente avec la signification.",
-                "`appearance=\"subtle\"` par défaut ; `bold` pour attirer l'attention, `outlined` sur fond coloré.",
+                "Libellé court (1-2 mots).",
+                "Un statut se colore sur l'axe de l'ADR 0002 : `neutral` (pas commencé, archivé), `information` (étape en cours), `warning` (action ou décision attendue), `success` (l'état souhaité est atteint), `critical` (échec ou refus). Voir la page Foundation/Statut.",
+                "Cet axe n'est pas propre au Tag : Badge, IconTile, SectionMessage, Banner, Snackbar et ProgressBar exposent les mêmes couleurs et leur doivent le même sens. Le Tag est seulement l'endroit où la frontière statut / catégorie est typée aujourd'hui.",
+                "Qualifier le jeu de statuts avant de le mapper : sur une *progression* (Brouillon → En cours → Terminé) l'état courant est `information` ; sur un *cycle de vie* (Actif / Suspendu / Archivé) le régime nominal est `success`. D'où « En cours » en bleu mais « Actif » en vert.",
+                "`critical` = ça a raté ou ça a été refusé. Une interruption réversible, qui attend une décision, est `warning` — sinon le rouge cesse de signaler.",
+                "Les couleurs catégorielles (`comete`, `accent*`) classent — rôle, secteur, métier — et ne portent jamais un statut. Typer les mappings sur `TagStatusColor` pour que le compilateur le garantisse.",
+                "Un tag = une dimension. Deux informations indépendantes → deux éléments (un tag + une icône), jamais une teinte composite.",
+                "Ne pas coder une couleur en dur au point d'usage : elle vient d'un mapping statut → couleur centralisé dans la couche produit, pas de l'écran.",
+                "`appearance=\"subtle\"` par défaut ; `bold` réservé à `critical` dans une liste longue ; `outlined` pour la catégorisation.",
               ]}
               accessibility={[
-                "La couleur ne doit pas être le seul porteur de sens — garder un libellé explicite.",
+                "La couleur ne doit pas être le seul porteur de sens — `label` est requis, et jamais réduit à une pastille.",
                 "Un Tag est informatif : ne pas y attacher d'interaction attendue au clavier.",
               ]}
             />
