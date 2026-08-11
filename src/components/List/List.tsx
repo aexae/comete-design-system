@@ -148,6 +148,15 @@ export interface ListItemTextProps {
    * @default false
    */
   wrap?: boolean;
+  /**
+   * Borne le `primary` à N lignes puis tronque à l'ellipse
+   * (`-webkit-line-clamp`). Distinct de `wrap` (nombre de lignes **illimité**,
+   * sans troncature) : `lineClamp={2}` est le compromis pour les **titres
+   * longs** — souvent les incidents — qu'une troncature à une seule ligne
+   * pénaliserait précisément. Cohérent avec `maxLines` du composant `Text`.
+   * Prioritaire sur `wrap` pour le primary.
+   */
+  lineClamp?: number;
   /** Alternative à `primary` pour un contenu libre. */
   children?: ReactNode;
   /** Classe CSS additionnelle. */
@@ -470,6 +479,7 @@ export function ListItemText({
   primary,
   secondary,
   wrap = false,
+  lineClamp,
   children,
   className,
   style,
@@ -484,7 +494,17 @@ export function ListItemText({
         <span className={styles.itemTextOverline}>{overline}</span>
       )}
       {primary !== undefined && (
-        <span className={styles.itemTextPrimary}>{primary}</span>
+        <span
+          className={styles.itemTextPrimary}
+          data-clamp={lineClamp !== undefined ? "true" : undefined}
+          style={
+            lineClamp !== undefined
+              ? { WebkitLineClamp: lineClamp }
+              : undefined
+          }
+        >
+          {primary}
+        </span>
       )}
       {secondary !== undefined && (
         <span className={styles.itemTextSecondary}>{secondary}</span>

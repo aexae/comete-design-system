@@ -297,6 +297,17 @@
   text-overflow: clip;
 }
 
+/* `lineClamp` : borne le primary à N lignes puis ellipse. Le nombre de lignes
+   (`-webkit-line-clamp`) est posé en style inline (valeur dynamique). Déclaré
+   APRÈS le mode wrap pour gagner sur lui (même spécificité) quand les deux
+   coexistent : la borne prime sur le wrap illimité. */
+.itemTextPrimary[data-clamp] {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+  overflow: hidden;
+}
+
 /* Texte secondaire en disabled : reste sourd. */
 .item[data-disabled] .itemTextSecondary,
 .itemButton[data-disabled] .itemTextSecondary {

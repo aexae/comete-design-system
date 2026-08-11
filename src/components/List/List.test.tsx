@@ -229,6 +229,30 @@ describe("List", () => {
     expect(kids[1]?.textContent).toBe("Toiture terrasse");
   });
 
+  it("should clamp the primary to N lines when lineClamp is set", () => {
+    const { container } = render(
+      <List aria-label="x">
+        <ListItem>
+          <ListItemText primary="Un titre d'incident très long" lineClamp={2} />
+        </ListItem>
+      </List>,
+    );
+    const primary = container.querySelector<HTMLElement>('[data-clamp="true"]');
+    expect(primary).not.toBeNull();
+    expect(primary?.getAttribute("style") ?? "").toMatch(/line-clamp:\s*2/);
+  });
+
+  it("should NOT set data-clamp when lineClamp is omitted", () => {
+    const { container } = render(
+      <List aria-label="x">
+        <ListItem>
+          <ListItemText primary="Titre court" />
+        </ListItem>
+      </List>,
+    );
+    expect(container.querySelector('[data-clamp]')).toBeNull();
+  });
+
   it("should render only primary when secondary is omitted", () => {
     render(
       <List aria-label="x">
