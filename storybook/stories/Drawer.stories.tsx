@@ -12,6 +12,7 @@ import {
   type DrawerSize,
   type DrawerStacking,
 } from "@aexae/comete-design-system/components";
+import { within, userEvent, expect } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
@@ -430,5 +431,135 @@ export const Swipeable: Story = {
         </Drawer>
       </div>
     );
+  },
+};
+
+/**
+ * **Panneau persistant (non modal).** `isModal={false}` (left/right) : le panneau
+ * vit **dans le flux**, la liste se reflow à côté (elle n'est jamais recouverte),
+ * sans voile ni piège à focus ; Échap ne le ferme pas. À comparer au Drawer
+ * **modal** (dessous) : la même action recouvre la liste (voile + piège à focus).
+ * C'est au consommateur de placer le panneau dans un conteneur flex.
+ */
+export const PersistentRight: Story = {
+  name: "Persistent (non modal, right)",
+  parameters: { controls: { disable: true } },
+  render: function PersistentStory() {
+    const [nonModalOpen, setNonModalOpen] = useState(true);
+    const [modalOpen, setModalOpen] = useState(false);
+    const List = () => (
+      <ul
+        style={{
+          flex: 1,
+          minWidth: 0,
+          margin: 0,
+          paddingLeft: "var(--space300)",
+          display: "flex",
+          flexDirection: "column",
+          gap: "var(--space100)",
+        }}
+      >
+        {["Tour Nord", "Entrepôt B", "Site Est", "Galerie Comète", "Mairie de Merville"].map(
+          (s) => (
+            <li key={s}>{s}</li>
+          ),
+        )}
+      </ul>
+    );
+    const frame = {
+      display: "flex",
+      gap: "var(--space200)",
+      marginTop: "var(--space150)",
+      alignItems: "stretch",
+      border: "1px dashed var(--border-subtle)",
+      padding: "var(--space150)",
+      minHeight: 160,
+    } as const;
+    return (
+      <div style={{ padding: 24, display: "flex", flexDirection: "column", gap: 32 }}>
+        <div>
+          <p style={{ marginBottom: "var(--space100)", fontWeight: 600 }}>
+            Non modal — la liste se reflow à côté
+          </p>
+          <Button
+            onPress={() => setNonModalOpen((o) => !o)}
+            aria-expanded={nonModalOpen}
+            aria-controls="persistent-panel"
+          >
+            {nonModalOpen ? "Replier le panneau" : "Déplier le panneau"}
+          </Button>
+          <div style={frame}>
+            <List />
+            <Drawer
+              isOpen={nonModalOpen}
+              onOpenChange={setNonModalOpen}
+              isModal={false}
+              placement="right"
+              size="280px"
+              id="persistent-panel"
+              aria-label="Panneau persistant"
+            >
+              <DrawerHeader onClose={() => setNonModalOpen(false)}>Détails</DrawerHeader>
+              <DrawerBody>
+                <p>
+                  Ce panneau occupe sa place : la liste se réduit à côté, elle
+                  n&apos;est jamais recouverte. Échap ne le ferme pas.
+                </p>
+              </DrawerBody>
+            </Drawer>
+          </div>
+        </div>
+
+        <div>
+          <p style={{ marginBottom: "var(--space100)", fontWeight: 600 }}>
+            Modal — recouvre la liste (voile + piège à focus)
+          </p>
+          <Button onPress={() => setModalOpen(true)}>Ouvrir en modal</Button>
+          <div style={frame}>
+            <List />
+          </div>
+          <Drawer
+            isOpen={modalOpen}
+            onOpenChange={setModalOpen}
+            placement="right"
+            size="narrow"
+            aria-label="Panneau modal"
+          >
+            <DrawerHeader onClose={() => setModalOpen(false)}>Détails (modal)</DrawerHeader>
+            <DrawerBody>
+              <p>Voile, piège à focus, Échap et clic extérieur ferment.</p>
+            </DrawerBody>
+          </Drawer>
+        </div>
+      </div>
+    );
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("le panneau non modal est une region, sans voile", async () => {
+      const panel = canvasElement.querySelector("#persistent-panel");
+      await expect(panel).not.toBeNull();
+      await expect((panel as HTMLElement).tagName).toBe("SECTION");
+      // aucun voile (overlay) dans le document pour le panneau non modal
+      await expect(
+        document.body.querySelector('[class*="overlay"]:not([class*="overlayTransparent"])'),
+      ).toBeNull();
+    });
+
+    await step("Tab ne piège pas le focus dans le panneau", async () => {
+      const closeBtn = canvas.getByRole("button", { name: "Fermer" });
+      closeBtn.focus();
+      await expect(closeBtn).toHaveFocus();
+      // Plusieurs Tab finissent par sortir du panneau (pas de piège).
+      const panel = canvasElement.querySelector("#persistent-panel") as HTMLElement;
+      for (let i = 0; i < 6; i++) await userEvent.tab();
+      await expect(panel.contains(document.activeElement)).toBe(false);
+    });
+
+    await step("Échap ne ferme pas le panneau persistant", async () => {
+      await userEvent.keyboard("{Escape}");
+      await expect(canvasElement.querySelector("#persistent-panel")).not.toBeNull();
+    });
   },
 };

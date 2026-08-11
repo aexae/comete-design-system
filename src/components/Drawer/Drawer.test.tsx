@@ -370,3 +370,70 @@ describe("Drawer — overlay stacking", () => {
     expect(frontModal.style.zIndex).toContain("+ 2");
   });
 });
+
+describe("Drawer — mode non modal", () => {
+  it("rend une region étiquetée, pas un dialog, et aucun voile", () => {
+    renderDrawer({ isModal: false, placement: "right" });
+    expect(screen.getByRole("region", { name: "Test drawer" })).toBeInTheDocument();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(document.body.querySelector('[class*="overlay"]')).toBeNull();
+  });
+
+  it("ne rend rien quand isOpen est false (la place est rendue au voisin)", () => {
+    renderDrawer({ isModal: false, placement: "right", isOpen: false });
+    expect(screen.queryByRole("region")).not.toBeInTheDocument();
+  });
+
+  it("est une <section> en flux (classe nonModal)", () => {
+    renderDrawer({ isModal: false, placement: "left" });
+    const region = screen.getByRole("region", { name: "Test drawer" });
+    expect(region.tagName).toBe("SECTION");
+    expect(region.className).toContain("nonModal");
+  });
+
+  it("ne se ferme pas sur Échap", async () => {
+    const onOpenChange = vi.fn();
+    renderDrawer({ isModal: false, placement: "right", onOpenChange });
+    await userEvent.keyboard("{Escape}");
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
+  it("ne vole pas le focus à l'ouverture", () => {
+    renderDrawer({ isModal: false, placement: "right" });
+    const region = screen.getByRole("region", { name: "Test drawer" });
+    expect(region.contains(document.activeElement)).toBe(false);
+  });
+
+  it("DrawerHeader rend un <h2> en non modal", () => {
+    render(
+      <Drawer
+        isOpen
+        onOpenChange={vi.fn()}
+        isModal={false}
+        placement="right"
+        aria-label="Filtres"
+      >
+        <DrawerHeader>Filtres</DrawerHeader>
+        <DrawerBody>contenu</DrawerBody>
+      </Drawer>,
+    );
+    const heading = screen.getByRole("heading", { name: "Filtres", level: 2 });
+    expect(heading.tagName).toBe("H2");
+  });
+
+  it("avertit et retombe en modal pour placement top/bottom", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    renderDrawer({ isModal: false, placement: "bottom" });
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('"left"'));
+    warn.mockRestore();
+  });
+
+  it("avertit que swipeable est sans effet en non modal", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    renderDrawer({ isModal: false, placement: "right", swipeable: true });
+    expect(screen.getByRole("region", { name: "Test drawer" })).toBeInTheDocument();
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("swipeable"));
+    warn.mockRestore();
+  });
+});
