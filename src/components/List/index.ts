@@ -7,6 +7,7 @@ export {
   ListItemText,
   ListItemAvatar,
   ListItemSecondaryAction,
+  ListItemTrailing,
 } from "./List";
 export type {
   ListProps,
@@ -18,4 +19,6 @@ export type {
   ListItemTextProps,
   ListItemAvatarProps,
   ListItemSecondaryActionProps,
+  ListItemTrailingProps,
+  ListItemTrailingAlign,
 } from "./List";

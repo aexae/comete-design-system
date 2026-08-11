@@ -9,6 +9,7 @@ declare const styles: {
   readonly "itemText": string;
   readonly "itemTextPrimary": string;
   readonly "itemTextSecondary": string;
+  readonly "itemTrailing": string;
   readonly "list": string;
   readonly "skeletonRow": string;
   readonly "skeletonText": string;

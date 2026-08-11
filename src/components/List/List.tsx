@@ -171,6 +171,34 @@ export interface ListItemSecondaryActionProps {
   style?: CSSProperties;
 }
 
+/**
+ * Alignement horizontal des enfants empilés d'un `ListItemTrailing`.
+ * - `end` (défaut) — tout calé à droite ;
+ * - `start` — calé à gauche : des sous-blocs de longueurs différentes (des
+ *   tags, par ex.) démarrent alors à un **bord commun** au lieu de flotter ;
+ * - `stretch` — pleine largeur : chaque enfant gère son propre bord
+ *   (`align-self` / `justify-content`), p. ex. une heure calée à droite
+ *   au-dessus d'un tag calé à gauche.
+ */
+export type ListItemTrailingAlign = "start" | "end" | "stretch";
+
+export interface ListItemTrailingProps {
+  /**
+   * Contenu **libre** du bloc de fin de ligne : un `Tag`, une heure, un
+   * montant, une `ProgressBar`, un chiffre… ou rien. Ce slot n'est **pas** typé
+   * « statut » — une liste Agents n'a aucun statut et doit pouvoir l'utiliser.
+   * Il est **facultatif et légitimement vide** (une liste Contacts n'a pas de
+   * trailing) : ce n'est pas un oubli.
+   */
+  children?: ReactNode;
+  /** Alignement horizontal des enfants empilés. @default "end" */
+  align?: ListItemTrailingAlign;
+  /** Classe CSS additionnelle. */
+  className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
+}
+
 // -----------------------------------------------------------------------
 // Composant principal
 
@@ -519,3 +547,46 @@ export function ListItemSecondaryAction({
 }
 
 ListItemSecondaryAction.displayName = "ListItemSecondaryAction";
+
+// -----------------------------------------------------------------------
+// ListItemTrailing — bloc de fin de ligne (attribution + état)
+
+/**
+ * ListItemTrailing — slot de fin de ligne, **frère flex** de `ListItemText`
+ * (le texte reste en `flex: 1` et se tronque ; le trailing est en
+ * `flex-shrink: 0`). Contrairement à `ListItemSecondaryAction`, il n'est **pas**
+ * positionné en absolu et **reste à l'intérieur** du `ListItemButton` : comme
+ * son contenu est non-interactif (un `Tag`, une heure…), la ligne conserve un
+ * **seul arrêt de tabulation**.
+ *
+ * Contenu libre, facultatif, non typé « statut » (cf. `ListItemTrailingProps`).
+ * Empile ses enfants verticalement, calés à droite par défaut (voir `align`).
+ *
+ * ```tsx
+ * <ListItemButton onPress={openDetail}>
+ *   <ListItemText primary="Ronde" secondary="Hall d'accueil" />
+ *   <ListItemTrailing>
+ *     <span>14:05</span>
+ *     <Tag label="En cours" color="information" />
+ *   </ListItemTrailing>
+ * </ListItemButton>
+ * ```
+ */
+export function ListItemTrailing({
+  children,
+  align = "end",
+  className,
+  style,
+}: ListItemTrailingProps): ReactElement {
+  return (
+    <span
+      className={[styles.itemTrailing, className].filter(Boolean).join(" ")}
+      style={style}
+      data-align={align}
+    >
+      {children}
+    </span>
+  );
+}
+
+ListItemTrailing.displayName = "ListItemTrailing";

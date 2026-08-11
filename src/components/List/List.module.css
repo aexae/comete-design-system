@@ -288,6 +288,38 @@
   color: var(--text-disabled);
 }
 
+/* --------------------------------------------------------------------------
+   ListItemTrailing — bloc de fin de ligne (attribution + état)
+   -------------------------------------------------------------------------- */
+
+/* Frère flex du texte, calé à droite. `flex-shrink: 0` → le texte (flex: 1) se
+   tronque avant que le trailing ne rétrécisse. Empile ses enfants
+   verticalement ; `align-items` piloté par `data-align`. */
+.itemTrailing {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--space050);
+  /* Ligne d'état réservée (§2 D11) : le trailing réserve la hauteur de son
+     anatomie à deux niveaux (attribution + état, ~48px), même quand l'état est
+     absent. Effet : toutes les lignes ont la même hauteur, y compris celles
+     sans état, et le rythme vertical tient SANS AUCUN FILET. C'est la
+     contrepartie assumée du « sans-divider » — ne pas retirer ce min-height
+     pour « simplifier », ce serait réintroduire des hauteurs de ligne inégales
+     que seuls des filets masqueraient. */
+  min-height: var(--size600);
+}
+
+.itemTrailing[data-align="start"] {
+  align-items: flex-start;
+}
+
+.itemTrailing[data-align="stretch"] {
+  align-items: stretch;
+}
+
 /* ------------------------------------------------------------------ */
 /* États natifs (chargement / vide / erreur)                          */
 
