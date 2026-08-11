@@ -15,6 +15,8 @@ import {
   ListItemIcon,
   ListItemText,
   ListItemTrailing,
+  SectionMessage,
+  Stack,
   Tag,
   Text,
 } from "@aexae/comete-design-system/components";
@@ -38,34 +40,23 @@ function LeadingTrailingDoc() {
       <Text size="medium" weight="bold" as="p">
         Où va quoi
       </Text>
-      <div
-        style={{
-          padding: "var(--space150) var(--space200)",
-          borderLeft: "var(--size050) solid var(--border-subtle)",
-          background: "var(--background-neutral-subtlest-default)",
-          borderRadius: "var(--radius100)",
-          display: "flex",
-          flexDirection: "column",
-          gap: "var(--space100)",
-        }}
+      <SectionMessage
+        appearance="information"
+        title="Le leading porte l'identité de la ligne. Le trailing porte l'attribution et l'état."
       >
-        <Text size="small" as="p">
-          <strong>
-            Le leading porte l&apos;identité de la ligne. Le trailing porte
-            l&apos;attribution et l&apos;état.
-          </strong>
-        </Text>
-        <Text size="small" color="subtle" as="p">
-          Un avatar <em>à gauche</em> répond à « qui est cette ligne ? » — la
-          ligne <em>est</em> l&apos;agent. Un avatar <em>à droite</em> répond à
-          « qui a fait ça ? » — la ligne est un évènement, l&apos;agent n&apos;en
-          est qu&apos;un attribut.
-        </Text>
-        <Text size="small" color="subtle" as="p">
-          <strong>Test</strong> : retire l&apos;avatar. Si tu ne sais plus de
-          quel objet parle la ligne, il va à gauche.
-        </Text>
-      </div>
+        <Stack gap="100">
+          <Text size="small" color="subtle" as="p">
+            Un avatar <em>à gauche</em> répond à « qui est cette ligne ? » — la
+            ligne <em>est</em> l&apos;agent. Un avatar <em>à droite</em> répond à
+            « qui a fait ça ? » — la ligne est un évènement, l&apos;agent
+            n&apos;en est qu&apos;un attribut.
+          </Text>
+          <Text size="small" color="subtle" as="p">
+            <strong>Test</strong> : retire l&apos;avatar. Si tu ne sais plus de
+            quel objet parle la ligne, il va à gauche.
+          </Text>
+        </Stack>
+      </SectionMessage>
       <ul
         style={{
           margin: 0,
