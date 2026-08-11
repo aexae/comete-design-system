@@ -21,7 +21,7 @@ import {
   Text,
 } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
-import { GuidelinesFlat } from "./_guidelines";
+import { GuidelinesFlat, SectionHeading } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Doc « Où va quoi » — règle leading (identité) / trailing (attribution + état).
@@ -37,9 +37,9 @@ function LeadingTrailingDoc() {
         gap: "var(--space150)",
       }}
     >
-      <Text size="medium" weight="bold" as="p">
-        Où va quoi
-      </Text>
+      <SectionHeading dot="var(--text-information)">
+        Placement du contenu
+      </SectionHeading>
       <SectionMessage
         appearance="information"
         title="Le leading porte l'identité de la ligne. Le trailing porte l'attribution et l'état."
@@ -184,7 +184,7 @@ const meta = {
                 "`isBordered=false` par défaut (inséré dans un conteneur) ; l'activer pour un rendu autonome.",
                 "ListItemIcon / ListItemAvatar à largeur fixe pour aligner le texte.",
                 "ListItemSecondaryAction pour une action à droite (interactif : Switch, Checkbox) — extraite du bouton. ListItemTrailing pour de l'attribution/état non-interactif (heure, Tag) — dans le bouton, la ligne reste un seul arrêt de tabulation.",
-                "Leading = identité de la ligne, trailing = attribution + état — voir « Où va quoi » ci-dessous.",
+                "Leading = identité de la ligne, trailing = attribution + état — voir « Placement du contenu » ci-dessous.",
                 "`overline` (surtitre) : réservé à un type COURT et énumérable (« Ronde », « Contrôle d'accès ») ; jamais une phrase libre, qu'il tronquerait de façon illisible. Question ouverte côté donnée : si un champ mélange type court et intitulé libre, il manque un champ — arbitrage produit, pas DS.",
               ]}
               accessibility={[
