@@ -10,6 +10,7 @@ import {
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
+  ListItemTrailing,
 } from "./List";
 
 describe("List", () => {
@@ -355,5 +356,73 @@ describe("List — états natifs", () => {
       </List>,
     );
     expect(screen.getByText("Item")).toBeInTheDocument();
+  });
+});
+
+describe("ListItemTrailing", () => {
+  it("should render its free content", () => {
+    render(
+      <List aria-label="x">
+        <ListItem>
+          <ListItemText primary="Ronde" />
+          <ListItemTrailing>
+            <span>14:05</span>
+          </ListItemTrailing>
+        </ListItem>
+      </List>,
+    );
+    expect(screen.getByText("14:05")).toBeInTheDocument();
+  });
+
+  it("should stay INSIDE the ListItemButton (single tab stop, unlike SecondaryAction)", () => {
+    render(
+      <List aria-label="x">
+        <ListItemButton>
+          <ListItemText primary="Ronde" />
+          <ListItemTrailing>
+            <span>14:05</span>
+          </ListItemTrailing>
+        </ListItemButton>
+      </List>,
+    );
+    // Un seul bouton, et le trailing est contenu DEDANS (non extrait) → la
+    // ligne reste un seul arrêt de tabulation.
+    const button = screen.getByRole("button");
+    expect(button).toHaveTextContent("14:05");
+  });
+
+  it("should default align to end", () => {
+    const { container } = render(
+      <List aria-label="x">
+        <ListItem>
+          <ListItemTrailing>x</ListItemTrailing>
+        </ListItem>
+      </List>,
+    );
+    expect(container.querySelector('[data-align="end"]')).not.toBeNull();
+  });
+
+  it("should apply align=start (bord commun)", () => {
+    const { container } = render(
+      <List aria-label="x">
+        <ListItem>
+          <ListItemTrailing align="start">x</ListItemTrailing>
+        </ListItem>
+      </List>,
+    );
+    expect(container.querySelector('[data-align="start"]')).not.toBeNull();
+  });
+
+  it("should render legitimately empty without error (slot facultatif)", () => {
+    const { container } = render(
+      <List aria-label="x">
+        <ListItem>
+          <ListItemText primary="Contact sans trailing" />
+          <ListItemTrailing />
+        </ListItem>
+      </List>,
+    );
+    expect(container.querySelector('[data-align="end"]')).not.toBeNull();
+    expect(screen.getByText("Contact sans trailing")).toBeInTheDocument();
   });
 });

@@ -288,6 +288,30 @@
   color: var(--text-disabled);
 }
 
+/* --------------------------------------------------------------------------
+   ListItemTrailing — bloc de fin de ligne (attribution + état)
+   -------------------------------------------------------------------------- */
+
+/* Frère flex du texte, calé à droite. `flex-shrink: 0` → le texte (flex: 1) se
+   tronque avant que le trailing ne rétrécisse. Empile ses enfants
+   verticalement ; `align-items` piloté par `data-align`. */
+.itemTrailing {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--space050);
+}
+
+.itemTrailing[data-align="start"] {
+  align-items: flex-start;
+}
+
+.itemTrailing[data-align="stretch"] {
+  align-items: stretch;
+}
+
 /* ------------------------------------------------------------------ */
 /* États natifs (chargement / vide / erreur)                          */
 
