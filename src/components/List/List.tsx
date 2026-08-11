@@ -531,8 +531,16 @@ ListItemText.displayName = "ListItemText";
 // ListItemAvatar — wrapper d'avatar
 
 /**
- * ListItemAvatar — slot avatar au début d'un item. Largeur fixe pour
- * aligner les textes sur plusieurs items.
+ * ListItemAvatar — slot avatar au début d'un item (leading). La **taille** est
+ * portée par l'`<Avatar size>` enfant, pas par ce slot : il couvre donc les
+ * deux usages sans réglage propre —
+ * - **identité** (la ligne *est* la personne, ex. liste Agents) : avatar plus
+ *   grand (`size="medium"` / `"large"`) ;
+ * - **attribution** (la ligne est un évènement, la personne n'en est qu'un
+ *   attribut, ex. Main courante) : avatar petit (`size="xsmall"`).
+ *
+ * Un avatar d'attribution va à **droite** (dans un `ListItemTrailing`), pas
+ * ici : le leading porte l'identité de la ligne (cf. guidelines « Où va quoi »).
  */
 export function ListItemAvatar({
   children,
