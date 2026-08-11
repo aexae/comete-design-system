@@ -1135,8 +1135,11 @@ export const TableToListRecipe: Story = {
         {MC_EVENTS.map((e) => (
           // Ligne cliquable = ListItemButton (bouton natif, clavier + focus).
           <ListItemButton key={e.id} onPress={() => { onOpenDetail(e.id); }}>
-            {/* Infos importantes : type (titre) + site (sous-titre), en fill. */}
-            <ListItemText primary={e.type} secondary={e.site} />
+            {/* Infos importantes : type (titre, borné à 2 lignes — les
+                incidents ont les libellés les plus longs, les tronquer à une
+                ligne pénaliserait justement les lignes qui comptent) + site
+                (sous-titre), en fill. */}
+            <ListItemText primary={e.type} secondary={e.site} lineClamp={2} />
             {/* Trailing = slot DS `ListItemTrailing` : frère flex DANS le bouton
                 (la ligne reste un seul arrêt de tabulation), empilement avatar +
                 heure AU-DESSUS du statut. La ligne d'état réservée et le calage
@@ -1172,13 +1175,24 @@ export const TableToListRecipe: Story = {
     await userEvent.click(canvas.getByRole("button", { name: /Toiture terrasse/ }));
     await expect(onOpenDetail).toHaveBeenCalledOnce();
 
-    // 2) Hauteur d'item constante malgré le contenu variable — la ligne d'état
-    //    réservée est désormais portée par `ListItemTrailing`, plus par du CSS
-    //    de story.
-    const heights = Array.from(list.querySelectorAll("li")).map(
-      (li) => li.getBoundingClientRect().height,
+    // 2) lineClamp={2} : un titre long (incident) tient sur 2 lignes → son item
+    //    est PLUS HAUT qu'un item à titre court. Démontre la prop en situation.
+    const rows = Array.from(list.querySelectorAll("li"));
+    const heightOf = (label: RegExp) =>
+      rows
+        .find((r) => label.test(r.textContent ?? ""))
+        ?.getBoundingClientRect().height ?? 0;
+    await expect(heightOf(/Intrusion détectée/)).toBeGreaterThan(
+      heightOf(/Toiture terrasse/),
     );
-    await expect(Math.max(...heights) - Math.min(...heights)).toBeLessThanOrEqual(1);
+
+    // 3) Alignement : le trailing est calé en HAUT (`align-self: flex-start`),
+    //    pas centré — il reste en regard de la 1re ligne du titre sur 2 lignes.
+    const trailing = list.querySelector('[class*="itemTrailing"]');
+    await expect(trailing).not.toBeNull();
+    await expect(getComputedStyle(trailing as Element).alignSelf).toBe(
+      "flex-start",
+    );
   },
 };
 

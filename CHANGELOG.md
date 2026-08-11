@@ -68,6 +68,12 @@ entre versions alpha.
   source unique `BREAKPOINTS`** — `sm 480→600`, `md 768→900`, `lg 1024→1200`.
   Cohérence avec les breakpoints de `Grid` (600/1200) ; l'API (`"sm"|"md"|"lg"`)
   est inchangée, seuls les seuils (largeur de container) bougent.
+- **`ListItemTrailing`** : calé en **haut** de l'item (`align-self: flex-start`)
+  au lieu d'être centré — reste en regard de la 1re ligne du titre quand
+  celui-ci passe à 2 lignes (`ListItemText lineClamp`). Sans effet sur les items
+  d'une seule ligne (la hauteur y égale la ligne d'état réservée). Démontré dans
+  la recette `Table → List`, où les titres d'incident (longs) passent en
+  `lineClamp={2}`.
 
 ### Documentation
 
