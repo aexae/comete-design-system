@@ -212,6 +212,23 @@ describe("List", () => {
     expect(screen.getByText("Secondary")).toBeInTheDocument();
   });
 
+  it("should render an overline above the primary text", () => {
+    const { container } = render(
+      <List aria-label="x">
+        <ListItem>
+          <ListItemText overline="Ronde" primary="Toiture terrasse" />
+        </ListItem>
+      </List>,
+    );
+    expect(screen.getByText("Ronde")).toBeInTheDocument();
+    expect(screen.getByText("Toiture terrasse")).toBeInTheDocument();
+    // Le surtitre est rendu AVANT le primary dans le flux.
+    const text = container.querySelector('[class*="itemText"]');
+    const kids = text ? Array.from(text.children) : [];
+    expect(kids[0]?.textContent).toBe("Ronde");
+    expect(kids[1]?.textContent).toBe("Toiture terrasse");
+  });
+
   it("should render only primary when secondary is omitted", () => {
     render(
       <List aria-label="x">

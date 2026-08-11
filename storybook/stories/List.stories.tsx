@@ -169,6 +169,7 @@ const meta = {
                 "ListItemIcon / ListItemAvatar à largeur fixe pour aligner le texte.",
                 "ListItemSecondaryAction pour une action à droite (interactif : Switch, Checkbox) — extraite du bouton. ListItemTrailing pour de l'attribution/état non-interactif (heure, Tag) — dans le bouton, la ligne reste un seul arrêt de tabulation.",
                 "Leading = identité de la ligne, trailing = attribution + état — voir « Où va quoi » ci-dessous.",
+                "`overline` (surtitre) : réservé à un type COURT et énumérable (« Ronde », « Contrôle d'accès ») ; jamais une phrase libre, qu'il tronquerait de façon illisible. Question ouverte côté donnée : si un champ mélange type court et intitulé libre, il manque un champ — arbitrage produit, pas DS.",
               ]}
               accessibility={[
                 "`List` porte un `aria-label` ; chaque item est une entité cohérente.",
@@ -736,5 +737,45 @@ export const ErrorState: Story = {
       error="Impossible de charger les membres."
       onRetry={noop}
     />
+  ),
+};
+
+/**
+ * **Surtitre (overline)** — un type court en capitales au-dessus du titre.
+ * Réservé à un type **court et énumérable** ; la 3ᵉ ligne (intitulé libre)
+ * montre pourquoi une phrase n'y a pas sa place — elle se tronque et appartient
+ * au titre. Le prop est livré ; la recette Main courante n'y bascule pas tant
+ * que la nature du champ `type` n'est pas tranchée côté produit (cf. guidelines).
+ * Les stories sans surtitre (Default, With secondary text…) sont le contre-point.
+ */
+export const Overline: Story = {
+  name: "Overline (surtitre)",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <List isBordered aria-label="Main courante">
+      <ListItem>
+        <ListItemText
+          overline="Ronde"
+          primary="Toiture terrasse"
+          secondary="Hall d'accueil · 14:05"
+        />
+      </ListItem>
+      <ListItem>
+        <ListItemText
+          overline="Contrôle d'accès"
+          primary="Tourniquet Est"
+          secondary="Zone livraison · 11:30"
+        />
+      </ListItem>
+      <ListItem>
+        {/* Cas limite : un intitulé libre en surtitre se tronque mal — il
+            appartient au titre, pas au surtitre. */}
+        <ListItemText
+          overline="Intrusion détectée en zone de stockage réfrigérée"
+          primary="Entrepôt B"
+          secondary="12:58"
+        />
+      </ListItem>
+    </List>
   ),
 };

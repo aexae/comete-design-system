@@ -129,6 +129,13 @@ export interface ListItemIconProps {
 
 export interface ListItemTextProps {
   /**
+   * Surtitre affiché **au-dessus** du `primary` : petit, capitales, couleur
+   * sourde, tronqué sur **une seule ligne**. Réservé à un **type court et
+   * énumérable** (« Ronde », « Contrôle d'accès ») — jamais une phrase libre,
+   * qu'un surtitre tronquerait de façon illisible.
+   */
+  overline?: ReactNode;
+  /**
    * Texte principal. Si omis, on peut passer le contenu via `children`
    * pour un format libre (paragraphes, badges, etc.).
    */
@@ -459,6 +466,7 @@ ListItemIcon.displayName = "ListItemIcon";
  * Alternative : utiliser `children` pour un contenu libre.
  */
 export function ListItemText({
+  overline,
   primary,
   secondary,
   wrap = false,
@@ -472,6 +480,9 @@ export function ListItemText({
       style={style}
       data-wrap={wrap || undefined}
     >
+      {overline !== undefined && (
+        <span className={styles.itemTextOverline}>{overline}</span>
+      )}
       {primary !== undefined && (
         <span className={styles.itemTextPrimary}>{primary}</span>
       )}

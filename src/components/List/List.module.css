@@ -249,6 +249,21 @@
   overflow: hidden;
 }
 
+/* Surtitre (overline) : petit, capitales, sourd, tronqué sur une ligne. Même
+   traitement typographique que `.head` (le surtitre est un « head » de ligne). */
+.itemTextOverline {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxs);
+  line-height: var(--line-height-ui-xxs);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-normal);
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .itemTextPrimary {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-s);
