@@ -339,6 +339,12 @@
   align-items: flex-end;
   justify-content: center;
   gap: var(--space050);
+  /* Calé en HAUT de l'item (align-self) : quand le titre passe sur 2 lignes
+     (`ListItemText lineClamp`), l'item grandit ; sans ça le trailing — centré
+     par l'item (`.item` est en align-items: center) — dériverait vers le bas,
+     décroché de la 1re ligne du titre. Sur un item d'une seule ligne (= la
+     hauteur réservée ci-dessous), flex-start ≡ center : aucun effet. */
+  align-self: flex-start;
   /* Ligne d'état réservée (§2 D11) : le trailing réserve la hauteur de son
      anatomie à deux niveaux (attribution + état, ~48px), même quand l'état est
      absent. Effet : toutes les lignes ont la même hauteur, y compris celles
