@@ -18,6 +18,11 @@ entre versions alpha.
 - **`ListHead`** : nouvelle prop `isFlush` (défaut `false`) qui annule le padding
   **horizontal** du sous-titre de section (le vertical est conservé), pour
   l'aligner sur des items eux-mêmes mis à plat (`ListItemButton isFlush`).
+- **Drawer — mode non modal** : nouvelle prop `isModal` (`true` par défaut,
+  non-breaking). En `isModal={false}`, le Drawer devient un **panneau persistant
+  rendu dans le flux** — sans voile ni piège à focus, sans fermeture au clic
+  extérieur / Échap, et sans voler le focus à l'ouverture. Réservé aux
+  placements `left` / `right`.
 
 ## [1.0.0-alpha.154] - 2026-09-07
 

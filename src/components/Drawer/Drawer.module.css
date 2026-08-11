@@ -140,6 +140,30 @@
 .top.full, .bottom.full         { height: 100%; border-radius: 0; }
 
 /* ==========================================================================
+   Mode non modal — panneau persistant DANS LE FLUX (pas d'overlay).
+   Déclaré après .drawer / placements pour l'emporter (même spécificité).
+   Le consommateur place ce panneau dans un conteneur flex/grid : le voisin
+   (la liste) se reflow à côté, il n'est pas recouvert.
+   ========================================================================== */
+
+.drawer.nonModal {
+  position: static;
+  inset: auto;
+  height: auto;
+  align-self: stretch;
+  flex: none;
+  /* En flux, pas d'ombre d'élévation forte : une bordure suffit à séparer. */
+  box-shadow: none;
+  border: 1px solid var(--border-default);
+}
+
+/* Pas d'animation d'entrée/sortie en non modal (montage/démontage direct). */
+.drawer.nonModal[data-entering],
+.drawer.nonModal[data-exiting] {
+  animation: none;
+}
+
+/* ==========================================================================
    Slide animations — per placement
    ========================================================================== */
 
