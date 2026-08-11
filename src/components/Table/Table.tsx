@@ -671,20 +671,53 @@ export function TableRow({
     }
   }
 
-  // Clic de confort sur la ligne : délègue à l'ancre. Ignore les clics sur un
-  // interactif interne (l'ancre elle-même, la checkbox de sélection, un bouton
-  // d'action) pour ne pas double-déclencher.
-  const handleRowClick: React.MouseEventHandler<HTMLTableRowElement> = (e) => {
-    if (
-      (e.target as Element).closest(
-        'a,button,input,select,textarea,label,[role="menuitem"],[role="checkbox"]',
-      )
-    ) {
-      return;
+  // Clic de confort sur la ligne : délègue à l'ancre. Ignore (1) les clics sur
+  // un interactif interne — l'ancre elle-même, la checkbox de sélection, un
+  // bouton d'action — pour ne pas double-déclencher ; (2) les clics faits
+  // pendant une sélection de texte.
+  const hasTextSelection = (): boolean => {
+    const sel = typeof window !== "undefined" ? window.getSelection() : null;
+    return sel !== null && sel.type === "Range" && sel.toString().length > 0;
+  };
+  const hitsInternalInteractive = (target: Element): boolean =>
+    target.closest(
+      'a,button,input,select,textarea,label,[role="menuitem"],[role="checkbox"]',
+    ) !== null;
+
+  // Navigation (`href`) : rejoue le clic sur le lien en préservant les
+  // modificateurs → le navigateur ouvre nativement un onglet (Ctrl/⌘) ou une
+  // fenêtre (Shift), sans `preventDefault`, et laisse le routeur de l'app
+  // intercepter comme pour tout `<a>`. Action (`onPress`) : simple activation.
+  const delegateToAnchor = (e: React.MouseEvent<HTMLTableRowElement>): void => {
+    const anchor = e.currentTarget.querySelector<HTMLElement>("[data-row-anchor]");
+    if (anchor === null) return;
+    if (href !== undefined) {
+      anchor.dispatchEvent(
+        new MouseEvent("click", {
+          bubbles: true,
+          cancelable: true,
+          ctrlKey: e.ctrlKey,
+          metaKey: e.metaKey,
+          shiftKey: e.shiftKey,
+        }),
+      );
+    } else {
+      anchor.click();
     }
-    e.currentTarget
-      .querySelector<HTMLElement>("[data-row-anchor]")
-      ?.click();
+  };
+
+  const handleRowClick: React.MouseEventHandler<HTMLTableRowElement> = (e) => {
+    if (hitsInternalInteractive(e.target as Element) || hasTextSelection()) return;
+    delegateToAnchor(e);
+  };
+
+  // Clic molette (button 1) → nouvel onglet, navigation uniquement. Le
+  // navigateur n'ouvre pas d'onglet sur un clic synthétique : `window.open` est
+  // le recours documenté, réservé à ce cas précis.
+  const handleRowAuxClick: React.MouseEventHandler<HTMLTableRowElement> = (e) => {
+    if (e.button !== 1 || href === undefined) return;
+    if (hitsInternalInteractive(e.target as Element) || hasTextSelection()) return;
+    if (typeof window !== "undefined") window.open(href, "_blank", "noopener");
   };
 
   return (
@@ -695,6 +728,7 @@ export function TableRow({
       data-clickable={isInteractive || onClick ? "true" : undefined}
       aria-selected={isSelected || undefined}
       onClick={isInteractive ? handleRowClick : onClick}
+      onAuxClick={isInteractive ? handleRowAuxClick : undefined}
     >
       <RowAnchorContext.Provider value={isInteractive ? { href, onPress } : null}>
         {renderedChildren}
