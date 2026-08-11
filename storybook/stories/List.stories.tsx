@@ -21,7 +21,7 @@ import {
   Text,
 } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
-import { GuidelinesFlat } from "./_guidelines";
+import { GuidelinesFlat, SectionHeading } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Doc « Où va quoi » — règle leading (identité) / trailing (attribution + état).
@@ -37,9 +37,9 @@ function LeadingTrailingDoc() {
         gap: "var(--space150)",
       }}
     >
-      <Text size="medium" weight="bold" as="p">
-        Où va quoi
-      </Text>
+      <SectionHeading dot="var(--text-information)">
+        Placement du contenu
+      </SectionHeading>
       <SectionMessage
         appearance="information"
         title="Le leading porte l'identité de la ligne. Le trailing porte l'attribution et l'état."
@@ -130,23 +130,46 @@ const meta = {
               dontExample={{
                 example: (
                   <div style={{ maxWidth: 280 }}>
-                    <List isBordered aria-label="Projets">
+                    <List isBordered aria-label="Agents">
                       <ListItem>
-                        <ListItemText
-                          primary="Alpha"
-                          secondary="Actif · John Doe · CODE-001"
-                        />
+                        <ListItemAvatar>
+                          <Avatar size="medium" initials="DM" />
+                        </ListItemAvatar>
+                        <ListItemText primary="DUPONT Marie" secondary="MAT-0142" />
+                        <ListItemTrailing>
+                          <Text size="xsmall" color="subtle" as="span">
+                            Payables 35h
+                          </Text>
+                          <Text size="xsmall" color="subtle" as="span">
+                            Indispo ±2
+                          </Text>
+                          <Text size="small" weight="medium" as="span">
+                            +2h30
+                          </Text>
+                        </ListItemTrailing>
                       </ListItem>
                       <ListItem>
-                        <ListItemText
-                          primary="Beta"
-                          secondary="En attente · Jane Smith · CODE-002"
-                        />
+                        <ListItemAvatar>
+                          <Avatar size="medium" initials="MB" />
+                        </ListItemAvatar>
+                        <ListItemText primary="MARTIN Bob" secondary="MAT-0198" />
+                        <ListItemTrailing>
+                          <Text size="xsmall" color="subtle" as="span">
+                            Payables 28h
+                          </Text>
+                          <Text size="xsmall" color="subtle" as="span">
+                            Indispo ±1
+                          </Text>
+                          <Text size="small" weight="medium" as="span">
+                            -1h00
+                          </Text>
+                        </ListItemTrailing>
                       </ListItem>
                     </List>
                   </div>
                 ),
-                caption: "Ne pas y entasser des données multi-colonnes.",
+                caption:
+                  "Une seule information dans le trailing ; les métriques secondaires vont au desktop ou à la fiche.",
               }}
               when={[
                 "Empiler des éléments homogènes d'une seule dimension (navigation, menus, réglages, fichiers).",
@@ -161,7 +184,7 @@ const meta = {
                 "`isBordered=false` par défaut (inséré dans un conteneur) ; l'activer pour un rendu autonome.",
                 "ListItemIcon / ListItemAvatar à largeur fixe pour aligner le texte.",
                 "ListItemSecondaryAction pour une action à droite (interactif : Switch, Checkbox) — extraite du bouton. ListItemTrailing pour de l'attribution/état non-interactif (heure, Tag) — dans le bouton, la ligne reste un seul arrêt de tabulation.",
-                "Leading = identité de la ligne, trailing = attribution + état — voir « Où va quoi » ci-dessous.",
+                "Leading = identité de la ligne, trailing = attribution + état — voir « Placement du contenu » ci-dessous.",
                 "`overline` (surtitre) : réservé à un type COURT et énumérable (« Ronde », « Contrôle d'accès ») ; jamais une phrase libre, qu'il tronquerait de façon illisible. Question ouverte côté donnée : si un champ mélange type court et intitulé libre, il manque un champ — arbitrage produit, pas DS.",
               ]}
               accessibility={[
@@ -853,39 +876,6 @@ export const AgentsList: Story = {
     await expect(buttons).toHaveLength(AGENTS.length);
     await expect(buttons[0]).toHaveTextContent("+2h30");
   },
-};
-
-/**
- * **Pourquoi une seule métrique.** Trois métriques entassées à droite : la
- * ligne n'est plus scannable. Le produit choisit LA métrique qui compte ; les
- * autres vont dans le détail.
- */
-export const AgentsThreeMetrics: Story = {
-  name: "Agents — 3 métriques (à éviter)",
-  parameters: { controls: { disable: true } },
-  render: () => (
-    <List isBordered aria-label="Agents (trop de métriques)">
-      {AGENTS.map((a) => (
-        <ListItem key={a.id}>
-          <ListItemAvatar>
-            <Avatar size="medium" initials={agentInitials(a.name)} />
-          </ListItemAvatar>
-          <ListItemText primary={a.name} secondary={a.matricule} />
-          <ListItemTrailing>
-            <Text size="xsmall" color="subtle" as="span">
-              Payables 35h
-            </Text>
-            <Text size="xsmall" color="subtle" as="span">
-              Indispo ±2
-            </Text>
-            <Text size="small" weight="medium" as="span">
-              {a.delta}
-            </Text>
-          </ListItemTrailing>
-        </ListItem>
-      ))}
-    </List>
-  ),
 };
 
 /**

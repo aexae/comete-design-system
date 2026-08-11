@@ -323,7 +323,7 @@ function Dot({ color }: { color: string }): ReactElement {
   );
 }
 
-function SectionHeading({
+export function SectionHeading({
   dot,
   children,
 }: {
