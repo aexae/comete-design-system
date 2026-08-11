@@ -108,6 +108,11 @@ entre versions alpha.
   statut), bascule via un `ToggleButtonGroup` (liste / grille) dans le header du
   `Table.View`. La guideline précise que la bascule est une option par écran,
   jamais le repli téléphone par défaut (qui reste la liste compacte).
+- **Recette `Table → List`** : recâblée sur le slot `ListItemTrailing` du DS
+  (avatar + heure au-dessus du statut, ligne d'état réservée portée par le
+  composant). La recette ne porte **plus aucune classe CSS locale** et
+  `storybook/stories/Table.stories.module.css` est supprimé — la mécanique vit
+  désormais dans `List`, conformément à `CONTRIBUTING.md`.
 - Ajout de `CONTRIBUTING.md` — règle « une story peut détenir de l'état, jamais
   de la mécanique » (les API manquantes repérées en story s'absorbent dans le
   composant avant merge).
