@@ -249,6 +249,11 @@
 
 .body {
   flex: 1;
+  /* En colonne flex, `min-height: auto` (défaut) empêche cet item de se
+     comprimer sous la hauteur de son contenu : le body déborde et pousse le
+     footer hors du drawer. `min-height: 0` autorise la compression → le body
+     défile en interne et le footer reste visible. */
+  min-height: 0;
   overflow-y: auto;
   padding: 0 var(--space300) var(--space300);
   font-family: var(--font-family-primary);
