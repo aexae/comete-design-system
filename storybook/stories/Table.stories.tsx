@@ -134,6 +134,7 @@ const meta = {
               ]}
             />
             <ResponsiveDocSection />
+            <RowClickDoctrineSection />
             </>
           }
         />
@@ -1301,6 +1302,147 @@ function ResponsiveDocSection(): ReactNode {
           ))}
         </tbody>
       </table>
+    </section>
+  );
+}
+
+// -----------------------------------------------------------------------
+// Section de doc « Que fait le clic sur une ligne ? » — doctrine d'ouverture,
+// injectée dans l'onglet Guidelines. Décide, par type d'objet, ce que fait le
+// clic : navigation (page) via `href`, ou consultation en panneau via `onPress`.
+
+const ROW_CLICK_DOCTRINE: Array<{
+  cas: string;
+  ouverture: string;
+  api: string;
+}> = [
+  {
+    cas: "L'objet a sa propre page où l'on travaille (Site, Agent).",
+    ouverture: "Navigation — page",
+    api: "href",
+  },
+  {
+    cas: "On vérifie un détail et on enchaîne dans la liste (Pointage, Vacation).",
+    ouverture: "Panneau latéral (Drawer)",
+    api: "onPress",
+  },
+  {
+    cas: "Action courte et ponctuelle.",
+    ouverture: "Modale — jamais pour consulter",
+    api: "bouton d'action dédié, pas le clic-ligne",
+  },
+];
+
+function RowClickDoctrineSection(): ReactNode {
+  const cellStyle = {
+    padding: "var(--space150) var(--space200)",
+    borderBottom: "1px solid var(--border-subtle)",
+    fontFamily: "var(--font-family-primary)",
+    fontSize: "var(--font-size-ui-xs)",
+    lineHeight: "var(--line-height-ui-m)",
+    color: "var(--text-default)",
+    textAlign: "start" as const,
+    verticalAlign: "top" as const,
+  };
+  const headStyle = {
+    ...cellStyle,
+    fontWeight: "var(--font-weight-semibold)",
+    background: "var(--background-neutral-subtlest-default)",
+  };
+  return (
+    <section style={{ maxWidth: 760, paddingTop: "var(--space400)" }}>
+      <h3
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "var(--space100)",
+          margin: 0,
+          fontFamily: "var(--font-family-primary)",
+          fontSize: "var(--font-size-ui-s)",
+          fontWeight: "var(--font-weight-semibold)",
+          color: "var(--text-default)",
+        }}
+      >
+        <span
+          style={{
+            width: 8,
+            height: 8,
+            borderRadius: "50%",
+            background: "var(--text-information)",
+            display: "inline-block",
+          }}
+        />
+        Que fait le clic sur une ligne ?
+      </h3>
+      <p
+        style={{
+          margin: "var(--space150) 0 var(--space200)",
+          fontFamily: "var(--font-family-primary)",
+          fontSize: "var(--font-size-ui-xs)",
+          lineHeight: "var(--line-height-ui-m)",
+          color: "var(--text-subtle)",
+        }}
+      >
+        Critère :{" "}
+        <strong>
+          « l&apos;utilisateur compare-t-il plusieurs éléments à la suite ? »
+        </strong>{" "}
+        Oui → panneau (on reste dans la liste), non → page. Toujours préférer{" "}
+        <code>href</code> à <code>onPress</code> + navigation programmatique :{" "}
+        <code>href</code> préserve le Ctrl/⌘+clic (nouvel onglet) et l&apos;URL au
+        survol, et rend la ligne activable au clavier.
+      </p>
+      <table
+        style={{
+          width: "100%",
+          borderCollapse: "collapse",
+          border: "1px solid var(--border-subtle)",
+          borderRadius: "var(--radius200)",
+          overflow: "hidden",
+        }}
+      >
+        <thead>
+          <tr>
+            <th style={headStyle}>Cas</th>
+            <th style={headStyle}>Ouverture</th>
+            <th style={headStyle}>API</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ROW_CLICK_DOCTRINE.map((row) => (
+            <tr key={row.api}>
+              <td style={cellStyle}>{row.cas}</td>
+              <td style={cellStyle}>{row.ouverture}</td>
+              <td style={cellStyle}>
+                <code>{row.api}</code>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <ul
+        style={{
+          margin: "var(--space200) 0 0",
+          paddingLeft: "var(--space300)",
+          display: "flex",
+          flexDirection: "column",
+          gap: "var(--space075)",
+          fontFamily: "var(--font-family-primary)",
+          fontSize: "var(--font-size-ui-xs)",
+          lineHeight: "var(--line-height-ui-m)",
+          color: "var(--text-subtle)",
+        }}
+      >
+        <li>
+          La modale n&apos;est pas un mode de consultation — réservée aux actions
+          courtes.
+        </li>
+        <li>Jamais d&apos;action destructrice au clic-ligne.</li>
+        <li>
+          Un même type d&apos;objet s&apos;ouvre de la même façon partout dans
+          l&apos;application.
+        </li>
+      </ul>
     </section>
   );
 }
