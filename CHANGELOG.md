@@ -97,6 +97,17 @@ entre versions alpha.
   catégorisation, l'illustration « un tag = une dimension », et les règles
   d'apparence. Vocabulaire strictement générique (le DS ignore le domaine).
   `Foundation/Couleur` y renvoie.
+- **Stories Table** : les deux mappings statut → couleur sont fusionnés en une
+  **map de démonstration unique** `DEMO_STATUS_COLOR`, explicitement marquée
+  **non normative**, typée `TagStatusColor` et réalignée sur l'axe de l'ADR 0002
+  (« En cours » passe de `success` à `information`, « Terminée » de `neutral` à
+  `success`). La guideline Table qui énonçait un mapping concurrent en
+  vocabulaire métier renvoie désormais à l'ADR.
+- **Story de référence Table** « Recette — Table ↔ cartes » : mêmes données
+  rendues en `Table` ou en grille de `Card` (titre + métadonnées + `Tag` de
+  statut), bascule via un `ToggleButtonGroup` (liste / grille) dans le header du
+  `Table.View`. La guideline précise que la bascule est une option par écran,
+  jamais le repli téléphone par défaut (qui reste la liste compacte).
 - Ajout de `CONTRIBUTING.md` — règle « une story peut détenir de l'état, jamais
   de la mécanique » (les API manquantes repérées en story s'absorbent dans le
   composant avant merge).
