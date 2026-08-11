@@ -134,6 +134,7 @@ const meta = {
               ]}
             />
             <ResponsiveDocSection />
+            <RowClickDoctrineSection />
             </>
           }
         />
@@ -457,12 +458,14 @@ export const RichCells: Story = {
 };
 
 /**
- * Lignes cliquables — chaque ligne appelle `onClick` (typiquement pour
- * ouvrir un détail dans un panel latéral). Le hover est plus prononcé
- * et le curseur passe en pointer.
+ * **`onClick` déprécié → préférez `href` / `onPress`.** Cette story montre le
+ * chemin historique : `onClick` sur `<tr>`, encore fonctionnel mais **invisible
+ * au clavier et aux lecteurs d'écran** (ni rôle, ni tabulation). Pour une ligne
+ * cliquable accessible, voir *Clickable rows — navigation (href)* et
+ * *— action (onPress)*.
  */
 export const ClickableRows: Story = {
-  name: "Clickable rows",
+  name: "Clickable rows (onClick — déprécié)",
   render: function ClickableStory(args) {
     const [openedRow, setOpenedRow] = useState<string | null>(null);
     return (
@@ -513,6 +516,151 @@ export const ClickableRows: Story = {
         </p>
       </div>
     );
+  },
+};
+
+// Ouvertures simulées (actions Storybook) pour les lignes interactives.
+const onNavigate = fn();
+const onOpenPanel = fn();
+
+/**
+ * **Lignes cliquables — navigation (`href`).** La cellule primaire (ici marquée
+ * `isRowAnchor`, la 1re colonne étant la sélection) rend un vrai `<a href>` :
+ * focusable, Ctrl/⌘+clic → nouvel onglet, URL au survol. Le clic ailleurs sur
+ * la ligne délègue au lien ; le clic sur la checkbox de sélection ne navigue
+ * pas. Le conteneur intercepte la navigation réelle (href relatifs) pour la
+ * story.
+ */
+export const ClickableRowLink: Story = {
+  name: "Clickable rows — navigation (href)",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <div
+      onClickCapture={(e) => {
+        const anchor = (e.target as Element).closest("a[href]");
+        if (anchor) {
+          e.preventDefault();
+          onNavigate(anchor.getAttribute("href"));
+        }
+      }}
+    >
+      <Table aria-label="Projets (navigation)">
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell width={40} isActionColumn>
+              Sélection
+            </TableHeaderCell>
+            <TableHeaderCell>Projet</TableHeaderCell>
+            <TableHeaderCell>Statut</TableHeaderCell>
+            <TableHeaderCell>Responsable</TableHeaderCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {ROWS.map((r) => (
+            <TableRow key={r.id} href={`/projets/${r.id}`}>
+              <TableCell>
+                <Checkbox aria-label={`Sélectionner ${r.title}`} />
+              </TableCell>
+              <TableCell isRowAnchor>{r.title}</TableCell>
+              <TableCell>
+                <Tag
+                  label={r.status}
+                  appearance={STATUS_APPEARANCE[r.status]}
+                  shape="rounded"
+                />
+              </TableCell>
+              <TableCell>{r.user}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    onNavigate.mockClear();
+
+    // 1) Cellule primaire = <a href> ; aucun <tr> n'est focusable.
+    const links = canvas.getAllByRole("link");
+    await expect(links[0]).toHaveAttribute("href", "/projets/1");
+    for (const row of canvas.getAllByRole("row")) {
+      await expect(row).not.toHaveAttribute("tabindex");
+    }
+
+    // 2) Le lien est dans l'ordre de tabulation.
+    links[0].focus();
+    await expect(links[0]).toHaveFocus();
+
+    // 3) Clic sur une autre cellule (Responsable) → délègue au lien.
+    await userEvent.click(canvas.getByText("John Doe"));
+    await expect(onNavigate).toHaveBeenCalledWith("/projets/1");
+
+    // 4) Clic sur la checkbox de sélection → NE navigue PAS.
+    onNavigate.mockClear();
+    await userEvent.click(
+      canvas.getByRole("checkbox", { name: /Sélectionner Alpha project/ }),
+    );
+    await expect(onNavigate).not.toHaveBeenCalled();
+  },
+};
+
+/**
+ * **Lignes cliquables — action (`onPress`).** La cellule primaire rend un vrai
+ * `<button>` : Espace/Entrée l'activent, le clic ailleurs sur la ligne délègue.
+ * À utiliser quand le détail s'ouvre en panneau sans quitter la liste.
+ */
+export const ClickableRowPress: Story = {
+  name: "Clickable rows — action (onPress)",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <Table aria-label="Pointages (panneau)">
+      <TableHead>
+        <TableRow>
+          <TableHeaderCell>Pointage</TableHeaderCell>
+          <TableHeaderCell>Agent</TableHeaderCell>
+          <TableHeaderCell>Statut</TableHeaderCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {ROWS.map((r) => (
+          <TableRow key={r.id} onPress={() => { onOpenPanel(r.id); }}>
+            <TableCell>{r.title}</TableCell>
+            <TableCell>{r.user}</TableCell>
+            <TableCell>
+              <Tag
+                label={r.status}
+                appearance={STATUS_APPEARANCE[r.status]}
+                shape="rounded"
+              />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    onOpenPanel.mockClear();
+
+    // Cellule primaire = <button> (au moins autant que de lignes).
+    const buttons = canvas.getAllByRole("button");
+    await expect(buttons.length).toBeGreaterThanOrEqual(ROWS.length);
+
+    // Entrée déclenche onPress.
+    buttons[0].focus();
+    await userEvent.keyboard("{Enter}");
+    await expect(onOpenPanel).toHaveBeenCalledWith("1");
+
+    // Espace aussi.
+    onOpenPanel.mockClear();
+    buttons[0].focus();
+    await userEvent.keyboard(" ");
+    await expect(onOpenPanel).toHaveBeenCalledWith("1");
+
+    // Clic sur une autre cellule → délègue au bouton.
+    onOpenPanel.mockClear();
+    await userEvent.click(canvas.getByText("John Doe"));
+    await expect(onOpenPanel).toHaveBeenCalledWith("1");
   },
 };
 
@@ -1305,6 +1453,147 @@ function ResponsiveDocSection(): ReactNode {
   );
 }
 
+// -----------------------------------------------------------------------
+// Section de doc « Que fait le clic sur une ligne ? » — doctrine d'ouverture,
+// injectée dans l'onglet Guidelines. Décide, par type d'objet, ce que fait le
+// clic : navigation (page) via `href`, ou consultation en panneau via `onPress`.
+
+const ROW_CLICK_DOCTRINE: Array<{
+  cas: string;
+  ouverture: string;
+  api: string;
+}> = [
+  {
+    cas: "L'objet a sa propre page où l'on travaille (Site, Agent).",
+    ouverture: "Navigation — page",
+    api: "href",
+  },
+  {
+    cas: "On vérifie un détail et on enchaîne dans la liste (Pointage, Vacation).",
+    ouverture: "Panneau latéral (Drawer)",
+    api: "onPress",
+  },
+  {
+    cas: "Action courte et ponctuelle.",
+    ouverture: "Modale — jamais pour consulter",
+    api: "bouton d'action dédié, pas le clic-ligne",
+  },
+];
+
+function RowClickDoctrineSection(): ReactNode {
+  const cellStyle = {
+    padding: "var(--space150) var(--space200)",
+    borderBottom: "1px solid var(--border-subtle)",
+    fontFamily: "var(--font-family-primary)",
+    fontSize: "var(--font-size-ui-xs)",
+    lineHeight: "var(--line-height-ui-m)",
+    color: "var(--text-default)",
+    textAlign: "start" as const,
+    verticalAlign: "top" as const,
+  };
+  const headStyle = {
+    ...cellStyle,
+    fontWeight: "var(--font-weight-semibold)",
+    background: "var(--background-neutral-subtlest-default)",
+  };
+  return (
+    <section style={{ maxWidth: 760, paddingTop: "var(--space400)" }}>
+      <h3
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "var(--space100)",
+          margin: 0,
+          fontFamily: "var(--font-family-primary)",
+          fontSize: "var(--font-size-ui-s)",
+          fontWeight: "var(--font-weight-semibold)",
+          color: "var(--text-default)",
+        }}
+      >
+        <span
+          style={{
+            width: 8,
+            height: 8,
+            borderRadius: "50%",
+            background: "var(--text-information)",
+            display: "inline-block",
+          }}
+        />
+        Que fait le clic sur une ligne ?
+      </h3>
+      <p
+        style={{
+          margin: "var(--space150) 0 var(--space200)",
+          fontFamily: "var(--font-family-primary)",
+          fontSize: "var(--font-size-ui-xs)",
+          lineHeight: "var(--line-height-ui-m)",
+          color: "var(--text-subtle)",
+        }}
+      >
+        Critère :{" "}
+        <strong>
+          « l&apos;utilisateur compare-t-il plusieurs éléments à la suite ? »
+        </strong>{" "}
+        Oui → panneau (on reste dans la liste), non → page. Toujours préférer{" "}
+        <code>href</code> à <code>onPress</code> + navigation programmatique :{" "}
+        <code>href</code> préserve le Ctrl/⌘+clic (nouvel onglet) et l&apos;URL au
+        survol, et rend la ligne activable au clavier.
+      </p>
+      <table
+        style={{
+          width: "100%",
+          borderCollapse: "collapse",
+          border: "1px solid var(--border-subtle)",
+          borderRadius: "var(--radius200)",
+          overflow: "hidden",
+        }}
+      >
+        <thead>
+          <tr>
+            <th style={headStyle}>Cas</th>
+            <th style={headStyle}>Ouverture</th>
+            <th style={headStyle}>API</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ROW_CLICK_DOCTRINE.map((row) => (
+            <tr key={row.api}>
+              <td style={cellStyle}>{row.cas}</td>
+              <td style={cellStyle}>{row.ouverture}</td>
+              <td style={cellStyle}>
+                <code>{row.api}</code>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <ul
+        style={{
+          margin: "var(--space200) 0 0",
+          paddingLeft: "var(--space300)",
+          display: "flex",
+          flexDirection: "column",
+          gap: "var(--space075)",
+          fontFamily: "var(--font-family-primary)",
+          fontSize: "var(--font-size-ui-xs)",
+          lineHeight: "var(--line-height-ui-m)",
+          color: "var(--text-subtle)",
+        }}
+      >
+        <li>
+          La modale n&apos;est pas un mode de consultation — réservée aux actions
+          courtes.
+        </li>
+        <li>Jamais d&apos;action destructrice au clic-ligne.</li>
+        <li>
+          Un même type d&apos;objet s&apos;ouvre de la même façon partout dans
+          l&apos;application.
+        </li>
+      </ul>
+    </section>
+  );
+}
+
 // =======================================================================
 // RECETTE — Table ↔ cartes (bascule liste / grille)
 // =======================================================================
@@ -1364,7 +1653,9 @@ function TableCardRecipe({ initialView }: { initialView: "table" | "cards" }) {
             </TableHead>
             <TableBody columnCount={4}>
               {ROWS.map((r) => (
-                <TableRow key={r.id}>
+                // Ligne = onPress (détail en panneau), cohérent avec la liste
+                // mobile jumelle : même type d'objet, même ouverture partout.
+                <TableRow key={r.id} onPress={() => { onOpenDetail(r.id); }}>
                   <TableCell>{r.title}</TableCell>
                   <TableCell>
                     <Tag

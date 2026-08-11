@@ -161,6 +161,175 @@ describe("Table", () => {
   });
 
   // -------------------------------------------------------------------
+  // TableRow — interactive (href / onPress) — D16
+  // -------------------------------------------------------------------
+
+  it("should render an <a href> in the primary cell without any role/tabindex on the <tr> (href)", () => {
+    render(
+      <Table aria-label="x">
+        <TableBody>
+          <TableRow href="/sites/1">
+            <TableCell>Site A</TableCell>
+            <TableCell>extra</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    const link = screen.getByRole("link", { name: "Site A" });
+    expect(link.tagName).toBe("A");
+    expect(link).toHaveAttribute("href", "/sites/1");
+    // Le <tr> reste une vraie ligne : ni rôle ni tabindex parasite.
+    const row = screen.getByRole("row");
+    expect(row).not.toHaveAttribute("role");
+    expect(row).not.toHaveAttribute("tabindex");
+  });
+
+  it("should render a <button> in the primary cell and call onPress (onPress)", () => {
+    const onPress = vi.fn();
+    render(
+      <Table aria-label="x">
+        <TableBody>
+          <TableRow onPress={onPress}>
+            <TableCell>Detail</TableCell>
+            <TableCell>extra</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    const btn = screen.getByRole("button", { name: "Detail" });
+    expect(btn.tagName).toBe("BUTTON");
+    fireEvent.click(btn);
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  it("should use the isRowAnchor cell as the anchor, not the first cell", () => {
+    render(
+      <Table aria-label="x">
+        <TableBody>
+          <TableRow href="/sites/1">
+            <TableCell>first</TableCell>
+            <TableCell isRowAnchor>anchor</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    expect(screen.getByRole("link")).toHaveTextContent("anchor");
+    expect(screen.getByText("first").closest("a")).toBeNull();
+  });
+
+  it("should delegate a click on a non-anchor cell to the anchor (onPress)", () => {
+    const onPress = vi.fn();
+    render(
+      <Table aria-label="x">
+        <TableBody>
+          <TableRow onPress={onPress}>
+            <TableCell>title</TableCell>
+            <TableCell>meta</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    fireEvent.click(screen.getByText("meta"));
+    expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  it("should NOT delegate when clicking an interactive element inside the row", () => {
+    const onPress = vi.fn();
+    render(
+      <Table aria-label="x">
+        <TableBody>
+          <TableRow onPress={onPress}>
+            <TableCell>title</TableCell>
+            <TableCell>
+              <button type="button">act</button>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    fireEvent.click(screen.getByText("act"));
+    expect(onPress).not.toHaveBeenCalled();
+  });
+
+  it("should NOT delegate while a text selection is active", () => {
+    const onPress = vi.fn();
+    const sel = vi.spyOn(window, "getSelection").mockReturnValue({
+      type: "Range",
+      toString: () => "texte sélectionné",
+    } as unknown as Selection);
+    render(
+      <Table aria-label="x">
+        <TableBody>
+          <TableRow onPress={onPress}>
+            <TableCell>title</TableCell>
+            <TableCell>meta</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    fireEvent.click(screen.getByText("meta"));
+    expect(onPress).not.toHaveBeenCalled();
+    sel.mockRestore();
+  });
+
+  it("should forward modifier keys to the anchor when delegating (href → nouvel onglet)", () => {
+    render(
+      <Table aria-label="x">
+        <TableBody>
+          <TableRow href="/sites/1">
+            <TableCell>Site A</TableCell>
+            <TableCell>extra</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    const link = screen.getByRole("link");
+    let forwardedCtrl: boolean | null = null;
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      forwardedCtrl = e.ctrlKey;
+    });
+    fireEvent.click(screen.getByText("extra"), { ctrlKey: true });
+    expect(forwardedCtrl).toBe(true);
+  });
+
+  it("should warn when both href and onPress are provided (href wins)", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    render(
+      <Table aria-label="x">
+        <TableBody>
+          <TableRow href="/x" onPress={() => undefined}>
+            <TableCell>a</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining("mutuellement exclusifs"),
+    );
+    expect(screen.getByRole("link")).toBeInTheDocument();
+    warn.mockRestore();
+  });
+
+  it("should still fire the deprecated onClick and warn in dev", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    const onClick = vi.fn();
+    render(
+      <Table aria-label="x">
+        <TableBody>
+          <TableRow onClick={onClick}>
+            <TableCell>tap</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("onClick"));
+    fireEvent.click(screen.getByText("tap"));
+    expect(onClick).toHaveBeenCalledTimes(1);
+    warn.mockRestore();
+  });
+
+  // -------------------------------------------------------------------
   // TableCell — align + width
   // -------------------------------------------------------------------
 

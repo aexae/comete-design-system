@@ -4,6 +4,7 @@
 // contexte `Density` — chaque `TableCell` / `TableHeaderCell` ajuste sa
 // hauteur, son padding et son typographie en conséquence.
 import type { CSSProperties, ReactElement, ReactNode } from "react";
+import { Children, cloneElement, createContext, isValidElement, useContext } from "react";
 import { VisuallyHidden } from "react-aria-components";
 import { Button } from "../Button/index.js";
 import { Icon } from "../Icon/index.js";
@@ -16,6 +17,11 @@ import {
   type Density,
 } from "../../contexts/DensityContext.js";
 import styles from "./Table.module.css";
+
+// `process` n'est pas typé ici (le DS build avec `types: []`, sans @types/node).
+// Déclaration locale minimale : le bundler du consommateur (Vite/webpack/Next)
+// remplace `process.env.NODE_ENV` par une constante à la compilation.
+declare const process: { env: { NODE_ENV?: string } };
 
 // -----------------------------------------------------------------------
 // Types publics
@@ -160,7 +166,28 @@ export interface TableRowProps {
   className?: string;
   /** Styles inline additionnels. */
   style?: CSSProperties;
-  /** Handler `onClick` optionnel pour rendre la ligne cliquable. */
+  /**
+   * Rend la ligne cliquable en **navigation**. La cellule primaire (première
+   * `TableCell`, ou celle marquée `isRowAnchor`) rend son contenu dans un vrai
+   * `<a href>` : focusable, activable au clavier, annoncé par les lecteurs
+   * d'écran, et compatible Ctrl/⌘+clic et clic molette (nouvel onglet). Le clic
+   * sur le reste de la ligne délègue à ce lien. Exclusif avec `onPress`.
+   */
+  href?: string;
+  /**
+   * Rend la ligne cliquable en **action** (ouvrir un panneau latéral, etc.).
+   * La cellule primaire rend son contenu dans un vrai `<button>`. Exclusif avec
+   * `href` — pour une navigation, toujours préférer `href` (ne pas priver
+   * l'utilisateur du Ctrl+clic / nouvel onglet).
+   */
+  onPress?: () => void;
+  /**
+   * @deprecated Utiliser `href` (navigation) ou `onPress` (action). Le
+   * `onClick` posé sur le `<tr>` ne crée ni rôle, ni ordre de tabulation, ni
+   * gestion clavier : la ligne cliquable reste invisible au clavier et aux
+   * lecteurs d'écran. Conservé temporairement pour compatibilité ; ignoré si
+   * `href`/`onPress` est fourni.
+   */
   onClick?: React.MouseEventHandler<HTMLTableRowElement>;
 }
 
@@ -200,6 +227,14 @@ export interface TableCellProps {
    * à une table compressée.
    */
   hideBelow?: TableHideBelow;
+  /**
+   * Désigne cette cellule comme **ancre de ligne** : quand la `TableRow` parente
+   * porte `href`/`onPress`, c'est le contenu de CETTE cellule qui devient le
+   * vrai `<a>`/`<button>` focusable. Par défaut (aucune cellule marquée), la
+   * **première** `TableCell` de la ligne fait office d'ancre. Sans `href`/`onPress`
+   * sur la ligne, la prop est sans effet.
+   */
+  isRowAnchor?: boolean;
 }
 
 export interface TableHeaderCellProps extends TableCellProps {
@@ -538,27 +573,166 @@ TableBody.displayName = "TableBody";
 // TableRow
 
 /**
+ * Contexte interne : une `TableRow` cliquable (`href`/`onPress`) transmet sa
+ * cible d'ouverture à la `TableCell` qui fait office d'ancre. `null` quand la
+ * ligne n'est pas interactive.
+ */
+interface RowAnchorContextValue {
+  href?: string;
+  onPress?: () => void;
+}
+const RowAnchorContext = createContext<RowAnchorContextValue | null>(null);
+
+/**
  * TableRow — une ligne de tableau. Applique hover + selected via
- * data-attributes ; le `onClick` optionnel rend la ligne cliquable
- * (souvent utilisé pour ouvrir un panel détail).
+ * data-attributes. `href` (navigation) ou `onPress` (action) rend la ligne
+ * cliquable de façon accessible : l'élément focusable réel (un vrai
+ * `<a>`/`<button>`) vit DANS la cellule primaire, pas sur le `<tr>` — la
+ * sémantique de table est préservée pour les lecteurs d'écran. Le clic sur le
+ * reste de la ligne est un confort souris qui délègue à cet élément.
  */
 export function TableRow({
   isSelected = false,
   children,
   className,
   style,
+  href,
+  onPress,
   onClick,
 }: TableRowProps): ReactElement {
+  const isInteractive = href !== undefined || onPress !== undefined;
+
+  if (process.env.NODE_ENV !== "production") {
+    if (href !== undefined && onPress !== undefined) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "TableRow : `href` et `onPress` sont mutuellement exclusifs — " +
+          "`href` (navigation) l'emporte.",
+      );
+    }
+    if (onClick) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        isInteractive
+          ? "TableRow : `onClick` est déprécié et ignoré quand `href`/`onPress` " +
+              "est fourni — n'en garder qu'un."
+          : "TableRow : `onClick` est déprécié — préférez `href` (navigation) ou " +
+              "`onPress` (action) pour une ligne cliquable accessible au clavier.",
+      );
+    }
+  }
+
+  // Ancre = la TableCell marquée `isRowAnchor`, sinon la première TableCell.
+  // On l'injecte par clonage (prop publique → type-safe) quand aucune n'est
+  // marquée. Déterministe (pas de compteur de rendu).
+  let renderedChildren: ReactNode = children;
+  if (isInteractive) {
+    const array = Children.toArray(children);
+    let firstCell = -1;
+    let explicitAnchor = -1;
+    let explicitCount = 0;
+    array.forEach((child, i) => {
+      if (isValidElement(child) && child.type === TableCell) {
+        if (firstCell === -1) firstCell = i;
+        if ((child.props as TableCellProps).isRowAnchor) {
+          explicitCount += 1;
+          if (explicitAnchor === -1) explicitAnchor = i;
+        }
+      }
+    });
+    const anchorIdx = explicitAnchor !== -1 ? explicitAnchor : firstCell;
+
+    if (process.env.NODE_ENV !== "production") {
+      if (anchorIdx === -1) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          "TableRow : `href`/`onPress` posé mais aucune `TableCell` éligible " +
+            "comme ancre (ligne vide ou cellule 100 % custom) — la ligne ne " +
+            "sera pas activable au clavier.",
+        );
+      }
+      if (explicitCount > 1) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          "TableRow : plusieurs cellules `isRowAnchor` — seule la première " +
+            "est utilisée comme ancre.",
+        );
+      }
+    }
+
+    if (anchorIdx !== -1 && explicitAnchor === -1) {
+      renderedChildren = array.map((child, i) =>
+        i === anchorIdx && isValidElement(child)
+          ? cloneElement(child as ReactElement<TableCellProps>, {
+              isRowAnchor: true,
+            })
+          : child,
+      );
+    }
+  }
+
+  // Clic de confort sur la ligne : délègue à l'ancre. Ignore (1) les clics sur
+  // un interactif interne — l'ancre elle-même, la checkbox de sélection, un
+  // bouton d'action — pour ne pas double-déclencher ; (2) les clics faits
+  // pendant une sélection de texte.
+  const hasTextSelection = (): boolean => {
+    const sel = typeof window !== "undefined" ? window.getSelection() : null;
+    return sel !== null && sel.type === "Range" && sel.toString().length > 0;
+  };
+  const hitsInternalInteractive = (target: Element): boolean =>
+    target.closest(
+      'a,button,input,select,textarea,label,[role="menuitem"],[role="checkbox"]',
+    ) !== null;
+
+  // Navigation (`href`) : rejoue le clic sur le lien en préservant les
+  // modificateurs → le navigateur ouvre nativement un onglet (Ctrl/⌘) ou une
+  // fenêtre (Shift), sans `preventDefault`, et laisse le routeur de l'app
+  // intercepter comme pour tout `<a>`. Action (`onPress`) : simple activation.
+  const delegateToAnchor = (e: React.MouseEvent<HTMLTableRowElement>): void => {
+    const anchor = e.currentTarget.querySelector<HTMLElement>("[data-row-anchor]");
+    if (anchor === null) return;
+    if (href !== undefined) {
+      anchor.dispatchEvent(
+        new MouseEvent("click", {
+          bubbles: true,
+          cancelable: true,
+          ctrlKey: e.ctrlKey,
+          metaKey: e.metaKey,
+          shiftKey: e.shiftKey,
+        }),
+      );
+    } else {
+      anchor.click();
+    }
+  };
+
+  const handleRowClick: React.MouseEventHandler<HTMLTableRowElement> = (e) => {
+    if (hitsInternalInteractive(e.target as Element) || hasTextSelection()) return;
+    delegateToAnchor(e);
+  };
+
+  // Clic molette (button 1) → nouvel onglet, navigation uniquement. Le
+  // navigateur n'ouvre pas d'onglet sur un clic synthétique : `window.open` est
+  // le recours documenté, réservé à ce cas précis.
+  const handleRowAuxClick: React.MouseEventHandler<HTMLTableRowElement> = (e) => {
+    if (e.button !== 1 || href === undefined) return;
+    if (hitsInternalInteractive(e.target as Element) || hasTextSelection()) return;
+    if (typeof window !== "undefined") window.open(href, "_blank", "noopener");
+  };
+
   return (
     <tr
       className={[styles.row, className].filter(Boolean).join(" ")}
       style={style}
       data-selected={isSelected || undefined}
-      data-clickable={onClick ? "true" : undefined}
+      data-clickable={isInteractive || onClick ? "true" : undefined}
       aria-selected={isSelected || undefined}
-      onClick={onClick}
+      onClick={isInteractive ? handleRowClick : onClick}
+      onAuxClick={isInteractive ? handleRowAuxClick : undefined}
     >
-      {children}
+      <RowAnchorContext.Provider value={isInteractive ? { href, onPress } : null}>
+        {renderedChildren}
+      </RowAnchorContext.Provider>
     </tr>
   );
 }
@@ -580,8 +754,36 @@ export function TableCell({
   style,
   colSpan,
   hideBelow,
+  isRowAnchor = false,
 }: TableCellProps): ReactElement {
   const mergedStyle: CSSProperties = width !== undefined ? { ...style, width } : (style ?? {});
+  const rowAnchor = useContext(RowAnchorContext);
+
+  // Cellule primaire d'une ligne cliquable → son contenu devient le vrai
+  // élément focusable. `<a href>` pour la navigation (href l'emporte si les
+  // deux sont fournis), sinon `<button>` pour l'action. Hérite du style texte
+  // de la cellule (pas d'apparence de lien bleu) ; c'est la ligne l'affordance.
+  const asAnchor = isRowAnchor && rowAnchor !== null;
+  let content: ReactNode = children;
+  if (asAnchor && rowAnchor.href !== undefined) {
+    content = (
+      <a href={rowAnchor.href} className={styles.rowAnchor} data-row-anchor="">
+        {children}
+      </a>
+    );
+  } else if (asAnchor && rowAnchor.onPress !== undefined) {
+    content = (
+      <button
+        type="button"
+        className={styles.rowAnchor}
+        data-row-anchor=""
+        onClick={rowAnchor.onPress}
+      >
+        {children}
+      </button>
+    );
+  }
+
   return (
     <td
       className={[styles.cell, className].filter(Boolean).join(" ")}
@@ -590,7 +792,7 @@ export function TableCell({
       data-hide-below={hideBelow}
       colSpan={colSpan}
     >
-      {children}
+      {content}
     </td>
   );
 }
