@@ -7,7 +7,7 @@
 // La recette (pas le composant) décide desktop/mobile via un matchMedia local.
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useEffect, useState } from "react";
-import type { ReactElement } from "react";
+import type { ReactElement, ReactNode } from "react";
 import { within, userEvent, expect } from "storybook/test";
 import {
   Page,
@@ -19,6 +19,7 @@ import {
   TableCell,
   Tag,
   type TagStatusColor,
+  type TableHideBelow,
   FilterChip,
   FilterChipRow,
   type FilterChipRowFacet,
@@ -111,6 +112,35 @@ const DATA: Vac[] = [
   { id: "10", agent: "ARMAND Fred", site: "Entrepôt B", prest: "Intervention", profil: "ADS CYNO", statut: "nonaffectee", horaires: "13:00 – 01:00" },
   { id: "11", agent: "BELLANGER Georgie", site: "Imperial Palace", prest: "Vacation", profil: "SSIAP1", statut: "encours", horaires: "06:30 – 18:30" },
   { id: "12", agent: "ANAIS Alfred", site: "Galerie Comète", prest: "Ronde", profil: "ADS", statut: "anomalie", horaires: "21:00 – 09:00" },
+];
+
+// Colonnes du tableau + priorités responsives (container queries via `responsive`
+// sur Table). Agent (identité) et Statut (état) ne sont JAMAIS masqués ; Profil
+// et Horaires (confort) partent en premiers (`lg`), Site et Prestation (contexte)
+// ensuite (`md`). Ouvrir le panneau rétrécit `.results` → les colonnes tombent.
+const COLUMNS: Array<{
+  key: keyof Vac;
+  label: string;
+  hideBelow?: TableHideBelow;
+  render?: (r: Vac) => ReactNode;
+}> = [
+  { key: "agent", label: "Agent" },
+  { key: "site", label: "Site", hideBelow: "md" },
+  { key: "prest", label: "Prestation", hideBelow: "md" },
+  { key: "profil", label: "Profil", hideBelow: "lg" },
+  {
+    key: "statut",
+    label: "Statut",
+    render: (r) => (
+      <Tag
+        label={STATUT_TAG[r.statut]?.label ?? r.statut}
+        color={STATUT_TAG[r.statut]?.color}
+        appearance="subtle"
+        shape="rounded"
+      />
+    ),
+  },
+  { key: "horaires", label: "Horaires", hideBelow: "lg" },
 ];
 
 type Applied = Partial<Record<FacetId, string[]>>;
@@ -287,33 +317,24 @@ function FiltersRecipe(): ReactElement {
       <div className={css["resCount"]} aria-live="polite">
         {results.length} résultat{results.length > 1 ? "s" : ""} · Août 2026
       </div>
-      <Table aria-label="Vacations">
+      <Table responsive aria-label="Vacations">
         <TableHead>
           <TableRow>
-            <TableHeaderCell>Agent</TableHeaderCell>
-            <TableHeaderCell>Site</TableHeaderCell>
-            <TableHeaderCell>Prestation</TableHeaderCell>
-            <TableHeaderCell>Profil</TableHeaderCell>
-            <TableHeaderCell>Statut</TableHeaderCell>
-            <TableHeaderCell>Horaires</TableHeaderCell>
+            {COLUMNS.map((c) => (
+              <TableHeaderCell key={c.key} hideBelow={c.hideBelow}>
+                {c.label}
+              </TableHeaderCell>
+            ))}
           </TableRow>
         </TableHead>
-        <TableBody columnCount={6} isEmpty={results.length === 0}>
+        <TableBody columnCount={COLUMNS.length} isEmpty={results.length === 0}>
           {results.map((r) => (
             <TableRow key={r.id}>
-              <TableCell>{r.agent}</TableCell>
-              <TableCell>{r.site}</TableCell>
-              <TableCell>{r.prest}</TableCell>
-              <TableCell>{r.profil}</TableCell>
-              <TableCell>
-                <Tag
-                  label={STATUT_TAG[r.statut]?.label ?? r.statut}
-                  color={STATUT_TAG[r.statut]?.color}
-                  appearance="subtle"
-                  shape="rounded"
-                />
-              </TableCell>
-              <TableCell>{r.horaires}</TableCell>
+              {COLUMNS.map((c) => (
+                <TableCell key={c.key} hideBelow={c.hideBelow}>
+                  {c.render ? c.render(r) : String(r[c.key])}
+                </TableCell>
+              ))}
             </TableRow>
           ))}
         </TableBody>
