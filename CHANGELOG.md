@@ -11,6 +11,17 @@ entre versions alpha.
 
 ### Ajouté
 
+- **Drawer — mode non modal** : nouvelle prop `isModal` (`true` par défaut,
+  non-breaking). En `isModal={false}` (placements `left`/`right` uniquement), le
+  Drawer devient un **panneau persistant en flux** — une `region` étiquetée
+  (`<section aria-label>`), sans overlay React Aria : pas de voile, pas de piège
+  à focus, pas de fermeture au clic extérieur / Échap, focus non volé à
+  l'ouverture. Le panneau occupe sa place dans la mise en page (le contenu
+  voisin se reflow) ; c'est au consommateur de le placer dans un conteneur
+  flex/grid. `swipeable` et `stacking` n'ont pas de sens en non modal (avertis
+  en développement) ; `placement` `top`/`bottom` retombe en modal (avec un
+  avertissement). Tous les usages modaux existants sont inchangés.
+
 - **Table — lignes interactives accessibles** : `TableRow` accepte `href`
   (navigation) ou `onPress` (action, p. ex. ouvrir un panneau). L'élément
   focusable réel est un vrai `<a href>` / `<button>` rendu **dans la cellule

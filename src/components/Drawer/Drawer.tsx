@@ -1,6 +1,6 @@
 // Drawer — Comète Design System
 // Panneau latéral accessible avec slide-in/out, stacking et swipe.
-import { useCallback, useId, useLayoutEffect, useRef } from "react";
+import { createContext, useCallback, useContext, useId, useLayoutEffect, useRef } from "react";
 import type { CSSProperties, ReactElement, ReactNode } from "react";
 import {
   Modal as AriaModal,
@@ -12,6 +12,17 @@ import { Button } from "../Button/Button.js";
 import { useDrawerStack } from "./DrawerContext.js";
 import type { DrawerPlacement, DrawerStacking } from "./DrawerContext.js";
 import styles from "./Drawer.module.css";
+
+// `process` n'est pas typé ici (le DS build avec `types: []`, sans @types/node).
+// Le bundler du consommateur remplace `process.env.NODE_ENV` à la compilation.
+declare const process: { env: { NODE_ENV?: string } };
+
+/**
+ * Contexte interne : indique aux sous-composants (DrawerHeader) si le Drawer
+ * parent est modal. En mode non modal il n'y a pas de `AriaDialog`, donc pas de
+ * slot `title` — le header rend alors un `<h2>` simple.
+ */
+const DrawerModeContext = createContext<boolean>(true);
 
 // -----------------------------------------------------------------------
 // Types publics
@@ -36,10 +47,31 @@ export interface DrawerProps {
    * (≥ 40px, souris ou tactile) ferme le drawer. @default false
    */
   swipeable?: boolean;
+  /**
+   * Rendu **modal** (défaut) ou **non modal**.
+   *
+   * - `true` (défaut) : overlay React Aria — voile, piège à focus, fermeture au
+   *   clic extérieur / Échap. Comportement historique, inchangé.
+   * - `false` : panneau **persistant en flux** (une `region` étiquetée, pas un
+   *   dialog) — pas de voile, pas de piège à focus, pas de fermeture au clic
+   *   extérieur / Échap, focus non volé à l'ouverture. Le panneau occupe sa
+   *   place dans la mise en page (le contenu voisin se reflow) : c'est au
+   *   **consommateur** de le placer dans un conteneur flex/grid. Ne s'applique
+   *   qu'à `placement: "left" | "right"` (warn + repli modal sinon). `swipeable`
+   *   et `stacking` n'ont pas de sens en non modal (warn en dev).
+   * @default true
+   */
+  isModal?: boolean;
   /** Contenu du drawer. */
   children: ReactNode;
   /** Label accessible (requis si pas de DrawerHeader). */
   "aria-label"?: string;
+  /**
+   * `id` du panneau — notamment pour le lier à son déclencheur via
+   * `aria-controls` (recommandé en mode non modal, où le bouton d'ouverture et
+   * le panneau doivent être liés).
+   */
+  id?: string;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -105,23 +137,55 @@ export function Drawer({
   size = "medium",
   stacking = "overlay",
   swipeable = false,
+  isModal = true,
   children,
   "aria-label": ariaLabel,
+  id,
   className,
   style,
-}: DrawerProps): ReactElement {
+}: DrawerProps): ReactElement | null {
   const uid = useId();
   const { stack, register, unregister } = useDrawerStack();
 
-  // Register/unregister in the drawer stack (layout effect for synchronous updates)
+  // Le mode non modal ne concerne que les panneaux latéraux (left/right) : en
+  // top/bottom un panneau persistant n'a pas de sens → repli modal.
+  const nonModal = !isModal && (placement === "left" || placement === "right");
+
+  if (process.env.NODE_ENV !== "production" && !isModal) {
+    if (placement === "top" || placement === "bottom") {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `Drawer : \`isModal={false}\` n'a de sens qu'en placement "left"/"right" ` +
+          `(reçu "${placement}") — repli en mode modal.`,
+      );
+    }
+    if (nonModal && swipeable) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "Drawer : `swipeable` est sans effet en mode non modal (le panneau " +
+          "persistant se replie via son bouton, pas au glissé).",
+      );
+    }
+    if (nonModal && stacking !== "overlay") {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "Drawer : `stacking` est sans effet en mode non modal (le panneau vit " +
+          "dans le flux, il ne s'empile pas au-dessus d'autres drawers).",
+      );
+    }
+  }
+
+  // Register/unregister in the drawer stack (layout effect for synchronous
+  // updates). Le mode non modal ne participe PAS au stack modal (voile partagé,
+  // offsets d'empilement) : il vit dans le flux.
   useLayoutEffect(() => {
-    if (isOpen) {
+    if (!nonModal && isOpen) {
       register({ id: uid, placement, stacking, size });
     } else {
       unregister(uid);
     }
     return () => unregister(uid);
-  }, [isOpen, uid, placement, stacking, size, register, unregister]);
+  }, [nonModal, isOpen, uid, placement, stacking, size, register, unregister]);
 
   // Only the first drawer in the stack renders the blanket
   const isFirstInStack = stack.length === 0 || stack[0]?.id === uid;
@@ -215,7 +279,39 @@ export function Drawer({
   // z-index increases per stack position so newer drawers appear on top
   const stackZIndex = myIndex >= 0 ? myIndex : 0;
 
+  // ------------------------------------------------------------------------
+  // Mode non modal : panneau persistant en flux. Pas d'overlay React Aria
+  // (donc pas de voile, pas de piège à focus, pas de fermeture Échap / clic
+  // extérieur, focus non volé). C'est une `region` étiquetée que le
+  // consommateur place dans un conteneur flex/grid pour que le voisin reflow.
+  if (nonModal) {
+    if (!isOpen) return null;
+    const nonModalClasses = [
+      styles.drawer,
+      styles[placement],
+      sizeClass,
+      styles.nonModal,
+      className,
+    ]
+      .filter(Boolean)
+      .join(" ");
+    return (
+      <DrawerModeContext.Provider value={false}>
+        <section
+          ref={drawerRef}
+          id={id}
+          className={nonModalClasses}
+          style={{ ...customSizeStyle, ...style }}
+          aria-label={ariaLabel}
+        >
+          {children}
+        </section>
+      </DrawerModeContext.Provider>
+    );
+  }
+
   return (
+    <DrawerModeContext.Provider value={true}>
     <AriaModalOverlay
       isOpen={isOpen}
       onOpenChange={onOpenChange}
@@ -226,6 +322,7 @@ export function Drawer({
       <AriaModal className={styles.modal} style={{ zIndex: `calc(var(--z-index-modal) + ${stackZIndex * 2})` }}>
         <AriaDialog
           ref={drawerRef}
+          id={id}
           className={drawerClasses}
           style={{
             ...customSizeStyle,
@@ -249,6 +346,7 @@ export function Drawer({
         </AriaDialog>
       </AriaModal>
     </AriaModalOverlay>
+    </DrawerModeContext.Provider>
   );
 }
 
@@ -277,10 +375,18 @@ export function DrawerHeader({
   className,
   style,
 }: DrawerHeaderProps): ReactElement {
+  // En mode non modal il n'y a pas d'`AriaDialog` parent, donc pas de slot
+  // `title` : on rend un `<h2>` simple. En modal, `AriaHeading slot="title"`
+  // étiquette automatiquement le dialog.
+  const isModal = useContext(DrawerModeContext);
   return (
     <div className={[styles.header, className].filter(Boolean).join(" ")} style={style}>
       {typeof children === "string" ? (
-        <AriaHeading slot="title" className={styles.title}>{children}</AriaHeading>
+        isModal ? (
+          <AriaHeading slot="title" className={styles.title}>{children}</AriaHeading>
+        ) : (
+          <h2 className={styles.title}>{children}</h2>
+        )
       ) : (
         children
       )}
