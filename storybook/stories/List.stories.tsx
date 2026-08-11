@@ -20,6 +20,85 @@ import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
+// Doc « Où va quoi » — règle leading (identité) / trailing (attribution + état).
+// Injectée dans l'onglet Guidelines, à la suite de GuidelinesFlat.
+
+function LeadingTrailingDoc() {
+  return (
+    <section
+      style={{
+        marginTop: "var(--space300)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--space150)",
+      }}
+    >
+      <Text size="medium" weight="bold" as="p">
+        Où va quoi
+      </Text>
+      <div
+        style={{
+          padding: "var(--space150) var(--space200)",
+          borderLeft: "var(--size050) solid var(--border-subtle)",
+          background: "var(--background-neutral-subtlest-default)",
+          borderRadius: "var(--radius100)",
+          display: "flex",
+          flexDirection: "column",
+          gap: "var(--space100)",
+        }}
+      >
+        <Text size="small" as="p">
+          <strong>
+            Le leading porte l&apos;identité de la ligne. Le trailing porte
+            l&apos;attribution et l&apos;état.
+          </strong>
+        </Text>
+        <Text size="small" color="subtle" as="p">
+          Un avatar <em>à gauche</em> répond à « qui est cette ligne ? » — la
+          ligne <em>est</em> l&apos;agent. Un avatar <em>à droite</em> répond à
+          « qui a fait ça ? » — la ligne est un évènement, l&apos;agent n&apos;en
+          est qu&apos;un attribut.
+        </Text>
+        <Text size="small" color="subtle" as="p">
+          <strong>Test</strong> : retire l&apos;avatar. Si tu ne sais plus de
+          quel objet parle la ligne, il va à gauche.
+        </Text>
+      </div>
+      <ul
+        style={{
+          margin: 0,
+          paddingLeft: "var(--space300)",
+          display: "flex",
+          flexDirection: "column",
+          gap: "var(--space075)",
+        }}
+      >
+        <li>
+          <Text size="small" color="subtle" as="span">
+            Le trailing est <strong>facultatif</strong> — une liste Contacts
+            n&apos;en a pas.
+          </Text>
+        </li>
+        <li>
+          <Text size="small" color="subtle" as="span">
+            <strong>Une seule information à droite</strong> : une ligne compacte
+            qui porte trois chiffres n&apos;est plus compacte.
+          </Text>
+        </li>
+        <li>
+          <Text size="small" color="subtle" as="span">
+            L&apos;affectation « quelle donnée à quel emplacement » appartient au{" "}
+            <strong>produit</strong>, pas au DS : le DS fournit les emplacements
+            (leading / titre / sous-titre / trailing), une <em>fiche
+            d&apos;anatomie</em> par liste décide du remplissage.
+          </Text>
+        </li>
+      </ul>
+    </section>
+  );
+}
+
+// -----------------------------------------------------------------------
 // Meta
 
 const meta = {
@@ -32,6 +111,7 @@ const meta = {
       page: () => (
         <DocsTabsPage
           guidelines={
+            <>
             <GuidelinesFlat
               doExample={{
                 example: (
@@ -87,13 +167,16 @@ const meta = {
               best={[
                 "`isBordered=false` par défaut (inséré dans un conteneur) ; l'activer pour un rendu autonome.",
                 "ListItemIcon / ListItemAvatar à largeur fixe pour aligner le texte.",
-                "ListItemSecondaryAction pour une action à droite, sans imbriquer d'interactif dans le bouton.",
+                "ListItemSecondaryAction pour une action à droite (interactif : Switch, Checkbox) — extraite du bouton. ListItemTrailing pour de l'attribution/état non-interactif (heure, Tag) — dans le bouton, la ligne reste un seul arrêt de tabulation.",
+                "Leading = identité de la ligne, trailing = attribution + état — voir « Où va quoi » ci-dessous.",
               ]}
               accessibility={[
                 "`List` porte un `aria-label` ; chaque item est une entité cohérente.",
                 "Action principale via ListItemButton ; ne pas imbriquer d'interactifs.",
               ]}
             />
+            <LeadingTrailingDoc />
+            </>
           }
         />
       ),
