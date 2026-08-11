@@ -214,10 +214,26 @@ existant continue de compiler à l'identique.
    indéchiffrable pour un utilisateur qui découvre l'écran. La couleur accélère
    la lecture d'un sens déjà écrit ; elle ne le remplace pas.
 
-4. **`subtle` par défaut.** `bold` est réservé à `critical` quand l'échec doit
-   ressortir dans une liste longue — un tag `bold` par ligne annule l'effet.
-   `outlined` sert la catégorisation, où le tag doit se distinguer des surfaces
-   colorées sans revendiquer d'urgence.
+4. **Discret par défaut ; l'emphase réservée à `critical`, et rare.**
+   L'emphase est un **budget**, pas un style : un élément accentué par ligne
+   annule l'effet recherché. Chaque composant applique cette règle avec le
+   levier dont il dispose :
+
+   | Composant | Levier | Réglage |
+   |---|---|---|
+   | `Tag` | `appearance` | `subtle` par défaut ; `bold` pour `critical` ; `outlined` pour la catégorisation |
+   | `Badge` | `importance` | `high` réservé à ce qui doit être vu |
+   | `IconTile` | — aucun | l'intensité tient à la taille et à la forme |
+   | `SectionMessage` | — aucun | calme par construction : un bloc dans le flux |
+   | `Banner` | — aucun | fort par construction : un bandeau qui interrompt |
+
+   Pour les composants sans levier, **choisir le composant, c'est choisir
+   l'intensité**. Corollaire à refuser explicitement : on ne promeut pas un
+   statut en `Banner` pour le faire remarquer — un bandeau interrompt la tâche
+   en cours, ce qu'un statut de ligne ne justifie jamais.
+
+   `outlined` est le seul réglage sans équivalent ailleurs : il est propre au
+   `Tag`, et sert la catégorisation.
 
 ### Hors périmètre — ce que cet ADR ne décide pas
 
