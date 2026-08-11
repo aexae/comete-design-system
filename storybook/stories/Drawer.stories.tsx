@@ -563,3 +563,55 @@ export const PersistentRight: Story = {
     });
   },
 };
+
+/**
+ * **Régression — body défilant, footer visible.** Contenu long + footer : le
+ * `DrawerBody` défile **en interne** (grâce à `min-height: 0` sur le flex), le
+ * footer ne se fait pas pousser hors du drawer. Bug antérieur à D13 touchant
+ * tous les drawers modaux à contenu long.
+ */
+export const ScrollableBody: Story = {
+  name: "Scrollable body (footer visible)",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <Drawer
+      isOpen
+      onOpenChange={() => undefined}
+      placement="right"
+      size="wide"
+      aria-label="Drawer défilant"
+    >
+      <DrawerHeader>Contenu long</DrawerHeader>
+      <DrawerBody>
+        {Array.from({ length: 60 }, (_, i) => (
+          <p key={i}>
+            Ligne {i + 1} — contenu qui déborde largement la hauteur du drawer.
+          </p>
+        ))}
+      </DrawerBody>
+      <DrawerFooter>
+        <Button color="comete">Action visible</Button>
+      </DrawerFooter>
+    </Drawer>
+  ),
+  play: async () => {
+    // Le drawer modal est portalisé dans document.body.
+    const dialog = document.body.querySelector<HTMLElement>(
+      '[role="dialog"][aria-label="Drawer défilant"]',
+    );
+    await expect(dialog).not.toBeNull();
+    const body = dialog!.querySelector<HTMLElement>('[class*="body"]');
+    const footer = dialog!.querySelector<HTMLElement>('[class*="footer"]');
+    await expect(body).not.toBeNull();
+    await expect(footer).not.toBeNull();
+
+    // Le fix : le body flex peut se comprimer sous son contenu.
+    await expect(getComputedStyle(body!).minHeight).toBe("0px");
+    // → il défile en interne (contenu plus haut que la zone visible)…
+    await expect(body!.scrollHeight).toBeGreaterThan(body!.clientHeight);
+    // …et le footer reste dans les limites du drawer (pas poussé dehors).
+    const dRect = dialog!.getBoundingClientRect();
+    const fRect = footer!.getBoundingClientRect();
+    await expect(Math.round(fRect.bottom)).toBeLessThanOrEqual(Math.round(dRect.bottom) + 1);
+  },
+};
