@@ -9,10 +9,10 @@ import {
   Card,
   Checkbox,
   Grid,
-  Icon,
   List,
   ListItemButton,
   ListItemText,
+  ListItemTrailing,
   Table,
   TableBody,
   TableCell,
@@ -30,7 +30,6 @@ import {
 import { useTableSelection } from "@aexae/comete-design-system/hooks";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
-import css from "./Table.stories.module.css";
 
 // -----------------------------------------------------------------------
 // Figma links
@@ -1078,7 +1077,7 @@ function EventStatusTag({ statut }: { statut?: EventStatus }) {
       label={statut}
       color={DEMO_STATUS_COLOR[statut]}
       appearance="subtle"
-      shape="rounded"
+      shape="square"
     />
   );
 }
@@ -1099,20 +1098,19 @@ const onOpenDetail = fn();
  * **Table → List (repli téléphone)** — sous ~600px de container, on ne compresse
  * pas la table : on bascule en `List`. Cette recette montre le **résultat du
  * repli** sur la donnée `MC_EVENTS` — la liste compacte « Main courante mobile »
- * (type d'événement en primary, site en secondary ; avatar + heure + tag de
- * statut + chevron en trailing).
+ * (type d'événement en primary, site en secondary ; avatar + heure au-dessus
+ * du tag de statut en trailing).
  *
  * Points de fidélité :
+ * - **Slots du DS, zéro CSS local** : le trailing est un `ListItemTrailing`
+ *   (frère flex dans le bouton), plus une pile de `<span>` bricolée dans le CSS
+ *   de la story. La recette ne porte plus aucune classe CSS locale.
  * - **Espacement sans filet** : `List gap="150"` — la séparation des lignes se
  *   fait par l'air, pas par des dividers.
- * - **Trailing uniforme** (contrepartie du sans-divider) : anatomie identique
- *   sur toutes les lignes — `[avatar] [heure] · [statut] · [chevron]` sur une
- *   grille à colonnes fixes. L'**emplacement du statut est réservé même sans
- *   statut** (colonne de largeur fixe, calée sur « Terminée ») ; un événement
- *   sans statut = *aucun statut* (log informationnel), pas une donnée manquante
- *   → emplacement vide. Les **chevrons sont alignés au pixel** et centrés sur la
- *   hauteur totale de l'item ; hauteur d'item constante (primary/secondary en
- *   ellipsis, 2 lignes).
+ * - **Ligne d'état réservée** (contrepartie du sans-divider) : portée par
+ *   `ListItemTrailing` (`min-height`), toutes les lignes gardent la même
+ *   hauteur, y compris celles sans statut — un événement sans statut = *aucun
+ *   statut* (log informationnel), pas une donnée manquante.
  * - **Fraîcheur** : heure seule aujourd'hui ; « Hier » / « Avant-hier » ; date
  *   courte au-delà (jamais l'heure seule pour un jour passé).
  * - **Cas éprouvés** : noms d'événements longs (ellipsis), « Ronde » répétés
@@ -1120,7 +1118,8 @@ const onOpenDetail = fn();
  *   sans statut.
  *
  * Clic vers le détail : `ListItemButton` (vrai bouton, clavier + focus natifs),
- * `onPress` (action Storybook), chevron **décoratif** en fin de ligne.
+ * `onPress` (action Storybook) sur toute la ligne — un seul arrêt de tabulation
+ * (le trailing est dans le bouton).
  *
  * **Guideline** : si les lignes de la table (large) sont cliquables, les items du
  * repli liste le sont aussi — **même destination, même geste** ; jamais le hover
@@ -1136,30 +1135,29 @@ export const TableToListRecipe: Story = {
         {MC_EVENTS.map((e) => (
           // Ligne cliquable = ListItemButton (bouton natif, clavier + focus).
           <ListItemButton key={e.id} onPress={() => { onOpenDetail(e.id); }}>
-            {/* Infos importantes : type (titre) + site (sous-titre). En fill
-                (flex:1) → pousse le trailing à droite. */}
+            {/* Infos importantes : type (titre) + site (sous-titre), en fill. */}
             <ListItemText primary={e.type} secondary={e.site} />
-            {/* Trailing DANS le bouton (frère flex du texte, pas un
-                ListItemSecondaryAction absolu) → texte en fill. Bloc vertical :
-                avatar + heure AU-DESSUS du statut ; chevron décoratif à droite.
-                Ligne de statut réservée (min-height) même sans tag. */}
-            <span className={css["trailing"]}>
-              <span className={css["trailingStack"]}>
-                <span className={css["trailingWhen"]}>
-                  <Avatar size="xsmall" initials={agentInitials(e.agent)} />
+            {/* Trailing = slot DS `ListItemTrailing` : frère flex DANS le bouton
+                (la ligne reste un seul arrêt de tabulation), empilement avatar +
+                heure AU-DESSUS du statut. La ligne d'état réservée et le calage
+                à droite sont portés par le composant → PLUS AUCUNE classe CSS
+                locale dans la recette. */}
+            <ListItemTrailing>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "var(--space050)",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <Avatar size="xsmall" initials={agentInitials(e.agent)} />
+                <Text size="xsmall" color="subtle" as="span">
                   {compactWhen(e)}
-                </span>
-                <span className={css["trailingStatus"]}>
-                  <EventStatusTag statut={e.statut} />
-                </span>
+                </Text>
               </span>
-              <Icon
-                icon="ChevronRight"
-                color="subtle"
-                size={16}
-                className={css["trailingChevron"]}
-              />
-            </span>
+              <EventStatusTag statut={e.statut} />
+            </ListItemTrailing>
           </ListItemButton>
         ))}
       </List>
@@ -1174,21 +1172,13 @@ export const TableToListRecipe: Story = {
     await userEvent.click(canvas.getByRole("button", { name: /Toiture terrasse/ }));
     await expect(onOpenDetail).toHaveBeenCalledOnce();
 
-    const spread = (values: number[]) =>
-      Math.max(...values) - Math.min(...values);
-
-    // 2) Tous les chevrons ont le même x (colonnes fixes du trailing).
-    const chevronX = Array.from(
-      list.querySelectorAll('[class*="trailingChevron"]'),
-    ).map((c) => c.getBoundingClientRect().x);
-    await expect(chevronX.length).toBe(MC_EVENTS.length);
-    await expect(spread(chevronX)).toBeLessThanOrEqual(1);
-
-    // 3) Hauteur d'item constante malgré le contenu variable.
+    // 2) Hauteur d'item constante malgré le contenu variable — la ligne d'état
+    //    réservée est désormais portée par `ListItemTrailing`, plus par du CSS
+    //    de story.
     const heights = Array.from(list.querySelectorAll("li")).map(
       (li) => li.getBoundingClientRect().height,
     );
-    await expect(spread(heights)).toBeLessThanOrEqual(1);
+    await expect(Math.max(...heights) - Math.min(...heights)).toBeLessThanOrEqual(1);
   },
 };
 
