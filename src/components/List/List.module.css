@@ -64,6 +64,17 @@
   padding-bottom: var(--space025);
 }
 
+/* En-tête collant (prop `isSticky`) — se colle au haut du plus proche ancêtre
+   scrollable. Fond OPAQUE obligatoire : sans lui, les lignes défileraient en
+   transparence sous le titre (et l'espace `gap` laisserait un filet visible).
+   `z-index` pour passer au-dessus des lignes. */
+.head[data-sticky] {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--background-surface-default);
+}
+
 /* --------------------------------------------------------------------------
    ListItem (et `.itemButton` en hérite via composition de classes)
    -------------------------------------------------------------------------- */

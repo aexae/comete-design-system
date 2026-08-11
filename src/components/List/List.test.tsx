@@ -108,6 +108,24 @@ describe("List", () => {
     expect(screen.queryAllByRole("listitem")).toHaveLength(0);
   });
 
+  it("should mark the head sticky via data-sticky when isSticky", () => {
+    const { container } = render(
+      <List aria-label="x">
+        <ListHead isSticky>Aujourd&apos;hui</ListHead>
+      </List>,
+    );
+    expect(container.querySelector('[data-sticky="true"]')).not.toBeNull();
+  });
+
+  it("should NOT be sticky by default", () => {
+    const { container } = render(
+      <List aria-label="x">
+        <ListHead>Aujourd&apos;hui</ListHead>
+      </List>,
+    );
+    expect(container.querySelector("[data-sticky]")).toBeNull();
+  });
+
   // -------------------------------------------------------------------
   // ListItem
   // -------------------------------------------------------------------

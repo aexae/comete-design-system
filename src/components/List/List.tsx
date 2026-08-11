@@ -82,6 +82,15 @@ export interface ListProps {
 export interface ListHeadProps {
   /** Texte du sous-titre de section. */
   children: ReactNode;
+  /**
+   * Rend l'en-tête de section **collant** (`position: sticky; top: 0`) dans le
+   * plus proche ancêtre scrollable — le titre du groupe reste visible pendant
+   * le défilement d'une longue section. **Opt-in** (et non par défaut) : un
+   * head collant par défaut s'activerait dans n'importe quel conteneur
+   * scrollable parent, souvent à contretemps. Un fond opaque est appliqué pour
+   * que les lignes ne transparaissent pas dessous. @default false
+   */
+  isSticky?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -328,6 +337,7 @@ List.displayName = "List";
  */
 export function ListHead({
   children,
+  isSticky = false,
   className,
   style,
 }: ListHeadProps): ReactElement {
@@ -336,6 +346,7 @@ export function ListHead({
       className={[styles.head, className].filter(Boolean).join(" ")}
       style={style}
       role="presentation"
+      data-sticky={isSticky || undefined}
     >
       {children}
     </li>
