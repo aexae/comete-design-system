@@ -1,0 +1,66 @@
+/* Recette Filtres (D13) — mise en page de la story.
+   La largeur du panneau (380px) est une valeur PRODUIT : elle vit ici (recette),
+   pas dans le composant Drawer. */
+
+.layout {
+  --filters-panel-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space200);
+  padding: var(--space200);
+}
+
+/* Rangée [résultats | panneau persistant]. Le panneau non modal est un enfant
+   flex : quand il est ouvert, les résultats se reflow à côté (jamais recouverts). */
+.body {
+  display: flex;
+  gap: var(--space200);
+  align-items: flex-start;
+}
+
+.results {
+  flex: 1;
+  min-width: 0;
+}
+
+.resCount {
+  padding: var(--space100) 0;
+  color: var(--text-subtle);
+  font-size: var(--font-size-ui-xs);
+}
+
+/* Sections de facettes empilées (même formulaire à plat desktop + mobile). */
+.section {
+  padding: var(--space150) 0;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space100);
+}
+
+.section:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space100);
+}
+
+.sectionTitle {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-subtle);
+}
+
+.footerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space100);
+  width: 100%;
+  justify-content: space-between;
+}
