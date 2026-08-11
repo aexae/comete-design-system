@@ -6,7 +6,9 @@ import { within, userEvent, expect, fn } from "storybook/test";
 import {
   Avatar,
   Button,
+  Card,
   Checkbox,
+  Grid,
   Icon,
   List,
   ListItemButton,
@@ -20,7 +22,10 @@ import {
   TableRow,
   Tag,
   Text,
+  ToggleButton,
+  ToggleButtonGroup,
   type TableSortDirection,
+  type TagStatusColor,
 } from "@aexae/comete-design-system/components";
 import { useTableSelection } from "@aexae/comete-design-system/hooks";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
@@ -120,7 +125,8 @@ const meta = {
                 "Une info masquée doit rester accessible : ligne cliquable vers le détail, ou vue cartes. Le tri d'une colonne masquée reste actif côté données — au consommateur de décider s'il le réinitialise.",
                 "Sous ~600px de container, ne compressez PAS la table : passez en liste compacte (`List` : titre en primary, site/méta en secondary, tag de statut + heure en trailing — le pattern Main courante mobile). Une table à 2 colonnes tronquées rend moins service qu'une ligne de liste dense. Les cartes sont la vue alternative (bascule liste/cartes), pas le repli par défaut. La story *Responsive columns* montre cette limite (600px = 2 colonnes étirées) ; la story *Table → List* montre le repli.",
                 "En liste (repli étroit), il n'y a plus d'en-têtes : le tri passe dans un contrôle « Trier par » au-dessus de la liste ; la sélection multiple par case par ligne ou appui long (à brancher sur le hook de sélection).",
-                "Statut → couleur (D12) : Actif → success, Pause → warning, Hors ligne → neutral. En méta compacte, l'heure seule aujourd'hui, et uniquement le jour (« Hier ») pour un jour antérieur — pour ne pas fausser la fraîcheur.",
+                "Statut → couleur : ne pas coder la couleur en dur dans la cellule ; passer par un mapping centralisé typé `TagStatusColor` et suivre l'axe de l'ADR 0002 — `neutral` (pas commencé) → `information` (en cours) → `warning` (action attendue) → `success` (état souhaité atteint) / `critical` (échec). Voir Foundation/Statut. Les mappings de cette page sont des démonstrations non normatives.",
+                "En méta compacte, l'heure seule aujourd'hui, et uniquement le jour (« Hier ») pour un jour antérieur — pour ne pas fausser la fraîcheur.",
               ]}
               accessibility={[
                 "En-têtes de colonnes (TableHeaderCell) reliés aux cellules ; navigation au clavier.",
@@ -986,14 +992,31 @@ export const ErrorState: Story = {
 
 type EventStatus = "En cours" | "Planifiée" | "Terminée" | "Absent";
 
-const EVENT_STATUS_COLOR: Record<
-  EventStatus,
-  "success" | "information" | "neutral" | "critical"
-> = {
-  "En cours": "success",
-  Planifiée: "information",
-  Terminée: "neutral",
-  Absent: "critical",
+// DONNÉES DE DÉMONSTRATION — NON NORMATIVES.
+// Map unique partagée par toutes les stories de cette page. Elle ne fait PAS
+// autorité : le mapping métier réel (« valeur d'API → libellé + couleur +
+// icône ») vit dans la couche produit, partagée entre applications et
+// versionnée séparément — pas dans le design system, qui ignore le domaine.
+// La seule chose normative est l'AXE de l'ADR 0002
+// (docs/adr/0002-semantique-couleurs-statut.md), dont ces valeurs sont une
+// application.
+//
+// Les deux jeux illustrent au passage les deux lectures de l'axe :
+//   - cycle de vie (Actif / En attente / Suspendu) — l'état souhaité est le
+//     régime nominal, donc `Actif` est `success` ;
+//   - progression (Planifiée → En cours → Terminée) — l'état souhaité est
+//     l'arrivée, donc l'étape courante est `information`, pas `success`.
+// D'où « Actif » en vert mais « En cours » en bleu : c'est voulu.
+const DEMO_STATUS_COLOR: Record<Row["status"] | EventStatus, TagStatusColor> = {
+  // Cycle de vie
+  Actif: "success", // régime nominal atteint
+  "En attente": "warning", // quelqu'un doit décider
+  Suspendu: "warning", // interruption réversible — PAS `critical`
+  // Progression
+  Planifiée: "neutral", // pas commencé
+  "En cours": "information", // étape transitoire — PAS `success`
+  Terminée: "success", // arrivée — PAS `neutral`
+  Absent: "critical", // ça a raté
 };
 
 interface McEvent {
@@ -1053,7 +1076,7 @@ function EventStatusTag({ statut }: { statut?: EventStatus }) {
   return (
     <Tag
       label={statut}
-      color={EVENT_STATUS_COLOR[statut]}
+      color={DEMO_STATUS_COLOR[statut]}
       appearance="subtle"
       shape="rounded"
     />
@@ -1277,3 +1300,154 @@ function ResponsiveDocSection(): ReactNode {
     </section>
   );
 }
+
+// =======================================================================
+// RECETTE — Table ↔ cartes (bascule liste / grille)
+// =======================================================================
+//
+// Mêmes données (ROWS) rendues soit en `Table`, soit en grille de `Card`, avec
+// un `ToggleButtonGroup` (icônes liste / grille) dans le header du
+// `Table.View`. La carte est un `Card` du DS (titre + 2 métadonnées + `Tag` de
+// statut) — aucune carte maison. Bascule via `useState`.
+
+function TableCardRecipe({ initialView }: { initialView: "table" | "cards" }) {
+  const [view, setView] = useState<"table" | "cards">(initialView);
+
+  return (
+    <div style={{ padding: "var(--space200)" }}>
+      <Table.View
+        header={
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "var(--space150)",
+              width: "100%",
+            }}
+          >
+            <Text weight="medium">Projets</Text>
+            <span style={{ flex: 1 }} />
+            <ToggleButtonGroup
+              aria-label="Affichage"
+              selectionMode="single"
+              selectedKeys={[view]}
+              onSelectionChange={(keys) => {
+                if (keys !== "all") {
+                  const k = [...keys][0];
+                  if (k === "table" || k === "cards") setView(k);
+                }
+              }}
+            >
+              <ToggleButton id="table" iconBefore="List" aria-label="Vue liste" />
+              <ToggleButton
+                id="cards"
+                iconBefore="Category"
+                aria-label="Vue cartes"
+              />
+            </ToggleButtonGroup>
+          </div>
+        }
+      >
+        {view === "table" ? (
+          <Table aria-label="Projets (vue liste)">
+            <TableHead>
+              <TableRow>
+                <TableHeaderCell>Projet</TableHeaderCell>
+                <TableHeaderCell>Statut</TableHeaderCell>
+                <TableHeaderCell>Responsable</TableHeaderCell>
+                <TableHeaderCell align="right">Code</TableHeaderCell>
+              </TableRow>
+            </TableHead>
+            <TableBody columnCount={4}>
+              {ROWS.map((r) => (
+                <TableRow key={r.id}>
+                  <TableCell>{r.title}</TableCell>
+                  <TableCell>
+                    <Tag
+                      label={r.status}
+                      color={DEMO_STATUS_COLOR[r.status]}
+                      appearance="subtle"
+                      shape="rounded"
+                    />
+                  </TableCell>
+                  <TableCell>{r.user}</TableCell>
+                  <TableCell align="right">{r.key}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="300">
+            {ROWS.map((r) => (
+              <Card key={r.id} appearance="outlined">
+                {/* Card = surface nue (aucun padding interne) → on pade le
+                    contenu ici. */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "var(--space100)",
+                    padding: "var(--space200)",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: "var(--space150)",
+                    }}
+                  >
+                    <Text weight="medium">{r.title}</Text>
+                    <Tag
+                      label={r.status}
+                      color={DEMO_STATUS_COLOR[r.status]}
+                      appearance="subtle"
+                      shape="rounded"
+                    />
+                  </div>
+                  <Text size="small" color="subtle">
+                    Responsable · {r.user}
+                  </Text>
+                  <Text size="small" color="subtle">
+                    Code · {r.key}
+                  </Text>
+                </div>
+              </Card>
+            ))}
+          </Grid>
+        )}
+      </Table.View>
+    </div>
+  );
+}
+
+/**
+ * **Recette — Table ↔ cartes (bascule)** — mêmes données en `Table` ou en
+ * grille de `Card`, bascule via le `ToggleButtonGroup` (liste / grille) du
+ * header. Démarre en vue liste.
+ *
+ * ⚠️ **La bascule liste ↔ cartes est une option par écran, jamais le repli
+ * téléphone par défaut.** Sous ~600px, le repli par défaut est la **liste
+ * compacte** (cf. recette `Table → List`) : une liste de 200 sites en cartes
+ * est inutilisable. Les cartes sont une vue alternative choisie écran par
+ * écran. Décision du doc d'audit — ne pas la rouvrir.
+ */
+export const TableCardsToggleRecipe: Story = {
+  name: "Recette — Table ↔ cartes (bascule)",
+  parameters: { controls: { disable: true }, layout: "fullscreen" },
+  render: () => <TableCardRecipe initialView="table" />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // Départ en vue liste → un tableau est présent.
+    await expect(canvas.getByRole("table")).toBeInTheDocument();
+    // Bascule en vue cartes → plus de tableau, les cartes apparaissent.
+    // (ToggleButtonGroup en selectionMode single = radiogroup → rôle "radio".)
+    await userEvent.click(canvas.getByRole("radio", { name: "Vue cartes" }));
+    await expect(canvas.queryByRole("table")).not.toBeInTheDocument();
+    await expect(canvas.getByText("Alpha project")).toBeInTheDocument();
+    // Retour en vue liste.
+    await userEvent.click(canvas.getByRole("radio", { name: "Vue liste" }));
+    await expect(canvas.getByRole("table")).toBeInTheDocument();
+  },
+};
