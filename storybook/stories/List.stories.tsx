@@ -1,6 +1,7 @@
 // List — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
+import { within, expect } from "storybook/test";
 import {
   Avatar,
   Badge,
@@ -13,6 +14,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  ListItemTrailing,
   Tag,
   Text,
 } from "@aexae/comete-design-system/components";
@@ -169,6 +171,7 @@ const meta = {
                 "ListItemIcon / ListItemAvatar à largeur fixe pour aligner le texte.",
                 "ListItemSecondaryAction pour une action à droite (interactif : Switch, Checkbox) — extraite du bouton. ListItemTrailing pour de l'attribution/état non-interactif (heure, Tag) — dans le bouton, la ligne reste un seul arrêt de tabulation.",
                 "Leading = identité de la ligne, trailing = attribution + état — voir « Où va quoi » ci-dessous.",
+                "`overline` (surtitre) : réservé à un type COURT et énumérable (« Ronde », « Contrôle d'accès ») ; jamais une phrase libre, qu'il tronquerait de façon illisible. Question ouverte côté donnée : si un champ mélange type court et intitulé libre, il manque un champ — arbitrage produit, pas DS.",
               ]}
               accessibility={[
                 "`List` porte un `aria-label` ; chaque item est une entité cohérente.",
@@ -370,14 +373,18 @@ export const WithTrailing: Story = {
           <Icon icon="Email" />
         </ListItemIcon>
         <ListItemText primary="Boîte de réception" />
-        <Badge label="12" appearance="information" importance="high" />
+        <ListItemTrailing>
+          <Badge label="12" appearance="information" importance="high" />
+        </ListItemTrailing>
       </ListItemButton>
       <ListItemButton>
         <ListItemIcon>
           <Icon icon="Star" />
         </ListItemIcon>
         <ListItemText primary="Favoris" />
-        <Tag label="Nouveau" appearance="subtle" />
+        <ListItemTrailing>
+          <Tag label="Nouveau" appearance="subtle" />
+        </ListItemTrailing>
       </ListItemButton>
       <ListItemButton>
         <ListItemIcon>
@@ -736,5 +743,224 @@ export const ErrorState: Story = {
       error="Impossible de charger les membres."
       onRetry={noop}
     />
+  ),
+};
+
+/**
+ * **Surtitre (overline)** — un type court en capitales au-dessus du titre.
+ * Réservé à un type **court et énumérable** ; la 3ᵉ ligne (intitulé libre)
+ * montre pourquoi une phrase n'y a pas sa place — elle se tronque et appartient
+ * au titre. Le prop est livré ; la recette Main courante n'y bascule pas tant
+ * que la nature du champ `type` n'est pas tranchée côté produit (cf. guidelines).
+ * Les stories sans surtitre (Default, With secondary text…) sont le contre-point.
+ */
+export const Overline: Story = {
+  name: "Overline (surtitre)",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <List isBordered aria-label="Main courante">
+      <ListItem>
+        <ListItemText
+          overline="Ronde"
+          primary="Toiture terrasse"
+          secondary="Hall d'accueil · 14:05"
+        />
+      </ListItem>
+      <ListItem>
+        <ListItemText
+          overline="Contrôle d'accès"
+          primary="Tourniquet Est"
+          secondary="Zone livraison · 11:30"
+        />
+      </ListItem>
+      <ListItem>
+        {/* Cas limite : un intitulé libre en surtitre se tronque mal — il
+            appartient au titre, pas au surtitre. */}
+        <ListItemText
+          overline="Intrusion détectée en zone de stockage réfrigérée"
+          primary="Entrepôt B"
+          secondary="12:58"
+        />
+      </ListItem>
+    </List>
+  ),
+  play: async ({ canvasElement }) => {
+    // Le surtitre est tronqué sur UNE seule ligne (nowrap + ellipse) — un
+    // intitulé libre n'y déborde pas verticalement.
+    const overlines = canvasElement.querySelectorAll('[class*="itemTextOverline"]');
+    await expect(overlines).toHaveLength(3);
+    const long = overlines[overlines.length - 1] as HTMLElement;
+    const cs = getComputedStyle(long);
+    await expect(cs.whiteSpace).toBe("nowrap");
+    await expect(cs.overflow).toBe("hidden");
+    await expect(cs.textOverflow).toBe("ellipsis");
+  },
+};
+
+// -----------------------------------------------------------------------
+// §8 — Fixture Agents : le cas limite qui valide le slot LIBRE.
+// Avatar d'identité en leading, nom en titre, matricule · contrat en
+// sous-titre, UNE métrique (Delta) en trailing, AUCUN statut.
+
+interface Agent {
+  id: string;
+  name: string;
+  matricule: string;
+  contrat: string;
+  delta: string;
+}
+
+const AGENTS: Agent[] = [
+  { id: "1", name: "DUPONT Marie", matricule: "MAT-0142", contrat: "CDI 35h", delta: "+2h30" },
+  { id: "2", name: "MARTIN Bob", matricule: "MAT-0198", contrat: "CDD 28h", delta: "-1h00" },
+  { id: "3", name: "CHEN Alice", matricule: "MAT-0231", contrat: "CDI 39h", delta: "+0h15" },
+  { id: "4", name: "CLAIRE Sophie", matricule: "MAT-0087", contrat: "Intérim", delta: "-3h45" },
+];
+
+const agentInitials = (name: string) =>
+  name
+    .split(" ")
+    .map((p) => p.charAt(0))
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+/**
+ * **Agents — le slot libre à l'épreuve.** Avatar d'**identité** en leading (la
+ * ligne EST l'agent → grand avatar), nom en titre, `matricule · contrat` en
+ * sous-titre, et **une seule** métrique (Delta) en trailing — **aucun statut**.
+ * C'est le cas qui prouve que `ListItemTrailing` n'est pas typé « statut ».
+ */
+export const AgentsList: Story = {
+  name: "Agents (slot libre, une métrique)",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <List isBordered aria-label="Agents">
+      {AGENTS.map((a) => (
+        <ListItemButton key={a.id}>
+          <ListItemAvatar>
+            <Avatar size="medium" initials={agentInitials(a.name)} />
+          </ListItemAvatar>
+          <ListItemText
+            primary={a.name}
+            secondary={`${a.matricule} · ${a.contrat}`}
+          />
+          <ListItemTrailing>
+            <Text size="small" weight="medium" as="span">
+              {a.delta}
+            </Text>
+          </ListItemTrailing>
+        </ListItemButton>
+      ))}
+    </List>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // Le trailing (Delta) est DANS le bouton → une ligne = un seul arrêt de
+    // tabulation : autant de boutons que d'agents, aucun focus supplémentaire.
+    const buttons = canvas.getAllByRole("button");
+    await expect(buttons).toHaveLength(AGENTS.length);
+    await expect(buttons[0]).toHaveTextContent("+2h30");
+  },
+};
+
+/**
+ * **Pourquoi une seule métrique.** Trois métriques entassées à droite : la
+ * ligne n'est plus scannable. Le produit choisit LA métrique qui compte ; les
+ * autres vont dans le détail.
+ */
+export const AgentsThreeMetrics: Story = {
+  name: "Agents — 3 métriques (à éviter)",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <List isBordered aria-label="Agents (trop de métriques)">
+      {AGENTS.map((a) => (
+        <ListItem key={a.id}>
+          <ListItemAvatar>
+            <Avatar size="medium" initials={agentInitials(a.name)} />
+          </ListItemAvatar>
+          <ListItemText primary={a.name} secondary={a.matricule} />
+          <ListItemTrailing>
+            <Text size="xsmall" color="subtle" as="span">
+              Payables 35h
+            </Text>
+            <Text size="xsmall" color="subtle" as="span">
+              Indispo ±2
+            </Text>
+            <Text size="small" weight="medium" as="span">
+              {a.delta}
+            </Text>
+          </ListItemTrailing>
+        </ListItem>
+      ))}
+    </List>
+  ),
+};
+
+/**
+ * **Ligne d'état réservée.** Une ligne avec état, une sans. Grâce au
+ * `min-height` réservé dans `ListItemTrailing` (§2), les deux gardent la MÊME
+ * hauteur — le rythme tient sans filet.
+ */
+export const ReservedTrailingLine: Story = {
+  name: "Ligne d'état réservée",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <List isBordered aria-label="Rythme réservé">
+      <ListItemButton>
+        <ListItemText primary="Avec état" secondary="Site A" />
+        <ListItemTrailing>
+          <Text size="xsmall" color="subtle" as="span">
+            14:05
+          </Text>
+          <Tag label="En cours" color="information" appearance="subtle" />
+        </ListItemTrailing>
+      </ListItemButton>
+      <ListItemButton>
+        <ListItemText primary="Sans état" secondary="Site B" />
+        <ListItemTrailing>
+          <Text size="xsmall" color="subtle" as="span">
+            13:40
+          </Text>
+        </ListItemTrailing>
+      </ListItemButton>
+    </List>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const rows = canvas.getAllByRole("listitem");
+    const heights = rows.map((r) => Math.round(r.getBoundingClientRect().height));
+    // La ligne réservée maintient la hauteur : avec état == sans état.
+    await expect(Math.max(...heights) - Math.min(...heights)).toBeLessThanOrEqual(1);
+  },
+};
+
+/**
+ * **Anatomie** — les emplacements d'un item, légendés. Le DS fournit les
+ * emplacements (leading / surtitre / titre / sous-titre / trailing) ; quelle
+ * donnée va où appartient au produit (cf. guidelines « Où va quoi »).
+ */
+export const ListAnatomy: Story = {
+  name: "Anatomie",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <List isBordered aria-label="Anatomie d'un item">
+      <ListItem>
+        <ListItemAvatar>
+          <Avatar size="medium" initials="LE" />
+        </ListItemAvatar>
+        <ListItemText
+          overline="SURTITRE"
+          primary="Titre (primary)"
+          secondary="Sous-titre (secondary)"
+        />
+        <ListItemTrailing>
+          <Text size="xsmall" color="subtle" as="span">
+            trailing
+          </Text>
+          <Tag label="état" color="neutral" appearance="subtle" />
+        </ListItemTrailing>
+      </ListItem>
+    </List>
   ),
 };

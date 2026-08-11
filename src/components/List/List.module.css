@@ -64,6 +64,17 @@
   padding-bottom: var(--space025);
 }
 
+/* En-tête collant (prop `isSticky`) — se colle au haut du plus proche ancêtre
+   scrollable. Fond OPAQUE obligatoire : sans lui, les lignes défileraient en
+   transparence sous le titre (et l'espace `gap` laisserait un filet visible).
+   `z-index` pour passer au-dessus des lignes. */
+.head[data-sticky] {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--background-surface-default);
+}
+
 /* --------------------------------------------------------------------------
    ListItem (et `.itemButton` en hérite via composition de classes)
    -------------------------------------------------------------------------- */
@@ -249,6 +260,21 @@
   overflow: hidden;
 }
 
+/* Surtitre (overline) : petit, capitales, sourd, tronqué sur une ligne. Même
+   traitement typographique que `.head` (le surtitre est un « head » de ligne). */
+.itemTextOverline {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxs);
+  line-height: var(--line-height-ui-xxs);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-normal);
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .itemTextPrimary {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-s);
@@ -280,6 +306,17 @@
   white-space: normal;
   overflow: visible;
   text-overflow: clip;
+}
+
+/* `lineClamp` : borne le primary à N lignes puis ellipse. Le nombre de lignes
+   (`-webkit-line-clamp`) est posé en style inline (valeur dynamique). Déclaré
+   APRÈS le mode wrap pour gagner sur lui (même spécificité) quand les deux
+   coexistent : la borne prime sur le wrap illimité. */
+.itemTextPrimary[data-clamp] {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+  overflow: hidden;
 }
 
 /* Texte secondaire en disabled : reste sourd. */

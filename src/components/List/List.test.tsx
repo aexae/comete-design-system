@@ -108,6 +108,24 @@ describe("List", () => {
     expect(screen.queryAllByRole("listitem")).toHaveLength(0);
   });
 
+  it("should mark the head sticky via data-sticky when isSticky", () => {
+    const { container } = render(
+      <List aria-label="x">
+        <ListHead isSticky>Aujourd&apos;hui</ListHead>
+      </List>,
+    );
+    expect(container.querySelector('[data-sticky="true"]')).not.toBeNull();
+  });
+
+  it("should NOT be sticky by default", () => {
+    const { container } = render(
+      <List aria-label="x">
+        <ListHead>Aujourd&apos;hui</ListHead>
+      </List>,
+    );
+    expect(container.querySelector("[data-sticky]")).toBeNull();
+  });
+
   // -------------------------------------------------------------------
   // ListItem
   // -------------------------------------------------------------------
@@ -210,6 +228,47 @@ describe("List", () => {
     );
     expect(screen.getByText("Primary")).toBeInTheDocument();
     expect(screen.getByText("Secondary")).toBeInTheDocument();
+  });
+
+  it("should render an overline above the primary text", () => {
+    const { container } = render(
+      <List aria-label="x">
+        <ListItem>
+          <ListItemText overline="Ronde" primary="Toiture terrasse" />
+        </ListItem>
+      </List>,
+    );
+    expect(screen.getByText("Ronde")).toBeInTheDocument();
+    expect(screen.getByText("Toiture terrasse")).toBeInTheDocument();
+    // Le surtitre est rendu AVANT le primary dans le flux.
+    const text = container.querySelector('[class*="itemText"]');
+    const kids = text ? Array.from(text.children) : [];
+    expect(kids[0]?.textContent).toBe("Ronde");
+    expect(kids[1]?.textContent).toBe("Toiture terrasse");
+  });
+
+  it("should clamp the primary to N lines when lineClamp is set", () => {
+    const { container } = render(
+      <List aria-label="x">
+        <ListItem>
+          <ListItemText primary="Un titre d'incident très long" lineClamp={2} />
+        </ListItem>
+      </List>,
+    );
+    const primary = container.querySelector<HTMLElement>('[data-clamp="true"]');
+    expect(primary).not.toBeNull();
+    expect(primary?.getAttribute("style") ?? "").toMatch(/line-clamp:\s*2/);
+  });
+
+  it("should NOT set data-clamp when lineClamp is omitted", () => {
+    const { container } = render(
+      <List aria-label="x">
+        <ListItem>
+          <ListItemText primary="Titre court" />
+        </ListItem>
+      </List>,
+    );
+    expect(container.querySelector('[data-clamp]')).toBeNull();
   });
 
   it("should render only primary when secondary is omitted", () => {

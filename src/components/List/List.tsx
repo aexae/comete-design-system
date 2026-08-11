@@ -82,6 +82,15 @@ export interface ListProps {
 export interface ListHeadProps {
   /** Texte du sous-titre de section. */
   children: ReactNode;
+  /**
+   * Rend l'en-tête de section **collant** (`position: sticky; top: 0`) dans le
+   * plus proche ancêtre scrollable — le titre du groupe reste visible pendant
+   * le défilement d'une longue section. **Opt-in** (et non par défaut) : un
+   * head collant par défaut s'activerait dans n'importe quel conteneur
+   * scrollable parent, souvent à contretemps. Un fond opaque est appliqué pour
+   * que les lignes ne transparaissent pas dessous. @default false
+   */
+  isSticky?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -129,6 +138,13 @@ export interface ListItemIconProps {
 
 export interface ListItemTextProps {
   /**
+   * Surtitre affiché **au-dessus** du `primary` : petit, capitales, couleur
+   * sourde, tronqué sur **une seule ligne**. Réservé à un **type court et
+   * énumérable** (« Ronde », « Contrôle d'accès ») — jamais une phrase libre,
+   * qu'un surtitre tronquerait de façon illisible.
+   */
+  overline?: ReactNode;
+  /**
    * Texte principal. Si omis, on peut passer le contenu via `children`
    * pour un format libre (paragraphes, badges, etc.).
    */
@@ -141,6 +157,15 @@ export interface ListItemTextProps {
    * @default false
    */
   wrap?: boolean;
+  /**
+   * Borne le `primary` à N lignes puis tronque à l'ellipse
+   * (`-webkit-line-clamp`). Distinct de `wrap` (nombre de lignes **illimité**,
+   * sans troncature) : `lineClamp={2}` est le compromis pour les **titres
+   * longs** — souvent les incidents — qu'une troncature à une seule ligne
+   * pénaliserait précisément. Cohérent avec `maxLines` du composant `Text`.
+   * Prioritaire sur `wrap` pour le primary.
+   */
+  lineClamp?: number;
   /** Alternative à `primary` pour un contenu libre. */
   children?: ReactNode;
   /** Classe CSS additionnelle. */
@@ -312,6 +337,7 @@ List.displayName = "List";
  */
 export function ListHead({
   children,
+  isSticky = false,
   className,
   style,
 }: ListHeadProps): ReactElement {
@@ -320,6 +346,7 @@ export function ListHead({
       className={[styles.head, className].filter(Boolean).join(" ")}
       style={style}
       role="presentation"
+      data-sticky={isSticky || undefined}
     >
       {children}
     </li>
@@ -459,9 +486,11 @@ ListItemIcon.displayName = "ListItemIcon";
  * Alternative : utiliser `children` pour un contenu libre.
  */
 export function ListItemText({
+  overline,
   primary,
   secondary,
   wrap = false,
+  lineClamp,
   children,
   className,
   style,
@@ -472,8 +501,21 @@ export function ListItemText({
       style={style}
       data-wrap={wrap || undefined}
     >
+      {overline !== undefined && (
+        <span className={styles.itemTextOverline}>{overline}</span>
+      )}
       {primary !== undefined && (
-        <span className={styles.itemTextPrimary}>{primary}</span>
+        <span
+          className={styles.itemTextPrimary}
+          data-clamp={lineClamp !== undefined ? "true" : undefined}
+          style={
+            lineClamp !== undefined
+              ? { WebkitLineClamp: lineClamp }
+              : undefined
+          }
+        >
+          {primary}
+        </span>
       )}
       {secondary !== undefined && (
         <span className={styles.itemTextSecondary}>{secondary}</span>
@@ -489,8 +531,16 @@ ListItemText.displayName = "ListItemText";
 // ListItemAvatar — wrapper d'avatar
 
 /**
- * ListItemAvatar — slot avatar au début d'un item. Largeur fixe pour
- * aligner les textes sur plusieurs items.
+ * ListItemAvatar — slot avatar au début d'un item (leading). La **taille** est
+ * portée par l'`<Avatar size>` enfant, pas par ce slot : il couvre donc les
+ * deux usages sans réglage propre —
+ * - **identité** (la ligne *est* la personne, ex. liste Agents) : avatar plus
+ *   grand (`size="medium"` / `"large"`) ;
+ * - **attribution** (la ligne est un évènement, la personne n'en est qu'un
+ *   attribut, ex. Main courante) : avatar petit (`size="xsmall"`).
+ *
+ * Un avatar d'attribution va à **droite** (dans un `ListItemTrailing`), pas
+ * ici : le leading porte l'identité de la ligne (cf. guidelines « Où va quoi »).
  */
 export function ListItemAvatar({
   children,

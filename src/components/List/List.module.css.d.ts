@@ -7,6 +7,7 @@ declare const styles: {
   readonly "itemIcon": string;
   readonly "itemSecondaryAction": string;
   readonly "itemText": string;
+  readonly "itemTextOverline": string;
   readonly "itemTextPrimary": string;
   readonly "itemTextSecondary": string;
   readonly "itemTrailing": string;
