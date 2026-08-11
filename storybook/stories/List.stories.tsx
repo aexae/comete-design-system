@@ -24,7 +24,7 @@ import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat, SectionHeading } from "./_guidelines";
 
 // -----------------------------------------------------------------------
-// Doc « Où va quoi » — règle leading (identité) / trailing (attribution + état).
+// Doc « Placement du contenu » — règle leading (identité) / trailing (attribution + état).
 // Injectée dans l'onglet Guidelines, à la suite de GuidelinesFlat.
 
 function LeadingTrailingDoc() {
@@ -919,7 +919,7 @@ export const ReservedTrailingLine: Story = {
 /**
  * **Anatomie** — les emplacements d'un item, légendés. Le DS fournit les
  * emplacements (leading / surtitre / titre / sous-titre / trailing) ; quelle
- * donnée va où appartient au produit (cf. guidelines « Où va quoi »).
+ * donnée va où appartient au produit (cf. guidelines « Placement du contenu »).
  */
 export const ListAnatomy: Story = {
   name: "Anatomie",
