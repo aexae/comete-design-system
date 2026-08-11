@@ -12,6 +12,7 @@ declare const styles: {
   readonly "paginationRowsPerPage": string;
   readonly "queryContainer": string;
   readonly "row": string;
+  readonly "rowAnchor": string;
   readonly "scrollContainer": string;
   readonly "selectionBar": string;
   readonly "selectionBarActions": string;

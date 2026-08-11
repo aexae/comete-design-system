@@ -11,6 +11,16 @@ entre versions alpha.
 
 ### Ajouté
 
+- **Table — lignes interactives accessibles** : `TableRow` accepte `href`
+  (navigation) ou `onPress` (action, p. ex. ouvrir un panneau). L'élément
+  focusable réel est un vrai `<a href>` / `<button>` rendu **dans la cellule
+  primaire** (première `TableCell`, ou celle marquée `isRowAnchor`), jamais sur
+  le `<tr>` : l'affordance devient atteignable au clavier et annoncée par les
+  lecteurs d'écran, la sémantique de table est préservée. Le clic sur le reste
+  de la ligne est un confort souris qui délègue à cet élément (et ignore les
+  interactifs internes : checkbox de sélection, boutons d'action). Nouveau
+  `isRowAnchor` sur `TableCell` pour désigner la cellule primaire.
+
 - **Table** : nouveaux états et API absorbant des patterns jusqu'ici story-only :
   - `TableBody isNoResults` (+ `noResultsTitle`/`noResultsDescription`/
     `noResultsAction`/`noResultsState`) — état « aucun résultat » (recherche/
@@ -58,6 +68,14 @@ entre versions alpha.
   compile à l'identique. Le découpage rend la doctrine de l'ADR 0002 visible à
   l'autocomplétion et permet de typer un mapping statut → couleur de façon que
   le compilateur interdise d'y glisser une couleur catégorielle.
+
+### Déprécié
+
+- **`TableRow onClick`** : déprécié au profit de `href` / `onPress`. Posé sur le
+  `<tr>`, il ne crée ni rôle, ni ordre de tabulation, ni gestion clavier — la
+  ligne cliquable reste invisible au clavier et aux lecteurs d'écran. Toujours
+  fonctionnel (avec un `console.warn` en développement) ; ignoré si
+  `href`/`onPress` est fourni.
 
 ### Modifié
 
