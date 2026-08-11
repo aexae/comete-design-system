@@ -122,6 +122,12 @@ entre versions alpha.
 - Ajout de `CONTRIBUTING.md` — règle « une story peut détenir de l'état, jamais
   de la mécanique » (les API manquantes repérées en story s'absorbent dans le
   composant avant merge).
+- **Guidelines List** : l'anti-pattern « trop d'informations dans le trailing »
+  (trois métriques entassées à droite) rejoint le `dontExample` des guidelines,
+  avec la règle en face — une seule information dans le trailing, les métriques
+  secondaires vont au desktop ou à la fiche. La story autonome
+  « Agents — 3 métriques (à éviter) » est supprimée (elle faisait doublon avec la
+  démonstration guidelines).
 
 ## [1.0.0-alpha.147] - 2026-08-04
 

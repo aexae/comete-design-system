@@ -130,23 +130,46 @@ const meta = {
               dontExample={{
                 example: (
                   <div style={{ maxWidth: 280 }}>
-                    <List isBordered aria-label="Projets">
+                    <List isBordered aria-label="Agents">
                       <ListItem>
-                        <ListItemText
-                          primary="Alpha"
-                          secondary="Actif · John Doe · CODE-001"
-                        />
+                        <ListItemAvatar>
+                          <Avatar size="medium" initials="DM" />
+                        </ListItemAvatar>
+                        <ListItemText primary="DUPONT Marie" secondary="MAT-0142" />
+                        <ListItemTrailing>
+                          <Text size="xsmall" color="subtle" as="span">
+                            Payables 35h
+                          </Text>
+                          <Text size="xsmall" color="subtle" as="span">
+                            Indispo ±2
+                          </Text>
+                          <Text size="small" weight="medium" as="span">
+                            +2h30
+                          </Text>
+                        </ListItemTrailing>
                       </ListItem>
                       <ListItem>
-                        <ListItemText
-                          primary="Beta"
-                          secondary="En attente · Jane Smith · CODE-002"
-                        />
+                        <ListItemAvatar>
+                          <Avatar size="medium" initials="MB" />
+                        </ListItemAvatar>
+                        <ListItemText primary="MARTIN Bob" secondary="MAT-0198" />
+                        <ListItemTrailing>
+                          <Text size="xsmall" color="subtle" as="span">
+                            Payables 28h
+                          </Text>
+                          <Text size="xsmall" color="subtle" as="span">
+                            Indispo ±1
+                          </Text>
+                          <Text size="small" weight="medium" as="span">
+                            -1h00
+                          </Text>
+                        </ListItemTrailing>
                       </ListItem>
                     </List>
                   </div>
                 ),
-                caption: "Ne pas y entasser des données multi-colonnes.",
+                caption:
+                  "Une seule information dans le trailing ; les métriques secondaires vont au desktop ou à la fiche.",
               }}
               when={[
                 "Empiler des éléments homogènes d'une seule dimension (navigation, menus, réglages, fichiers).",
@@ -853,39 +876,6 @@ export const AgentsList: Story = {
     await expect(buttons).toHaveLength(AGENTS.length);
     await expect(buttons[0]).toHaveTextContent("+2h30");
   },
-};
-
-/**
- * **Pourquoi une seule métrique.** Trois métriques entassées à droite : la
- * ligne n'est plus scannable. Le produit choisit LA métrique qui compte ; les
- * autres vont dans le détail.
- */
-export const AgentsThreeMetrics: Story = {
-  name: "Agents — 3 métriques (à éviter)",
-  parameters: { controls: { disable: true } },
-  render: () => (
-    <List isBordered aria-label="Agents (trop de métriques)">
-      {AGENTS.map((a) => (
-        <ListItem key={a.id}>
-          <ListItemAvatar>
-            <Avatar size="medium" initials={agentInitials(a.name)} />
-          </ListItemAvatar>
-          <ListItemText primary={a.name} secondary={a.matricule} />
-          <ListItemTrailing>
-            <Text size="xsmall" color="subtle" as="span">
-              Payables 35h
-            </Text>
-            <Text size="xsmall" color="subtle" as="span">
-              Indispo ±2
-            </Text>
-            <Text size="small" weight="medium" as="span">
-              {a.delta}
-            </Text>
-          </ListItemTrailing>
-        </ListItem>
-      ))}
-    </List>
-  ),
 };
 
 /**
