@@ -162,7 +162,14 @@ function applyFilters(data: Vac[], applied: Applied, q: string): Vac[] {
 // La recette décide desktop/mobile — JAMAIS le composant Drawer.
 
 function useIsDesktop(): boolean {
-  const [desktop, setDesktop] = useState(true);
+  // Lecture SYNCHRONE à l'init : dès le premier rendu on connaît la largeur, donc
+  // on ne flashe jamais le panneau desktop (380px) à une largeur mobile avant
+  // que l'effet ne corrige (ce flash ressemblait à une feuille cassée/vide).
+  const [desktop, setDesktop] = useState(() =>
+    typeof window === "undefined"
+      ? true
+      : window.matchMedia("(min-width: 1024px)").matches,
+  );
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 1024px)");
     const update = () => setDesktop(mq.matches);
