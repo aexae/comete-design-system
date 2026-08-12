@@ -47,6 +47,15 @@ jobs:
         env:
           NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # Fait suivre `latest` sur cette pré-release : le projet est entièrement en
+      # `1.0.0-alpha.*`, on veut que les installs sans tag prennent la dernière.
+      # `${GITHUB_REF_NAME#v}` retire le `v` du tag (v1.0.0-alpha.148 → 1.0.0-alpha.148).
+      - name: Point `latest` at this pre-release
+        if: contains(github.ref_name, '-')
+        run: npm dist-tag add "@aexae/comete-design-system@${GITHUB_REF_NAME#v}" latest
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Publish (stable)
         if: "!contains(github.ref_name, '-')"
         run: pnpm publish --no-git-checks
