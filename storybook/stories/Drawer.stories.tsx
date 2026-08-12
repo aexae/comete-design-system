@@ -607,6 +607,9 @@ export const ScrollableBody: Story = {
 
     // Le fix : le body flex peut se comprimer sous son contenu.
     await expect(getComputedStyle(body!).minHeight).toBe("0px");
+    // …mais NE s'effondre PAS à 0 (base `auto`, pas `0`) — il occupe l'essentiel
+    // de la hauteur du drawer.
+    await expect(body!.clientHeight).toBeGreaterThan(150);
     // → il défile en interne (contenu plus haut que la zone visible)…
     await expect(body!.scrollHeight).toBeGreaterThan(body!.clientHeight);
     // …et le footer reste dans les limites du drawer (pas poussé dehors).
