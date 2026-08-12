@@ -9,6 +9,19 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.148] - 2026-08-12
+
+### Corrigé
+
+- **Build / dist — paquet non stylé (critique)** : chaque composant importe son
+  module CSS, mais l'ancien build (tsup) compilait ces `*.module.css` en objets
+  vides (`{}`) → tous les composants posaient des classes `undefined`, aucun style
+  n'était appliqué chez les consommateurs (l'`index.css` était valide mais ne ciblait
+  rien). Le build passe sur **Vite (library mode)** pour le JS + CSS Modules (même
+  pipeline que les tests/Storybook), avec **`tsup --dts-only`** pour les `.d.ts`
+  bundlés. Garde de non-régression ajoutée : `scripts/smoke-dist.mjs` (lancé par
+  `pnpm build`) + `publint` en CI.
+
 ### Ajouté
 
 - **Table — lignes interactives accessibles** : `TableRow` accepte `href`

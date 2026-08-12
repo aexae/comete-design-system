@@ -2,7 +2,7 @@
   "name": "@aexae/comete-design-system",
   "description": "Comète Design System — React Aria + CSS Modules + Design Tokens",
   "author": "aexae",
-  "version": "1.0.0-alpha.147",
+  "version": "1.0.0-alpha.148",
   "license": "AGPL-3.0-only",
   "private": false,
   "type": "module",
@@ -35,7 +35,7 @@
   "scripts": {
     "css-types": "tcm src --pattern '**/*.module.css'",
     "css-types:watch": "tcm src --pattern '**/*.module.css' --watch",
-    "build": "pnpm css-types && tsup",
+    "build": "pnpm css-types && vite build --config vite.lib.config.ts && tsup && node scripts/smoke-dist.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:stories": "pnpm --filter @aexae/comete-design-system-storybook test",
@@ -81,6 +81,7 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.57.1",
     "vite": "^7.3.1",
+    "vite-plugin-lib-inject-css": "^2.2.2",
     "vitest": "^4.1.0"
   },
   "exports": {
