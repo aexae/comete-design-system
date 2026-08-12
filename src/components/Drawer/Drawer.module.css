@@ -248,7 +248,12 @@
 }
 
 .body {
-  flex: 1;
+  /* `flex-basis: auto` (et non `0`) : la base = la taille du contenu. Avec un
+     `flex-basis: 0` (`flex: 1`), Safari EFFONDRE ce body à 0 en colonne flex à
+     hauteur `vh` (drawer visuellement vide, footer remonté en haut). Base
+     `auto` + `min-height: 0` : le body défile quand le drawer a une hauteur
+     définie, sans s'effondrer. */
+  flex: 1 1 auto;
   /* En colonne flex, `min-height: auto` (défaut) empêche cet item de se
      comprimer sous la hauteur de son contenu : le body déborde et pousse le
      footer hors du drawer. `min-height: 0` autorise la compression → le body
