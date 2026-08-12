@@ -17,8 +17,19 @@ if (files.length === 0) {
 }
 
 const failures = [];
+
+// Garde anti-régression : AUCUNE feuille `*.module.css` ne doit être livrée.
+// Les consommateurs (Vite, webpack modules.auto) re-scoperaient ces fichiers
+// (`.X-module__local` → `._X-module__local_hash`) alors que les noms sont figés
+// dans le JS → composant non stylé. Les feuilles doivent être en `.css` plein.
+const moduleSheets = globSync("dist/**/*.module.css");
+for (const sheet of moduleSheets) {
+  failures.push(`${sheet} : feuille livrée en *.module.css (sera re-scopée par le bundler consommateur — doit être *.css)`);
+}
+
 for (const jsPath of files) {
-  const cssPath = jsPath.replace(/\.js$/, "");
+  // La feuille associée au chunk `X.module.css.js` est désormais `X.css` (plainify-css).
+  const cssPath = jsPath.replace(/\.module\.css\.js$/, ".css");
   const js = readFileSync(jsPath, "utf8");
   let css = "";
   try {
