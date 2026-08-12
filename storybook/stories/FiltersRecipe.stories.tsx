@@ -375,6 +375,16 @@ function FiltersRecipe(): ReactElement {
             size="var(--filters-panel-width)"
             id="filters-panel"
             aria-label="Filtres"
+            // Choix de MISE EN PAGE (recette, pas composant) : le panneau reste
+            // collant sous la toolbar et défile en interne au lieu de s'étirer à
+            // la hauteur du tableau — on ne le perd pas en parcourant la liste.
+            // Inline pour l'emporter sur `.nonModal` (align-self/position/height).
+            style={{
+              position: "sticky",
+              top: "var(--space200)",
+              alignSelf: "flex-start",
+              maxHeight: "calc(100vh - var(--space400))",
+            }}
           >
             <DrawerHeader onClose={() => setPanelOpen(false)}>Filtres</DrawerHeader>
             <DrawerBody>
