@@ -88,7 +88,7 @@ Catalogue complet des composants avec tests d'interaction intégrés. Lien Figma
 - **React Aria Components** — Accessibilité native headless
 - **CSS Modules** — Styles scopés, zéro valeur hardcodée
 - **100% token-driven** — Toutes les valeurs visuelles proviennent de `@aexae/comete-design-tokens`
-- **tsup** — Bundle ESM, code splitting, tree-shaking
+- **Build** — **Vite (library mode)** pour le JS + CSS Modules (code splitting, tree-shaking, injection auto de la feuille par composant) ; `tsup --dts-only` pour les déclarations de types **bundlées** (résolution correcte, y compris Node16 ESM)
 
 ## Stack
 
