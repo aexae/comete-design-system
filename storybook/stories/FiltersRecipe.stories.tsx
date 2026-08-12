@@ -418,7 +418,7 @@ function FiltersRecipe(): ReactElement {
           placement="bottom"
           swipeable
           size="85vh"
-          id="filters-panel"
+          id="filters-sheet"
           aria-label="Filtres"
         >
           <DrawerHeader onClose={() => setPanelOpen(false)}>Filtres</DrawerHeader>
