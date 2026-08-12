@@ -9,6 +9,24 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.149] - 2026-08-12
+
+### Corrigé
+
+- **Build / dist — feuilles livrées en `*.css` plein, plus en `*.module.css`
+  (critique)** : le build émettait les feuilles sous leur nom source
+  `X.module.css`, avec les classes déjà scopées (`X-module__local`) figées dans le
+  JS. Or les bundlers des consommateurs (Vite, webpack `css-loader modules.auto`)
+  appliquent la transformation CSS Modules à **tout** fichier `*.module.css`, y
+  compris dans `node_modules` : ils **re-scopaient** `.X-module__local` en
+  `._X-module__local_hash`, si bien que la feuille ne ciblait plus les classes
+  posées dans le DOM → composants non stylés chez Vite/webpack (alors que le paquet
+  paraissait sain avec un bundler sans CSS Modules par extension, ex. esbuild).
+  Le build « aplatit » désormais les feuilles en `*.css` (script
+  `scripts/plainify-css.mjs`) et réécrit l'import side-effect injecté ; ces
+  feuilles sont de fait globales et ne sont plus re-traitées par personne. Garde
+  ajoutée dans `scripts/smoke-dist.mjs` : échec si un `*.module.css` est livré.
+
 ## [1.0.0-alpha.148] - 2026-08-12
 
 ### Corrigé
