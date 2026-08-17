@@ -28,6 +28,7 @@ import {
   DrawerBody,
   DrawerFooter,
   Button,
+  Badge,
   Checkbox,
   CheckboxGroup,
   TextField,
@@ -402,6 +403,16 @@ function FiltersRecipe({ forceRegime }: { forceRegime?: Regime } = {}): ReactEle
     }
   };
 
+  // Panneau actif du régime courant, pour lier le bouton « Filtres »
+  // (aria-expanded / aria-controls). aria-controls n'est posé que si le panneau
+  // est monté (il l'est seulement quand ouvert).
+  const panelId = isRail
+    ? "filters-rail"
+    : regime === "drawer"
+      ? "filters-drawer"
+      : "filters-sheet";
+  const panelIsOpen = isRail ? railOpen : panelOpen;
+
   const results = applyFilters(DATA, applied, q);
   const total = countAll(applied);
 
@@ -479,9 +490,28 @@ function FiltersRecipe({ forceRegime }: { forceRegime?: Regime } = {}): ReactEle
             elemAfter={<Icon icon="Search" size={20} color="subtle" />}
           />
         }
+        start={
+          // Le bouton « Filtres » vit dans la toolbar, à côté de la recherche
+          // (slot `start`). C'est LUI qui porte aria-expanded/aria-controls
+          // (le bouton interne de FilterChipRow ne l'expose pas).
+          <Button
+            appearance="outlined"
+            iconBefore="Tune"
+            onPress={openAll}
+            aria-expanded={panelIsOpen}
+            aria-controls={panelIsOpen ? panelId : undefined}
+          >
+            Filtres
+            {total > 0 && (
+              <Badge label={String(total)} appearance="information" importance="high" />
+            )}
+          </Button>
+        }
       />
 
-      <FilterChipRow facets={rowFacets} totalActiveCount={total} onOpenAll={openAll} />
+      {/* Chips des filtres actifs SOUS la toolbar (retirables : × par facette).
+          Plus de bouton « Filtres » ici — il est passé dans la toolbar. */}
+      <FilterChipRow facets={rowFacets} />
 
       <div className={css["body"]}>
         {resultsTable}
