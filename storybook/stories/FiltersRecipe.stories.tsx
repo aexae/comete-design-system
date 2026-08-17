@@ -405,6 +405,20 @@ function FiltersRecipe({ forceRegime }: { forceRegime?: Regime } = {}): ReactEle
   const results = applyFilters(DATA, applied, q);
   const total = countAll(applied);
 
+  // Annonce du nombre de résultats TEMPORISÉE (~1,5 s) : une rafale de clics ne
+  // produit qu'une seule annonce finale (sinon un lecteur d'écran se coupe à
+  // chaque changement et l'utilisateur n'entend aucun total). Séparée du
+  // compteur visuel, qui lui se met à jour immédiatement.
+  const [announced, setAnnounced] = useState("");
+  useEffect(() => {
+    const n = results.length;
+    const id = setTimeout(
+      () => setAnnounced(`${n} résultat${n > 1 ? "s" : ""}`),
+      1500,
+    );
+    return () => clearTimeout(id);
+  }, [results.length]);
+
   const rowFacets: FilterChipRowFacet[] = FACETS.map((f) => ({
     id: f.id,
     isPinned: false,
@@ -420,8 +434,13 @@ function FiltersRecipe({ forceRegime }: { forceRegime?: Regime } = {}): ReactEle
 
   const resultsTable = (
     <div className={css["results"]}>
-      <div className={css["resCount"]} aria-live="polite">
+      {/* Compteur VISUEL immédiat (pas de aria-live : l'annonce est temporisée). */}
+      <div className={css["resCount"]}>
         {results.length} résultat{results.length > 1 ? "s" : ""} · Août 2026
+      </div>
+      {/* Annonce lecteur d'écran temporisée. */}
+      <div className={css["srOnly"]} role="status" aria-live="polite">
+        {announced}
       </div>
       <Table responsive aria-label="Vacations">
         <TableHead>
@@ -644,5 +663,95 @@ export const Filtres: Story = {
     await expect(
       within(panel as HTMLElement).getByRole("checkbox", { name: "Ronde" }),
     ).toBeInTheDocument();
+  },
+};
+
+/**
+ * **A11y du rail non modal (§6)** — régime rail forcé. Play : focus non volé à
+ * l'ouverture ; WCAG 3.2.2 (cocher garde la case cochée ET au focus, panneau
+ * pas refermé, seule la liste change) ; pas de piège à focus (Tab sort du rail) ;
+ * Échap ne ferme PAS le rail.
+ */
+export const RailA11y: Story = {
+  name: "Rail — a11y (WCAG 3.2.2, pas de piège, Échap)",
+  parameters: { controls: { disable: true }, layout: "fullscreen" },
+  render: () => (
+    <div style={{ width: 1280 }}>
+      <FiltersRecipe forceRegime="rail" />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    await wait(200);
+    if (!canvasElement.querySelector("#filters-rail")) {
+      await userEvent.click(canvas.getByRole("button", { name: /Filtres/ }));
+      await wait(250);
+    }
+    const rail = canvasElement.querySelector<HTMLElement>("#filters-rail");
+    await expect(rail).not.toBeNull();
+    const railEl = rail as HTMLElement;
+
+    // Focus NON volé à l'ouverture (contrairement au modal).
+    await expect(railEl.contains(document.activeElement)).toBe(false);
+
+    const count = () =>
+      Number(
+        /\d+/.exec(
+          canvasElement.querySelector('[class*="resCount"]')?.textContent ?? "0",
+        )?.[0] ?? "0",
+      );
+
+    // WCAG 3.2.2 : cocher une case au clavier → reste cochée + gardée au focus,
+    // le rail ne se ferme pas, seule la liste change.
+    const before = count();
+    const cb = within(railEl).getByRole("checkbox", { name: "Vacation" });
+    cb.focus();
+    await userEvent.keyboard(" ");
+    await wait(80);
+    await expect(cb).toBeChecked();
+    await expect(cb).toHaveFocus();
+    await expect(canvasElement.querySelector("#filters-rail")).not.toBeNull();
+    await expect(count()).toBeLessThan(before);
+
+    // Pas de piège à focus : depuis le dernier focusable du rail, Tab en sort.
+    const clearBtn = within(railEl).getByRole("button", { name: "Tout effacer" });
+    clearBtn.focus();
+    await expect(clearBtn).toHaveFocus();
+    await userEvent.tab();
+    await expect(railEl.contains(document.activeElement)).toBe(false);
+
+    // Échap ne ferme PAS le rail (non modal).
+    await userEvent.keyboard("{Escape}");
+    await wait(120);
+    await expect(canvasElement.querySelector("#filters-rail")).not.toBeNull();
+  },
+};
+
+/**
+ * **Contre-exemple modal (§6)** — régime drawer forcé : le drawer superposé se
+ * ferme sur Échap (inverse du rail). Piège à focus + voile fournis par React
+ * Aria (déjà couverts par Drawer.test).
+ */
+export const ModalEscapeCloses: Story = {
+  name: "Drawer superposé — Échap ferme (contre-exemple)",
+  parameters: { controls: { disable: true }, layout: "fullscreen" },
+  render: () => (
+    <div style={{ width: 1280 }}>
+      <FiltersRecipe forceRegime="drawer" />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    await wait(150);
+    await userEvent.click(canvas.getByRole("button", { name: /Filtres/ }));
+    await wait(300);
+    await expect(
+      document.body.querySelector('#filters-drawer[role="dialog"]'),
+    ).not.toBeNull();
+    await userEvent.keyboard("{Escape}");
+    await wait(300);
+    await expect(document.body.querySelector("#filters-drawer")).toBeNull();
   },
 };

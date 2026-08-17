@@ -29,6 +29,19 @@
   font-size: var(--font-size-ui-xs);
 }
 
+/* Réservé aux lecteurs d'écran (annonce aria-live temporisée). */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Sections de facettes empilées (même formulaire à plat desktop + mobile). */
 .section {
   padding: var(--space150) 0;
