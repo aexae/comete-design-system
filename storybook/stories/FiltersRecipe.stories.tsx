@@ -572,16 +572,30 @@ const meta = {
         component:
           "Recette filtres (D13) — à copier par les écrans, le contenu des facettes " +
           "étant du métier (pas du DS).\n\n" +
-          "**Application asymétrique, volontaire.** Desktop : le panneau persistant et " +
-          "la liste sont visibles ensemble → application **immédiate**, on voit le " +
-          "résultat changer, pas de bouton « Appliquer ». Mobile : le bottom sheet " +
-          "**couvre** la liste → application **différée**, le pied porte « Voir N résultats ».\n\n" +
-          "**Échap** ne ferme PAS le panneau persistant (il n'est pas modal) ; il ferme " +
-          "le bottom sheet. Le focus n'est pas volé à l'ouverture du panneau persistant.\n\n" +
-          "**a11y** : une région `aria-live` annonce le nombre de résultats ; le panneau " +
-          "est atteignable au clavier après la toolbar, avant la liste (flux : filtrer → " +
-          "lire les résultats). `FilterChipRow` porte les chips actifs (× par facette) et " +
-          "le bouton « Filtres » (badge de total) via `onOpenAll` / `totalActiveCount`.",
+          "**Le critère unique : la liste reste-t-elle visible ?** Il produit trois " +
+          "régimes (jamais formulés « desktop vs mobile » — c'est cette formulation qui " +
+          "avait engendré cinq variantes) :\n" +
+          "- **≥ 1600px** — rail poussé à droite, en flux, la liste se reflow à côté " +
+          "(visible) → **non modal**, application **immédiate**, pas de bouton « Appliquer » " +
+          "(le résultat se voit à côté).\n" +
+          "- **1024–1600px** — drawer superposé à droite (couvre la liste) → **modal**, " +
+          "application **différée**, pied `Voir N résultats`.\n" +
+          "- **< 1024px** — bottom sheet (couvre la liste) → **modal**, différée, pied.\n\n" +
+          "Un seul seuil décide la **modalité** (1600) ; 1024 ne choisit que le placement " +
+          "(droite vs bas). Le rail est **à droite** dans les trois cas (à gauche il " +
+          "entrerait en collision avec le mode `peeking` de la SideNav).\n\n" +
+          "**Une seule région poussante par axe** : le rail de filtres pousse ; un panneau " +
+          "de détail (inspecteur de ligne, D16) **se superpose** — deux régions poussantes " +
+          "sur le même axe écraseraient le tableau.\n\n" +
+          "**Le rail rétrécit le tableau** : `Table responsive` (container queries) + " +
+          "`hideBelow` sur les colonnes secondaires ; rail ouvert = une ou deux colonnes " +
+          "repliées, jamais de scroll horizontal (dépendance D9).\n\n" +
+          "**a11y** : Échap ne ferme PAS le rail (non modal) mais ferme drawer/sheet ; " +
+          "focus non volé à l'ouverture du rail ; WCAG 3.2.2 (l'application immédiate ne " +
+          "recharge pas, ne déplace pas le focus, ne referme pas la facette) ; annonce " +
+          "`aria-live` **temporisée** du nombre de résultats. `FilterChipRow` porte les " +
+          "chips actifs (× par facette) et le bouton « Filtres » (badge de total) via " +
+          "`onOpenAll` / `totalActiveCount`.",
       },
     },
   },
