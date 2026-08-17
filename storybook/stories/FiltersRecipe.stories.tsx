@@ -159,25 +159,37 @@ function applyFilters(data: Vac[], applied: Applied, q: string): Vac[] {
 }
 
 // -----------------------------------------------------------------------
-// La recette décide desktop/mobile — JAMAIS le composant Drawer.
+// La recette (jamais le composant Drawer) décide du régime selon la largeur.
+// Critère unique : « la liste reste-t-elle visible ? »
+//   ≥ 1600 → rail poussé à droite (non modal, liste visible → immédiat)
+//   1024–1600 → drawer superposé à droite (modal, liste couverte → différé)
+//   < 1024 → bottom sheet (modal, différé)
+// Un seul seuil décide la MODALITÉ (1600) ; 1024 ne choisit que le placement.
 
-function useIsDesktop(): boolean {
-  // Lecture SYNCHRONE à l'init : dès le premier rendu on connaît la largeur, donc
-  // on ne flashe jamais le panneau desktop (380px) à une largeur mobile avant
-  // que l'effet ne corrige (ce flash ressemblait à une feuille cassée/vide).
-  const [desktop, setDesktop] = useState(() =>
-    typeof window === "undefined"
-      ? true
-      : window.matchMedia("(min-width: 1024px)").matches,
-  );
+type Regime = "rail" | "drawer" | "sheet";
+
+const RAIL_MQ = "(min-width: 1600px)";
+const DESKTOP_MQ = "(min-width: 1024px)";
+const RAIL_STORAGE_KEY = "comete-filters-rail-open";
+
+function computeRegime(): Regime {
+  if (typeof window === "undefined") return "rail";
+  if (window.matchMedia(RAIL_MQ).matches) return "rail";
+  if (window.matchMedia(DESKTOP_MQ).matches) return "drawer";
+  return "sheet";
+}
+
+function useFilterRegime(): Regime {
+  // Init SYNCHRONE (corrige le flash de premier rendu). Deux seuils.
+  const [regime, setRegime] = useState<Regime>(computeRegime);
   useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const update = () => setDesktop(mq.matches);
+    const mqs = [window.matchMedia(RAIL_MQ), window.matchMedia(DESKTOP_MQ)];
+    const update = () => setRegime(computeRegime());
     update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
+    mqs.forEach((mq) => mq.addEventListener("change", update));
+    return () => mqs.forEach((mq) => mq.removeEventListener("change", update));
   }, []);
-  return desktop;
+  return regime;
 }
 
 // -----------------------------------------------------------------------
@@ -289,19 +301,106 @@ function FacetChip({
 }
 
 // -----------------------------------------------------------------------
+// Panneau modal DIFFÉRÉ, partagé par le drawer superposé (droite) et le bottom
+// sheet (bas) : même formulaire, pied « Tout effacer » + « Voir N résultats ».
+
+function DeferredPanel({
+  placement,
+  size,
+  swipeable = false,
+  id,
+  isOpen,
+  onClose,
+  draft,
+  onDraftFacet,
+  onClearAll,
+  onApply,
+  resultCount,
+}: {
+  placement: "right" | "bottom";
+  size: string;
+  swipeable?: boolean;
+  id: string;
+  isOpen: boolean;
+  onClose: () => void;
+  draft: Applied;
+  onDraftFacet: (id: FacetId, values: string[]) => void;
+  onClearAll: () => void;
+  onApply: () => void;
+  resultCount: number;
+}): ReactElement {
+  return (
+    <Drawer
+      isOpen={isOpen}
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+      placement={placement}
+      swipeable={swipeable}
+      size={size}
+      id={id}
+      aria-label="Filtres"
+    >
+      <DrawerHeader onClose={onClose}>Filtres</DrawerHeader>
+      <DrawerBody>
+        <PanelSections value={draft} onFacet={onDraftFacet} />
+      </DrawerBody>
+      <DrawerFooter>
+        <div className={css["footerActions"]}>
+          <Button appearance="subtle" onPress={onClearAll}>
+            Tout effacer
+          </Button>
+          <Button color="comete" onPress={onApply}>
+            Voir {resultCount} résultats
+          </Button>
+        </div>
+      </DrawerFooter>
+    </Drawer>
+  );
+}
+
+// -----------------------------------------------------------------------
 // Recette
 
-function FiltersRecipe(): ReactElement {
-  const isDesktop = useIsDesktop();
+function FiltersRecipe({ forceRegime }: { forceRegime?: Regime } = {}): ReactElement {
+  const autoRegime = useFilterRegime();
+  const regime = forceRegime ?? autoRegime;
+  const isRail = regime === "rail";
+
   const [q, setQ] = useState("");
   const [applied, setApplied] = useState<Applied>({});
-  const [draft, setDraft] = useState<Applied>({}); // brouillon mobile (différé)
-  const [panelOpen, setPanelOpen] = useState(true); // desktop : ouvert par défaut
+  const [draft, setDraft] = useState<Applied>({}); // brouillon modal (différé)
+  const [panelOpen, setPanelOpen] = useState(false); // drawer/sheet (modal)
+  // Rail : repliable, état mémorisé pour la session (recette, pas composant).
+  const [railOpen, setRailOpen] = useState<boolean>(() => {
+    try {
+      return sessionStorage.getItem(RAIL_STORAGE_KEY) !== "false";
+    } catch {
+      return true;
+    }
+  });
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(RAIL_STORAGE_KEY, String(railOpen));
+    } catch {
+      /* sessionStorage indisponible : état gardé en mémoire seulement */
+    }
+  }, [railOpen]);
 
   const setFacet = (id: FacetId, values: string[]) =>
     setApplied((prev) => ({ ...prev, [id]: values }));
   const setDraftFacet = (id: FacetId, values: string[]) =>
     setDraft((prev) => ({ ...prev, [id]: values }));
+
+  // « Filtres » : rail → replie/déplie ; drawer/sheet → ouvre (brouillon amorcé
+  // sur l'état appliqué courant).
+  const openAll = () => {
+    if (isRail) setRailOpen((o) => !o);
+    else {
+      setDraft(applied);
+      setPanelOpen(true);
+    }
+  };
 
   const results = applyFilters(DATA, applied, q);
   const total = countAll(applied);
@@ -363,29 +462,24 @@ function FiltersRecipe(): ReactElement {
         }
       />
 
-      <FilterChipRow
-        facets={rowFacets}
-        totalActiveCount={total}
-        onOpenAll={() => setPanelOpen((o) => (isDesktop ? !o : true))}
-      />
+      <FilterChipRow facets={rowFacets} totalActiveCount={total} onOpenAll={openAll} />
 
       <div className={css["body"]}>
         {resultsTable}
-        {isDesktop && (
-          // Panneau PERSISTANT non modal : enfant flex → les résultats se
-          // reflow à côté. Application IMMÉDIATE (on voit la liste changer).
+        {isRail && (
+          // ≥ 1600px : RAIL non modal, enfant flex → la liste se reflow à côté
+          // (jamais recouverte). Application IMMÉDIATE (édite `applied`), pas de
+          // bouton « Appliquer » : le résultat se voit à côté.
           <Drawer
-            isOpen={panelOpen}
-            onOpenChange={setPanelOpen}
+            isOpen={railOpen}
+            onOpenChange={setRailOpen}
             isModal={false}
             placement="right"
             size="var(--filters-panel-width)"
-            id="filters-panel"
+            id="filters-rail"
             aria-label="Filtres"
-            // Choix de MISE EN PAGE (recette, pas composant) : le panneau reste
-            // collant sous la toolbar et défile en interne au lieu de s'étirer à
-            // la hauteur du tableau — on ne le perd pas en parcourant la liste.
-            // Inline pour l'emporter sur `.nonModal` (align-self/position/height).
+            // Mise en page (recette) : collant sous la toolbar, défilement
+            // interne. Inline pour l'emporter sur `.nonModal`.
             style={{
               position: "sticky",
               top: "var(--space200)",
@@ -393,7 +487,7 @@ function FiltersRecipe(): ReactElement {
               maxHeight: "calc(100vh - var(--space400))",
             }}
           >
-            <DrawerHeader onClose={() => setPanelOpen(false)}>Filtres</DrawerHeader>
+            <DrawerHeader onClose={() => setRailOpen(false)}>Filtres</DrawerHeader>
             <DrawerBody>
               <PanelSections value={applied} onFacet={setFacet} />
             </DrawerBody>
@@ -406,42 +500,42 @@ function FiltersRecipe(): ReactElement {
         )}
       </div>
 
-      {!isDesktop && (
-        // Bottom sheet MODAL : recouvre la liste → application DIFFÉRÉE, le pied
-        // porte l'action explicite « Voir N résultats ».
-        <Drawer
+      {/* 1024–1600 : drawer superposé (modal, à droite) ; < 1024 : bottom sheet.
+          Les deux COUVRENT la liste → application DIFFÉRÉE, pied « Voir N ». */}
+      {regime === "drawer" && (
+        <DeferredPanel
+          placement="right"
+          size="var(--filters-panel-width)"
+          id="filters-drawer"
           isOpen={panelOpen}
-          onOpenChange={(open) => {
-            if (open) setDraft(applied);
-            setPanelOpen(open);
+          onClose={() => setPanelOpen(false)}
+          draft={draft}
+          onDraftFacet={setDraftFacet}
+          onClearAll={() => setDraft({})}
+          onApply={() => {
+            setApplied(draft);
+            setPanelOpen(false);
           }}
+          resultCount={applyFilters(DATA, draft, q).length}
+        />
+      )}
+      {regime === "sheet" && (
+        <DeferredPanel
           placement="bottom"
-          swipeable
           size="85vh"
+          swipeable
           id="filters-sheet"
-          aria-label="Filtres"
-        >
-          <DrawerHeader onClose={() => setPanelOpen(false)}>Filtres</DrawerHeader>
-          <DrawerBody>
-            <PanelSections value={draft} onFacet={setDraftFacet} />
-          </DrawerBody>
-          <DrawerFooter>
-            <div className={css["footerActions"]}>
-              <Button appearance="subtle" onPress={() => setDraft({})}>
-                Tout effacer
-              </Button>
-              <Button
-                color="comete"
-                onPress={() => {
-                  setApplied(draft);
-                  setPanelOpen(false);
-                }}
-              >
-                Voir {applyFilters(DATA, draft, q).length} résultats
-              </Button>
-            </div>
-          </DrawerFooter>
-        </Drawer>
+          isOpen={panelOpen}
+          onClose={() => setPanelOpen(false)}
+          draft={draft}
+          onDraftFacet={setDraftFacet}
+          onClearAll={() => setDraft({})}
+          onApply={() => {
+            setApplied(draft);
+            setPanelOpen(false);
+          }}
+          resultCount={applyFilters(DATA, draft, q).length}
+        />
       )}
     </div>
   );
@@ -478,32 +572,24 @@ export default meta;
 type Story = StoryObj;
 
 export const Filtres: Story = {
-  name: "Panneau persistant (desktop) / bottom sheet (mobile)",
+  name: "Filtres — 3 régimes (selon la largeur de fenêtre)",
   render: () => <FiltersRecipe />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-
-    // Desktop (viewport ≥ 1024) : le panneau est une <section> region en flux,
-    // sans voile.
-    const panel = canvasElement.querySelector("#filters-panel");
+    // Régime-agnostique : le rail est ouvert par défaut ; drawer/sheet
+    // s'ouvrent via « Filtres ». On vérifie juste que le panneau expose bien
+    // les facettes (le comportement par régime est couvert par les stories
+    // dédiées RailColumnsCollapse / RailA11y).
+    const panelOf = () =>
+      document.body.querySelector<HTMLElement>('[aria-label="Filtres"]');
+    if (!panelOf()) {
+      await userEvent.click(canvas.getByRole("button", { name: /Filtres/ }));
+      await new Promise((r) => setTimeout(r, 150));
+    }
+    const panel = panelOf();
     await expect(panel).not.toBeNull();
-    await expect((panel as HTMLElement).tagName).toBe("SECTION");
     await expect(
-      document.body.querySelector('[class*="overlay"]:not([class*="overlayTransparent"])'),
-    ).toBeNull();
-
-    // Échap ne ferme pas le panneau persistant.
-    await userEvent.keyboard("{Escape}");
-    await expect(canvasElement.querySelector("#filters-panel")).not.toBeNull();
-
-    // Application immédiate : cocher une prestation réduit les résultats
-    // (région aria-live mise à jour).
-    const count = () => {
-      const live = canvasElement.querySelector('[aria-live="polite"]');
-      return Number(/\d+/.exec(live?.textContent ?? "0")?.[0] ?? "0");
-    };
-    const before = count();
-    await userEvent.click(canvas.getByRole("checkbox", { name: "Ronde" }));
-    await expect(count()).toBeLessThan(before);
+      within(panel as HTMLElement).getByRole("checkbox", { name: "Ronde" }),
+    ).toBeInTheDocument();
   },
 };
