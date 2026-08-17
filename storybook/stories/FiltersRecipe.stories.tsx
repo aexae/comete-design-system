@@ -571,6 +571,59 @@ const meta = {
 export default meta;
 type Story = StoryObj;
 
+/**
+ * **Acceptation D9 (§5)** — le rail rétrécit le tableau : rail **ouvert**, les
+ * colonnes secondaires se replient (container queries + `hideBelow`), **sans
+ * scroll horizontal** ; rail **fermé**, elles reviennent. Régime rail forcé,
+ * conteneur ~1280px pour rendre le repli visible sans dépendre du viewport.
+ */
+export const RailColumnsCollapse: Story = {
+  name: "Rail — colonnes repliées, zéro scroll H (acceptation D9)",
+  parameters: { controls: { disable: true }, layout: "fullscreen" },
+  render: () => (
+    <div style={{ width: 1280 }}>
+      <FiltersRecipe forceRegime="rail" />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    const ths = () => [...canvasElement.querySelectorAll("thead th")];
+    const thByLabel = (label: string) =>
+      ths().find((t) => (t.textContent ?? "").trim().startsWith(label)) ?? null;
+    const displayOf = (label: string) => {
+      const th = thByLabel(label);
+      return th ? getComputedStyle(th).display : "absent";
+    };
+    const results = () => canvasElement.querySelector<HTMLElement>('[class*="results"]');
+    const noHScroll = () => {
+      const r = results();
+      return !r || r.scrollWidth <= r.clientWidth + 1;
+    };
+
+    await wait(200);
+    // S'assurer que le rail est ouvert (état mémorisé pouvant venir d'une autre story).
+    if (!canvasElement.querySelector("#filters-rail")) {
+      await userEvent.click(canvas.getByRole("button", { name: /Filtres/ }));
+      await wait(250);
+    }
+    await expect(canvasElement.querySelector("#filters-rail")).not.toBeNull();
+
+    // Rail OUVERT → colonnes secondaires masquées + aucun scroll horizontal.
+    await expect(displayOf("Profil")).toBe("none");
+    await expect(displayOf("Horaires")).toBe("none");
+    await expect(noHScroll()).toBe(true);
+
+    // Rail FERMÉ → les colonnes reviennent.
+    const rail = canvasElement.querySelector<HTMLElement>("#filters-rail");
+    await userEvent.click(within(rail as HTMLElement).getByRole("button", { name: "Fermer" }));
+    await wait(300);
+    await expect(canvasElement.querySelector("#filters-rail")).toBeNull();
+    await expect(displayOf("Profil")).not.toBe("none");
+    await expect(noHScroll()).toBe(true);
+  },
+};
+
 export const Filtres: Story = {
   name: "Filtres — 3 régimes (selon la largeur de fenêtre)",
   render: () => <FiltersRecipe />,
