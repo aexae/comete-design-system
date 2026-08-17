@@ -1,8 +1,8 @@
 // Logo — Comète Design System
-// Affiche un logo produit depuis @naxit/comete-logos avec support thème.
+// Affiche un logo produit depuis @aexae/comete-logos avec support thème.
 import type { ReactElement } from "react";
-import type { LogoProduct, LogoAppearance, LogoFormat, LogoTaglineAlign } from "@naxit/comete-logos";
-import { logoRegistry } from "@naxit/comete-logos";
+import type { LogoProduct, LogoAppearance, LogoFormat, LogoTaglineAlign } from "@aexae/comete-logos";
+import { logoRegistry } from "@aexae/comete-logos";
 
 // -----------------------------------------------------------------------
 // Types publics
@@ -40,7 +40,7 @@ export interface LogoProps {
  * Affiche un logo produit (Comète, OnTime, Link, Café Comète, etc.) dans
  * l'apparence souhaitée. Les couleurs sont résolues depuis les design tokens
  * CSS (`--logo-comete-*`) via les classes `.comete-logo--{appearance}`
- * embarquées dans `@naxit/comete-logos`. Le thème light/dark est
+ * embarquées dans `@aexae/comete-logos`. Le thème light/dark est
  * automatique via `[data-theme]` sur `<html>`.
  *
  * ```tsx

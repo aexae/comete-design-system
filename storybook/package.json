@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@aexae/comete-design-system": "file:..",
-    "@naxit/comete-icons": "0.6.0",
-    "@naxit/comete-logos": "0.12.2",
+    "@aexae/comete-icons": "0.6.1",
+    "@aexae/comete-logos": "0.12.4",
     "react": "^19.2.4",
     "react-aria-components": "^1.16.0",
     "react-dom": "^19.2.4"

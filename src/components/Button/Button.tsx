@@ -1,7 +1,7 @@
 import React from "react";
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from "react-aria-components";
 import { forwardRef } from "react";
-import type { IconColor, IconName } from "@naxit/comete-icons";
+import type { IconColor, IconName } from "@aexae/comete-icons";
 import { Icon } from "../Icon/index.js";
 import { useInputContext } from "../../contexts/InputContext.js";
 import { useDensity, type Density } from "../../contexts/DensityContext.js";

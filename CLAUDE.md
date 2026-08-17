@@ -217,7 +217,7 @@ Les props acceptant une icône (`icon`, `startIcon`, `endIcon`, etc.) ne sont pa
 
 ```ts
 import type { ReactNode } from "react";
-import { Person } from "@naxit/comete-icons";
+import { Person } from "@aexae/comete-icons";
 
 // REASON: React.ReactNode n'est pas sérialisable dans Storybook args.
 // Storybook résout la clé string en valeur ReactNode avant de passer au composant.
@@ -233,7 +233,7 @@ icon: { control: "select", options: ICON_OPTIONS, mapping: ICON_MAPPING },
 args: { icon: "Person" },
 ```
 
-Toujours inclure au minimum `none` et une icône représentative de `@naxit/comete-icons`.
+Toujours inclure au minimum `none` et une icône représentative de `@aexae/comete-icons`.
 
 ### 6. Commit, push et PR
 

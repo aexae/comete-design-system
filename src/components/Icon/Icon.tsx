@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
-import type { IconColor, IconName, IconProps, IconSpacing, IconVariant } from "@naxit/comete-icons";
-import { iconRegistry } from "@naxit/comete-icons";
+import type { IconColor, IconName, IconProps, IconSpacing, IconVariant } from "@aexae/comete-icons";
+import { iconRegistry } from "@aexae/comete-icons";
 import { useInputContext } from "../../contexts/InputContext.js";
 import styles from "./Icon.module.css";
 
@@ -11,7 +11,7 @@ export type { IconName };
 export type IconAppearance = IconVariant;
 
 export interface IconComponentProps {
-  /** Name of the icon to render. Must match an export from @naxit/comete-icons. */
+  /** Name of the icon to render. Must match an export from @aexae/comete-icons. */
   icon: IconName;
   /** Icon style appearance. @default "outlined" */
   appearance?: IconAppearance;
@@ -43,7 +43,7 @@ export interface IconComponentProps {
 /**
  * Icon — Comète Design System
  *
- * Renders an icon from `@naxit/comete-icons` by name.
+ * Renders an icon from `@aexae/comete-icons` by name.
  * Wraps the SVG in a `<span>` for easy CSS positioning.
  *
  * ```tsx

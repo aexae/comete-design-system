@@ -9,7 +9,7 @@ import {
 } from "@aexae/comete-design-system/components";
 import type { CSSProperties, ReactElement } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { logoRegistry } from "@naxit/comete-logos";
+import { logoRegistry } from "@aexae/comete-logos";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 

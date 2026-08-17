@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button as AriaButton } from "react-aria-components";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { IconName } from "@naxit/comete-icons";
+import type { IconName } from "@aexae/comete-icons";
 import {
   Breadcrumbs,
   BreadcrumbItem,

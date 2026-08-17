@@ -6,8 +6,8 @@ import {
   ButtonGroup,
   Button,
 } from "@aexae/comete-design-system/components";
-import type { IllustrationName } from "@naxit/comete-illustrations";
-import { illustrationRegistry } from "@naxit/comete-illustrations";
+import type { IllustrationName } from "@aexae/comete-illustrations";
+import { illustrationRegistry } from "@aexae/comete-illustrations";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 

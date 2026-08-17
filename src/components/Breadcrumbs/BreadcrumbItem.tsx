@@ -1,6 +1,6 @@
 // BreadcrumbItem — élément individuel du fil d'Ariane
 import { useState, type FocusEvent, type ReactElement, type ReactNode } from "react";
-import type { IconName } from "@naxit/comete-icons";
+import type { IconName } from "@aexae/comete-icons";
 import { Icon } from "../Icon/index.js";
 import { FocusRing } from "../FocusRing/index.js";
 import styles from "./BreadcrumbItem.module.css";
@@ -15,7 +15,7 @@ export interface BreadcrumbItemProps {
   href?: string;
   /** Handler de clic (alternatif à href pour la navigation programmatique). */
   onClick?: () => void;
-  /** Nom de l'icône affichée avant le libellé. Must match an export from @naxit/comete-icons. */
+  /** Nom de l'icône affichée avant le libellé. Must match an export from @aexae/comete-icons. */
   iconBefore?: IconName;
   /**
    * Nom de l'icône affichée après le libellé.

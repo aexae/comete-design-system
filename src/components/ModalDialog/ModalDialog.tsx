@@ -7,7 +7,7 @@ import {
   Dialog as AriaDialog,
   Heading as AriaHeading,
 } from "react-aria-components";
-import type { IconName } from "@naxit/comete-icons";
+import type { IconName } from "@aexae/comete-icons";
 import { Button } from "../Button/Button.js";
 import { Icon } from "../Icon/Icon.js";
 import styles from "./ModalDialog.module.css";

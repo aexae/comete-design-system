@@ -10,7 +10,7 @@ import { Children,
   useState,
   type ReactElement,
   type ReactNode, type CSSProperties } from "react";
-import type { IconName } from "@naxit/comete-icons";
+import type { IconName } from "@aexae/comete-icons";
 import { Icon } from "../Icon/index.js";
 import { Button } from "../Button/index.js";
 import { Divider } from "../Divider/index.js";

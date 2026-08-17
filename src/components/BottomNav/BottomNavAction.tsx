@@ -4,7 +4,7 @@ import {
   Button as AriaButton,
   type ButtonProps as AriaButtonProps,
 } from "react-aria-components";
-import type { IconName } from "@naxit/comete-icons";
+import type { IconName } from "@aexae/comete-icons";
 import { Icon } from "../Icon/index.js";
 import { FocusRing } from "../FocusRing/index.js";
 import styles from "./BottomNavAction.module.css";
@@ -13,7 +13,7 @@ import styles from "./BottomNavAction.module.css";
 // Types publics
 
 export interface BottomNavActionProps {
-  /** Nom de l'icône issu de @naxit/comete-icons. */
+  /** Nom de l'icône issu de @aexae/comete-icons. */
   icon: IconName;
   /**
    * Libellé accessible — **obligatoire** : le FAB n'a pas de texte visible.

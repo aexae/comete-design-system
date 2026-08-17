@@ -1,8 +1,8 @@
 import { Icon } from "@aexae/comete-design-system";
 import type { IconComponentProps } from "@aexae/comete-design-system";
-import * as Icons from "@naxit/comete-icons";
-import type { IconColor, IconName, IconProps, IconVariant } from "@naxit/comete-icons";
-import { iconRegistry } from "@naxit/comete-icons";
+import * as Icons from "@aexae/comete-icons";
+import type { IconColor, IconName, IconProps, IconVariant } from "@aexae/comete-icons";
+import { iconRegistry } from "@aexae/comete-icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { CSSProperties, ComponentType, ReactElement } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";

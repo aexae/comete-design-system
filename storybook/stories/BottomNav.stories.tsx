@@ -14,7 +14,7 @@ import {
   MenuSection,
   Text,
 } from "@aexae/comete-design-system/components";
-import type { IconName } from "@naxit/comete-icons";
+import type { IconName } from "@aexae/comete-icons";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 import css from "./BottomNav.stories.module.css";
