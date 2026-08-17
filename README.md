@@ -38,7 +38,7 @@ function App() {
 - **Apparences** (`appearance`) : `contained`, `outlined`, `subtle`, `link`, `link-subtle`
 - **Couleurs** (`color`) : `default`, `subtle`, `subtlest`, `brand`, `success`, `critical`, `warning`, `information`
 - **Densité** (`density`) : `compact`, `default`, `touch` — dimension + padding + radius, pilotable globalement via `DensityProvider`
-- **Icônes** : `iconBefore` / `iconAfter` reçoivent un `IconName` (string) de `@naxit/comete-icons` — couleur résolue automatiquement selon `appearance` + `color`
+- **Icônes** : `iconBefore` / `iconAfter` reçoivent un `IconName` (string) de `@aexae/comete-icons` — couleur résolue automatiquement selon `appearance` + `color`
 - **Accessibilité** : React Aria (ARIA, clavier, focus management)
 
 ### ThemeProvider & useTheme
@@ -99,7 +99,7 @@ Catalogue complet des composants avec tests d'interaction intégrés. Lien Figma
 
 ## Écosystème
 
-Ce package consomme `@aexae/comete-design-tokens` (theming + styles) et `@naxit/comete-icons` (icônes dans les composants). Les trois packages forment la base de l'écosystème Comète.
+Ce package consomme `@aexae/comete-design-tokens` (theming + styles) et `@aexae/comete-icons` (icônes dans les composants). Les trois packages forment la base de l'écosystème Comète.
 
 ## Licence
 

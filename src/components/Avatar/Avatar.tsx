@@ -4,7 +4,7 @@ import {
   Button as AriaButton,
   type ButtonProps as AriaButtonProps,
 } from "react-aria-components";
-import type { IconName } from "@naxit/comete-icons";
+import type { IconName } from "@aexae/comete-icons";
 import { Icon } from "../Icon/index.js";
 import { Badge } from "../Badge/index.js";
 import { FocusRing, type FocusRingBorderRadius } from "../FocusRing/index.js";
@@ -30,7 +30,7 @@ export interface AvatarProps {
   alt?: string;
   /** 1–2 letters shown when no photo is provided. */
   initials?: string;
-  /** Icon name shown when no photo and no initials. Must match an export from @naxit/comete-icons. */
+  /** Icon name shown when no photo and no initials. Must match an export from @aexae/comete-icons. */
   icon?: IconName;
   /** Disabled state. */
   isDisabled?: boolean;

@@ -9,7 +9,7 @@ import {
   type ToggleButtonProps as AriaToggleButtonProps,
   type Selection,
 } from "react-aria-components";
-import type { IconName } from "@naxit/comete-icons";
+import type { IconName } from "@aexae/comete-icons";
 import { Icon } from "../Icon/index.js";
 import { Badge } from "../Badge/index.js";
 import { FocusRing } from "../FocusRing/index.js";

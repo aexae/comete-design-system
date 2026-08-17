@@ -11,7 +11,7 @@ import {
   type TabProps as AriaTabProps,
   type TabPanelProps as AriaTabPanelProps,
 } from "react-aria-components";
-import type { IconName } from "@naxit/comete-icons";
+import type { IconName } from "@aexae/comete-icons";
 import { Icon } from "../Icon/index.js";
 import { FocusRing } from "../FocusRing/index.js";
 import styles from "./Tabs.module.css";

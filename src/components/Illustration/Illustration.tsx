@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
-import type { IllustrationName, IllustrationProps } from "@naxit/comete-illustrations";
-import { illustrationRegistry } from "@naxit/comete-illustrations";
+import type { IllustrationName, IllustrationProps } from "@aexae/comete-illustrations";
+import { illustrationRegistry } from "@aexae/comete-illustrations";
 import styles from "./Illustration.module.css";
 
 // ----------------------------------------------------------------------
@@ -10,7 +10,7 @@ export type { IllustrationName };
 export type IllustrationSize = 128 | 256 | 512;
 
 export interface IllustrationComponentProps {
-  /** Name of the illustration to render. Must match an export from @naxit/comete-illustrations. */
+  /** Name of the illustration to render. Must match an export from @aexae/comete-illustrations. */
   illustration: IllustrationName;
   /** Rendered size in pixels (width & height). @default 256 */
   size?: IllustrationSize;
@@ -31,7 +31,7 @@ export interface IllustrationComponentProps {
 /**
  * Illustration — Comète Design System
  *
- * Renders a multicolor illustration from `@naxit/comete-illustrations` by name.
+ * Renders a multicolor illustration from `@aexae/comete-illustrations` by name.
  * Wraps the SVG in a `<span>` for easy CSS positioning.
  *
  * ```tsx

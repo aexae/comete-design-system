@@ -72,7 +72,7 @@ describe("Banner", () => {
 
   it("should render the Warning icon", () => {
     const { container } = render(<Banner appearance="warning">Message</Banner>);
-    // L'icône Warning est un SVG rendu par @naxit/comete-icons
+    // L'icône Warning est un SVG rendu par @aexae/comete-icons
     expect(container.querySelector("svg")).toBeInTheDocument();
   });
 });

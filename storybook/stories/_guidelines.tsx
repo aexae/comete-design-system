@@ -12,7 +12,7 @@ import {
   TabPanel,
   Tabs,
 } from "@aexae/comete-design-system/components";
-import type { IconColor, IconName } from "@naxit/comete-icons";
+import type { IconColor, IconName } from "@aexae/comete-icons";
 
 // -----------------------------------------------------------------------
 // Liens automatiques vers les composants cités dans les guidelines.

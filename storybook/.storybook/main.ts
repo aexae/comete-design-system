@@ -35,9 +35,9 @@ const config: StorybookConfig = {
         exclude: ["@aexae/comete-design-system"],
         include: [
           "react-aria-components",
-          "@naxit/comete-icons",
-          "@naxit/comete-logos",
-          "@naxit/comete-illustrations",
+          "@aexae/comete-icons",
+          "@aexae/comete-logos",
+          "@aexae/comete-illustrations",
           "@mdx-js/react",
         ],
       },

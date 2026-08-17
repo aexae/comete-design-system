@@ -10,8 +10,8 @@ import type {
   IconTileSize,
   IconTileShape,
 } from "@aexae/comete-design-system/components";
-import type { IconName } from "@naxit/comete-icons";
-import { iconRegistry } from "@naxit/comete-icons";
+import type { IconName } from "@aexae/comete-icons";
+import { iconRegistry } from "@aexae/comete-icons";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 

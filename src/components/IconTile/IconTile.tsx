@@ -1,7 +1,7 @@
 // IconTile — Comète Design System
 // Icône présentée sur un fond coloré avec forme et taille configurables.
 import type { ReactElement } from "react";
-import type { IconName } from "@naxit/comete-icons";
+import type { IconName } from "@aexae/comete-icons";
 import { Icon } from "../Icon";
 import styles from "./IconTile.module.css";
 

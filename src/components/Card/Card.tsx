@@ -6,7 +6,7 @@ import type { DragEvent,
   ReactElement,
   ReactNode, CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
-import { DragIndicator } from "@naxit/comete-icons";
+import { DragIndicator } from "@aexae/comete-icons";
 import { FocusRing } from "../FocusRing/FocusRing.js";
 import { Skeleton } from "../Skeleton/index.js";
 import styles from "./Card.module.css";

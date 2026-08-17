@@ -16,9 +16,9 @@ export default defineConfig({
     },
     server: {
       deps: {
-        // @naxit/comete-icons importe un fichier CSS side-effect : on le passe
+        // @aexae/comete-icons importe un fichier CSS side-effect : on le passe
         // par le pipeline Vite pour qu'il soit transformé correctement en test.
-        inline: ["@naxit/comete-icons", "@naxit/comete-illustrations", "@naxit/comete-logos"],
+        inline: ["@aexae/comete-icons", "@aexae/comete-illustrations", "@aexae/comete-logos"],
       },
     },
   },

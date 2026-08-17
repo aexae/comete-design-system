@@ -10,7 +10,7 @@ Le seul composant de cette release, avec une couverture complète des cas d'usag
 
 ```tsx
 import { Button } from "@aexae/comete-design-system";
-import { Lock, ChevronRight } from "@naxit/comete-icons";
+import { Lock, ChevronRight } from "@aexae/comete-icons";
 
 <Button variant="contained" color="brand">Valider</Button>
 <Button variant="outlined" color="critical" size="small">Supprimer</Button>
@@ -88,4 +88,4 @@ function App() {
 
 ## Écosystème
 
-Consomme `@aexae/comete-design-tokens` (theming + styles) et `@naxit/comete-icons` (icônes dans les composants). Les trois packages forment la base de l'écosystème Comète.
+Consomme `@aexae/comete-design-tokens` (theming + styles) et `@aexae/comete-icons` (icônes dans les composants). Les trois packages forment la base de l'écosystème Comète.

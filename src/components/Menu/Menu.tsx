@@ -22,7 +22,7 @@ import {
   type MenuTriggerProps as AriaMenuTriggerProps,
   type SubmenuTriggerProps as AriaSubmenuTriggerProps,
 } from "react-aria-components";
-import type { IconName } from "@naxit/comete-icons";
+import type { IconName } from "@aexae/comete-icons";
 import { Icon } from "../Icon/index.js";
 import { FocusRing } from "../FocusRing/index.js";
 import { Popover } from "../Popover/index.js";

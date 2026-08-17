@@ -9,6 +9,21 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.150] - 2026-08-17
+
+### Changements cassants (BREAKING)
+
+- **Migration de scope `@naxit/*` → `@aexae/*`** : les dépendances d'icônes,
+  logos et illustrations sont désormais publiées sous le scope de l'organisation
+  `@aexae` (alignement avec `@aexae/comete-design-tokens` et
+  `@aexae/comete-design-system`). Les `peerDependencies` du DS passent de
+  `@naxit/comete-icons` / `@naxit/comete-illustrations` à
+  `@aexae/comete-icons` (>=0.6.1) / `@aexae/comete-illustrations`
+  (>=0.1.0-alpha.4). **Action requise côté consommateur** : installer les
+  paquets `@aexae/*` correspondants (les `@naxit/*` ne sont plus utilisés). Plus
+  aucune référence à `naxit` dans le code, les commentaires, la documentation ni
+  la configuration.
+
 ## [1.0.0-alpha.149] - 2026-08-12
 
 ### Corrigé
@@ -393,7 +408,7 @@ entre versions alpha.
 - **Switch** : les glyphes du pouce sont désormais fidèles au design — coche pour
   `success` (cochée), point d'exclamation nu pour `warning` / `critical` (au lieu
   de l'icône triangle « Warning »). Rendus en SVG inline (le « ! » nu n'existe pas
-  dans `@naxit/comete-icons`), colorés via `--icon-success` / `--icon-warning` /
+  dans `@aexae/comete-icons`), colorés via `--icon-success` / `--icon-warning` /
   `--icon-critical`.
 
 ## [1.0.0-alpha.138] - 2026-07-10

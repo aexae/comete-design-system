@@ -4,7 +4,7 @@ import {
   Button as AriaButton,
   type ButtonProps as AriaButtonProps,
 } from "react-aria-components";
-import type { IconName, IconColor } from "@naxit/comete-icons";
+import type { IconName, IconColor } from "@aexae/comete-icons";
 import { Icon, type IconAppearance } from "../Icon/index.js";
 import { Badge } from "../Badge/index.js";
 import { FocusRing } from "../FocusRing/index.js";
@@ -16,7 +16,7 @@ import styles from "./BottomNavItem.module.css";
 export interface BottomNavItemProps {
   /** Libellé affiché sous l'icône. */
   label: string;
-  /** Nom de l'icône issu de @naxit/comete-icons. La variante (filled/outlined) et la couleur sont gérées automatiquement. */
+  /** Nom de l'icône issu de @aexae/comete-icons. La variante (filled/outlined) et la couleur sont gérées automatiquement. */
   icon: IconName;
   /** Indique si cet item est l'élément de navigation actif. Par défaut false. */
   isSelected?: boolean;
