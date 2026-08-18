@@ -509,9 +509,12 @@ function FiltersRecipe({ forceRegime }: { forceRegime?: Regime } = {}): ReactEle
         }
       />
 
-      {/* Chips des filtres actifs SOUS la toolbar (retirables : × par facette).
-          Plus de bouton « Filtres » ici — il est passé dans la toolbar. */}
-      <FilterChipRow facets={rowFacets} />
+      {/* Chips des filtres actifs SOUS la toolbar (× par facette). Masqués quand
+          le RAIL est ouvert : le rail montre et édite déjà les mêmes facettes →
+          les chips (avec leur popover) feraient doublon (deux commandes pour une
+          chose). Ils réapparaissent rail replié / en drawer / en sheet, où il
+          n'y a pas de panneau persistant. */}
+      {!(isRail && railOpen) && <FilterChipRow facets={rowFacets} />}
 
       <div className={css["body"]}>
         {resultsTable}
@@ -527,14 +530,10 @@ function FiltersRecipe({ forceRegime }: { forceRegime?: Regime } = {}): ReactEle
             size="var(--filters-panel-width)"
             id="filters-rail"
             aria-label="Filtres"
-            // Mise en page (recette) : collant sous la toolbar, défilement
-            // interne. Inline pour l'emporter sur `.nonModal`.
-            style={{
-              position: "sticky",
-              top: "var(--space200)",
-              alignSelf: "flex-start",
-              maxHeight: "calc(100vh - var(--space400))",
-            }}
+            // Le rail s'étire sur la hauteur de `.body` (shell à hauteur de
+            // viewport, cf. .module.css) → header + body défilant + pied TOUJOURS
+            // dans l'écran. `.nonModal` (align-self: stretch) fait le travail,
+            // aucun style inline nécessaire.
           >
             <DrawerHeader onClose={() => setRailOpen(false)}>Filtres</DrawerHeader>
             <DrawerBody>
@@ -618,8 +617,11 @@ const meta = {
           "de détail (inspecteur de ligne, D16) **se superpose** — deux régions poussantes " +
           "sur le même axe écraseraient le tableau.\n\n" +
           "**Le rail rétrécit le tableau** : `Table responsive` (container queries) + " +
-          "`hideBelow` sur les colonnes secondaires ; rail ouvert = une ou deux colonnes " +
-          "repliées, jamais de scroll horizontal (dépendance D9).\n\n" +
+          "`hideBelow` sur les colonnes secondaires. Selon la largeur du conteneur : " +
+          "≥1200px les 6 colonnes ; 900–1200px les colonnes de confort (Profil, Horaires) " +
+          "tombent → 4 ; <900px les colonnes de contexte (Site, Prestation) aussi → 2 " +
+          "(Agent + Statut, jamais masquées). Donc **deux à quatre colonnes repliées** " +
+          "selon la largeur, jamais de scroll horizontal (dépendance D9).\n\n" +
           "**a11y** : Échap ne ferme PAS le rail (non modal) mais ferme drawer/sheet ; " +
           "focus non volé à l'ouverture du rail ; WCAG 3.2.2 (l'application immédiate ne " +
           "recharge pas, ne déplace pas le focus, ne referme pas la facette) ; annonce " +
@@ -640,51 +642,63 @@ type Story = StoryObj;
  * scroll horizontal** ; rail **fermé**, elles reviennent. Régime rail forcé,
  * conteneur ~1280px pour rendre le repli visible sans dépendre du viewport.
  */
-export const RailColumnsCollapse: Story = {
-  name: "Rail — colonnes repliées, zéro scroll H (acceptation D9)",
-  parameters: { controls: { disable: true }, layout: "fullscreen" },
-  render: () => (
-    <div style={{ width: 1280 }}>
-      <FiltersRecipe forceRegime="rail" />
-    </div>
-  ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
-    const ths = () => [...canvasElement.querySelectorAll("thead th")];
-    const thByLabel = (label: string) =>
-      ths().find((t) => (t.textContent ?? "").trim().startsWith(label)) ?? null;
-    const displayOf = (label: string) => {
-      const th = thByLabel(label);
-      return th ? getComputedStyle(th).display : "absent";
-    };
-    const results = () => canvasElement.querySelector<HTMLElement>('[class*="results"]');
-    const noHScroll = () => {
-      const r = results();
-      return !r || r.scrollWidth <= r.clientWidth + 1;
-    };
-
-    await wait(200);
-    // S'assurer que le rail est ouvert (état mémorisé pouvant venir d'une autre story).
-    if (!canvasElement.querySelector("#filters-rail")) {
-      await userEvent.click(canvas.getByRole("button", { name: /Filtres/ }));
+// Sonde d'acceptation D9 paramétrée par largeur : régime rail forcé, conteneur
+// fixe → une bande de colonnes précise. Un palier = une story (6 / 4 / 2).
+function railTierStory(wrapperWidth: number, band: "wide" | "mid" | "narrow"): Story {
+  return {
+    parameters: { controls: { disable: true }, layout: "fullscreen" },
+    render: () => (
+      <div style={{ width: wrapperWidth }}>
+        <FiltersRecipe forceRegime="rail" />
+      </div>
+    ),
+    play: async ({ canvasElement }) => {
+      const canvas = within(canvasElement);
+      const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
       await wait(250);
-    }
-    await expect(canvasElement.querySelector("#filters-rail")).not.toBeNull();
+      if (!canvasElement.querySelector("#filters-rail")) {
+        await userEvent.click(canvas.getByRole("button", { name: /Filtres/ }));
+        await wait(250);
+      }
+      await expect(canvasElement.querySelector("#filters-rail")).not.toBeNull();
 
-    // Rail OUVERT → colonnes secondaires masquées + aucun scroll horizontal.
-    await expect(displayOf("Profil")).toBe("none");
-    await expect(displayOf("Horaires")).toBe("none");
-    await expect(noHScroll()).toBe(true);
+      const results = canvasElement.querySelector<HTMLElement>('[class*="results"]');
+      const cw = results ? results.clientWidth : 0;
+      const visible = [...canvasElement.querySelectorAll("thead th")].filter(
+        (th) => getComputedStyle(th).display !== "none",
+      ).length;
+      const expectedByWidth = cw >= 1200 ? 6 : cw >= 900 ? 4 : 2;
 
-    // Rail FERMÉ → les colonnes reviennent.
-    const rail = canvasElement.querySelector<HTMLElement>("#filters-rail");
-    await userEvent.click(within(rail as HTMLElement).getByRole("button", { name: "Fermer" }));
-    await wait(300);
-    await expect(canvasElement.querySelector("#filters-rail")).toBeNull();
-    await expect(displayOf("Profil")).not.toBe("none");
-    await expect(noHScroll()).toBe(true);
-  },
+      // Le conteneur tombe bien dans la bande visée…
+      if (band === "wide") {
+        await expect(cw).toBeGreaterThanOrEqual(1200);
+      } else if (band === "mid") {
+        await expect(cw).toBeGreaterThanOrEqual(900);
+        await expect(cw).toBeLessThan(1200);
+      } else {
+        await expect(cw).toBeLessThan(900);
+      }
+      // …et le nombre de colonnes visibles correspond exactement, sans scroll H.
+      await expect(visible).toBe(expectedByWidth);
+      await expect(results!.scrollWidth <= results!.clientWidth + 1).toBe(true);
+    },
+  };
+}
+
+/** §5 acceptation — ≥1200px de conteneur : les 6 colonnes, zéro scroll H. */
+export const RailCols6: Story = {
+  name: "Rail — large (6 colonnes)",
+  ...railTierStory(1760, "wide"),
+};
+/** §5 acceptation — 900–1200px : colonnes de confort repliées (4). */
+export const RailCols4: Story = {
+  name: "Rail — moyen (4 colonnes)",
+  ...railTierStory(1480, "mid"),
+};
+/** §5 acceptation — <900px : confort + contexte repliés (2 : Agent + Statut). */
+export const RailCols2: Story = {
+  name: "Rail — étroit (2 colonnes)",
+  ...railTierStory(1240, "narrow"),
 };
 
 export const Filtres: Story = {
@@ -758,8 +772,16 @@ export const RailA11y: Story = {
     await expect(canvasElement.querySelector("#filters-rail")).not.toBeNull();
     await expect(count()).toBeLessThan(before);
 
-    // Pas de piège à focus : depuis le dernier focusable du rail, Tab en sort.
+    // Pied « Tout effacer » ÉPINGLÉ et visible dans le rail (pas repoussé hors
+    // écran) : son bas ne dépasse pas celui du rail, et il est dans le viewport.
     const clearBtn = within(railEl).getByRole("button", { name: "Tout effacer" });
+    const cbr = clearBtn.getBoundingClientRect();
+    const rbr = railEl.getBoundingClientRect();
+    await expect(cbr.height).toBeGreaterThan(0);
+    await expect(Math.round(cbr.bottom)).toBeLessThanOrEqual(Math.round(rbr.bottom) + 1);
+    await expect(cbr.bottom).toBeLessThanOrEqual(window.innerHeight + 1);
+
+    // Pas de piège à focus : depuis le dernier focusable du rail, Tab en sort.
     clearBtn.focus();
     await expect(clearBtn).toHaveFocus();
     await userEvent.tab();
@@ -791,9 +813,33 @@ export const ModalEscapeCloses: Story = {
     await wait(150);
     await userEvent.click(canvas.getByRole("button", { name: /Filtres/ }));
     await wait(300);
+    const drawer = document.body.querySelector<HTMLElement>('#filters-drawer[role="dialog"]');
+    await expect(drawer).not.toBeNull();
+
+    // #4 — le VOILE couvre bien le tableau (modal en apparence, pas seulement en
+    // comportement) : elementFromPoint sur une cellule renvoie le voile.
+    const blanket = document.body.querySelector<HTMLElement>(
+      '[class*="overlay"]:not([class*="overlayTransparent"])',
+    );
+    await expect(blanket).not.toBeNull();
+    const cell = canvas.getByText("DUPONT Marie");
+    const cr = cell.getBoundingClientRect();
+    const atCell = document.elementFromPoint(
+      Math.round(cr.left + cr.width / 2),
+      Math.round(cr.top + cr.height / 2),
+    );
     await expect(
-      document.body.querySelector('#filters-drawer[role="dialog"]'),
-    ).not.toBeNull();
+      atCell === blanket || (blanket as HTMLElement).contains(atCell as Node),
+    ).toBe(true);
+
+    // #5 — le pied ne chevauche pas le body (flex siblings) : footer.top ≥ body.bottom.
+    const body = drawer!.querySelector<HTMLElement>('[class*="body"]');
+    const footer = drawer!.querySelector<HTMLElement>('[class*="footer"]');
+    await expect(
+      Math.round(footer!.getBoundingClientRect().top),
+    ).toBeGreaterThanOrEqual(Math.round(body!.getBoundingClientRect().bottom) - 1);
+
+    // Échap ferme (inverse du rail).
     await userEvent.keyboard("{Escape}");
     await wait(300);
     await expect(document.body.querySelector("#filters-drawer")).toBeNull();

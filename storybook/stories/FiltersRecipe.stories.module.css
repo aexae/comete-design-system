@@ -1,26 +1,50 @@
 /* Recette Filtres (D13) — mise en page de la story.
-   La largeur du panneau (380px) est une valeur PRODUIT : elle vit ici (recette),
-   pas dans le composant Drawer. */
+   La largeur du panneau (344px) est une valeur PRODUIT : elle vit ici (recette),
+   pas dans le composant Drawer. 344 (et non 380) laisse ~68px de marge au-dessus
+   du seuil md à 1600px avec la nav ouverte (1600−240−344−48 ≈ 968), donc 5
+   colonnes stables au lieu d'être à 32px de la falaise à 2 colonnes. */
 
+/* Shell à hauteur de viewport : la toolbar reste en haut, la zone
+   [résultats | rail] remplit le reste et défile en INTERNE. Ainsi le rail tient
+   toujours dans l'écran (son pied « Tout effacer » n'est jamais repoussé
+   hors-champ) et la page elle-même ne scrolle pas. */
 .layout {
-  --filters-panel-width: 380px;
+  --filters-panel-width: 344px;
   display: flex;
   flex-direction: column;
   gap: var(--space200);
   padding: var(--space200);
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
-/* Rangée [résultats | panneau persistant]. Le panneau non modal est un enfant
-   flex : quand il est ouvert, les résultats se reflow à côté (jamais recouverts). */
+/* Rangée [résultats | rail persistant] : remplit la hauteur restante. Le rail
+   non modal (align-self: stretch) s'étire donc sur toute la hauteur → défilement
+   interne, pied épinglé en bas. */
 .body {
   display: flex;
   gap: var(--space200);
-  align-items: flex-start;
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
 }
 
+/* Les résultats défilent en interne (la page ne scrolle pas). */
 .results {
   flex: 1;
   min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* Cas dégénéré (2 colonnes après repli) : le tableau ne s'étire pas pour
+   remplir la largeur (sinon Agent occupe 480px et Statut flotte au milieu).
+   Largeurs naturelles, alignées à gauche ; `max-width: 100%` garde le repli
+   `hideBelow` responsable de la largeur → jamais de scroll horizontal. */
+.results table {
+  width: auto;
+  max-width: 100%;
 }
 
 .resCount {
