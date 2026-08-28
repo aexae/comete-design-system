@@ -9,7 +9,7 @@
 // mini-recherche, vues enregistrées) vient du DCLogic de la maquette.
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useMemo, useState } from "react";
-import type { ReactElement } from "react";
+import type { CSSProperties, ReactElement } from "react";
 import { within, expect } from "storybook/test";
 import {
   Button,
@@ -18,6 +18,11 @@ import {
   type TagStatusColor,
   TextField,
   Icon,
+  Popup,
+  Checkbox,
+  Switch,
+  RadioGroup,
+  Radio,
   Table,
   TableHead,
   TableBody,
@@ -186,6 +191,28 @@ function facetCount(f: Filters, key: string): number {
 const totalActive = (f: Filters): number =>
   FACET_DEFS.reduce((n, d) => n + facetCount(f, d.key), 0);
 
+// Domaine (valeurs distinctes) de chaque facette multi, trié FR.
+const DOMAINS = MULTI_KEYS.reduce(
+  (acc, key) => {
+    acc[key] = [...new Set(AGENTS.map((a) => a[key]))].sort((x, y) => x.localeCompare(y, "fr"));
+    return acc;
+  },
+  {} as Record<MultiKey, string[]>,
+);
+
+// Match en ignorant une facette (pour des comptes qui ne s'effondrent pas
+// quand on coche plusieurs valeurs de la même facette).
+function matchExcept(a: Agent, f: Filters, skip: MultiKey): boolean {
+  if (!f.sousTraitants && a.sousTraitant) return false;
+  if (f.cdiOnly && a.contrat !== "CDI") return false;
+  if (f.dispoMode !== "tous" && a.dispo !== f.dispoMode) return false;
+  return MULTI_KEYS.every((k) => k === skip || !f[k].length || f[k].includes(a[k]));
+}
+
+// Compte vivant : nombre d'agents que cocher cette valeur ramènerait.
+const optionCount = (f: Filters, key: MultiKey, value: string): number =>
+  AGENTS.filter((a) => a[key] === value && matchExcept(a, f, key)).length;
+
 interface ActiveGroup {
   key: string;
   facet: string;
@@ -194,17 +221,45 @@ interface ActiveGroup {
   clear: () => void;
 }
 
+const dateInputStyle: CSSProperties = {
+  height: 36,
+  padding: "0 var(--space100)",
+  borderRadius: "var(--radius075)",
+  border: "1px solid var(--border-default)",
+  background: "var(--background-surface-default)",
+  color: "var(--text-default)",
+  fontFamily: "inherit",
+  fontSize: 13,
+};
+
 // -----------------------------------------------------------------------
 // Recette
 
 function FiltresOptionB(): ReactElement {
   const [f, setF] = useState<Filters>(initialFilters);
   const [panelOpen, setPanelOpen] = useState(false);
+  const [cat, setCat] = useState<string>("societe");
+  const [query, setQuery] = useState("");
 
   const setFacet = (patch: Partial<Filters>) => setF((prev) => ({ ...prev, ...patch }));
+  const toggleMulti = (key: MultiKey, value: string) =>
+    setF((prev) => {
+      const has = prev[key].includes(value);
+      return { ...prev, [key]: has ? prev[key].filter((v) => v !== value) : [...prev[key], value] };
+    });
 
   const results = useMemo(() => filteredAgents(f), [f]);
   const total = totalActive(f);
+
+  const curDef = FACET_DEFS.find((d) => d.key === cat) ?? FACET_DEFS[0];
+  const q = query.trim().toLowerCase();
+  const searchHits = q
+    ? MULTI_KEYS.flatMap((k) =>
+        DOMAINS[k]
+          .filter((v) => v.toLowerCase().includes(q))
+          .map((v) => ({ key: k, value: v })),
+      )
+    : [];
 
   const groups: ActiveGroup[] = useMemo(() => {
     const out: ActiveGroup[] = [];
@@ -247,18 +302,216 @@ function FiltresOptionB(): ReactElement {
             elemBefore={<Icon icon="Search" size={18} color="subtle" />}
           />
         </div>
-        <Button
-          appearance="outlined"
-          iconBefore="Tune"
-          onPress={() => setPanelOpen((o) => !o)}
-          aria-expanded={panelOpen}
-          aria-controls="filtres-panel"
+        <Popup
+          isOpen={panelOpen}
+          onOpenChange={setPanelOpen}
+          placement="bottom-left"
+          style={{ width: 720, maxWidth: "calc(100vw - 32px)" }}
+          trigger={
+            <Button appearance="outlined" iconBefore="Tune">
+              Filtres
+              {total > 0 && (
+                <Badge label={String(total)} appearance="information" importance="high" />
+              )}
+            </Button>
+          }
         >
-          Filtres
-          {total > 0 && (
-            <Badge label={String(total)} appearance="information" importance="high" />
-          )}
-        </Button>
+          <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
+            {/* Mini-recherche transversale (toutes facettes). */}
+            <div style={{ padding: "var(--space200) var(--space200) var(--space150)" }}>
+              <TextField
+                aria-label="Rechercher dans les filtres"
+                placeholder="Rechercher un critère (société, secteur, diplôme…)"
+                value={query}
+                onChange={setQuery}
+                elemBefore={<Icon icon="Search" size={18} color="subtle" />}
+              />
+            </div>
+
+            {/* Deux volets : facettes (gauche) / options (droite). */}
+            <div style={{ display: "flex", height: 380, borderTop: "1px solid var(--border-subtle)" }}>
+              {/* Volet gauche : liste des facettes. */}
+              <ul
+                aria-label="Facettes"
+                style={{
+                  flex: "none",
+                  width: 232,
+                  margin: 0,
+                  padding: "var(--space100)",
+                  listStyle: "none",
+                  overflowY: "auto",
+                  borderRight: "1px solid var(--border-subtle)",
+                  background: "var(--background-surface-elevation-sunken-default)",
+                }}
+              >
+                {FACET_DEFS.map((d) => {
+                  const c = facetCount(f, d.key);
+                  const active = !q && d.key === cat;
+                  return (
+                    <li key={d.key}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setQuery("");
+                          setCat(d.key);
+                        }}
+                        aria-current={active || undefined}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "var(--space100)",
+                          width: "100%",
+                          padding: "0 var(--space150)",
+                          height: 40,
+                          border: 0,
+                          borderRadius: "var(--radius100)",
+                          background: active ? "var(--background-brand-subtlest-default)" : "none",
+                          color: active ? "var(--text-brand)" : "var(--text-default)",
+                          fontSize: 13.5,
+                          fontWeight: active ? 600 : 500,
+                          textAlign: "left",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <span style={{ flex: 1 }}>{d.label}</span>
+                        {c > 0 && (
+                          <Badge label={String(c)} appearance={active ? "information" : "neutral"} importance="high" />
+                        )}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+
+              {/* Volet droit : options de la facette courante, ou résultats de recherche. */}
+              <div style={{ flex: 1, overflowY: "auto", padding: "var(--space200)" }}>
+                {q ? (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
+                    <p style={{ margin: "0 0 var(--space100)", fontSize: 12, color: "var(--text-subtlest)" }}>
+                      {searchHits.length} résultat{searchHits.length > 1 ? "s" : ""} pour « {query.trim()} »
+                    </p>
+                    {searchHits.map(({ key, value }) => {
+                      const n = optionCount(f, key, value);
+                      const facetLabel = FACET_DEFS.find((d) => d.key === key)!.label;
+                      return (
+                        <label
+                          key={`${key}:${value}`}
+                          style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}
+                        >
+                          <Checkbox
+                            isChecked={f[key].includes(value)}
+                            isDisabled={n === 0 && !f[key].includes(value)}
+                            onChange={() => toggleMulti(key, value)}
+                            label={value}
+                          />
+                          <span style={{ fontSize: 11.5, color: "var(--text-subtlest)" }}>{facetLabel}</span>
+                          <span style={{ marginLeft: "auto", fontSize: 12, color: "var(--text-subtlest)", fontVariantNumeric: "tabular-nums" }}>
+                            {n}
+                          </span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                ) : curDef.kind === "switches" ? (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)" }}>
+                    <Switch isChecked={f.sousTraitants} onChange={(v) => setFacet({ sousTraitants: v })}>
+                      Inclure les sous-traitants
+                    </Switch>
+                    <Switch isChecked={f.cdiOnly} onChange={(v) => setFacet({ cdiOnly: v })}>
+                      CDI uniquement
+                    </Switch>
+                  </div>
+                ) : curDef.kind === "dispo" ? (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)" }}>
+                    <RadioGroup
+                      aria-label="Disponibilités"
+                      value={f.dispoMode}
+                      onChange={(v) => setFacet({ dispoMode: v })}
+                    >
+                      {DISPO_MODES.map((m) => (
+                        <Radio key={m.id} value={m.id} label={m.label} />
+                      ))}
+                    </RadioGroup>
+                    <fieldset style={{ border: 0, margin: 0, padding: 0, display: "flex", gap: "var(--space150)", flexWrap: "wrap" }}>
+                      <label style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 12, color: "var(--text-subtle)" }}>
+                        Date
+                        <input
+                          type="date"
+                          value={f.date}
+                          onChange={(e) => setFacet({ date: e.target.value })}
+                          style={dateInputStyle}
+                        />
+                      </label>
+                      <label style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 12, color: "var(--text-subtle)" }}>
+                        De
+                        <input
+                          type="time"
+                          value={f.from}
+                          onChange={(e) => setFacet({ from: e.target.value })}
+                          style={dateInputStyle}
+                        />
+                      </label>
+                      <label style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 12, color: "var(--text-subtle)" }}>
+                        À
+                        <input
+                          type="time"
+                          value={f.to}
+                          onChange={(e) => setFacet({ to: e.target.value })}
+                          style={dateInputStyle}
+                        />
+                      </label>
+                    </fieldset>
+                  </div>
+                ) : (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
+                    {DOMAINS[cat as MultiKey].map((value) => {
+                      const n = optionCount(f, cat as MultiKey, value);
+                      const checked = f[cat as MultiKey].includes(value);
+                      return (
+                        <label
+                          key={value}
+                          style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}
+                        >
+                          <Checkbox
+                            isChecked={checked}
+                            isDisabled={n === 0 && !checked}
+                            onChange={() => toggleMulti(cat as MultiKey, value)}
+                            label={value}
+                          />
+                          <span style={{ marginLeft: "auto", fontSize: 12, color: "var(--text-subtlest)", fontVariantNumeric: "tabular-nums" }}>
+                            {n}
+                          </span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Pied : compteur + réinitialiser. */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "var(--space150)",
+                padding: "var(--space150) var(--space200)",
+                borderTop: "1px solid var(--border-subtle)",
+              }}
+            >
+              <span style={{ fontSize: 13, color: "var(--text-subtle)", fontVariantNumeric: "tabular-nums" }}>
+                {results.length} agent{results.length > 1 ? "s" : ""}
+              </span>
+              <div style={{ flex: 1 }} />
+              <Button appearance="subtle" onPress={clearAll} isDisabled={total === 0}>
+                Réinitialiser
+              </Button>
+              <Button appearance="contained" onPress={() => setPanelOpen(false)}>
+                Voir les résultats
+              </Button>
+            </div>
+          </div>
+        </Popup>
         <div style={{ flex: 1 }} />
         <span
           style={{
