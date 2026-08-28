@@ -23,6 +23,7 @@ import {
   Switch,
   RadioGroup,
   Radio,
+  Avatar,
   Table,
   TableHead,
   TableBody,
@@ -805,6 +806,215 @@ function FiltresOptionB(): ReactElement {
 }
 
 // -----------------------------------------------------------------------
+// Mobile : cadre + feuille (bottom sheet) en accordéon.
+//
+// La maquette rend la feuille À L'INTÉRIEUR du cadre téléphone (et non en
+// overlay fixé au viewport). On reproduit donc une feuille bespoke positionnée
+// dans le cadre plutôt que le composant Drawer (fixé au viewport), ce qui
+// serait inadapté à une maquette de téléphone posée dans le canvas Storybook.
+
+const initialsOf = (nom: string): string =>
+  nom
+    .split(/\s+/)
+    .map((w) => w[0] ?? "")
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
+function FiltresOptionBMobile(): ReactElement {
+  const [f, setF] = useState<Filters>(initialFilters);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [query, setQuery] = useState("");
+
+  const toggleMulti = (key: MultiKey, value: string) =>
+    setF((prev) => {
+      const has = prev[key].includes(value);
+      return { ...prev, [key]: has ? prev[key].filter((v) => v !== value) : [...prev[key], value] };
+    });
+  const clearAll = () => setF(emptyFilters());
+
+  const results = useMemo(() => filteredAgents(f), [f]);
+  const total = totalActive(f);
+  const q = query.trim().toLowerCase();
+  const sheetFacets = FACET_DEFS.filter((d) => d.kind === "multi");
+
+  return (
+    <div style={{ padding: "var(--space400)", display: "flex", justifyContent: "center", background: "var(--background-surface-elevation-sunken-default)", minHeight: "100vh", boxSizing: "border-box" }}>
+      {/* Cadre téléphone. */}
+      <div
+        style={{
+          position: "relative",
+          width: 390,
+          height: 780,
+          overflow: "hidden",
+          borderRadius: 40,
+          border: "10px solid var(--background-neutral-bold-default)",
+          background: "var(--background-default)",
+          display: "flex",
+          flexDirection: "column",
+          fontFamily: "var(--font-family-primary)",
+          color: "var(--text-default)",
+          boxShadow: "var(--elevation-large)",
+        }}
+      >
+        {/* En-tête. */}
+        <div style={{ display: "flex", alignItems: "baseline", gap: "var(--space100)", padding: "var(--space300) var(--space200) var(--space150)" }}>
+          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>Agents</h2>
+          <span style={{ fontSize: 13, color: "var(--text-subtle)" }}>{results.length} / {AGENTS.length}</span>
+        </div>
+
+        {/* Recherche + Filtres. */}
+        <div style={{ display: "flex", gap: "var(--space100)", padding: "0 var(--space200) var(--space150)" }}>
+          <div style={{ flex: 1 }}>
+            <TextField aria-label="Rechercher un agent" placeholder="Rechercher" elemBefore={<Icon icon="Search" size={18} color="subtle" />} />
+          </div>
+          <Button
+            appearance={total > 0 ? "contained" : "outlined"}
+            iconBefore="Tune"
+            onPress={() => setSheetOpen(true)}
+          >
+            {total > 0 && <Badge label={String(total)} appearance="information-inverted" importance="high" />}
+          </Button>
+        </div>
+
+        {/* Liste des agents. */}
+        <ul style={{ flex: 1, margin: 0, padding: 0, listStyle: "none", overflowY: "auto" }}>
+          {results.map((a) => (
+            <li
+              key={a.nom}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "var(--space150)",
+                padding: "var(--space150) var(--space200)",
+                borderTop: "1px solid var(--border-subtle)",
+              }}
+            >
+              <Avatar initials={initialsOf(a.nom)} alt={a.nom} />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 14, fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{a.nom}</div>
+                <div style={{ fontSize: 12, color: "var(--text-subtle)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                  {a.societe} · {a.diplome}
+                </div>
+              </div>
+              <Tag label={DISPO_TAG[a.dispo].label} color={DISPO_TAG[a.dispo].color} appearance="subtle" shape="rounded" />
+            </li>
+          ))}
+          {results.length === 0 && (
+            <li style={{ padding: "var(--space400) var(--space200)", textAlign: "center", color: "var(--text-subtlest)", fontSize: 13 }}>
+              Aucun agent ne correspond.
+            </li>
+          )}
+        </ul>
+
+        {/* Scrim + feuille (dans le cadre). */}
+        {sheetOpen && (
+          <button
+            type="button"
+            aria-label="Fermer les filtres"
+            onClick={() => setSheetOpen(false)}
+            style={{ position: "absolute", inset: 0, border: 0, background: "var(--blanket-default)", cursor: "pointer" }}
+          />
+        )}
+        <div
+          role="dialog"
+          aria-label="Filtres"
+          aria-hidden={!sheetOpen}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            maxHeight: "85%",
+            display: "flex",
+            flexDirection: "column",
+            background: "var(--background-surface-elevation-overlay-default)",
+            borderRadius: "20px 20px 0 0",
+            boxShadow: "var(--elevation-large)",
+            transform: sheetOpen ? "translateY(0)" : "translateY(105%)",
+            transition: "transform 220ms ease",
+          }}
+        >
+          {/* Poignée. */}
+          <div style={{ display: "flex", justifyContent: "center", padding: "var(--space100) 0 0" }}>
+            <span style={{ width: 40, height: 4, borderRadius: "var(--radius-round)", background: "var(--background-neutral-bold-default)" }} />
+          </div>
+          {/* Titre + réinitialiser. */}
+          <div style={{ display: "flex", alignItems: "center", padding: "var(--space150) var(--space200)" }}>
+            <strong style={{ flex: 1, fontSize: 16 }}>Filtres</strong>
+            <Button appearance="link" onPress={clearAll} isDisabled={total === 0}>
+              Réinitialiser
+            </Button>
+          </div>
+          {/* Mini-recherche. */}
+          <div style={{ padding: "0 var(--space200) var(--space150)" }}>
+            <TextField
+              aria-label="Rechercher un critère"
+              placeholder="Rechercher un critère"
+              value={query}
+              onChange={setQuery}
+              elemBefore={<Icon icon="Search" size={18} color="subtle" />}
+            />
+          </div>
+          {/* Accordéon de facettes. */}
+          <div style={{ flex: 1, overflowY: "auto", padding: "0 var(--space200)" }}>
+            {sheetFacets.map((d) => {
+              const key = d.key as MultiKey;
+              const domainVals = DOMAINS[key].filter((v) => !q || v.toLowerCase().includes(q));
+              if (q && domainVals.length === 0) return null;
+              const c = facetCount(f, key);
+              return (
+                <details key={key} open={Boolean(q) || c > 0}>
+                  <summary
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "var(--space100)",
+                      padding: "var(--space150) 0",
+                      borderTop: "1px solid var(--border-subtle)",
+                      cursor: "pointer",
+                      fontSize: 14,
+                      fontWeight: 600,
+                      listStyle: "none",
+                    }}
+                  >
+                    <span style={{ flex: 1 }}>{d.label}</span>
+                    {c > 0 && <Badge label={String(c)} appearance="information" importance="high" />}
+                  </summary>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)", padding: "0 0 var(--space150) var(--space100)" }}>
+                    {domainVals.map((value) => {
+                      const n = optionCount(f, key, value);
+                      const checked = f[key].includes(value);
+                      return (
+                        <label key={value} style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
+                          <Checkbox
+                            isChecked={checked}
+                            isDisabled={n === 0 && !checked}
+                            onChange={() => toggleMulti(key, value)}
+                            label={value}
+                          />
+                          <span style={{ marginLeft: "auto", fontSize: 12, color: "var(--text-subtlest)", fontVariantNumeric: "tabular-nums" }}>{n}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </details>
+              );
+            })}
+          </div>
+          {/* Pied : voir les résultats. */}
+          <div style={{ padding: "var(--space150) var(--space200) var(--space200)", borderTop: "1px solid var(--border-subtle)" }}>
+            <Button appearance="contained" onPress={() => setSheetOpen(false)} style={{ width: "100%" }}>
+              Voir {results.length} agent{results.length > 1 ? "s" : ""}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------
 // Meta + story
 
 const meta = {
@@ -842,4 +1052,8 @@ export const OptionB: Story = {
     await expect(rows.length).toBeGreaterThan(0);
     await expect(rows.length).toBeLessThan(AGENTS.length);
   },
+};
+
+export const Mobile: Story = {
+  render: () => <FiltresOptionBMobile />,
 };
