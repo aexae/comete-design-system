@@ -10,7 +10,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useMemo, useRef, useState } from "react";
 import type { CSSProperties, ReactElement } from "react";
-import { within, expect } from "storybook/test";
+import { within, screen, userEvent, waitFor, expect } from "storybook/test";
 import {
   Button,
   Badge,
@@ -476,7 +476,7 @@ function FiltresOptionB(): ReactElement {
                       const n = optionCount(f, key, value);
                       const facetLabel = FACET_DEFS.find((d) => d.key === key)!.label;
                       return (
-                        <label
+                        <div
                           key={`${key}:${value}`}
                           style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}
                         >
@@ -490,7 +490,7 @@ function FiltresOptionB(): ReactElement {
                           <span style={{ marginLeft: "auto", fontSize: 12, color: "var(--text-subtlest)", fontVariantNumeric: "tabular-nums" }}>
                             {n}
                           </span>
-                        </label>
+                        </div>
                       );
                     })}
                   </div>
@@ -550,7 +550,7 @@ function FiltresOptionB(): ReactElement {
                       const n = optionCount(f, cat as MultiKey, value);
                       const checked = f[cat as MultiKey].includes(value);
                       return (
-                        <label
+                        <div
                           key={value}
                           style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}
                         >
@@ -563,7 +563,7 @@ function FiltresOptionB(): ReactElement {
                           <span style={{ marginLeft: "auto", fontSize: 12, color: "var(--text-subtlest)", fontVariantNumeric: "tabular-nums" }}>
                             {n}
                           </span>
-                        </label>
+                        </div>
                       );
                     })}
                   </div>
@@ -698,6 +698,8 @@ function FiltresOptionB(): ReactElement {
       {/* Tags des filtres actifs, regroupés par catégorie. */}
       {total > 0 && (
         <div
+          role="group"
+          aria-label="Filtres actifs"
           style={{
             display: "flex",
             alignItems: "center",
@@ -871,6 +873,7 @@ function FiltresOptionBMobile(): ReactElement {
           <Button
             appearance={total > 0 ? "contained" : "outlined"}
             iconBefore="Tune"
+            aria-label={total > 0 ? `Filtres, ${total} critère${total > 1 ? "s" : ""} actif${total > 1 ? "s" : ""}` : "Filtres"}
             onPress={() => setSheetOpen(true)}
           >
             {total > 0 && <Badge label={String(total)} appearance="information-inverted" importance="high" />}
@@ -878,7 +881,7 @@ function FiltresOptionBMobile(): ReactElement {
         </div>
 
         {/* Liste des agents. */}
-        <ul style={{ flex: 1, margin: 0, padding: 0, listStyle: "none", overflowY: "auto" }}>
+        <ul aria-label="Liste des agents" style={{ flex: 1, margin: 0, padding: 0, listStyle: "none", overflowY: "auto" }}>
           {results.map((a) => (
             <li
               key={a.nom}
@@ -933,6 +936,9 @@ function FiltresOptionBMobile(): ReactElement {
             boxShadow: "var(--elevation-large)",
             transform: sheetOpen ? "translateY(0)" : "translateY(105%)",
             transition: "transform 220ms ease",
+            // Retirée du flux d'AT et du tab order quand fermée (les contrôles
+            // ne doivent pas être focusables sous le voile).
+            visibility: sheetOpen ? "visible" : "hidden",
           }}
         >
           {/* Poignée. */}
@@ -986,7 +992,7 @@ function FiltresOptionBMobile(): ReactElement {
                       const n = optionCount(f, key, value);
                       const checked = f[key].includes(value);
                       return (
-                        <label key={value} style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
+                        <div key={value} style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
                           <Checkbox
                             isChecked={checked}
                             isDisabled={n === 0 && !checked}
@@ -994,7 +1000,7 @@ function FiltresOptionBMobile(): ReactElement {
                             label={value}
                           />
                           <span style={{ marginLeft: "auto", fontSize: 12, color: "var(--text-subtlest)", fontVariantNumeric: "tabular-nums" }}>{n}</span>
-                        </label>
+                        </div>
                       );
                     })}
                   </div>
@@ -1041,19 +1047,60 @@ type Story = StoryObj;
 export const OptionB: Story = {
   name: "Desktop",
   render: () => <FiltresOptionB />,
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    // Le badge du bouton Filtres = total des critères actifs.
-    const filtresBtn = canvas.getByRole("button", { name: /Filtres/ });
-    await expect(filtresBtn).toHaveAttribute("aria-expanded", "false");
-    // Les tags actifs sont présents (sélection initiale) et le tableau est filtré.
-    await expect(canvas.getByText(/Société \/ Agence/)).toBeInTheDocument();
-    const rows = canvasElement.querySelectorAll("tbody tr");
-    await expect(rows.length).toBeGreaterThan(0);
-    await expect(rows.length).toBeLessThan(AGENTS.length);
+    const rowCount = () => canvasElement.querySelectorAll("tbody tr").length;
+
+    await step("état initial : panneau fermé, tableau filtré", async () => {
+      const filtresBtn = canvas.getByRole("button", { name: /Filtres/ });
+      await expect(filtresBtn).toHaveAttribute("aria-expanded", "false");
+      // Sélection initiale → tableau filtré (ni vide, ni complet).
+      await expect(rowCount()).toBeGreaterThan(0);
+      await expect(rowCount()).toBeLessThan(AGENTS.length);
+    });
+
+    await step("ouvrir le panneau à deux volets", async () => {
+      await userEvent.click(canvas.getByRole("button", { name: /Filtres/ }));
+      // Le popover est rendu dans un portail (hors canvas) → requête document.
+      await waitFor(() => expect(screen.getByRole("dialog")).toBeInTheDocument());
+      const dialog = within(screen.getByRole("dialog"));
+      await expect(dialog.getByRole("button", { name: "Langues" })).toBeInTheDocument();
+    });
+
+    await step("cocher une facette vide réduit (ou maintient) les résultats", async () => {
+      const dialog = within(screen.getByRole("dialog"));
+      const before = rowCount();
+      await userEvent.click(dialog.getByRole("button", { name: "Langues" }));
+      const cb = dialog.getByRole("checkbox", { name: "Français" });
+      await userEvent.click(cb);
+      await expect(cb).toBeChecked();
+      await waitFor(() => expect(rowCount()).toBeLessThanOrEqual(before));
+    });
+
+    await step("fermer le panneau avec Échap", async () => {
+      await userEvent.keyboard("{Escape}");
+      await waitFor(() =>
+        expect(canvas.getByRole("button", { name: /Filtres/ })).toHaveAttribute("aria-expanded", "false"),
+      );
+    });
   },
 };
 
 export const Mobile: Story = {
   render: () => <FiltresOptionBMobile />,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("ouvrir la feuille de filtres", async () => {
+      await userEvent.click(canvas.getByRole("button", { name: /Filtres/ }));
+      await waitFor(() => expect(canvas.getByRole("dialog", { name: "Filtres" })).toBeVisible());
+    });
+
+    await step("« Voir N agents » ferme la feuille", async () => {
+      const sheet = within(canvas.getByRole("dialog", { name: "Filtres" }));
+      await userEvent.click(sheet.getByRole("button", { name: /Voir \d+ agent/ }));
+      // Fermée : visibility:hidden + aria-hidden → hors de l'arbre accessible.
+      await waitFor(() => expect(canvas.queryByRole("dialog", { name: "Filtres" })).toBeNull());
+    });
+  },
 };
