@@ -8,7 +8,7 @@
 // @naxit, sont mappés vers @aexae). La logique de filtre (comptes vivants,
 // mini-recherche, vues enregistrées) vient du DCLogic de la maquette.
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { CSSProperties, ReactElement } from "react";
 import { within, expect } from "storybook/test";
 import {
@@ -221,6 +221,18 @@ interface ActiveGroup {
   clear: () => void;
 }
 
+interface SavedView {
+  id: string;
+  name: string;
+  filters: Filters;
+}
+
+const INITIAL_VIEWS: SavedView[] = [
+  { id: "v-seed-1", name: "SSIAP disponibles", filters: { ...emptyFilters(), diplome: ["SSIAP 1", "SSIAP 2"], dispoMode: "disponibles" } },
+  { id: "v-seed-2", name: "Comète Sécurité — CDI", filters: { ...emptyFilters(), societe: ["Comète Sécurité"], cdiOnly: true } },
+  { id: "v-seed-3", name: "Cynophiles Sud", filters: { ...emptyFilters(), emploi: ["Agent cynophile"], secteur: ["Sud"] } },
+];
+
 const dateInputStyle: CSSProperties = {
   height: 36,
   padding: "0 var(--space100)",
@@ -240,6 +252,24 @@ function FiltresOptionB(): ReactElement {
   const [panelOpen, setPanelOpen] = useState(false);
   const [cat, setCat] = useState<string>("societe");
   const [query, setQuery] = useState("");
+  const [views, setViews] = useState<SavedView[]>(INITIAL_VIEWS);
+  const [viewsOpen, setViewsOpen] = useState(false);
+  const [savingName, setSavingName] = useState<string | null>(null);
+  const viewSeq = useRef(0);
+
+  const applyView = (v: SavedView) => {
+    setF(v.filters);
+    setViewsOpen(false);
+    setPanelOpen(false);
+  };
+  const deleteView = (id: string) => setViews((vs) => vs.filter((v) => v.id !== id));
+  const saveView = () => {
+    const name = (savingName ?? "").trim();
+    if (!name) return;
+    viewSeq.current += 1;
+    setViews((vs) => [...vs, { id: `v-${viewSeq.current}`, name, filters: f }]);
+    setSavingName(null);
+  };
 
   const setFacet = (patch: Partial<Filters>) => setF((prev) => ({ ...prev, ...patch }));
   const toggleMulti = (key: MultiKey, value: string) =>
@@ -550,17 +580,105 @@ function FiltresOptionB(): ReactElement {
                 borderTop: "1px solid var(--border-subtle)",
               }}
             >
-              <span style={{ fontSize: 13, color: "var(--text-subtle)", fontVariantNumeric: "tabular-nums" }}>
-                {results.length} agent{results.length > 1 ? "s" : ""}
-              </span>
-              <div style={{ flex: 1 }} />
-              <Button appearance="subtle" onPress={clearAll} isDisabled={total === 0}>
-                Réinitialiser
-              </Button>
-              <Button appearance="contained" onPress={() => setPanelOpen(false)}>
-                Voir les résultats
-              </Button>
+              {savingName === null ? (
+                <>
+                  <Button appearance="link" iconBefore="BookmarkAdd" onPress={() => setSavingName("")} isDisabled={total === 0}>
+                    Enregistrer cette recherche
+                  </Button>
+                  <div style={{ flex: 1 }} />
+                  <span style={{ fontSize: 13, color: "var(--text-subtle)", fontVariantNumeric: "tabular-nums" }}>
+                    {results.length} agent{results.length > 1 ? "s" : ""}
+                  </span>
+                  <Button appearance="subtle" onPress={clearAll} isDisabled={total === 0}>
+                    Réinitialiser
+                  </Button>
+                  <Button appearance="contained" onPress={() => setPanelOpen(false)}>
+                    Voir les résultats
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <div style={{ flex: 1, maxWidth: 260 }}>
+                    <TextField
+                      aria-label="Nom de la recherche"
+                      placeholder="Nom de la recherche"
+                      value={savingName}
+                      onChange={setSavingName}
+                    />
+                  </div>
+                  <Button appearance="contained" onPress={saveView} isDisabled={!savingName.trim()}>
+                    Enregistrer
+                  </Button>
+                  <Button appearance="subtle" onPress={() => setSavingName(null)}>
+                    Annuler
+                  </Button>
+                </>
+              )}
             </div>
+          </div>
+        </Popup>
+        <Popup
+          isOpen={viewsOpen}
+          onOpenChange={setViewsOpen}
+          placement="bottom-left"
+          trigger={
+            <Button appearance="subtle" iconBefore="Bookmark">
+              Recherches
+              {views.length > 0 && (
+                <Badge label={String(views.length)} appearance="neutral" importance="high" />
+              )}
+            </Button>
+          }
+        >
+          <div style={{ width: 300, padding: "var(--space100)" }}>
+            {views.length === 0 ? (
+              <p style={{ margin: 0, padding: "var(--space200)", fontSize: 13, color: "var(--text-subtlest)", textAlign: "center" }}>
+                Aucune recherche enregistrée.
+              </p>
+            ) : (
+              <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column" }}>
+                {views.map((v) => (
+                  <li key={v.id} style={{ display: "flex", alignItems: "center" }}>
+                    <button
+                      type="button"
+                      onClick={() => applyView(v)}
+                      style={{
+                        flex: 1,
+                        display: "block",
+                        textAlign: "left",
+                        padding: "var(--space100) var(--space150)",
+                        border: 0,
+                        borderRadius: "var(--radius100)",
+                        background: "none",
+                        color: "var(--text-default)",
+                        fontSize: 13.5,
+                        cursor: "pointer",
+                      }}
+                    >
+                      {v.name}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => deleteView(v.id)}
+                      aria-label={`Supprimer la recherche ${v.name}`}
+                      style={{
+                        display: "inline-flex",
+                        padding: "var(--space075)",
+                        border: 0,
+                        background: "none",
+                        borderRadius: "var(--radius-round)",
+                        cursor: "pointer",
+                        color: "var(--icon-subtle)",
+                      }}
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                        <path d="M6 6l12 12M18 6 6 18" />
+                      </svg>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </Popup>
         <div style={{ flex: 1 }} />
