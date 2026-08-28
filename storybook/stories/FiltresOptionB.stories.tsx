@@ -279,6 +279,57 @@ function FiltresOptionB(): ReactElement {
 
   const clearAll = () => setF(emptyFilters());
 
+  // Chips actifs : on en montre quelques-uns puis « +N » (popover).
+  const MAX_CHIPS = 4;
+  const visibleGroups = groups.slice(0, MAX_CHIPS);
+  const overflowGroups = groups.slice(MAX_CHIPS);
+
+  const renderChip = (g: ActiveGroup): ReactElement => {
+    const first = g.values.split(", ")[0];
+    const extra = g.count > 1 ? `+${g.count - 1}` : "";
+    return (
+      <span
+        key={g.key}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "var(--space075)",
+          height: 28,
+          padding: "0 var(--space075) 0 var(--space150)",
+          borderRadius: "var(--radius-round)",
+          background: "var(--background-brand-subtlest-default)",
+          color: "var(--text-brand)",
+          fontSize: 12.5,
+          fontWeight: 500,
+          whiteSpace: "nowrap",
+        }}
+      >
+        <span style={{ opacity: 0.65 }}>{g.facet} :</span>
+        <span>{first}</span>
+        {extra && <span style={{ fontWeight: 600, opacity: 0.75 }}>{extra}</span>}
+        <button
+          type="button"
+          onClick={g.clear}
+          aria-label={`Retirer ${g.facet}`}
+          style={{
+            display: "inline-flex",
+            padding: 4,
+            border: 0,
+            background: "none",
+            borderRadius: "var(--radius-round)",
+            cursor: "pointer",
+            color: "inherit",
+            opacity: 0.7,
+          }}
+        >
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" aria-hidden="true">
+            <path d="M6 6l12 12M18 6 6 18" />
+          </svg>
+        </button>
+      </span>
+    );
+  };
+
   return (
     <div
       style={{
@@ -550,66 +601,42 @@ function FiltresOptionB(): ReactElement {
           >
             Filtres
           </span>
-          {groups.map((g) => {
-            const first = g.values.split(", ")[0];
-            const extra = g.count > 1 ? ` +${g.count - 1}` : "";
-            return (
-              <span
-                key={g.key}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "var(--space075)",
-                  height: 28,
-                  padding: "0 var(--space075) 0 var(--space150)",
-                  borderRadius: "var(--radius-round)",
-                  background: "var(--background-brand-subtlest-default)",
-                  color: "var(--text-brand)",
-                  fontSize: 12.5,
-                  fontWeight: 500,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                <span style={{ opacity: 0.65 }}>{g.facet} :</span>
-                <span>{first}</span>
-                {extra && <span style={{ fontWeight: 600, opacity: 0.75 }}>{extra}</span>}
+          {visibleGroups.map(renderChip)}
+          {overflowGroups.length > 0 && (
+            <Popup
+              placement="bottom-left"
+              trigger={
                 <button
                   type="button"
-                  onClick={g.clear}
-                  aria-label={`Retirer ${g.facet}`}
+                  aria-label={`Afficher ${overflowGroups.length} filtre${overflowGroups.length > 1 ? "s" : ""} de plus`}
                   style={{
                     display: "inline-flex",
-                    padding: 4,
-                    border: 0,
-                    background: "none",
+                    alignItems: "center",
+                    height: 28,
+                    padding: "0 var(--space150)",
                     borderRadius: "var(--radius-round)",
+                    border: "1px solid var(--border-default)",
+                    background: "var(--background-surface-default)",
+                    color: "var(--text-subtle)",
+                    fontSize: 12.5,
+                    fontWeight: 600,
                     cursor: "pointer",
-                    color: "inherit",
-                    opacity: 0.7,
+                    whiteSpace: "nowrap",
                   }}
                 >
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" aria-hidden="true">
-                    <path d="M6 6l12 12M18 6 6 18" />
-                  </svg>
+                  +{overflowGroups.length}
                 </button>
-              </span>
-            );
-          })}
-          <button
-            type="button"
-            onClick={clearAll}
-            style={{
-              flex: "none",
-              border: 0,
-              background: "none",
-              fontSize: 12.5,
-              color: "var(--text-link-default)",
-              cursor: "pointer",
-              whiteSpace: "nowrap",
-            }}
-          >
+              }
+            >
+              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)", padding: "var(--space150)", maxWidth: 320 }}>
+                {overflowGroups.map(renderChip)}
+              </div>
+            </Popup>
+          )}
+          <div style={{ flex: 1 }} />
+          <Button appearance="link" onPress={clearAll}>
             Réinitialiser
-          </button>
+          </Button>
         </div>
       )}
 
@@ -625,7 +652,17 @@ function FiltresOptionB(): ReactElement {
             <TableHeaderCell>Disponibilité</TableHeaderCell>
           </TableRow>
         </TableHead>
-        <TableBody columnCount={6} isEmpty={results.length === 0}>
+        <TableBody
+          columnCount={6}
+          isNoResults={results.length === 0}
+          noResultsTitle="Aucun agent ne correspond"
+          noResultsDescription="Ajustez ou réinitialisez les filtres pour élargir la recherche."
+          noResultsAction={
+            <Button appearance="outlined" onPress={clearAll}>
+              Réinitialiser les filtres
+            </Button>
+          }
+        >
           {results.map((a) => (
             <TableRow key={a.nom}>
               <TableCell>{a.nom}</TableCell>
