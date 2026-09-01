@@ -8,6 +8,7 @@
     "build-storybook": "storybook build",
     "preview": "serve storybook-static -s -p 6006",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "chromatic": "chromatic"

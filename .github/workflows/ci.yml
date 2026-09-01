@@ -61,3 +61,18 @@ jobs:
       - name: Lint Storybook
         working-directory: storybook
         run: pnpm lint
+
+      - name: Typecheck Storybook
+        working-directory: storybook
+        run: pnpm typecheck
+
+      # Tests d'interaction : les stories (play functions + a11y) sont exécutées
+      # en navigateur headless via @storybook/addon-vitest (@vitest/browser +
+      # Playwright/Chromium). Nécessite le binaire Chromium.
+      - name: Install Playwright Chromium
+        working-directory: storybook
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Test Storybook stories
+        working-directory: storybook
+        run: pnpm test
