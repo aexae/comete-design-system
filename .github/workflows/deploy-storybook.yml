@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  packages: read
   pages: write
   id-token: write
 
@@ -41,13 +42,13 @@ jobs:
       - name: Install root dependencies
         run: pnpm install --frozen-lockfile
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.PKG_READ_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Storybook dependencies
         working-directory: storybook
         run: pnpm install --frozen-lockfile
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.PKG_READ_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Storybook
         working-directory: storybook
