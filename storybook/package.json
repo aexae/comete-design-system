@@ -8,6 +8,7 @@
     "build-storybook": "storybook build",
     "preview": "serve storybook-static -s -p 6006",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "chromatic": "chromatic"
@@ -42,6 +43,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-storybook": "^10.5.8",
     "globals": "^17.4.0",
+    "playwright": "1.60.0",
     "serve": "^14.2.6",
     "storybook": "^10.5.8",
     "typescript-eslint": "^8.57.1",
