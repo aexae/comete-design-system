@@ -8,6 +8,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   ci:
     name: Lint, Test & Build
@@ -31,7 +35,7 @@ jobs:
       - name: Install root dependencies
         run: pnpm install --frozen-lockfile
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.PKG_READ_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Lint
         run: pnpm lint
@@ -52,7 +56,7 @@ jobs:
         working-directory: storybook
         run: pnpm install --frozen-lockfile
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.PKG_READ_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Lint Storybook
         working-directory: storybook
