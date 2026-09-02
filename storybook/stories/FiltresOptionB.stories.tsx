@@ -25,6 +25,11 @@ import {
   TextField,
   Icon,
   Popup,
+  Menu,
+  MenuTrigger,
+  MenuPopover,
+  MenuSection,
+  MenuItem,
   Checkbox,
   Switch,
   RadioGroup,
@@ -38,7 +43,6 @@ import {
   ListItemText,
   ListItemAvatar,
   ListItemTrailing,
-  ListItemSecondaryAction,
   Table,
   TableHead,
   TableBody,
@@ -565,45 +569,47 @@ function FiltresOptionB(): ReactElement {
 
         <div style={{ flex: 1 }} />
 
-        {/* Recherches enregistrées — action à droite, éloignée de la recherche. */}
-        <Popup
-          isOpen={viewsOpen}
-          onOpenChange={setViewsOpen}
-          placement="bottom-right"
-          trigger={
-            <Button appearance="outlined" iconBefore="Bookmark" iconAfter="ArrowDropDown">
-              Recherches
-            </Button>
-          }
-        >
-          <div style={{ width: 320, padding: "var(--space075)" }}>
-            <div style={{ padding: "var(--space150) var(--space150) var(--space075)", fontSize: 11, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--text-subtlest)" }}>
-              Recherches enregistrées
-            </div>
-            {views.length === 0 ? (
-              <p style={{ margin: 0, padding: "var(--space200)", textAlign: "center", fontSize: 13, color: "var(--text-subtlest)" }}>Aucune recherche enregistrée.</p>
-            ) : (
-              <List aria-label="Recherches enregistrées">
-                {views.map((v) => {
-                  const n = totalActive(v.filters);
-                  return (
-                    <ListItemButton key={v.id} onPress={() => applyView(v)} style={{ paddingRight: 44 }}>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 1, flex: 1, minWidth: 0 }}>
-                        <span style={{ fontSize: 12.5, fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{v.name}</span>
-                        <span style={{ fontSize: 11, color: "var(--text-subtlest)" }}>
-                          {n} filtre{n > 1 ? "s" : ""} appliqué{n > 1 ? "s" : ""}
-                        </span>
-                      </div>
-                      <ListItemSecondaryAction>
-                        <Button appearance="subtle" iconBefore="Close" aria-label={`Supprimer ${v.name}`} onPress={() => deleteView(v.id)} />
-                      </ListItemSecondaryAction>
-                    </ListItemButton>
-                  );
-                })}
-              </List>
-            )}
-          </div>
-        </Popup>
+        {/* Recherches enregistrées — action à droite, éloignée de la recherche.
+            Composant Menu du DS : MenuItem (label + description = nb de filtres)
+            avec la croix de suppression dans le elemAfter. */}
+        <MenuTrigger isOpen={viewsOpen} onOpenChange={setViewsOpen}>
+          <Button appearance="outlined" iconBefore="Bookmark" iconAfter="ArrowDropDown">
+            Recherches
+          </Button>
+          <MenuPopover width={320}>
+            <Menu
+              aria-label="Recherches enregistrées"
+              onAction={(key) => {
+                const v = views.find((x) => x.id === key);
+                if (v) applyView(v);
+              }}
+            >
+              <MenuSection title="Recherches enregistrées">
+                {views.length === 0 ? (
+                  <MenuItem id="__empty" isDisabled>
+                    Aucune recherche enregistrée
+                  </MenuItem>
+                ) : (
+                  views.map((v) => {
+                    const n = totalActive(v.filters);
+                    return (
+                      <MenuItem
+                        key={v.id}
+                        id={v.id}
+                        description={`${n} filtre${n > 1 ? "s" : ""} appliqué${n > 1 ? "s" : ""}`}
+                        elemAfter={
+                          <Button appearance="subtle" iconBefore="Close" aria-label={`Supprimer ${v.name}`} onPress={() => deleteView(v.id)} />
+                        }
+                      >
+                        {v.name}
+                      </MenuItem>
+                    );
+                  })
+                )}
+              </MenuSection>
+            </Menu>
+          </MenuPopover>
+        </MenuTrigger>
       </div>
 
       {/* Tags des filtres actifs, regroupés par catégorie. */}
