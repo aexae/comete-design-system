@@ -546,9 +546,6 @@ function FiltresOptionB(): ReactElement {
                     Enregistrer cette recherche
                   </Button>
                   <div style={{ flex: 1 }} />
-                  <span style={{ fontSize: 13, color: "var(--text-subtle)", fontVariantNumeric: "tabular-nums" }}>
-                    {results.length} agent{results.length > 1 ? "s" : ""}
-                  </span>
                   <Button appearance="subtle" onPress={clearAll} isDisabled={total === 0}>
                     Réinitialiser
                   </Button>
