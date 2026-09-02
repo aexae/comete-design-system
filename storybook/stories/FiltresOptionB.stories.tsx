@@ -233,14 +233,7 @@ interface SavedView {
   filters: Filters;
 }
 
-// Résumé « valeurs · valeurs » d'une recherche enregistrée (sous-titre).
-function viewSummary(filters: Filters): string {
-  return groupsOf(filters)
-    .map((g) => g.values)
-    .join(" · ");
-}
-
-// Groupes de valeurs actives (sert aux tags et au résumé des vues).
+// Groupes de valeurs actives (sert aux tags des filtres appliqués).
 function groupsOf(f: Filters): { key: string; facet: string; values: string; count: number }[] {
   const out: { key: string; facet: string; values: string; count: number }[] = [];
   MULTI_KEYS.forEach((k) => {
@@ -591,15 +584,22 @@ function FiltresOptionB(): ReactElement {
               <p style={{ margin: 0, padding: "var(--space200)", textAlign: "center", fontSize: 13, color: "var(--text-subtlest)" }}>Aucune recherche enregistrée.</p>
             ) : (
               <List aria-label="Recherches enregistrées">
-                {views.map((v) => (
-                  <ListItemButton key={v.id} onPress={() => applyView(v)}>
-                    <ListItemText primary={v.name} secondary={viewSummary(v.filters)} />
-                    <ListItemSecondaryAction>
-                      <span style={{ fontSize: 12.5, color: "var(--text-subtlest)", fontVariantNumeric: "tabular-nums" }}>{filteredAgents(v.filters).length}</span>
-                      <Button appearance="subtle" iconBefore="Close" aria-label={`Supprimer ${v.name}`} onPress={() => deleteView(v.id)} />
-                    </ListItemSecondaryAction>
-                  </ListItemButton>
-                ))}
+                {views.map((v) => {
+                  const n = totalActive(v.filters);
+                  return (
+                    <ListItemButton key={v.id} onPress={() => applyView(v)} style={{ paddingRight: 44 }}>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 1, flex: 1, minWidth: 0 }}>
+                        <span style={{ fontSize: 12.5, fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{v.name}</span>
+                        <span style={{ fontSize: 11, color: "var(--text-subtlest)" }}>
+                          {n} filtre{n > 1 ? "s" : ""} appliqué{n > 1 ? "s" : ""}
+                        </span>
+                      </div>
+                      <ListItemSecondaryAction>
+                        <Button appearance="subtle" iconBefore="Close" aria-label={`Supprimer ${v.name}`} onPress={() => deleteView(v.id)} />
+                      </ListItemSecondaryAction>
+                    </ListItemButton>
+                  );
+                })}
               </List>
             )}
           </div>
