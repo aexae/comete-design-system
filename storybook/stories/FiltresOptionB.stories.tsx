@@ -546,7 +546,7 @@ function FiltresOptionB(): ReactElement {
                   <Button appearance="subtle" onPress={clearAll} isDisabled={total === 0}>
                     Réinitialiser
                   </Button>
-                  <Button appearance="contained" onPress={() => setPanelOpen(false)}>
+                  <Button appearance="contained" color="comete" onPress={() => setPanelOpen(false)}>
                     Voir les résultats
                   </Button>
                 </>
@@ -555,7 +555,7 @@ function FiltresOptionB(): ReactElement {
                   <div style={{ flex: 1, maxWidth: 260 }}>
                     <TextField aria-label="Nom de la recherche" placeholder="Nom de la recherche" value={savingName} onChange={setSavingName} />
                   </div>
-                  <Button appearance="contained" onPress={saveView} isDisabled={!savingName.trim()}>
+                  <Button appearance="contained" color="comete" onPress={saveView} isDisabled={!savingName.trim()}>
                     Enregistrer
                   </Button>
                   <Button appearance="subtle" onPress={() => setSavingName(null)}>
@@ -765,8 +765,7 @@ function FiltresOptionBMobile(): ReactElement {
     display: "flex",
     alignItems: "center",
     gap: "var(--space075)",
-    padding: "var(--space200) var(--space100) var(--space150)",
-    borderBottom: "1px solid var(--border-subtle)",
+    padding: "var(--space100) var(--space100) var(--space150)",
   } as const;
 
   return (
@@ -831,45 +830,74 @@ function FiltresOptionBMobile(): ReactElement {
           )}
         </div>
 
-        {/* Panneau de filtres en drill-down (dans le cadre). */}
+        {/* Voile — ferme la feuille au clic. */}
+        <button
+          type="button"
+          aria-label="Fermer les filtres"
+          onClick={closeFilter}
+          tabIndex={filterOpen ? 0 : -1}
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 24,
+            border: 0,
+            cursor: "pointer",
+            background: "var(--blanket-default)",
+            opacity: filterOpen ? 1 : 0,
+            pointerEvents: filterOpen ? "auto" : "none",
+            transition: "opacity 220ms ease",
+          }}
+        />
+
+        {/* Bottom sheet — filtres en drill-down (liste des facettes → détail). */}
         <div
           role="dialog"
           aria-label="Filtres"
           aria-hidden={!filterOpen}
           style={{
             position: "absolute",
-            inset: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
             zIndex: 25,
-            background: "var(--background-surface-elevation-overlay-default)",
+            maxHeight: "86%",
             display: "flex",
             flexDirection: "column",
+            background: "var(--background-surface-elevation-overlay-default)",
+            borderRadius: "20px 20px 0 0",
+            boxShadow: "var(--elevation-large)",
             transform: filterOpen ? "translateY(0)" : "translateY(100%)",
-            transition: "transform 220ms ease",
+            transition: "transform 240ms ease",
             visibility: filterOpen ? "visible" : "hidden",
           }}
         >
+          {/* Poignée du bottom sheet. */}
+          <div style={{ display: "flex", justifyContent: "center", paddingTop: "var(--space100)" }}>
+            <span style={{ width: 40, height: 4, borderRadius: "var(--radius-round)", background: "var(--background-neutral-bold-default)" }} />
+          </div>
+
           {detailDef === null ? (
             <>
               <div style={headerStyle}>
                 <Button appearance="subtle" iconBefore="Close" aria-label="Fermer" onPress={closeFilter} />
                 <strong style={{ flex: 1, fontSize: 18 }}>Filtres</strong>
               </div>
-              <div style={{ flex: 1, overflowY: "auto" }}>
-                <List isBordered aria-label="Facettes">
+              <div style={{ flex: 1, overflowY: "auto", minHeight: 0 }}>
+                <List aria-label="Facettes">
                   {FACET_DEFS.map((d) => {
                     const c = facetCount(f, d.key);
                     const val = facetValue(d);
                     return (
                       <ListItemButton key={d.key} onPress={() => setFacet(d.key)}>
                         <ListItemText primary={d.label} />
-                        <ListItemTrailing>
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space100)", marginLeft: "auto" }}>
                           {val ? (
                             <span style={{ color: "var(--text-subtlest)", fontSize: 14 }}>{val}</span>
                           ) : c > 0 ? (
                             <Badge label={String(c)} appearance="information" importance="high" />
                           ) : null}
                           <Icon icon="ChevronRight" color="subtlest" />
-                        </ListItemTrailing>
+                        </span>
                       </ListItemButton>
                     );
                   })}
@@ -883,7 +911,7 @@ function FiltresOptionBMobile(): ReactElement {
                 <strong style={{ flex: 1, fontSize: 18 }}>{detailDef.label}</strong>
                 <Button appearance="subtle" iconBefore="Close" aria-label="Fermer" onPress={closeFilter} />
               </div>
-              <div style={{ flex: 1, overflowY: "auto", padding: "var(--space200)" }}>{optionControls(detailDef)}</div>
+              <div style={{ flex: 1, overflowY: "auto", minHeight: 0, padding: "var(--space200)" }}>{optionControls(detailDef)}</div>
             </>
           )}
 
@@ -893,7 +921,7 @@ function FiltresOptionBMobile(): ReactElement {
               Réinitialiser
             </Button>
             <div style={{ flex: 1 }} />
-            <Button appearance="contained" onPress={closeFilter}>
+            <Button appearance="contained" color="comete" onPress={closeFilter}>
               Voir {results.length} agent{results.length > 1 ? "s" : ""}
             </Button>
           </div>
