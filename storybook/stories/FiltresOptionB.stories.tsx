@@ -1,21 +1,27 @@
 // Recette « Filtres — option B » (portée depuis la maquette Claude Design
-// « Affichage du rail de filtre » / Filtres option B). Panneau unique de
-// filtres : desktop = recherche + bouton Filtres (badge) ouvrant un popover à
-// deux volets ; tags actifs groupés par catégorie sous la toolbar ; tableau de
-// résultats. Mobile = bouton Filtres + feuille (bottom sheet) en accordéon.
+// « Filtres option B »). Panneau unique de filtres :
+// - Desktop = recherche + bouton Filtres (popover à deux volets) ; les
+//   recherches enregistrées sont une action à droite de la barre ; tags actifs
+//   groupés par catégorie (+N) sous la toolbar ; tableau de résultats.
+// - Mobile = liste d'agents + panneau de filtres en drill-down (liste des
+//   facettes → détail d'une facette).
 //
-// Transposée sur les composants + tokens du repo (les tokens de la maquette,
-// @naxit, sont mappés vers @aexae). La logique de filtre (comptes vivants,
-// mini-recherche, vues enregistrées) vient du DCLogic de la maquette.
+// Transposée 100 % sur les composants + tokens du repo : SearchField, Popup,
+// Checkbox, Switch, RadioGroup/Radio, DatePicker, TimePicker, Table, Tag,
+// Badge, Button, Icon, Avatar, List (+ItemButton/Text/Avatar/Trailing/
+// SecondaryAction). La logique (comptes vivants, mini-recherche, vues
+// enregistrées) vient du DCLogic de la maquette.
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useMemo, useRef, useState } from "react";
-import type { CSSProperties, ReactElement } from "react";
+import type { ReactElement } from "react";
 import { within, screen, userEvent, waitFor, expect } from "storybook/test";
+import { parseDate, Time } from "@internationalized/date";
 import {
   Button,
   Badge,
   Tag,
   type TagStatusColor,
+  SearchField,
   TextField,
   Icon,
   Popup,
@@ -23,7 +29,16 @@ import {
   Switch,
   RadioGroup,
   Radio,
+  DatePicker,
+  TimePicker,
   Avatar,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  ListItemAvatar,
+  ListItemTrailing,
+  ListItemSecondaryAction,
   Table,
   TableHead,
   TableBody,
@@ -140,20 +155,11 @@ interface Filters {
   sousTraitants: boolean;
   cdiOnly: boolean;
   dispoMode: string;
-  date: string;
-  from: string;
-  to: string;
+  nameQuery: string;
 }
 
 function emptyFilters(): Filters {
-  const f = {
-    sousTraitants: false,
-    cdiOnly: false,
-    dispoMode: "tous",
-    date: "2026-08-20",
-    from: "18:00",
-    to: "23:00",
-  } as Filters;
+  const f = { sousTraitants: false, cdiOnly: false, dispoMode: "tous", nameQuery: "" } as Filters;
   MULTI_KEYS.forEach((k) => {
     f[k] = [];
   });
@@ -178,10 +184,31 @@ function match(a: Agent, f: Filters): boolean {
   if (!f.sousTraitants && a.sousTraitant) return false;
   if (f.cdiOnly && a.contrat !== "CDI") return false;
   if (f.dispoMode !== "tous" && a.dispo !== f.dispoMode) return false;
+  if (f.nameQuery && !a.nom.toLowerCase().includes(f.nameQuery.toLowerCase())) return false;
   return MULTI_KEYS.every((k) => !f[k].length || f[k].includes(a[k]));
 }
 
 const filteredAgents = (f: Filters): Agent[] => AGENTS.filter((a) => match(a, f));
+
+// Match en ignorant une facette (comptes qui ne s'effondrent pas quand on
+// coche plusieurs valeurs de la même facette).
+function matchExcept(a: Agent, f: Filters, skip: MultiKey): boolean {
+  if (!f.sousTraitants && a.sousTraitant) return false;
+  if (f.cdiOnly && a.contrat !== "CDI") return false;
+  if (f.dispoMode !== "tous" && a.dispo !== f.dispoMode) return false;
+  return MULTI_KEYS.every((k) => k === skip || !f[k].length || f[k].includes(a[k]));
+}
+
+const optionCount = (f: Filters, key: MultiKey, value: string): number =>
+  AGENTS.filter((a) => a[key] === value && matchExcept(a, f, key)).length;
+
+const DOMAINS = MULTI_KEYS.reduce(
+  (acc, key) => {
+    acc[key] = [...new Set(AGENTS.map((a) => a[key]))].sort((x, y) => x.localeCompare(y, "fr"));
+    return acc;
+  },
+  {} as Record<MultiKey, string[]>,
+);
 
 function facetCount(f: Filters, key: string): number {
   if (key === "perimetre") return (f.sousTraitants ? 1 : 0) + (f.cdiOnly ? 1 : 0);
@@ -191,28 +218,6 @@ function facetCount(f: Filters, key: string): number {
 
 const totalActive = (f: Filters): number =>
   FACET_DEFS.reduce((n, d) => n + facetCount(f, d.key), 0);
-
-// Domaine (valeurs distinctes) de chaque facette multi, trié FR.
-const DOMAINS = MULTI_KEYS.reduce(
-  (acc, key) => {
-    acc[key] = [...new Set(AGENTS.map((a) => a[key]))].sort((x, y) => x.localeCompare(y, "fr"));
-    return acc;
-  },
-  {} as Record<MultiKey, string[]>,
-);
-
-// Match en ignorant une facette (pour des comptes qui ne s'effondrent pas
-// quand on coche plusieurs valeurs de la même facette).
-function matchExcept(a: Agent, f: Filters, skip: MultiKey): boolean {
-  if (!f.sousTraitants && a.sousTraitant) return false;
-  if (f.cdiOnly && a.contrat !== "CDI") return false;
-  if (f.dispoMode !== "tous" && a.dispo !== f.dispoMode) return false;
-  return MULTI_KEYS.every((k) => k === skip || !f[k].length || f[k].includes(a[k]));
-}
-
-// Compte vivant : nombre d'agents que cocher cette valeur ramènerait.
-const optionCount = (f: Filters, key: MultiKey, value: string): number =>
-  AGENTS.filter((a) => a[key] === value && matchExcept(a, f, key)).length;
 
 interface ActiveGroup {
   key: string;
@@ -228,25 +233,46 @@ interface SavedView {
   filters: Filters;
 }
 
+// Résumé « valeurs · valeurs » d'une recherche enregistrée (sous-titre).
+function viewSummary(filters: Filters): string {
+  return groupsOf(filters)
+    .map((g) => g.values)
+    .join(" · ");
+}
+
+// Groupes de valeurs actives (sert aux tags et au résumé des vues).
+function groupsOf(f: Filters): { key: string; facet: string; values: string; count: number }[] {
+  const out: { key: string; facet: string; values: string; count: number }[] = [];
+  MULTI_KEYS.forEach((k) => {
+    if (!f[k].length) return;
+    const d = FACET_DEFS.find((x) => x.key === k)!;
+    out.push({ key: k, facet: d.label, values: f[k].join(", "), count: f[k].length });
+  });
+  if (f.cdiOnly) out.push({ key: "cdi", facet: "Contrat", values: "CDI uniquement", count: 1 });
+  if (f.sousTraitants) out.push({ key: "st", facet: "Périmètre", values: "Sous-traitants inclus", count: 1 });
+  if (f.dispoMode !== "tous") {
+    const m = DISPO_MODES.find((x) => x.id === f.dispoMode)!;
+    out.push({ key: "dispo", facet: "Disponibilité", values: m.label, count: 1 });
+  }
+  return out;
+}
+
 const INITIAL_VIEWS: SavedView[] = [
-  { id: "v-seed-1", name: "SSIAP disponibles", filters: { ...emptyFilters(), diplome: ["SSIAP 1", "SSIAP 2"], dispoMode: "disponibles" } },
-  { id: "v-seed-2", name: "Comète Sécurité — CDI", filters: { ...emptyFilters(), societe: ["Comète Sécurité"], cdiOnly: true } },
-  { id: "v-seed-3", name: "Cynophiles Sud", filters: { ...emptyFilters(), emploi: ["Agent cynophile"], secteur: ["Sud"] } },
+  { id: "v-seed-1", name: "SSIAP 2 disponibles", filters: { ...emptyFilters(), diplome: ["SSIAP 2"], dispoMode: "disponibles" } },
+  { id: "v-seed-2", name: "Cynophiles secteur Nord et Est", filters: { ...emptyFilters(), secteur: ["Nord", "Est"], emploi: ["Agent cynophile"] } },
+  { id: "v-seed-3", name: "Formalités incomplètes", filters: { ...emptyFilters(), formalite: ["Pièce manquante"] } },
 ];
 
-const dateInputStyle: CSSProperties = {
-  height: 36,
-  padding: "0 var(--space100)",
-  borderRadius: "var(--radius075)",
-  border: "1px solid var(--border-default)",
-  background: "var(--background-surface-default)",
-  color: "var(--text-default)",
-  fontFamily: "inherit",
-  fontSize: 13,
-};
+const initialsOf = (nom: string): string =>
+  nom
+    .split(/\s+/)
+    .map((w) => w[0] ?? "")
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
 
 // -----------------------------------------------------------------------
-// Recette
+// Recette — desktop
 
 function FiltresOptionB(): ReactElement {
   const [f, setF] = useState<Filters>(initialFilters);
@@ -257,20 +283,6 @@ function FiltresOptionB(): ReactElement {
   const [viewsOpen, setViewsOpen] = useState(false);
   const [savingName, setSavingName] = useState<string | null>(null);
   const viewSeq = useRef(0);
-
-  const applyView = (v: SavedView) => {
-    setF(v.filters);
-    setViewsOpen(false);
-    setPanelOpen(false);
-  };
-  const deleteView = (id: string) => setViews((vs) => vs.filter((v) => v.id !== id));
-  const saveView = () => {
-    const name = (savingName ?? "").trim();
-    if (!name) return;
-    viewSeq.current += 1;
-    setViews((vs) => [...vs, { id: `v-${viewSeq.current}`, name, filters: f }]);
-    setSavingName(null);
-  };
 
   const setFacet = (patch: Partial<Filters>) => setF((prev) => ({ ...prev, ...patch }));
   const toggleMulti = (key: MultiKey, value: string) =>
@@ -286,34 +298,88 @@ function FiltresOptionB(): ReactElement {
   const q = query.trim().toLowerCase();
   const searchHits = q
     ? MULTI_KEYS.flatMap((k) =>
-        DOMAINS[k]
-          .filter((v) => v.toLowerCase().includes(q))
-          .map((v) => ({ key: k, value: v })),
+        DOMAINS[k].filter((v) => v.toLowerCase().includes(q)).map((v) => ({ key: k, value: v })),
       )
     : [];
 
   const groups: ActiveGroup[] = useMemo(() => {
-    const out: ActiveGroup[] = [];
-    MULTI_KEYS.forEach((k) => {
-      if (!f[k].length) return;
-      const d = FACET_DEFS.find((x) => x.key === k)!;
-      out.push({ key: k, facet: d.label, values: f[k].join(", "), count: f[k].length, clear: () => setFacet({ [k]: [] }) });
-    });
-    if (f.cdiOnly) out.push({ key: "cdi", facet: "Contrat", values: "CDI uniquement", count: 1, clear: () => setFacet({ cdiOnly: false }) });
-    if (f.sousTraitants) out.push({ key: "st", facet: "Périmètre", values: "Sous-traitants inclus", count: 1, clear: () => setFacet({ sousTraitants: false }) });
-    if (f.dispoMode !== "tous") {
-      const m = DISPO_MODES.find((x) => x.id === f.dispoMode)!;
-      out.push({ key: "dispo", facet: "Disponibilité", values: m.label, count: 1, clear: () => setFacet({ dispoMode: "tous" }) });
-    }
-    return out;
+    return groupsOf(f).map((g) => ({
+      ...g,
+      clear: () => {
+        if (g.key === "cdi") setFacet({ cdiOnly: false });
+        else if (g.key === "st") setFacet({ sousTraitants: false });
+        else if (g.key === "dispo") setFacet({ dispoMode: "tous" });
+        else setFacet({ [g.key]: [] });
+      },
+    }));
   }, [f]);
 
   const clearAll = () => setF(emptyFilters());
 
-  // Chips actifs : on en montre quelques-uns puis « +N » (popover).
   const MAX_CHIPS = 4;
   const visibleGroups = groups.slice(0, MAX_CHIPS);
   const overflowGroups = groups.slice(MAX_CHIPS);
+
+  const applyView = (v: SavedView) => {
+    setF(v.filters);
+    setViewsOpen(false);
+    setPanelOpen(false);
+  };
+  const deleteView = (id: string) => setViews((vs) => vs.filter((v) => v.id !== id));
+  const saveView = () => {
+    const name = (savingName ?? "").trim();
+    if (!name) return;
+    viewSeq.current += 1;
+    setViews((vs) => [...vs, { id: `v-${viewSeq.current}`, name, filters: f }]);
+    setSavingName(null);
+  };
+
+  // Contrôles d'options d'une facette (partagés desktop / mobile).
+  const optionControls = (def: FacetDef): ReactElement => {
+    if (def.kind === "switches") {
+      return (
+        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)" }}>
+          <Switch isChecked={f.sousTraitants} onChange={(v) => setFacet({ sousTraitants: v })}>
+            Inclure les sous-traitants
+          </Switch>
+          <Switch isChecked={f.cdiOnly} onChange={(v) => setFacet({ cdiOnly: v })}>
+            CDI uniquement
+          </Switch>
+        </div>
+      );
+    }
+    if (def.kind === "dispo") {
+      return (
+        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)" }}>
+          <RadioGroup aria-label="Disponibilités" value={f.dispoMode} onChange={(v) => setFacet({ dispoMode: v })}>
+            {DISPO_MODES.map((m) => (
+              <Radio key={m.id} value={m.id} label={m.label} />
+            ))}
+          </RadioGroup>
+          <div style={{ display: "flex", gap: "var(--space150)", flexWrap: "wrap" }}>
+            <DatePicker aria-label="Date" defaultValue={parseDate("2026-08-20")} />
+            <TimePicker aria-label="Heure de début" defaultValue={new Time(18, 0)} />
+            <TimePicker aria-label="Heure de fin" defaultValue={new Time(23, 0)} />
+          </div>
+        </div>
+      );
+    }
+    const key = def.key as MultiKey;
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
+        {DOMAINS[key].map((value) => {
+          const n = optionCount(f, key, value);
+          const checked = f[key].includes(value);
+          return (
+            <div key={value} style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
+              <Checkbox isChecked={checked} isDisabled={n === 0 && !checked} onChange={() => toggleMulti(key, value)} label={value} />
+              <span style={{ marginLeft: "auto", fontSize: 12, color: "var(--text-subtlest)", fontVariantNumeric: "tabular-nums" }}>{n}</span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
 
   const renderChip = (g: ActiveGroup): ReactElement => {
     const first = g.values.split(", ")[0];
@@ -342,20 +408,9 @@ function FiltresOptionB(): ReactElement {
           type="button"
           onClick={g.clear}
           aria-label={`Retirer ${g.facet}`}
-          style={{
-            display: "inline-flex",
-            padding: 4,
-            border: 0,
-            background: "none",
-            borderRadius: "var(--radius-round)",
-            cursor: "pointer",
-            color: "inherit",
-            opacity: 0.7,
-          }}
+          style={{ display: "inline-flex", padding: 4, border: 0, background: "none", borderRadius: "var(--radius-round)", cursor: "pointer", color: "inherit", opacity: 0.7 }}
         >
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" aria-hidden="true">
-            <path d="M6 6l12 12M18 6 6 18" />
-          </svg>
+          <Icon icon="Close" size={12} />
         </button>
       </span>
     );
@@ -375,13 +430,14 @@ function FiltresOptionB(): ReactElement {
         boxSizing: "border-box",
       }}
     >
-      {/* Toolbar une ligne : recherche + Filtres (badge) + compteur. */}
+      {/* Toolbar : recherche + Filtres à gauche ; Recherches (action) à droite. */}
       <div style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
         <div style={{ width: 260, flex: "none" }}>
-          <TextField
+          <SearchField
             aria-label="Rechercher un agent"
             placeholder="Rechercher un agent"
-            elemBefore={<Icon icon="Search" size={18} color="subtle" />}
+            value={f.nameQuery}
+            onChange={(v) => setFacet({ nameQuery: v })}
           />
         </div>
         <Popup
@@ -392,25 +448,19 @@ function FiltresOptionB(): ReactElement {
           trigger={
             <Button appearance="outlined" iconBefore="Tune">
               Filtres
-              {total > 0 && (
-                <Badge label={String(total)} appearance="information" importance="high" />
-              )}
+              {total > 0 && <Badge label={String(total)} appearance="information" importance="high" />}
             </Button>
           }
         >
           <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
-            {/* Mini-recherche transversale (toutes facettes). */}
             <div style={{ padding: "var(--space200) var(--space200) var(--space150)" }}>
-              <TextField
+              <SearchField
                 aria-label="Rechercher dans les filtres"
                 placeholder="Rechercher un critère (société, secteur, diplôme…)"
                 value={query}
                 onChange={setQuery}
-                elemBefore={<Icon icon="Search" size={18} color="subtle" />}
               />
             </div>
-
-            {/* Deux volets : facettes (gauche) / options (droite). */}
             <div style={{ display: "flex", height: 380, borderTop: "1px solid var(--border-subtle)" }}>
               {/* Volet gauche : liste des facettes. */}
               <ul
@@ -456,9 +506,7 @@ function FiltresOptionB(): ReactElement {
                         }}
                       >
                         <span style={{ flex: 1 }}>{d.label}</span>
-                        {c > 0 && (
-                          <Badge label={String(c)} appearance={active ? "information" : "neutral"} importance="high" />
-                        )}
+                        {c > 0 && <Badge label={String(c)} appearance={active ? "information" : "neutral"} importance="high" />}
                       </button>
                     </li>
                   );
@@ -476,114 +524,25 @@ function FiltresOptionB(): ReactElement {
                       const n = optionCount(f, key, value);
                       const facetLabel = FACET_DEFS.find((d) => d.key === key)!.label;
                       return (
-                        <div
-                          key={`${key}:${value}`}
-                          style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}
-                        >
-                          <Checkbox
-                            isChecked={f[key].includes(value)}
-                            isDisabled={n === 0 && !f[key].includes(value)}
-                            onChange={() => toggleMulti(key, value)}
-                            label={value}
-                          />
+                        <div key={`${key}:${value}`} style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
+                          <Checkbox isChecked={f[key].includes(value)} isDisabled={n === 0 && !f[key].includes(value)} onChange={() => toggleMulti(key, value)} label={value} />
                           <span style={{ fontSize: 11.5, color: "var(--text-subtlest)" }}>{facetLabel}</span>
-                          <span style={{ marginLeft: "auto", fontSize: 12, color: "var(--text-subtlest)", fontVariantNumeric: "tabular-nums" }}>
-                            {n}
-                          </span>
+                          <span style={{ marginLeft: "auto", fontSize: 12, color: "var(--text-subtlest)", fontVariantNumeric: "tabular-nums" }}>{n}</span>
                         </div>
                       );
                     })}
-                  </div>
-                ) : curDef.kind === "switches" ? (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)" }}>
-                    <Switch isChecked={f.sousTraitants} onChange={(v) => setFacet({ sousTraitants: v })}>
-                      Inclure les sous-traitants
-                    </Switch>
-                    <Switch isChecked={f.cdiOnly} onChange={(v) => setFacet({ cdiOnly: v })}>
-                      CDI uniquement
-                    </Switch>
-                  </div>
-                ) : curDef.kind === "dispo" ? (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)" }}>
-                    <RadioGroup
-                      aria-label="Disponibilités"
-                      value={f.dispoMode}
-                      onChange={(v) => setFacet({ dispoMode: v })}
-                    >
-                      {DISPO_MODES.map((m) => (
-                        <Radio key={m.id} value={m.id} label={m.label} />
-                      ))}
-                    </RadioGroup>
-                    <fieldset style={{ border: 0, margin: 0, padding: 0, display: "flex", gap: "var(--space150)", flexWrap: "wrap" }}>
-                      <label style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 12, color: "var(--text-subtle)" }}>
-                        Date
-                        <input
-                          type="date"
-                          value={f.date}
-                          onChange={(e) => setFacet({ date: e.target.value })}
-                          style={dateInputStyle}
-                        />
-                      </label>
-                      <label style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 12, color: "var(--text-subtle)" }}>
-                        De
-                        <input
-                          type="time"
-                          value={f.from}
-                          onChange={(e) => setFacet({ from: e.target.value })}
-                          style={dateInputStyle}
-                        />
-                      </label>
-                      <label style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 12, color: "var(--text-subtle)" }}>
-                        À
-                        <input
-                          type="time"
-                          value={f.to}
-                          onChange={(e) => setFacet({ to: e.target.value })}
-                          style={dateInputStyle}
-                        />
-                      </label>
-                    </fieldset>
                   </div>
                 ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
-                    {DOMAINS[cat as MultiKey].map((value) => {
-                      const n = optionCount(f, cat as MultiKey, value);
-                      const checked = f[cat as MultiKey].includes(value);
-                      return (
-                        <div
-                          key={value}
-                          style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}
-                        >
-                          <Checkbox
-                            isChecked={checked}
-                            isDisabled={n === 0 && !checked}
-                            onChange={() => toggleMulti(cat as MultiKey, value)}
-                            label={value}
-                          />
-                          <span style={{ marginLeft: "auto", fontSize: 12, color: "var(--text-subtlest)", fontVariantNumeric: "tabular-nums" }}>
-                            {n}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
+                  optionControls(curDef)
                 )}
               </div>
             </div>
 
-            {/* Pied : compteur + réinitialiser. */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "var(--space150)",
-                padding: "var(--space150) var(--space200)",
-                borderTop: "1px solid var(--border-subtle)",
-              }}
-            >
+            {/* Pied : enregistrer / compteur / réinitialiser. */}
+            <div style={{ display: "flex", alignItems: "center", gap: "var(--space150)", padding: "var(--space150) var(--space200)", borderTop: "1px solid var(--border-subtle)" }}>
               {savingName === null ? (
                 <>
-                  <Button appearance="link" iconBefore="BookmarkAdd" onPress={() => setSavingName("")} isDisabled={total === 0}>
+                  <Button appearance="link" iconBefore="Bookmark" onPress={() => setSavingName("")} isDisabled={total === 0}>
                     Enregistrer cette recherche
                   </Button>
                   <div style={{ flex: 1 }} />
@@ -600,12 +559,7 @@ function FiltresOptionB(): ReactElement {
               ) : (
                 <>
                   <div style={{ flex: 1, maxWidth: 260 }}>
-                    <TextField
-                      aria-label="Nom de la recherche"
-                      placeholder="Nom de la recherche"
-                      value={savingName}
-                      onChange={setSavingName}
-                    />
+                    <TextField aria-label="Nom de la recherche" placeholder="Nom de la recherche" value={savingName} onChange={setSavingName} />
                   </div>
                   <Button appearance="contained" onPress={saveView} isDisabled={!savingName.trim()}>
                     Enregistrer
@@ -618,81 +572,41 @@ function FiltresOptionB(): ReactElement {
             </div>
           </div>
         </Popup>
+
+        <div style={{ flex: 1 }} />
+
+        {/* Recherches enregistrées — action à droite, éloignée de la recherche. */}
         <Popup
           isOpen={viewsOpen}
           onOpenChange={setViewsOpen}
-          placement="bottom-left"
+          placement="bottom-right"
           trigger={
-            <Button appearance="subtle" iconBefore="Bookmark">
+            <Button appearance="outlined" iconBefore="Bookmark" iconAfter="ArrowDropDown">
               Recherches
-              {views.length > 0 && (
-                <Badge label={String(views.length)} appearance="neutral" importance="high" />
-              )}
             </Button>
           }
         >
-          <div style={{ width: 300, padding: "var(--space100)" }}>
+          <div style={{ width: 320, padding: "var(--space075)" }}>
+            <div style={{ padding: "var(--space150) var(--space150) var(--space075)", fontSize: 11, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--text-subtlest)" }}>
+              Recherches enregistrées
+            </div>
             {views.length === 0 ? (
-              <p style={{ margin: 0, padding: "var(--space200)", fontSize: 13, color: "var(--text-subtlest)", textAlign: "center" }}>
-                Aucune recherche enregistrée.
-              </p>
+              <p style={{ margin: 0, padding: "var(--space200)", textAlign: "center", fontSize: 13, color: "var(--text-subtlest)" }}>Aucune recherche enregistrée.</p>
             ) : (
-              <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column" }}>
+              <List aria-label="Recherches enregistrées">
                 {views.map((v) => (
-                  <li key={v.id} style={{ display: "flex", alignItems: "center" }}>
-                    <button
-                      type="button"
-                      onClick={() => applyView(v)}
-                      style={{
-                        flex: 1,
-                        display: "block",
-                        textAlign: "left",
-                        padding: "var(--space100) var(--space150)",
-                        border: 0,
-                        borderRadius: "var(--radius100)",
-                        background: "none",
-                        color: "var(--text-default)",
-                        fontSize: 13.5,
-                        cursor: "pointer",
-                      }}
-                    >
-                      {v.name}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => deleteView(v.id)}
-                      aria-label={`Supprimer la recherche ${v.name}`}
-                      style={{
-                        display: "inline-flex",
-                        padding: "var(--space075)",
-                        border: 0,
-                        background: "none",
-                        borderRadius: "var(--radius-round)",
-                        cursor: "pointer",
-                        color: "var(--icon-subtle)",
-                      }}
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                        <path d="M6 6l12 12M18 6 6 18" />
-                      </svg>
-                    </button>
-                  </li>
+                  <ListItemButton key={v.id} onPress={() => applyView(v)}>
+                    <ListItemText primary={v.name} secondary={viewSummary(v.filters)} />
+                    <ListItemSecondaryAction>
+                      <span style={{ fontSize: 12.5, color: "var(--text-subtlest)", fontVariantNumeric: "tabular-nums" }}>{filteredAgents(v.filters).length}</span>
+                      <Button appearance="subtle" iconBefore="Close" aria-label={`Supprimer ${v.name}`} onPress={() => deleteView(v.id)} />
+                    </ListItemSecondaryAction>
+                  </ListItemButton>
                 ))}
-              </ul>
+              </List>
             )}
           </div>
         </Popup>
-        <div style={{ flex: 1 }} />
-        <span
-          style={{
-            flex: "none",
-            fontSize: 13,
-            color: "var(--text-subtle)",
-            fontVariantNumeric: "tabular-nums",
-          }}
-        >
-          {results.length} {results.length > 1 ? "agents" : "agent"} sur {AGENTS.length}
-        </span>
       </div>
 
       {/* Tags des filtres actifs, regroupés par catégorie. */}
@@ -700,58 +614,23 @@ function FiltresOptionB(): ReactElement {
         <div
           role="group"
           aria-label="Filtres actifs"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--space075)",
-            minHeight: 40,
-            flexWrap: "wrap",
-            borderBottom: "1px solid var(--border-subtle)",
-            paddingBottom: "var(--space100)",
-          }}
+          style={{ display: "flex", alignItems: "center", gap: "var(--space075)", minHeight: 40, flexWrap: "wrap", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "var(--space100)" }}
         >
-          <span
-            style={{
-              flex: "none",
-              fontSize: 12,
-              fontWeight: 600,
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-              color: "var(--text-subtlest)",
-            }}
-          >
-            Filtres
-          </span>
+          <span style={{ flex: "none", fontSize: 12, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--text-subtlest)" }}>Filtres</span>
           {visibleGroups.map(renderChip)}
           {overflowGroups.length > 0 && (
             <Popup
               placement="bottom-left"
               trigger={
-                <button
-                  type="button"
+                <Button
+                  appearance="subtle"
                   aria-label={`Afficher ${overflowGroups.length} filtre${overflowGroups.length > 1 ? "s" : ""} de plus`}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    height: 28,
-                    padding: "0 var(--space150)",
-                    borderRadius: "var(--radius-round)",
-                    border: "1px solid var(--border-default)",
-                    background: "var(--background-surface-default)",
-                    color: "var(--text-subtle)",
-                    fontSize: 12.5,
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    whiteSpace: "nowrap",
-                  }}
                 >
                   +{overflowGroups.length}
-                </button>
+                </Button>
               }
             >
-              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)", padding: "var(--space150)", maxWidth: 320 }}>
-                {overflowGroups.map(renderChip)}
-              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)", padding: "var(--space150)", maxWidth: 320 }}>{overflowGroups.map(renderChip)}</div>
             </Popup>
           )}
           <div style={{ flex: 1 }} />
@@ -792,12 +671,7 @@ function FiltresOptionB(): ReactElement {
               <TableCell>{a.diplome}</TableCell>
               <TableCell>{a.contrat}</TableCell>
               <TableCell>
-                <Tag
-                  label={DISPO_TAG[a.dispo].label}
-                  color={DISPO_TAG[a.dispo].color}
-                  appearance="subtle"
-                  shape="rounded"
-                />
+                <Tag label={DISPO_TAG[a.dispo].label} color={DISPO_TAG[a.dispo].color} appearance="subtle" shape="rounded" />
               </TableCell>
             </TableRow>
           ))}
@@ -808,26 +682,14 @@ function FiltresOptionB(): ReactElement {
 }
 
 // -----------------------------------------------------------------------
-// Mobile : cadre + feuille (bottom sheet) en accordéon.
-//
-// La maquette rend la feuille À L'INTÉRIEUR du cadre téléphone (et non en
-// overlay fixé au viewport). On reproduit donc une feuille bespoke positionnée
-// dans le cadre plutôt que le composant Drawer (fixé au viewport), ce qui
-// serait inadapté à une maquette de téléphone posée dans le canvas Storybook.
-
-const initialsOf = (nom: string): string =>
-  nom
-    .split(/\s+/)
-    .map((w) => w[0] ?? "")
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+// Recette — mobile (liste + panneau de filtres en drill-down).
 
 function FiltresOptionBMobile(): ReactElement {
   const [f, setF] = useState<Filters>(initialFilters);
-  const [sheetOpen, setSheetOpen] = useState(false);
-  const [query, setQuery] = useState("");
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [facet, setFacet] = useState<string | null>(null);
 
+  const patch = (p: Partial<Filters>) => setF((prev) => ({ ...prev, ...p }));
   const toggleMulti = (key: MultiKey, value: string) =>
     setF((prev) => {
       const has = prev[key].includes(value);
@@ -837,12 +699,75 @@ function FiltresOptionBMobile(): ReactElement {
 
   const results = useMemo(() => filteredAgents(f), [f]);
   const total = totalActive(f);
-  const q = query.trim().toLowerCase();
-  const sheetFacets = FACET_DEFS.filter((d) => d.kind === "multi");
+  const detailDef = facet ? (FACET_DEFS.find((d) => d.key === facet) ?? null) : null;
+
+  const closeFilter = () => {
+    setFilterOpen(false);
+    setFacet(null);
+  };
+
+  const optionControls = (def: FacetDef): ReactElement => {
+    if (def.kind === "switches") {
+      return (
+        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)" }}>
+          <Switch isChecked={f.sousTraitants} onChange={(v) => patch({ sousTraitants: v })}>
+            Inclure les sous-traitants
+          </Switch>
+          <Switch isChecked={f.cdiOnly} onChange={(v) => patch({ cdiOnly: v })}>
+            CDI uniquement
+          </Switch>
+        </div>
+      );
+    }
+    if (def.kind === "dispo") {
+      return (
+        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)" }}>
+          <RadioGroup aria-label="Disponibilités" value={f.dispoMode} onChange={(v) => patch({ dispoMode: v })}>
+            {DISPO_MODES.map((m) => (
+              <Radio key={m.id} value={m.id} label={m.label} />
+            ))}
+          </RadioGroup>
+          <div style={{ display: "flex", gap: "var(--space150)", flexWrap: "wrap" }}>
+            <DatePicker aria-label="Date" defaultValue={parseDate("2026-08-20")} />
+            <TimePicker aria-label="Heure de début" defaultValue={new Time(18, 0)} />
+            <TimePicker aria-label="Heure de fin" defaultValue={new Time(23, 0)} />
+          </div>
+        </div>
+      );
+    }
+    const key = def.key as MultiKey;
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
+        {DOMAINS[key].map((value) => {
+          const n = optionCount(f, key, value);
+          const checked = f[key].includes(value);
+          return (
+            <div key={value} style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
+              <Checkbox isChecked={checked} isDisabled={n === 0 && !checked} onChange={() => toggleMulti(key, value)} label={value} />
+              <span style={{ marginLeft: "auto", fontSize: 12, color: "var(--text-subtlest)", fontVariantNumeric: "tabular-nums" }}>{n}</span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const facetValue = (d: FacetDef): string => {
+    if (d.kind === "dispo") return f.dispoMode === "tous" ? "" : DISPO_MODES.find((m) => m.id === f.dispoMode)!.label;
+    if (d.kind === "multi" && facetCount(f, d.key) === 1) return f[d.key as MultiKey][0];
+    return "";
+  };
+
+  const headerStyle = {
+    display: "flex",
+    alignItems: "center",
+    gap: "var(--space075)",
+    padding: "var(--space200) var(--space100) var(--space150)",
+    borderBottom: "1px solid var(--border-subtle)",
+  } as const;
 
   return (
     <div style={{ padding: "var(--space400)", display: "flex", justifyContent: "center", background: "var(--background-surface-elevation-sunken-default)", minHeight: "100vh", boxSizing: "border-box" }}>
-      {/* Cadre téléphone. */}
       <div
         style={{
           position: "relative",
@@ -860,157 +785,112 @@ function FiltresOptionBMobile(): ReactElement {
         }}
       >
         {/* En-tête. */}
-        <div style={{ display: "flex", alignItems: "baseline", gap: "var(--space100)", padding: "var(--space300) var(--space200) var(--space150)" }}>
+        <div style={{ padding: "var(--space300) var(--space200) var(--space150)" }}>
           <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>Agents</h2>
-          <span style={{ fontSize: 13, color: "var(--text-subtle)" }}>{results.length} / {AGENTS.length}</span>
         </div>
 
         {/* Recherche + Filtres. */}
         <div style={{ display: "flex", gap: "var(--space100)", padding: "0 var(--space200) var(--space150)" }}>
           <div style={{ flex: 1 }}>
-            <TextField aria-label="Rechercher un agent" placeholder="Rechercher" elemBefore={<Icon icon="Search" size={18} color="subtle" />} />
+            <SearchField aria-label="Rechercher un agent" placeholder="Rechercher" value={f.nameQuery} onChange={(v) => patch({ nameQuery: v })} />
           </div>
           <Button
             appearance={total > 0 ? "contained" : "outlined"}
             iconBefore="Tune"
             aria-label={total > 0 ? `Filtres, ${total} critère${total > 1 ? "s" : ""} actif${total > 1 ? "s" : ""}` : "Filtres"}
-            onPress={() => setSheetOpen(true)}
+            onPress={() => {
+              setFilterOpen(true);
+              setFacet(null);
+            }}
           >
             {total > 0 && <Badge label={String(total)} appearance="information-inverted" importance="high" />}
           </Button>
         </div>
 
         {/* Liste des agents. */}
-        <ul aria-label="Liste des agents" style={{ flex: 1, margin: 0, padding: 0, listStyle: "none", overflowY: "auto" }}>
-          {results.map((a) => (
-            <li
-              key={a.nom}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "var(--space150)",
-                padding: "var(--space150) var(--space200)",
-                borderTop: "1px solid var(--border-subtle)",
-              }}
-            >
-              <Avatar initials={initialsOf(a.nom)} alt={a.nom} />
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 14, fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{a.nom}</div>
-                <div style={{ fontSize: 12, color: "var(--text-subtle)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                  {a.societe} · {a.diplome}
-                </div>
-              </div>
-              <Tag label={DISPO_TAG[a.dispo].label} color={DISPO_TAG[a.dispo].color} appearance="subtle" shape="rounded" />
-            </li>
-          ))}
-          {results.length === 0 && (
-            <li style={{ padding: "var(--space400) var(--space200)", textAlign: "center", color: "var(--text-subtlest)", fontSize: 13 }}>
-              Aucun agent ne correspond.
-            </li>
+        <div style={{ flex: 1, overflowY: "auto" }}>
+          {results.length === 0 ? (
+            <p style={{ padding: "var(--space400) var(--space200)", textAlign: "center", color: "var(--text-subtlest)", fontSize: 13 }}>Aucun agent ne correspond.</p>
+          ) : (
+            <List isBordered aria-label="Liste des agents">
+              {results.map((a) => (
+                <ListItem key={a.nom}>
+                  <ListItemAvatar>
+                    <Avatar initials={initialsOf(a.nom)} alt={a.nom} />
+                  </ListItemAvatar>
+                  <ListItemText primary={a.nom} secondary={`${a.societe} · ${a.diplome}`} />
+                  <ListItemTrailing>
+                    <Tag label={DISPO_TAG[a.dispo].label} color={DISPO_TAG[a.dispo].color} appearance="subtle" shape="rounded" />
+                  </ListItemTrailing>
+                </ListItem>
+              ))}
+            </List>
           )}
-        </ul>
+        </div>
 
-        {/* Scrim + feuille (dans le cadre). */}
-        {sheetOpen && (
-          <button
-            type="button"
-            aria-label="Fermer les filtres"
-            onClick={() => setSheetOpen(false)}
-            style={{ position: "absolute", inset: 0, border: 0, background: "var(--blanket-default)", cursor: "pointer" }}
-          />
-        )}
+        {/* Panneau de filtres en drill-down (dans le cadre). */}
         <div
           role="dialog"
           aria-label="Filtres"
-          aria-hidden={!sheetOpen}
+          aria-hidden={!filterOpen}
           style={{
             position: "absolute",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            maxHeight: "85%",
+            inset: 0,
+            zIndex: 25,
+            background: "var(--background-surface-elevation-overlay-default)",
             display: "flex",
             flexDirection: "column",
-            background: "var(--background-surface-elevation-overlay-default)",
-            borderRadius: "20px 20px 0 0",
-            boxShadow: "var(--elevation-large)",
-            transform: sheetOpen ? "translateY(0)" : "translateY(105%)",
+            transform: filterOpen ? "translateY(0)" : "translateY(100%)",
             transition: "transform 220ms ease",
-            // Retirée du flux d'AT et du tab order quand fermée (les contrôles
-            // ne doivent pas être focusables sous le voile).
-            visibility: sheetOpen ? "visible" : "hidden",
+            visibility: filterOpen ? "visible" : "hidden",
           }}
         >
-          {/* Poignée. */}
-          <div style={{ display: "flex", justifyContent: "center", padding: "var(--space100) 0 0" }}>
-            <span style={{ width: 40, height: 4, borderRadius: "var(--radius-round)", background: "var(--background-neutral-bold-default)" }} />
-          </div>
-          {/* Titre + réinitialiser. */}
-          <div style={{ display: "flex", alignItems: "center", padding: "var(--space150) var(--space200)" }}>
-            <strong style={{ flex: 1, fontSize: 16 }}>Filtres</strong>
+          {detailDef === null ? (
+            <>
+              <div style={headerStyle}>
+                <Button appearance="subtle" iconBefore="Close" aria-label="Fermer" onPress={closeFilter} />
+                <strong style={{ flex: 1, fontSize: 18 }}>Filtres</strong>
+              </div>
+              <div style={{ flex: 1, overflowY: "auto" }}>
+                <List isBordered aria-label="Facettes">
+                  {FACET_DEFS.map((d) => {
+                    const c = facetCount(f, d.key);
+                    const val = facetValue(d);
+                    return (
+                      <ListItemButton key={d.key} onPress={() => setFacet(d.key)}>
+                        <ListItemText primary={d.label} />
+                        <ListItemTrailing>
+                          {val ? (
+                            <span style={{ color: "var(--text-subtlest)", fontSize: 14 }}>{val}</span>
+                          ) : c > 0 ? (
+                            <Badge label={String(c)} appearance="information" importance="high" />
+                          ) : null}
+                          <Icon icon="ChevronRight" color="subtlest" />
+                        </ListItemTrailing>
+                      </ListItemButton>
+                    );
+                  })}
+                </List>
+              </div>
+            </>
+          ) : (
+            <>
+              <div style={headerStyle}>
+                <Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Retour" onPress={() => setFacet(null)} />
+                <strong style={{ flex: 1, fontSize: 18 }}>{detailDef.label}</strong>
+                <Button appearance="subtle" iconBefore="Close" aria-label="Fermer" onPress={closeFilter} />
+              </div>
+              <div style={{ flex: 1, overflowY: "auto", padding: "var(--space200)" }}>{optionControls(detailDef)}</div>
+            </>
+          )}
+
+          {/* Pied : réinitialiser + voir les résultats. */}
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--space100)", padding: "var(--space150) var(--space200) var(--space200)", borderTop: "1px solid var(--border-subtle)" }}>
             <Button appearance="link" onPress={clearAll} isDisabled={total === 0}>
               Réinitialiser
             </Button>
-          </div>
-          {/* Mini-recherche. */}
-          <div style={{ padding: "0 var(--space200) var(--space150)" }}>
-            <TextField
-              aria-label="Rechercher un critère"
-              placeholder="Rechercher un critère"
-              value={query}
-              onChange={setQuery}
-              elemBefore={<Icon icon="Search" size={18} color="subtle" />}
-            />
-          </div>
-          {/* Accordéon de facettes. */}
-          <div style={{ flex: 1, overflowY: "auto", padding: "0 var(--space200)" }}>
-            {sheetFacets.map((d) => {
-              const key = d.key as MultiKey;
-              const domainVals = DOMAINS[key].filter((v) => !q || v.toLowerCase().includes(q));
-              if (q && domainVals.length === 0) return null;
-              const c = facetCount(f, key);
-              return (
-                <details key={key} open={Boolean(q) || c > 0}>
-                  <summary
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "var(--space100)",
-                      padding: "var(--space150) 0",
-                      borderTop: "1px solid var(--border-subtle)",
-                      cursor: "pointer",
-                      fontSize: 14,
-                      fontWeight: 600,
-                      listStyle: "none",
-                    }}
-                  >
-                    <span style={{ flex: 1 }}>{d.label}</span>
-                    {c > 0 && <Badge label={String(c)} appearance="information" importance="high" />}
-                  </summary>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)", padding: "0 0 var(--space150) var(--space100)" }}>
-                    {domainVals.map((value) => {
-                      const n = optionCount(f, key, value);
-                      const checked = f[key].includes(value);
-                      return (
-                        <div key={value} style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
-                          <Checkbox
-                            isChecked={checked}
-                            isDisabled={n === 0 && !checked}
-                            onChange={() => toggleMulti(key, value)}
-                            label={value}
-                          />
-                          <span style={{ marginLeft: "auto", fontSize: 12, color: "var(--text-subtlest)", fontVariantNumeric: "tabular-nums" }}>{n}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </details>
-              );
-            })}
-          </div>
-          {/* Pied : voir les résultats. */}
-          <div style={{ padding: "var(--space150) var(--space200) var(--space200)", borderTop: "1px solid var(--border-subtle)" }}>
-            <Button appearance="contained" onPress={() => setSheetOpen(false)} style={{ width: "100%" }}>
+            <div style={{ flex: 1 }} />
+            <Button appearance="contained" onPress={closeFilter}>
               Voir {results.length} agent{results.length > 1 ? "s" : ""}
             </Button>
           </div>
@@ -1021,7 +901,7 @@ function FiltresOptionBMobile(): ReactElement {
 }
 
 // -----------------------------------------------------------------------
-// Meta + story
+// Meta + stories
 
 const meta = {
   title: "Recipes/Filtres option B",
@@ -1031,11 +911,11 @@ const meta = {
       description: {
         component:
           "Recette « Filtres — option B » (maquette Claude Design). Panneau unique : " +
-          "desktop = recherche + bouton Filtres (badge compteur) ouvrant un popover à deux " +
-          "volets (facettes / options), tags actifs regroupés par catégorie sous la toolbar " +
-          "(surplus sous « +N »), tableau de résultats ; mobile = bouton Filtres + feuille " +
-          "en accordéon. Comptes vivants (option à 0 résultat désactivée), mini-recherche " +
-          "transversale, recherches enregistrées.",
+          "desktop = recherche + bouton Filtres (popover à deux volets), recherches " +
+          "enregistrées en action à droite, tags actifs regroupés par catégorie (+N) et " +
+          "tableau ; mobile = liste d'agents + panneau de filtres en drill-down (liste des " +
+          "facettes → détail). Comptes vivants, mini-recherche transversale, recherches " +
+          "enregistrées. 100 % composants + tokens du design system.",
       },
     },
   },
@@ -1054,14 +934,12 @@ export const OptionB: Story = {
     await step("état initial : panneau fermé, tableau filtré", async () => {
       const filtresBtn = canvas.getByRole("button", { name: /Filtres/ });
       await expect(filtresBtn).toHaveAttribute("aria-expanded", "false");
-      // Sélection initiale → tableau filtré (ni vide, ni complet).
       await expect(rowCount()).toBeGreaterThan(0);
       await expect(rowCount()).toBeLessThan(AGENTS.length);
     });
 
     await step("ouvrir le panneau à deux volets", async () => {
       await userEvent.click(canvas.getByRole("button", { name: /Filtres/ }));
-      // Le popover est rendu dans un portail (hors canvas) → requête document.
       await waitFor(() => expect(screen.getByRole("dialog")).toBeInTheDocument());
       const dialog = within(screen.getByRole("dialog"));
       await expect(dialog.getByRole("button", { name: "Langues" })).toBeInTheDocument();
@@ -1079,9 +957,7 @@ export const OptionB: Story = {
 
     await step("fermer le panneau avec Échap", async () => {
       await userEvent.keyboard("{Escape}");
-      await waitFor(() =>
-        expect(canvas.getByRole("button", { name: /Filtres/ })).toHaveAttribute("aria-expanded", "false"),
-      );
+      await waitFor(() => expect(canvas.getByRole("button", { name: /Filtres/ })).toHaveAttribute("aria-expanded", "false"));
     });
   },
 };
@@ -1091,15 +967,22 @@ export const Mobile: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step("ouvrir la feuille de filtres", async () => {
+    await step("ouvrir le panneau de filtres", async () => {
       await userEvent.click(canvas.getByRole("button", { name: /Filtres/ }));
       await waitFor(() => expect(canvas.getByRole("dialog", { name: "Filtres" })).toBeVisible());
     });
 
-    await step("« Voir N agents » ferme la feuille", async () => {
-      const sheet = within(canvas.getByRole("dialog", { name: "Filtres" }));
-      await userEvent.click(sheet.getByRole("button", { name: /Voir \d+ agent/ }));
-      // Fermée : visibility:hidden + aria-hidden → hors de l'arbre accessible.
+    await step("drill-down dans une facette puis retour", async () => {
+      const panel = within(canvas.getByRole("dialog", { name: "Filtres" }));
+      await userEvent.click(panel.getByRole("button", { name: /Langues/ }));
+      await waitFor(() => expect(panel.getByRole("checkbox", { name: "Français" })).toBeInTheDocument());
+      await userEvent.click(panel.getByRole("button", { name: "Retour" }));
+      await waitFor(() => expect(panel.getByRole("button", { name: /Langues/ })).toBeInTheDocument());
+    });
+
+    await step("« Voir N agents » ferme le panneau", async () => {
+      const panel = within(canvas.getByRole("dialog", { name: "Filtres" }));
+      await userEvent.click(panel.getByRole("button", { name: /Voir \d+ agent/ }));
       await waitFor(() => expect(canvas.queryByRole("dialog", { name: "Filtres" })).toBeNull());
     });
   },
