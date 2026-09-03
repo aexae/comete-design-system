@@ -9,6 +9,13 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.153] - 2026-09-03
+
+### Ajouté
+
+- **Icônes** : nouvelle icône `AdminPanelSettings` via `<Icon icon="AdminPanelSettings" />`
+  (bump `@aexae/comete-icons` → `0.7.2`).
+
 ## [1.0.0-alpha.152] - 2026-09-03
 
 ### Ajouté
