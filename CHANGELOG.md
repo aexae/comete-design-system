@@ -9,6 +9,15 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.151] - 2026-09-03
+
+### Ajouté
+
+- **Icônes** : 3 nouvelles icônes disponibles via `<Icon icon="…" />` —
+  `SubcontractorFilter`, `Revenue`, `FinanceMode`. Bump de la dépendance
+  `@aexae/comete-icons` → `^0.7.0` (peer). Elles apparaissent automatiquement
+  dans l'explorateur d'icônes de Storybook (liste dynamique).
+
 ## [1.0.0-alpha.150] - 2026-08-17
 
 ### Changements cassants (BREAKING)
