@@ -9,6 +9,14 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.152] - 2026-09-03
+
+### Ajouté
+
+- **Icônes** : nouvelle icône `HourlyRate` disponible via `<Icon icon="HourlyRate" />`
+  (bump `@aexae/comete-icons` → `0.7.1`). Son accent duotone rouge est mappé sur
+  `--icon-critical`.
+
 ## [1.0.0-alpha.151] - 2026-09-03
 
 ### Ajouté
