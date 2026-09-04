@@ -17,7 +17,6 @@ import { renderIcon, availableIconNames, type IconVariant, type IconSpacing } fr
 import { renderLogo, type LogoAppearance, type LogoFormat, type LogoProduct, type LogoTaglineAlign } from "./logos.ts";
 import { loadTokens } from "./tokens.ts";
 import { toDataUri, csvCell, POWERBI_URL_LIMIT, COLOR_PLACEHOLDER } from "./datauri.ts";
-import { rasterize } from "./png.ts";
 import { buildTheme, unmappedColors } from "./theme.ts";
 import { renderReadme } from "./readme.ts";
 
@@ -45,7 +44,6 @@ interface IconsConfig {
 }
 interface LogosConfig {
   size: number;
-  pngScales: number[];
   entries: { product: LogoProduct; format: LogoFormat; taglineAlign: LogoTaglineAlign }[];
   appearances: LogoAppearance[];
 }
@@ -162,9 +160,6 @@ export async function build(): Promise<Report> {
 
       const slug = `${entry.product}-${entry.format}-${entry.taglineAlign}-${appearance}`;
       write(`logos/svg/${slug}.svg`, rendered.svg);
-      for (const scale of logosConfig.pngScales) {
-        write(`logos/png/${slug}@${scale}x.png`, rasterize(rendered.svg, scale));
-      }
       const { uri, length, overLimit } = toDataUri(rendered.svg);
       if (overLimit) oversized.push(`${slug} (${length})`);
       logoRows.push([slug, entry.product, entry.format, appearance, String(rendered.width), String(rendered.height), uri, String(length)]);

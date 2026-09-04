@@ -9,9 +9,12 @@ Workspace interne, non publié. Le livrable est le contenu de `dist/`.
 ```bash
 pnpm install                # depuis la racine du dépôt
 pnpm --filter @aexae/comete-powerbi-kit build
+pnpm --filter @aexae/comete-powerbi-kit verify
 ```
 
 Le kit est écrit dans `dist/` (ignoré par git : c'est un artefact regénérable).
+`verify` rejoue le chemin réel de consommation : substitution DAX du placeholder,
+décodage de la data URI, rasterisation. À lancer après chaque build.
 
 ## Ce que le générateur doit rejouer
 
@@ -41,7 +44,8 @@ génère identiques d'un sous-SVG à l'autre.
 | `src/compose.ts` | aplatissement du markup multi-SVG en SVG unique |
 | `src/tokens.ts` | lecture de `comete-tokens.css`, résolution des `var()` |
 | `src/datauri.ts` | encodage data URI compatible Power BI |
-| `src/png.ts` | rasterisation (resvg) |
+| `src/png.ts` | rasterisation (resvg), utilisée par la vérification |
+| `src/verify.ts` | contrôle du kit généré (décodage et rendu des data URI) |
 | `src/theme.ts` | thème de rapport depuis les tokens |
 | `src/readme.ts` | README livré au consultant |
 | `src/css-stub.ts` | neutralise les imports CSS des packages sous Node |

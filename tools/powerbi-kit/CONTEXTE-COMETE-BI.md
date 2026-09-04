@@ -34,7 +34,7 @@ Journal du chantier entre Axel et Claude. Ouvert pendant l'échange Cowork du 31
 ## Thème : source de vérité = ce dossier (tools/powerbi-kit)
 
 - Le thème n'est plus édité à la main. Il est généré depuis les tokens par `config/theme-base.json` (structure) et `config/theme-tokens.json` (chemin JSON vers token, light et dark).
-- Historique : v0 (2 sept, généré depuis les tokens primitifs), v0.1 (nouvelle Carte `cardVisual` et `actionButton`), v0.2 (DIN remplacée par Segoe UI Semibold), v0.3 (4 sept, appliqué dans les configs du kit sur go d'Axel, name du theme-base corrigé le même jour). Les thèmes générés s'appellent « Comète BI clair » et « Comète BI sombre ».
+- Historique : v0 (2 sept, généré depuis les tokens primitifs), v0.1 (nouvelle Carte `cardVisual` et `actionButton`), v0.2 (DIN remplacée par Segoe UI Semibold), v0.3 (4 sept, appliqué dans les configs du kit sur go d'Axel, name du theme-base corrigé le même jour), v0.4 (4 sept, sur go d'Axel : défauts des nouveaux objets, `textbox` en Segoe UI 10 text-default sans remplissage, `shape` en fond surface, contour border-default, radius 4, et `$schema` passé de 2.114 à 2.157). Les thèmes générés s'appellent « Comète BI clair » et « Comète BI sombre ».
 - v0.3 : couleurs basculées sur les tokens sémantiques (text-default pour texte, titres, callouts et valeurs, text-subtle pour étiquettes, border-default, fond de page background-surface-elevation-sunken, zébrage sunken, grilles border-subtle, totaux brand-subtlest), radius des visuels 4 (DS Card = radius050), rowPadding des tables retiré, bouton = contained.default du DS (fond neutral-subtler, texte text-default, sans contour, Arrière-plan désactivé, radius 6 = control-radius-default). Mapping vérifié light et dark : zéro token manquant, zéro hexa hors tokens.
 - Un aperçu équivalent à `dist/theme/comete-bi-light.json` a été livré hors dépôt : « Thème Comète BI_v0.3.json ».
 - Le build ne tourne pas depuis la VM de Cowork (binaires esbuild et resvg macOS) : `pnpm --filter @aexae/comete-powerbi-kit build` sur le Mac.
@@ -48,7 +48,9 @@ Journal du chantier entre Axel et Claude. Ouvert pendant l'échange Cowork du 31
 - Redesign de la page d'Accueil : spec à produire, avec les icônes du kit pour les rubriques. Question en suspens : garder les 7 cartes KPI actuelles ou les réduire aux KPI actionnables.
 - Ensuite : checklist de réplication par page pour KPI, règles d'usage (étiquettes de données obligatoires sur les séries ambre #E19800 et bleu clair #66B8F4, contraste inférieur à 3:1), CR v2 pour Frédéric.
 - Icônes : l'inventaire du tour produit (21 icônes) est couvert par la sélection du kit, y compris Revenue, FinanceMode et SubcontractorFilter pour les trois manquantes identifiées. Le kit génère aussi `dist/svg/icons/main_menu/` : les 8 icônes du menu principal en SVG à couleur figée (token icon-brand), pour les boutons et le canevas.
-- Proposition en attente de go : étendre le thème avec des défauts `textbox` et `shape` (texte en Segoe UI text-default, remplissage désactivé, contour border-default, radius) pour que les nouveaux objets insérés par KPI partent propres.
+- Logos : SVG uniquement depuis le 4 septembre (PNG retirés, Desktop accepte le SVG et il reste net à toute taille).
+- Contrôle du kit : `pnpm --filter @aexae/comete-powerbi-kit verify` rejoue le chemin réel (substitution DAX, décodage de la data URI, rasterisation) et échoue au moindre SVG cassé. À lancer après chaque build.
+- Reste à valider dans Desktop : qu'une zone de texte et une forme neuves héritent bien des défauts du thème v0.4 à l'insertion (le schéma le permet, le comportement à l'insertion est à confirmer).
 
 ## Roadmap interne (roadmap.logiciel-comete.fr, projet 17, responsable Thomas)
 

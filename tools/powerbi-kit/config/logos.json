@@ -1,15 +1,10 @@
 {
   "$comment": [
     "Logos exportés dans le kit. `size` est la hauteur de la ligne de wordmark",
-    "en px, la largeur suit. Les PNG sont générés aux densités `pngScales`",
-    "car Power BI n'accepte pas de SVG à l'insertion d'image sur le canvas."
+    "en px, la largeur suit. SVG uniquement : Power BI Desktop les accepte",
+    "à l'insertion d'image et ils restent nets à toute taille."
   ],
   "size": 32,
-  "pngScales": [
-    1,
-    2,
-    3
-  ],
   "entries": [
     {
       "product": "bi",

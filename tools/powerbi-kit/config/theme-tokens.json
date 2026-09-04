@@ -56,5 +56,8 @@
   "visualStyles.cardVisual.*.calloutValues[0].color.solid.color": "--text-default",
   "visualStyles.cardVisual.*.calloutLabels[0].color.solid.color": "--text-subtle",
   "visualStyles.actionButton.*.fill[0].fillColor.solid.color": "--background-neutral-subtler-default",
-  "visualStyles.actionButton.*.text[0].fontColor.solid.color": "--text-default"
+  "visualStyles.actionButton.*.text[0].fontColor.solid.color": "--text-default",
+  "visualStyles.textbox.*.text[0].color.solid.color": "--text-default",
+  "visualStyles.shape.*.fill[0].fillColor.solid.color": "--background-surface-default",
+  "visualStyles.shape.*.outline[0].lineColor.solid.color": "--border-default"
 }

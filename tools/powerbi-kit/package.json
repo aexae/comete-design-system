@@ -3,10 +3,13 @@
   "private": true,
   "type": "module",
   "description": "Générateur du kit Power BI Comète — icônes, logos, thème et data URI prêts pour DAX",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "build": "tsx src/main.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "verify": "tsx src/verify.ts"
   },
   "dependencies": {
     "@aexae/comete-design-tokens": "^0.13.0",

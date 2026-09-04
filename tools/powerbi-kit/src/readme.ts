@@ -32,7 +32,7 @@ les fichiers à la main, ils seront écrasés à la prochaine génération.
 | \`logos.csv\` | ${data.logoCount} logos en data URI |
 | \`svg/icons/\` | les mêmes icônes en SVG plats (placeholder de couleur) |
 | \`svg/icons/main_menu/\` | icônes du menu principal en SVG à couleur figée, pour le canevas et les boutons |
-| \`logos/svg/\`, \`logos/png/\` | logos vectoriels et rasterisés (1x, 2x, 3x, fond transparent) |
+| \`logos/svg/\` | logos en SVG uniques, autonomes, fond transparent |
 | \`theme/\` | thèmes de rapport, clair et sombre |
 
 ## Power BI et le SVG : deux canaux
@@ -98,7 +98,10 @@ une image, à la taille de ligne définie dans **Format > Valeurs > Taille**.
 **Affichage > Thèmes > Rechercher des thèmes** → \`theme/comete-bi-light.json\`.
 
 Il fixe les couleurs de séries, les rôles KPI (\`good\` / \`neutral\` / \`bad\`), les
-fonds, bordures et classes typographiques. Toute la typographie est en
+fonds, bordures et classes typographiques. Il définit aussi les défauts des
+objets insérés : une zone de texte neuve part en Segoe UI 10 sans remplissage,
+une forme neuve part en fond de surface avec un contour discret et des coins
+arrondis. Ne s'applique qu'aux objets créés après l'import du thème. Toute la typographie est en
 **Segoe UI**, livrée avec Windows, avec **Segoe UI Semibold** pour les titres et
 les chiffres clés. Aucune police à installer.
 
@@ -114,9 +117,8 @@ Sélectionner le bouton, volet **Format > Bouton > Style > Icône**, choisir
 
 ## Logos
 
-- **En-tête de rapport, filigrane, fond** : utiliser les SVG (\`logos/svg/\`),
-  nets à toute taille. Les PNG (\`logos/png/\`, 1x, 2x, 3x) restent fournis pour
-  les contextes qui refusent le SVG (anciennes versions, exports, documents).
+- **En-tête de rapport, filigrane, fond** : Insérer > Image vers un SVG de
+  \`logos/svg/\`, net à toute taille.
 - **Dans une table ou une carte** : \`logos.csv\`, comme les icônes.
 - Apparences : \`brand\` (fond clair), \`inverse\` (fond sombre), \`neutral\`
   (monochrome). Le logo est un élément de marque : ne pas le recolorer,
