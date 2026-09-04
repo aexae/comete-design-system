@@ -1,0 +1,45 @@
+{
+  "$comment": [
+    "Logos exportés dans le kit. `size` est la hauteur de la ligne de wordmark",
+    "en px, la largeur suit. Les PNG sont générés aux densités `pngScales`",
+    "car Power BI n'accepte pas de SVG à l'insertion d'image sur le canvas."
+  ],
+  "size": 32,
+  "pngScales": [
+    1,
+    2,
+    3
+  ],
+  "entries": [
+    {
+      "product": "bi",
+      "format": "logo",
+      "taglineAlign": "inline"
+    },
+    {
+      "product": "bi",
+      "format": "icon",
+      "taglineAlign": "none"
+    },
+    {
+      "product": "comete",
+      "format": "logo",
+      "taglineAlign": "none"
+    },
+    {
+      "product": "comete",
+      "format": "logo",
+      "taglineAlign": "column"
+    },
+    {
+      "product": "comete",
+      "format": "icon",
+      "taglineAlign": "none"
+    }
+  ],
+  "appearances": [
+    "brand",
+    "neutral",
+    "inverse"
+  ]
+}

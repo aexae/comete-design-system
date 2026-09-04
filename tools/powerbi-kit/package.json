@@ -1,0 +1,26 @@
+{
+  "name": "@aexae/comete-powerbi-kit",
+  "private": true,
+  "type": "module",
+  "description": "Générateur du kit Power BI Comète — icônes, logos, thème et data URI prêts pour DAX",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "tsx src/main.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@aexae/comete-design-tokens": "^0.13.0",
+    "@aexae/comete-icons": "latest",
+    "@aexae/comete-logos": "0.12.4",
+    "@resvg/resvg-js": "^2.6.2",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

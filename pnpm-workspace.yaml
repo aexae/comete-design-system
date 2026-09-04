@@ -1,5 +1,6 @@
 packages:
   - storybook
+  - tools/powerbi-kit
 
 allowBuilds:
   esbuild: true
