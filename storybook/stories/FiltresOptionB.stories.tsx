@@ -255,6 +255,17 @@ function groupsOf(f: Filters): { key: string; facet: string; values: string; cou
   return out;
 }
 
+// Deux jeux de filtres identiques ? (sert à marquer une recherche déjà
+// enregistrée — icône bookmark pleine.)
+function sameFilters(a: Filters, b: Filters): boolean {
+  if (a.cdiOnly !== b.cdiOnly || a.sousTraitants !== b.sousTraitants || a.dispoMode !== b.dispoMode) return false;
+  return MULTI_KEYS.every((k) => {
+    const x = [...a[k]].sort();
+    const y = [...b[k]].sort();
+    return x.length === y.length && x.every((v, i) => v === y[i]);
+  });
+}
+
 const INITIAL_VIEWS: SavedView[] = [
   { id: "v-seed-1", name: "SSIAP 2 disponibles", filters: { ...emptyFilters(), diplome: ["SSIAP 2"], dispoMode: "disponibles" } },
   { id: "v-seed-2", name: "Cynophiles secteur Nord et Est", filters: { ...emptyFilters(), secteur: ["Nord", "Est"], emploi: ["Agent cynophile"] } },
@@ -291,6 +302,7 @@ function FiltresOptionB(): ReactElement {
 
   const results = useMemo(() => filteredAgents(f), [f]);
   const total = totalActive(f);
+  const isCurrentSaved = total > 0 && views.some((v) => sameFilters(v.filters, f));
 
   const curDef = FACET_DEFS.find((d) => d.key === cat) ?? FACET_DEFS[0];
   const q = query.trim().toLowerCase();
@@ -380,8 +392,8 @@ function FiltresOptionB(): ReactElement {
   };
 
   const renderChip = (g: ActiveGroup): ReactElement => {
-    const first = g.values.split(", ")[0];
-    const extra = g.count > 1 ? `+${g.count - 1}` : "";
+    // 1 valeur → la valeur ; ≥ 2 → seulement le nombre (« Facette : 2 »).
+    const shown = g.count === 1 ? g.values.split(", ")[0] : String(g.count);
     return (
       <span
         key={g.key}
@@ -400,8 +412,7 @@ function FiltresOptionB(): ReactElement {
         }}
       >
         <span style={{ opacity: 0.65 }}>{g.facet} :</span>
-        <span>{first}</span>
-        {extra && <span style={{ fontWeight: 600, opacity: 0.75 }}>{extra}</span>}
+        <span>{shown}</span>
         <button
           type="button"
           onClick={g.clear}
@@ -472,7 +483,6 @@ function FiltresOptionB(): ReactElement {
                   listStyle: "none",
                   overflowY: "auto",
                   borderRight: "1px solid var(--border-subtle)",
-                  background: "var(--background-surface-elevation-sunken-default)",
                 }}
               >
                 {FACET_DEFS.map((d) => {
@@ -505,7 +515,7 @@ function FiltresOptionB(): ReactElement {
                         }}
                       >
                         <span style={{ flex: 1 }}>{d.label}</span>
-                        {c > 0 && <Badge label={String(c)} appearance={active ? "information" : "neutral"} importance="high" />}
+                        {c > 0 && <Badge label={String(c)} appearance="information" importance="high" />}
                       </button>
                     </li>
                   );
@@ -541,10 +551,10 @@ function FiltresOptionB(): ReactElement {
             <div style={{ display: "flex", alignItems: "center", gap: "var(--space150)", padding: "var(--space150) var(--space200)", borderTop: "1px solid var(--border-subtle)" }}>
               {savingName === null ? (
                 <>
-                  <Button appearance="link" className={css["saveBtn"]} onPress={() => setSavingName("")} isDisabled={total === 0}>
+                  <Button appearance="link" className={css["textAction"]} onPress={() => setSavingName("")} isDisabled={total === 0}>
                     <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space075)" }}>
-                      <Icon icon="Bookmark" size={18} />
-                      Enregistrer cette recherche
+                      <Icon icon="Bookmark" appearance={isCurrentSaved ? "filled" : "outlined"} size={18} />
+                      {isCurrentSaved ? "Recherche enregistrée" : "Enregistrer cette recherche"}
                     </span>
                   </Button>
                   <div style={{ flex: 1 }} />
@@ -578,7 +588,7 @@ function FiltresOptionB(): ReactElement {
             Composant Menu du DS : MenuItem (label + description = nb de filtres)
             avec la croix de suppression dans le elemAfter. */}
         <MenuTrigger isOpen={viewsOpen} onOpenChange={setViewsOpen}>
-          <Button appearance="outlined" iconAfter="ArrowDropDown">
+          <Button appearance="outlined" iconAfter="KeyboardArrowDown">
             <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space075)" }}>
               <Icon icon="Bookmark" size={18} />
               Recherches
@@ -635,6 +645,7 @@ function FiltresOptionB(): ReactElement {
               trigger={
                 <Button
                   appearance="subtle"
+                  className={css["chipTrigger"]}
                   aria-label={`Afficher ${overflowGroups.length} filtre${overflowGroups.length > 1 ? "s" : ""} de plus`}
                 >
                   +{overflowGroups.length}
@@ -644,8 +655,7 @@ function FiltresOptionB(): ReactElement {
               <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)", padding: "var(--space150)", maxWidth: 320 }}>{overflowGroups.map(renderChip)}</div>
             </Popup>
           )}
-          <div style={{ flex: 1 }} />
-          <Button appearance="link" onPress={clearAll}>
+          <Button appearance="link" className={css["textAction"]} onPress={clearAll}>
             Réinitialiser
           </Button>
         </div>
@@ -887,8 +897,10 @@ function FiltresOptionBMobile(): ReactElement {
           {detailDef === null ? (
             <>
               <div style={headerStyle}>
-                <Button appearance="subtle" iconBefore="Close" aria-label="Fermer" onPress={closeFilter} />
                 <strong style={{ flex: 1, fontSize: 18 }}>Filtres</strong>
+                <Button appearance="link" className={css["textAction"]} onPress={clearAll} isDisabled={total === 0}>
+                  Réinitialiser
+                </Button>
               </div>
               <div style={{ flex: 1, overflowY: "auto", minHeight: 0 }}>
                 <List aria-label="Facettes">
@@ -917,19 +929,17 @@ function FiltresOptionBMobile(): ReactElement {
               <div style={headerStyle}>
                 <Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Retour" onPress={() => setFacet(null)} />
                 <strong style={{ flex: 1, fontSize: 18 }}>{detailDef.label}</strong>
-                <Button appearance="subtle" iconBefore="Close" aria-label="Fermer" onPress={closeFilter} />
+                <Button appearance="link" className={css["textAction"]} onPress={clearAll} isDisabled={total === 0}>
+                  Réinitialiser
+                </Button>
               </div>
               <div style={{ flex: 1, overflowY: "auto", minHeight: 0, padding: "var(--space200)" }}>{optionControls(detailDef)}</div>
             </>
           )}
 
-          {/* Pied : réinitialiser + voir les résultats. */}
-          <div style={{ display: "flex", alignItems: "center", gap: "var(--space100)", padding: "var(--space150) var(--space200) var(--space200)", borderTop: "1px solid var(--border-subtle)" }}>
-            <Button appearance="link" onPress={clearAll} isDisabled={total === 0}>
-              Réinitialiser
-            </Button>
-            <div style={{ flex: 1 }} />
-            <Button appearance="contained" color="comete" onPress={closeFilter}>
+          {/* Pied : voir les résultats (pleine largeur). */}
+          <div style={{ padding: "var(--space150) var(--space200) var(--space200)", borderTop: "1px solid var(--border-subtle)" }}>
+            <Button appearance="contained" color="comete" onPress={closeFilter} style={{ width: "100%" }}>
               Voir {results.length} agent{results.length > 1 ? "s" : ""}
             </Button>
           </div>

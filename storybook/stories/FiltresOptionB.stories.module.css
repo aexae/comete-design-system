@@ -1,5 +1,6 @@
 /* Recette « Filtres option B » — styles ne pouvant pas passer en inline
-   (pseudo-éléments de scrollbar, override d'état d'un Button). 100 % tokens. */
+   (pseudo-éléments de scrollbar, override d'état/apparence d'un Button).
+   100 % tokens. */
 
 /* Scrollbar thématisée — même convention que le Drawer du design system :
    pouce neutre bold, piste transparente, coins arrondis. */
@@ -21,12 +22,32 @@
   background-clip: padding-box;
 }
 
-/* « Enregistrer cette recherche » : action texte discrète — ni soulignement
-   ni fond (double classe pour battre `.link` du Button sans !important). */
-.saveBtn.saveBtn {
+/* Action texte discrète (« Enregistrer cette recherche », « Réinitialiser ») :
+   ni soulignement ni fond (double classe pour battre `.link` du Button sans
+   !important). */
+.textAction.textAction {
   text-decoration: none;
 }
-.saveBtn.saveBtn[data-hovered],
-.saveBtn.saveBtn[data-pressed] {
+.textAction.textAction[data-hovered],
+.textAction.textAction[data-pressed] {
   background-color: transparent;
+}
+
+/* Déclencheur « +N » du surplus de tags, stylé comme une puce de filtre actif
+   (même fond/texte/rayon que les chips bespoke). */
+.chipTrigger.chipTrigger {
+  min-height: var(--size350, 28px);
+  height: 28px;
+  padding: 0 var(--space150);
+  border: 0;
+  border-radius: var(--radius-round);
+  background-color: var(--background-brand-subtlest-default);
+  color: var(--text-brand);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+.chipTrigger.chipTrigger[data-hovered],
+.chipTrigger.chipTrigger[data-pressed] {
+  background-color: var(--background-brand-subtlest-hovered, var(--background-brand-subtlest-default));
+  color: var(--text-brand);
 }
