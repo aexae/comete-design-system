@@ -1,26 +1,34 @@
 /* Recette « Filtres option B » — styles ne pouvant pas passer en inline
    (pseudo-éléments de scrollbar, override d'état d'un Button). 100 % tokens. */
 
-/* Scrollbar personnalisée (WebKit/Blink — Chromium, cible de Storybook).
-   NB : ne PAS déclarer `scrollbar-width`/`scrollbar-color` ici — dès qu'ils
-   sont posés, Chrome rend la scrollbar native et IGNORE `::-webkit-scrollbar`.
-   Pouce discret (border-bold), plus marqué au survol ; piste transparente ;
-   bordure transparente + background-clip pour un pouce fin et arrondi. */
+/* Scrollbar — identique à la SideNav (story « Scrollable ») : gouttière
+   réservée, pouce fin transparent au repos, révélé au survol du volet
+   (transition douce), piste toujours transparente. */
+.scroll {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color var(--duration-normal) var(--easing-default);
+}
+.scroll:hover {
+  scrollbar-color: var(--border-default) transparent;
+}
 .scroll::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+  width: 8px;
 }
 .scroll::-webkit-scrollbar-track {
   background: transparent;
 }
 .scroll::-webkit-scrollbar-thumb {
-  background-color: var(--border-bold);
-  border-radius: var(--radius-round);
-  border: 3px solid transparent;
-  background-clip: padding-box;
+  background: transparent;
+  border-radius: 4px;
+  transition: background-color var(--duration-normal) var(--easing-default);
 }
-.scroll::-webkit-scrollbar-thumb:hover {
-  background-color: var(--background-neutral-bold-default);
+.scroll:hover::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+}
+.scroll:hover::-webkit-scrollbar-thumb:hover {
+  background: var(--background-neutral-bold-default);
 }
 
 /* Action texte discrète (« Enregistrer cette recherche », « Réinitialiser ») :
