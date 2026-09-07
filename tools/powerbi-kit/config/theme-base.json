@@ -1,5 +1,5 @@
 {
-  "name": "Comète BI v0.4",
+  "name": "Comète BI v0.5",
   "$schema": "https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.157.json",
   "dataColors": [
     "#2467D1",
@@ -441,7 +441,12 @@
         ],
         "shape": [
           {
-            "roundedCornerRadius": 6
+            "rectangleRoundedCurve": 6
+          }
+        ],
+        "icon": [
+          {
+            "iconSize": 24
           }
         ]
       }
