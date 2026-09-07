@@ -326,10 +326,6 @@ function FiltresOptionB(): ReactElement {
 
   const clearAll = () => setF(emptyFilters());
 
-  const MAX_CHIPS = 4;
-  const visibleGroups = groups.slice(0, MAX_CHIPS);
-  const overflowGroups = groups.slice(MAX_CHIPS);
-
   const applyView = (v: SavedView) => {
     setF(v.filters);
     setViewsOpen(false);
@@ -551,12 +547,19 @@ function FiltresOptionB(): ReactElement {
             <div style={{ display: "flex", alignItems: "center", gap: "var(--space150)", padding: "var(--space150) var(--space200)", borderTop: "1px solid var(--border-subtle)" }}>
               {savingName === null ? (
                 <>
-                  <Button appearance="link" className={css["textAction"]} onPress={() => setSavingName("")} isDisabled={total === 0}>
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space075)" }}>
-                      <Icon icon="Bookmark" appearance={isCurrentSaved ? "filled" : "outlined"} size={18} />
-                      {isCurrentSaved ? "Recherche enregistrée" : "Enregistrer cette recherche"}
+                  {isCurrentSaved ? (
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space075)", padding: "0 var(--space075)", fontSize: 13.5, fontWeight: 600, color: "var(--text-default)" }}>
+                      <Icon icon="Bookmark" appearance="filled" size={18} />
+                      Recherche enregistrée
                     </span>
-                  </Button>
+                  ) : (
+                    <Button appearance="link" className={css["textAction"]} onPress={() => setSavingName("")} isDisabled={total === 0}>
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space075)" }}>
+                        <Icon icon="Bookmark" size={18} />
+                        Enregistrer cette recherche
+                      </span>
+                    </Button>
+                  )}
                   <div style={{ flex: 1 }} />
                   <Button appearance="subtle" onPress={clearAll} isDisabled={total === 0}>
                     Réinitialiser
@@ -638,23 +641,7 @@ function FiltresOptionB(): ReactElement {
           style={{ display: "flex", alignItems: "center", gap: "var(--space075)", minHeight: 40, flexWrap: "wrap", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "var(--space100)" }}
         >
           <span style={{ flex: "none", fontSize: 12, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--text-subtlest)" }}>Filtres</span>
-          {visibleGroups.map(renderChip)}
-          {overflowGroups.length > 0 && (
-            <Popup
-              placement="bottom-left"
-              trigger={
-                <Button
-                  appearance="subtle"
-                  className={css["chipTrigger"]}
-                  aria-label={`Afficher ${overflowGroups.length} filtre${overflowGroups.length > 1 ? "s" : ""} de plus`}
-                >
-                  +{overflowGroups.length}
-                </Button>
-              }
-            >
-              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)", padding: "var(--space150)", maxWidth: 320 }}>{overflowGroups.map(renderChip)}</div>
-            </Popup>
-          )}
+          {groups.map(renderChip)}
           <Button appearance="link" className={css["textAction"]} onPress={clearAll}>
             Réinitialiser
           </Button>
