@@ -5,7 +5,16 @@
 // Ce README part avec le kit chez le consultant : il doit être autoportant et
 // tenir compte de ce que Power BI sait — et ne sait pas — faire d'un SVG.
 
+export interface StatusColorRow {
+  value: string;
+  token: string;
+  note: string;
+  hex: string;
+}
+
 export interface ReadmeData {
+  /** Couleurs de statut résolues, injectées dans la mesure DAX livrée. */
+  statusColors: { column: string; fallback: string; entries: StatusColorRow[] };
   iconCount: number;
   /** Écarts relevés entre l'interface actuelle et le kit. */
   notes: string[];
@@ -92,6 +101,31 @@ RETURN SUBSTITUTE(Svg, "${data.placeholder}", Couleur)
 
 Placer la mesure dans une colonne de table ou de matrice : elle s'affiche comme
 une image, à la taille de ligne définie dans **Format > Valeurs > Taille**.
+
+## Couleurs des statuts de devis
+
+Les statuts portent leur couleur par le sens, pas par la position dans la
+palette. Ne jamais laisser un visuel colorer les statuts tout seul : appliquer
+la mesure ci-dessous sur chaque visuel concerné (volet Format, section
+Colonnes ou Couleurs des données, bouton fx, Style de format = Valeur de
+champ, choisir la mesure).
+
+| Statut | Token | Hex |
+|---|---|---|
+${data.statusColors.entries.map((e) => `| ${e.value} | \`${e.token.slice(2)}\` | \`${e.hex}\` |`).join("\n")}
+
+\`\`\`dax
+Couleur statut devis =
+SWITCH(
+    SELECTEDVALUE(${data.statusColors.column}),
+${data.statusColors.entries.map((e) => `    "${e.value}", "${e.hex}",`).join("\n")}
+    "${data.statusColors.fallback}"
+)
+\`\`\`
+
+Adapter la référence \`${data.statusColors.column}\` au nom réel de la table et
+de la colonne du modèle. Les couleurs affectées manuellement par catégorie ne
+sont jamais touchées par un import de thème : cette mesure est la seule source.
 
 ## Thème du rapport
 

@@ -42,6 +42,16 @@ interface IconsConfig {
    */
   coloredSets?: { dir: string; color: string; variant: IconVariant; names: string[] }[];
 }
+interface StatusColor {
+  value: string;
+  token: string;
+  note: string;
+}
+interface StatusColorsConfig {
+  column: string;
+  fallback: string;
+  entries: StatusColor[];
+}
 interface LogosConfig {
   size: number;
   entries: { product: LogoProduct; format: LogoFormat; taglineAlign: LogoTaglineAlign }[];
@@ -179,10 +189,24 @@ export async function build(): Promise<Report> {
     write(`theme/comete-bi-${mode}.json`, JSON.stringify(theme, null, 2) + "\n");
   }
 
+  // ---- Couleurs de statut : tokens résolus pour la mesure DAX du README ---
+  const statusConfig = readConfig<StatusColorsConfig>("status-colors.json");
+  const resolveToken = (token: string): string => {
+    const hex = tokens.get(token);
+    if (hex === undefined) throw new Error(`Token de statut inconnu : ${token}`);
+    return hex.toUpperCase();
+  };
+  const statusColors = {
+    column: statusConfig.column,
+    fallback: resolveToken(statusConfig.fallback),
+    entries: statusConfig.entries.map((e) => ({ ...e, hex: resolveToken(e.token) })),
+  };
+
   // ---- Documentation ------------------------------------------------------
   write("README.md", renderReadme({
     iconCount: entries.length,
     notes: iconsConfig.notes ?? [],
+    statusColors,
     variants: iconsConfig.variants,
     logoCount,
     colorCount: colorRows.length,

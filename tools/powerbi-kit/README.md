@@ -57,7 +57,10 @@ La liste actuelle est **provisoire** : elle doit être remplacée par les icône
 réellement identifiées dans Comète BI. `"names": "*"` exporte les 422 icônes du
 package, ce qui est utile pour explorer mais peu exploitable comme livrable.
 
-**`config/logos.json`**, logos, formats et densités PNG.
+**`config/logos.json`**, logos et formats exportés (SVG uniquement).
+
+**`config/status-colors.json`**, mapping statut de devis vers token : les hex
+sont résolus au build et injectés dans la mesure DAX du README livré.
 
 **`config/theme-base.json`**, structure du thème de rapport.
 **`config/theme-tokens.json`**, mapping `chemin JSON → token`, appliqué sur la
