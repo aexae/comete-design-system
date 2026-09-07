@@ -16,6 +16,7 @@ import { useMemo, useRef, useState } from "react";
 import type { ReactElement } from "react";
 import { within, screen, userEvent, waitFor, expect } from "storybook/test";
 import { parseDate, Time } from "@internationalized/date";
+import css from "./FiltresOptionB.stories.module.css";
 import {
   Button,
   Badge,
@@ -462,6 +463,7 @@ function FiltresOptionB(): ReactElement {
               {/* Volet gauche : liste des facettes. */}
               <ul
                 aria-label="Facettes"
+                className={css["scroll"]}
                 style={{
                   flex: "none",
                   width: 232,
@@ -511,7 +513,7 @@ function FiltresOptionB(): ReactElement {
               </ul>
 
               {/* Volet droit : options de la facette courante, ou résultats de recherche. */}
-              <div style={{ flex: 1, overflowY: "auto", padding: "var(--space200)" }}>
+              <div className={css["scroll"]} style={{ flex: 1, overflowY: "auto", padding: "var(--space200)" }}>
                 {q ? (
                   <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
                     <p style={{ margin: "0 0 var(--space100)", fontSize: 12, color: "var(--text-subtlest)" }}>
@@ -539,8 +541,11 @@ function FiltresOptionB(): ReactElement {
             <div style={{ display: "flex", alignItems: "center", gap: "var(--space150)", padding: "var(--space150) var(--space200)", borderTop: "1px solid var(--border-subtle)" }}>
               {savingName === null ? (
                 <>
-                  <Button appearance="link" iconBefore="Bookmark" onPress={() => setSavingName("")} isDisabled={total === 0}>
-                    Enregistrer cette recherche
+                  <Button appearance="link" className={css["saveBtn"]} onPress={() => setSavingName("")} isDisabled={total === 0}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space075)" }}>
+                      <Icon icon="Bookmark" size={18} />
+                      Enregistrer cette recherche
+                    </span>
                   </Button>
                   <div style={{ flex: 1 }} />
                   <Button appearance="subtle" onPress={clearAll} isDisabled={total === 0}>
@@ -573,8 +578,11 @@ function FiltresOptionB(): ReactElement {
             Composant Menu du DS : MenuItem (label + description = nb de filtres)
             avec la croix de suppression dans le elemAfter. */}
         <MenuTrigger isOpen={viewsOpen} onOpenChange={setViewsOpen}>
-          <Button appearance="outlined" iconBefore="Bookmark" iconAfter="ArrowDropDown">
-            Recherches
+          <Button appearance="outlined" iconAfter="ArrowDropDown">
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space075)" }}>
+              <Icon icon="Bookmark" size={18} />
+              Recherches
+            </span>
           </Button>
           <MenuPopover width={320}>
             <Menu

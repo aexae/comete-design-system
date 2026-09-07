@@ -1,0 +1,32 @@
+/* Recette « Filtres option B » — styles ne pouvant pas passer en inline
+   (pseudo-éléments de scrollbar, override d'état d'un Button). 100 % tokens. */
+
+/* Scrollbar thématisée — même convention que le Drawer du design system :
+   pouce neutre bold, piste transparente, coins arrondis. */
+.scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--background-neutral-bold-default) transparent;
+}
+.scroll::-webkit-scrollbar {
+  width: var(--size100);
+  height: var(--size100);
+}
+.scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll::-webkit-scrollbar-thumb {
+  background-color: var(--background-neutral-bold-default);
+  border-radius: var(--radius-round);
+  border: var(--size025) solid transparent;
+  background-clip: padding-box;
+}
+
+/* « Enregistrer cette recherche » : action texte discrète — ni soulignement
+   ni fond (double classe pour battre `.link` du Button sans !important). */
+.saveBtn.saveBtn {
+  text-decoration: none;
+}
+.saveBtn.saveBtn[data-hovered],
+.saveBtn.saveBtn[data-pressed] {
+  background-color: transparent;
+}
