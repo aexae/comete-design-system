@@ -22,7 +22,7 @@
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
-    "@aexae/comete-design-tokens": "^0.13.0",
+    "@aexae/comete-design-tokens": "^0.13.1",
     "@chromatic-com/storybook": "^5.3.0",
     "@eslint/js": "^9.39.4",
     "@mdx-js/react": "^3.1.1",

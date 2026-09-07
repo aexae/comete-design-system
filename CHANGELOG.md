@@ -9,6 +9,16 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.154] - 2026-09-07
+
+### Corrigé
+
+- **Typographie** : le token `--font-family-code` passe de `SF Mono` (exclusif
+  Apple, sans fallback → texte non-monospace hors macOS) à une **pile monospace
+  système** cross-platform : `ui-monospace, SFMono-Regular, "SF Mono", Menlo,
+  Consolas, "Liberation Mono", monospace` (via `@aexae/comete-design-tokens@0.13.1`).
+  Le rôle « code » rend désormais en monospace sur toutes les plateformes.
+
 ## [1.0.0-alpha.153] - 2026-09-03
 
 ### Ajouté
