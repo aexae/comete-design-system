@@ -291,6 +291,7 @@ function FiltresOptionB(): ReactElement {
   const [views, setViews] = useState<SavedView[]>(INITIAL_VIEWS);
   const [viewsOpen, setViewsOpen] = useState(false);
   const [savingName, setSavingName] = useState<string | null>(null);
+  const [chipsExpanded, setChipsExpanded] = useState(false);
   const viewSeq = useRef(0);
 
   const setFacet = (patch: Partial<Filters>) => setF((prev) => ({ ...prev, ...patch }));
@@ -325,6 +326,10 @@ function FiltresOptionB(): ReactElement {
   }, [f]);
 
   const clearAll = () => setF(emptyFilters());
+
+  const MAX_CHIPS = 4;
+  const visibleGroups = chipsExpanded ? groups : groups.slice(0, MAX_CHIPS);
+  const hiddenCount = groups.length - visibleGroups.length;
 
   const applyView = (v: SavedView) => {
     setF(v.filters);
@@ -641,7 +646,30 @@ function FiltresOptionB(): ReactElement {
           style={{ display: "flex", alignItems: "center", gap: "var(--space075)", minHeight: 40, flexWrap: "wrap", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "var(--space100)" }}
         >
           <span style={{ flex: "none", fontSize: 12, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--text-subtlest)" }}>Filtres</span>
-          {groups.map(renderChip)}
+          {visibleGroups.map(renderChip)}
+          {hiddenCount > 0 && (
+            <button
+              type="button"
+              onClick={() => setChipsExpanded(true)}
+              aria-label={`Afficher ${hiddenCount} filtre${hiddenCount > 1 ? "s" : ""} de plus`}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                height: 28,
+                padding: "0 var(--space150)",
+                borderRadius: "var(--radius-round)",
+                border: 0,
+                background: "var(--background-brand-subtlest-default)",
+                color: "var(--text-brand)",
+                fontSize: 12.5,
+                fontWeight: 500,
+                cursor: "pointer",
+                whiteSpace: "nowrap",
+              }}
+            >
+              +{hiddenCount}
+            </button>
+          )}
           <Button appearance="link" className={css["textAction"]} onPress={clearAll}>
             Réinitialiser
           </Button>
