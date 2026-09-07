@@ -1,0 +1,43 @@
+/* Recette « Filtres option B » — styles ne pouvant pas passer en inline
+   (pseudo-éléments de scrollbar, override d'état d'un Button). 100 % tokens. */
+
+/* Scrollbar — identique à la SideNav (story « Scrollable ») : gouttière
+   réservée, pouce fin transparent au repos, révélé au survol du volet
+   (transition douce), piste toujours transparente. */
+.scroll {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color var(--duration-normal) var(--easing-default);
+}
+.scroll:hover {
+  scrollbar-color: var(--border-default) transparent;
+}
+.scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+  transition: background-color var(--duration-normal) var(--easing-default);
+}
+.scroll:hover::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+}
+.scroll:hover::-webkit-scrollbar-thumb:hover {
+  background: var(--background-neutral-bold-default);
+}
+
+/* Action texte discrète (« Enregistrer cette recherche », « Réinitialiser ») :
+   ni soulignement ni fond (double classe pour battre `.link` du Button sans
+   !important). */
+.textAction.textAction {
+  text-decoration: none;
+}
+.textAction.textAction[data-hovered],
+.textAction.textAction[data-pressed] {
+  background-color: transparent;
+}
