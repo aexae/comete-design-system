@@ -1,9 +1,11 @@
 declare const styles: {
   readonly "head": string;
+  readonly "headFlush": string;
   readonly "item": string;
   readonly "itemAvatar": string;
   readonly "itemButton": string;
   readonly "itemButtonWrapper": string;
+  readonly "itemFlush": string;
   readonly "itemIcon": string;
   readonly "itemSecondaryAction": string;
   readonly "itemText": string;

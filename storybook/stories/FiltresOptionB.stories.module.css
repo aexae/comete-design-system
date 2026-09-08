@@ -3,32 +3,107 @@
 
 /* Scrollbar — identique à la SideNav (story « Scrollable ») : gouttière
    réservée, pouce fin transparent au repos, révélé au survol du volet
-   (transition douce), piste toujours transparente. */
-.scroll {
+   (transition douce), piste toujours transparente. Utilisée par les volets
+   desktop ET par le corps de la feuille mobile (DrawerBody), pour une barre
+   identique partout.
+   Classe doublée (`.scroll.scroll`, spécificité 0,2,0) afin de battre le
+   traitement thématisé propre au `.body` du DrawerBody (0,1,0) sans
+   `!important` — même parade que les overrides d'état du DS. Sur un simple
+   `<ul class="scroll">` (desktop), le sélecteur doublé s'applique tout autant. */
+.scroll.scroll {
   scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
   transition: scrollbar-color var(--duration-normal) var(--easing-default);
 }
-.scroll:hover {
+.scroll.scroll:hover {
   scrollbar-color: var(--border-default) transparent;
 }
-.scroll::-webkit-scrollbar {
+.scroll.scroll::-webkit-scrollbar {
   width: 8px;
 }
-.scroll::-webkit-scrollbar-track {
+.scroll.scroll::-webkit-scrollbar-track {
   background: transparent;
 }
-.scroll::-webkit-scrollbar-thumb {
+.scroll.scroll::-webkit-scrollbar-thumb {
   background: transparent;
   border-radius: 4px;
   transition: background-color var(--duration-normal) var(--easing-default);
 }
-.scroll:hover::-webkit-scrollbar-thumb {
+.scroll.scroll:hover::-webkit-scrollbar-thumb {
   background: var(--border-default);
 }
-.scroll:hover::-webkit-scrollbar-thumb:hover {
+.scroll.scroll:hover::-webkit-scrollbar-thumb:hover {
   background: var(--background-neutral-bold-default);
+}
+
+/* Racine de la feuille : colonne flex dont le `gap` porte l'espace autour du
+   filet entre le bloc « enregistrement » et les facettes (une valeur, un
+   endroit — jamais une marge sur le filet). Le `gap` s'applique de part et
+   d'autre du `Divider`, enfant de la colonne. */
+.rootGroups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space150);
+}
+
+/* Titres de section de la feuille : casse normale (le `.head` du DS est en
+   capitales). Classe doublée (0,2,0) pour gagner sur `.head` (0,1,0) sans
+   `!important` — on ne fait que styler l'élément via son `className` public,
+   sans atteindre l'intérieur du composant. */
+.sectionTitle.sectionTitle {
+  text-transform: none;
+}
+
+/* Libellé de facette : `flex: none` → il ne rétrécit jamais et garde donc la
+   priorité (§4 racine). Les libellés de facette sont courts et bornés ; c'est
+   la VALEUR (fin de ligne) qui cède. Typo alignée sur `.itemTextPrimary` du DS. */
+.facetLabel {
+  flex: none;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-s);
+  line-height: var(--line-height-ui-s);
+  color: var(--text-default);
+  white-space: nowrap;
+}
+
+/* Fin de ligne des facettes / « Mes recherches » (vue racine). Poussée à droite
+   (`margin-left: auto`) et SEULE partie qui rétrécit (`flex: 0 1 auto`,
+   `min-width: 0`) → la valeur se tronque avant le libellé (§4 racine). */
+.facetTrailing {
+  flex: 0 1 auto;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space100);
+  min-width: 0;
+  color: var(--text-subtlest);
+}
+.facetValue {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-ui-s);
+  color: var(--text-subtlest);
+}
+
+/* Ligne d'option (vue détail). Le compteur de résultats ne se tronque JAMAIS
+   (`flex: none`) ; c'est l'étiquette de l'option qui cède (§4 détail). */
+.optionRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space100);
+}
+.optionMain {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.optionCount {
+  flex: none;
+  font-size: var(--font-size-ui-xs);
+  color: var(--text-subtlest);
+  font-variant-numeric: tabular-nums;
 }
 
 /* Action texte discrète (« Enregistrer cette recherche », « Réinitialiser ») :
