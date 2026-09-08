@@ -125,7 +125,15 @@ ${data.statusColors.entries.map((e) => `    "${e.value}", "${e.hex}",`).join("\n
 
 Adapter la référence \`${data.statusColors.column}\` au nom réel de la table et
 de la colonne du modèle. Les couleurs affectées manuellement par catégorie ne
-sont jamais touchées par un import de thème : cette mesure est la seule source.
+sont jamais touchées par un import de thème : cette table est la seule source.
+
+Le mécanisme d'application dépend du visuel. La mise en forme conditionnelle
+par mesure (fx, Valeur de champ) est disponible sur les barres, colonnes et
+aires sans champ dans le puits Légende, et sur les fonds de cellule des tables
+et matrices. Quand le visuel a une légende, ou pour les secteurs et anneaux,
+Power BI ne propose pas le fx : affecter alors les couleurs par catégorie à la
+main (Format, Couleurs des données) en prenant les hex de la table ci-dessus.
+Dans tous les cas la règle est la même : un statut, une couleur, partout.
 
 ## Thème du rapport
 
