@@ -12,6 +12,7 @@ declare const styles: {
   readonly "medium": string;
   readonly "modal": string;
   readonly "narrow": string;
+  readonly "nonModal": string;
   readonly "overlay": string;
   readonly "overlay-fade-in": string;
   readonly "overlay-fade-out": string;

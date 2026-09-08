@@ -140,6 +140,30 @@
 .top.full, .bottom.full         { height: 100%; border-radius: 0; }
 
 /* ==========================================================================
+   Mode non modal — panneau persistant DANS LE FLUX (pas d'overlay).
+   Déclaré après .drawer / placements pour l'emporter (même spécificité).
+   Le consommateur place ce panneau dans un conteneur flex/grid : le voisin
+   (la liste) se reflow à côté, il n'est pas recouvert.
+   ========================================================================== */
+
+.drawer.nonModal {
+  position: static;
+  inset: auto;
+  height: auto;
+  align-self: stretch;
+  flex: none;
+  /* En flux, pas d'ombre d'élévation forte : une bordure suffit à séparer. */
+  box-shadow: none;
+  border: 1px solid var(--border-default);
+}
+
+/* Pas d'animation d'entrée/sortie en non modal (montage/démontage direct). */
+.drawer.nonModal[data-entering],
+.drawer.nonModal[data-exiting] {
+  animation: none;
+}
+
+/* ==========================================================================
    Slide animations — per placement
    ========================================================================== */
 
@@ -224,7 +248,17 @@
 }
 
 .body {
-  flex: 1;
+  /* `flex-basis: auto` (et non `0`) : la base = la taille du contenu. Avec un
+     `flex-basis: 0` (`flex: 1`), Safari EFFONDRE ce body à 0 en colonne flex à
+     hauteur `vh` (drawer visuellement vide, footer remonté en haut). Base
+     `auto` + `min-height: 0` : le body défile quand le drawer a une hauteur
+     définie, sans s'effondrer. */
+  flex: 1 1 auto;
+  /* En colonne flex, `min-height: auto` (défaut) empêche cet item de se
+     comprimer sous la hauteur de son contenu : le body déborde et pousse le
+     footer hors du drawer. `min-height: 0` autorise la compression → le body
+     défile en interne et le footer reste visible. */
+  min-height: 0;
   overflow-y: auto;
   padding: 0 var(--space300) var(--space300);
   font-family: var(--font-family-primary);
