@@ -1,5 +1,5 @@
 {
-  "name": "Comète BI v0.8.1",
+  "name": "Comète BI v0.8.2",
   "$schema": "https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.157.json",
   "dataColors": [
     "#429AEF",
@@ -280,18 +280,22 @@
             "fontSize": 10,
             "fontColor": {
               "solid": {
-                "color": "#FFFFFF"
+                "color": "#252A2C"
               }
             },
             "backColor": {
               "solid": {
-                "color": "#1E3661"
+                "color": "#FFFFFF"
               }
             },
-            "alignment": "Left",
-            "titleAlignment": "Left",
             "wordWrap": true,
-            "outlineStyle": 0
+            "outlineStyle": 2,
+            "outlineColor": {
+              "solid": {
+                "color": "#D8DEDF"
+              }
+            },
+            "outlineWeight": 1
           }
         ],
         "values": [
@@ -342,7 +346,8 @@
             "perRowLevel": true,
             "rowSubtotalsLabel": "Total",
             "rowSubtotalsPosition": "Top",
-            "applyToHeaders": false
+            "applyToHeaders": false,
+            "bold": false
           }
         ],
         "columnTotal": [

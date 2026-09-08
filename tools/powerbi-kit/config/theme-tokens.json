@@ -60,8 +60,8 @@
     "dark": "--comete-blue-400"
   },
   "visualStyles.pivotTable.*.rowHeaders[0].outlineColor.solid.color": "--border-default",
-  "visualStyles.pivotTable.*.columnHeaders[0].fontColor.solid.color": "--text-inverted",
-  "visualStyles.pivotTable.*.columnHeaders[0].backColor.solid.color": "--background-brand-bold-default",
+  "visualStyles.pivotTable.*.columnHeaders[0].fontColor.solid.color": "--text-default",
+  "visualStyles.pivotTable.*.columnHeaders[0].backColor.solid.color": "--background-surface-default",
   "visualStyles.pivotTable.*.values[0].fontColorPrimary.solid.color": "--text-default",
   "visualStyles.pivotTable.*.values[0].fontColorSecondary.solid.color": {
     "light": "--comete-blue-700",
@@ -77,5 +77,6 @@
   },
   "visualStyles.pivotTable.*.columnTotal[0].backColor.solid.color": "--background-surface-default",
   "visualStyles.pivotTable.*.rowTotal[0].fontColor.solid.color": "--text-default",
-  "visualStyles.pivotTable.*.grid[0].gridHorizontalColor.solid.color": "--border-subtle"
+  "visualStyles.pivotTable.*.grid[0].gridHorizontalColor.solid.color": "--border-subtle",
+  "visualStyles.pivotTable.*.columnHeaders[0].outlineColor.solid.color": "--border-default"
 }
