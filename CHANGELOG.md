@@ -9,6 +9,16 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Ajouté
+
+- **`ListItemButton`** : nouvelle prop `isFlush` (défaut `false`) qui annule le
+  padding **horizontal** de l'item (le vertical / la cible tactile de 44 px est
+  conservé). À utiliser quand un conteneur parent définit déjà le retrait
+  horizontal, pour un unique bord d'alignement.
+- **`ListHead`** : nouvelle prop `isFlush` (défaut `false`) qui annule le padding
+  **horizontal** du sous-titre de section (le vertical est conservé), pour
+  l'aligner sur des items eux-mêmes mis à plat (`ListItemButton isFlush`).
+
 ## [1.0.0-alpha.154] - 2026-09-07
 
 ### Corrigé

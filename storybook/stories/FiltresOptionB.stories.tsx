@@ -15,6 +15,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useMemo, useRef, useState } from "react";
 import type { ReactElement } from "react";
 import { within, screen, userEvent, waitFor, expect } from "storybook/test";
+import { MINIMAL_VIEWPORTS } from "storybook/viewport";
 import { parseDate, Time } from "@internationalized/date";
 import css from "./FiltresOptionB.stories.module.css";
 import {
@@ -38,12 +39,19 @@ import {
   DatePicker,
   TimePicker,
   Avatar,
+  Divider,
+  Drawer,
+  DrawerHeader,
+  DrawerBody,
+  DrawerFooter,
   List,
+  ListHead,
   ListItem,
   ListItemButton,
   ListItemText,
   ListItemAvatar,
   ListItemTrailing,
+  ListItemSecondaryAction,
   Table,
   TableHead,
   TableBody,
@@ -104,18 +112,18 @@ interface Agent {
 
 const AGENTS: Agent[] = (
   [
-    ["DUPONT Marie", "Comète Sécurité", "Nord", "SST", "Complètes", "Radio", "CQP APS", "Agent de sécurité", "Français", "CDI", false, "planifies"],
-    ["MARTIN Bob", "Comète Sécurité", "Est", "H0B0", "Pièce manquante", "Véhicule", "SSIAP 1", "Agent SSIAP", "Français", "CDI", false, "non"],
-    ["CHEN Alice", "Comète Sécurité", "Nord", "SST", "Complètes", "Radio", "SSIAP 2", "Chef de poste", "Anglais", "CDI", false, "disponibles"],
-    ["CLAIRE Sophie", "Agence Lyon", "Sud", "Palpation", "Complètes", "Chien", "CQP APS", "Agent cynophile", "Français", "Vacataire", false, "disponibles"],
-    ["BARDET Romain", "Sous-traitant Vigilis", "Est", "SST", "Pièce manquante", "Radio", "CQP APS", "Agent de sécurité", "Espagnol", "CDD", true, "planifies"],
-    ["BENOIT Armand", "Agence Lyon", "Sud", "H0B0", "Complètes", "Véhicule", "SSIAP 1", "Agent SSIAP", "Français", "CDI", false, "planifies"],
-    ["BERNARD Alex", "Comète Sécurité", "Ouest", "SST", "Complètes", "Radio", "CQP APS", "Agent de sécurité", "Anglais", "Vacataire", false, "non"],
-    ["ORSAL Guillaume", "Agence Lyon", "Sud", "SST", "Complètes", "Véhicule", "SSIAP 2", "Chef de poste", "Français", "CDI", false, "disponibles"],
-    ["COCHARD Cédric", "Sous-traitant Vigilis", "Nord", "Palpation", "Pièce manquante", "Radio", "CQP APS", "Agent de sécurité", "Portugais", "CDD", true, "non"],
-    ["ARMAND Fred", "Comète Sécurité", "Est", "Palpation", "Complètes", "Chien", "CQP APS", "Agent cynophile", "Français", "CDI", false, "planifies"],
-    ["BELLANGER Georgie", "Agence Lyon", "Ouest", "SST", "Complètes", "Radio", "SSIAP 1", "Agent SSIAP", "Anglais", "Vacataire", false, "disponibles"],
-    ["ANAIS Alfred", "Comète Sécurité", "Nord", "H0B0", "Complètes", "Véhicule", "SSIAP 2", "Chef de poste", "Français", "CDI", false, "planifies"],
+    ["DUPONT Marie", "Comète Sécurité", "Événementiel", "SST", "Complètes", "Radio", "CQP APS", "Agent de sécurité", "Français", "CDI", false, "planifies"],
+    ["MARTIN Bob", "Comète Sécurité", "Industrie", "H0B0", "Pièce manquante", "Véhicule", "SSIAP 1", "Agent SSIAP", "Français", "CDI", false, "non"],
+    ["CHEN Alice", "Comète Sécurité", "Événementiel", "SST", "Complètes", "Radio", "SSIAP 2", "Chef de poste", "Anglais", "CDI", false, "disponibles"],
+    ["CLAIRE Sophie", "Agence Lyon", "Centres commerciaux", "Palpation", "Complètes", "Chien", "CQP APS", "Agent cynophile", "Français", "Vacataire", false, "disponibles"],
+    ["BARDET Romain", "Sous-traitant Vigilis", "Logistique / Entrepôts", "SST", "Pièce manquante", "Radio", "CQP APS", "Agent de sécurité", "Espagnol", "CDD", true, "planifies"],
+    ["BENOIT Armand", "Agence Lyon", "Tertiaire / Bureaux", "H0B0", "Complètes", "Véhicule", "SSIAP 1", "Agent SSIAP", "Français", "CDI", false, "planifies"],
+    ["BERNARD Alex", "Comète Sécurité", "Industrie", "SST", "Complètes", "Radio", "CQP APS", "Agent de sécurité", "Anglais", "Vacataire", false, "non"],
+    ["ORSAL Guillaume", "Agence Lyon", "Événementiel", "SST", "Complètes", "Véhicule", "SSIAP 2", "Chef de poste", "Français", "CDI", false, "disponibles"],
+    ["COCHARD Cédric", "Sous-traitant Vigilis", "Transports", "Palpation", "Pièce manquante", "Radio", "CQP APS", "Agent de sécurité", "Portugais", "CDD", true, "non"],
+    ["ARMAND Fred", "Comète Sécurité", "Centres commerciaux", "Palpation", "Complètes", "Chien", "CQP APS", "Agent cynophile", "Français", "CDI", false, "planifies"],
+    ["BELLANGER Georgie", "Agence Lyon", "Grande distribution", "SST", "Complètes", "Radio", "SSIAP 1", "Agent SSIAP", "Anglais", "Vacataire", false, "disponibles"],
+    ["ANAIS Alfred", "Comète Sécurité", "Hôpitaux / Santé", "H0B0", "Complètes", "Véhicule", "SSIAP 2", "Chef de poste", "Français", "CDI", false, "planifies"],
   ] as const
 ).map((r) => ({
   nom: r[0],
@@ -176,7 +184,7 @@ function initialFilters(): Filters {
   return {
     ...emptyFilters(),
     societe: ["Comète Sécurité", "Agence Lyon"],
-    secteur: ["Nord", "Sud"],
+    secteur: ["Événementiel", "Industrie"],
     habilitation: ["SST"],
     formalite: ["Complètes"],
     equipement: ["Radio", "Véhicule"],
@@ -207,9 +215,36 @@ function matchExcept(a: Agent, f: Filters, skip: MultiKey): boolean {
 const optionCount = (f: Filters, key: MultiKey, value: string): number =>
   AGENTS.filter((a) => a[key] === value && matchExcept(a, f, key)).length;
 
+// Secteurs d'activité — liste longue (bien au-delà des valeurs réellement
+// portées par les agents) : elle justifie une barre de recherche dans la
+// catégorie « Secteurs » sur mobile. Les secteurs sans agent correspondant
+// ressortent à 0 (option désactivée), comme n'importe quelle option morte.
+const SECTEURS = [
+  "Aéroportuaire",
+  "Banque / Finance",
+  "BTP / Chantiers",
+  "Centres commerciaux",
+  "Data centers",
+  "Distribution / Retail",
+  "Événementiel",
+  "Grande distribution",
+  "Hôpitaux / Santé",
+  "Industrie",
+  "Logistique / Entrepôts",
+  "Luxe / Boutiques",
+  "Musées / Culture",
+  "Nucléaire",
+  "Portuaire",
+  "Tertiaire / Bureaux",
+  "Transports",
+  "Universités / Écoles",
+];
+
 const DOMAINS = MULTI_KEYS.reduce(
   (acc, key) => {
-    acc[key] = [...new Set(AGENTS.map((a) => a[key]))].sort((x, y) => x.localeCompare(y, "fr"));
+    acc[key] = key === "secteur"
+      ? SECTEURS
+      : [...new Set(AGENTS.map((a) => a[key]))].sort((x, y) => x.localeCompare(y, "fr"));
     return acc;
   },
   {} as Record<MultiKey, string[]>,
@@ -456,7 +491,11 @@ function FiltresOptionB(): ReactElement {
           placement="bottom-left"
           style={{ width: 720, maxWidth: "calc(100vw - 32px)" }}
           trigger={
-            <Button appearance="outlined" iconBefore="Tune">
+            <Button
+              appearance="outlined"
+              iconBefore="Tune"
+              aria-label={total > 0 ? `Filtres, ${total} critère${total > 1 ? "s" : ""} actif${total > 1 ? "s" : ""}` : "Filtres"}
+            >
               Filtres
               {total > 0 && <Badge label={String(total)} appearance="information" importance="high" />}
             </Button>
@@ -555,13 +594,13 @@ function FiltresOptionB(): ReactElement {
                   {isCurrentSaved ? (
                     <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space075)", padding: "0 var(--space075)", fontSize: 13.5, fontWeight: 600, color: "var(--text-default)" }}>
                       <Icon icon="Bookmark" appearance="filled" size={18} />
-                      Recherche enregistrée
+                      Filtres enregistrés
                     </span>
                   ) : (
                     <Button appearance="link" className={css["textAction"]} onPress={() => setSavingName("")} isDisabled={total === 0}>
                       <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space075)" }}>
                         <Icon icon="Bookmark" size={18} />
-                        Enregistrer cette recherche
+                        Enregistrer ces filtres
                       </span>
                     </Button>
                   )}
@@ -576,7 +615,7 @@ function FiltresOptionB(): ReactElement {
               ) : (
                 <>
                   <div style={{ flex: 1, maxWidth: 260 }}>
-                    <TextField aria-label="Nom de la recherche" placeholder="Nom de la recherche" value={savingName} onChange={setSavingName} />
+                    <TextField aria-label="Nom de l'enregistrement" placeholder="Nom de l'enregistrement" value={savingName} onChange={setSavingName} />
                   </div>
                   <Button appearance="contained" color="comete" onPress={saveView} isDisabled={!savingName.trim()}>
                     Enregistrer
@@ -599,21 +638,21 @@ function FiltresOptionB(): ReactElement {
           <Button appearance="outlined" iconAfter="KeyboardArrowDown">
             <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space075)" }}>
               <Icon icon="Bookmark" size={18} />
-              Recherches
+              Filtres enregistrés
             </span>
           </Button>
           <MenuPopover width={320}>
             <Menu
-              aria-label="Recherches enregistrées"
+              aria-label="Filtres enregistrés"
               onAction={(key) => {
                 const v = views.find((x) => x.id === key);
                 if (v) applyView(v);
               }}
             >
-              <MenuSection title="Recherches enregistrées">
+              <MenuSection title="Filtres enregistrés">
                 {views.length === 0 ? (
                   <MenuItem id="__empty" isDisabled>
-                    Aucune recherche enregistrée
+                    Aucun filtre enregistré
                   </MenuItem>
                 ) : (
                   views.map((v) => {
@@ -643,7 +682,7 @@ function FiltresOptionB(): ReactElement {
         <div
           role="group"
           aria-label="Filtres actifs"
-          style={{ display: "flex", alignItems: "center", gap: "var(--space075)", minHeight: 40, flexWrap: "wrap", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "var(--space100)" }}
+          style={{ display: "flex", alignItems: "center", gap: "var(--space075)", minHeight: 40, flexWrap: "wrap" }}
         >
           <span style={{ flex: "none", fontSize: 12, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--text-subtlest)" }}>Filtres</span>
           {visibleGroups.map(renderChip)}
@@ -724,6 +763,17 @@ function FiltresOptionBMobile(): ReactElement {
   const [f, setF] = useState<Filters>(initialFilters);
   const [filterOpen, setFilterOpen] = useState(false);
   const [facet, setFacet] = useState<string | null>(null);
+  const [showViews, setShowViews] = useState(false);
+  const [views, setViews] = useState<SavedView[]>(INITIAL_VIEWS);
+  const [savingName, setSavingName] = useState<string | null>(null);
+  // Recherche locale dans une catégorie à liste longue (ex. « Secteurs »).
+  const [optionQuery, setOptionQuery] = useState("");
+  const viewSeq = useRef(0);
+
+  const openFacet = (key: string) => {
+    setOptionQuery("");
+    setFacet(key);
+  };
 
   const patch = (p: Partial<Filters>) => setF((prev) => ({ ...prev, ...p }));
   const toggleMulti = (key: MultiKey, value: string) =>
@@ -735,11 +785,29 @@ function FiltresOptionBMobile(): ReactElement {
 
   const results = useMemo(() => filteredAgents(f), [f]);
   const total = totalActive(f);
+  // Filtre enregistré actuellement appliqué (si les filtres courants
+  // correspondent à un enregistrement) : son nom s'affiche sur la ligne.
+  const appliedView = total > 0 ? views.find((v) => sameFilters(v.filters, f)) : undefined;
   const detailDef = facet ? (FACET_DEFS.find((d) => d.key === facet) ?? null) : null;
 
   const closeFilter = () => {
     setFilterOpen(false);
     setFacet(null);
+    setShowViews(false);
+    setSavingName(null);
+    setOptionQuery("");
+  };
+  const applyView = (v: SavedView) => {
+    setF(v.filters);
+    closeFilter();
+  };
+  const deleteView = (id: string) => setViews((vs) => vs.filter((v) => v.id !== id));
+  const saveView = () => {
+    const name = (savingName ?? "").trim();
+    if (!name) return;
+    viewSeq.current += 1;
+    setViews((vs) => [...vs, { id: `vm-${viewSeq.current}`, name, filters: f }]);
+    setSavingName(null);
   };
 
   const optionControls = (def: FacetDef): ReactElement => {
@@ -772,18 +840,38 @@ function FiltresOptionBMobile(): ReactElement {
       );
     }
     const key = def.key as MultiKey;
+    const domain = DOMAINS[key];
+    // Liste longue → barre de recherche pour filtrer les options par texte.
+    const searchable = domain.length > 8;
+    const q = optionQuery.trim().toLowerCase();
+    const shown = searchable && q ? domain.filter((v) => v.toLowerCase().includes(q)) : domain;
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
-        {DOMAINS[key].map((value) => {
-          const n = optionCount(f, key, value);
-          const checked = f[key].includes(value);
-          return (
-            <div key={value} style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
-              <Checkbox isChecked={checked} isDisabled={n === 0 && !checked} onChange={() => toggleMulti(key, value)} label={value} />
-              <span style={{ marginLeft: "auto", fontSize: 12, color: "var(--text-subtlest)", fontVariantNumeric: "tabular-nums" }}>{n}</span>
-            </div>
-          );
-        })}
+      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space150)" }}>
+        {searchable ? (
+          <SearchField
+            aria-label={`Rechercher dans ${def.label}`}
+            placeholder="Rechercher"
+            value={optionQuery}
+            onChange={setOptionQuery}
+          />
+        ) : null}
+        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
+          {shown.map((value) => {
+            const n = optionCount(f, key, value);
+            const checked = f[key].includes(value);
+            return (
+              <div key={value} className={css["optionRow"]}>
+                <span className={css["optionMain"]}>
+                  <Checkbox isChecked={checked} isDisabled={n === 0 && !checked} onChange={() => toggleMulti(key, value)} label={value} />
+                </span>
+                <span className={css["optionCount"]}>{n}</span>
+              </div>
+            );
+          })}
+          {shown.length === 0 ? (
+            <p style={{ padding: "var(--space200) 0", textAlign: "center", color: "var(--text-subtlest)", fontSize: 13 }}>Aucune option ne correspond.</p>
+          ) : null}
+        </div>
       </div>
     );
   };
@@ -794,140 +882,199 @@ function FiltresOptionBMobile(): ReactElement {
     return "";
   };
 
-  const headerStyle = {
-    display: "flex",
-    alignItems: "center",
-    gap: "var(--space075)",
-    padding: "var(--space100) var(--space100) var(--space150)",
-  } as const;
+  // En-tête de la feuille : le chevron retour occupe un emplacement réservé
+  // dans les DEUX vues (racine sans retour, détail/recherches avec) → le titre
+  // commence au même x partout (§5).
+  const back = () => {
+    if (showViews) {
+      setShowViews(false);
+      setSavingName(null);
+    } else {
+      setFacet(null);
+      setOptionQuery("");
+    }
+  };
+  const sheetTitle = showViews
+    ? "Filtres enregistrés"
+    : savingName !== null
+      ? "Enregistrer ces filtres"
+      : detailDef
+        ? detailDef.label
+        : "Filtres";
 
   return (
-    <div style={{ padding: "var(--space400)", display: "flex", justifyContent: "center", background: "var(--background-surface-elevation-sunken-default)", minHeight: "100vh", boxSizing: "border-box" }}>
-      <div
-        style={{
-          position: "relative",
-          width: 390,
-          height: 780,
-          overflow: "hidden",
-          borderRadius: 40,
-          border: "10px solid var(--background-neutral-bold-default)",
-          background: "var(--background-default)",
-          display: "flex",
-          flexDirection: "column",
-          fontFamily: "var(--font-family-primary)",
-          color: "var(--text-default)",
-          boxShadow: "var(--elevation-large)",
-        }}
-      >
-        {/* En-tête. */}
-        <div style={{ padding: "var(--space300) var(--space200) var(--space150)" }}>
-          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>Agents</h2>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100dvh",
+        background: "var(--background-default)",
+        color: "var(--text-default)",
+        fontFamily: "var(--font-family-primary)",
+        boxSizing: "border-box",
+      }}
+    >
+      {/* En-tête. */}
+      <div style={{ padding: "var(--space300) var(--space200) var(--space150)" }}>
+        <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>Agents</h2>
+      </div>
+
+      {/* Recherche + Filtres. */}
+      <div style={{ display: "flex", gap: "var(--space100)", padding: "0 var(--space200) var(--space150)" }}>
+        <div style={{ flex: 1 }}>
+          <SearchField aria-label="Rechercher un agent" placeholder="Rechercher" value={f.nameQuery} onChange={(v) => patch({ nameQuery: v })} />
         </div>
-
-        {/* Recherche + Filtres. */}
-        <div style={{ display: "flex", gap: "var(--space100)", padding: "0 var(--space200) var(--space150)" }}>
-          <div style={{ flex: 1 }}>
-            <SearchField aria-label="Rechercher un agent" placeholder="Rechercher" value={f.nameQuery} onChange={(v) => patch({ nameQuery: v })} />
-          </div>
-          <Button
-            appearance={total > 0 ? "contained" : "outlined"}
-            iconBefore="Tune"
-            aria-label={total > 0 ? `Filtres, ${total} critère${total > 1 ? "s" : ""} actif${total > 1 ? "s" : ""}` : "Filtres"}
-            onPress={() => {
-              setFilterOpen(true);
-              setFacet(null);
-            }}
-          >
-            {total > 0 && <Badge label={String(total)} appearance="information-inverted" importance="high" />}
-          </Button>
-        </div>
-
-        {/* Liste des agents. */}
-        <div style={{ flex: 1, overflowY: "auto" }}>
-          {results.length === 0 ? (
-            <p style={{ padding: "var(--space400) var(--space200)", textAlign: "center", color: "var(--text-subtlest)", fontSize: 13 }}>Aucun agent ne correspond.</p>
-          ) : (
-            <List isBordered aria-label="Liste des agents">
-              {results.map((a) => (
-                <ListItem key={a.nom}>
-                  <ListItemAvatar>
-                    <Avatar initials={initialsOf(a.nom)} alt={a.nom} />
-                  </ListItemAvatar>
-                  <ListItemText primary={a.nom} secondary={`${a.societe} · ${a.diplome}`} />
-                  <ListItemTrailing>
-                    <Tag label={DISPO_TAG[a.dispo].label} color={DISPO_TAG[a.dispo].color} appearance="subtle" shape="rounded" />
-                  </ListItemTrailing>
-                </ListItem>
-              ))}
-            </List>
-          )}
-        </div>
-
-        {/* Voile — ferme la feuille au clic. */}
-        <button
-          type="button"
-          aria-label="Fermer les filtres"
-          onClick={closeFilter}
-          tabIndex={filterOpen ? 0 : -1}
-          style={{
-            position: "absolute",
-            inset: 0,
-            zIndex: 24,
-            border: 0,
-            cursor: "pointer",
-            background: "var(--blanket-default)",
-            opacity: filterOpen ? 1 : 0,
-            pointerEvents: filterOpen ? "auto" : "none",
-            transition: "opacity 220ms ease",
-          }}
-        />
-
-        {/* Bottom sheet — filtres en drill-down (liste des facettes → détail). */}
-        <div
-          role="dialog"
-          aria-label="Filtres"
-          aria-hidden={!filterOpen}
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 25,
-            maxHeight: "86%",
-            display: "flex",
-            flexDirection: "column",
-            background: "var(--background-surface-elevation-overlay-default)",
-            borderRadius: "20px 20px 0 0",
-            boxShadow: "var(--elevation-large)",
-            transform: filterOpen ? "translateY(0)" : "translateY(100%)",
-            transition: "transform 240ms ease",
-            visibility: filterOpen ? "visible" : "hidden",
+        <Button
+          appearance={total > 0 ? "contained" : "outlined"}
+          iconBefore="Tune"
+          aria-label={total > 0 ? `Filtres, ${total} critère${total > 1 ? "s" : ""} actif${total > 1 ? "s" : ""}` : "Filtres"}
+          onPress={() => {
+            setFacet(null);
+            setFilterOpen(true);
           }}
         >
-          {/* Poignée du bottom sheet. */}
-          <div style={{ display: "flex", justifyContent: "center", paddingTop: "var(--space100)" }}>
-            <span style={{ width: 40, height: 4, borderRadius: "var(--radius-round)", background: "var(--background-neutral-bold-default)" }} />
-          </div>
+          {total > 0 && <Badge label={String(total)} appearance="information-inverted" importance="high" />}
+        </Button>
+      </div>
 
-          {detailDef === null ? (
-            <>
-              <div style={headerStyle}>
-                <strong style={{ flex: 1, fontSize: 18 }}>Filtres</strong>
-                <Button appearance="link" className={css["textAction"]} onPress={clearAll} isDisabled={total === 0}>
-                  Réinitialiser
-                </Button>
+      {/* Liste des agents. */}
+      <div style={{ flex: 1, overflowY: "auto" }}>
+        {results.length === 0 ? (
+          <p style={{ padding: "var(--space400) var(--space200)", textAlign: "center", color: "var(--text-subtlest)", fontSize: 13 }}>Aucun agent ne correspond.</p>
+        ) : (
+          <List isBordered aria-label="Liste des agents">
+            {results.map((a) => (
+              <ListItem key={a.nom}>
+                <ListItemAvatar>
+                  <Avatar initials={initialsOf(a.nom)} alt={a.nom} />
+                </ListItemAvatar>
+                <ListItemText primary={a.nom} secondary={`${a.societe} · ${a.diplome}`} />
+                <ListItemTrailing>
+                  <Tag label={DISPO_TAG[a.dispo].label} color={DISPO_TAG[a.dispo].color} appearance="subtle" shape="rounded" />
+                </ListItemTrailing>
+              </ListItem>
+            ))}
+          </List>
+        )}
+      </div>
+
+      {/* Feuille de filtres — Drawer swipeable (placement bas), drill-down.
+          `size="auto"` → la feuille épouse son contenu, bornée à 85dvh (§3) ;
+          le corps défile au-delà. Le retrait horizontal et la barre de
+          défilement thématisée viennent des sous-composants DS eux-mêmes
+          (DrawerHeader / DrawerBody / DrawerFooter, tous en `--space300`) :
+          les lignes `ListItemButton isFlush` s'alignent sur le padding du
+          corps (§1), le titre part de la même colonne (§5). */}
+      <Drawer
+        isOpen={filterOpen}
+        onOpenChange={(o) => {
+          setFilterOpen(o);
+          if (!o) {
+            setFacet(null);
+            setShowViews(false);
+            setSavingName(null);
+          }
+        }}
+        placement="bottom"
+        swipeable
+        size="auto"
+        style={{ maxHeight: "85dvh" }}
+        aria-label="Filtres"
+      >
+        <DrawerHeader>
+          {/* Chevron retour dans les vues détail / recherches (drill-down). */}
+          {showViews || detailDef ? (
+            <Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Retour" onPress={back} />
+          ) : null}
+          <strong style={{ flex: 1, minWidth: 0, fontSize: "var(--font-size-ui-m)", fontWeight: "var(--font-weight-semibold)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{sheetTitle}</strong>
+          {!showViews && savingName === null ? (
+            <Button appearance="link" className={css["textAction"]} onPress={clearAll} isDisabled={total === 0}>
+              Réinitialiser
+            </Button>
+          ) : null}
+        </DrawerHeader>
+
+        <Divider />
+
+          <DrawerBody className={css["scroll"]}>
+            {showViews ? (
+              views.length === 0 ? (
+                <p style={{ padding: "var(--space300) 0", textAlign: "center", color: "var(--text-subtlest)", fontSize: 13 }}>Aucun filtre enregistré.</p>
+              ) : (
+                <List aria-label="Filtres enregistrés">
+                  {views.map((v) => {
+                    const n = totalActive(v.filters);
+                    return (
+                      <ListItemButton key={v.id} onPress={() => applyView(v)}>
+                        <ListItemText primary={v.name} secondary={`${n} filtre${n > 1 ? "s" : ""} appliqué${n > 1 ? "s" : ""}`} />
+                        <ListItemSecondaryAction>
+                          <Button appearance="subtle" iconBefore="Close" aria-label={`Supprimer ${v.name}`} onPress={() => deleteView(v.id)} />
+                        </ListItemSecondaryAction>
+                      </ListItemButton>
+                    );
+                  })}
+                </List>
+              )
+            ) : savingName !== null ? (
+              // Enregistrement : vue FOCALISÉE — seuls le champ et ses deux
+              // actions sont présents/actifs. Facettes, pied « Voir N » et
+              // « Réinitialiser » disparaissent le temps de nommer l'enregistrement.
+              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)", paddingBlock: "var(--space100)" }}>
+                <TextField aria-label="Nom de l'enregistrement" placeholder="Nom de l'enregistrement" value={savingName} onChange={setSavingName} />
+                <div style={{ display: "flex", gap: "var(--space100)" }}>
+                  <Button appearance="contained" color="comete" onPress={saveView} isDisabled={!savingName.trim()} style={{ flex: 1 }}>
+                    Enregistrer
+                  </Button>
+                  <Button appearance="subtle" onPress={() => setSavingName(null)} style={{ flex: 1 }}>
+                    Annuler
+                  </Button>
+                </div>
               </div>
-              <div style={{ flex: 1, overflowY: "auto", minHeight: 0 }}>
-                <List aria-label="Facettes">
+            ) : detailDef ? (
+              optionControls(detailDef)
+            ) : (
+              // Colonne flex : l'espace autour du filet entre les deux groupes
+              // est porté par le `gap` (une valeur, un endroit), jamais par une
+              // marge sur le filet.
+              <div className={css["rootGroups"]}>
+                {/* Bloc « enregistrement » : action + collection.
+                    Aucun picto (§2) → texte aligné sur la colonne unique. */}
+                <List aria-label="Filtres enregistrés">
+                  <ListHead isFlush className={css["sectionTitle"]}>Enregistrement</ListHead>
+                  <ListItemButton isFlush onPress={() => setSavingName("")} isDisabled={total === 0}>
+                    <ListItemText primary="Enregistrer ces filtres" />
+                  </ListItemButton>
+                  <ListItemButton isFlush onPress={() => setShowViews(true)}>
+                    {/* Même patron que les facettes : libellé prioritaire
+                        (`flex: none`), le nom appliqué tronque avant lui (§4). */}
+                    <span className={css["facetLabel"]}>Filtres enregistrés</span>
+                    {/* Pas de badge : on laisse apparaître le nom du filtre
+                        enregistré appliqué, quand il y en a un. */}
+                    <span className={css["facetTrailing"]}>
+                      {appliedView ? <span className={css["facetValue"]}>{appliedView.name}</span> : null}
+                      <Icon icon="ChevronRight" color="subtlest" />
+                    </span>
+                  </ListItemButton>
+                </List>
+
+                {/* Filet — de bord à bord de la colonne de contenu (il vit dans
+                    le padding du DrawerBody, même retrait que le reste) ;
+                    l'espace autour vient du `gap`, pas d'une marge. */}
+                <Divider />
+
+                {/* Facettes — libellé en ListItemText (flex:1 base 0) : c'est la
+                    VALEUR qui se tronque en premier, pas le libellé (§4 racine). */}
+                <List aria-label="Critères">
+                  <ListHead isFlush className={css["sectionTitle"]}>Critères</ListHead>
                   {FACET_DEFS.map((d) => {
                     const c = facetCount(f, d.key);
                     const val = facetValue(d);
                     return (
-                      <ListItemButton key={d.key} onPress={() => setFacet(d.key)}>
-                        <ListItemText primary={d.label} />
-                        <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space100)", marginLeft: "auto" }}>
+                      <ListItemButton key={d.key} isFlush onPress={() => openFacet(d.key)}>
+                        <span className={css["facetLabel"]}>{d.label}</span>
+                        <span className={css["facetTrailing"]}>
                           {val ? (
-                            <span style={{ color: "var(--text-subtlest)", fontSize: 14 }}>{val}</span>
+                            <span className={css["facetValue"]}>{val}</span>
                           ) : c > 0 ? (
                             <Badge label={String(c)} appearance="information" importance="high" />
                           ) : null}
@@ -938,28 +1085,18 @@ function FiltresOptionBMobile(): ReactElement {
                   })}
                 </List>
               </div>
-            </>
-          ) : (
-            <>
-              <div style={headerStyle}>
-                <Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Retour" onPress={() => setFacet(null)} />
-                <strong style={{ flex: 1, fontSize: 18 }}>{detailDef.label}</strong>
-                <Button appearance="link" className={css["textAction"]} onPress={clearAll} isDisabled={total === 0}>
-                  Réinitialiser
-                </Button>
-              </div>
-              <div style={{ flex: 1, overflowY: "auto", minHeight: 0, padding: "var(--space200)" }}>{optionControls(detailDef)}</div>
-            </>
-          )}
+            )}
+          </DrawerBody>
 
-          {/* Pied : voir les résultats (pleine largeur). */}
-          <div style={{ padding: "var(--space150) var(--space200) var(--space200)", borderTop: "1px solid var(--border-subtle)" }}>
-            <Button appearance="contained" color="comete" onPress={closeFilter} style={{ width: "100%" }}>
-              Voir {results.length} agent{results.length > 1 ? "s" : ""}
-            </Button>
-          </div>
-        </div>
-      </div>
+          {/* Pied masqué pendant l'enregistrement : aucun autre élément actif. */}
+          {savingName === null ? (
+            <DrawerFooter>
+              <Button appearance="contained" color="comete" onPress={closeFilter} style={{ width: "100%" }}>
+                Voir {results.length} agent{results.length > 1 ? "s" : ""}
+              </Button>
+            </DrawerFooter>
+          ) : null}
+      </Drawer>
     </div>
   );
 }
@@ -967,19 +1104,31 @@ function FiltresOptionBMobile(): ReactElement {
 // -----------------------------------------------------------------------
 // Meta + stories
 
+// Viewports proposés : les presets minimaux du DS + un défaut téléphone
+// 390 × 844 (iPhone 12/13/14) sélectionné par les stories mobiles.
+const VIEWPORTS = {
+  ...MINIMAL_VIEWPORTS,
+  phone390: {
+    name: "Téléphone (390 × 844)",
+    styles: { width: "390px", height: "844px" },
+    type: "mobile" as const,
+  },
+};
+
 const meta = {
-  title: "Recipes/Filtres option B",
+  title: "Recipes/Filtres",
   parameters: {
     layout: "fullscreen",
+    viewport: { options: VIEWPORTS },
     docs: {
       description: {
         component:
-          "Recette « Filtres — option B » (maquette Claude Design). Panneau unique : " +
-          "desktop = recherche + bouton Filtres (popover à deux volets), recherches " +
-          "enregistrées en action à droite, tags actifs regroupés par catégorie (+N) et " +
+          "Recette « Filtres » (maquette Claude Design). Panneau unique : " +
+          "desktop = recherche + bouton Filtres (popover à deux volets), filtres " +
+          "enregistrés en action à droite, tags actifs regroupés par catégorie (+N) et " +
           "tableau ; mobile = liste d'agents + panneau de filtres en drill-down (liste des " +
-          "facettes → détail). Comptes vivants, mini-recherche transversale, recherches " +
-          "enregistrées. 100 % composants + tokens du design system.",
+          "facettes → détail, recherche dans les catégories longues). Comptes vivants, " +
+          "mini-recherche transversale, filtres enregistrés. 100 % composants + tokens du design system.",
       },
     },
   },
@@ -988,22 +1137,37 @@ const meta = {
 export default meta;
 type Story = StoryObj;
 
-export const OptionB: Story = {
-  name: "Desktop",
+// Stories affichées : sans `play`, pour être utilisables immédiatement à
+// l'ouverture (aucune interaction rejouée automatiquement au montage).
+export const Desktop: Story = {
+  render: () => <FiltresOptionB />,
+};
+
+export const Mobile: Story = {
+  globals: { viewport: { value: "phone390" } },
+  render: () => <FiltresOptionBMobile />,
+};
+
+// Stories de test (interactions) — masquées du sidebar via `!dev`, mais
+// exécutées par le test-runner (vitest/CI). Elles portent les `play`
+// functions pour que les interactions ne se rejouent PAS à l'ouverture des
+// stories visibles ci-dessus.
+export const DesktopInteractions: Story = {
+  tags: ["!dev"],
   render: () => <FiltresOptionB />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const rowCount = () => canvasElement.querySelectorAll("tbody tr").length;
 
     await step("état initial : panneau fermé, tableau filtré", async () => {
-      const filtresBtn = canvas.getByRole("button", { name: /Filtres/ });
+      const filtresBtn = canvas.getByRole("button", { name: /Filtres,/ });
       await expect(filtresBtn).toHaveAttribute("aria-expanded", "false");
       await expect(rowCount()).toBeGreaterThan(0);
       await expect(rowCount()).toBeLessThan(AGENTS.length);
     });
 
     await step("ouvrir le panneau à deux volets", async () => {
-      await userEvent.click(canvas.getByRole("button", { name: /Filtres/ }));
+      await userEvent.click(canvas.getByRole("button", { name: /Filtres,/ }));
       await waitFor(() => expect(screen.getByRole("dialog")).toBeInTheDocument());
       const dialog = within(screen.getByRole("dialog"));
       await expect(dialog.getByRole("button", { name: "Langues" })).toBeInTheDocument();
@@ -1021,33 +1185,45 @@ export const OptionB: Story = {
 
     await step("fermer le panneau avec Échap", async () => {
       await userEvent.keyboard("{Escape}");
-      await waitFor(() => expect(canvas.getByRole("button", { name: /Filtres/ })).toHaveAttribute("aria-expanded", "false"));
+      await waitFor(() => expect(canvas.getByRole("button", { name: /Filtres,/ })).toHaveAttribute("aria-expanded", "false"));
     });
   },
 };
 
-export const Mobile: Story = {
+export const MobileInteractions: Story = {
+  tags: ["!dev"],
+  globals: { viewport: { value: "phone390" } },
   render: () => <FiltresOptionBMobile />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    // Le Drawer est rendu dans un portail (hors canvas) → requêtes via document.
+    const drawer = () => within(screen.getByRole("dialog", { name: "Filtres" }));
 
-    await step("ouvrir le panneau de filtres", async () => {
-      await userEvent.click(canvas.getByRole("button", { name: /Filtres/ }));
-      await waitFor(() => expect(canvas.getByRole("dialog", { name: "Filtres" })).toBeVisible());
+    await step("ouvrir la feuille de filtres", async () => {
+      await userEvent.click(canvas.getByRole("button", { name: /Filtres,/ }));
+      await waitFor(() => expect(screen.getByRole("dialog", { name: "Filtres" })).toBeInTheDocument());
+    });
+
+    await step("enregistrer les filtres courants", async () => {
+      await userEvent.click(drawer().getByRole("button", { name: /Enregistrer ces filtres/ }));
+      await userEvent.type(drawer().getByRole("textbox", { name: "Nom de l'enregistrement" }), "Mes filtres");
+      await userEvent.click(drawer().getByRole("button", { name: "Enregistrer" }));
+      // De retour à la racine : les filtres courants correspondent désormais à
+      // l'enregistrement créé → son nom apparaît sur la ligne « Filtres
+      // enregistrés » (pas de badge, pas de compte).
+      await waitFor(() => expect(drawer().getByText("Mes filtres")).toBeInTheDocument());
     });
 
     await step("drill-down dans une facette puis retour", async () => {
-      const panel = within(canvas.getByRole("dialog", { name: "Filtres" }));
-      await userEvent.click(panel.getByRole("button", { name: /Langues/ }));
-      await waitFor(() => expect(panel.getByRole("checkbox", { name: "Français" })).toBeInTheDocument());
-      await userEvent.click(panel.getByRole("button", { name: "Retour" }));
-      await waitFor(() => expect(panel.getByRole("button", { name: /Langues/ })).toBeInTheDocument());
+      await userEvent.click(drawer().getByRole("button", { name: /Langues/ }));
+      await waitFor(() => expect(drawer().getByRole("checkbox", { name: "Français" })).toBeInTheDocument());
+      await userEvent.click(drawer().getByRole("button", { name: "Retour" }));
+      await waitFor(() => expect(drawer().getByRole("button", { name: /Langues/ })).toBeInTheDocument());
     });
 
-    await step("« Voir N agents » ferme le panneau", async () => {
-      const panel = within(canvas.getByRole("dialog", { name: "Filtres" }));
-      await userEvent.click(panel.getByRole("button", { name: /Voir \d+ agent/ }));
-      await waitFor(() => expect(canvas.queryByRole("dialog", { name: "Filtres" })).toBeNull());
+    await step("« Voir N agents » ferme la feuille", async () => {
+      await userEvent.click(drawer().getByRole("button", { name: /Voir \d+ agent/ }));
+      await waitFor(() => expect(screen.queryByRole("dialog", { name: "Filtres" })).toBeNull());
     });
   },
 };

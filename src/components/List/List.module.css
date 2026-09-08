@@ -64,6 +64,14 @@
   padding-bottom: var(--space025);
 }
 
+/* Flush : annule le retrait horizontal du sous-titre (le vertical reste), pour
+   l'aligner sur des items eux-mêmes mis à plat. Doublé (0,2,0) pour gagner sur
+   `.head` (0,1,0) sans `!important`. */
+.head.headFlush {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 /* En-tête collant (prop `isSticky`) — se colle au haut du plus proche ancêtre
    scrollable. Fond OPAQUE obligatoire : sans lui, les lignes défileraient en
    transparence sous le titre (et l'espace `gap` laisserait un filet visible).
@@ -96,6 +104,13 @@
    le contenu du texte ne passe pas sous l'action absolute. */
 .item:has(.itemSecondaryAction) {
   padding-right: var(--space700);
+}
+
+/* Flush : annule le retrait horizontal (le vertical / la cible tactile reste).
+   Déclaré après la règle `:has` pour gagner à spécificité égale (0,2,0). */
+.item.itemFlush {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .list[data-dense] .item {
