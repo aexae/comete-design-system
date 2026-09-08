@@ -40,14 +40,6 @@
   "visualStyles.tableEx.*.grid[0].gridHorizontalColor.solid.color": "--border-subtle",
   "visualStyles.tableEx.*.total[0].fontColor.solid.color": "--text-default",
   "visualStyles.tableEx.*.total[0].backColor.solid.color": "--background-brand-subtlest-default",
-  "visualStyles.pivotTable.*.columnHeaders[0].fontColor.solid.color": "--text-inverted",
-  "visualStyles.pivotTable.*.columnHeaders[0].backColor.solid.color": "--background-brand-bold-default",
-  "visualStyles.pivotTable.*.rowHeaders[0].fontColor.solid.color": "--text-default",
-  "visualStyles.pivotTable.*.values[0].fontColorPrimary.solid.color": "--text-default",
-  "visualStyles.pivotTable.*.values[0].backColorPrimary.solid.color": "--background-default-default",
-  "visualStyles.pivotTable.*.values[0].backColorSecondary.solid.color": "--background-surface-elevation-sunken-default",
-  "visualStyles.pivotTable.*.grid[0].gridHorizontalColor.solid.color": "--border-subtle",
-  "visualStyles.pivotTable.*.subTotals[0].fontColor.solid.color": "--text-default",
   "visualStyles.slicer.*.header[0].fontColor.solid.color": "--text-default",
   "visualStyles.slicer.*.items[0].fontColor.solid.color": "--text-default",
   "visualStyles.slicer.*.items[0].background.solid.color": "--background-default-default",
@@ -61,5 +53,29 @@
   "visualStyles.shape.*.fill[0].fillColor.solid.color": "--background-surface-default",
   "visualStyles.shape.*.outline[0].lineColor.solid.color": "--border-default",
   "visualStyles.donutChart.*.dataPoint[0].borderColor.solid.color": "--background-surface-default",
-  "visualStyles.pieChart.*.dataPoint[0].borderColor.solid.color": "--background-surface-default"
+  "visualStyles.pieChart.*.dataPoint[0].borderColor.solid.color": "--background-surface-default",
+  "visualStyles.pivotTable.*.rowHeaders[0].fontColor.solid.color": "--text-default",
+  "visualStyles.pivotTable.*.rowHeaders[0].expandCollapseButtonsColor.solid.color": {
+    "light": "--comete-blue-700",
+    "dark": "--comete-blue-400"
+  },
+  "visualStyles.pivotTable.*.rowHeaders[0].outlineColor.solid.color": "--border-default",
+  "visualStyles.pivotTable.*.columnHeaders[0].fontColor.solid.color": "--text-inverted",
+  "visualStyles.pivotTable.*.columnHeaders[0].backColor.solid.color": "--background-brand-bold-default",
+  "visualStyles.pivotTable.*.values[0].fontColorPrimary.solid.color": "--text-default",
+  "visualStyles.pivotTable.*.values[0].fontColorSecondary.solid.color": {
+    "light": "--comete-blue-700",
+    "dark": "--comete-blue-400"
+  },
+  "visualStyles.pivotTable.*.values[0].backColorPrimary.solid.color": "--background-surface-default",
+  "visualStyles.pivotTable.*.values[0].backColorSecondary.solid.color": "--background-surface-default",
+  "visualStyles.pivotTable.*.values[0].outlineColor.solid.color": "--border-default",
+  "visualStyles.pivotTable.*.subTotals[0].fontColor.solid.color": "--text-default",
+  "visualStyles.pivotTable.*.columnTotal[0].fontColor.solid.color": {
+    "light": "--comete-blue-700",
+    "dark": "--comete-blue-400"
+  },
+  "visualStyles.pivotTable.*.columnTotal[0].backColor.solid.color": "--background-surface-default",
+  "visualStyles.pivotTable.*.rowTotal[0].fontColor.solid.color": "--text-default",
+  "visualStyles.pivotTable.*.grid[0].gridHorizontalColor.solid.color": "--border-subtle"
 }
