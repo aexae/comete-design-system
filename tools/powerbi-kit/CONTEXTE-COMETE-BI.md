@@ -60,6 +60,8 @@ Tâches créées le 2 septembre et assignées à Axel : « Page pilote : thème 
 
 ## Documents livrés hors dépôt
 
+Le 8 septembre : « Guide point KPI - Intégration thème Comète BI_v1.md », support du prochain point avec Frédéric : intention, livrables, checklist de reprise par page, règles non négociables, trois options de répartition (A Comète reprend, B KPI reprend, C mixte par type de page, préférence Comète A ou C), points à trancher en séance et plan d'action à remplir. Estimation posée : 30 à 45 min par page, 12 à 17 h pour 23 pages.
+
 Dossier `/Users/nax/Documents/Axel/Professionnel/Companies/Comète/Comète BI` : trames du point de cadrage (v1 à v3), « Tour produit Comète BI - 2026-09-02_v1.docx » (23 captures, observations), « Inventaire icônes Comète BI_v1.xlsx » (visuels relevés et correspondances comete-icons), « CR chantier design Comète BI_v1.docx » (compte rendu évolutif pour Frédéric), thèmes v0 à v0.3, ressources fournies par KPI (Comete.pptx, Thème.json, Theme_Comete.json).
 
 ## Règles de travail avec Axel sur ce chantier
