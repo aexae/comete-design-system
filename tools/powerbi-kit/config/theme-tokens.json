@@ -1,12 +1,12 @@
 {
-  "dataColors[0]": "--comete-blue-700",
-  "dataColors[1]": "--comete-yellow-600",
-  "dataColors[2]": "--green-600",
-  "dataColors[3]": "--red-500",
-  "dataColors[4]": "--comete-blue-800",
-  "dataColors[5]": "--comete-yellow-700",
-  "dataColors[6]": "--comete-blue-400",
-  "dataColors[7]": "--red-700",
+  "dataColors[0]": "--comete-blue-500",
+  "dataColors[1]": "--comete-yellow-500",
+  "dataColors[2]": "--teal-500",
+  "dataColors[3]": "--magenta-500",
+  "dataColors[4]": "--lime-500",
+  "dataColors[5]": "--purple-500",
+  "dataColors[6]": "--orange-500",
+  "dataColors[7]": "--blue-grey-500",
   "foreground": "--text-default",
   "background": "--background-default-default",
   "tableAccent": "--comete-blue-700",
@@ -59,5 +59,7 @@
   "visualStyles.actionButton.*.text[0].fontColor.solid.color": "--text-default",
   "visualStyles.textbox.*.text[0].color.solid.color": "--text-default",
   "visualStyles.shape.*.fill[0].fillColor.solid.color": "--background-surface-default",
-  "visualStyles.shape.*.outline[0].lineColor.solid.color": "--border-default"
+  "visualStyles.shape.*.outline[0].lineColor.solid.color": "--border-default",
+  "visualStyles.donutChart.*.dataPoint[0].borderColor.solid.color": "--background-surface-default",
+  "visualStyles.pieChart.*.dataPoint[0].borderColor.solid.color": "--background-surface-default"
 }

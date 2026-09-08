@@ -1,15 +1,15 @@
 {
-  "name": "Comète BI v0.5",
+  "name": "Comète BI v0.6",
   "$schema": "https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.157.json",
   "dataColors": [
-    "#2467D1",
-    "#E19800",
-    "#009B60",
-    "#F44040",
-    "#2354AA",
-    "#BB6C02",
-    "#66B8F4",
-    "#BE1717"
+    "#429AEF",
+    "#F8BF01",
+    "#1F92BB",
+    "#DA62AC",
+    "#82B536",
+    "#8270DB",
+    "#FCA013",
+    "#58759F"
   ],
   "foreground": "#3B3D42",
   "background": "#FFFFFF",
@@ -498,6 +498,36 @@
         "shape": [
           {
             "rectangleRoundedCurve": 4
+          }
+        ]
+      }
+    },
+    "donutChart": {
+      "*": {
+        "dataPoint": [
+          {
+            "borderShow": true,
+            "borderColor": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "borderSize": 2
+          }
+        ]
+      }
+    },
+    "pieChart": {
+      "*": {
+        "dataPoint": [
+          {
+            "borderShow": true,
+            "borderColor": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "borderSize": 2
           }
         ]
       }
