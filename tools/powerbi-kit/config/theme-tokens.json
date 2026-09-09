@@ -24,9 +24,6 @@
   "visualStyles.*.*.border[0].color.solid.color": "--border-default",
   "visualStyles.*.*.title[0].fontColor.solid.color": "--text-default",
   "visualStyles.*.*.title[0].background.solid.color": "--background-default-default",
-  "visualStyles.*.*.visualTooltip[0].titleFontColor.solid.color": "--text-inverted",
-  "visualStyles.*.*.visualTooltip[0].valueFontColor.solid.color": "--text-inverted",
-  "visualStyles.*.*.visualTooltip[0].background.solid.color": "--background-brand-bold-default",
   "visualStyles.page.*.background[0].color.solid.color": "--background-surface-elevation-sunken-default",
   "visualStyles.page.*.outspace[0].color.solid.color": "--background-neutral-subtler-default",
   "visualStyles.card.*.labels[0].color.solid.color": "--text-default",
@@ -125,5 +122,10 @@
   "visualStyles.shape.*.outline[0].weight": "--size0125",
   "visualStyles.shape.*.shape[0].rectangleRoundedCurve": "--control-radius-default",
   "visualStyles.donutChart.*.dataPoint[0].borderSize": "--size0125",
-  "visualStyles.pieChart.*.dataPoint[0].borderSize": "--size0125"
+  "visualStyles.pieChart.*.dataPoint[0].borderSize": "--size0125",
+  "visualStyles.*.*.visualTooltip[0].titleFontColor.solid.color": "--text-subtlest",
+  "visualStyles.*.*.visualTooltip[0].valueFontColor.solid.color": "--text-default",
+  "visualStyles.*.*.visualTooltip[0].actionFontColor.solid.color": "--text-comete",
+  "visualStyles.*.*.visualTooltip[0].background.solid.color": "--background-surface-default",
+  "visualStyles.*.*.visualTooltip[0].fontSize": "--font-size-ui-xxxs"
 }
