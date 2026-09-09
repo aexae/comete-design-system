@@ -342,7 +342,6 @@ export const Base: Story = {
 // chaque colonne / action porte son `roles` (une source par élément) ; aucun
 // `if (isPartner)` dans l'affichage (§0bis.B du prompt D10).
 type Role = "manager" | "partenaire" | "client";
-const ROLE_LABEL: Record<Role, string> = { manager: "Manager", partenaire: "Partenaire", client: "Client" };
 type SortDir = "default" | "ascending" | "descending";
 type Agent = (typeof AGENTS)[number];
 
@@ -382,6 +381,182 @@ const AGENT_VIEWS = [
 ];
 
 const ROWS_PER_PAGE = 5;
+
+// -----------------------------------------------------------------------
+// Cœur partagé (§0bis.A) : Table du DS + quatre états + sélection + repli
+// téléphone + lignes interactives. Factorisé pour être réutilisé par les DEUX
+// formes — « Liste » (page) et « Liste de section » — qui ne diffèrent que par
+// leur surface de contrôle (vues + filtres pour la page ; rien de plus que le
+// tri + la recherche compacte pour la section). Présentationnel : toutes les
+// données arrivent déjà filtrées / triées / paginées par l'appelant.
+interface AgentTableCoreProps {
+  /** Libellé accessible de la Table (diffère page ↔ section). */
+  ariaLabel: string;
+  /** Colonnes déjà filtrées par rôle (source déclarative, §0bis.B). */
+  cols: AgentColumn[];
+  /** Nb de colonnes rendues (sélection incluse) — pour les états du TableBody. */
+  columnCount: number;
+  state: string;
+  /** Agents de la page courante (déjà triés + slicés). */
+  pageAgents: Agent[];
+  /** Total filtré — pagination + compteur. */
+  totalCount: number;
+  sel: ReturnType<typeof useTableSelection<string>>;
+  sort: { col: string; dir: SortDir };
+  onSort: (s: { col: string; dir: SortDir }) => void;
+  page: number;
+  onPageChange: (p: number) => void;
+  /**
+   * Liste de section : « aucun résultat » en UNE ligne (variante compacte, §4)
+   * au lieu de l'état riche illustré. Sans effet sur les autres états.
+   */
+  compactEmpty?: boolean;
+}
+
+function AgentTableCore({
+  ariaLabel,
+  cols,
+  columnCount,
+  state,
+  pageAgents,
+  totalCount,
+  sel,
+  sort,
+  onSort,
+  page,
+  onPageChange,
+  compactEmpty = false,
+}: AgentTableCoreProps): React.ReactElement {
+  const isData = state === "data";
+  // Repli téléphone : ce que la liste compacte montre dérive des MÊMES
+  // colonnes déclaratives (aucun littéral de rôle). Matricule et delta ne
+  // s'affichent que si leur colonne est visible pour le rôle courant.
+  const showMat = cols.some((c) => c.id === "mat");
+  const showDelta = cols.some((c) => c.id === "delta");
+  const compactSecondary = (a: Agent): string | undefined =>
+    [showMat ? `Mat. ${a.mat}` : null, a.contrat ? `${a.contrat} h` : null]
+      .filter(Boolean)
+      .join(" · ") || undefined;
+
+  // Liste de section : « aucun résultat » (filtré à zéro) en une seule ligne,
+  // sans l'état riche du TableBody ni la pagination (§4). Les autres formes
+  // passent par le rendu complet ci-dessous.
+  if (compactEmpty && state === "noResults") {
+    return (
+      <Text size="small" as="p" color="subtlest">
+        Aucun résultat pour cette section.
+      </Text>
+    );
+  }
+
+  return (
+    <>
+      {/* Sélection active → barre contextuelle (compteur + actions groupées) ;
+          sinon le compteur de résultats. Même emplacement. Masqués hors état
+          « données ». La sélection fait partie du cœur : les deux formes en
+          héritent. */}
+      {isData &&
+        (sel.selectedCount > 0 ? (
+          <TableSelectionBar count={sel.selectedCount} onClear={sel.clear}>
+            <Button appearance="subtle" iconBefore="Download">Exporter la sélection</Button>
+          </TableSelectionBar>
+        ) : (
+          <Text size="small" as="span" color="subtlest">{totalCount} agents</Text>
+        ))}
+
+      {/* Repli responsive (§5) : Table du DS sur desktop, liste compacte sur
+          téléphone (motif TableToListRecipe — réutilisé, pas réécrit). Même
+          bascule à 599px, une seule source (pageAgents). */}
+      <div className={css["tableDesktopOnly"]}>
+        {/* Table du DS, dé-encartée (aucun Card autour). Ligne cliquable via
+            `href` (D16) : la cellule « Agent » (isRowAnchor) devient un <a> ;
+            le clic sur la case de sélection ne navigue pas. */}
+        <Table responsive aria-label={ariaLabel}>
+          <TableHead>
+            <TableRow>
+              <TableHeaderCell><Checkbox {...sel.getSelectAllProps()} /></TableHeaderCell>
+              {cols.map((c) => (
+                <TableHeaderCell
+                  key={c.id}
+                  align={c.align}
+                  hideBelow={c.hideBelow}
+                  isSortable={c.sortable}
+                  sortDirection={sort.col === c.id ? sort.dir : "default"}
+                  onSortChange={c.sortable ? (next) => onSort({ col: c.id, dir: next }) : undefined}
+                >
+                  {c.header}
+                </TableHeaderCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          {/* Un seul TableBody porte les quatre états (priorité DS :
+              error > loading > empty > noResults > enfants). « aucun
+              résultat » (filtré à zéro) est distinct de « vide » (aucune
+              donnée) et propose « Tout effacer ». */}
+          <TableBody
+            columnCount={columnCount}
+            skeletonRows={ROWS_PER_PAGE}
+            isLoading={state === "loading"}
+            isEmpty={state === "empty"}
+            emptyTitle="Aucun agent"
+            emptyDescription="Ajoutez un premier agent pour le voir apparaître ici."
+            isNoResults={state === "noResults"}
+            noResultsTitle="Aucun résultat"
+            noResultsDescription="Aucun agent ne correspond aux filtres actifs."
+            noResultsAction={<Button appearance="subtle">Tout effacer</Button>}
+            error={state === "error"}
+            onRetry={() => undefined}
+          >
+            {isData
+              ? pageAgents.map((a) => (
+                  <TableRow key={a.mat} href={`#/agents/${a.mat}`} isSelected={sel.isSelected(a.mat)}>
+                    <TableCell><Checkbox {...sel.getRowCheckboxProps(a.mat, a.name)} /></TableCell>
+                    {cols.map((c) => (
+                      <TableCell key={c.id} align={c.align} hideBelow={c.hideBelow} isRowAnchor={c.id === "agent"}>
+                        {c.cell(a)}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              : null}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Repli téléphone : liste compacte cliquable (List + ListItemButton +
+          ListItemText + ListItemTrailing). PAS des cartes (§9). N'existe qu'à
+          l'état « données » ; les autres états restent portés par la Table. */}
+      {isData && (
+        <div className={css["listMobileOnly"]}>
+          <List aria-label={`${ariaLabel} — liste compacte`} gap="150">
+            {pageAgents.map((a) => (
+              <ListItemButton
+                key={a.mat}
+                onPress={() => {
+                  window.location.hash = `/agents/${a.mat}`;
+                }}
+              >
+                <ListItemAvatar>
+                  <Avatar size="small" initials={a.initials} />
+                </ListItemAvatar>
+                <ListItemText primary={a.name} secondary={compactSecondary(a)} lineClamp={2} />
+                {showDelta && a.delta ? (
+                  <ListItemTrailing>
+                    <Text size="small" weight="bold" as="span" color={a.status === "success" ? "success" : "critical"}>
+                      {a.delta}
+                    </Text>
+                  </ListItemTrailing>
+                ) : null}
+              </ListItemButton>
+            ))}
+          </List>
+        </div>
+      )}
+
+      {isData && <TablePagination count={totalCount} page={page} rowsPerPage={ROWS_PER_PAGE} onPageChange={onPageChange} />}
+    </>
+  );
+}
 
 /**
  * **Collection** — recette « Liste » standard (premier gabarit de page, D10).
@@ -424,17 +599,6 @@ export const Collection: Story = {
     const pageAgents = sorted.slice(page * ROWS_PER_PAGE, page * ROWS_PER_PAGE + ROWS_PER_PAGE);
     const sel = useTableSelection({ keys: pageAgents.map((a) => a.mat) });
     const columnCount = cols.length + 1; // +1 pour la colonne de sélection
-    const isData = state === "data";
-
-    // Repli téléphone : ce que la liste compacte montre dérive des MÊMES
-    // colonnes déclaratives (aucun littéral de rôle). Matricule et delta ne
-    // s'affichent que si leur colonne est visible pour le rôle courant.
-    const showMat = cols.some((c) => c.id === "mat");
-    const showDelta = cols.some((c) => c.id === "delta");
-    const compactSecondary = (a: Agent): string | undefined =>
-      [showMat ? `Mat. ${a.mat}` : null, a.contrat ? `${a.contrat} h` : null]
-        .filter(Boolean)
-        .join(" · ") || undefined;
 
     return (
       <Page globalActions={null}>
@@ -480,114 +644,136 @@ export const Collection: Story = {
                 (dé-encartage), pas dans une carte. */}
             <FilterBar facets={visibleFacets} />
 
-            {/* Sélection active → barre contextuelle (compteur + actions
-                groupées) ; sinon le compteur de résultats. Même emplacement.
-                Masqués hors état « données ». */}
-            {isData && (sel.selectedCount > 0 ? (
-              <TableSelectionBar count={sel.selectedCount} onClear={sel.clear}>
-                <Button appearance="subtle" iconBefore="Download">Exporter la sélection</Button>
-              </TableSelectionBar>
-            ) : (
-              <Text size="small" as="span" color="subtlest">{sorted.length} agents · rôle&nbsp;: {ROLE_LABEL[role]}</Text>
-            ))}
-
-            {/* Repli responsive (§5) : Table du DS sur desktop, liste compacte
-                sur téléphone (motif TableToListRecipe — réutilisé, pas réécrit).
-                Même bascule à 599px, une seule source (pageAgents). */}
-            <div className={css["tableDesktopOnly"]}>
-            {/* Table du DS, dé-encartée (aucun Card autour). Ligne cliquable via
-                `href` (D16) : la cellule « Agent » (isRowAnchor) devient un <a> ;
-                le clic sur la case de sélection ne navigue pas. */}
-            <Table responsive aria-label="Liste des agents">
-              <TableHead>
-                <TableRow>
-                  <TableHeaderCell><Checkbox {...sel.getSelectAllProps()} /></TableHeaderCell>
-                  {cols.map((c) => (
-                    <TableHeaderCell
-                      key={c.id}
-                      align={c.align}
-                      hideBelow={c.hideBelow}
-                      isSortable={c.sortable}
-                      sortDirection={sort.col === c.id ? sort.dir : "default"}
-                      onSortChange={c.sortable ? (next) => setSort({ col: c.id, dir: next }) : undefined}
-                    >
-                      {c.header}
-                    </TableHeaderCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              {/* Un seul TableBody porte les quatre états (priorité DS :
-                  error > loading > empty > noResults > enfants). « aucun
-                  résultat » (filtré à zéro) est distinct de « vide » (aucune
-                  donnée) et propose « Tout effacer ». */}
-              <TableBody
-                columnCount={columnCount}
-                skeletonRows={ROWS_PER_PAGE}
-                isLoading={state === "loading"}
-                isEmpty={state === "empty"}
-                emptyTitle="Aucun agent"
-                emptyDescription="Ajoutez un premier agent pour le voir apparaître ici."
-                isNoResults={state === "noResults"}
-                noResultsTitle="Aucun résultat"
-                noResultsDescription="Aucun agent ne correspond aux filtres actifs."
-                noResultsAction={<Button appearance="subtle">Tout effacer</Button>}
-                error={state === "error"}
-                onRetry={() => undefined}
-              >
-                {isData
-                  ? pageAgents.map((a) => (
-                      <TableRow key={a.mat} href={`#/agents/${a.mat}`} isSelected={sel.isSelected(a.mat)}>
-                        <TableCell><Checkbox {...sel.getRowCheckboxProps(a.mat, a.name)} /></TableCell>
-                        {cols.map((c) => (
-                          <TableCell key={c.id} align={c.align} hideBelow={c.hideBelow} isRowAnchor={c.id === "agent"}>
-                            {c.cell(a)}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    ))
-                  : null}
-              </TableBody>
-            </Table>
-            </div>
-
-            {/* Repli téléphone : liste compacte cliquable (List + ListItemButton
-                + ListItemText + ListItemTrailing). PAS des cartes (§9). Ce qui
-                s'affiche dérive des mêmes colonnes déclaratives (compactSecondary,
-                showDelta) — aucun littéral de rôle. N'existe qu'à l'état
-                « données » ; les autres états restent portés par la Table. */}
-            {isData && (
-              <div className={css["listMobileOnly"]}>
-                <List aria-label="Agents — liste compacte" gap="150">
-                  {pageAgents.map((a) => (
-                    <ListItemButton
-                      key={a.mat}
-                      onPress={() => {
-                        window.location.hash = `/agents/${a.mat}`;
-                      }}
-                    >
-                      <ListItemAvatar>
-                        <Avatar size="small" initials={a.initials} />
-                      </ListItemAvatar>
-                      <ListItemText primary={a.name} secondary={compactSecondary(a)} lineClamp={2} />
-                      {showDelta && a.delta ? (
-                        <ListItemTrailing>
-                          <Text size="small" weight="bold" as="span" color={a.status === "success" ? "success" : "critical"}>
-                            {a.delta}
-                          </Text>
-                        </ListItemTrailing>
-                      ) : null}
-                    </ListItemButton>
-                  ))}
-                </List>
-              </div>
-            )}
-
-            {isData && <TablePagination count={sorted.length} page={page} rowsPerPage={ROWS_PER_PAGE} onPageChange={setPage} />}
+            {/* Cœur partagé (§0bis.A) : sélection + Table (4 états) + repli
+                téléphone + pagination. La page ne fournit QUE sa surface de
+                contrôle (toolbar : recherche + vues ; filtres complets ci-dessus)
+                ; le reste vient du cœur, réutilisé tel quel par la liste de
+                section. */}
+            <AgentTableCore
+              ariaLabel="Liste des agents"
+              cols={cols}
+              columnCount={columnCount}
+              state={state}
+              pageAgents={pageAgents}
+              totalCount={sorted.length}
+              sel={sel}
+              sort={sort}
+              onSort={setSort}
+              page={page}
+              onPageChange={setPage}
+            />
           </Stack>
         </Page.Body>
       </Page>
     );
   },
+};
+
+// -----------------------------------------------------------------------
+// 1bis. LISTE DE SECTION (§0bis.A, décision B)
+// Le MÊME cœur (AgentTableCore) posé DANS une fiche, SANS chrome de page : ni
+// Page.Bar ni Page.Toolbar. La surface de contrôle est réduite AU NIVEAU
+// SECTION — en-tête (titre + recherche compacte) + tri via les en-têtes —,
+// sans segment de vues ni panneau de filtres. Composé SUR LE FOND (décision
+// B), pas dans un TableView (qui ajouterait une surface = double gris) ni un
+// Card.
+
+function SectionList({
+  title,
+  viewerRole,
+  agents,
+}: {
+  title: string;
+  viewerRole: Role;
+  agents: Agent[];
+}): React.ReactElement {
+  const [q, setQ] = useState("");
+  const [sort, setSort] = useState<{ col: string; dir: SortDir }>({ col: "agent", dir: "default" });
+  const [page, setPage] = useState(0);
+
+  const cols = AGENT_COLUMNS.filter((c) => c.roles.includes(viewerRole));
+  const needle = q.trim().toLowerCase();
+  const filtered = needle ? agents.filter((a) => a.name.toLowerCase().includes(needle)) : agents;
+  const sorted = [...filtered].sort((a, b) => {
+    if (sort.dir === "default") return 0;
+    const c = AGENT_COLUMNS.find((x) => x.id === sort.col);
+    if (!c?.sortValue) return 0;
+    const va = c.sortValue(a), vb = c.sortValue(b);
+    const cmp = va < vb ? -1 : va > vb ? 1 : 0;
+    return sort.dir === "ascending" ? cmp : -cmp;
+  });
+  const pageAgents = sorted.slice(page * ROWS_PER_PAGE, page * ROWS_PER_PAGE + ROWS_PER_PAGE);
+  const sel = useTableSelection({ keys: pageAgents.map((a) => a.mat) });
+  const columnCount = cols.length + 1;
+  // Recherche compacte à zéro résultat → « aucun résultat » compact (§4).
+  const state = sorted.length === 0 ? "noResults" : "data";
+
+  return (
+    <Stack gap="200">
+      {/* En-tête de section : titre un cran SOUS le titre de fiche
+          (Heading size="small"), et la surface de contrôle réduite — recherche
+          compacte SEULEMENT (ni vues, ni panneau de filtres). Ordre imposé :
+          en-tête → tableau → pagination (§7). */}
+      <Cluster justify="between" align="center" gap="200">
+        <Heading size="small" as="h2">{title}</Heading>
+        <div className={css["searchWrapper"]}>
+          <SearchField
+            density="compact"
+            placeholder="Rechercher…"
+            aria-label={`Rechercher dans « ${title} »`}
+            value={q}
+            onChange={(v) => { setQ(v); setPage(0); }}
+          />
+        </div>
+      </Cluster>
+      <AgentTableCore
+        ariaLabel={title}
+        cols={cols}
+        columnCount={columnCount}
+        state={state}
+        pageAgents={pageAgents}
+        totalCount={sorted.length}
+        sel={sel}
+        sort={sort}
+        onSort={setSort}
+        page={page}
+        onPageChange={setPage}
+        compactEmpty
+      />
+    </Stack>
+  );
+}
+
+/**
+ * **Liste de section** — la liste posée DANS une fiche, sans chrome de page
+ * (§0bis.A, décision B).
+ *
+ * Aucune `Page.Bar`, aucune `Page.Toolbar` de niveau page : chaque section
+ * porte son propre en-tête (`Heading size="small"` + recherche compacte) et
+ * rien de plus — **ni segment de vues, ni panneau de filtres**. Le **cœur**
+ * (Table, états, sélection, repli) est le **même** que la page
+ * (`AgentTableCore`). Deux sections consécutives, **posées sur le fond** (pas
+ * de `TableView`, pas de `Card`), séparées par le seul **rythme vertical**
+ * (`--space500`) — une seule section ne prouverait pas qu'elles se distinguent
+ * sans surface.
+ */
+export const ListeDeSection: Story = {
+  name: "Liste de section (dans une fiche)",
+  parameters: { design: { type: "figma", url: figmaUrl("4577:13694") } },
+  render: () => (
+    <Page globalActions={null}>
+      {/* Pas de Page.Bar / Page.Toolbar : on isole la RÉGION de section d'une
+          fiche. Le titre de fiche est un simple Heading (un cran AU-DESSUS des
+          titres de section), pas une Page.Bar. */}
+      <Page.Body>
+        <Stack gap="500">
+          <Heading size="large" as="h1">Site Montparnasse</Heading>
+          <SectionList title="Agents rattachés" viewerRole="manager" agents={AGENTS.slice(0, 4)} />
+          <SectionList title="Agents intérimaires" viewerRole="manager" agents={AGENTS.slice(4)} />
+        </Stack>
+      </Page.Body>
+    </Page>
+  ),
 };
 
 // -----------------------------------------------------------------------
