@@ -390,10 +390,14 @@ const ROWS_PER_PAGE = 5;
 export const Collection: Story = {
   name: "Collection (liste + filtres)",
   parameters: { design: { type: "figma", url: figmaUrl("4577:13694") } },
-  argTypes: { role: { name: "Rôle", control: "inline-radio", options: ["manager", "partenaire", "client"] } },
-  args: { role: "manager" },
+  argTypes: {
+    role: { name: "Rôle", control: "inline-radio", options: ["manager", "partenaire", "client"] },
+    state: { name: "État", control: "inline-radio", options: ["data", "loading", "empty", "noResults", "error"] },
+  },
+  args: { role: "manager", state: "data" },
   render: function CollectionStory(args) {
     const role = (args as { role?: Role }).role ?? "manager";
+    const state = (args as { state?: string }).state ?? "data";
     const [view, setView] = useState("tous");
     const [sort, setSort] = useState<{ col: string; dir: SortDir }>({ col: "agent", dir: "default" });
     const [page, setPage] = useState(0);
@@ -414,6 +418,8 @@ export const Collection: Story = {
     });
     const pageAgents = sorted.slice(page * ROWS_PER_PAGE, page * ROWS_PER_PAGE + ROWS_PER_PAGE);
     const sel = useTableSelection({ keys: pageAgents.map((a) => a.mat) });
+    const columnCount = cols.length + 1; // +1 pour la colonne de sélection
+    const isData = state === "data";
 
     return (
       <Page globalActions={null}>
@@ -460,14 +466,15 @@ export const Collection: Story = {
             <FilterBar facets={visibleFacets} />
 
             {/* Sélection active → barre contextuelle (compteur + actions
-                groupées) ; sinon le compteur de résultats. Même emplacement. */}
-            {sel.selectedCount > 0 ? (
+                groupées) ; sinon le compteur de résultats. Même emplacement.
+                Masqués hors état « données ». */}
+            {isData && (sel.selectedCount > 0 ? (
               <TableSelectionBar count={sel.selectedCount} onClear={sel.clear}>
                 <Button appearance="subtle" iconBefore="Download">Exporter la sélection</Button>
               </TableSelectionBar>
             ) : (
               <Text size="small" as="span" color="subtlest">{sorted.length} agents · rôle&nbsp;: {ROLE_LABEL[role]}</Text>
-            )}
+            ))}
 
             {/* Table du DS, dé-encartée (aucun Card autour). Ligne cliquable via
                 `href` (D16) : la cellule « Agent » (isRowAnchor) devient un <a> ;
@@ -490,21 +497,40 @@ export const Collection: Story = {
                   ))}
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {pageAgents.map((a) => (
-                  <TableRow key={a.mat} href={`#/agents/${a.mat}`} isSelected={sel.isSelected(a.mat)}>
-                    <TableCell><Checkbox {...sel.getRowCheckboxProps(a.mat, a.name)} /></TableCell>
-                    {cols.map((c) => (
-                      <TableCell key={c.id} align={c.align} hideBelow={c.hideBelow} isRowAnchor={c.id === "agent"}>
-                        {c.cell(a)}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
+              {/* Un seul TableBody porte les quatre états (priorité DS :
+                  error > loading > empty > noResults > enfants). « aucun
+                  résultat » (filtré à zéro) est distinct de « vide » (aucune
+                  donnée) et propose « Tout effacer ». */}
+              <TableBody
+                columnCount={columnCount}
+                skeletonRows={ROWS_PER_PAGE}
+                isLoading={state === "loading"}
+                isEmpty={state === "empty"}
+                emptyTitle="Aucun agent"
+                emptyDescription="Ajoutez un premier agent pour le voir apparaître ici."
+                isNoResults={state === "noResults"}
+                noResultsTitle="Aucun résultat"
+                noResultsDescription="Aucun agent ne correspond aux filtres actifs."
+                noResultsAction={<Button appearance="subtle">Tout effacer</Button>}
+                error={state === "error"}
+                onRetry={() => undefined}
+              >
+                {isData
+                  ? pageAgents.map((a) => (
+                      <TableRow key={a.mat} href={`#/agents/${a.mat}`} isSelected={sel.isSelected(a.mat)}>
+                        <TableCell><Checkbox {...sel.getRowCheckboxProps(a.mat, a.name)} /></TableCell>
+                        {cols.map((c) => (
+                          <TableCell key={c.id} align={c.align} hideBelow={c.hideBelow} isRowAnchor={c.id === "agent"}>
+                            {c.cell(a)}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  : null}
               </TableBody>
             </Table>
 
-            <TablePagination count={sorted.length} page={page} rowsPerPage={ROWS_PER_PAGE} onPageChange={setPage} />
+            {isData && <TablePagination count={sorted.length} page={page} rowsPerPage={ROWS_PER_PAGE} onPageChange={setPage} />}
           </Stack>
         </Page.Body>
       </Page>
