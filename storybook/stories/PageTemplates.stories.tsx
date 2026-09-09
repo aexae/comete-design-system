@@ -31,18 +31,24 @@ import {
   Tab,
   TabPanel,
   SectionMessage,
-  Drawer,
-  DrawerHeader,
-  DrawerBody,
-  DrawerFooter,
   DrawerProvider,
   MonthPicker,
   Banner,
   SideNav,
   Logo,
   useSideNav,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableHeaderCell,
+  TablePagination,
+  ToggleButtonGroup,
+  ToggleButton,
 } from "@aexae/comete-design-system/components";
 import css from "./PageTemplates.module.css";
+import { FilterBar } from "./_filterDemo";
 
 // -----------------------------------------------------------------------
 // Figma
@@ -110,50 +116,6 @@ type Story = StoryObj;
 
 function CC({ children, padding = "var(--space200)" }: { children: React.ReactNode; padding?: string }) {
   return <div style={{ padding, flex: 1, minWidth: 0 }}>{children}</div>;
-}
-
-function FilterPanel({ showHeader = true }: { showHeader?: boolean }) {
-  return (
-    <Stack gap="200">
-      {showHeader && <><Heading size="small" as="span">Filtres</Heading><Divider /></>}
-      {["Société / Agence", "Secteur", "Habilitations", "Formalités", "Équipements"].map((label) => (
-        <Stack key={label} gap="075">
-          <Text size="xsmall" weight="medium" as="span" color="subtlest">{label.toUpperCase()}</Text>
-          <div className={css["placeholder"]} style={{ height: 36 }}>Tous</div>
-        </Stack>
-      ))}
-    </Stack>
-  );
-}
-
-function AgentCard({ initials, name, contrat, heures, delta, status }: {
-  initials: string; name: string; contrat: string; heures: string; delta: string;
-  status: "success" | "critical" | "warning" | "neutral";
-}) {
-  return (
-    <Card appearance="outlined">
-      <CC>
-        <Stack gap="100">
-          <Cluster gap="100" align="center">
-            <Avatar size="small" initials={initials} />
-            <Heading size="xsmall" as="span">{name}</Heading>
-          </Cluster>
-          {(contrat || heures || delta) && (
-            <div className={css["siteStats"]}>
-              {contrat && <Stack gap="0"><Text size="small" as="span" color="subtlest">Contrat</Text><Heading size="xsmall" as="span">{contrat}</Heading></Stack>}
-              {heures && <Stack gap="0"><Text size="small" as="span" color="subtlest">Heures</Text><Heading size="xsmall" as="span">{heures}</Heading></Stack>}
-              {delta && (
-                <Stack gap="0">
-                  <Text size="small" as="span" color="subtlest">Delta</Text>
-                  <Text size="small" weight="bold" as="span" color={status === "success" ? "success" : "critical"}>{delta}</Text>
-                </Stack>
-              )}
-            </div>
-          )}
-        </Stack>
-      </CC>
-    </Card>
-  );
 }
 
 function PropRow({ icon, label, value }: { icon: IconName; label: string; value: string }) {
@@ -229,7 +191,7 @@ function ProgressRow({ icon, label, current, total }: { icon: IconName; label: s
   );
 }
 
-function TableRow({ cells, isHeader }: { cells: React.ReactNode[]; isHeader?: boolean }) {
+function MiniTableRow({ cells, isHeader }: { cells: React.ReactNode[]; isHeader?: boolean }) {
   return (
     <div
       className={css["tableRow"]}
@@ -368,102 +330,165 @@ export const Base: Story = {
 
 // -----------------------------------------------------------------------
 // 1. COLLECTION
+// Recette « Liste » standard (D10). La visibilité par rôle est DÉCLARATIVE :
+// chaque colonne / action porte son `roles` (une source par élément) ; aucun
+// `if (isPartner)` dans l'affichage (§0bis.B du prompt D10).
+type Role = "manager" | "partenaire" | "client";
+const ROLE_LABEL: Record<Role, string> = { manager: "Manager", partenaire: "Partenaire", client: "Client" };
+type SortDir = "default" | "ascending" | "descending";
+type Agent = (typeof AGENTS)[number];
+
+interface AgentColumn {
+  id: string;
+  header: string;
+  roles: Role[];
+  align?: "left" | "right";
+  hideBelow?: "sm" | "md" | "lg";
+  sortable?: boolean;
+  sortValue?: (a: Agent) => string | number;
+  cell: (a: Agent) => React.ReactNode;
+}
+const AGENT_COLUMNS: AgentColumn[] = [
+  { id: "agent", header: "Agent", roles: ["manager", "partenaire", "client"], sortable: true, sortValue: (a) => a.name,
+    cell: (a) => <Cluster gap="075" align="center"><Avatar size="xsmall" initials={a.initials} /><Text as="span">{a.name}</Text></Cluster> },
+  // Matricule et Heures ne sont pas exposés au partenaire (sous-traitance) —
+  // via `roles`, pas via un test de rôle dans la cellule.
+  { id: "mat", header: "Matricule", roles: ["manager", "client"], hideBelow: "md", cell: (a) => a.mat },
+  { id: "contrat", header: "Contrat", roles: ["manager", "partenaire", "client"], align: "right", hideBelow: "md", cell: (a) => a.contrat || "—" },
+  { id: "heures", header: "Heures", roles: ["manager", "client"], align: "right", hideBelow: "lg", cell: (a) => a.heures || "—" },
+  { id: "delta", header: "Delta", roles: ["manager", "client"], align: "right", sortable: true, sortValue: (a) => parseFloat(a.delta || "0"),
+    cell: (a) => a.delta ? <Text size="small" weight="bold" as="span" color={a.status === "success" ? "success" : "critical"}>{a.delta}</Text> : <Text as="span" color="subtlest">—</Text> },
+];
+
+interface AgentAction { id: string; label: string; icon: IconName; primary?: boolean; roles: Role[]; }
+const AGENT_ACTIONS: AgentAction[] = [
+  { id: "new", label: "Nouvel agent", icon: "Add", primary: true, roles: ["manager"] },
+  { id: "export", label: "Exporter", icon: "Download", roles: ["manager", "partenaire", "client"] },
+];
+
+// Vues de travail (§2) = segment dans la toolbar ; compteur = badge.
+const AGENT_VIEWS = [
+  { id: "tous", label: "Tous", badge: "140" },
+  { id: "anomalies", label: "Anomalies", badge: "12" },
+  { id: "actifs", label: "Actifs" },
+];
+
+const ROWS_PER_PAGE = 5;
+
 /**
- * **Collection** — Liste avec toolbar et filtres.
+ * **Collection** — recette « Liste » standard (premier gabarit de page, D10).
  *
- * - **Desktop** : tableau + sidebar filtres (Grid 9+3)
- * - **Mobile** : tableau bascule en **cards**, filtres dans un **Drawer**
- * - Infinite scroll
+ * `Table` du DS **dé-encartée** (posée sur le fond, pas dans une carte), **une
+ * seule** toolbar (recherche + **segment de vues** `ToggleButtonGroup`), filtres
+ * via `_filterDemo` (chips + panneau), lignes cliquables (**D16 : `href`**), tri,
+ * pagination. Colonnes et actions **déclaratives par rôle** (`roles`) — bascule
+ * le contrôle **Rôle** pour voir deux jeux issus des **mêmes** définitions.
  */
 export const Collection: Story = {
   name: "Collection (liste + filtres)",
   parameters: { design: { type: "figma", url: figmaUrl("4577:13694") } },
-  render: function CollectionStory() {
-    const [filtersOpen, setFiltersOpen] = useState(false);
+  argTypes: { role: { name: "Rôle", control: "inline-radio", options: ["manager", "partenaire", "client"] } },
+  args: { role: "manager" },
+  render: function CollectionStory(args) {
+    const role = (args as { role?: Role }).role ?? "manager";
+    const [view, setView] = useState("tous");
+    const [sort, setSort] = useState<{ col: string; dir: SortDir }>({ col: "agent", dir: "default" });
+    const [page, setPage] = useState(0);
+
+    const cols = AGENT_COLUMNS.filter((c) => c.roles.includes(role));
+    const actions = AGENT_ACTIONS.filter((a) => a.roles.includes(role));
+
+    const sorted = [...AGENTS].sort((a, b) => {
+      if (sort.dir === "default") return 0;
+      const c = AGENT_COLUMNS.find((x) => x.id === sort.col);
+      if (!c?.sortValue) return 0;
+      const va = c.sortValue(a), vb = c.sortValue(b);
+      const cmp = va < vb ? -1 : va > vb ? 1 : 0;
+      return sort.dir === "ascending" ? cmp : -cmp;
+    });
+    const pageAgents = sorted.slice(page * ROWS_PER_PAGE, page * ROWS_PER_PAGE + ROWS_PER_PAGE);
+
     return (
       <Page globalActions={null}>
-          <Page.Bar title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
-          <Page.Toolbar
-            start={
-              <>
-                <div className={css["searchWrapper"]}>
-                  <SearchField placeholder="Rechercher…" density="compact" />
-                </div>
-                <span className={css["showOnDesktop"]}>
-                  <Button appearance="subtle" iconBefore="FilterList" onPress={() => setFiltersOpen(true)}>Filtres</Button>
-                </span>
-                <span className={css["showOnMobileOnly"]}>
-                  <Button appearance="subtle" iconBefore="FilterList" onPress={() => setFiltersOpen(true)} aria-label="Filtres" />
-                </span>
-              </>
-            }
-            end={
-              <ButtonGroup>
-                <span className={css["showOnDesktop"]}>
-                  <Button color="comete" iconBefore="Add">Nouvel agent</Button>
-                </span>
-                <span className={css["showOnMobileOnly"]}>
-                  <Button color="comete" iconBefore="Add" aria-label="Nouvel agent" />
-                </span>
-                <span className={css["hideOnMobile"]}>
-                  <Button appearance="subtle" iconBefore="Download">Exporter</Button>
-                </span>
-                <Button appearance="subtle" iconBefore="MoreHoriz" aria-label="Plus" />
-              </ButtonGroup>
-            }
-          />
-          <Page.Body>
-            <Grid gap="300">
-              <Grid.Col span={{ mobile: 12, desktop: 9 }}>
-                <Stack gap="150">
-                  <Text size="small" as="span" color="subtlest">140 agents</Text>
+        <Page.Bar title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
+        <Page.Toolbar
+          start={
+            <>
+              <div className={css["searchWrapper"]}>
+                <SearchField placeholder="Rechercher…" density="compact" aria-label="Rechercher un agent" />
+              </div>
+              <ToggleButtonGroup
+                aria-label="Vues"
+                size="small"
+                selectionMode="single"
+                selectedKeys={[view]}
+                onSelectionChange={(keys) => {
+                  if (keys === "all") return;
+                  const k = [...keys][0];
+                  if (typeof k === "string") { setView(k); setPage(0); }
+                }}
+              >
+                {AGENT_VIEWS.map((v) => (
+                  <ToggleButton key={v.id} id={v.id} badge={v.badge}>{v.label}</ToggleButton>
+                ))}
+              </ToggleButtonGroup>
+            </>
+          }
+          end={
+            <ButtonGroup>
+              {actions.map((a) =>
+                a.primary
+                  ? <Button key={a.id} color="comete" iconBefore={a.icon}>{a.label}</Button>
+                  : <Button key={a.id} appearance="subtle" iconBefore={a.icon}>{a.label}</Button>
+              )}
+              <Button appearance="subtle" iconBefore="MoreHoriz" aria-label="Plus d'actions" />
+            </ButtonGroup>
+          }
+        />
+        <Page.Body>
+          <Stack gap="150">
+            {/* Filtres : chips actives + panneau complet, via _filterDemo tel
+                quel. Posés sur le fond (dé-encartage), pas dans une carte. */}
+            <FilterBar />
 
-                  {/* Desktop: table */}
-                  <div className={css["tableDesktopOnly"]}>
-                    <Card appearance="outlined">
-                      <div className={css["cardColumn"]}>
-                        <TableRow isHeader cells={["Agent", "Matricule", "Contrat", "Heures", "Delta"]} />
-                        {AGENTS.map((a) => (
-                          <TableRow key={a.mat} cells={[
-                            <><Avatar size="xsmall" initials={a.initials} /><span>{a.name}</span></>,
-                            a.mat, a.contrat, a.heures,
-                            a.delta ? <Text key="d" size="small" weight="bold" as="span" color={a.status === "success" ? "success" : "critical"}>{a.delta}</Text> : null,
-                          ]} />
-                        ))}
-                      </div>
-                    </Card>
-                  </div>
+            <Text size="small" as="span" color="subtlest">{sorted.length} agents · rôle&nbsp;: {ROLE_LABEL[role]}</Text>
 
-                  {/* Mobile: cards */}
-                  <div className={css["cardsMobileOnly"]}>
-                    <Stack gap="100">
-                      {AGENTS.map((a) => <AgentCard key={a.mat} {...a} />)}
-                    </Stack>
-                  </div>
+            {/* Table du DS, dé-encartée (aucun Card autour). Ligne cliquable via
+                `href` (D16) : la cellule « Agent » (isRowAnchor) devient un <a>. */}
+            <Table responsive aria-label="Liste des agents">
+              <TableHead>
+                <TableRow>
+                  {cols.map((c) => (
+                    <TableHeaderCell
+                      key={c.id}
+                      align={c.align}
+                      hideBelow={c.hideBelow}
+                      isSortable={c.sortable}
+                      sortDirection={sort.col === c.id ? sort.dir : "default"}
+                      onSortChange={c.sortable ? (next) => setSort({ col: c.id, dir: next }) : undefined}
+                    >
+                      {c.header}
+                    </TableHeaderCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {pageAgents.map((a) => (
+                  <TableRow key={a.mat} href={`#/agents/${a.mat}`}>
+                    {cols.map((c) => (
+                      <TableCell key={c.id} align={c.align} hideBelow={c.hideBelow} isRowAnchor={c.id === "agent"}>
+                        {c.cell(a)}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
 
-                  <div style={{ textAlign: "center", padding: "var(--space200)" }}>
-                    <Text size="small" as="span" color="subtlest">Scroll pour charger plus</Text>
-                  </div>
-                </Stack>
-              </Grid.Col>
-
-              <Grid.Col span={{ mobile: 12, desktop: 3 }}>
-                <div className={css["filterSidebar"]}>
-                  <Card appearance="outlined"><CC><FilterPanel /></CC></Card>
-                </div>
-              </Grid.Col>
-            </Grid>
-          </Page.Body>
-
-          <Drawer isOpen={filtersOpen} onOpenChange={setFiltersOpen} placement="right" size="narrow" aria-label="Filtres">
-            <DrawerHeader onClose={() => setFiltersOpen(false)}>Filtres</DrawerHeader>
-            <DrawerBody><FilterPanel showHeader={false} /></DrawerBody>
-            <DrawerFooter>
-              <Button appearance="subtle" onPress={() => setFiltersOpen(false)}>Réinitialiser</Button>
-              <Button color="comete" onPress={() => setFiltersOpen(false)}>Appliquer</Button>
-            </DrawerFooter>
-          </Drawer>
-        </Page>
+            <TablePagination count={sorted.length} page={page} rowsPerPage={ROWS_PER_PAGE} onPageChange={setPage} />
+          </Stack>
+        </Page.Body>
+      </Page>
     );
   },
 };
@@ -870,13 +895,13 @@ export const Settings: Story = {
                   <div className={css["tableDesktopOnly"]}>
                     <Card appearance="outlined">
                       <div className={css["cardColumn"]}>
-                        <TableRow isHeader cells={["Fonction", "Rôle", "Utilisateurs", "Modifié le"]} />
+                        <MiniTableRow isHeader cells={["Fonction", "Rôle", "Utilisateurs", "Modifié le"]} />
                         {[
                           { fn: "Responsable planning", role: "Manager", users: "8", date: "12/04/2026" },
                           { fn: "Superviseur terrain", role: "Manager", users: "5", date: "08/04/2026" },
                           { fn: "Gestionnaire RH", role: "Admin.", users: "3", date: "01/04/2026" },
                         ].map((fn, i) => (
-                          <TableRow key={i} cells={[
+                          <MiniTableRow key={i} cells={[
                             <Text key="fn" weight="medium" as="span">{fn.fn}</Text>,
                             <Tag key="r" label={fn.role} />,
                             fn.users,
