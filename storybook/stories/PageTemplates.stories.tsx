@@ -44,9 +44,12 @@ import {
   TableCell,
   TableHeaderCell,
   TablePagination,
+  TableSelectionBar,
+  Checkbox,
   ToggleButtonGroup,
   ToggleButton,
 } from "@aexae/comete-design-system/components";
+import { useTableSelection } from "@aexae/comete-design-system/hooks";
 import css from "./PageTemplates.module.css";
 import { FilterBar, FACETS } from "./_filterDemo";
 
@@ -410,6 +413,7 @@ export const Collection: Story = {
       return sort.dir === "ascending" ? cmp : -cmp;
     });
     const pageAgents = sorted.slice(page * ROWS_PER_PAGE, page * ROWS_PER_PAGE + ROWS_PER_PAGE);
+    const sel = useTableSelection({ keys: pageAgents.map((a) => a.mat) });
 
     return (
       <Page globalActions={null}>
@@ -455,13 +459,23 @@ export const Collection: Story = {
                 (dé-encartage), pas dans une carte. */}
             <FilterBar facets={visibleFacets} />
 
-            <Text size="small" as="span" color="subtlest">{sorted.length} agents · rôle&nbsp;: {ROLE_LABEL[role]}</Text>
+            {/* Sélection active → barre contextuelle (compteur + actions
+                groupées) ; sinon le compteur de résultats. Même emplacement. */}
+            {sel.selectedCount > 0 ? (
+              <TableSelectionBar count={sel.selectedCount} onClear={sel.clear}>
+                <Button appearance="subtle" iconBefore="Download">Exporter la sélection</Button>
+              </TableSelectionBar>
+            ) : (
+              <Text size="small" as="span" color="subtlest">{sorted.length} agents · rôle&nbsp;: {ROLE_LABEL[role]}</Text>
+            )}
 
             {/* Table du DS, dé-encartée (aucun Card autour). Ligne cliquable via
-                `href` (D16) : la cellule « Agent » (isRowAnchor) devient un <a>. */}
+                `href` (D16) : la cellule « Agent » (isRowAnchor) devient un <a> ;
+                le clic sur la case de sélection ne navigue pas. */}
             <Table responsive aria-label="Liste des agents">
               <TableHead>
                 <TableRow>
+                  <TableHeaderCell><Checkbox {...sel.getSelectAllProps()} /></TableHeaderCell>
                   {cols.map((c) => (
                     <TableHeaderCell
                       key={c.id}
@@ -478,7 +492,8 @@ export const Collection: Story = {
               </TableHead>
               <TableBody>
                 {pageAgents.map((a) => (
-                  <TableRow key={a.mat} href={`#/agents/${a.mat}`}>
+                  <TableRow key={a.mat} href={`#/agents/${a.mat}`} isSelected={sel.isSelected(a.mat)}>
+                    <TableCell><Checkbox {...sel.getRowCheckboxProps(a.mat, a.name)} /></TableCell>
                     {cols.map((c) => (
                       <TableCell key={c.id} align={c.align} hideBelow={c.hideBelow} isRowAnchor={c.id === "agent"}>
                         {c.cell(a)}
