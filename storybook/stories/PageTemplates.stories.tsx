@@ -373,11 +373,14 @@ const AGENT_ACTIONS: AgentAction[] = [
   { id: "export", label: "Exporter", icon: "Download", roles: ["manager", "partenaire", "client"] },
 ];
 
-// Vues de travail (§2) = segment dans la toolbar ; compteur = badge.
-const AGENT_VIEWS = [
-  { id: "tous", label: "Tous", badge: "140" },
-  { id: "anomalies", label: "Anomalies", badge: "12" },
-  { id: "actifs", label: "Actifs" },
+// Vues de travail (§2) = segment dans la toolbar. Une vue est un JEU FILTRÉ
+// prédéfini (pas un filtre du panneau) : elle porte son propre prédicat, et
+// son compteur (badge) en découle. Changer de vue change réellement le
+// contenu du tableau.
+const AGENT_VIEWS: Array<{ id: string; label: string; match: (a: Agent) => boolean }> = [
+  { id: "tous", label: "Tous", match: () => true },
+  { id: "anomalies", label: "Anomalies", match: (a) => a.status === "critical" },
+  { id: "actifs", label: "Actifs", match: (a) => a.contrat !== "" },
 ];
 
 const ROWS_PER_PAGE = 5;
@@ -588,7 +591,10 @@ export const Collection: Story = {
     // garde que celles visibles par le rôle courant — aucun `if (isPartner)`.
     const visibleFacets = FACETS.filter((f) => !f.roles || f.roles.includes(role));
 
-    const sorted = [...AGENTS].sort((a, b) => {
+    // La vue courante filtre le jeu (§2). Le tri s'applique ensuite.
+    const viewMatch = (AGENT_VIEWS.find((v) => v.id === view) ?? AGENT_VIEWS[0]).match;
+    const inView = AGENTS.filter(viewMatch);
+    const sorted = [...inView].sort((a, b) => {
       if (sort.dir === "default") return 0;
       const c = AGENT_COLUMNS.find((x) => x.id === sort.col);
       if (!c?.sortValue) return 0;
@@ -621,7 +627,7 @@ export const Collection: Story = {
                 }}
               >
                 {AGENT_VIEWS.map((v) => (
-                  <ToggleButton key={v.id} id={v.id} badge={v.badge}>{v.label}</ToggleButton>
+                  <ToggleButton key={v.id} id={v.id} badge={String(AGENTS.filter(v.match).length)}>{v.label}</ToggleButton>
                 ))}
               </ToggleButtonGroup>
             </>
