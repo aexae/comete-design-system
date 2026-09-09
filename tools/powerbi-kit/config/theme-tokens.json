@@ -82,5 +82,9 @@
   "visualStyles.pivotTable.*.rowTotal[0].backColor.solid.color": {
     "light": "--comete-blue-700",
     "dark": "--comete-blue-400"
+  },
+  "visualStyles.slicer.*.selectionIcon[0].color.solid.color": {
+    "light": "--comete-blue-700",
+    "dark": "--comete-blue-400"
   }
 }
