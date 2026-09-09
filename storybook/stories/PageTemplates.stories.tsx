@@ -6,6 +6,7 @@
 
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { within, userEvent, expect, fn } from "storybook/test";
 import type { IconName } from "@aexae/comete-design-system/components";
 import {
   Page,
@@ -385,6 +386,13 @@ const AGENT_VIEWS: Array<{ id: string; label: string; match: (a: Agent) => boole
 
 const ROWS_PER_PAGE = 5;
 
+// Espion de navigation (harnais de story) : tient lieu de routeur applicatif
+// pour la recette. L'intercepteur (onClickCapture, dans Collection) empêche
+// toujours la navigation réelle et n'appelle CE handler que pour un clic
+// simple — un clic modifié (Ctrl/⌘, bouton milieu) est laissé au navigateur
+// (nouvel onglet), donc n'appelle PAS la navigation interne (§8).
+const onAgentNavigate = fn();
+
 // -----------------------------------------------------------------------
 // Cœur partagé (§0bis.A) : Table du DS + quatre états + sélection + repli
 // téléphone + lignes interactives. Factorisé pour être réutilisé par les DEUX
@@ -644,6 +652,20 @@ export const Collection: Story = {
           }
         />
         <Page.Body>
+          {/* Harnais de navigation (D16) : intercepte les clics sur les lignes
+              (a[href]) pour tenir lieu de routeur. Empêche toujours la vraie
+              navigation ; n'appelle onAgentNavigate que pour un clic SIMPLE —
+              un clic modifié (Ctrl/⌘, bouton milieu) est laissé au navigateur.
+              Dans une app réelle, c'est le routeur qui joue ce rôle. */}
+          <div
+            onClickCapture={(e) => {
+              const anchor = (e.target as Element).closest?.("a[href]");
+              if (!anchor) return;
+              e.preventDefault();
+              if (e.ctrlKey || e.metaKey || e.button !== 0) return;
+              onAgentNavigate(anchor.getAttribute("href"));
+            }}
+          >
           <Stack gap="150">
             {/* Filtres : chips actives + panneau (incl. « Tous les filtres »),
                 via _filterDemo. Facettes filtrées par rôle. Posés sur le fond
@@ -669,9 +691,95 @@ export const Collection: Story = {
               onPageChange={setPage}
             />
           </Stack>
+          </div>
         </Page.Body>
       </Page>
     );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // ── §8.6 — Rôles déclaratifs (critère de recette) ────────────────────
+    // Les MÊMES définitions annotées `roles` produisent deux jeux selon le
+    // rôle. Manager voit plus de colonnes que partenaire (matricule, heures,
+    // delta lui sont réservés).
+    const colsFor = (r: Role) => AGENT_COLUMNS.filter((c) => c.roles.includes(r)).map((c) => c.id);
+    await expect(colsFor("manager")).not.toEqual(colsFor("partenaire"));
+    await expect(colsFor("manager").length).toBeGreaterThan(colsFor("partenaire").length);
+    await expect(AGENT_ACTIONS.filter((a) => a.roles.includes("manager")).length).toBeGreaterThan(
+      AGENT_ACTIONS.filter((a) => a.roles.includes("partenaire")).length,
+    );
+    // Le rendu courant (manager) montre exactement le jeu manager (en-têtes
+    // lus dans le DOM, y compris les colonnes repliées à largeur réduite).
+    const headerText = () =>
+      Array.from(canvasElement.querySelectorAll("th"))
+        .map((th) => (th.textContent ?? "").trim())
+        .filter(Boolean);
+    await expect(headerText()).toEqual(["Agent", "Matricule", "Contrat", "Heures", "Delta"]);
+    // Aucun littéral de rôle dans les composants d'AFFICHAGE (cœur + cellules) :
+    // la visibilité vient du champ `roles`, jamais d'un test en dur.
+    const displaySource = [AgentTableCore.toString(), ...AGENT_COLUMNS.map((c) => c.cell.toString())].join("\n");
+    await expect(/isPartner|isManager|role_code/.test(displaySource)).toBe(false);
+
+    // ── §8.1 — Clic de ligne (D16) : navigation clavier + modificateurs ──
+    onAgentNavigate.mockClear();
+    const links = canvas.getAllByRole("link");
+    await expect(links[0]).toHaveAttribute("href", "#/agents/150");
+    // Les lignes elles-mêmes ne sont pas focusables (c'est le lien qui l'est).
+    for (const row of canvas.getAllByRole("row")) {
+      await expect(row).not.toHaveAttribute("tabindex");
+    }
+    // Entrée sur le lien focalisé → navigation interne.
+    links[0]?.focus();
+    await userEvent.keyboard("{Enter}");
+    await expect(onAgentNavigate).toHaveBeenCalledWith("#/agents/150");
+    // Ctrl+clic → PAS de navigation interne (laissé au navigateur : nouvel onglet).
+    // Clic natif porteur de ctrlKey (userEvent ne propage pas un modificateur
+    // maintenu au clavier vers l'événement souris d'un click() distinct).
+    onAgentNavigate.mockClear();
+    links[0].dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, ctrlKey: true }));
+    await expect(onAgentNavigate).not.toHaveBeenCalled();
+    // Clic sur la case de sélection → ne navigue pas.
+    onAgentNavigate.mockClear();
+    await userEvent.click(canvas.getByRole("checkbox", { name: /DUPONT Marie/ }));
+    await expect(onAgentNavigate).not.toHaveBeenCalled();
+
+    // ── §8.2 — Repli des colonnes à conteneur réduit, sans scroll-x ──────
+    const wrap = canvasElement.querySelector<HTMLElement>('[class*="tableDesktopOnly"]');
+    const qc = canvasElement.querySelector<HTMLElement>('[class*="queryContainer"]');
+    // Colonne de confort « Matricule » (hideBelow="md") : visible = offsetParent
+    // non nul (display:none via container-query → offsetParent null).
+    const matShown = () => {
+      const th = Array.from(canvasElement.querySelectorAll("th")).find(
+        (h) => (h.textContent ?? "").trim() === "Matricule",
+      ) as HTMLElement | undefined;
+      return !!th?.offsetParent;
+    };
+    if (wrap && qc) {
+      // Large : toutes les colonnes visibles.
+      wrap.style.width = "1200px";
+      await new Promise((r) => setTimeout(r, 150));
+      await expect(matShown()).toBe(true);
+      // Réduit : colonnes de confort/contexte repliées, et AUCUN scroll horizontal.
+      wrap.style.width = "360px";
+      await new Promise((r) => setTimeout(r, 150));
+      await expect(matShown()).toBe(false);
+      await expect(qc.scrollWidth).toBeLessThanOrEqual(qc.clientWidth + 1);
+      // Retour à largeur normale : les colonnes reviennent (pas un masquage définitif).
+      wrap.style.width = "1200px";
+      await new Promise((r) => setTimeout(r, 150));
+      await expect(matShown()).toBe(true);
+      wrap.style.width = ""; // nettoyage : rend la largeur au flux
+    }
+
+    // ── §8.3 — Changement de vue : le contenu change, le focus reste ─────
+    const anomalies = canvas.getByRole("radio", { name: /Anomalies/ });
+    await userEvent.click(anomalies);
+    await expect(anomalies).toHaveFocus();
+    // Le contenu change. (Chaque agent peut apparaître deux fois dans le DOM :
+    // table desktop + liste repli mobile masquée — d'où les requêtes *All*.)
+    await expect(canvas.queryAllByText("MARTIN Jean")).toHaveLength(0); // non-anomalie → sorti
+    await expect(canvas.getAllByText("BERNARD Sophie").length).toBeGreaterThanOrEqual(1); // anomalie → présent
   },
 };
 
@@ -780,6 +888,82 @@ export const ListeDeSection: Story = {
       </Page.Body>
     </Page>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // ── §8.5 — Aucun chrome de page ──────────────────────────────────────
+    // Surface de contrôle de niveau page absente : ni segment de vues (radios),
+    // ni bouton « Filtres » (entrée du panneau). Assertions négatives.
+    await expect(canvas.queryByRole("radio")).toBeNull();
+    await expect(canvas.queryByRole("button", { name: /^Filtres/ })).toBeNull();
+    // Aucune recherche de niveau page (« Rechercher un agent ») ; à la place,
+    // une recherche compacte PAR section.
+    await expect(canvas.queryByRole("searchbox", { name: /Rechercher un agent/ })).toBeNull();
+
+    // ── En-tête de section à la place : titre de fiche (h1) + 2 sections (h2)
+    await expect(canvas.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    await expect(canvas.getAllByRole("heading", { level: 2 })).toHaveLength(2);
+
+    // ── Surface de contrôle réduite : une recherche compacte par section ──
+    const searches = canvas.getAllByRole("searchbox");
+    await expect(searches).toHaveLength(2);
+
+    // ── Cœur PARTAGÉ, pas dupliqué : la Table est identique à la page ────
+    // Mêmes colonnes (jeu manager), sélection (« Tout sélectionner »), tri
+    // (en-têtes triables). Lu dans le DOM (colonnes repliées incluses).
+    const headerText = Array.from(canvasElement.querySelectorAll("th"))
+      .map((th) => (th.textContent ?? "").trim())
+      .filter(Boolean);
+    await expect(headerText).toContain("Matricule");
+    await expect(headerText).toContain("Delta");
+    await expect(canvas.getAllByRole("checkbox", { name: /Tout sélectionner/ }).length).toBeGreaterThanOrEqual(1);
+
+    // ── §8.5 (suite) — « Aucun résultat » = variante COMPACTE (une ligne) ──
+    // Recherche sans correspondance dans la 2e section → une seule ligne, PAS
+    // l'illustration riche (pas de bouton « Tout effacer » du TableBody page).
+    await userEvent.type(searches[1], "zzzz");
+    await expect(await canvas.findByText(/Aucun résultat pour cette section/)).toBeInTheDocument();
+    await expect(canvas.queryByRole("button", { name: /Tout effacer/ })).toBeNull();
+  },
+};
+
+// -----------------------------------------------------------------------
+// 1quater. FILTRES ACTIFS (§8.4) — la rangée de chips reflète les filtres
+// actifs, et « Effacer les filtres » les vide. Filtres préréglés (initial)
+// pour un test déterministe, sans dépendre d'une sélection dans un popover.
+
+/**
+ * **Filtres actifs** — la rangée de chips reflète les filtres actifs et
+ * « Effacer les filtres » les vide (§8.4).
+ */
+export const FiltresActifs: Story = {
+  name: "Filtres actifs (chips + effacer)",
+  parameters: { design: { type: "figma", url: figmaUrl("4319:15827") } },
+  render: () => (
+    <Page globalActions={null}>
+      <Page.Bar title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
+      <Page.Body>
+        <Stack gap="150">
+          <FilterBar initial={{ sites: ["paris", "lyon"] }} />
+          <Text color="subtle">
+            Deux sites actifs : la rangée de chips le reflète (compteur sur « Filtres ») ;
+            « Effacer les filtres » vide tout.
+          </Text>
+        </Stack>
+      </Page.Body>
+    </Page>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // 1) La rangée de chips reflète les 2 filtres actifs (compteur sur « Filtres »).
+    const filtres = canvas.getByRole("button", { name: /Filtres/ });
+    await expect(filtres).toHaveTextContent("2");
+    // 2) « Effacer les filtres » (panneau) les vide → plus aucun compteur.
+    await userEvent.click(filtres);
+    const clear = await within(document.body).findByRole("button", { name: /Effacer les filtres/ });
+    await userEvent.click(clear);
+    await expect(filtres).not.toHaveTextContent(/\d/);
+  },
 };
 
 // -----------------------------------------------------------------------
