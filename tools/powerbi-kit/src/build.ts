@@ -204,11 +204,31 @@ export async function build(): Promise<Report> {
     entries: statusConfig.entries.map((e) => ({ ...e, hex: resolveToken(e.token) })),
   };
 
+  // ---- Couleurs des graphiques : table de référence pour les mesures DAX --
+  const mapping = readConfig<Record<string, string | { light: string }>>("theme-tokens.json");
+  const seriesColors: { token: string; hex: string }[] = [];
+  for (let i = 0; ; i += 1) {
+    const ref = mapping[`dataColors[${i}]`];
+    if (ref === undefined) break;
+    const token = typeof ref === "string" ? ref : ref.light;
+    seriesColors.push({ token: token.slice(2), hex: resolveToken(token) });
+  }
+  const semanticColors = [
+    { label: "Positif, hausse", token: "--icon-success" },
+    { label: "Négatif, baisse", token: "--icon-critical" },
+    { label: "Attention (texte lisible)", token: "--text-warning" },
+    { label: "Information", token: "--icon-information" },
+    { label: "Accent des tables et matrices", token: "--comete-blue-700" },
+    { label: "Texte secondaire", token: "--text-subtlest" },
+  ].map((e) => ({ ...e, token: e.token.slice(2), hex: resolveToken(e.token) }));
+
   // ---- Documentation ------------------------------------------------------
   write("README.md", renderReadme({
     iconCount: entries.length,
     notes: iconsConfig.notes ?? [],
     statusColors,
+    seriesColors,
+    semanticColors,
     variants: iconsConfig.variants,
     logoCount,
     colorCount: colorRows.length,

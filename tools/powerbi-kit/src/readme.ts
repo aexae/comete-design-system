@@ -12,7 +12,16 @@ export interface StatusColorRow {
   hex: string;
 }
 
+export interface ChartColorRow {
+  token: string;
+  hex: string;
+}
+
 export interface ReadmeData {
+  /** Palette de séries du thème, dans l'ordre des slots. */
+  seriesColors: ChartColorRow[];
+  /** Couleurs sémantiques à utiliser dans les mesures DAX. */
+  semanticColors: (ChartColorRow & { label: string })[];
   /** Couleurs de statut résolues, injectées dans la mesure DAX livrée. */
   statusColors: { column: string; fallback: string; entries: StatusColorRow[] };
   iconCount: number;
@@ -101,6 +110,27 @@ RETURN SUBSTITUTE(Svg, "${data.placeholder}", Couleur)
 
 Placer la mesure dans une colonne de table ou de matrice : elle s'affiche comme
 une image, à la taille de ligne définie dans **Format > Valeurs > Taille**.
+
+## Couleurs des graphiques et des mesures DAX
+
+Les visuels qui suivent le thème n'ont rien à faire : la palette de séries
+s'applique seule, dans cet ordre.
+
+| Slot | Token | Hex |
+|---|---|---|
+${data.seriesColors.map((c, i) => `| ${i + 1} | \`${c.token}\` | \`${c.hex}\` |`).join("\n")}
+
+En revanche, **les couleurs écrites dans les mesures DAX ne suivent jamais le
+thème** : mises en forme conditionnelles, flèches de tendance, titres
+dynamiques. Chaque hex codé dans une mesure doit être remplacé par une valeur
+de ce document. Pour les usages sémantiques :
+
+| Usage | Token | Hex |
+|---|---|---|
+${data.semanticColors.map((c) => `| ${c.label} | \`${c.token}\` | \`${c.hex}\` |`).join("\n")}
+
+Règle : plus aucun hex hors de ce document dans les mesures. En cas de besoin
+non couvert, demander à Comète plutôt que d'improviser une couleur.
 
 ## Couleurs des statuts de devis
 
