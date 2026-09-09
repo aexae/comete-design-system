@@ -135,5 +135,9 @@
   "visualStyles.shape.*.padding[0].top": "--size0",
   "visualStyles.shape.*.padding[0].bottom": "--size0",
   "visualStyles.shape.*.padding[0].left": "--size0",
-  "visualStyles.shape.*.padding[0].right": "--size0"
+  "visualStyles.shape.*.padding[0].right": "--size0",
+  "visualStyles.image.*.padding[0].top": "--size0",
+  "visualStyles.image.*.padding[0].bottom": "--size0",
+  "visualStyles.image.*.padding[0].left": "--size0",
+  "visualStyles.image.*.padding[0].right": "--size0"
 }
