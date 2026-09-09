@@ -720,6 +720,25 @@ export const Collection: Story = {
     // la visibilité vient du champ `roles`, jamais d'un test en dur.
     const displaySource = [AgentTableCore.toString(), ...AGENT_COLUMNS.map((c) => c.cell.toString())].join("\n");
     await expect(/isPartner|isManager|role_code/.test(displaySource)).toBe(false);
+    // Les FACETTES sont role-déclaratives elles aussi — c'est LE point tranché :
+    // le recensement a trouvé le masquage surtout dans les filtres, pas dans
+    // les colonnes. Mêmes définitions FACETS → deux jeux selon le rôle, sans
+    // littéral de rôle (le consommateur filtre `facets` par `roles`).
+    const facetsFor = (r: Role) => FACETS.filter((f) => !f.roles || f.roles.includes(r)).map((f) => f.id);
+    await expect(facetsFor("manager")).not.toEqual(facetsFor("partenaire"));
+    await expect(facetsFor("manager").length).toBeGreaterThan(facetsFor("partenaire").length);
+    await expect(facetsFor("manager")).toContain("groupes"); // réservé manager…
+    await expect(facetsFor("partenaire")).not.toContain("groupes"); // …masqué au partenaire
+
+    // ── §8 (filtres) — Une seule entrée vers le panneau ─────────────────
+    // « Tous les filtres » vit dans la rangée de chips (bouton open-all) ; la
+    // toolbar de page n'en porte pas.
+    await expect(canvas.getAllByRole("button", { name: /^Filtres/ })).toHaveLength(1);
+    const toolbarEl = canvasElement.querySelector<HTMLElement>('[class*="toolbar"]');
+    await expect(toolbarEl).not.toBeNull();
+    if (toolbarEl) {
+      await expect(within(toolbarEl).queryByRole("button", { name: /^Filtres/ })).toBeNull();
+    }
 
     // ── §8.1 — Clic de ligne (D16) : navigation clavier + modificateurs ──
     onAgentNavigate.mockClear();
@@ -904,9 +923,13 @@ export const ListeDeSection: Story = {
     await expect(canvas.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     await expect(canvas.getAllByRole("heading", { level: 2 })).toHaveLength(2);
 
-    // ── Surface de contrôle réduite : une recherche compacte par section ──
+    // ── Surface de contrôle réduite = TRI + recherche compacte, RIEN d'autre.
+    // Une recherche compacte par section ; le tri est là (en-têtes triables,
+    // aria-sort) ; mais NI panneau de filtres, NI vues enregistrées (couverts
+    // par les assertions négatives ci-dessus : aucune radio, aucun « Filtres »).
     const searches = canvas.getAllByRole("searchbox");
     await expect(searches).toHaveLength(2);
+    await expect(canvasElement.querySelector("th[aria-sort]")).not.toBeNull();
 
     // ── Cœur PARTAGÉ, pas dupliqué : la Table est identique à la page ────
     // Mêmes colonnes (jeu manager), sélection (« Tout sélectionner »), tri
