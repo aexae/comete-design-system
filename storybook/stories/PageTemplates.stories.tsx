@@ -48,7 +48,7 @@ import {
   ToggleButton,
 } from "@aexae/comete-design-system/components";
 import css from "./PageTemplates.module.css";
-import { FilterBar } from "./_filterDemo";
+import { FilterBar, FACETS } from "./_filterDemo";
 
 // -----------------------------------------------------------------------
 // Figma
@@ -397,6 +397,9 @@ export const Collection: Story = {
 
     const cols = AGENT_COLUMNS.filter((c) => c.roles.includes(role));
     const actions = AGENT_ACTIONS.filter((a) => a.roles.includes(role));
+    // Filtres role-déclaratifs : la facette porte `roles` (§0bis.B). On ne
+    // garde que celles visibles par le rôle courant — aucun `if (isPartner)`.
+    const visibleFacets = FACETS.filter((f) => !f.roles || f.roles.includes(role));
 
     const sorted = [...AGENTS].sort((a, b) => {
       if (sort.dir === "default") return 0;
@@ -447,9 +450,10 @@ export const Collection: Story = {
         />
         <Page.Body>
           <Stack gap="150">
-            {/* Filtres : chips actives + panneau complet, via _filterDemo tel
-                quel. Posés sur le fond (dé-encartage), pas dans une carte. */}
-            <FilterBar />
+            {/* Filtres : chips actives + panneau (incl. « Tous les filtres »),
+                via _filterDemo. Facettes filtrées par rôle. Posés sur le fond
+                (dé-encartage), pas dans une carte. */}
+            <FilterBar facets={visibleFacets} />
 
             <Text size="small" as="span" color="subtlest">{sorted.length} agents · rôle&nbsp;: {ROLE_LABEL[role]}</Text>
 
