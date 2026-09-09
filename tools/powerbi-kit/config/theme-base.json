@@ -1,5 +1,5 @@
 {
-  "name": "Comète BI v0.8.7",
+  "name": "Comète BI v0.8.8",
   "$schema": "https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.157.json",
   "dataColors": [
     "#429AEF",
@@ -303,7 +303,8 @@
                 "color": "#B5C1C4"
               }
             },
-            "outlineWeight": 1
+            "outlineWeight": 1,
+            "columnAdjustment": "growToFit"
           }
         ],
         "values": [
