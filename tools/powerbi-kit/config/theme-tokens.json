@@ -76,7 +76,11 @@
     "dark": "--comete-blue-400"
   },
   "visualStyles.pivotTable.*.columnTotal[0].backColor.solid.color": "--background-surface-default",
-  "visualStyles.pivotTable.*.rowTotal[0].fontColor.solid.color": "--text-default",
+  "visualStyles.pivotTable.*.rowTotal[0].fontColor.solid.color": "--text-inverted",
   "visualStyles.pivotTable.*.grid[0].gridHorizontalColor.solid.color": "--border-subtle",
-  "visualStyles.pivotTable.*.columnHeaders[0].outlineColor.solid.color": "--border-bold"
+  "visualStyles.pivotTable.*.columnHeaders[0].outlineColor.solid.color": "--border-bold",
+  "visualStyles.pivotTable.*.rowTotal[0].backColor.solid.color": {
+    "light": "--comete-blue-700",
+    "dark": "--comete-blue-400"
+  }
 }
