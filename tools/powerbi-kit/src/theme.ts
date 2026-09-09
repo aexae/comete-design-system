@@ -11,7 +11,7 @@
 // évoluent, et la variante sombre s'obtient en changeant de table de tokens.
 
 import { readFileSync } from "node:fs";
-import type { ThemeMode } from "./tokens.ts";
+import { resolveVars, type ThemeMode } from "./tokens.ts";
 import { fileURLToPath } from "node:url";
 
 const CONFIG_DIR = fileURLToPath(new URL("../config/", import.meta.url));
@@ -23,7 +23,7 @@ function readJson(file: string): Json {
 }
 
 /** Écrit `value` à l'emplacement décrit par un chemin `a.b[0].c`. */
-function setAtPath(root: Json, path: string, value: string): boolean {
+function setAtPath(root: Json, path: string, value: Json): boolean {
   const steps = path.match(/[^.[\]]+/g);
   if (!steps || steps.length === 0) return false;
 
@@ -74,12 +74,20 @@ export function buildTheme(tokens: Map<string, string>, mode: ThemeMode, name: s
 
   for (const [path, ref] of Object.entries(mapping)) {
     const token = tokenFor(ref, mode);
-    const value = tokens.get(token);
-    if (value === undefined) {
+    const raw = tokens.get(token);
+    if (raw === undefined) {
       missing.push(`${path} → ${token}`);
       continue;
     }
-    if (!setAtPath(theme, path, value.toUpperCase())) missing.push(`${path} (chemin absent)`);
+    // Le mapping porte des couleurs et des dimensions. Une valeur en px
+    // devient un nombre nu (le thème Power BI ne connaît pas les unités),
+    // un hex reste une chaîne normalisée.
+    const resolved = resolveVars(raw, tokens);
+    const pixels = /^(-?\d+(?:\.\d+)?)px$/.exec(resolved);
+    const value: Json = pixels !== null ? Number(pixels[1])
+      : /^#[0-9a-fA-F]{6}$/.test(resolved) ? resolved.toUpperCase()
+      : resolved;
+    if (!setAtPath(theme, path, value)) missing.push(`${path} (chemin absent)`);
   }
 
   if (theme !== null && typeof theme === "object" && !Array.isArray(theme)) {
