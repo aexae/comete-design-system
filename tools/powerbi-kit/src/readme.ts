@@ -22,6 +22,8 @@ export interface ReadmeData {
   seriesColors: ChartColorRow[];
   /** Couleurs sémantiques à utiliser dans les mesures DAX. */
   semanticColors: (ChartColorRow & { label: string })[];
+  /** Convention des comparaisons N contre N-1. */
+  nVsN1: { current: ChartColorRow; previous: ChartColorRow };
   /** Couleurs de statut résolues, injectées dans la mesure DAX livrée. */
   statusColors: { column: string; fallback: string; entries: StatusColorRow[] };
   iconCount: number;
@@ -128,6 +130,20 @@ de ce document. Pour les usages sémantiques :
 | Usage | Token | Hex |
 |---|---|---|
 ${data.semanticColors.map((c) => `| ${c.label} | \`${c.token}\` | \`${c.hex}\` |`).join("\n")}
+
+### Comparaisons N contre N-1
+
+Une série N contre N-1 n'est pas deux catégories : c'est un sujet et son
+contexte. Ne pas leur donner deux couleurs pleines de la palette. La règle :
+
+| Série | Token | Hex |
+|---|---|---|
+| Période courante (N) | \`${data.nVsN1.current.token}\` | \`${data.nVsN1.current.hex}\` |
+| Période de comparaison (N-1) | \`${data.nVsN1.previous.token}\` | \`${data.nVsN1.previous.hex}\` |
+
+Le thème ne sait pas affecter une couleur à un nom de série : ces deux
+couleurs s'appliquent dans le visuel (section Couleurs, série par série),
+ou par la mesure DAX quand le visuel le permet.
 
 Règle : plus aucun hex hors de ce document dans les mesures. En cas de besoin
 non couvert, demander à Comète plutôt que d'improviser une couleur.

@@ -222,6 +222,12 @@ export async function build(): Promise<Report> {
     { label: "Texte secondaire", token: "--text-subtlest" },
   ].map((e) => ({ ...e, token: e.token.slice(2), hex: resolveToken(e.token) }));
 
+  // Règle N contre N-1 : l'année courante en bleu plein, le comparatif atténué
+  const nVsN1 = {
+    current: { token: "comete-blue-500", hex: resolveToken("--comete-blue-500") },
+    previous: { token: "comete-blue-300", hex: resolveToken("--comete-blue-300") },
+  };
+
   // ---- Documentation ------------------------------------------------------
   write("README.md", renderReadme({
     iconCount: entries.length,
@@ -229,6 +235,7 @@ export async function build(): Promise<Report> {
     statusColors,
     seriesColors,
     semanticColors,
+    nVsN1,
     variants: iconsConfig.variants,
     logoCount,
     colorCount: colorRows.length,

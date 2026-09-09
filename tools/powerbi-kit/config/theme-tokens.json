@@ -127,5 +127,13 @@
   "visualStyles.*.*.visualTooltip[0].valueFontColor.solid.color": "--text-default",
   "visualStyles.*.*.visualTooltip[0].actionFontColor.solid.color": "--text-comete",
   "visualStyles.*.*.visualTooltip[0].background.solid.color": "--background-surface-default",
-  "visualStyles.*.*.visualTooltip[0].fontSize": "--font-size-ui-xxxs"
+  "visualStyles.*.*.visualTooltip[0].fontSize": "--font-size-ui-xxxs",
+  "visualStyles.textbox.*.padding[0].top": "--size0",
+  "visualStyles.textbox.*.padding[0].bottom": "--size0",
+  "visualStyles.textbox.*.padding[0].left": "--size0",
+  "visualStyles.textbox.*.padding[0].right": "--size0",
+  "visualStyles.shape.*.padding[0].top": "--size0",
+  "visualStyles.shape.*.padding[0].bottom": "--size0",
+  "visualStyles.shape.*.padding[0].left": "--size0",
+  "visualStyles.shape.*.padding[0].right": "--size0"
 }
