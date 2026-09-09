@@ -17,7 +17,7 @@ import { renderIcon, availableIconNames, type IconVariant, type IconSpacing } fr
 import { renderLogo, type LogoAppearance, type LogoFormat, type LogoProduct, type LogoTaglineAlign } from "./logos.ts";
 import { loadTokens } from "./tokens.ts";
 import { toDataUri, csvCell, POWERBI_URL_LIMIT, COLOR_PLACEHOLDER } from "./datauri.ts";
-import { buildTheme, unmappedColors } from "./theme.ts";
+import { annotateTheme, buildTheme, unmappedColors } from "./theme.ts";
 import { renderReadme } from "./readme.ts";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
@@ -187,6 +187,8 @@ export async function build(): Promise<Report> {
     themeWarnings.push(...missing.map((m) => `${mode}: token manquant ${m}`));
     themeWarnings.push(...unmappedColors(theme, modeTokens).map((c) => `${mode}: couleur hors tokens ${c}`));
     write(`theme/comete-bi-${mode}.json`, JSON.stringify(theme, null, 2) + "\n");
+    // Version annotée (JSONC) : chaque couleur mappée porte le nom de son token.
+    write(`theme/comete-bi-${mode}.annotated.jsonc`, annotateTheme(theme, mode));
   }
 
   // ---- Couleurs de statut : tokens résolus pour la mesure DAX du README ---

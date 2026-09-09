@@ -42,7 +42,7 @@ les fichiers à la main, ils seront écrasés à la prochaine génération.
 | \`svg/icons/\` | les mêmes icônes en SVG plats (placeholder de couleur) |
 | \`svg/icons/main_menu/\` | icônes du menu principal en SVG à couleur figée, pour le canevas et les boutons |
 | \`logos/svg/\` | logos en SVG uniques, autonomes, fond transparent |
-| \`theme/\` | thèmes de rapport, clair et sombre |
+| \`theme/\` | thèmes de rapport, clair et sombre. Les \`.annotated.jsonc\` portent le nom du token en commentaire sur chaque couleur : pour la lecture uniquement, Power BI refuse les commentaires à l'import |
 
 ## Power BI et le SVG : deux canaux
 

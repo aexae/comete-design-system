@@ -88,6 +88,38 @@ export function buildTheme(tokens: Map<string, string>, mode: ThemeMode, name: s
   return { theme, missing };
 }
 
+/**
+ * Sérialise le thème en JSONC annoté : chaque valeur pilotée par le mapping
+ * porte le nom de son token en commentaire. Power BI refuse les commentaires
+ * dans les thèmes : ce fichier sert à la LECTURE, jamais à l'import.
+ */
+export function annotateTheme(theme: Json, mode: ThemeMode): string {
+  const mapping = readJson("theme-tokens.json") as Record<string, TokenRef>;
+  const byPath = new Map(Object.entries(mapping).map(([path, ref]) => [path, tokenFor(ref, mode)]));
+
+  const render = (node: Json, path: string, indent: string): string => {
+    if (node === null || typeof node !== "object") {
+      const text = JSON.stringify(node);
+      const token = byPath.get(path);
+      return token === undefined ? text : `${text} /* ${token} */`;
+    }
+    const childIndent = indent + "  ";
+    if (Array.isArray(node)) {
+      if (node.length === 0) return "[]";
+      const rows = node.map((v, i) => `${childIndent}${render(v, `${path}[${i}]`, childIndent)}`);
+      return `[\n${rows.join(",\n")}\n${indent}]`;
+    }
+    const entries = Object.entries(node);
+    if (entries.length === 0) return "{}";
+    const rows = entries.map(([k, v]) => {
+      const childPath = path === "" ? k : `${path}.${k}`;
+      return `${childIndent}${JSON.stringify(k)}: ${render(v, childPath, childIndent)}`;
+    });
+    return `{\n${rows.join(",\n")}\n${indent}}`;
+  };
+  return render(theme, "", "") + "\n";
+}
+
 /** Couleurs restées en dur : utile pour vérifier que le mapping est complet. */
 export function unmappedColors(theme: Json, tokens: Map<string, string>): string[] {
   const known = new Set([...tokens.values()].map((v) => v.toUpperCase()));
