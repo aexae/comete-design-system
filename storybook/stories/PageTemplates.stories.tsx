@@ -777,6 +777,123 @@ export const ListeDeSection: Story = {
 };
 
 // -----------------------------------------------------------------------
+// 1ter. GUIDELINES — « Anatomie d'un écran de liste » (§7)
+// Doc de la recette, composée avec les composants du DS (pas de dalle de
+// texte brute) : l'ordre des six éléments, les règles vues/filtres, la
+// doctrine d'ouverture, l'élévation, les deux niveaux, les rôles déclaratifs
+// et le rythme inter-sections.
+
+const ANATOMIE: Array<{ n: string; el: string; note: string }> = [
+  { n: "1", el: "Banner", note: "Alerte globale, au-dessus du layout, hors de Page.Body. À l'intérieur du contenu, c'est SectionMessage — jamais l'inverse." },
+  { n: "2", el: "SideNav", note: "À gauche, avec son Provider et son repli ; le SideNav.Trigger vit dans Page.Bar.leading (cf. story Base)." },
+  { n: "3", el: "Page.Bar", note: "Titre de l'écran, fil d'Ariane, action primaire." },
+  { n: "4", el: "Page.Toolbar — une seule par écran", note: "search = recherche ; start = le segment de vues (§2) ; end = les actions de page. La toolbar ne porte PAS de bouton « Filtres »." },
+  { n: "5", el: "Rangée de chips des filtres actifs", note: "Sous la toolbar, via _filterDemo. Elle porte AUSSI l'accès à « Tous les filtres » — l'unique entrée vers le panneau, pas de second déclencheur." },
+  { n: "6", el: "Table", note: "responsive, hideBelow sur les colonnes secondaires, tri, pagination, sélection, lignes interactives." },
+];
+
+// Prose gardée en constantes (apostrophes dans des chaînes JS, pas en enfants
+// JSX bruts — convention du fichier + règle react/no-unescaped-entities).
+const G_TITLE = "Anatomie d'un écran de liste";
+const G_INTRO =
+  "Premier gabarit de page (D10). La recette fixe la structure et le comportement ; elle laisse au produit le choix des colonnes, des vues et des facettes.";
+const G_SIX = "Les six éléments, dans l'ordre";
+const G_D16_TITLE = "Le clic de ligne — doctrine D16";
+const G_D16 =
+  "Navigation quand l'objet a une page à lui : href sur la cellule primaire + isRowAnchor (les modificateurs Ctrl/⌘+clic et clic-milieu doivent marcher). Panneau latéral quand on reste dans la liste : onPress — hors de cette story tant que le mode non modal du Drawer n'est pas livré. Modale : réservée à la confirmation, pas à la consultation.";
+const G_TOOLBAR_TITLE = "Une seule toolbar de niveau page par écran";
+const G_TOOLBAR =
+  "Une liste de section porte ses contrôles réduits au niveau section, jamais une seconde Page.Toolbar. Ce que la recette ne décide pas : quelles colonnes, quelles vues, quelles facettes — ça appartient au produit, écran par écran.";
+
+const RULES: Array<{ title: string; body: string }> = [
+  {
+    title: "Vues ou filtres ?",
+    body: "Les états de travail (anomalies, en cours, terminé, mes documents…) sont des VUES dans la barre d'outils. Les critères (sites, prestations, profils…) sont des FILTRES. Un état ne descend jamais dans le panneau de filtres.",
+  },
+  {
+    title: "L'élévation est pour ce qui flotte, pas pour ce qui est posé",
+    body: "Un popover, une feuille, un panneau superposé : élévation légitime. Une section, une barre de filtres, un tableau : sur le fond, délimités par l'espacement et un filet.",
+  },
+  {
+    title: "Une liste vit à deux niveaux",
+    body: "En PAGE, elle porte le chrome (Page.Bar, Page.Toolbar) et la surface de contrôle complète (recherche, vues, filtres, chips). En LISTE DE SECTION (dans une fiche), aucun chrome de page : un en-tête de section remplace la Page.Bar, et la surface de contrôle se réduit à tri + recherche compacte (ni vues enregistrées, ni panneau de filtres). Le cœur (table, états, sélection, repli, lignes) est partagé ; la surface de contrôle ne l'est pas.",
+  },
+  {
+    title: "La visibilité par rôle est déclarative, à la source",
+    body: "Chaque colonne / filtre / action porte son roles: [...] ; l'affichage ne garde que les éléments dont roles inclut le rôle courant. Un composant d'affichage ne teste JAMAIS isPartner / isManager en dur.",
+  },
+  {
+    title: "Rythme inter-sections",
+    body: "La séparation entre deux sections d'une fiche vient du rythme vertical et de la hiérarchie typographique, jamais d'un fond ni d'une carte : espacement vertical ≥ --space500 entre deux sections consécutives ; titre de section en Heading size=small (un cran sous le titre de la fiche) ; ordre imposé dans chaque section : en-tête → tableau → pagination.",
+  },
+];
+
+/**
+ * **Guidelines** — anatomie d'un écran de liste (D10, §7).
+ *
+ * La recette décide de la STRUCTURE et du COMPORTEMENT ; elle ne décide pas
+ * quelles colonnes, quelles vues ni quelles facettes — ça appartient au
+ * produit, écran par écran.
+ */
+export const Guidelines: Story = {
+  name: "Guidelines (anatomie)",
+  parameters: { design: { type: "figma", url: figmaUrl("4319:15827") } },
+  render: () => (
+    <Page globalActions={null}>
+      <Page.Body>
+        <div style={{ maxWidth: 820 }}>
+          <Stack gap="400">
+            <Stack gap="100">
+              <Heading size="large" as="h1">{G_TITLE}</Heading>
+              <Text color="subtle">{G_INTRO}</Text>
+            </Stack>
+
+            <Divider />
+
+            <Stack gap="200">
+              <Heading size="small" as="h2">{G_SIX}</Heading>
+              <Stack gap="150">
+                {ANATOMIE.map((r) => (
+                  <Cluster key={r.n} gap="150" align="start">
+                    <Badge label={r.n} appearance="information" importance="medium" />
+                    <Stack gap="025">
+                      <Text weight="medium" as="span">{r.el}</Text>
+                      <Text size="small" as="span" color="subtle">{r.note}</Text>
+                    </Stack>
+                  </Cluster>
+                ))}
+              </Stack>
+            </Stack>
+
+            <Stack gap="100">
+              <Heading size="small" as="h2">{G_D16_TITLE}</Heading>
+              <Text color="subtle">{G_D16}</Text>
+            </Stack>
+
+            <Stack gap="100">
+              <Heading size="small" as="h2">{G_TOOLBAR_TITLE}</Heading>
+              <Text color="subtle">{G_TOOLBAR}</Text>
+            </Stack>
+
+            <Divider />
+
+            {/* Les règles doctrinales (vues/filtres, élévation, deux niveaux,
+                rôles déclaratifs, rythme) en encarts SectionMessage. */}
+            <Stack gap="200">
+              {RULES.map((rule) => (
+                <SectionMessage key={rule.title} appearance="information" title={rule.title}>
+                  {rule.body}
+                </SectionMessage>
+              ))}
+            </Stack>
+          </Stack>
+        </div>
+      </Page.Body>
+    </Page>
+  ),
+};
+
+// -----------------------------------------------------------------------
 // 2. ENTITY
 
 /**
