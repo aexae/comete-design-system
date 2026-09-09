@@ -48,6 +48,11 @@ import {
   Checkbox,
   ToggleButtonGroup,
   ToggleButton,
+  List,
+  ListItemButton,
+  ListItemAvatar,
+  ListItemText,
+  ListItemTrailing,
 } from "@aexae/comete-design-system/components";
 import { useTableSelection } from "@aexae/comete-design-system/hooks";
 import css from "./PageTemplates.module.css";
@@ -421,6 +426,16 @@ export const Collection: Story = {
     const columnCount = cols.length + 1; // +1 pour la colonne de sélection
     const isData = state === "data";
 
+    // Repli téléphone : ce que la liste compacte montre dérive des MÊMES
+    // colonnes déclaratives (aucun littéral de rôle). Matricule et delta ne
+    // s'affichent que si leur colonne est visible pour le rôle courant.
+    const showMat = cols.some((c) => c.id === "mat");
+    const showDelta = cols.some((c) => c.id === "delta");
+    const compactSecondary = (a: Agent): string | undefined =>
+      [showMat ? `Mat. ${a.mat}` : null, a.contrat ? `${a.contrat} h` : null]
+        .filter(Boolean)
+        .join(" · ") || undefined;
+
     return (
       <Page globalActions={null}>
         <Page.Bar title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
@@ -476,6 +491,10 @@ export const Collection: Story = {
               <Text size="small" as="span" color="subtlest">{sorted.length} agents · rôle&nbsp;: {ROLE_LABEL[role]}</Text>
             ))}
 
+            {/* Repli responsive (§5) : Table du DS sur desktop, liste compacte
+                sur téléphone (motif TableToListRecipe — réutilisé, pas réécrit).
+                Même bascule à 599px, une seule source (pageAgents). */}
+            <div className={css["tableDesktopOnly"]}>
             {/* Table du DS, dé-encartée (aucun Card autour). Ligne cliquable via
                 `href` (D16) : la cellule « Agent » (isRowAnchor) devient un <a> ;
                 le clic sur la case de sélection ne navigue pas. */}
@@ -529,6 +548,39 @@ export const Collection: Story = {
                   : null}
               </TableBody>
             </Table>
+            </div>
+
+            {/* Repli téléphone : liste compacte cliquable (List + ListItemButton
+                + ListItemText + ListItemTrailing). PAS des cartes (§9). Ce qui
+                s'affiche dérive des mêmes colonnes déclaratives (compactSecondary,
+                showDelta) — aucun littéral de rôle. N'existe qu'à l'état
+                « données » ; les autres états restent portés par la Table. */}
+            {isData && (
+              <div className={css["listMobileOnly"]}>
+                <List aria-label="Agents — liste compacte" gap="150">
+                  {pageAgents.map((a) => (
+                    <ListItemButton
+                      key={a.mat}
+                      onPress={() => {
+                        window.location.hash = `/agents/${a.mat}`;
+                      }}
+                    >
+                      <ListItemAvatar>
+                        <Avatar size="small" initials={a.initials} />
+                      </ListItemAvatar>
+                      <ListItemText primary={a.name} secondary={compactSecondary(a)} lineClamp={2} />
+                      {showDelta && a.delta ? (
+                        <ListItemTrailing>
+                          <Text size="small" weight="bold" as="span" color={a.status === "success" ? "success" : "critical"}>
+                            {a.delta}
+                          </Text>
+                        </ListItemTrailing>
+                      ) : null}
+                    </ListItemButton>
+                  ))}
+                </List>
+              </div>
+            )}
 
             {isData && <TablePagination count={sorted.length} page={page} rowsPerPage={ROWS_PER_PAGE} onPageChange={setPage} />}
           </Stack>
