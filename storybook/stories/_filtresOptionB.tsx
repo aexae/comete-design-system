@@ -7,7 +7,7 @@
 // override d'état d'un Button texte) sont fournies par le consommateur via
 // `scrollClassName` / `textActionClassName` — elles vivent dans le module CSS
 // des stories, pas dans ce helper (critère D11).
-import { useRef, useState, type ReactElement } from "react";
+import { useEffect, useRef, useState, type ReactElement } from "react";
 import { parseDate, Time } from "@internationalized/date";
 import {
   Button,
@@ -35,6 +35,16 @@ import {
   TableRow,
   TableHeaderCell,
   TableCell,
+  Divider,
+  Drawer,
+  DrawerHeader,
+  DrawerBody,
+  DrawerFooter,
+  List,
+  ListHead,
+  ListItemButton,
+  ListItemText,
+  ListItemSecondaryAction,
 } from "@aexae/comete-design-system/components";
 
 // -----------------------------------------------------------------------
@@ -437,7 +447,59 @@ function OptionControls({ def, filters, onChange }: { def: FacetDef; filters: Fi
 }
 
 // -----------------------------------------------------------------------
-// FiltresPanel — bouton « Filtres » + popover à deux volets (desktop). C'EST la
+// Bascule popover ↔ feuille : le déclencheur `collapseLabel` du Button se réduit
+// en icône seule sous `@container (max-width: 767px)`, en réagissant au conteneur
+// ancêtre le plus proche (ex. la `Page`, qui déclare `container: … / inline-size`).
+// On observe CE MÊME conteneur pour rendre, dès que le bouton devient une icône,
+// une feuille (bottom sheet) au lieu du popover — comme la recette mobile. Sans
+// conteneur ancêtre ou sans ResizeObserver (SSR, tests), on reste en popover.
+
+function useTriggerCollapsed(
+  ref: React.RefObject<HTMLElement | null>,
+  enabled: boolean,
+): boolean {
+  const [collapsed, setCollapsed] = useState(false);
+  useEffect(() => {
+    if (!enabled) {
+      setCollapsed(false);
+      return undefined;
+    }
+    const start = ref.current;
+    if (!start || typeof ResizeObserver === "undefined" || typeof getComputedStyle === "undefined") {
+      return undefined;
+    }
+    // Conteneur ancêtre le plus proche établissant un contexte de requête
+    // conteneur (`container-type` ≠ `normal`) — celui que résout le `@container`
+    // du Button. Aucun → le bouton ne se replie jamais → on reste en popover.
+    let el: HTMLElement | null = start.parentElement;
+    let container: HTMLElement | null = null;
+    while (el) {
+      const ct = getComputedStyle(el).containerType;
+      if (ct && ct !== "normal") {
+        container = el;
+        break;
+      }
+      el = el.parentElement;
+    }
+    if (!container) {
+      setCollapsed(false);
+      return undefined;
+    }
+    const ro = new ResizeObserver((entries) => {
+      const width = entries[0]?.contentRect.width ?? 0;
+      // Le Button se replie à `max-width: 767px` → largeur conteneur < 768.
+      setCollapsed(width > 0 && width < 768);
+    });
+    ro.observe(container);
+    return () => ro.disconnect();
+  }, [ref, enabled]);
+  return collapsed;
+}
+
+// -----------------------------------------------------------------------
+// FiltresPanel — bouton « Filtres » + panneau. Desktop (bouton large) : popover
+// à deux volets. Compact (bouton réduit en icône seule) : feuille (bottom sheet)
+// en drill-down, comme la recette mobile — MÊME source (`FiltresSheet`). C'EST la
 // popup partagée. `scrollClassName` / `textActionClassName` viennent du CSS de
 // la story (scrollbar fine + bouton texte sans soulignement).
 
@@ -446,6 +508,7 @@ export function FiltresPanel({
   onChange,
   views,
   onSaveView,
+  onDeleteView,
   role,
   collapseLabel,
   scrollClassName,
@@ -455,10 +518,16 @@ export function FiltresPanel({
   onChange: (f: Filters) => void;
   views: SavedView[];
   onSaveView: (name: string) => void;
+  /** Supprimer un filtre enregistré (croix de la feuille compacte). Absent =
+   *  pas de suppression proposée. Sans effet en popover (les vues y vivent
+   *  dans l'action `SavedSearchesMenu` voisine). */
+  onDeleteView?: (id: string) => void;
   /** Rôle courant : filtre les facettes visibles (déclaratif). Absent = toutes. */
   role?: Role;
   /** Replie le déclencheur en icône seule (carré) sous le breakpoint conteneur
-   *  — pour les toolbars responsive. L'`aria-label` reste « Filtres ». */
+   *  — pour les toolbars responsive. L'`aria-label` reste « Filtres ». Dès que
+   *  le bouton est réduit en icône, le panneau s'ouvre en feuille (bottom sheet)
+   *  au lieu du popover (comme la recette mobile). */
   collapseLabel?: boolean;
   scrollClassName?: string;
   textActionClassName?: string;
@@ -467,6 +536,9 @@ export function FiltresPanel({
   const [cat, setCat] = useState<string>("societe");
   const [query, setQuery] = useState("");
   const [savingName, setSavingName] = useState<string | null>(null);
+  const rootRef = useRef<HTMLSpanElement>(null);
+  // Dès que le déclencheur `collapseLabel` se réduit en icône seule → feuille.
+  const collapsed = useTriggerCollapsed(rootRef, !!collapseLabel);
 
   const toggleMulti = (key: MultiKey, value: string) => {
     const has = filters[key].includes(value);
@@ -495,23 +567,52 @@ export function FiltresPanel({
     setSavingName(null);
   };
 
+  const label = total > 0 ? `Filtres, ${total} critère${total > 1 ? "s" : ""} actif${total > 1 ? "s" : ""}` : "Filtres";
+  // `managed` = chemin feuille : c'est nous qui ouvrons (onPress) ; en popover
+  // c'est le DialogTrigger de Popup qui gère le press.
+  const triggerBtn = (managed: boolean): ReactElement => (
+    <Button
+      appearance="outlined"
+      iconBefore="Tune"
+      {...(collapseLabel ? { collapseLabel: true, shape: "square" as const } : {})}
+      aria-label={label}
+      {...(managed ? { onPress: () => setOpen(true), "aria-haspopup": "dialog" as const, "aria-expanded": open } : {})}
+    >
+      Filtres
+      {total > 0 && <Badge label={String(total)} appearance="information" importance="high" />}
+    </Button>
+  );
+
+  // Compact (icône seule) → feuille (bottom sheet), drill-down, comme le mobile.
+  if (collapseLabel && collapsed) {
+    return (
+      <span ref={rootRef} style={{ display: "inline-flex" }}>
+        {triggerBtn(true)}
+        <FiltresSheet
+          filters={filters}
+          onChange={onChange}
+          views={views}
+          onSaveView={onSaveView}
+          onApplyView={(v) => onChange(v.filters)}
+          {...(onDeleteView ? { onDeleteView } : {})}
+          role={role}
+          isOpen={open}
+          onOpenChange={setOpen}
+          scrollClassName={scrollClassName}
+          textActionClassName={textActionClassName}
+        />
+      </span>
+    );
+  }
+
   return (
+    <span ref={rootRef} style={{ display: "inline-flex" }}>
     <Popup
       isOpen={open}
       onOpenChange={setOpen}
       placement="bottom-left"
       style={{ width: 720, maxWidth: "calc(100vw - 32px)", maxHeight: "min(calc(100vh - 24px), 520px)", overflow: "hidden" }}
-      trigger={
-        <Button
-          appearance="outlined"
-          iconBefore="Tune"
-          {...(collapseLabel ? { collapseLabel: true, shape: "square" as const } : {})}
-          aria-label={total > 0 ? `Filtres, ${total} critère${total > 1 ? "s" : ""} actif${total > 1 ? "s" : ""}` : "Filtres"}
-        >
-          Filtres
-          {total > 0 && <Badge label={String(total)} appearance="information" importance="high" />}
-        </Button>
-      }
+      trigger={triggerBtn(false)}
     >
       <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
         <div style={{ flex: "none", padding: "var(--space200) var(--space200) var(--space150)" }}>
@@ -645,6 +746,312 @@ export function FiltresPanel({
         </div>
       </div>
     </Popup>
+    </span>
+  );
+}
+
+// -----------------------------------------------------------------------
+// FiltresSheet — panneau de filtres en FEUILLE (bottom sheet), drill-down. C'EST
+// la feuille partagée : la recette mobile ET FiltresPanel compact la rendent à
+// l'identique (source unique). Ouverture contrôlée (`isOpen` / `onOpenChange`) ;
+// le déclencheur est rendu par l'appelant. Zéro CSS local (D11) : seules la
+// scrollbar fine (`scrollClassName`) et le bouton texte sans soulignement
+// (`textActionClassName`) viennent du CSS de la story ; tout le reste est inline.
+
+export function FiltresSheet({
+  filters,
+  onChange,
+  views,
+  onSaveView,
+  onApplyView,
+  onDeleteView,
+  role,
+  isOpen,
+  onOpenChange,
+  scrollClassName,
+  textActionClassName,
+}: {
+  filters: Filters;
+  onChange: (f: Filters) => void;
+  views: SavedView[];
+  onSaveView: (name: string) => void;
+  /** Appliquer un filtre enregistré. La feuille se ferme ensuite (choix fait). */
+  onApplyView: (view: SavedView) => void;
+  /** Supprimer un filtre enregistré. Absent = pas de croix de suppression. */
+  onDeleteView?: (id: string) => void;
+  /** Rôle courant : filtre les facettes visibles (déclaratif). Absent = toutes. */
+  role?: Role;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  scrollClassName?: string;
+  textActionClassName?: string;
+}): ReactElement {
+  const [facet, setFacet] = useState<string | null>(null);
+  const [showViews, setShowViews] = useState(false);
+  const [savingName, setSavingName] = useState<string | null>(null);
+  // Recherche locale dans une catégorie à liste longue (ex. « Secteurs »).
+  const [optionQuery, setOptionQuery] = useState("");
+
+  const visibleFacets = facetsForRole(role);
+  const patch = (p: Partial<Filters>) => onChange({ ...filters, ...p });
+  const toggleMulti = (key: MultiKey, value: string) => {
+    const has = filters[key].includes(value);
+    onChange({ ...filters, [key]: has ? filters[key].filter((v) => v !== value) : [...filters[key], value] });
+  };
+  const clearAll = () => onChange(emptyFilters());
+
+  const results = filteredAgents(filters);
+  const total = totalActive(filters);
+  // Filtre enregistré actuellement appliqué (si les filtres courants
+  // correspondent à un enregistrement) : son nom s'affiche sur la ligne.
+  const appliedView = total > 0 ? views.find((v) => sameFilters(v.filters, filters)) : undefined;
+  const detailDef = facet ? (visibleFacets.find((d) => d.key === facet) ?? null) : null;
+
+  const openFacet = (key: string) => {
+    setOptionQuery("");
+    setFacet(key);
+  };
+  const resetDrill = () => {
+    setFacet(null);
+    setShowViews(false);
+    setSavingName(null);
+    setOptionQuery("");
+  };
+  const applyView = (v: SavedView) => {
+    onApplyView(v);
+    resetDrill();
+    onOpenChange(false);
+  };
+  const saveView = () => {
+    const name = (savingName ?? "").trim();
+    if (!name) return;
+    onSaveView(name);
+    setSavingName(null);
+  };
+
+  // En-tête de la feuille : le chevron retour occupe un emplacement réservé dans
+  // les vues détail / recherches → le titre part de la même colonne partout.
+  const back = () => {
+    if (showViews) {
+      setShowViews(false);
+      setSavingName(null);
+    } else {
+      setFacet(null);
+      setOptionQuery("");
+    }
+  };
+  const sheetTitle = showViews
+    ? "Filtres enregistrés"
+    : savingName !== null
+      ? "Enregistrer ces filtres"
+      : detailDef
+        ? detailDef.label
+        : "Filtres";
+
+  const optionControls = (def: FacetDef): ReactElement => {
+    if (def.kind === "switches") {
+      return (
+        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)" }}>
+          <Switch isChecked={filters.sousTraitants} onChange={(v) => patch({ sousTraitants: v })}>
+            Inclure les sous-traitants
+          </Switch>
+          <Switch isChecked={filters.cdiOnly} onChange={(v) => patch({ cdiOnly: v })}>
+            CDI uniquement
+          </Switch>
+        </div>
+      );
+    }
+    if (def.kind === "dispo") {
+      return (
+        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)" }}>
+          <RadioGroup aria-label="Disponibilités" value={filters.dispoMode} onChange={(v) => patch({ dispoMode: v })}>
+            {DISPO_MODES.map((m) => (
+              <Radio key={m.id} value={m.id} label={m.label} />
+            ))}
+          </RadioGroup>
+          {/* CAS DUR « plage de dates » : une plage Du → Au (deux DatePicker),
+              plus une plage horaire début → fin. */}
+          <div style={{ display: "flex", gap: "var(--space150)", flexWrap: "wrap", alignItems: "flex-end" }}>
+            <DatePicker aria-label="Du (date de début)" defaultValue={parseDate("2026-08-20")} />
+            <DatePicker aria-label="Au (date de fin)" defaultValue={parseDate("2026-08-27")} />
+            <TimePicker aria-label="Heure de début" defaultValue={new Time(18, 0)} />
+            <TimePicker aria-label="Heure de fin" defaultValue={new Time(23, 0)} />
+          </div>
+        </div>
+      );
+    }
+    const key = def.key as MultiKey;
+    const domain = DOMAINS[key];
+    // Liste longue → barre de recherche pour filtrer les options par texte.
+    const searchable = domain.length > 8;
+    const query = optionQuery.trim().toLowerCase();
+    const shown = searchable && query ? domain.filter((v) => v.toLowerCase().includes(query)) : domain;
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space150)" }}>
+        {searchable ? (
+          <SearchField
+            aria-label={`Rechercher dans ${def.label}`}
+            placeholder="Rechercher"
+            value={optionQuery}
+            onChange={setOptionQuery}
+          />
+        ) : null}
+        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
+          {shown.map((value) => {
+            const n = optionCount(filters, key, value);
+            const checked = filters[key].includes(value);
+            return (
+              <div key={value} style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
+                <span style={{ flex: "1 1 auto", minWidth: 0 }}>
+                  <Checkbox isChecked={checked} isDisabled={n === 0 && !checked} onChange={() => toggleMulti(key, value)} label={value} />
+                </span>
+                <span style={{ flex: "none", fontSize: "var(--font-size-ui-xs)", color: "var(--text-subtlest)", fontVariantNumeric: "tabular-nums" }}>{n}</span>
+              </div>
+            );
+          })}
+          {shown.length === 0 ? (
+            <p style={{ padding: "var(--space200) 0", textAlign: "center", color: "var(--text-subtlest)", fontSize: 13 }}>Aucune option ne correspond.</p>
+          ) : null}
+        </div>
+      </div>
+    );
+  };
+
+  const facetValue = (d: FacetDef): string => {
+    if (d.kind === "dispo") return filters.dispoMode === "tous" ? "" : (DISPO_MODES.find((m) => m.id === filters.dispoMode)?.label ?? "");
+    if (d.kind === "multi" && facetCount(filters, d.key) === 1) return filters[d.key as MultiKey][0] ?? "";
+    return "";
+  };
+
+  // Styles inline (D11) repris des classes de la recette mobile : libellé de
+  // facette prioritaire (ne rétrécit pas), valeur en fin de ligne qui se tronque.
+  const facetLabelStyle = { flex: "none", fontFamily: "var(--font-family-primary)", fontSize: "var(--font-size-ui-s)", lineHeight: "var(--line-height-ui-s)", color: "var(--text-default)", whiteSpace: "nowrap" } as const;
+  const facetTrailingStyle = { flex: "0 1 auto", marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: "var(--space100)", minWidth: 0, color: "var(--text-subtlest)" } as const;
+  const facetValueStyle = { minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: "var(--font-size-ui-s)", color: "var(--text-subtlest)" } as const;
+  // `textTransform: none` en inline bat le `.head` du DS (capitales) sans classe.
+  const sectionTitleStyle = { textTransform: "none" } as const;
+
+  return (
+    <Drawer
+      isOpen={isOpen}
+      onOpenChange={(o) => {
+        onOpenChange(o);
+        if (!o) resetDrill();
+      }}
+      placement="bottom"
+      swipeable
+      size="auto"
+      style={{ maxHeight: "85dvh" }}
+      aria-label="Filtres"
+    >
+      <DrawerHeader>
+        {/* Chevron retour dans les vues détail / recherches (drill-down). */}
+        {showViews || detailDef ? (
+          <Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Retour" onPress={back} />
+        ) : null}
+        <strong style={{ flex: 1, minWidth: 0, fontSize: "var(--font-size-ui-m)", fontWeight: "var(--font-weight-semibold)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{sheetTitle}</strong>
+        {!showViews && savingName === null ? (
+          <Button appearance="link" className={textActionClassName} onPress={clearAll} isDisabled={total === 0}>
+            Réinitialiser
+          </Button>
+        ) : null}
+      </DrawerHeader>
+
+      <Divider />
+
+      <DrawerBody className={scrollClassName}>
+        {showViews ? (
+          views.length === 0 ? (
+            <p style={{ padding: "var(--space300) 0", textAlign: "center", color: "var(--text-subtlest)", fontSize: 13 }}>Aucun filtre enregistré.</p>
+          ) : (
+            <List aria-label="Filtres enregistrés">
+              {views.map((v) => {
+                const n = totalActive(v.filters);
+                return (
+                  <ListItemButton key={v.id} onPress={() => applyView(v)}>
+                    <ListItemText primary={v.name} secondary={`${n} filtre${n > 1 ? "s" : ""} appliqué${n > 1 ? "s" : ""}`} />
+                    {onDeleteView ? (
+                      <ListItemSecondaryAction>
+                        <Button appearance="subtle" iconBefore="Close" aria-label={`Supprimer ${v.name}`} onPress={() => onDeleteView(v.id)} />
+                      </ListItemSecondaryAction>
+                    ) : null}
+                  </ListItemButton>
+                );
+              })}
+            </List>
+          )
+        ) : savingName !== null ? (
+          // Enregistrement : vue FOCALISÉE — seuls le champ et ses deux actions
+          // sont présents/actifs. Facettes, pied « Voir N » et « Réinitialiser »
+          // disparaissent le temps de nommer l'enregistrement.
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)", paddingBlock: "var(--space100)" }}>
+            <TextField aria-label="Nom de l'enregistrement" placeholder="Nom de l'enregistrement" value={savingName} onChange={setSavingName} />
+            <div style={{ display: "flex", gap: "var(--space100)" }}>
+              <Button appearance="contained" color="comete" onPress={saveView} isDisabled={!savingName.trim()} style={{ flex: 1 }}>
+                Enregistrer
+              </Button>
+              <Button appearance="subtle" onPress={() => setSavingName(null)} style={{ flex: 1 }}>
+                Annuler
+              </Button>
+            </div>
+          </div>
+        ) : detailDef ? (
+          optionControls(detailDef)
+        ) : (
+          // Colonne flex : l'espace autour du filet entre les deux groupes est
+          // porté par le `gap` (une valeur, un endroit), jamais par une marge.
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space150)" }}>
+            {/* Bloc « enregistrement » : action + collection. */}
+            <List aria-label="Filtres enregistrés">
+              <ListHead isFlush style={sectionTitleStyle}>Enregistrement</ListHead>
+              <ListItemButton isFlush onPress={() => setSavingName("")} isDisabled={total === 0}>
+                <ListItemText primary="Enregistrer ces filtres" />
+              </ListItemButton>
+              <ListItemButton isFlush onPress={() => setShowViews(true)}>
+                <span style={facetLabelStyle}>Filtres enregistrés</span>
+                <span style={facetTrailingStyle}>
+                  {appliedView ? <span style={facetValueStyle}>{appliedView.name}</span> : null}
+                  <Icon icon="ChevronRight" color="subtlest" />
+                </span>
+              </ListItemButton>
+            </List>
+
+            <Divider />
+
+            {/* Facettes — libellé prioritaire, valeur en fin de ligne tronquée. */}
+            <List aria-label="Critères">
+              <ListHead isFlush style={sectionTitleStyle}>Critères</ListHead>
+              {visibleFacets.map((d) => {
+                const c = facetCount(filters, d.key);
+                const val = facetValue(d);
+                return (
+                  <ListItemButton key={d.key} isFlush onPress={() => openFacet(d.key)}>
+                    <span style={facetLabelStyle}>{d.label}</span>
+                    <span style={facetTrailingStyle}>
+                      {val ? (
+                        <span style={facetValueStyle}>{val}</span>
+                      ) : c > 0 ? (
+                        <Badge label={String(c)} appearance="information" importance="high" />
+                      ) : null}
+                      <Icon icon="ChevronRight" color="subtlest" />
+                    </span>
+                  </ListItemButton>
+                );
+              })}
+            </List>
+          </div>
+        )}
+      </DrawerBody>
+
+      {/* Pied masqué pendant l'enregistrement : aucun autre élément actif. */}
+      {savingName === null ? (
+        <DrawerFooter>
+          <Button appearance="contained" color="comete" onPress={() => onOpenChange(false)} style={{ width: "100%" }}>
+            Voir {results.length} agent{results.length > 1 ? "s" : ""}
+          </Button>
+        </DrawerFooter>
+      ) : null}
+    </Drawer>
   );
 }
 

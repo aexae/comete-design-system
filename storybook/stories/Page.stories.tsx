@@ -254,8 +254,10 @@ function ListingPage({ leading }: { leading?: React.ReactNode }) {
           </ButtonGroup>
         }
       />
-      {/* Tags des critères actifs (façon option B) — vide tant qu'aucun filtre. */}
-      <div style={{ paddingInline: "var(--page-gutter)" }}>
+      {/* Tags des critères actifs (façon option B) — vide tant qu'aucun filtre.
+          Masqués sous le breakpoint compact : en mobile, les critères sont portés
+          par le badge du bouton « Filtres » et la feuille (drill-down). */}
+      <div className={css["hideBlockUnderCompact"]} style={{ paddingInline: "var(--page-gutter)" }}>
         <ActiveFilterTags filters={f} onChange={setF} textActionClassName={filtresCss["textAction"]} />
       </div>
       <Page.Body>

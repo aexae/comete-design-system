@@ -12,66 +12,39 @@
 // SecondaryAction). La logique (comptes vivants, mini-recherche, vues
 // enregistrées) vient du DCLogic de la maquette.
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ReactElement } from "react";
 import { within, screen, userEvent, waitFor, expect } from "storybook/test";
 import { MINIMAL_VIEWPORTS } from "storybook/viewport";
-import { parseDate, Time } from "@internationalized/date";
 import css from "./FiltresOptionB.stories.module.css";
 import {
   Button,
   Badge,
   Tag,
   SearchField,
-  TextField,
-  Icon,
-  Checkbox,
-  Switch,
-  RadioGroup,
-  Radio,
-  DatePicker,
-  TimePicker,
   Avatar,
-  Divider,
-  Drawer,
-  DrawerHeader,
-  DrawerBody,
-  DrawerFooter,
   List,
-  ListHead,
   ListItem,
-  ListItemButton,
   ListItemText,
   ListItemAvatar,
   ListItemTrailing,
-  ListItemSecondaryAction,
 } from "@aexae/comete-design-system/components";
 import {
   FiltresPanel,
+  FiltresSheet,
   SavedSearchesMenu,
   ActiveFilterTags,
   ResultsTable,
   useSavedViews,
   initialFilters,
-  emptyFilters,
   filteredAgents,
   totalActive,
-  sameFilters,
-  optionCount,
-  facetCount,
-  DOMAINS,
-  DISPO_MODES,
   DISPO_TAG,
-  FACET_DEFS,
-  INITIAL_VIEWS,
   initialsOf,
   AGENTS,
   facetsForRole,
   effectiveFilters,
   type Filters,
-  type FacetDef,
-  type MultiKey,
-  type SavedView,
   type Role,
 } from "./_filtresOptionB";
 
@@ -139,145 +112,11 @@ function FiltresOptionB({ role }: { role?: Role }): ReactElement {
 function FiltresOptionBMobile(): ReactElement {
   const [f, setF] = useState<Filters>(initialFilters);
   const [filterOpen, setFilterOpen] = useState(false);
-  const [facet, setFacet] = useState<string | null>(null);
-  const [showViews, setShowViews] = useState(false);
-  const [views, setViews] = useState<SavedView[]>(INITIAL_VIEWS);
-  const [savingName, setSavingName] = useState<string | null>(null);
-  // Recherche locale dans une catégorie à liste longue (ex. « Secteurs »).
-  const [optionQuery, setOptionQuery] = useState("");
-  const viewSeq = useRef(0);
-
-  const openFacet = (key: string) => {
-    setOptionQuery("");
-    setFacet(key);
-  };
+  const { views, save, remove } = useSavedViews();
 
   const patch = (p: Partial<Filters>) => setF((prev) => ({ ...prev, ...p }));
-  const toggleMulti = (key: MultiKey, value: string) =>
-    setF((prev) => {
-      const has = prev[key].includes(value);
-      return { ...prev, [key]: has ? prev[key].filter((v) => v !== value) : [...prev[key], value] };
-    });
-  const clearAll = () => setF(emptyFilters());
-
   const results = useMemo(() => filteredAgents(f), [f]);
   const total = totalActive(f);
-  // Filtre enregistré actuellement appliqué (si les filtres courants
-  // correspondent à un enregistrement) : son nom s'affiche sur la ligne.
-  const appliedView = total > 0 ? views.find((v) => sameFilters(v.filters, f)) : undefined;
-  const detailDef = facet ? (FACET_DEFS.find((d) => d.key === facet) ?? null) : null;
-
-  const closeFilter = () => {
-    setFilterOpen(false);
-    setFacet(null);
-    setShowViews(false);
-    setSavingName(null);
-    setOptionQuery("");
-  };
-  const applyView = (v: SavedView) => {
-    setF(v.filters);
-    closeFilter();
-  };
-  const deleteView = (id: string) => setViews((vs) => vs.filter((v) => v.id !== id));
-  const saveView = () => {
-    const name = (savingName ?? "").trim();
-    if (!name) return;
-    viewSeq.current += 1;
-    setViews((vs) => [...vs, { id: `vm-${viewSeq.current}`, name, filters: f }]);
-    setSavingName(null);
-  };
-
-  const optionControls = (def: FacetDef): ReactElement => {
-    if (def.kind === "switches") {
-      return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)" }}>
-          <Switch isChecked={f.sousTraitants} onChange={(v) => patch({ sousTraitants: v })}>
-            Inclure les sous-traitants
-          </Switch>
-          <Switch isChecked={f.cdiOnly} onChange={(v) => patch({ cdiOnly: v })}>
-            CDI uniquement
-          </Switch>
-        </div>
-      );
-    }
-    if (def.kind === "dispo") {
-      return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)" }}>
-          <RadioGroup aria-label="Disponibilités" value={f.dispoMode} onChange={(v) => patch({ dispoMode: v })}>
-            {DISPO_MODES.map((m) => (
-              <Radio key={m.id} value={m.id} label={m.label} />
-            ))}
-          </RadioGroup>
-          <div style={{ display: "flex", gap: "var(--space150)", flexWrap: "wrap" }}>
-            <DatePicker aria-label="Date" defaultValue={parseDate("2026-08-20")} />
-            <TimePicker aria-label="Heure de début" defaultValue={new Time(18, 0)} />
-            <TimePicker aria-label="Heure de fin" defaultValue={new Time(23, 0)} />
-          </div>
-        </div>
-      );
-    }
-    const key = def.key as MultiKey;
-    const domain = DOMAINS[key];
-    // Liste longue → barre de recherche pour filtrer les options par texte.
-    const searchable = domain.length > 8;
-    const q = optionQuery.trim().toLowerCase();
-    const shown = searchable && q ? domain.filter((v) => v.toLowerCase().includes(q)) : domain;
-    return (
-      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space150)" }}>
-        {searchable ? (
-          <SearchField
-            aria-label={`Rechercher dans ${def.label}`}
-            placeholder="Rechercher"
-            value={optionQuery}
-            onChange={setOptionQuery}
-          />
-        ) : null}
-        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
-          {shown.map((value) => {
-            const n = optionCount(f, key, value);
-            const checked = f[key].includes(value);
-            return (
-              <div key={value} className={css["optionRow"]}>
-                <span className={css["optionMain"]}>
-                  <Checkbox isChecked={checked} isDisabled={n === 0 && !checked} onChange={() => toggleMulti(key, value)} label={value} />
-                </span>
-                <span className={css["optionCount"]}>{n}</span>
-              </div>
-            );
-          })}
-          {shown.length === 0 ? (
-            <p style={{ padding: "var(--space200) 0", textAlign: "center", color: "var(--text-subtlest)", fontSize: 13 }}>Aucune option ne correspond.</p>
-          ) : null}
-        </div>
-      </div>
-    );
-  };
-
-  const facetValue = (d: FacetDef): string => {
-    if (d.kind === "dispo") return f.dispoMode === "tous" ? "" : DISPO_MODES.find((m) => m.id === f.dispoMode)!.label;
-    if (d.kind === "multi" && facetCount(f, d.key) === 1) return f[d.key as MultiKey][0];
-    return "";
-  };
-
-  // En-tête de la feuille : le chevron retour occupe un emplacement réservé
-  // dans les DEUX vues (racine sans retour, détail/recherches avec) → le titre
-  // commence au même x partout (§5).
-  const back = () => {
-    if (showViews) {
-      setShowViews(false);
-      setSavingName(null);
-    } else {
-      setFacet(null);
-      setOptionQuery("");
-    }
-  };
-  const sheetTitle = showViews
-    ? "Filtres enregistrés"
-    : savingName !== null
-      ? "Enregistrer ces filtres"
-      : detailDef
-        ? detailDef.label
-        : "Filtres";
 
   return (
     <div
@@ -305,14 +144,17 @@ function FiltresOptionBMobile(): ReactElement {
           appearance={total > 0 ? "contained" : "outlined"}
           iconBefore="Tune"
           aria-label={total > 0 ? `Filtres, ${total} critère${total > 1 ? "s" : ""} actif${total > 1 ? "s" : ""}` : "Filtres"}
-          onPress={() => {
-            setFacet(null);
-            setFilterOpen(true);
-          }}
+          aria-haspopup="dialog"
+          aria-expanded={filterOpen}
+          onPress={() => setFilterOpen(true)}
         >
           {total > 0 && <Badge label={String(total)} appearance="information-inverted" importance="high" />}
         </Button>
       </div>
+
+      {/* Pas de rangée de tags en mobile : les critères actifs sont portés par le
+          badge du bouton Filtres et la feuille (drill-down). La rangée « FILTRES :
+          … » est une affordance desktop uniquement. */}
 
       {/* Liste des agents. */}
       <div style={{ flex: 1, overflowY: "auto" }}>
@@ -335,145 +177,20 @@ function FiltresOptionBMobile(): ReactElement {
         )}
       </div>
 
-      {/* Feuille de filtres — Drawer swipeable (placement bas), drill-down.
-          `size="auto"` → la feuille épouse son contenu, bornée à 85dvh (§3) ;
-          le corps défile au-delà. Le retrait horizontal et la barre de
-          défilement thématisée viennent des sous-composants DS eux-mêmes
-          (DrawerHeader / DrawerBody / DrawerFooter, tous en `--space300`) :
-          les lignes `ListItemButton isFlush` s'alignent sur le padding du
-          corps (§1), le titre part de la même colonne (§5). */}
-      <Drawer
+      {/* Feuille de filtres — MÊME source que FiltresPanel compact (FiltresSheet).
+          Bottom sheet swipeable, drill-down facettes + filtres enregistrés. */}
+      <FiltresSheet
+        filters={f}
+        onChange={setF}
+        views={views}
+        onSaveView={(name) => save(name, f)}
+        onApplyView={(v) => setF(v.filters)}
+        onDeleteView={remove}
         isOpen={filterOpen}
-        onOpenChange={(o) => {
-          setFilterOpen(o);
-          if (!o) {
-            setFacet(null);
-            setShowViews(false);
-            setSavingName(null);
-          }
-        }}
-        placement="bottom"
-        swipeable
-        size="auto"
-        style={{ maxHeight: "85dvh" }}
-        aria-label="Filtres"
-      >
-        <DrawerHeader>
-          {/* Chevron retour dans les vues détail / recherches (drill-down). */}
-          {showViews || detailDef ? (
-            <Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Retour" onPress={back} />
-          ) : null}
-          <strong style={{ flex: 1, minWidth: 0, fontSize: "var(--font-size-ui-m)", fontWeight: "var(--font-weight-semibold)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{sheetTitle}</strong>
-          {!showViews && savingName === null ? (
-            <Button appearance="link" className={css["textAction"]} onPress={clearAll} isDisabled={total === 0}>
-              Réinitialiser
-            </Button>
-          ) : null}
-        </DrawerHeader>
-
-        <Divider />
-
-          <DrawerBody className={css["scroll"]}>
-            {showViews ? (
-              views.length === 0 ? (
-                <p style={{ padding: "var(--space300) 0", textAlign: "center", color: "var(--text-subtlest)", fontSize: 13 }}>Aucun filtre enregistré.</p>
-              ) : (
-                <List aria-label="Filtres enregistrés">
-                  {views.map((v) => {
-                    const n = totalActive(v.filters);
-                    return (
-                      <ListItemButton key={v.id} onPress={() => applyView(v)}>
-                        <ListItemText primary={v.name} secondary={`${n} filtre${n > 1 ? "s" : ""} appliqué${n > 1 ? "s" : ""}`} />
-                        <ListItemSecondaryAction>
-                          <Button appearance="subtle" iconBefore="Close" aria-label={`Supprimer ${v.name}`} onPress={() => deleteView(v.id)} />
-                        </ListItemSecondaryAction>
-                      </ListItemButton>
-                    );
-                  })}
-                </List>
-              )
-            ) : savingName !== null ? (
-              // Enregistrement : vue FOCALISÉE — seuls le champ et ses deux
-              // actions sont présents/actifs. Facettes, pied « Voir N » et
-              // « Réinitialiser » disparaissent le temps de nommer l'enregistrement.
-              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)", paddingBlock: "var(--space100)" }}>
-                <TextField aria-label="Nom de l'enregistrement" placeholder="Nom de l'enregistrement" value={savingName} onChange={setSavingName} />
-                <div style={{ display: "flex", gap: "var(--space100)" }}>
-                  <Button appearance="contained" color="comete" onPress={saveView} isDisabled={!savingName.trim()} style={{ flex: 1 }}>
-                    Enregistrer
-                  </Button>
-                  <Button appearance="subtle" onPress={() => setSavingName(null)} style={{ flex: 1 }}>
-                    Annuler
-                  </Button>
-                </div>
-              </div>
-            ) : detailDef ? (
-              optionControls(detailDef)
-            ) : (
-              // Colonne flex : l'espace autour du filet entre les deux groupes
-              // est porté par le `gap` (une valeur, un endroit), jamais par une
-              // marge sur le filet.
-              <div className={css["rootGroups"]}>
-                {/* Bloc « enregistrement » : action + collection.
-                    Aucun picto (§2) → texte aligné sur la colonne unique. */}
-                <List aria-label="Filtres enregistrés">
-                  <ListHead isFlush className={css["sectionTitle"]}>Enregistrement</ListHead>
-                  <ListItemButton isFlush onPress={() => setSavingName("")} isDisabled={total === 0}>
-                    <ListItemText primary="Enregistrer ces filtres" />
-                  </ListItemButton>
-                  <ListItemButton isFlush onPress={() => setShowViews(true)}>
-                    {/* Même patron que les facettes : libellé prioritaire
-                        (`flex: none`), le nom appliqué tronque avant lui (§4). */}
-                    <span className={css["facetLabel"]}>Filtres enregistrés</span>
-                    {/* Pas de badge : on laisse apparaître le nom du filtre
-                        enregistré appliqué, quand il y en a un. */}
-                    <span className={css["facetTrailing"]}>
-                      {appliedView ? <span className={css["facetValue"]}>{appliedView.name}</span> : null}
-                      <Icon icon="ChevronRight" color="subtlest" />
-                    </span>
-                  </ListItemButton>
-                </List>
-
-                {/* Filet — de bord à bord de la colonne de contenu (il vit dans
-                    le padding du DrawerBody, même retrait que le reste) ;
-                    l'espace autour vient du `gap`, pas d'une marge. */}
-                <Divider />
-
-                {/* Facettes — libellé en ListItemText (flex:1 base 0) : c'est la
-                    VALEUR qui se tronque en premier, pas le libellé (§4 racine). */}
-                <List aria-label="Critères">
-                  <ListHead isFlush className={css["sectionTitle"]}>Critères</ListHead>
-                  {FACET_DEFS.map((d) => {
-                    const c = facetCount(f, d.key);
-                    const val = facetValue(d);
-                    return (
-                      <ListItemButton key={d.key} isFlush onPress={() => openFacet(d.key)}>
-                        <span className={css["facetLabel"]}>{d.label}</span>
-                        <span className={css["facetTrailing"]}>
-                          {val ? (
-                            <span className={css["facetValue"]}>{val}</span>
-                          ) : c > 0 ? (
-                            <Badge label={String(c)} appearance="information" importance="high" />
-                          ) : null}
-                          <Icon icon="ChevronRight" color="subtlest" />
-                        </span>
-                      </ListItemButton>
-                    );
-                  })}
-                </List>
-              </div>
-            )}
-          </DrawerBody>
-
-          {/* Pied masqué pendant l'enregistrement : aucun autre élément actif. */}
-          {savingName === null ? (
-            <DrawerFooter>
-              <Button appearance="contained" color="comete" onPress={closeFilter} style={{ width: "100%" }}>
-                Voir {results.length} agent{results.length > 1 ? "s" : ""}
-              </Button>
-            </DrawerFooter>
-          ) : null}
-      </Drawer>
+        onOpenChange={setFilterOpen}
+        scrollClassName={css["scroll"]}
+        textActionClassName={css["textAction"]}
+      />
     </div>
   );
 }
