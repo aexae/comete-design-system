@@ -1,5 +1,5 @@
 {
-  "name": "Comète BI v0.9.8",
+  "name": "Comète BI v0.9.9",
   "$schema": "https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.157.json",
   "dataColors": [
     "#429AEF",
@@ -426,14 +426,7 @@
       "*": {
         "header": [
           {
-            "show": true,
-            "fontColor": {
-              "solid": {
-                "color": "#1E3661"
-              }
-            },
-            "fontFamily": "Segoe UI Semibold",
-            "fontSize": 10
+            "show": false
           }
         ],
         "items": [
@@ -471,6 +464,16 @@
                 "color": "#2467D1"
               }
             }
+          }
+        ],
+        "selection": [
+          {
+            "singleSelect": false
+          }
+        ],
+        "pendingChangesIcon": [
+          {
+            "show": false
           }
         ]
       }
@@ -544,7 +547,7 @@
             "$id": "default",
             "text": "Button",
             "fontFamily": "Segoe UI Semibold",
-            "fontSize": 12,
+            "fontSize": 10,
             "fontColor": {
               "solid": {
                 "color": "#FFFFFF"
@@ -575,7 +578,8 @@
               "solid": {
                 "color": "#2467D1"
               }
-            }
+            },
+            "transparency": 0
           },
           {
             "$id": "hover",
@@ -583,7 +587,8 @@
               "solid": {
                 "color": "#2354AA"
               }
-            }
+            },
+            "transparency": 0
           },
           {
             "$id": "selected",
@@ -591,7 +596,8 @@
               "solid": {
                 "color": "#224986"
               }
-            }
+            },
+            "transparency": 0
           },
           {
             "$id": "disabled",
@@ -599,7 +605,8 @@
               "solid": {
                 "color": "#F8F8F8"
               }
-            }
+            },
+            "transparency": 0
           }
         ],
         "icon": [
@@ -616,8 +623,7 @@
                 "color": "#B5C1C4"
               }
             },
-            "weight": 1,
-            "roundEdge": 6
+            "weight": 1
           }
         ],
         "title": [
@@ -641,6 +647,12 @@
             "bottom": 0,
             "left": 0,
             "right": 0
+          }
+        ],
+        "shape": [
+          {
+            "rectangleRoundedCurve": 6,
+            "roundEdge": 6
           }
         ]
       }

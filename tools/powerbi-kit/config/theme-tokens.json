@@ -132,7 +132,7 @@
   "visualStyles.image.*.padding[0].left": "--size0",
   "visualStyles.image.*.padding[0].right": "--size0",
   "visualStyles.actionButton.*.text[1].fontColor.solid.color": "--white-100",
-  "visualStyles.actionButton.*.text[1].fontSize": "--font-size-ui-xxs",
+  "visualStyles.actionButton.*.text[1].fontSize": "--font-size-ui-xxxs",
   "visualStyles.actionButton.*.text[1].bottomMargin": "--size050",
   "visualStyles.actionButton.*.text[2].fontColor.solid.color": "--text-disabled",
   "visualStyles.actionButton.*.fill[1].fillColor.solid.color": "--comete-blue-700",
@@ -142,9 +142,10 @@
   "visualStyles.actionButton.*.icon[0].iconSize": "--size300",
   "visualStyles.actionButton.*.outline[0].lineColor.solid.color": "--border-bold",
   "visualStyles.actionButton.*.outline[0].weight": "--size0125",
-  "visualStyles.actionButton.*.outline[0].roundEdge": "--control-radius-default",
   "visualStyles.actionButton.*.padding[0].top": "--size0",
   "visualStyles.actionButton.*.padding[0].bottom": "--size0",
   "visualStyles.actionButton.*.padding[0].left": "--size0",
-  "visualStyles.actionButton.*.padding[0].right": "--size0"
+  "visualStyles.actionButton.*.padding[0].right": "--size0",
+  "visualStyles.actionButton.*.shape[0].rectangleRoundedCurve": "--control-radius-default",
+  "visualStyles.actionButton.*.shape[0].roundEdge": "--control-radius-default"
 }
