@@ -1,10 +1,12 @@
 // Page — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 import {
   Page,
   Button,
   ButtonGroup,
   Avatar,
+  Cluster,
   Grid,
   Card,
   SearchField,
@@ -13,7 +15,17 @@ import {
 import { expect, within } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import {
+  FiltresPanel,
+  ActiveFilterTags,
+  SavedSearchesMenu,
+  initialFilters,
+  emptyFilters,
+  useSavedViews,
+  type Filters,
+} from "./_filtresOptionB";
 import css from "./Page.stories.module.css";
+import filtresCss from "./FiltresOptionB.stories.module.css";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -81,45 +93,76 @@ function Gutters({ children }: { children: React.ReactNode }) {
 /** Gabarit complet avec header, toolbar et body (cas typique listing). */
 export const Default: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("4559:6522") } },
-  render: () => (
-    <Gutters>
-      <Page globalActions={null}>
-        <Page.Bar
-          title="Agents"
-          trailing={<Avatar initials="AC" />}
-        />
-        <Page.Toolbar
-          search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
-          start={<Button iconBefore="Tune">Filtres</Button>}
-          end={
-            <ButtonGroup>
-              <Button color="comete" iconBefore="Add">Nouvel agent</Button>
-              <Button>Exporter</Button>
-            </ButtonGroup>
-          }
-        />
-        <Page.Body>
-          <SectionMessage appearance="information" style={{ marginBottom: 16}}>
-            Message d&apos;accueil (texte par défaut)
-          </SectionMessage>
-          <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
-            {Array.from({ length: 9 }, (_, i) => (
-              <Grid.Col key={i}>
-                <Card appearance="outlined">
-                  <div style={{ padding: "var(--space200)" }}>
-                    <strong>Agent {i + 1}</strong>
-                    <p style={{ margin: "var(--space100) 0 0" }}>
-                      Description courte
-                    </p>
-                  </div>
-                </Card>
-              </Grid.Col>
-            ))}
-          </Grid>
-        </Page.Body>
-      </Page>
-    </Gutters>
-  ),
+  render: function DefaultPage() {
+    // Toolbar « recette Filtres » (option B) : recherche + bouton « Filtres »
+    // (slot `filters`, popover deux volets) + « Filtres enregistrés » + actions,
+    // et les tags des critères actifs sous la barre. Composant partagé
+    // `_filtresOptionB`, identique à Recipes/Filtres et Page/Toolbar.
+    const [f, setF] = useState<Filters>(initialFilters);
+    const { views, save, remove } = useSavedViews();
+    return (
+      <Gutters>
+        <Page globalActions={null}>
+          <Page.Bar
+            title="Agents"
+            trailing={<Avatar initials="AC" />}
+          />
+          <Page.Toolbar
+            search={
+              <SearchField
+                aria-label="Rechercher"
+                placeholder="Rechercher un agent"
+                value={f.nameQuery}
+                onChange={(v) => setF({ ...f, nameQuery: v })}
+              />
+            }
+            filters={
+              <FiltresPanel
+                filters={f}
+                onChange={setF}
+                views={views}
+                onSaveView={(name) => save(name, f)}
+                scrollClassName={filtresCss["scroll"]}
+                textActionClassName={filtresCss["textAction"]}
+              />
+            }
+            end={
+              <Cluster gap="100">
+                <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
+                <ButtonGroup>
+                  <Button color="comete" iconBefore="Add">Nouvel agent</Button>
+                  <Button>Exporter</Button>
+                </ButtonGroup>
+              </Cluster>
+            }
+          />
+          {/* Tags des critères actifs, sous la barre. */}
+          <div style={{ paddingInline: "var(--page-gutter)" }}>
+            <ActiveFilterTags filters={f} onChange={setF} textActionClassName={filtresCss["textAction"]} />
+          </div>
+          <Page.Body>
+            <SectionMessage appearance="information" style={{ marginBottom: 16 }}>
+              Message d&apos;accueil (texte par défaut)
+            </SectionMessage>
+            <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
+              {Array.from({ length: 9 }, (_, i) => (
+                <Grid.Col key={i}>
+                  <Card appearance="outlined">
+                    <div style={{ padding: "var(--space200)" }}>
+                      <strong>Agent {i + 1}</strong>
+                      <p style={{ margin: "var(--space100) 0 0" }}>
+                        Description courte
+                      </p>
+                    </div>
+                  </Card>
+                </Grid.Col>
+              ))}
+            </Grid>
+          </Page.Body>
+        </Page>
+      </Gutters>
+    );
+  },
 };
 
 /** Titre très long — ellipsize proprement. */
@@ -159,6 +202,8 @@ export const LongTitle: Story = {
  * `Page.Body` = grille de cartes responsive.
  */
 function ListingPage({ leading }: { leading?: React.ReactNode }) {
+  const [f, setF] = useState<Filters>(emptyFilters);
+  const { views, save } = useSavedViews();
   return (
     <Page style={{ minHeight: "100vh" }}>
       <Page.Bar title="Agents" leading={leading} />
@@ -166,13 +211,27 @@ function ListingPage({ leading }: { leading?: React.ReactNode }) {
         /* Slot dédié : le layout borne le champ (160–240px), le compresse avec
            un plancher entre 480 et 767px, et le passe en PLEINE LARGEUR sur sa
            propre rangée sous 480px — le placeholder n'est jamais tronqué. */
-        search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
-        start={
-          /* Secondaire gris (contained neutral, Figma) + icône avant ;
-             icône seule (squared, alignée sur la toolbar) sous compact */
-          <Button collapseLabel shape="square" iconBefore="Tune" aria-label="Filtres">
-            Filtres
-          </Button>
+        search={
+          <SearchField
+            aria-label="Rechercher"
+            placeholder="Rechercher"
+            value={f.nameQuery}
+            onChange={(v) => setF({ ...f, nameQuery: v })}
+          />
+        }
+        /* Recette « Filtres » (option B) : le déclencheur se replie en icône
+           seule (squared) sous compact — comportement responsive conservé —
+           mais ouvre le vrai popover deux volets. */
+        filters={
+          <FiltresPanel
+            filters={f}
+            onChange={setF}
+            views={views}
+            onSaveView={(name) => save(name, f)}
+            collapseLabel
+            scrollClassName={filtresCss["scroll"]}
+            textActionClassName={filtresCss["textAction"]}
+          />
         }
         end={
           <ButtonGroup>
@@ -195,6 +254,12 @@ function ListingPage({ leading }: { leading?: React.ReactNode }) {
           </ButtonGroup>
         }
       />
+      {/* Tags des critères actifs (façon option B) — vide tant qu'aucun filtre.
+          Masqués sous le breakpoint compact : en mobile, les critères sont portés
+          par le badge du bouton « Filtres » et la feuille (drill-down). */}
+      <div className={css["hideBlockUnderCompact"]} style={{ paddingInline: "var(--page-gutter)" }}>
+        <ActiveFilterTags filters={f} onChange={setF} textActionClassName={filtresCss["textAction"]} />
+      </div>
       <Page.Body>
         <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
           {Array.from({ length: 9 }, (_, i) => (

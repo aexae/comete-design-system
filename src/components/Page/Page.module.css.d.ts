@@ -10,6 +10,7 @@ declare const styles: {
   readonly "page": string;
   readonly "toolbar": string;
   readonly "toolbarEnd": string;
+  readonly "toolbarFilters": string;
   readonly "toolbarSearch": string;
   readonly "toolbarStart": string;
   readonly "trailing": string;

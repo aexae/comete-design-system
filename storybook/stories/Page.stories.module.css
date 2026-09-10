@@ -9,3 +9,13 @@
     display: none;
   }
 }
+
+/* Rangée de tags des critères actifs : masquée sous le breakpoint compact. En
+   mobile/compact, les critères actifs sont portés par le badge du bouton
+   « Filtres » et la feuille (drill-down) — la rangée « FILTRES : … » est une
+   affordance desktop uniquement. Bloc générique (pas un bouton). */
+@container page (max-width: 767px) {
+  .hideBlockUnderCompact {
+    display: none;
+  }
+}
