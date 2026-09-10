@@ -12,7 +12,7 @@
 // SecondaryAction). La logique (comptes vivants, mini-recherche, vues
 // enregistrées) vient du DCLogic de la maquette.
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactElement } from "react";
 import { within, screen, userEvent, waitFor, expect } from "storybook/test";
 import { MINIMAL_VIEWPORTS } from "storybook/viewport";
@@ -67,6 +67,7 @@ import {
   initialsOf,
   AGENTS,
   facetsForRole,
+  effectiveFilters,
   type Filters,
   type FacetDef,
   type MultiKey,
@@ -82,6 +83,12 @@ import {
 function FiltresOptionB({ role }: { role?: Role }): ReactElement {
   const [f, setF] = useState<Filters>(initialFilters);
   const { views, save, remove } = useSavedViews();
+  // Le rôle change → on NEUTRALISE (n'applique plus) les facettes qu'il ne gère
+  // pas : elles disparaissent des tags ET des résultats, pas seulement du
+  // popover. Visible sans ouvrir le panneau.
+  useEffect(() => {
+    setF((prev) => effectiveFilters(prev, role));
+  }, [role]);
   return (
     <div
       style={{
@@ -551,11 +558,13 @@ export const DesktopInteractions: Story = {
       await expect(dialog.getByRole("button", { name: "Langues" })).toBeInTheDocument();
     });
 
-    await step("cocher une facette vide réduit (ou maintient) les résultats", async () => {
+    await step("cocher une option ACTIVE (compte > 0) réduit ou maintient les résultats", async () => {
       const dialog = within(screen.getByRole("dialog"));
       const before = rowCount();
       await userEvent.click(dialog.getByRole("button", { name: "Langues" }));
-      const cb = dialog.getByRole("checkbox", { name: "Français" });
+      // « Anglais » a un compte vivant > 0 sur la sélection initiale (option
+      // activée) ; « Français » y ressort à 0 → désactivée, non cochable.
+      const cb = dialog.getByRole("checkbox", { name: "Anglais" });
       await userEvent.click(cb);
       await expect(cb).toBeChecked();
       await waitFor(() => expect(rowCount()).toBeLessThanOrEqual(before));

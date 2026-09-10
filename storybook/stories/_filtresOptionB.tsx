@@ -174,15 +174,24 @@ export function emptyFilters(): Filters {
   return f;
 }
 
-// Sélection initiale de la maquette (pour montrer tags + comptes d'emblée).
+// Sélection initiale de la maquette — pensée pour exposer les CAS DURS d'emblée :
+// - `secteur` = 7 valeurs, la 1re étant le libellé TRÈS LONG → le tag prouve à
+//   la fois la troncature (1re valeur) ET l'overflow multi (« +6 ») ;
+// - `cdiOnly` (facette « Périmètre et contrats ») = réservée au manager :
+//   bascule le rôle et ce critère disparaît des tags ET des résultats.
 export function initialFilters(): Filters {
   return {
     ...emptyFilters(),
-    societe: ["Comète Sécurité", "Agence Lyon"],
-    secteur: ["Événementiel", "Industrie"],
-    habilitation: ["SST"],
-    formalite: ["Complètes"],
-    equipement: ["Radio", "Véhicule"],
+    societe: ["Comète Sécurité"],
+    secteur: [
+      "Zone industrialo-portuaire et plateformes logistiques multimodales du Grand Ouest",
+      "Événementiel",
+      "Industrie",
+      "Portuaire",
+      "Nucléaire",
+      "Aéroportuaire",
+      "Ferroviaire",
+    ],
     diplome: ["SSIAP 2"],
     cdiOnly: true,
   };
@@ -210,29 +219,68 @@ function matchExcept(a: Agent, f: Filters, skip: MultiKey): boolean {
 export const optionCount = (f: Filters, key: MultiKey, value: string): number =>
   AGENTS.filter((a) => a[key] === value && matchExcept(a, f, key)).length;
 
-// Secteurs d'activité — liste longue (bien au-delà des valeurs réellement
-// portées par les agents) : elle justifie une barre de recherche dans la
-// catégorie « Secteurs » sur mobile. Les secteurs sans agent correspondant
-// ressortent à 0 (option désactivée), comme n'importe quelle option morte.
+// Secteurs d'activité — CAS DUR « facette à ~60 options » : liste longue (bien
+// au-delà des valeurs réellement portées par les agents) → le volet droit
+// défile et la mini-recherche du popover devient indispensable pour retrouver
+// une option. Les secteurs sans agent correspondant ressortent à 0 (option
+// désactivée), comme n'importe quelle option morte. Inclut un libellé TRÈS LONG
+// (cas dur « troncature du tag »).
 const SECTEURS = [
+  "Administrations publiques",
   "Aéroportuaire",
+  "Agroalimentaire",
+  "Ambassades / Consulats",
+  "Assurances",
+  "Automobile",
   "Banque / Finance",
+  "Bijouterie / Joaillerie",
   "BTP / Chantiers",
+  "Câbles et réseaux",
   "Centres commerciaux",
+  "Centres de données",
+  "Chimie / Pétrochimie",
+  "Cinémas / Théâtres",
+  "Cliniques privées",
+  "Collectivités territoriales",
+  "Concerts / Festivals",
   "Data centers",
+  "Défense / Armement",
   "Distribution / Retail",
+  "Édition / Presse",
+  "Énergie / Utilities",
+  "Enseignement supérieur",
+  "Entrepôts frigorifiques",
   "Événementiel",
+  "Ferroviaire",
   "Grande distribution",
   "Hôpitaux / Santé",
+  "Hôtellerie / Restauration",
+  "Immobilier / Property",
   "Industrie",
+  "Industrie pharmaceutique",
+  "Laboratoires de recherche",
   "Logistique / Entrepôts",
   "Luxe / Boutiques",
+  "Maritime / Croisières",
+  "Mines / Carrières",
   "Musées / Culture",
   "Nucléaire",
+  "Parcs d'attractions",
+  "Ports de plaisance",
   "Portuaire",
+  "Sièges sociaux",
+  "Sites classés Seveso",
+  "Sites pétroliers et gaziers",
+  "Stades / Arénas",
+  "Stations d'épuration",
+  "Télécommunications",
   "Tertiaire / Bureaux",
   "Transports",
+  "Transports en commun urbains",
   "Universités / Écoles",
+  "Zones commerciales",
+  "Zones franches",
+  "Zone industrialo-portuaire et plateformes logistiques multimodales du Grand Ouest",
 ];
 
 export const DOMAINS = MULTI_KEYS.reduce(
@@ -253,6 +301,27 @@ export function facetCount(f: Filters, key: string): number {
 
 export const totalActive = (f: Filters): number =>
   FACET_DEFS.reduce((n, d) => n + facetCount(f, d.key), 0);
+
+/**
+ * Filtres EFFECTIFS pour un rôle : les facettes que le rôle ne gère pas ne
+ * sont **pas appliquées** — ni dans le popover, ni en tag, ni dans les
+ * résultats. (On ne masque jamais un filtre appliqué : ce serait une liste
+ * filtrée sans explication ni moyen de l'enlever.) `nameQuery` (la recherche)
+ * n'est pas une facette et reste toujours actif.
+ */
+export function effectiveFilters(f: Filters, role?: Role): Filters {
+  const visible = new Set(facetsForRole(role).map((d) => d.key));
+  const out: Filters = { ...f };
+  MULTI_KEYS.forEach((k) => {
+    if (!visible.has(k)) out[k] = [];
+  });
+  if (!visible.has("perimetre")) {
+    out.sousTraitants = false;
+    out.cdiOnly = false;
+  }
+  if (!visible.has("dispo")) out.dispoMode = "tous";
+  return out;
+}
 
 interface ActiveGroup {
   key: string;
@@ -339,8 +408,11 @@ function OptionControls({ def, filters, onChange }: { def: FacetDef; filters: Fi
             <Radio key={m.id} value={m.id} label={m.label} />
           ))}
         </RadioGroup>
-        <div style={{ display: "flex", gap: "var(--space150)", flexWrap: "wrap" }}>
-          <DatePicker aria-label="Date" defaultValue={parseDate("2026-08-20")} />
+        {/* CAS DUR « plage de dates » : une plage Du → Au (deux DatePicker),
+            plus une plage horaire début → fin. */}
+        <div style={{ display: "flex", gap: "var(--space150)", flexWrap: "wrap", alignItems: "flex-end" }}>
+          <DatePicker aria-label="Du (date de début)" defaultValue={parseDate("2026-08-20")} />
+          <DatePicker aria-label="Au (date de fin)" defaultValue={parseDate("2026-08-27")} />
           <TimePicker aria-label="Heure de début" defaultValue={new Time(18, 0)} />
           <TimePicker aria-label="Heure de fin" defaultValue={new Time(23, 0)} />
         </div>
@@ -657,8 +729,13 @@ export function ActiveFilterTags({
   const hiddenCount = groups.length - visibleGroups.length;
 
   const renderChip = (g: ActiveGroup): ReactElement => {
-    // 1 valeur → la valeur ; ≥ 2 → seulement le nombre (« Facette : 2 »).
-    const shown = g.count === 1 ? g.values.split(", ")[0] : String(g.count);
+    // Format DOCUMENTÉ du tag : « Facette : 1re valeur » (1 valeur) ou
+    // « Facette : 1re valeur +N » (≥ 2 ; N = valeurs restantes). La 1re valeur
+    // se TRONQUE (ellipsis) si elle est longue — le « +N » et la croix restent
+    // toujours lisibles (flex: none). Le tag est borné (maxWidth) pour qu'un
+    // libellé long ne pousse jamais le reste de la rangée hors écran.
+    const first = g.values.split(", ")[0] ?? "";
+    const extra = g.count - 1;
     return (
       <span
         key={g.key}
@@ -667,22 +744,23 @@ export function ActiveFilterTags({
           alignItems: "center",
           gap: "var(--space075)",
           height: 28,
+          maxWidth: 260,
           padding: "0 var(--space075) 0 var(--space150)",
           borderRadius: "var(--radius-round)",
           background: "var(--background-brand-subtlest-default)",
           color: "var(--text-brand)",
           fontSize: 12.5,
           fontWeight: 500,
-          whiteSpace: "nowrap",
         }}
       >
-        <span style={{ opacity: 0.65 }}>{g.facet} :</span>
-        <span>{shown}</span>
+        <span style={{ flex: "none", opacity: 0.65 }}>{g.facet} :</span>
+        <span style={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{first}</span>
+        {extra > 0 && <span style={{ flex: "none" }}>+{extra}</span>}
         <button
           type="button"
           onClick={g.clear}
           aria-label={`Retirer ${g.facet}`}
-          style={{ display: "inline-flex", padding: 4, border: 0, background: "none", borderRadius: "var(--radius-round)", cursor: "pointer", color: "inherit", opacity: 0.7 }}
+          style={{ flex: "none", display: "inline-flex", padding: 4, border: 0, background: "none", borderRadius: "var(--radius-round)", cursor: "pointer", color: "inherit", opacity: 0.7 }}
         >
           <Icon icon="Close" size={12} />
         </button>
