@@ -15,12 +15,12 @@ import {
 } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
-import { FilterBar } from "./_filterDemo";
 import {
   FiltresPanel,
   ActiveFilterTags,
   SavedSearchesMenu,
   initialFilters,
+  emptyFilters,
   useSavedViews,
   type Filters,
 } from "./_filtresOptionB";
@@ -169,27 +169,49 @@ export const Full: Story = {
 };
 
 /**
- * **Toolbar — Recherche + filtres (sans actions)** : recherche et rangée de
- * filtres rapides (`FilterChip`), sans actions à droite. Pour les pages de
- * listing en consultation (main courante, logs…).
+ * **Toolbar — Recherche + filtres (sans actions)** : recherche et **bouton
+ * « Filtres »** (recette option B, popover deux volets) dans le slot `filters`,
+ * sans actions à droite. Pour les pages de listing en consultation (main
+ * courante, logs…). La popup est la même que la story `Recipes/Filtres`.
  */
 export const SearchOnly: Story = {
   name: "Search only",
-  render: () => (
-    <Gutters>
-      <Page globalActions={null}>
-        <Page.Bar title="Main courante" />
-        <Page.Toolbar
-          search={<SearchField aria-label="Rechercher" placeholder="Rechercher une entrée…" />}
-        />
-        {/* Filtres rapides alignés sur la recherche (gouttière de page). */}
-        <div style={{ paddingInline: "var(--page-gutter)" }}>
-          <FilterBar initial={{ sites: ["idf", "paris", "lyon"] }} />
-        </div>
-        <Divider />
-      </Page>
-    </Gutters>
-  ),
+  render: function SearchOnlyToolbar() {
+    const [f, setF] = useState<Filters>(() => ({ ...emptyFilters(), secteur: ["Événementiel"] }));
+    const { views, save } = useSavedViews();
+    return (
+      <Gutters>
+        <Page globalActions={null}>
+          <Page.Bar title="Main courante" />
+          <Page.Toolbar
+            search={
+              <SearchField
+                aria-label="Rechercher"
+                placeholder="Rechercher une entrée…"
+                value={f.nameQuery}
+                onChange={(v) => setF({ ...f, nameQuery: v })}
+              />
+            }
+            filters={
+              <FiltresPanel
+                filters={f}
+                onChange={setF}
+                views={views}
+                onSaveView={(name) => save(name, f)}
+                scrollClassName={filtresCss["scroll"]}
+                textActionClassName={filtresCss["textAction"]}
+              />
+            }
+          />
+          {/* Tags des critères actifs, sous la barre (façon option B). */}
+          <div style={{ paddingInline: "var(--page-gutter)" }}>
+            <ActiveFilterTags filters={f} onChange={setF} textActionClassName={filtresCss["textAction"]} />
+          </div>
+          <Divider />
+        </Page>
+      </Gutters>
+    );
+  },
 };
 
 /**
@@ -241,41 +263,61 @@ export const None: Story = {
 };
 
 /**
- * **Toolbar — Filtres appliqués** : sous la barre, la rangée de filtres rapides
- * est composée avec le composant **`FilterChip`** (via `FilterChipRow`). Chaque
- * chip affiche la valeur (1 sélection) ou le compteur (≥ 2) et s'efface via sa
- * croix ; le bouton « Filtres » de la rangée ouvre le **panneau complet**
- * (Drawer). Voir la story dédiée `Components/FilterChip` pour tout le détail.
+ * **Toolbar — Filtres appliqués** : plusieurs critères déjà posés. Le badge du
+ * bouton **« Filtres »** (slot `filters`) reflète leur nombre, et les **tags
+ * actifs** sous la barre les rappellent — groupés par catégorie, surplus sous
+ * « +N », « Réinitialiser » pour tout vider. Même popup (recette option B) que
+ * `Recipes/Filtres`.
  */
 export const WithActiveFilters: Story = {
   name: "With active filters",
-  render: () => (
-    <Gutters>
-      <Page globalActions={null}>
-        <Page.Bar title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
-        <Page.Toolbar
-          search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
-          end={
-            <ButtonGroup>
-              <Button
-                color="comete"
-                iconBefore="Add"
-                collapseLabel
-                shape="square"
-                aria-label="Nouvel agent"
-              >
-                Nouvel agent
-              </Button>
-            </ButtonGroup>
-          }
-        />
-        {/* Rangée de filtres rapides = composant FilterChip / FilterChipRow.
-            Alignée sur la toolbar/recherche via la gouttière de page. */}
-        <div style={{ paddingInline: "var(--page-gutter)" }}>
-          <FilterBar initial={{ sites: ["idf", "paris", "lyon"], types: ["intrusion"] }} />
-        </div>
-        <Divider />
-      </Page>
-    </Gutters>
-  ),
+  render: function WithActiveFiltersToolbar() {
+    const [f, setF] = useState<Filters>(initialFilters);
+    const { views, save } = useSavedViews();
+    return (
+      <Gutters>
+        <Page globalActions={null}>
+          <Page.Bar title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
+          <Page.Toolbar
+            search={
+              <SearchField
+                aria-label="Rechercher"
+                placeholder="Rechercher"
+                value={f.nameQuery}
+                onChange={(v) => setF({ ...f, nameQuery: v })}
+              />
+            }
+            filters={
+              <FiltresPanel
+                filters={f}
+                onChange={setF}
+                views={views}
+                onSaveView={(name) => save(name, f)}
+                scrollClassName={filtresCss["scroll"]}
+                textActionClassName={filtresCss["textAction"]}
+              />
+            }
+            end={
+              <ButtonGroup>
+                <Button
+                  color="comete"
+                  iconBefore="Add"
+                  collapseLabel
+                  shape="square"
+                  aria-label="Nouvel agent"
+                >
+                  Nouvel agent
+                </Button>
+              </ButtonGroup>
+            }
+          />
+          {/* Tags des critères actifs, sous la barre (façon option B). */}
+          <div style={{ paddingInline: "var(--page-gutter)" }}>
+            <ActiveFilterTags filters={f} onChange={setF} textActionClassName={filtresCss["textAction"]} />
+          </div>
+          <Divider />
+        </Page>
+      </Gutters>
+    );
+  },
 };
