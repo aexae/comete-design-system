@@ -1,0 +1,19 @@
+{
+  "$comment": [
+    "Couleurs des statuts de devis, validées le 7 septembre 2026.",
+    "Chaque statut pointe un token : les hex sont résolus au build et injectés",
+    "dans la mesure DAX du README livré. Un statut garde la même couleur sur",
+    "tous les visuels, quel que soit le tri ou le filtre."
+  ],
+  "column": "'Devis'[Statut]",
+  "fallback": "--icon-subtlest",
+  "entries": [
+    { "value": "En cours", "token": "--background-information-bold-default", "note": "état normal, pas une alerte" },
+    { "value": "Envoyé au client", "token": "--background-accent-teal-bold-default", "note": "voisin de l'info, étape suivante" },
+    { "value": "Accepté", "token": "--background-success-bold-default", "note": "succès" },
+    { "value": "Commande", "token": "--background-accent-purple-bold-default", "note": "étape intermédiaire, famille à part" },
+    { "value": "Facturé", "token": "--background-accent-turquoise-bold-default", "note": "finalisé, distinct du vert d'accepté" },
+    { "value": "Refusé", "token": "--background-critical-bold-default", "note": "échec" },
+    { "value": "Annulé", "token": "--red-700", "note": "rouge plus sombre, distinct du refus" }
+  ]
+}
