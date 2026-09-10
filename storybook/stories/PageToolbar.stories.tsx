@@ -1,6 +1,8 @@
 // Page.Toolbar — stories isolées du sous-composant
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
+import { useState } from "react";
+import { within, screen, userEvent, expect, waitFor } from "storybook/test";
 import {
   Page,
   Avatar,
@@ -14,7 +16,16 @@ import {
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 import { FilterBar } from "./_filterDemo";
+import {
+  FiltresPanel,
+  ActiveFilterTags,
+  SavedSearchesMenu,
+  initialFilters,
+  useSavedViews,
+  type Filters,
+} from "./_filtresOptionB";
 import css from "./Page.stories.module.css";
+import filtresCss from "./FiltresOptionB.stories.module.css";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -39,7 +50,7 @@ const meta = {
           guidelines={
             <GuidelinesFlat
               when={[
-                "Barre d'outils sous l'en-tête : recherche (`search`), filtres (`start`), actions (`end`).",
+                "Barre d'outils sous l'en-tête : recherche (`search`), bouton « Filtres » (`filters`), vues/compteurs (`start`), actions (`end`).",
                 "Pour les pages de listing nécessitant recherche, filtres et actions groupées.",
               ]}
               avoid={[
@@ -47,7 +58,7 @@ const meta = {
                 "La navigation entre sections → Tabs.",
               ]}
               best={[
-                "Mettre la recherche dans `search`, les filtres dans `start`, les actions dans `end`.",
+                "Mettre la recherche dans `search`, le bouton « Filtres » dans `filters`, les vues dans `start`, les actions dans `end` — tout sur une seule ligne.",
                 "Sous le breakpoint, réduire les boutons en icône seule (`collapseLabel`) et laisser la recherche se comprimer — la barre reste sur une seule ligne.",
               ]}
               accessibility={[
@@ -71,48 +82,90 @@ type Story = StoryObj<typeof Page>;
 // Stories
 
 /**
- * **Toolbar — Complète** : recherche + rangée de filtres rapides (`FilterChip`)
- * + actions. La barre reste sur **une seule ligne** : sous le breakpoint du
- * conteneur (`page`, ~768px), l'action primaire se réduit en icône seule
- * (`collapseLabel`, `shape="square"`), « Exporter » est masqué (repli dans
- * « ⋯ ») et la recherche se comprime. La rangée de filtres (composant
- * `FilterChip` / `FilterChipRow`) est alignée sur la recherche et passe en
- * scroll horizontal sous le breakpoint ; le bouton « Filtres » ouvre le
- * panneau complet.
+ * **Toolbar — Complète** : recherche + **bouton « Filtres »** (recette option B,
+ * popover deux volets) + actions, **tout sur une seule ligne**. Le bouton vit
+ * dans le slot `filters` de `Page.Toolbar` ; les tags des critères actifs se
+ * posent sous la barre. La popup est **strictement identique** à la story
+ * `Recipes/Filtres` (composant partagé `_filtresOptionB`). Sous le breakpoint
+ * du conteneur, l'action primaire se réduit en icône seule et « Exporter » se
+ * masque.
  */
 export const Full: Story = {
   name: "Full (search + filters + actions)",
-  render: () => (
-    <Gutters>
-      <Page globalActions={null}>
-        <Page.Bar title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
-        <Page.Toolbar
-          search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
-          end={
-            <ButtonGroup>
-              <Button
-                color="comete"
-                iconBefore="Add"
-                collapseLabel
-                shape="square"
-                aria-label="Nouvel agent"
-              >
-                Nouvel agent
-              </Button>
-              <Button className={css["hideUnderCompact"]}>Exporter</Button>
-              <Button shape="square" iconBefore="MoreHoriz" aria-label="Plus d'actions" />
-            </ButtonGroup>
-          }
-        />
-        {/* Filtres rapides (FilterChip / FilterChipRow) alignés sur la recherche.
-            Aucun filtre appliqué au départ (chips épinglées inactives). */}
-        <div style={{ paddingInline: "var(--page-gutter)" }}>
-          <FilterBar />
-        </div>
-        <Divider />
-      </Page>
-    </Gutters>
-  ),
+  render: function FullToolbar() {
+    // La recette « Filtres » (option B) vit DANS la barre : bouton « Filtres »
+    // dans le slot `filters`, recherche + actions sur la même ligne. Tags des
+    // critères actifs sous la barre. Popup partagée avec Recipes/Filtres.
+    const [f, setF] = useState<Filters>(initialFilters);
+    const { views, save, remove } = useSavedViews();
+    return (
+      <Gutters>
+        <Page globalActions={null}>
+          <Page.Bar title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
+          <Page.Toolbar
+            search={
+              <SearchField
+                aria-label="Rechercher un agent"
+                placeholder="Rechercher un agent"
+                value={f.nameQuery}
+                onChange={(v) => setF({ ...f, nameQuery: v })}
+              />
+            }
+            filters={
+              <FiltresPanel
+                filters={f}
+                onChange={setF}
+                views={views}
+                onSaveView={(name) => save(name, f)}
+                scrollClassName={filtresCss["scroll"]}
+                textActionClassName={filtresCss["textAction"]}
+              />
+            }
+            end={
+              <Cluster gap="100">
+                <SavedSearchesMenu views={views} onApply={(v) => setF(v.filters)} onDelete={remove} />
+                <ButtonGroup>
+                  <Button
+                    color="comete"
+                    iconBefore="Add"
+                    collapseLabel
+                    shape="square"
+                    aria-label="Nouvel agent"
+                  >
+                    Nouvel agent
+                  </Button>
+                  <Button className={css["hideUnderCompact"]}>Exporter</Button>
+                  <Button shape="square" iconBefore="MoreHoriz" aria-label="Plus d'actions" />
+                </ButtonGroup>
+              </Cluster>
+            }
+          />
+          {/* Tags des critères actifs, sous la barre (façon option B). */}
+          <div style={{ paddingInline: "var(--page-gutter)" }}>
+            <ActiveFilterTags filters={f} onChange={setF} textActionClassName={filtresCss["textAction"]} />
+          </div>
+          <Divider />
+        </Page>
+      </Gutters>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // Le bouton « Filtres » vit DANS la barre ; son badge = nb de critères actifs.
+    const filtres = () => canvas.getByRole("button", { name: /^Filtres,/ });
+    await expect(filtres()).toHaveTextContent("10");
+    // Il ouvre le popover à deux volets (facettes / options) — la recette option B.
+    await userEvent.click(filtres());
+    const dialog = within(await screen.findByRole("dialog"));
+    await expect(dialog.getByRole("button", { name: /^Diplômes/ })).toBeInTheDocument();
+    // Facette « Diplômes » → cocher « CQP APS » ajoute un critère (badge 10 → 11).
+    await userEvent.click(dialog.getByRole("button", { name: /^Diplômes/ }));
+    await userEvent.click(dialog.getByRole("checkbox", { name: "CQP APS" }));
+    await waitFor(() => expect(filtres()).toHaveTextContent("11"));
+    // « Réinitialiser » (pied du popover) vide tout → la rangée de tags disparaît.
+    await userEvent.click(dialog.getByRole("button", { name: "Réinitialiser" }));
+    await waitFor(() => expect(canvas.queryByRole("group", { name: "Filtres actifs" })).toBeNull());
+  },
 };
 
 /**
