@@ -36,12 +36,6 @@ export interface FacetDef {
   /** Épinglée (toujours visible) ou temporaire (visible si active). */
   pinned: boolean;
   options: Option[];
-  /**
-   * Rôles qui voient cette facette. Absent = tous les rôles. La visibilité par
-   * rôle est ainsi **déclarative sur la facette** — le consommateur filtre
-   * `facets` par le rôle courant, sans `if (isPartner)` dans l'affichage.
-   */
-  roles?: string[];
 }
 
 const SITES: Option[] = [
@@ -103,10 +97,8 @@ export const FACETS: FacetDef[] = [
   { id: "dates", label: "Date", multi: false, pinned: true, options: DATES },
   { id: "statut", label: "Statut", multi: false, pinned: false, options: STATUTS },
   { id: "importance", label: "Importance", multi: true, pinned: false, options: IMPORTANCE },
-  // Facettes réservées à certains rôles (le partenaire — sous-traitance — ne les
-  // voit pas), comme FiltersResources masque des blocs via `!isPartner`.
-  { id: "groupes", label: "Groupes", multi: true, pinned: false, options: GROUPES, roles: ["manager"] },
-  { id: "agents", label: "Agents", multi: true, pinned: false, options: AGENTS, roles: ["manager", "client"] },
+  { id: "groupes", label: "Groupes", multi: true, pinned: false, options: GROUPES },
+  { id: "agents", label: "Agents", multi: true, pinned: false, options: AGENTS },
 ];
 
 export type Applied = Record<string, string[]>;
@@ -325,15 +317,12 @@ export function AllFiltersDrawer({
   onClearAll,
   isOpen,
   onOpenChange,
-  facets = FACETS,
 }: {
   applied: Applied;
   onApplied: (id: string, values: string[]) => void;
   onClearAll: () => void;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  /** Facettes à afficher (déjà filtrées par rôle). Défaut : toutes. */
-  facets?: FacetDef[];
 }): ReactElement {
   const isNarrow = useIsNarrowViewport();
   const [detailId, setDetailId] = useState<string | null>(null);
@@ -342,7 +331,7 @@ export function AllFiltersDrawer({
     if (!isOpen) setDetailId(null);
   }, [isOpen]);
 
-  const detailFacet = detailId ? facets.find((f) => f.id === detailId) ?? null : null;
+  const detailFacet = detailId ? FACETS.find((f) => f.id === detailId) ?? null : null;
 
   // Résumé de la ligne maître : les valeurs sélectionnées EN TOUTES LETTRES.
   const summaryText = (f: FacetDef): string | null => {
@@ -413,7 +402,7 @@ export function AllFiltersDrawer({
             </div>
 
             <div className={css["list"]}>
-              {facets.map((f) => {
+              {FACETS.map((f) => {
                 const summary = summaryText(f);
                 return (
                   <button
@@ -461,21 +450,18 @@ export function FilterBar({
   mode = "instant",
   openFacet,
   openAll = false,
-  facets = FACETS,
 }: {
   initial?: Applied;
   mode?: "instant" | "deferred";
   openFacet?: string;
   openAll?: boolean;
-  /** Facettes affichées (déjà filtrées par rôle par le consommateur). Défaut : toutes. */
-  facets?: FacetDef[];
 }): ReactElement {
   const [applied, setApplied] = useState<Applied>(initial);
   const [drawerOpen, setDrawerOpen] = useState(openAll);
   const setFacet = (id: string, values: string[]) =>
     setApplied((prev) => ({ ...prev, [id]: values }));
 
-  const rowFacets: FilterChipRowFacet[] = facets.map((f) => ({
+  const rowFacets: FilterChipRowFacet[] = FACETS.map((f) => ({
     id: f.id,
     isPinned: f.pinned,
     isActive: (applied[f.id]?.length ?? 0) > 0,
@@ -503,7 +489,6 @@ export function FilterBar({
         onClearAll={() => setApplied({})}
         isOpen={drawerOpen}
         onOpenChange={setDrawerOpen}
-        facets={facets}
       />
     </>
   );

@@ -132,20 +132,6 @@
   }
 }
 
-/* ---- Liste (D10) : repli téléphone en liste compacte (PAS des cartes) ----
-   Même bascule que tableDesktopOnly, mais nommée pour ce qu'elle porte : une
-   List (motif TableToListRecipe), pas un empilement de Card. */
-
-.listMobileOnly {
-  display: none;
-}
-
-@media (max-width: 599px) {
-  .listMobileOnly {
-    display: block;
-  }
-}
-
 /* ---- Entity: actions bar under header on mobile ---- */
 
 .entityActions {
