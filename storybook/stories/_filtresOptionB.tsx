@@ -41,10 +41,22 @@ import {
 // Modèle : facettes + agents (données de la maquette).
 
 type FacetKind = "multi" | "switches" | "dispo";
+
+/** Rôle courant de l'utilisateur (pilote la visibilité déclarative des facettes). */
+export type Role = "manager" | "partenaire" | "client";
+
 export interface FacetDef {
   key: string;
   label: string;
   kind: FacetKind;
+  /**
+   * Rôles qui voient cette facette. Absent = tous les rôles. La visibilité par
+   * rôle est ainsi **déclarative sur la facette** : le composant d'affichage
+   * filtre `FACET_DEFS` sur ce champ, sans jamais tester `isPartner` /
+   * `isManager` en dur (critère du recensement — le masquage vivait surtout
+   * dans les filtres).
+   */
+  roles?: Role[];
 }
 
 export const FACET_DEFS: FacetDef[] = [
@@ -54,11 +66,17 @@ export const FACET_DEFS: FacetDef[] = [
   { key: "formalite", label: "Formalités", kind: "multi" },
   { key: "equipement", label: "Équipements", kind: "multi" },
   { key: "diplome", label: "Diplômes", kind: "multi" },
-  { key: "emploi", label: "Emplois", kind: "multi" },
+  // Emplois : masqué au partenaire (sous-traitance) — réservé manager + client.
+  { key: "emploi", label: "Emplois", kind: "multi", roles: ["manager", "client"] },
   { key: "langue", label: "Langues", kind: "multi" },
-  { key: "perimetre", label: "Périmètre et contrats", kind: "switches" },
+  // Périmètre et contrats (sous-traitants / CDI) : décision interne → manager seul.
+  { key: "perimetre", label: "Périmètre et contrats", kind: "switches", roles: ["manager"] },
   { key: "dispo", label: "Disponibilités", kind: "dispo" },
 ];
+
+/** Facettes visibles pour un rôle (source déclarative, sans littéral de rôle). */
+export const facetsForRole = (role?: Role): FacetDef[] =>
+  role == null ? FACET_DEFS : FACET_DEFS.filter((d) => !d.roles || d.roles.includes(role));
 
 export const MULTI_KEYS = [
   "societe",
@@ -356,6 +374,7 @@ export function FiltresPanel({
   onChange,
   views,
   onSaveView,
+  role,
   scrollClassName,
   textActionClassName,
 }: {
@@ -363,6 +382,8 @@ export function FiltresPanel({
   onChange: (f: Filters) => void;
   views: SavedView[];
   onSaveView: (name: string) => void;
+  /** Rôle courant : filtre les facettes visibles (déclaratif). Absent = toutes. */
+  role?: Role;
   scrollClassName?: string;
   textActionClassName?: string;
 }): ReactElement {
@@ -377,12 +398,17 @@ export function FiltresPanel({
   };
   const clearAll = () => onChange(emptyFilters());
 
+  // Visibilité par rôle, DÉCLARATIVE : on filtre `FACET_DEFS` sur le champ
+  // `roles` de chaque facette — aucun test de rôle codé en dur ici.
+  const visibleFacets = facetsForRole(role);
+  const visibleMultiKeys = MULTI_KEYS.filter((k) => visibleFacets.some((d) => d.key === k));
+
   const total = totalActive(filters);
   const isCurrentSaved = total > 0 && views.some((v) => sameFilters(v.filters, filters));
-  const curDef = FACET_DEFS.find((d) => d.key === cat) ?? FACET_DEFS[0];
+  const curDef = visibleFacets.find((d) => d.key === cat) ?? visibleFacets[0];
   const q = query.trim().toLowerCase();
   const searchHits = q
-    ? MULTI_KEYS.flatMap((k) =>
+    ? visibleMultiKeys.flatMap((k) =>
         DOMAINS[k].filter((v) => v.toLowerCase().includes(q)).map((v) => ({ key: k, value: v })),
       )
     : [];
@@ -434,7 +460,7 @@ export function FiltresPanel({
               borderRight: "1px solid var(--border-subtle)",
             }}
           >
-            {FACET_DEFS.map((d) => {
+            {visibleFacets.map((d) => {
               const c = facetCount(filters, d.key);
               const active = !q && d.key === cat;
               return (

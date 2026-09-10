@@ -66,10 +66,12 @@ import {
   INITIAL_VIEWS,
   initialsOf,
   AGENTS,
+  facetsForRole,
   type Filters,
   type FacetDef,
   type MultiKey,
   type SavedView,
+  type Role,
 } from "./_filtresOptionB";
 
 // -----------------------------------------------------------------------
@@ -77,7 +79,7 @@ import {
 // recette « Filtres » partagée (_filtresOptionB). MÊME popup que la story
 // Layout/Page/Toolbar → source unique.
 
-function FiltresOptionB(): ReactElement {
+function FiltresOptionB({ role }: { role?: Role }): ReactElement {
   const [f, setF] = useState<Filters>(initialFilters);
   const { views, save, remove } = useSavedViews();
   return (
@@ -109,6 +111,7 @@ function FiltresOptionB(): ReactElement {
           onChange={setF}
           views={views}
           onSaveView={(name) => save(name, f)}
+          role={role}
           scrollClassName={css["scroll"]}
           textActionClassName={css["textAction"]}
         />
@@ -507,7 +510,15 @@ type Story = StoryObj;
 // Stories affichées : sans `play`, pour être utilisables immédiatement à
 // l'ouverture (aucune interaction rejouée automatiquement au montage).
 export const Desktop: Story = {
-  render: () => <FiltresOptionB />,
+  // Rôle courant : filtre les facettes visibles dans le popover (déclaratif).
+  // Bascule le contrôle pour voir deux jeux de facettes issus des MÊMES
+  // définitions — manager voit « Périmètre et contrats » et « Emplois », pas le
+  // partenaire.
+  argTypes: {
+    role: { name: "Rôle", control: "inline-radio", options: ["manager", "partenaire", "client"] },
+  },
+  args: { role: "manager" },
+  render: (args) => <FiltresOptionB role={(args as { role?: Role }).role} />,
 };
 
 export const Mobile: Story = {
@@ -553,6 +564,21 @@ export const DesktopInteractions: Story = {
     await step("fermer le panneau avec Échap", async () => {
       await userEvent.keyboard("{Escape}");
       await waitFor(() => expect(canvas.getByRole("button", { name: /Filtres,/ })).toHaveAttribute("aria-expanded", "false"));
+    });
+
+    await step("rôles déclaratifs : deux rôles → deux jeux de facettes, sans littéral", async () => {
+      // Mêmes définitions FACET_DEFS → jeux différents selon le rôle (le point
+      // du recensement : le masquage vivait surtout dans les FILTRES).
+      const manager = facetsForRole("manager").map((d) => d.key);
+      const partenaire = facetsForRole("partenaire").map((d) => d.key);
+      await expect(manager).not.toEqual(partenaire);
+      await expect(manager.length).toBeGreaterThan(partenaire.length);
+      await expect(manager).toContain("perimetre"); // réservé manager…
+      await expect(partenaire).not.toContain("perimetre"); // …masqué au partenaire
+      await expect(partenaire).not.toContain("emploi"); // réservé manager + client
+      // Aucun littéral de rôle dans le composant d'AFFICHAGE : la visibilité
+      // vient du champ `roles`, jamais d'un test en dur.
+      await expect(/isPartner|isManager|role_code/.test(FiltresPanel.toString())).toBe(false);
     });
   },
 };
