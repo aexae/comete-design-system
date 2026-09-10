@@ -11,6 +11,11 @@ entre versions alpha.
 
 ### Ajouté
 
+- **`Page.Toolbar`** : nouveau slot `filters` (optionnel, non-breaking) — le
+  déclencheur du panneau de filtres (typiquement un unique bouton « Filtres »
+  ouvrant un popover) rendu sur la ligne de la toolbar, **entre la recherche et
+  `start`**, pour que recherche + filtres + vues + actions tiennent sur une
+  seule ligne. Largeur de contenu, jamais comprimé.
 - **`ListItemButton`** : nouvelle prop `isFlush` (défaut `false`) qui annule le
   padding **horizontal** de l'item (le vertical / la cible tactile de 44 px est
   conservé). À utiliser quand un conteneur parent définit déjà le retrait

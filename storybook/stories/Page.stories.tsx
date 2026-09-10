@@ -90,7 +90,7 @@ export const Default: Story = {
         />
         <Page.Toolbar
           search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
-          start={<Button iconBefore="Tune">Filtres</Button>}
+          filters={<Button iconBefore="Tune">Filtres</Button>}
           end={
             <ButtonGroup>
               <Button color="comete" iconBefore="Add">Nouvel agent</Button>

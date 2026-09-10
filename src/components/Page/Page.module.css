@@ -186,6 +186,16 @@
   max-width: 240px;
 }
 
+/* Slot `filters` — le bouton « Filtres » (panneau) vit sur la ligne de la
+   toolbar, entre la recherche et les vues (`start`). Largeur de contenu comme
+   `start` : jamais comprimé, c'est la recherche qui absorbe la compression. */
+.toolbarFilters {
+  display: flex;
+  align-items: center;
+  gap: var(--space100);
+  flex: 0 0 auto;
+}
+
 /* `start` garde sa largeur de contenu (boutons jamais écrasés). C'est la
    recherche qui absorbe la compression ; `end` (margin-left: auto) reste à
    droite. */

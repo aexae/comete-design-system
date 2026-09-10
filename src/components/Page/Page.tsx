@@ -93,8 +93,16 @@ export interface PageToolbarProps {
    */
   search?: ReactNode;
   /**
-   * Zone de contrôles à gauche (filtres, segment de tabs, compteurs).
-   * Les enfants wrap si la largeur est insuffisante.
+   * Slot filtres — le déclencheur du panneau de filtres (typiquement un unique
+   * bouton « Filtres » ouvrant un popover). Rendu sur la ligne de la toolbar,
+   * **entre la recherche et `start`**, pour que recherche + filtres + vues +
+   * actions tiennent sur **une seule ligne**. Largeur de contenu (jamais
+   * comprimé). Optionnel.
+   */
+  filters?: ReactNode;
+  /**
+   * Zone de contrôles à gauche (segment de vues/tabs, compteurs). Les enfants
+   * wrap si la largeur est insuffisante.
    */
   start?: ReactNode;
   /**
@@ -307,6 +315,7 @@ PageBar.displayName = "Page.Bar";
  */
 function PageToolbar({
   search,
+  filters,
   start,
   end,
   className,
@@ -316,6 +325,9 @@ function PageToolbar({
     <div className={classNames}>
       {search !== undefined && (
         <div className={styles.toolbarSearch}>{search}</div>
+      )}
+      {filters !== undefined && (
+        <div className={styles.toolbarFilters}>{filters}</div>
       )}
       {start !== undefined && (
         <div className={styles.toolbarStart}>{start}</div>
