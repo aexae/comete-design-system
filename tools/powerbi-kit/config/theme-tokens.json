@@ -152,7 +152,6 @@
   "visualStyles.actionButton.*.shape[2].roundEdge": "--control-radius-default",
   "visualStyles.actionButton.*.shape[3].rectangleRoundedCurve": "--control-radius-default",
   "visualStyles.actionButton.*.shape[3].roundEdge": "--control-radius-default",
-  "visualStyles.advancedSlicerVisual.*.fillCustom[0].fillColor.solid.color": "--background-surface-default",
   "visualStyles.advancedSlicerVisual.*.value[0].fontSize": "--font-size-ui-xxxs",
   "visualStyles.advancedSlicerVisual.*.value[1].fontColor.solid.color": "--text-default",
   "visualStyles.advancedSlicerVisual.*.value[2].fontColor.solid.color": "--text-selected",
@@ -163,5 +162,7 @@
   "visualStyles.advancedSlicerVisual.*.padding[0].top": "--size0",
   "visualStyles.advancedSlicerVisual.*.padding[0].bottom": "--size0",
   "visualStyles.advancedSlicerVisual.*.padding[0].left": "--size0",
-  "visualStyles.advancedSlicerVisual.*.padding[0].right": "--size0"
+  "visualStyles.advancedSlicerVisual.*.padding[0].right": "--size0",
+  "visualStyles.advancedSlicerVisual.*.background[1].color.solid.color": "--background-selected-subtlest-default",
+  "visualStyles.advancedSlicerVisual.*.layout[0].rectangleRoundedCurve": "--control-radius-default"
 }
