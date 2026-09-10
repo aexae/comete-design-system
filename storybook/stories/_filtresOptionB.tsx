@@ -648,20 +648,28 @@ export function FiltresPanel({
 
 export function SavedSearchesMenu({
   views,
+  current,
   onApply,
   onDelete,
 }: {
   views: SavedView[];
+  /** Filtres courants — pour marquer l'enregistrement APPLIQUÉ (le cas échéant). */
+  current: Filters;
   onApply: (v: SavedView) => void;
   onDelete: (id: string) => void;
 }): ReactElement {
   const [open, setOpen] = useState(false);
+  // L'enregistrement appliqué = celui dont les filtres correspondent aux filtres
+  // courants (sameFilters). Aucun si l'utilisateur a modifié depuis.
+  const applied = views.find((v) => sameFilters(v.filters, current));
   return (
     <MenuTrigger isOpen={open} onOpenChange={setOpen}>
-      <Button appearance="outlined" iconAfter="KeyboardArrowDown">
+      <Button appearance="outlined">
         <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space075)" }}>
-          <Icon icon="Bookmark" size={18} />
-          Filtres enregistrés
+          {/* Bookmark REMPLI quand un enregistrement est appliqué, et son nom
+              affiché sur le déclencheur — « lequel est sélectionné » d'un coup d'œil. */}
+          <Icon icon="Bookmark" appearance={applied ? "filled" : "outlined"} size={18} />
+          {applied ? applied.name : "Filtres enregistrés"}
         </span>
       </Button>
       <MenuPopover width={320}>
@@ -680,11 +688,14 @@ export function SavedSearchesMenu({
             ) : (
               views.map((v) => {
                 const n = totalActive(v.filters);
+                const isApplied = applied?.id === v.id;
                 return (
                   <MenuItem
                     key={v.id}
                     id={v.id}
-                    description={`${n} filtre${n > 1 ? "s" : ""} appliqué${n > 1 ? "s" : ""}`}
+                    // Indicateur d'état : bookmark REMPLI = appliqué, contour = non.
+                    elemBefore={<Icon icon="Bookmark" appearance={isApplied ? "filled" : "outlined"} size={18} />}
+                    description={isApplied ? `Appliqué · ${n} critère${n > 1 ? "s" : ""}` : `${n} critère${n > 1 ? "s" : ""}`}
                     elemAfter={
                       <Button appearance="subtle" iconBefore="Close" aria-label={`Supprimer ${v.name}`} onPress={() => onDelete(v.id)} />
                     }

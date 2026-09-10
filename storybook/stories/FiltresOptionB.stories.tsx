@@ -123,7 +123,7 @@ function FiltresOptionB({ role }: { role?: Role }): ReactElement {
           textActionClassName={css["textAction"]}
         />
         <div style={{ flex: 1 }} />
-        <SavedSearchesMenu views={views} onApply={(v) => setF(v.filters)} onDelete={remove} />
+        <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
       </div>
 
       <ActiveFilterTags filters={f} onChange={setF} textActionClassName={css["textAction"]} />

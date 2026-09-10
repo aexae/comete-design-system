@@ -123,7 +123,7 @@ export const Full: Story = {
             }
             end={
               <Cluster gap="100">
-                <SavedSearchesMenu views={views} onApply={(v) => setF(v.filters)} onDelete={remove} />
+                <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
                 <ButtonGroup>
                   <Button
                     color="comete"
