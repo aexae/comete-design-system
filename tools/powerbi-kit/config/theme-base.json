@@ -1,5 +1,5 @@
 {
-  "name": "Comète BI v0.9.10",
+  "name": "Comète BI v0.9.11",
   "$schema": "https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.157.json",
   "dataColors": [
     "#429AEF",
@@ -772,6 +772,99 @@
     },
     "image": {
       "*": {
+        "padding": [
+          {
+            "top": 0,
+            "bottom": 0,
+            "left": 0,
+            "right": 0
+          }
+        ]
+      }
+    },
+    "advancedSlicerVisual": {
+      "*": {
+        "fillCustom": [
+          {
+            "show": true,
+            "fillColor": {
+              "solid": {
+                "color": "#FFFFFF"
+              }
+            },
+            "transparency": 0
+          }
+        ],
+        "value": [
+          {
+            "show": true,
+            "fontFamily": "Segoe UI",
+            "fontSize": 10
+          },
+          {
+            "$id": "default",
+            "fontColor": {
+              "solid": {
+                "color": "#252A2C"
+              }
+            }
+          },
+          {
+            "$id": "selected",
+            "fontColor": {
+              "solid": {
+                "color": "#0076D8"
+              }
+            }
+          }
+        ],
+        "outline": [
+          {
+            "show": true,
+            "weight": 1
+          },
+          {
+            "$id": "default",
+            "lineColor": {
+              "solid": {
+                "color": "#D8DEDF"
+              }
+            }
+          },
+          {
+            "$id": "selected",
+            "lineColor": {
+              "solid": {
+                "color": "#009BFE"
+              }
+            }
+          }
+        ],
+        "shapeCustomRectangle": [
+          {
+            "rectangleRoundedCurve": 6
+          }
+        ],
+        "selectionIcon": [
+          {
+            "show": false
+          }
+        ],
+        "title": [
+          {
+            "show": false
+          }
+        ],
+        "border": [
+          {
+            "show": false
+          }
+        ],
+        "background": [
+          {
+            "show": false
+          }
+        ],
         "padding": [
           {
             "top": 0,
