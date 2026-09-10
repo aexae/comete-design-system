@@ -145,5 +145,11 @@
   "visualStyles.actionButton.*.padding[0].left": "--size0",
   "visualStyles.actionButton.*.padding[0].right": "--size0",
   "visualStyles.actionButton.*.shape[0].rectangleRoundedCurve": "--control-radius-default",
-  "visualStyles.actionButton.*.shape[0].roundEdge": "--control-radius-default"
+  "visualStyles.actionButton.*.shape[0].roundEdge": "--control-radius-default",
+  "visualStyles.actionButton.*.shape[1].rectangleRoundedCurve": "--control-radius-default",
+  "visualStyles.actionButton.*.shape[1].roundEdge": "--control-radius-default",
+  "visualStyles.actionButton.*.shape[2].rectangleRoundedCurve": "--control-radius-default",
+  "visualStyles.actionButton.*.shape[2].roundEdge": "--control-radius-default",
+  "visualStyles.actionButton.*.shape[3].rectangleRoundedCurve": "--control-radius-default",
+  "visualStyles.actionButton.*.shape[3].roundEdge": "--control-radius-default"
 }
