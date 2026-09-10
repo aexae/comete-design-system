@@ -447,6 +447,7 @@ export function FiltresPanel({
   views,
   onSaveView,
   role,
+  collapseLabel,
   scrollClassName,
   textActionClassName,
 }: {
@@ -456,6 +457,9 @@ export function FiltresPanel({
   onSaveView: (name: string) => void;
   /** Rôle courant : filtre les facettes visibles (déclaratif). Absent = toutes. */
   role?: Role;
+  /** Replie le déclencheur en icône seule (carré) sous le breakpoint conteneur
+   *  — pour les toolbars responsive. L'`aria-label` reste « Filtres ». */
+  collapseLabel?: boolean;
   scrollClassName?: string;
   textActionClassName?: string;
 }): ReactElement {
@@ -501,6 +505,7 @@ export function FiltresPanel({
         <Button
           appearance="outlined"
           iconBefore="Tune"
+          {...(collapseLabel ? { collapseLabel: true, shape: "square" as const } : {})}
           aria-label={total > 0 ? `Filtres, ${total} critère${total > 1 ? "s" : ""} actif${total > 1 ? "s" : ""}` : "Filtres"}
         >
           Filtres

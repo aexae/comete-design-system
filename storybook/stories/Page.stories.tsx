@@ -20,6 +20,7 @@ import {
   ActiveFilterTags,
   SavedSearchesMenu,
   initialFilters,
+  emptyFilters,
   useSavedViews,
   type Filters,
 } from "./_filtresOptionB";
@@ -201,6 +202,8 @@ export const LongTitle: Story = {
  * `Page.Body` = grille de cartes responsive.
  */
 function ListingPage({ leading }: { leading?: React.ReactNode }) {
+  const [f, setF] = useState<Filters>(emptyFilters);
+  const { views, save } = useSavedViews();
   return (
     <Page style={{ minHeight: "100vh" }}>
       <Page.Bar title="Agents" leading={leading} />
@@ -208,13 +211,27 @@ function ListingPage({ leading }: { leading?: React.ReactNode }) {
         /* Slot dédié : le layout borne le champ (160–240px), le compresse avec
            un plancher entre 480 et 767px, et le passe en PLEINE LARGEUR sur sa
            propre rangée sous 480px — le placeholder n'est jamais tronqué. */
-        search={<SearchField aria-label="Rechercher" placeholder="Rechercher" />}
-        start={
-          /* Secondaire gris (contained neutral, Figma) + icône avant ;
-             icône seule (squared, alignée sur la toolbar) sous compact */
-          <Button collapseLabel shape="square" iconBefore="Tune" aria-label="Filtres">
-            Filtres
-          </Button>
+        search={
+          <SearchField
+            aria-label="Rechercher"
+            placeholder="Rechercher"
+            value={f.nameQuery}
+            onChange={(v) => setF({ ...f, nameQuery: v })}
+          />
+        }
+        /* Recette « Filtres » (option B) : le déclencheur se replie en icône
+           seule (squared) sous compact — comportement responsive conservé —
+           mais ouvre le vrai popover deux volets. */
+        filters={
+          <FiltresPanel
+            filters={f}
+            onChange={setF}
+            views={views}
+            onSaveView={(name) => save(name, f)}
+            collapseLabel
+            scrollClassName={filtresCss["scroll"]}
+            textActionClassName={filtresCss["textAction"]}
+          />
         }
         end={
           <ButtonGroup>
@@ -237,6 +254,10 @@ function ListingPage({ leading }: { leading?: React.ReactNode }) {
           </ButtonGroup>
         }
       />
+      {/* Tags des critères actifs (façon option B) — vide tant qu'aucun filtre. */}
+      <div style={{ paddingInline: "var(--page-gutter)" }}>
+        <ActiveFilterTags filters={f} onChange={setF} textActionClassName={filtresCss["textAction"]} />
+      </div>
       <Page.Body>
         <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
           {Array.from({ length: 9 }, (_, i) => (
