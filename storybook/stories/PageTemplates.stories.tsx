@@ -6,7 +6,7 @@
 
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, userEvent, expect, fn } from "storybook/test";
+import { within, userEvent, expect, fn, waitFor } from "storybook/test";
 import type { IconName } from "@aexae/comete-design-system/components";
 import {
   Page,
@@ -57,7 +57,7 @@ import {
 } from "@aexae/comete-design-system/components";
 import { useTableSelection } from "@aexae/comete-design-system/hooks";
 import css from "./PageTemplates.module.css";
-import { FilterBar, FACETS } from "./_filterDemo";
+import { FilterBar, FACETS, FacetChip } from "./_filterDemo";
 
 // -----------------------------------------------------------------------
 // Figma
@@ -986,6 +986,67 @@ export const FiltresActifs: Story = {
     const clear = await within(document.body).findByRole("button", { name: /Effacer les filtres/ });
     await userEvent.click(clear);
     await expect(filtres).not.toHaveTextContent(/\d/);
+  },
+};
+
+// -----------------------------------------------------------------------
+// 1quinquies. BASCULE DE FACETTE (§8) — la facette s'ouvre en popover quand
+// son CONTENEUR est large, en feuille (bottom sheet) quand il est étroit. On
+// teste le comportement ACTUEL du DS FilterChip : le seuil est la largeur de
+// CONTENEUR (ResizeObserver), pas un viewport. (L'alignement éventuel du seuil
+// et l'unification de la feuille swipeable relèvent d'un ticket DS séparé.)
+
+/**
+ * **Bascule de facette** — popover si le conteneur est large, feuille si étroit
+ * (comportement actuel du DS `FilterChip`, seuil = largeur de conteneur).
+ */
+export const FacetBascule: Story = {
+  name: "Facette — bascule popover / feuille",
+  parameters: { controls: { disable: true } },
+  render: function FacetBasculeStory() {
+    const [applied, setApplied] = useState<string[]>([]);
+    return (
+      <div style={{ padding: "var(--space300)" }}>
+        <Text size="small" as="p" color="subtle">
+          La facette bascule selon la largeur de son CONTENEUR (pas le viewport) :
+          popover quand il est large, feuille (bottom sheet) quand il est étroit.
+        </Text>
+        <div
+          data-testid="facet-frame"
+          style={{
+            // Largeur explicite (pas de maxWidth) : le seuil de bascule est la
+            // largeur de CONTENEUR, on la contrôle donc directement.
+            width: 600,
+            border: "1px dashed var(--border-subtle)",
+            borderRadius: "var(--radius200)",
+            padding: "var(--space200)",
+          }}
+        >
+          <FacetChip facet={FACETS[0]} applied={applied} onApplied={setApplied} mode="instant" />
+        </div>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const frame = canvasElement.querySelector<HTMLElement>('[data-testid="facet-frame"]');
+    const sheet = () => document.querySelector('[class*="drawer" i]');
+    const popover = () => document.querySelector('[class*="popup" i]');
+    const openSites = () => userEvent.click(canvas.getByRole("button", { name: /Sites/ }));
+
+    // Conteneur large (600px ≥ seuil) → popover, aucune feuille.
+    await openSites();
+    await waitFor(() => expect(popover()).not.toBeNull());
+    await expect(sheet()).toBeNull();
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(popover()).toBeNull());
+
+    // Transition vers un conteneur étroit (320px < seuil) → feuille (Drawer
+    // bottom). La bascule réagit au changement de largeur (ResizeObserver).
+    if (frame) frame.style.width = "320px";
+    await new Promise((r) => setTimeout(r, 400)); // laisse le ResizeObserver + re-render propager
+    await openSites();
+    await waitFor(() => expect(sheet()).not.toBeNull());
   },
 };
 
