@@ -163,6 +163,7 @@
   "visualStyles.advancedSlicerVisual.*.padding[0].bottom": "--size0",
   "visualStyles.advancedSlicerVisual.*.padding[0].left": "--size0",
   "visualStyles.advancedSlicerVisual.*.padding[0].right": "--size0",
-  "visualStyles.advancedSlicerVisual.*.background[1].color.solid.color": "--background-selected-subtlest-default",
-  "visualStyles.advancedSlicerVisual.*.layout[0].rectangleRoundedCurve": "--control-radius-default"
+  "visualStyles.advancedSlicerVisual.*.layout[0].rectangleRoundedCurve": "--control-radius-default",
+  "visualStyles.advancedSlicerVisual.*.background[2].color.solid.color": "--background-selected-subtlest-default",
+  "visualStyles.advancedSlicerVisual.*.layout[0].columnPadding": "--size050"
 }
