@@ -112,7 +112,6 @@
   "visualStyles.cardVisual.*.calloutValues[0].fontSize": "--font-size-ui-m",
   "visualStyles.cardVisual.*.calloutLabels[0].fontSize": "--font-size-ui-xxxs",
   "visualStyles.actionButton.*.text[0].fontSize": "--font-size-ui-xxxs",
-  "visualStyles.actionButton.*.shape[0].rectangleRoundedCurve": "--control-radius-default",
   "visualStyles.actionButton.*.icon[0].iconSize": "--size300",
   "visualStyles.actionButton.*.padding[0].top": "--size0",
   "visualStyles.actionButton.*.padding[0].bottom": "--size0",
@@ -139,5 +138,9 @@
   "visualStyles.image.*.padding[0].top": "--size0",
   "visualStyles.image.*.padding[0].bottom": "--size0",
   "visualStyles.image.*.padding[0].left": "--size0",
-  "visualStyles.image.*.padding[0].right": "--size0"
+  "visualStyles.image.*.padding[0].right": "--size0",
+  "visualStyles.actionButton.*.outline[0].roundEdge": "--control-radius-default",
+  "visualStyles.actionButton.*.outline[1].roundEdge": "--control-radius-default",
+  "visualStyles.actionButton.*.outline[2].roundEdge": "--control-radius-default",
+  "visualStyles.actionButton.*.outline[3].roundEdge": "--control-radius-default"
 }
