@@ -496,7 +496,7 @@ export function FiltresPanel({
       isOpen={open}
       onOpenChange={setOpen}
       placement="bottom-left"
-      style={{ width: 720, maxWidth: "calc(100vw - 32px)" }}
+      style={{ width: 720, maxWidth: "calc(100vw - 32px)", maxHeight: "min(calc(100vh - 24px), 520px)", overflow: "hidden" }}
       trigger={
         <Button
           appearance="outlined"
@@ -509,7 +509,7 @@ export function FiltresPanel({
       }
     >
       <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
-        <div style={{ padding: "var(--space200) var(--space200) var(--space150)" }}>
+        <div style={{ flex: "none", padding: "var(--space200) var(--space200) var(--space150)" }}>
           <SearchField
             aria-label="Rechercher dans les filtres"
             placeholder="Rechercher un critère (société, secteur, diplôme…)"
@@ -517,7 +517,11 @@ export function FiltresPanel({
             onChange={setQuery}
           />
         </div>
-        <div style={{ display: "flex", height: 380, borderTop: "1px solid var(--border-subtle)" }}>
+        {/* Les deux volets : hauteur RAISONNABLE et bornée (jamais tout le
+            viewport). Le popover reste à la taille de son contenu ; le
+            débordement (facette à ~60 options) défile DANS le volet droit, pas
+            dans le popover. S'adapte vers le bas sur petit écran. */}
+        <div style={{ display: "flex", height: "min(380px, calc(100vh - 220px))", borderTop: "1px solid var(--border-subtle)" }}>
           {/* Volet gauche : liste des facettes. */}
           <ul
             aria-label="Facettes"
@@ -525,6 +529,7 @@ export function FiltresPanel({
             style={{
               flex: "none",
               width: 232,
+              minHeight: 0,
               margin: 0,
               padding: "var(--space100)",
               listStyle: "none",
@@ -570,7 +575,7 @@ export function FiltresPanel({
           </ul>
 
           {/* Volet droit : options de la facette courante, ou résultats de recherche. */}
-          <div className={scrollClassName} style={{ flex: 1, overflowY: "auto", padding: "var(--space200)" }}>
+          <div className={scrollClassName} style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "var(--space200)" }}>
             {q ? (
               <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
                 <p style={{ margin: "0 0 var(--space100)", fontSize: 12, color: "var(--text-subtlest)" }}>
@@ -595,7 +600,7 @@ export function FiltresPanel({
         </div>
 
         {/* Pied : enregistrer / compteur / réinitialiser. */}
-        <div style={{ display: "flex", alignItems: "center", gap: "var(--space150)", padding: "var(--space150) var(--space200)", borderTop: "1px solid var(--border-subtle)" }}>
+        <div style={{ flex: "none", display: "flex", alignItems: "center", gap: "var(--space150)", padding: "var(--space150) var(--space200)", borderTop: "1px solid var(--border-subtle)" }}>
           {savingName === null ? (
             <>
               {isCurrentSaved ? (
