@@ -1,5 +1,5 @@
 {
-  "name": "Comète BI v0.9.5",
+  "name": "Comète BI v0.9.6",
   "$schema": "https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.157.json",
   "dataColors": [
     "#429AEF",
@@ -571,6 +571,16 @@
               }
             },
             "transparency": 0
+          },
+          {
+            "$id": "disabled",
+            "show": true,
+            "fillColor": {
+              "solid": {
+                "color": "#F8F8F8"
+              }
+            },
+            "transparency": 0
           }
         ],
         "outline": [
@@ -661,6 +671,22 @@
             "fontColor": {
               "solid": {
                 "color": "#FFFFFF"
+              }
+            },
+            "topMargin": 0,
+            "bottomMargin": 4,
+            "leftMargin": 0,
+            "rightMargin": 0
+          },
+          {
+            "$id": "disabled",
+            "show": true,
+            "text": "Button",
+            "fontFamily": "Segoe UI Semibold",
+            "fontSize": 12,
+            "fontColor": {
+              "solid": {
+                "color": "#DDDEE1"
               }
             },
             "topMargin": 0,

@@ -158,5 +158,9 @@
   "visualStyles.actionButton.*.icon[3].iconSize": "--size300",
   "visualStyles.actionButton.*.outline[3].lineColor.solid.color": "--border-bold",
   "visualStyles.actionButton.*.outline[3].weight": "--size0125",
-  "visualStyles.actionButton.*.outline[3].roundEdge": "--control-radius-default"
+  "visualStyles.actionButton.*.outline[3].roundEdge": "--control-radius-default",
+  "visualStyles.actionButton.*.fill[3].fillColor.solid.color": "--background-disabled-default",
+  "visualStyles.actionButton.*.text[3].fontColor.solid.color": "--text-disabled",
+  "visualStyles.actionButton.*.text[3].fontSize": "--font-size-ui-xxs",
+  "visualStyles.actionButton.*.text[3].bottomMargin": "--size050"
 }
