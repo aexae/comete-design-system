@@ -1,5 +1,5 @@
 {
-  "name": "Comète BI v0.9.7",
+  "name": "Comète BI v0.9.8",
   "$schema": "https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.157.json",
   "dataColors": [
     "#429AEF",
@@ -536,103 +536,12 @@
     },
     "actionButton": {
       "*": {
-        "background": [
-          {
-            "show": false
-          }
-        ],
-        "fill": [
-          {
-            "$id": "default",
-            "show": true,
-            "fillColor": {
-              "solid": {
-                "color": "#2467D1"
-              }
-            },
-            "transparency": 0
-          },
-          {
-            "$id": "hover",
-            "show": true,
-            "fillColor": {
-              "solid": {
-                "color": "#2354AA"
-              }
-            },
-            "transparency": 0
-          },
-          {
-            "$id": "selected",
-            "show": true,
-            "fillColor": {
-              "solid": {
-                "color": "#224986"
-              }
-            },
-            "transparency": 0
-          },
-          {
-            "$id": "disabled",
-            "show": true,
-            "fillColor": {
-              "solid": {
-                "color": "#F8F8F8"
-              }
-            },
-            "transparency": 0
-          }
-        ],
-        "outline": [
-          {
-            "$id": "default",
-            "show": false,
-            "lineColor": {
-              "solid": {
-                "color": "#B5C1C4"
-              }
-            },
-            "weight": 1,
-            "roundEdge": 6
-          },
-          {
-            "$id": "hover",
-            "show": false,
-            "lineColor": {
-              "solid": {
-                "color": "#B5C1C4"
-              }
-            },
-            "weight": 1,
-            "roundEdge": 6
-          },
-          {
-            "$id": "selected",
-            "show": false,
-            "lineColor": {
-              "solid": {
-                "color": "#B5C1C4"
-              }
-            },
-            "weight": 1,
-            "roundEdge": 6
-          },
-          {
-            "$id": "disabled",
-            "show": false,
-            "lineColor": {
-              "solid": {
-                "color": "#B5C1C4"
-              }
-            },
-            "weight": 1,
-            "roundEdge": 6
-          }
-        ],
         "text": [
           {
+            "show": true
+          },
+          {
             "$id": "default",
-            "show": true,
             "text": "Button",
             "fontFamily": "Segoe UI Semibold",
             "fontSize": 12,
@@ -647,71 +556,83 @@
             "rightMargin": 0
           },
           {
-            "$id": "hover",
-            "show": true,
-            "fontFamily": "Segoe UI Semibold",
-            "fontSize": 12,
-            "fontColor": {
-              "solid": {
-                "color": "#FFFFFF"
-              }
-            },
-            "topMargin": 0,
-            "bottomMargin": 4,
-            "leftMargin": 0,
-            "rightMargin": 0
-          },
-          {
-            "$id": "selected",
-            "show": true,
-            "fontFamily": "Segoe UI Semibold",
-            "fontSize": 12,
-            "fontColor": {
-              "solid": {
-                "color": "#FFFFFF"
-              }
-            },
-            "topMargin": 0,
-            "bottomMargin": 4,
-            "leftMargin": 0,
-            "rightMargin": 0
-          },
-          {
             "$id": "disabled",
-            "show": true,
-            "fontFamily": "Segoe UI Semibold",
-            "fontSize": 12,
             "fontColor": {
               "solid": {
                 "color": "#DDDEE1"
               }
-            },
-            "topMargin": 0,
-            "bottomMargin": 4,
-            "leftMargin": 0,
-            "rightMargin": 0
+            }
+          }
+        ],
+        "fill": [
+          {
+            "show": true,
+            "transparency": 0
+          },
+          {
+            "$id": "default",
+            "fillColor": {
+              "solid": {
+                "color": "#2467D1"
+              }
+            }
+          },
+          {
+            "$id": "hover",
+            "fillColor": {
+              "solid": {
+                "color": "#2354AA"
+              }
+            }
+          },
+          {
+            "$id": "selected",
+            "fillColor": {
+              "solid": {
+                "color": "#224986"
+              }
+            }
+          },
+          {
+            "$id": "disabled",
+            "fillColor": {
+              "solid": {
+                "color": "#F8F8F8"
+              }
+            }
           }
         ],
         "icon": [
           {
-            "$id": "default",
             "show": false,
             "iconSize": 24
-          },
+          }
+        ],
+        "outline": [
           {
-            "$id": "hover",
             "show": false,
-            "iconSize": 24
-          },
+            "lineColor": {
+              "solid": {
+                "color": "#B5C1C4"
+              }
+            },
+            "weight": 1,
+            "roundEdge": 6
+          }
+        ],
+        "title": [
           {
-            "$id": "selected",
-            "show": false,
-            "iconSize": 24
-          },
+            "show": false
+          }
+        ],
+        "border": [
           {
-            "$id": "disabled",
-            "show": false,
-            "iconSize": 24
+            "show": false
+          }
+        ],
+        "background": [
+          {
+            "show": false
           }
         ],
         "padding": [
