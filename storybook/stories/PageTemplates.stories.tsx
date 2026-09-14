@@ -31,10 +31,6 @@ import {
   Tab,
   TabPanel,
   SectionMessage,
-  Drawer,
-  DrawerHeader,
-  DrawerBody,
-  DrawerFooter,
   DrawerProvider,
   MonthPicker,
   Banner,
@@ -43,6 +39,14 @@ import {
   useSideNav,
 } from "@aexae/comete-design-system/components";
 import css from "./PageTemplates.module.css";
+import {
+  FiltresPanel,
+  ActiveFilterTags,
+  useSavedViews,
+  emptyFilters,
+  type Filters,
+} from "./_filtresOptionB";
+import filtresCss from "./FiltresOptionB.stories.module.css";
 
 // -----------------------------------------------------------------------
 // Figma
@@ -110,20 +114,6 @@ type Story = StoryObj;
 
 function CC({ children, padding = "var(--space200)" }: { children: React.ReactNode; padding?: string }) {
   return <div style={{ padding, flex: 1, minWidth: 0 }}>{children}</div>;
-}
-
-function FilterPanel({ showHeader = true }: { showHeader?: boolean }) {
-  return (
-    <Stack gap="200">
-      {showHeader && <><Heading size="small" as="span">Filtres</Heading><Divider /></>}
-      {["Société / Agence", "Secteur", "Habilitations", "Formalités", "Équipements"].map((label) => (
-        <Stack key={label} gap="075">
-          <Text size="xsmall" weight="medium" as="span" color="subtlest">{label.toUpperCase()}</Text>
-          <div className={css["placeholder"]} style={{ height: 36 }}>Tous</div>
-        </Stack>
-      ))}
-    </Stack>
-  );
 }
 
 function AgentCard({ initials, name, contrat, heures, delta, status }: {
@@ -369,100 +359,93 @@ export const Base: Story = {
 // -----------------------------------------------------------------------
 // 1. COLLECTION
 /**
- * **Collection** — Liste avec toolbar et filtres.
+ * **Collection** — Liste avec la recette « Filtres » dans la toolbar.
  *
- * - **Desktop** : tableau + sidebar filtres (Grid 9+3)
- * - **Mobile** : tableau bascule en **cards**, filtres dans un **Drawer**
- * - Infinite scroll
+ * - Bouton **« Filtres »** dans le slot `filters` de `Page.Toolbar` : **popover
+ *   deux volets** en desktop, **feuille (bottom sheet)** dès qu'il se réduit en
+ *   icône (compact) — même composant partagé que `Recipes/Filtres`.
+ * - **Tags des critères actifs** sous la barre (desktop) ; **masqués en
+ *   compact/mobile** (les critères sont portés par le badge et la feuille).
+ * - **Mobile** : le tableau bascule en **cards**. Infinite scroll.
  */
 export const Collection: Story = {
   name: "Collection (liste + filtres)",
   parameters: { design: { type: "figma", url: figmaUrl("4577:13694") } },
   render: function CollectionStory() {
-    const [filtersOpen, setFiltersOpen] = useState(false);
+    const [f, setF] = useState<Filters>(emptyFilters);
+    const { views, save } = useSavedViews();
     return (
       <Page globalActions={null}>
           <Page.Bar title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
           <Page.Toolbar
-            start={
-              <>
-                <div className={css["searchWrapper"]}>
-                  <SearchField placeholder="Rechercher…" density="compact" />
-                </div>
-                <span className={css["showOnDesktop"]}>
-                  <Button appearance="subtle" iconBefore="FilterList" onPress={() => setFiltersOpen(true)}>Filtres</Button>
-                </span>
-                <span className={css["showOnMobileOnly"]}>
-                  <Button appearance="subtle" iconBefore="FilterList" onPress={() => setFiltersOpen(true)} aria-label="Filtres" />
-                </span>
-              </>
+            search={
+              <div className={css["searchWrapper"]}>
+                <SearchField
+                  aria-label="Rechercher un agent"
+                  placeholder="Rechercher…"
+                  density="compact"
+                  value={f.nameQuery}
+                  onChange={(v) => setF({ ...f, nameQuery: v })}
+                />
+              </div>
+            }
+            filters={
+              <FiltresPanel
+                filters={f}
+                onChange={setF}
+                views={views}
+                onSaveView={(name) => save(name, f)}
+                collapseLabel
+                scrollClassName={filtresCss["scroll"]}
+                textActionClassName={filtresCss["textAction"]}
+              />
             }
             end={
               <ButtonGroup>
-                <span className={css["showOnDesktop"]}>
-                  <Button color="comete" iconBefore="Add">Nouvel agent</Button>
-                </span>
-                <span className={css["showOnMobileOnly"]}>
-                  <Button color="comete" iconBefore="Add" aria-label="Nouvel agent" />
-                </span>
-                <span className={css["hideOnMobile"]}>
-                  <Button appearance="subtle" iconBefore="Download">Exporter</Button>
-                </span>
+                <Button color="comete" iconBefore="Add" collapseLabel shape="square" aria-label="Nouvel agent">Nouvel agent</Button>
+                <Button appearance="subtle" iconBefore="Download" className={css["hideOnMobile"]}>Exporter</Button>
                 <Button appearance="subtle" iconBefore="MoreHoriz" aria-label="Plus" />
               </ButtonGroup>
             }
           />
+          {/* Tags des critères actifs, sous la barre — masqués sous le breakpoint
+              compact : en mobile, les critères sont portés par le badge du bouton
+              « Filtres » et la feuille (drill-down). */}
+          <div className={css["hideBlockUnderCompact"]} style={{ paddingInline: "var(--page-gutter)" }}>
+            <ActiveFilterTags filters={f} onChange={setF} textActionClassName={filtresCss["textAction"]} />
+          </div>
           <Page.Body>
-            <Grid gap="300">
-              <Grid.Col span={{ mobile: 12, desktop: 9 }}>
-                <Stack gap="150">
-                  <Text size="small" as="span" color="subtlest">140 agents</Text>
+            <Stack gap="150">
+              <Text size="small" as="span" color="subtlest">140 agents</Text>
 
-                  {/* Desktop: table */}
-                  <div className={css["tableDesktopOnly"]}>
-                    <Card appearance="outlined">
-                      <div className={css["cardColumn"]}>
-                        <TableRow isHeader cells={["Agent", "Matricule", "Contrat", "Heures", "Delta"]} />
-                        {AGENTS.map((a) => (
-                          <TableRow key={a.mat} cells={[
-                            <><Avatar size="xsmall" initials={a.initials} /><span>{a.name}</span></>,
-                            a.mat, a.contrat, a.heures,
-                            a.delta ? <Text key="d" size="small" weight="bold" as="span" color={a.status === "success" ? "success" : "critical"}>{a.delta}</Text> : null,
-                          ]} />
-                        ))}
-                      </div>
-                    </Card>
+              {/* Desktop: table */}
+              <div className={css["tableDesktopOnly"]}>
+                <Card appearance="outlined">
+                  <div className={css["cardColumn"]}>
+                    <TableRow isHeader cells={["Agent", "Matricule", "Contrat", "Heures", "Delta"]} />
+                    {AGENTS.map((a) => (
+                      <TableRow key={a.mat} cells={[
+                        <><Avatar size="xsmall" initials={a.initials} /><span>{a.name}</span></>,
+                        a.mat, a.contrat, a.heures,
+                        a.delta ? <Text key="d" size="small" weight="bold" as="span" color={a.status === "success" ? "success" : "critical"}>{a.delta}</Text> : null,
+                      ]} />
+                    ))}
                   </div>
+                </Card>
+              </div>
 
-                  {/* Mobile: cards */}
-                  <div className={css["cardsMobileOnly"]}>
-                    <Stack gap="100">
-                      {AGENTS.map((a) => <AgentCard key={a.mat} {...a} />)}
-                    </Stack>
-                  </div>
-
-                  <div style={{ textAlign: "center", padding: "var(--space200)" }}>
-                    <Text size="small" as="span" color="subtlest">Scroll pour charger plus</Text>
-                  </div>
+              {/* Mobile: cards */}
+              <div className={css["cardsMobileOnly"]}>
+                <Stack gap="100">
+                  {AGENTS.map((a) => <AgentCard key={a.mat} {...a} />)}
                 </Stack>
-              </Grid.Col>
+              </div>
 
-              <Grid.Col span={{ mobile: 12, desktop: 3 }}>
-                <div className={css["filterSidebar"]}>
-                  <Card appearance="outlined"><CC><FilterPanel /></CC></Card>
-                </div>
-              </Grid.Col>
-            </Grid>
+              <div style={{ textAlign: "center", padding: "var(--space200)" }}>
+                <Text size="small" as="span" color="subtlest">Scroll pour charger plus</Text>
+              </div>
+            </Stack>
           </Page.Body>
-
-          <Drawer isOpen={filtersOpen} onOpenChange={setFiltersOpen} placement="right" size="narrow" aria-label="Filtres">
-            <DrawerHeader onClose={() => setFiltersOpen(false)}>Filtres</DrawerHeader>
-            <DrawerBody><FilterPanel showHeader={false} /></DrawerBody>
-            <DrawerFooter>
-              <Button appearance="subtle" onPress={() => setFiltersOpen(false)}>Réinitialiser</Button>
-              <Button color="comete" onPress={() => setFiltersOpen(false)}>Appliquer</Button>
-            </DrawerFooter>
-          </Drawer>
         </Page>
     );
   },

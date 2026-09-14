@@ -101,14 +101,13 @@
   }
 }
 
-/* ---- Collection: desktop-only filter sidebar ---- */
+/* ---- Collection: tags des critères actifs masqués sous le breakpoint compact.
+   Réagit au conteneur `page` (comme le repli du bouton « Filtres »), pas au
+   viewport : en compact/mobile, les critères sont portés par le badge et la
+   feuille (drill-down). ---- */
 
-.filterSidebar {
-  display: block;
-}
-
-@media (max-width: 1199px) {
-  .filterSidebar {
+@container page (max-width: 767px) {
+  .hideBlockUnderCompact {
     display: none;
   }
 }
