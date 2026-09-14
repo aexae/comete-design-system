@@ -23,7 +23,6 @@
   "visualStyles.*.*.background[0].color.solid.color": "--background-default-default",
   "visualStyles.*.*.border[0].color.solid.color": "--border-default",
   "visualStyles.*.*.title[0].fontColor.solid.color": "--text-default",
-  "visualStyles.*.*.title[0].background.solid.color": "--background-default-default",
   "visualStyles.page.*.background[0].color.solid.color": "--background-surface-elevation-sunken-default",
   "visualStyles.page.*.outspace[0].color.solid.color": "--background-neutral-subtler-default",
   "visualStyles.card.*.labels[0].color.solid.color": "--text-default",
@@ -165,5 +164,6 @@
   "visualStyles.advancedSlicerVisual.*.padding[0].right": "--size0",
   "visualStyles.advancedSlicerVisual.*.layout[0].rectangleRoundedCurve": "--control-radius-default",
   "visualStyles.advancedSlicerVisual.*.background[2].color.solid.color": "--background-selected-subtlest-default",
-  "visualStyles.advancedSlicerVisual.*.layout[0].columnPadding": "--size050"
+  "visualStyles.advancedSlicerVisual.*.layout[0].columnPadding": "--size050",
+  "visualStyles.advancedSlicerVisual.*.background[0].color.solid.color": "--background-selected-subtlest-default"
 }
