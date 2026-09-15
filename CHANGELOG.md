@@ -9,6 +9,19 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.155] - 2026-09-15
+
+### Modifié
+
+- **Couleurs (tokens)** — via `@aexae/comete-design-tokens@0.13.2` :
+  - Bouton `color="comete"` (contained), thème clair : fond default/hover/pressed
+    passe de comete-blue `950/900/800` à `700/800/900` (bleu de marque plus vif
+    qui fonce à l'interaction ; blanc sur le fond par défaut = 5.34:1, AA).
+  - Tokens `selected` / `focused` repointés de la palette `blue` vers `comete.blue`
+    au même step (clair + sombre) : `--border-focused`, `--border-selected`,
+    `--background-focused-default`, `--text-selected`, `--icon-selected`,
+    `--border-selected-inverted`, `--border-focus-inverted`.
+
 ### Ajouté
 
 - **`Page.Toolbar`** : nouveau slot `filters` (optionnel, non-breaking) — le
