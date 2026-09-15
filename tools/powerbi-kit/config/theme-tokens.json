@@ -165,5 +165,7 @@
   "visualStyles.advancedSlicerVisual.*.layout[0].rectangleRoundedCurve": "--control-radius-default",
   "visualStyles.advancedSlicerVisual.*.background[2].color.solid.color": "--background-selected-subtlest-default",
   "visualStyles.advancedSlicerVisual.*.layout[0].columnPadding": "--size050",
-  "visualStyles.advancedSlicerVisual.*.background[0].color.solid.color": "--background-selected-subtlest-default"
+  "visualStyles.advancedSlicerVisual.*.background[3].color.solid.color": "--background-selected-subtlest-default",
+  "visualStyles.advancedSlicerVisual.*.background[4].color.solid.color": "--background-selected-subtlest-default",
+  "visualStyles.advancedSlicerVisual.*.background[5].color.solid.color": "--background-selected-subtlest-default"
 }

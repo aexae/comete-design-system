@@ -1,5 +1,5 @@
 {
-  "name": "Comète BI v0.9.15",
+  "name": "Comète BI v0.9.16",
   "$schema": "https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.157.json",
   "dataColors": [
     "#429AEF",
@@ -855,12 +855,7 @@
         ],
         "background": [
           {
-            "show": true,
-            "color": {
-              "solid": {
-                "color": "#DCEEFD"
-              }
-            }
+            "show": false
           },
           {
             "$id": "default",
@@ -869,6 +864,36 @@
           },
           {
             "$id": "selection:selected",
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#DCEEFD"
+              }
+            },
+            "transparency": 0
+          },
+          {
+            "$id": "selection:selected-interaction:rest",
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#DCEEFD"
+              }
+            },
+            "transparency": 0
+          },
+          {
+            "$id": "selection:selected-interaction:hover",
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#DCEEFD"
+              }
+            },
+            "transparency": 0
+          },
+          {
+            "$id": "selection:selected-interaction:press",
             "show": true,
             "color": {
               "solid": {
@@ -910,6 +935,11 @@
         "image": [
           {
             "show": false
+          }
+        ],
+        "label": [
+          {
+            "horizontalAlignment": "center"
           }
         ]
       }
