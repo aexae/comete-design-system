@@ -161,8 +161,12 @@
   "visualStyles.advancedSlicerVisual.*.background[4].color.solid.color": "--background-selected-subtlest-default",
   "visualStyles.advancedSlicerVisual.*.background[5].color.solid.color": "--background-selected-subtlest-default",
   "visualStyles.advancedSlicerVisual.*.value[1].fontSize": "--font-size-ui-xxxs",
-  "visualStyles.advancedSlicerVisual.*.padding[0].topMargin": "--size0",
-  "visualStyles.advancedSlicerVisual.*.padding[0].bottomMargin": "--size0",
-  "visualStyles.advancedSlicerVisual.*.padding[0].leftMargin": "--size0",
-  "visualStyles.advancedSlicerVisual.*.padding[0].rightMargin": "--size0"
+  "visualStyles.advancedSlicerVisual.*.padding[0].top": "--size0",
+  "visualStyles.advancedSlicerVisual.*.padding[1].topMargin": "--size0",
+  "visualStyles.advancedSlicerVisual.*.padding[0].bottom": "--size0",
+  "visualStyles.advancedSlicerVisual.*.padding[1].bottomMargin": "--size0",
+  "visualStyles.advancedSlicerVisual.*.padding[0].left": "--size0",
+  "visualStyles.advancedSlicerVisual.*.padding[1].leftMargin": "--size0",
+  "visualStyles.advancedSlicerVisual.*.padding[0].right": "--size0",
+  "visualStyles.advancedSlicerVisual.*.padding[1].rightMargin": "--size0"
 }
