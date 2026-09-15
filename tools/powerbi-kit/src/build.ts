@@ -180,9 +180,12 @@ export async function build(): Promise<Report> {
 
   // ---- Thème --------------------------------------------------------------
   const themeWarnings: string[] = [];
+  // La version du theme-base est reprise dans le nom importé : c'est le seul
+  // moyen fiable, côté Desktop, de savoir quelle version du thème est active.
+  const baseName = (readConfig<{ name?: string }>("theme-base.json").name ?? "").replace("Comète BI ", "");
   for (const mode of ["light", "dark"] as const) {
     const modeTokens = loadTokens(mode);
-    const label = mode === "light" ? "Comète BI clair" : "Comète BI sombre";
+    const label = `${mode === "light" ? "Comète BI clair" : "Comète BI sombre"} ${baseName}`.trim();
     const { theme, missing } = buildTheme(modeTokens, mode, label);
     themeWarnings.push(...missing.map((m) => `${mode}: token manquant ${m}`));
     themeWarnings.push(...unmappedColors(theme, modeTokens).map((c) => `${mode}: couleur hors tokens ${c}`));
