@@ -1,0 +1,109 @@
+{
+  "$comment": [
+    "Sélection strictement alignée sur « Inventaire icônes Comète BI_v1.xlsx », qui fait foi.",
+    "Une icône par usage relevé : aucune alternative.",
+    "Deux écarts assumés par rapport au tableau, l'icône réelle primant sur le nom écrit :",
+    "  · ligne 23 le tableau écrit « CompanyFilter », l'icône s'appelle CompaniesFilter",
+    "  · ligne 13 « Settings ou ManageAccounts » est tranché en AdminPanelSettings (arbitrage du 03/09/2026)",
+    "Mettre \"entries\": \"*\" pour exporter tout le package."
+  ],
+  "variants": [
+    "outlined",
+    "filled"
+  ],
+  "spacing": "default",
+  "size": 24,
+  "entries": [
+    {
+      "name": "Home",
+      "usage": "Retour Accueil (menu de l'Accueil, bandeau CA et Tarifs)"
+    },
+    {
+      "name": "Revenue",
+      "usage": "Rubrique Chiffres d'affaires (menu)"
+    },
+    {
+      "name": "Quote",
+      "usage": "Rubrique Devis (menu)"
+    },
+    {
+      "name": "Group",
+      "usage": "Rubrique Effectifs (menu), approchant"
+    },
+    {
+      "name": "TaskAlt",
+      "usage": "Rubrique Conformité (menu)"
+    },
+    {
+      "name": "CalendarMonth",
+      "usage": "Rubrique Exploitation (menu)"
+    },
+    {
+      "name": "FinanceMode",
+      "usage": "Rubrique Rentabilité (menu)"
+    },
+    {
+      "name": "AdminPanelSettings",
+      "usage": "Rubrique Droits d'accès (menu)"
+    },
+    {
+      "name": "Person",
+      "usage": "Carte Clients actifs (page CA)"
+    },
+    {
+      "name": "Info",
+      "usage": "Badge « Règles de gestion »"
+    },
+    {
+      "name": "Warning",
+      "usage": "Alertes (Conformité, Détails, tables)"
+    },
+    {
+      "name": "Cancel",
+      "usage": "Éléments invalides (Détails des conformités)"
+    },
+    {
+      "name": "CheckCircle",
+      "usage": "Éléments valides"
+    },
+    {
+      "name": "ArrowPositive",
+      "usage": "Évolution à la hausse (Prépaies, Rentabilité, Détails)"
+    },
+    {
+      "name": "ArrowNegative",
+      "usage": "Évolution à la baisse (Prépaies, Rentabilité, Détails)"
+    },
+    {
+      "name": "CompaniesFilter",
+      "usage": "Filtre Sociétés/Agences (page Sous-traitance)"
+    },
+    {
+      "name": "SubcontractorFilter",
+      "usage": "Filtre Sous-traitants (page Sous-traitance)"
+    }
+  ],
+  "notes": [
+    "Carte « Taux horaire moyen » (€ + calendrier) et médaillon « Main tenant un € » de la page CA : marqués à retirer de l'interface. Aucune icône n'est fournie pour ces deux emplacements, il ne faut pas les reproduire dans le rapport.",
+    "Flèches d'évolution (ArrowPositive / ArrowNegative) : l'inventaire les marque « ne pas modifier, natif Power BI ». Elles sont fournies pour le cas où le rendu natif ne suivrait pas la charte, sinon, laisser la mise en forme conditionnelle de Power BI faire.",
+    "Onglet « Accueil » à soulignement jaune : c'est un pattern de navigation, pas une icône. À unifier côté produit.",
+    "Pastilles rondes de statut des cartes KPI : ce sont des couleurs de statut, à prendre dans colors.csv (success, critical, warning, information)."
+  ],
+  "coloredSets": [
+    {
+      "dir": "main_menu",
+      "color": "icon-brand",
+      "variant": "outlined",
+      "names": [
+        "Home",
+        "Revenue",
+        "Quote",
+        "Group",
+        "TaskAlt",
+        "CalendarMonth",
+        "FinanceMode",
+        "AdminPanelSettings"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "$comment": [
+    "Logos exportés dans le kit. `size` est la hauteur de la ligne de wordmark",
+    "en px, la largeur suit. SVG uniquement : Power BI Desktop les accepte",
+    "à l'insertion d'image et ils restent nets à toute taille."
+  ],
+  "size": 32,
+  "entries": [
+    {
+      "product": "bi",
+      "format": "logo",
+      "taglineAlign": "inline"
+    },
+    {
+      "product": "bi",
+      "format": "icon",
+      "taglineAlign": "none"
+    },
+    {
+      "product": "comete",
+      "format": "logo",
+      "taglineAlign": "none"
+    },
+    {
+      "product": "comete",
+      "format": "logo",
+      "taglineAlign": "column"
+    },
+    {
+      "product": "comete",
+      "format": "icon",
+      "taglineAlign": "none"
+    }
+  ],
+  "appearances": [
+    "brand",
+    "neutral",
+    "inverse"
+  ]
+}
