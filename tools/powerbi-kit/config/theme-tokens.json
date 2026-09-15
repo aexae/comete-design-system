@@ -69,13 +69,10 @@
     "dark": "--comete-blue-400"
   },
   "visualStyles.pivotTable.*.columnTotal[0].backColor.solid.color": "--background-surface-default",
-  "visualStyles.pivotTable.*.rowTotal[0].fontColor.solid.color": "--text-inverted",
+  "visualStyles.pivotTable.*.rowTotal[0].fontColor.solid.color": "--text-default",
   "visualStyles.pivotTable.*.grid[0].gridHorizontalColor.solid.color": "--border-bold",
   "visualStyles.pivotTable.*.columnHeaders[0].outlineColor.solid.color": "--border-bold",
-  "visualStyles.pivotTable.*.rowTotal[0].backColor.solid.color": {
-    "light": "--comete-blue-700",
-    "dark": "--comete-blue-400"
-  },
+  "visualStyles.pivotTable.*.rowTotal[0].backColor.solid.color": "--background-neutral-subtler-default",
   "visualStyles.slicer.*.selectionIcon[0].color.solid.color": {
     "light": "--comete-blue-700",
     "dark": "--comete-blue-400"
@@ -151,21 +148,21 @@
   "visualStyles.actionButton.*.shape[2].roundEdge": "--control-radius-default",
   "visualStyles.actionButton.*.shape[3].rectangleRoundedCurve": "--control-radius-default",
   "visualStyles.actionButton.*.shape[3].roundEdge": "--control-radius-default",
-  "visualStyles.advancedSlicerVisual.*.value[0].fontSize": "--font-size-ui-xxxs",
   "visualStyles.advancedSlicerVisual.*.value[1].fontColor.solid.color": "--text-default",
   "visualStyles.advancedSlicerVisual.*.value[2].fontColor.solid.color": "--text-selected",
   "visualStyles.advancedSlicerVisual.*.outline[0].weight": "--size0125",
   "visualStyles.advancedSlicerVisual.*.outline[1].lineColor.solid.color": "--border-default",
   "visualStyles.advancedSlicerVisual.*.outline[2].lineColor.solid.color": "--border-selected",
   "visualStyles.advancedSlicerVisual.*.shapeCustomRectangle[0].rectangleRoundedCurve": "--control-radius-default",
-  "visualStyles.advancedSlicerVisual.*.padding[0].top": "--size0",
-  "visualStyles.advancedSlicerVisual.*.padding[0].bottom": "--size0",
-  "visualStyles.advancedSlicerVisual.*.padding[0].left": "--size0",
-  "visualStyles.advancedSlicerVisual.*.padding[0].right": "--size0",
   "visualStyles.advancedSlicerVisual.*.layout[0].rectangleRoundedCurve": "--control-radius-default",
   "visualStyles.advancedSlicerVisual.*.background[2].color.solid.color": "--background-selected-subtlest-default",
   "visualStyles.advancedSlicerVisual.*.layout[0].columnPadding": "--size050",
   "visualStyles.advancedSlicerVisual.*.background[3].color.solid.color": "--background-selected-subtlest-default",
   "visualStyles.advancedSlicerVisual.*.background[4].color.solid.color": "--background-selected-subtlest-default",
-  "visualStyles.advancedSlicerVisual.*.background[5].color.solid.color": "--background-selected-subtlest-default"
+  "visualStyles.advancedSlicerVisual.*.background[5].color.solid.color": "--background-selected-subtlest-default",
+  "visualStyles.advancedSlicerVisual.*.value[1].fontSize": "--font-size-ui-xxxs",
+  "visualStyles.advancedSlicerVisual.*.padding[0].topMargin": "--size0",
+  "visualStyles.advancedSlicerVisual.*.padding[0].bottomMargin": "--size0",
+  "visualStyles.advancedSlicerVisual.*.padding[0].leftMargin": "--size0",
+  "visualStyles.advancedSlicerVisual.*.padding[0].rightMargin": "--size0"
 }
