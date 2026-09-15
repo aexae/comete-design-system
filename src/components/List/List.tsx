@@ -91,6 +91,13 @@ export interface ListHeadProps {
    * que les lignes ne transparaissent pas dessous. @default false
    */
   isSticky?: boolean;
+  /**
+   * Annule le padding **horizontal** du sous-titre (le vertical est conservé).
+   * À utiliser quand un conteneur parent définit déjà le retrait horizontal,
+   * pour aligner le sous-titre sur la même colonne que des items eux-mêmes
+   * mis à plat (`ListItemButton isFlush`). @default false
+   */
+  isFlush?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -119,6 +126,12 @@ export interface ListItemButtonProps
   extends Omit<AriaButtonProps, "className" | "style" | "children"> {
   /** Marque l'item comme sélectionné (état visuel + `aria-current`). */
   isSelected?: boolean;
+  /**
+   * Annule le padding **horizontal** de l'item (le vertical / la cible tactile
+   * de 44 px est conservé). À utiliser quand un conteneur parent porte déjà le
+   * retrait horizontal, pour ne pas cumuler deux insets. @default false
+   */
+  isFlush?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -338,12 +351,13 @@ List.displayName = "List";
 export function ListHead({
   children,
   isSticky = false,
+  isFlush = false,
   className,
   style,
 }: ListHeadProps): ReactElement {
   return (
     <li
-      className={[styles.head, className].filter(Boolean).join(" ")}
+      className={[styles.head, isFlush && styles.headFlush, className].filter(Boolean).join(" ")}
       style={style}
       role="presentation"
       data-sticky={isSticky || undefined}
@@ -419,6 +433,7 @@ function splitSecondaryAction(children: ReactNode): {
  */
 export function ListItemButton({
   isSelected = false,
+  isFlush = false,
   className,
   style,
   children,
@@ -432,7 +447,7 @@ export function ListItemButton({
     <li className={styles.itemButtonWrapper}>
       <AriaButton
         {...ariaProps}
-        className={[styles.item, styles.itemButton, className]
+        className={[styles.item, styles.itemButton, isFlush && styles.itemFlush, className]
           .filter(Boolean)
           .join(" ")}
         style={style}

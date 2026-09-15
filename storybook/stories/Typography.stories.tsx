@@ -310,7 +310,7 @@ const TYPE_GROUPS: TypeGroup[] = [
     id: "code",
     label: "Code",
     description:
-      "Texte monospace pour les extraits de code, valeurs techniques, identifiants et chemins de fichiers. Utilise SF Mono.",
+      "Texte monospace pour les extraits de code, valeurs techniques, identifiants et chemins de fichiers. Pile monospace système (SF Mono sur Apple, Consolas sur Windows, etc.).",
     guidance: [
       "Toujours afficher les valeurs de code dans un contexte à fond contrasté (surface sunken).",
       "Ne pas appliquer d'italic — la lisibilité du code nécessite un style droit.",
@@ -550,7 +550,7 @@ function FontFamilySection(): ReactElement {
     },
     {
       token: "--font-family-code",
-      resolved: "SF Mono",
+      resolved: "monospace système (SF Mono, Consolas, …)",
       role: "Police monospace",
       usage: "Code, valeurs techniques, identifiants.",
       sample: "const x = 42; // → {}[]",
@@ -571,7 +571,7 @@ function FontFamilySection(): ReactElement {
         <h2 style={css.groupTitle}>Polices et graisses</h2>
         <p style={css.groupDesc}>
           Comète utilise <strong>Poppins</strong> comme police principale et{" "}
-          <strong>SF Mono</strong> pour le code. Les quatre niveaux de graisse
+          une <strong>pile monospace système</strong> pour le code. Les quatre niveaux de graisse
           permettent de créer une hiérarchie claire sans multiplier les familles.
         </p>
       </div>

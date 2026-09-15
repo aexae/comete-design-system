@@ -9,6 +9,49 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.155] - 2026-09-15
+
+### Modifié
+
+- **Couleurs (tokens)** — via `@aexae/comete-design-tokens@0.13.2` :
+  - Bouton `color="comete"` (contained), thème clair : fond default/hover/pressed
+    passe de comete-blue `950/900/800` à `700/800/900` (bleu de marque plus vif
+    qui fonce à l'interaction ; blanc sur le fond par défaut = 5.34:1, AA).
+  - Tokens `selected` / `focused` repointés de la palette `blue` vers `comete.blue`
+    au même step (clair + sombre) : `--border-focused`, `--border-selected`,
+    `--background-focused-default`, `--text-selected`, `--icon-selected`,
+    `--border-selected-inverted`, `--border-focus-inverted`.
+
+### Ajouté
+
+- **`Page.Toolbar`** : nouveau slot `filters` (optionnel, non-breaking) — le
+  déclencheur du panneau de filtres (typiquement un unique bouton « Filtres »
+  ouvrant un popover) rendu sur la ligne de la toolbar, **entre la recherche et
+  `start`**, pour que recherche + filtres + vues + actions tiennent sur une
+  seule ligne. Largeur de contenu, jamais comprimé.
+- **`ListItemButton`** : nouvelle prop `isFlush` (défaut `false`) qui annule le
+  padding **horizontal** de l'item (le vertical / la cible tactile de 44 px est
+  conservé). À utiliser quand un conteneur parent définit déjà le retrait
+  horizontal, pour un unique bord d'alignement.
+- **`ListHead`** : nouvelle prop `isFlush` (défaut `false`) qui annule le padding
+  **horizontal** du sous-titre de section (le vertical est conservé), pour
+  l'aligner sur des items eux-mêmes mis à plat (`ListItemButton isFlush`).
+- **Drawer — mode non modal** : nouvelle prop `isModal` (`true` par défaut,
+  non-breaking). En `isModal={false}`, le Drawer devient un **panneau persistant
+  rendu dans le flux** — sans voile ni piège à focus, sans fermeture au clic
+  extérieur / Échap, et sans voler le focus à l'ouverture. Réservé aux
+  placements `left` / `right`.
+
+## [1.0.0-alpha.154] - 2026-09-07
+
+### Corrigé
+
+- **Typographie** : le token `--font-family-code` passe de `SF Mono` (exclusif
+  Apple, sans fallback → texte non-monospace hors macOS) à une **pile monospace
+  système** cross-platform : `ui-monospace, SFMono-Regular, "SF Mono", Menlo,
+  Consolas, "Liberation Mono", monospace` (via `@aexae/comete-design-tokens@0.13.1`).
+  Le rôle « code » rend désormais en monospace sur toutes les plateformes.
+
 ## [1.0.0-alpha.153] - 2026-09-03
 
 ### Ajouté

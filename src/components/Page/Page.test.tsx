@@ -175,6 +175,34 @@ describe("Page.Toolbar", () => {
     expect(container.querySelector("[class*='toolbarEnd']")).toBeNull();
   });
 
+  it("should render filters when provided", () => {
+    const { getByText } = render(<Page.Toolbar filters={<span>Filtres</span>} />);
+    expect(getByText("Filtres")).toBeInTheDocument();
+  });
+
+  it("should NOT render filters slot when omitted", () => {
+    const { container } = render(<Page.Toolbar start={<span>S</span>} />);
+    expect(container.querySelector("[class*='toolbarFilters']")).toBeNull();
+  });
+
+  it("should render filters between search and start on the toolbar line", () => {
+    const { container } = render(
+      <Page.Toolbar
+        search={<span>Q</span>}
+        filters={<span>Filtres</span>}
+        start={<span>Vues</span>}
+      />,
+    );
+    const slots = Array.from(container.firstChild!.childNodes).map(
+      (n) => (n as HTMLElement).className,
+    );
+    const iSearch = slots.findIndex((c) => c.includes("toolbarSearch"));
+    const iFilters = slots.findIndex((c) => c.includes("toolbarFilters"));
+    const iStart = slots.findIndex((c) => c.includes("toolbarStart"));
+    expect(iSearch).toBeLessThan(iFilters);
+    expect(iFilters).toBeLessThan(iStart);
+  });
+
   it("should include the base toolbar class", () => {
     const { container } = render(<Page.Toolbar start={<span>x</span>} />);
     expect((container.firstChild as HTMLElement).className).toContain(

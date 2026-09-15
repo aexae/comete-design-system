@@ -126,6 +126,24 @@ describe("List", () => {
     expect(container.querySelector("[data-sticky]")).toBeNull();
   });
 
+  it("should NOT apply the head flush class by default", () => {
+    render(
+      <List aria-label="x">
+        <ListHead>Section</ListHead>
+      </List>,
+    );
+    expect(screen.getByText("Section").className).not.toContain("headFlush");
+  });
+
+  it("should apply the head flush class when isFlush", () => {
+    render(
+      <List aria-label="x">
+        <ListHead isFlush>Section</ListHead>
+      </List>,
+    );
+    expect(screen.getByText("Section").className).toContain("headFlush");
+  });
+
   // -------------------------------------------------------------------
   // ListItem
   // -------------------------------------------------------------------
@@ -177,6 +195,24 @@ describe("List", () => {
     expect(
       screen.getByRole("button", { name: "Click me" }),
     ).toBeInTheDocument();
+  });
+
+  it("should not apply the flush class by default", () => {
+    render(
+      <List aria-label="x">
+        <ListItemButton>Click me</ListItemButton>
+      </List>,
+    );
+    expect(screen.getByRole("button", { name: "Click me" }).className).not.toContain("itemFlush");
+  });
+
+  it("should apply the flush class when isFlush", () => {
+    render(
+      <List aria-label="x">
+        <ListItemButton isFlush>Click me</ListItemButton>
+      </List>,
+    );
+    expect(screen.getByRole("button", { name: "Click me" }).className).toContain("itemFlush");
   });
 
   it("should call onPress when ListItemButton is clicked", () => {
