@@ -168,5 +168,9 @@
   "visualStyles.advancedSlicerVisual.*.padding[0].left": "--size0",
   "visualStyles.advancedSlicerVisual.*.padding[1].leftMargin": "--size0",
   "visualStyles.advancedSlicerVisual.*.padding[0].right": "--size0",
-  "visualStyles.advancedSlicerVisual.*.padding[1].rightMargin": "--size0"
+  "visualStyles.advancedSlicerVisual.*.padding[1].rightMargin": "--size0",
+  "visualStyles.card.*.title[0].fontColor.solid.color": "--text-subtle",
+  "visualStyles.card.*.title[0].fontSize": "--font-size-ui-xxxs",
+  "visualStyles.cardVisual.*.title[0].fontColor.solid.color": "--text-subtle",
+  "visualStyles.cardVisual.*.title[0].fontSize": "--font-size-ui-xxxs"
 }
