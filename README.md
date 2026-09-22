@@ -4,6 +4,20 @@ Design system Comète — composants React accessibles, thémables et 100% pilot
 
 ## Installation
 
+Les deux packages sont publiés sur **GitHub Packages**. Configurer le registry dans un `.npmrc` :
+
+```ini
+@aexae:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NPM_AUTH_TOKEN}
+```
+
+GitHub Packages exige un token même en lecture, et l'org `aexae` **interdit les PAT classic > 90 jours**. Le plus simple est le token OAuth de la CLI `gh` :
+
+```bash
+gh auth refresh -h github.com -s read:packages
+export NPM_AUTH_TOKEN=$(gh auth token)
+```
+
 ```bash
 pnpm add @aexae/comete-design-system @aexae/comete-design-tokens
 ```
@@ -82,6 +96,16 @@ cd storybook && pnpm install && pnpm start   # → http://localhost:6006
 ```
 
 Catalogue complet des composants avec tests d'interaction intégrés. Lien Figma via `@storybook/addon-designs`.
+
+### Publication
+
+Automatisée par la CI (`.github/workflows/publish.yml`) au push d'un tag `v*`, via le `GITHUB_TOKEN` d'Actions (`packages: write`) — **aucun PAT requis**. Les pré-releases (tag contenant `-`, ex. `v1.0.0-alpha.156`) sont publiées sous le dist-tag `alpha`, puis `latest` est repointé dessus.
+
+```bash
+# bump la version dans package.json, committer, puis :
+git tag v1.0.0-alpha.156
+git push origin main v1.0.0-alpha.156   # le tag déclenche le workflow Publish
+```
 
 ## Architecture
 
