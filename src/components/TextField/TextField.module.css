@@ -105,7 +105,7 @@
    le texte saisi ne passe jamais sous le bouton (largeur extérieure du champ
    inchangée — c'est uniquement l'aire visible du texte qui se réduit). */
 .textField:has(.clearButton) .input {
-  padding-right: var(--size300);
+  padding-right: var(--space300);
 }
 
 .clearButton[data-hovered] {
