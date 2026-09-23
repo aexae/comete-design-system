@@ -17,12 +17,12 @@
   "center": "--comete-blue-400",
   "minimum": "--comete-blue-200",
   "textClasses.callout.color": "--text-default",
-  "textClasses.title.color": "--text-default",
+  "textClasses.title.color": "--text-subtle",
   "textClasses.header.color": "--text-default",
   "textClasses.label.color": "--text-subtle",
   "visualStyles.*.*.background[0].color.solid.color": "--background-default-default",
   "visualStyles.*.*.border[0].color.solid.color": "--border-default",
-  "visualStyles.*.*.title[0].fontColor.solid.color": "--text-default",
+  "visualStyles.*.*.title[0].fontColor.solid.color": "--text-subtle",
   "visualStyles.page.*.background[0].color.solid.color": "--background-surface-elevation-sunken-default",
   "visualStyles.page.*.outspace[0].color.solid.color": "--background-neutral-subtler-default",
   "visualStyles.card.*.labels[0].color.solid.color": "--text-default",
@@ -169,8 +169,6 @@
   "visualStyles.advancedSlicerVisual.*.padding[1].leftMargin": "--size0",
   "visualStyles.advancedSlicerVisual.*.padding[0].right": "--size0",
   "visualStyles.advancedSlicerVisual.*.padding[1].rightMargin": "--size0",
-  "visualStyles.card.*.title[0].fontColor.solid.color": "--text-subtle",
-  "visualStyles.card.*.title[0].fontSize": "--font-size-ui-xxxs",
-  "visualStyles.cardVisual.*.title[0].fontColor.solid.color": "--text-subtle",
-  "visualStyles.cardVisual.*.title[0].fontSize": "--font-size-ui-xxxs"
+  "visualStyles.*.*.title[0].fontSize": "--font-size-ui-xxxs",
+  "textClasses.title.fontSize": "--font-size-ui-xxxs"
 }
