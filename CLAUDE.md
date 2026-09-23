@@ -115,10 +115,10 @@ git checkout -b component-name   # kebab-case du nom du composant
 
 ### 1. Extraction Figma
 
-Le token Figma est dans `.env` sous la clé `FIGMA_ACCESS_TOKEN`. Le fichier du DS est `YO9cW75K8aLcM5BbojZAqB`.
+Le token Figma est dans `.env` sous la clé `FIGMA_TOKEN`. Le fichier du DS est `YO9cW75K8aLcM5BbojZAqB`.
 
 ```bash
-curl -s -H "X-Figma-Token: $FIGMA_ACCESS_TOKEN" \
+curl -s -H "X-Figma-Token: $FIGMA_TOKEN" \
   "https://api.figma.com/v1/files/YO9cW75K8aLcM5BbojZAqB/nodes?ids=NODE_ID" \
   | python3 -m json.tool > /tmp/component_node.json
 ```
