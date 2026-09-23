@@ -1,5 +1,5 @@
 {
-  "name": "Comète BI v0.9.22",
+  "name": "Comète BI v0.9.23",
   "$schema": "https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.157.json",
   "dataColors": [
     "#429AEF",
@@ -118,6 +118,11 @@
             "bottom": 8,
             "left": 8,
             "right": 8
+          }
+        ],
+        "subTitle": [
+          {
+            "show": false
           }
         ]
       }
@@ -764,6 +769,22 @@
             "left": 16,
             "right": 16
           }
+        ],
+        "value": [
+          {
+            "fontFamily": "Segoe UI Semibold",
+            "fontSize": 14
+          }
+        ],
+        "labels": [
+          {
+            "fontSize": 8
+          }
+        ],
+        "legend": [
+          {
+            "fontSize": 8
+          }
         ]
       }
     },
@@ -992,6 +1013,27 @@
             "left": 16,
             "right": 16
           }
+        ],
+        "categoryAxis": [
+          {
+            "showAxisTitle": false,
+            "gridlineShow": false
+          }
+        ],
+        "valueAxis": [
+          {
+            "showAxisTitle": false
+          }
+        ],
+        "legend": [
+          {
+            "position": "Top"
+          }
+        ],
+        "labels": [
+          {
+            "show": false
+          }
         ]
       }
     },
@@ -1003,6 +1045,27 @@
             "bottom": 16,
             "left": 16,
             "right": 16
+          }
+        ],
+        "categoryAxis": [
+          {
+            "showAxisTitle": false,
+            "gridlineShow": false
+          }
+        ],
+        "valueAxis": [
+          {
+            "showAxisTitle": false
+          }
+        ],
+        "legend": [
+          {
+            "position": "Top"
+          }
+        ],
+        "labels": [
+          {
+            "show": false
           }
         ]
       }
@@ -1016,6 +1079,27 @@
             "left": 16,
             "right": 16
           }
+        ],
+        "categoryAxis": [
+          {
+            "showAxisTitle": false,
+            "gridlineShow": false
+          }
+        ],
+        "valueAxis": [
+          {
+            "showAxisTitle": false
+          }
+        ],
+        "legend": [
+          {
+            "position": "Top"
+          }
+        ],
+        "labels": [
+          {
+            "show": false
+          }
         ]
       }
     },
@@ -1027,6 +1111,27 @@
             "bottom": 16,
             "left": 16,
             "right": 16
+          }
+        ],
+        "categoryAxis": [
+          {
+            "showAxisTitle": false,
+            "gridlineShow": false
+          }
+        ],
+        "valueAxis": [
+          {
+            "showAxisTitle": false
+          }
+        ],
+        "legend": [
+          {
+            "position": "Top"
+          }
+        ],
+        "labels": [
+          {
+            "show": false
           }
         ]
       }
@@ -1076,6 +1181,27 @@
             "left": 16,
             "right": 16
           }
+        ],
+        "categoryAxis": [
+          {
+            "showAxisTitle": false,
+            "gridlineShow": false
+          }
+        ],
+        "valueAxis": [
+          {
+            "showAxisTitle": false
+          }
+        ],
+        "legend": [
+          {
+            "position": "Top"
+          }
+        ],
+        "labels": [
+          {
+            "show": false
+          }
         ]
       }
     },
@@ -1087,6 +1213,27 @@
             "bottom": 16,
             "left": 16,
             "right": 16
+          }
+        ],
+        "categoryAxis": [
+          {
+            "showAxisTitle": false,
+            "gridlineShow": false
+          }
+        ],
+        "valueAxis": [
+          {
+            "showAxisTitle": false
+          }
+        ],
+        "legend": [
+          {
+            "position": "Top"
+          }
+        ],
+        "labels": [
+          {
+            "show": false
           }
         ]
       }

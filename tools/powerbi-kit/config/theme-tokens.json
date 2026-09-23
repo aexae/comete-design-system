@@ -250,5 +250,6 @@
   "visualStyles.waterfallChart.*.padding[0].top": "--size200",
   "visualStyles.waterfallChart.*.padding[0].bottom": "--size200",
   "visualStyles.waterfallChart.*.padding[0].left": "--size200",
-  "visualStyles.waterfallChart.*.padding[0].right": "--size200"
+  "visualStyles.waterfallChart.*.padding[0].right": "--size200",
+  "visualStyles.donutChart.*.value[0].fontSize": "--font-size-ui-xs"
 }
