@@ -114,6 +114,49 @@ function isColorValue(v: string): boolean {
   return v.startsWith("#") || v.startsWith("rgb") || v.startsWith("hsl") || v.startsWith("rgba");
 }
 
+type ColorFormat = "hex" | "rgb" | "omnisint";
+
+const COLOR_FORMATS: { key: ColorFormat; label: string }[] = [
+  { key: "hex", label: "#HEX" },
+  { key: "rgb", label: "RGB" },
+  { key: "omnisint", label: "OMNISINT" },
+];
+
+/** Parse une couleur (#hex 3/6/8, rgb(), rgba()) en [r, g, b] 0-255, ou null. */
+function parseRgb(v: string): [number, number, number] | null {
+  const s = v.trim();
+  const hexMatch = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.exec(s);
+  if (hexMatch?.[1]) {
+    let h = hexMatch[1];
+    if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+    return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+  }
+  const rgbMatch = /^rgba?\(([^)]+)\)$/i.exec(s);
+  if (rgbMatch?.[1]) {
+    const [r, g, b] = rgbMatch[1].split(/[,\s/]+/).filter(Boolean).map(Number);
+    if (r !== undefined && g !== undefined && b !== undefined && Number.isFinite(r) && Number.isFinite(g) && Number.isFinite(b)) {
+      return [r, g, b];
+    }
+  }
+  return null;
+}
+
+/**
+ * Reformate une valeur couleur selon le format choisi. Les valeurs non-couleur
+ * (espacement, radius, alias `var()`…) sont renvoyées telles quelles.
+ * - `omnisint` : entier couleur d'Omnis Studio, `r + g*256 + b*65536` (alpha ignoré).
+ */
+function formatColor(value: string, format: ColorFormat): string {
+  if (format === "hex" && value.trim().startsWith("#")) return value;
+  const rgb = parseRgb(value);
+  if (!rgb) return value;
+  const [r, g, b] = rgb;
+  if (format === "rgb") return `rgb(${r}, ${g}, ${b})`;
+  if (format === "omnisint") return String(r + g * 256 + b * 65536);
+  const h = (n: number) => Math.round(n).toString(16).padStart(2, "0");
+  return `#${h(r)}${h(g)}${h(b)}`;
+}
+
 function getComputedTokenValue(name: string): string {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
@@ -180,14 +223,38 @@ function NavLink({ label, count, active, onClick }: { label: string; count: numb
   );
 }
 
-function TokenRow({ token, computedValue, copiedField, onCopy }: {
-  token: TokenEntry; computedValue: string;
+function ColorFormatToggle({ value, onChange }: { value: ColorFormat; onChange: (f: ColorFormat) => void }): ReactElement {
+  return (
+    <div role="group" aria-label="Format de couleur (affichage et copie)"
+      style={{ display: "inline-flex", border: "1px solid var(--border-default)", borderRadius: 6, overflow: "hidden", flexShrink: 0 }}>
+      {COLOR_FORMATS.map((o, i) => {
+        const active = value === o.key;
+        return (
+          <button key={o.key} type="button" aria-pressed={active} onClick={() => onChange(o.key)} title={`Afficher et copier les couleurs en ${o.label}`}
+            style={{
+              padding: "6px 10px", border: "none",
+              borderLeft: i === 0 ? "none" : "1px solid var(--border-default)",
+              background: active ? "var(--background-selected-subtlest-default)" : "var(--background-default-default)",
+              color: active ? "var(--text-selected)" : "var(--text-subtle)",
+              fontSize: 12, fontWeight: active ? 600 : 400, fontFamily: "inherit", cursor: "pointer",
+            }}>
+            {o.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function TokenRow({ token, computedValue, colorFormat, copiedField, onCopy }: {
+  token: TokenEntry; computedValue: string; colorFormat: ColorFormat;
   copiedField: { name: string; field: "var" | "value" } | null;
   onCopy: (name: string, field: "var" | "value", text: string) => void;
 }): ReactElement {
   const isColor = isColorValue(computedValue) || isColorValue(token.light);
   const hasThemeVariant = token.dark !== null && token.dark !== token.light;
   const resolvedValue = computedValue || token.light;
+  const displayValue = isColor ? formatColor(resolvedValue, colorFormat) : resolvedValue;
   const isCopiedVar = copiedField?.name === token.name && copiedField.field === "var";
   const isCopiedValue = copiedField?.name === token.name && copiedField.field === "value";
   const isAnyCopied = isCopiedVar || isCopiedValue;
@@ -208,9 +275,9 @@ function TokenRow({ token, computedValue, copiedField, onCopy }: {
           style={{ ...btn, fontSize: 12, color: isCopiedVar ? "var(--text-selected)" : "var(--text-default)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {isCopiedVar ? "✓ copié" : token.name.replace(/^--/, "")}
         </button>
-        <button type="button" onClick={() => { onCopy(token.name, "value", resolvedValue); }} title={`Copier ${resolvedValue}`}
+        <button type="button" onClick={() => { onCopy(token.name, "value", displayValue); }} title={`Copier ${displayValue}`}
           style={{ ...btn, fontSize: 11, color: isCopiedValue ? "var(--text-selected)" : "var(--text-subtlest)" }}>
-          {isCopiedValue ? "✓ copié" : resolvedValue}
+          {isCopiedValue ? "✓ copié" : displayValue}
         </button>
       </span>
       {hasThemeVariant
@@ -220,12 +287,14 @@ function TokenRow({ token, computedValue, copiedField, onCopy }: {
   );
 }
 
-function ColorSwatch({ token: t, copiedField, onCopy }: {
+function ColorSwatch({ token: t, colorFormat, copiedField, onCopy }: {
   token: TokenEntry;
+  colorFormat: ColorFormat;
   copiedField: { name: string; field: "var" | "value" } | null;
   onCopy: (name: string, field: "var" | "value", text: string) => void;
 }): ReactElement {
   const shade = t.name.match(/-(\d+-a)$/)?.[1] ?? t.name.split("-").pop() ?? "";
+  const displayValue = formatColor(t.light, colorFormat);
   const isCopiedVar = copiedField?.name === t.name && copiedField.field === "var";
   const isCopiedValue = copiedField?.name === t.name && copiedField.field === "value";
   const isAnyCopied = isCopiedVar || isCopiedValue;
@@ -236,9 +305,9 @@ function ColorSwatch({ token: t, copiedField, onCopy }: {
         style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 10, fontFamily: "monospace", color: isCopiedVar ? "var(--text-selected)" : "var(--text-subtlest)" }}>
         {isCopiedVar ? "✓ var" : shade}
       </button>
-      <button type="button" onClick={() => onCopy(t.name, "value", t.light)} title={`Copier ${t.light}`}
+      <button type="button" onClick={() => onCopy(t.name, "value", displayValue)} title={`Copier ${displayValue}`}
         style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontSize: 9, fontFamily: "monospace", color: isCopiedValue ? "var(--text-selected)" : "var(--text-subtlest)" }}>
-        {isCopiedValue ? "✓ hex" : t.light}
+        {isCopiedValue ? "✓ copié" : displayValue}
       </button>
     </div>
   );
@@ -258,6 +327,7 @@ function AllTokensTab(): ReactElement {
   const [semanticGroup, setSemanticGroup] = useState<SemanticGroup>("background");
   const [primitiveGroup, setPrimitiveGroup] = useState<PrimitiveGroup>("color");
   const [search, setSearch] = useState("");
+  const [colorFormat, setColorFormat] = useState<ColorFormat>("hex");
   const [copiedField, handleCopy] = useCopy();
   const [tick, setTick] = useState(0);
 
@@ -299,8 +369,9 @@ function AllTokensTab(): ReactElement {
         <div style={S.toolbar}>
           <input type="search" placeholder="Rechercher un token…" value={search} onChange={(e) => setSearch(e.target.value)}
             style={{ flex: "1 1 240px", padding: "6px 10px", border: "1px solid var(--border-default)", borderRadius: 6, background: "var(--background-default-default)", color: "var(--text-default)", fontSize: 13, fontFamily: "inherit" }} />
+          <ColorFormatToggle value={colorFormat} onChange={setColorFormat} />
           <span style={{ fontSize: 12, color: "var(--text-subtlest)" }}>
-            Cliquer sur le nom pour copier <code style={{ background: "var(--background-neutral-subtler-default)", padding: "1px 4px", borderRadius: 3 }}>var(--nom)</code>, sur la valeur pour copier le hex/valeur brute
+            Cliquer sur le nom pour copier <code style={{ background: "var(--background-neutral-subtler-default)", padding: "1px 4px", borderRadius: 3 }}>var(--nom)</code>, sur la valeur pour copier au format choisi (les couleurs suivent #HEX / RGB / OMNISINT, les autres tokens restent bruts)
           </span>
         </div>
 
@@ -317,7 +388,7 @@ function AllTokensTab(): ReactElement {
           ? subgroups.map((sg) => {
               const tokens = activeTokens.filter((t) => getBackgroundSubgroup(t.name) === sg);
               if (tokens.length === 0) return null;
-              return (<div key={sg}><p style={S.subgroupTitle}>{sg}</p>{tokens.map((t) => <TokenRow key={t.name} token={t} computedValue={getComputedTokenValue(t.name)} copiedField={copiedField} onCopy={handleCopy} />)}</div>);
+              return (<div key={sg}><p style={S.subgroupTitle}>{sg}</p>{tokens.map((t) => <TokenRow key={t.name} token={t} computedValue={getComputedTokenValue(t.name)} colorFormat={colorFormat} copiedField={copiedField} onCopy={handleCopy} />)}</div>);
             })
           : isColorPalette && palettes
             ? palettes.map((palette) => {
@@ -326,9 +397,9 @@ function AllTokensTab(): ReactElement {
                   const numB = parseInt(b.name.match(/-(\d+)[A-Z]*$/)?.[1] ?? "0", 10);
                   return numA - numB;
                 });
-                return (<div key={palette}><p style={S.subgroupTitle}>{palette}</p><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))", gap: 4, marginBottom: 8 }}>{tokens.map((t) => <ColorSwatch key={t.name} token={t} copiedField={copiedField} onCopy={handleCopy} />)}</div></div>);
+                return (<div key={palette}><p style={S.subgroupTitle}>{palette}</p><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(80px, 1fr))", gap: 4, marginBottom: 8 }}>{tokens.map((t) => <ColorSwatch key={t.name} token={t} colorFormat={colorFormat} copiedField={copiedField} onCopy={handleCopy} />)}</div></div>);
               })
-            : activeTokens.map((t) => <TokenRow key={t.name} token={t} computedValue={getComputedTokenValue(t.name)} copiedField={copiedField} onCopy={handleCopy} />)}
+            : activeTokens.map((t) => <TokenRow key={t.name} token={t} computedValue={getComputedTokenValue(t.name)} colorFormat={colorFormat} copiedField={copiedField} onCopy={handleCopy} />)}
       </div>
     </div>
   );
