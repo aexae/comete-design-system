@@ -9,6 +9,13 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.157] - 2026-09-29
+
+### Ajouté
+
+- **Icônes** : nouvelle icône `DeployedCode` (Material Symbols `deployed_code`) via
+  `<Icon icon="DeployedCode" />` (bump `@aexae/comete-icons` → `0.7.3`).
+
 ## [1.0.0-alpha.155] - 2026-09-15
 
 ### Modifié
