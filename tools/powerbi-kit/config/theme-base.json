@@ -1,5 +1,5 @@
 {
-  "name": "Comète BI v0.9.19",
+  "name": "Comète BI v0.9.24",
   "$schema": "https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.157.json",
   "dataColors": [
     "#429AEF",
@@ -28,8 +28,8 @@
     },
     "title": {
       "fontFace": "Segoe UI Semibold",
-      "fontSize": 13,
-      "color": "#1E3661"
+      "fontSize": 10,
+      "color": "#49585B"
     },
     "header": {
       "fontFace": "Segoe UI Semibold",
@@ -77,11 +77,11 @@
             "show": true,
             "fontColor": {
               "solid": {
-                "color": "#1E3661"
+                "color": "#49585B"
               }
             },
             "fontFamily": "Segoe UI Semibold",
-            "fontSize": 13,
+            "fontSize": 10,
             "alignment": "left"
           }
         ],
@@ -118,6 +118,11 @@
             "bottom": 8,
             "left": 8,
             "right": 8
+          }
+        ],
+        "subTitle": [
+          {
+            "show": false
           }
         ]
       }
@@ -168,16 +173,6 @@
             },
             "fontFamily": "Segoe UI",
             "fontSize": 10
-          }
-        ],
-        "title": [
-          {
-            "fontSize": 10,
-            "fontColor": {
-              "solid": {
-                "color": "#49585B"
-              }
-            }
           }
         ]
       }
@@ -231,7 +226,7 @@
                 "color": "#F6F6F6"
               }
             },
-            "fontFamily": "Segoe UI",
+            "fontFamily": "Segoe UI Semibold",
             "fontSize": 10
           }
         ],
@@ -322,7 +317,7 @@
         ],
         "values": [
           {
-            "fontFamily": "Segoe UI",
+            "fontFamily": "Segoe UI Semibold",
             "fontSize": 8,
             "fontColorPrimary": {
               "solid": {
@@ -491,6 +486,14 @@
             "strokeWidth": 2,
             "showMarker": false
           }
+        ],
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
+          }
         ]
       }
     },
@@ -539,16 +542,6 @@
             },
             "fontFamily": "Segoe UI",
             "fontSize": 10
-          }
-        ],
-        "title": [
-          {
-            "fontSize": 10,
-            "fontColor": {
-              "solid": {
-                "color": "#49585B"
-              }
-            }
           }
         ]
       }
@@ -768,6 +761,30 @@
             },
             "borderSize": 1
           }
+        ],
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
+          }
+        ],
+        "value": [
+          {
+            "fontFamily": "Segoe UI Semibold",
+            "fontSize": 14
+          }
+        ],
+        "labels": [
+          {
+            "fontSize": 8
+          }
+        ],
+        "legend": [
+          {
+            "fontSize": 8
+          }
         ]
       }
     },
@@ -782,6 +799,14 @@
               }
             },
             "borderSize": 1
+          }
+        ],
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
           }
         ]
       }
@@ -963,6 +988,342 @@
         "image": [
           {
             "show": false
+          }
+        ]
+      }
+    },
+    "areaChart": {
+      "*": {
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
+          }
+        ]
+      }
+    },
+    "barChart": {
+      "*": {
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
+          }
+        ],
+        "categoryAxis": [
+          {
+            "showAxisTitle": false,
+            "gridlineShow": false
+          }
+        ],
+        "valueAxis": [
+          {
+            "showAxisTitle": false
+          }
+        ],
+        "legend": [
+          {
+            "position": "Top"
+          }
+        ],
+        "labels": [
+          {
+            "show": false
+          }
+        ]
+      }
+    },
+    "clusteredBarChart": {
+      "*": {
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
+          }
+        ],
+        "categoryAxis": [
+          {
+            "showAxisTitle": false,
+            "gridlineShow": false
+          }
+        ],
+        "valueAxis": [
+          {
+            "showAxisTitle": false
+          }
+        ],
+        "legend": [
+          {
+            "position": "Top"
+          }
+        ],
+        "labels": [
+          {
+            "show": false
+          }
+        ]
+      }
+    },
+    "clusteredColumnChart": {
+      "*": {
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
+          }
+        ],
+        "categoryAxis": [
+          {
+            "showAxisTitle": false,
+            "gridlineShow": false
+          }
+        ],
+        "valueAxis": [
+          {
+            "showAxisTitle": false
+          }
+        ],
+        "legend": [
+          {
+            "position": "Top"
+          }
+        ],
+        "labels": [
+          {
+            "show": false,
+            "labelOrientation": 0,
+            "labelPosition": "OutsideEnd"
+          }
+        ]
+      }
+    },
+    "columnChart": {
+      "*": {
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
+          }
+        ],
+        "categoryAxis": [
+          {
+            "showAxisTitle": false,
+            "gridlineShow": false
+          }
+        ],
+        "valueAxis": [
+          {
+            "showAxisTitle": false
+          }
+        ],
+        "legend": [
+          {
+            "position": "Top"
+          }
+        ],
+        "labels": [
+          {
+            "show": false,
+            "labelOrientation": 0,
+            "labelPosition": "OutsideEnd"
+          }
+        ]
+      }
+    },
+    "funnel": {
+      "*": {
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
+          }
+        ]
+      }
+    },
+    "gauge": {
+      "*": {
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
+          }
+        ]
+      }
+    },
+    "hundredPercentStackedAreaChart": {
+      "*": {
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
+          }
+        ]
+      }
+    },
+    "hundredPercentStackedBarChart": {
+      "*": {
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
+          }
+        ],
+        "categoryAxis": [
+          {
+            "showAxisTitle": false,
+            "gridlineShow": false
+          }
+        ],
+        "valueAxis": [
+          {
+            "showAxisTitle": false
+          }
+        ],
+        "legend": [
+          {
+            "position": "Top"
+          }
+        ],
+        "labels": [
+          {
+            "show": false
+          }
+        ]
+      }
+    },
+    "hundredPercentStackedColumnChart": {
+      "*": {
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
+          }
+        ],
+        "categoryAxis": [
+          {
+            "showAxisTitle": false,
+            "gridlineShow": false
+          }
+        ],
+        "valueAxis": [
+          {
+            "showAxisTitle": false
+          }
+        ],
+        "legend": [
+          {
+            "position": "Top"
+          }
+        ],
+        "labels": [
+          {
+            "show": false,
+            "labelOrientation": 0,
+            "labelPosition": "OutsideEnd"
+          }
+        ]
+      }
+    },
+    "lineClusteredColumnComboChart": {
+      "*": {
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
+          }
+        ]
+      }
+    },
+    "lineStackedColumnComboChart": {
+      "*": {
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
+          }
+        ]
+      }
+    },
+    "ribbonChart": {
+      "*": {
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
+          }
+        ]
+      }
+    },
+    "scatterChart": {
+      "*": {
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
+          }
+        ]
+      }
+    },
+    "stackedAreaChart": {
+      "*": {
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
+          }
+        ]
+      }
+    },
+    "treemap": {
+      "*": {
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
+          }
+        ]
+      }
+    },
+    "waterfallChart": {
+      "*": {
+        "padding": [
+          {
+            "top": 16,
+            "bottom": 16,
+            "left": 16,
+            "right": 16
           }
         ]
       }
