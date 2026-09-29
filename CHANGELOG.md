@@ -9,6 +9,13 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.159] - 2026-09-29
+
+### Modifié
+
+- **Icônes** : `InvoiceStatusCheck` resynchronisée depuis Figma, accent en
+  `--icon-information` (bump `@aexae/comete-icons` → `0.7.5`).
+
 ## [1.0.0-alpha.158] - 2026-09-29
 
 ### Ajouté
