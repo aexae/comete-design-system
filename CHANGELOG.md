@@ -9,6 +9,21 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.158] - 2026-09-29
+
+### Ajouté
+
+- **Icônes** : `CalendarAi`, `Female`, `Instruction`, `Male`, `TextFields`, `VisibilityBadge`
+  et `License` (existait sans export) via `<Icon icon="…" />` (bump `@aexae/comete-icons` → `0.7.4`).
+
+### Modifié
+
+- **Icônes** : couleurs alignées sur Figma, zéro couleur codée en dur dans le paquet
+  (110 composants corrigés) ; 28 icônes aux tracés mis à jour depuis Figma (famille
+  `Clocking*`, `Description`, `HourlyRate`, `Tune`, `Lock`, `Pdf`, `Report`, etc.).
+  `--icon-selected` n'apparaît plus dans le dessin des icônes (reste disponible via
+  la prop `color`).
+
 ## [1.0.0-alpha.157] - 2026-09-29
 
 ### Ajouté
