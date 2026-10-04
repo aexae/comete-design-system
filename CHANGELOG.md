@@ -9,6 +9,17 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.160] - 2026-10-04
+
+### Modifié
+
+- **Couleurs disabled** : les tokens `disabled` (fond, texte, icône, bordure) pointent
+  désormais sur les primitives alpha (`black-*` / `white-*`) au lieu de `grey.solid`
+  (bump `@aexae/comete-design-tokens` → `0.15.0`). Le contraste texte sur fond disabled
+  remonte de ~1,27:1 à **2,62:1** (clair) et de ~2,1:1 à **3,42:1** (sombre). Le fond
+  disabled devient semi-transparent et s'adapte à la surface sous-jacente. Les 26
+  composants qui consomment ces tokens suivent automatiquement, sans modification de code.
+
 ## [1.0.0-alpha.159] - 2026-09-29
 
 ### Modifié
