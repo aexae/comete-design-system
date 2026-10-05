@@ -14,11 +14,14 @@ entre versions alpha.
 ### Modifié
 
 - **Couleurs disabled** : les tokens `disabled` (fond, texte, icône, bordure) pointent
-  désormais sur les primitives alpha (`black-*` / `white-*`) au lieu de `grey.solid`
-  (bump `@aexae/comete-design-tokens` → `0.15.0`). Le contraste texte sur fond disabled
-  remonte de ~1,27:1 à **2,62:1** (clair) et de ~2,1:1 à **3,42:1** (sombre). Le fond
-  disabled devient semi-transparent et s'adapte à la surface sous-jacente. Les 26
-  composants qui consomment ces tokens suivent automatiquement, sans modification de code.
+  désormais sur les primitives alpha (`black-*` / `white-*`) au lieu de `grey.solid`.
+  Le contraste texte sur fond disabled remonte de ~1,27:1 à **2,62:1** (clair) et de
+  ~2,1:1 à **3,42:1** (sombre). Le fond disabled devient semi-transparent et s'adapte à
+  la surface sous-jacente. Les 26 composants qui consomment ces tokens suivent
+  automatiquement, sans modification de code.
+- **Texte par défaut (thème sombre)** : `text.default` passe de `cool-grey.200` (`#d8dedf`)
+  à `cool-grey.50` (`#f7f8f8`), texte par défaut plus lumineux et contrasté en dark.
+- Bump `@aexae/comete-design-tokens` → `0.16.0` (regroupe les deux changements ci-dessus).
 
 ## [1.0.0-alpha.159] - 2026-09-29
 
