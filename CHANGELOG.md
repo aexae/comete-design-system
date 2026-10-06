@@ -9,6 +9,18 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.162] - 2026-10-06
+
+### Modifié
+
+- **Logo, variante `inverse`** : le suffixe « on time » passe sur le ton atténué du
+  thème opposé (`--logo-comete-subtle-inverted`). La variante `inverse` se pose sur la
+  surface opposée au thème, mais le suffixe prenait le ton atténué du thème courant :
+  1,6 à 2,6:1, illisible. Il remonte à **5 à 8:1**. Aucun changement d'API.
+- Bump `@aexae/comete-design-tokens` → `0.17.0` (nouveau token
+  `--logo-comete-subtle-inverted`) et `@aexae/comete-logos` → `0.13.0` (consomme ce
+  token ; sa peer dependency sur les tokens passe de `^0.13.0` à `^0.17.0`).
+
 ## [1.0.0-alpha.161] - 2026-10-06
 
 ### Changements cassants (BREAKING)
