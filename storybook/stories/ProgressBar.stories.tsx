@@ -61,7 +61,9 @@ const meta = {
                 "Un simple statut → Tag/Badge.",
               ]}
               best={[
-                "appearance auto pour dériver la couleur du contexte ; showLabel pour afficher la valeur.",
+                "appearance auto (défaut) : information pendant la progression, success à 100 %. C'est l'axe de statut (ADR 0002).",
+                "Jauge à seuils (quota, capacité, échéance) : forcer warning ou critical depuis la règle métier, jamais depuis la seule valeur.",
+                "showLabel pour afficher la valeur.",
                 "Accompagner d'un libellé décrivant ce qui progresse ; valeur 0-100 réaliste.",
                 "Ne pas animer la barre en boucle — c'est réservé à l'état indéterminé.",
               ]}
@@ -85,10 +87,10 @@ type Story = StoryObj<typeof ProgressBar>;
 // -----------------------------------------------------------------------
 // Stories
 
-/** Barre de progression par défaut à 50 % (auto → warning). */
+/** Barre de progression par défaut à 50 % (auto → information). */
 export const Default: Story = {};
 
-/** Barre vide (0 %, auto → critical). */
+/** Barre vide (0 %, auto → information). */
 export const Empty: Story = {
   args: { value: 0 },
 };
@@ -103,17 +105,17 @@ export const NoLabel: Story = {
   args: { value: 60, showLabel: false },
 };
 
-/** Apparence critique (≤ 20 %). */
+/** Apparence critique forcée (jauge : seuil métier dépassé). */
 export const Critical: Story = {
-  args: { value: 15 },
+  args: { value: 15, appearance: "critical" },
 };
 
-/** Apparence warning (21–69 %). */
+/** Apparence warning forcée (jauge : seuil métier approché). */
 export const Warning: Story = {
-  args: { value: 55 },
+  args: { value: 55, appearance: "warning" },
 };
 
-/** Apparence information (70–99 %). */
+/** Apparence information (auto, toute progression en cours). */
 export const Information: Story = {
   args: { value: 80 },
 };

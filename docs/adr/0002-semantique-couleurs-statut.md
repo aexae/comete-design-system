@@ -132,7 +132,7 @@ divergence décrite dans le Contexte, à l'échelle du design system cette fois.
 | `SectionMessage` | `appearance` | 4 (pas de `neutral`) + accents | Aligné ; accents à questionner |
 | `Banner` | `appearance` | 4 + `announcement` | **À trancher** |
 | `Snackbar` | `appearance` | 4 + `discovery` | **À trancher** |
-| `ProgressBar` | `appearance` | 4 + `comete`, et un mode `auto` | **À trancher** |
+| `ProgressBar` | `appearance` | 4 + `comete`, et un mode `auto` | `auto` réaligné (voir point 3) |
 | `Text`, `Icon` | `color` | les 5 | Porteurs, pas décideurs |
 
 `Text` et `Icon` sont un cas distinct : ils **rendent** une couleur qu'on leur
@@ -163,7 +163,13 @@ des API publiques et méritent leur propre décision.
    composant au motif qu'une **jauge** exprime un seuil et non une étape — ce
    qui se défend, mais doit être écrit pour ne pas passer pour un oubli.
 
-Tant que ces trois points ne sont pas tranchés, ils constituent les seules
+   *Tranché* : `auto` est réaligné sur l'axe. Une progression en cours est
+   `information`, 100 % est `success`. La valeur seule ne permet pas de dire
+   qu'une progression est en retard, donc le DS ne colore plus `warning` ni
+   `critical` par seuil. Une jauge qui a besoin de seuils les applique dans la
+   couche produit en forçant `appearance`.
+
+Tant que les points 1 et 2 ne sont pas tranchés, ils constituent les seules
 exceptions connues à la portée ci-dessus.
 
 ### Les accents sont exclus des statuts

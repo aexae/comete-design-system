@@ -72,38 +72,20 @@ describe("ProgressBar", () => {
   // -----------------------------------------------------------------------
   // Auto appearance
 
-  it("should apply critical appearance when value <= 20 (auto)", () => {
+  it("should apply information appearance at 0 (auto)", () => {
+    const { container } = render(<ProgressBar value={0} />);
+    const fill = container.querySelector(`.fill`);
+    expect(fill?.classList.contains("information")).toBe(true);
+  });
+
+  it("should apply information appearance at 15 (auto)", () => {
     const { container } = render(<ProgressBar value={15} />);
     const fill = container.querySelector(`.fill`);
-    expect(fill?.classList.contains("critical")).toBe(true);
+    expect(fill?.classList.contains("information")).toBe(true);
   });
 
-  it("should apply critical appearance at exactly 20 (auto)", () => {
-    const { container } = render(<ProgressBar value={20} />);
-    const fill = container.querySelector(`.fill`);
-    expect(fill?.classList.contains("critical")).toBe(true);
-  });
-
-  it("should apply warning appearance between 21 and 99 (auto)", () => {
+  it("should apply information appearance at 50 (auto)", () => {
     const { container } = render(<ProgressBar value={50} />);
-    const fill = container.querySelector(`.fill`);
-    expect(fill?.classList.contains("warning")).toBe(true);
-  });
-
-  it("should apply warning appearance at 21 (auto)", () => {
-    const { container } = render(<ProgressBar value={21} />);
-    const fill = container.querySelector(`.fill`);
-    expect(fill?.classList.contains("warning")).toBe(true);
-  });
-
-  it("should apply warning appearance at 69 (auto)", () => {
-    const { container } = render(<ProgressBar value={69} />);
-    const fill = container.querySelector(`.fill`);
-    expect(fill?.classList.contains("warning")).toBe(true);
-  });
-
-  it("should apply information appearance at 70 (auto)", () => {
-    const { container } = render(<ProgressBar value={70} />);
     const fill = container.querySelector(`.fill`);
     expect(fill?.classList.contains("information")).toBe(true);
   });
@@ -120,10 +102,20 @@ describe("ProgressBar", () => {
     expect(fill?.classList.contains("success")).toBe(true);
   });
 
-  it("should apply critical appearance at 0 (auto)", () => {
-    const { container } = render(<ProgressBar value={0} />);
+  it("should apply success appearance when value is clamped above 100 (auto)", () => {
+    const { container } = render(<ProgressBar value={140} />);
     const fill = container.querySelector(`.fill`);
-    expect(fill?.classList.contains("critical")).toBe(true);
+    expect(fill?.classList.contains("success")).toBe(true);
+  });
+
+  it("should never resolve auto to warning or critical", () => {
+    for (const v of [0, 10, 20, 21, 50, 69, 70, 99]) {
+      const { container, unmount } = render(<ProgressBar value={v} />);
+      const fill = container.querySelector(`.fill`);
+      expect(fill?.classList.contains("warning")).toBe(false);
+      expect(fill?.classList.contains("critical")).toBe(false);
+      unmount();
+    }
   });
 
   // -----------------------------------------------------------------------

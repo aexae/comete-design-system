@@ -9,6 +9,17 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.161] - 2026-10-06
+
+### Changements cassants (BREAKING)
+
+- **ProgressBar `appearance="auto"`** (valeur par défaut) suit désormais l'axe de statut
+  de l'ADR 0002 : `information` de 0 à 99 %, `success` à 100 %. Les anciens seuils
+  (`critical` ≤ 20, `warning` 21–69, `information` 70–99) sont supprimés : ils peignaient
+  en rouge toute barre qui démarre et traitaient une progression normale comme une alerte.
+  Pour une jauge à seuils (quota, capacité, échéance), passer `appearance="warning"` ou
+  `"critical"` explicitement depuis la règle métier.
+
 ## [1.0.0-alpha.160] - 2026-10-04
 
 ### Modifié

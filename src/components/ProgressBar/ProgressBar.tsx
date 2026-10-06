@@ -11,7 +11,15 @@ export type ProgressBarAppearance = "critical" | "warning" | "information" | "co
 export interface ProgressBarProps {
   /** Valeur de progression (0–100). @default 0 */
   value?: number;
-  /** Apparence de la barre. @default "auto" (critical ≤20, warning 21–99, success 100). Peut être forcée manuellement. */
+  /**
+   * Apparence de la barre. @default "auto"
+   *
+   * `auto` suit l'axe de statut (ADR 0002) : une progression en cours est
+   * `information` (« ça avance, rien à faire »), 100 % est `success`
+   * (« l'état souhaité est atteint »). La valeur seule ne dit pas si une
+   * progression est en retard : pour une jauge à seuils (quota, capacité),
+   * le consommateur force `warning` ou `critical` selon sa règle métier.
+   */
   appearance?: ProgressBarAppearance | "auto";
   /** Afficher le pourcentage à droite de la barre. @default true */
   showLabel?: boolean;
@@ -45,10 +53,7 @@ function resolveAppearance(
   value: number,
 ): ProgressBarAppearance {
   if (appearance !== "auto") return appearance;
-  if (value <= 20) return "critical";
-  if (value >= 100) return "success";
-  if (value >= 70) return "information";
-  return "warning";
+  return value >= 100 ? "success" : "information";
 }
 
 export function ProgressBar({
