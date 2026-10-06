@@ -9,6 +9,16 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.163] - 2026-10-06
+
+### Changements cassants (BREAKING)
+
+- La peer dependency `@aexae/comete-icons` passe de `^0.7.0` à `^0.8.0`. Icons 0.8.0 ne
+  change aucune icône : il corrige sa propre peer dependency sur les tokens, qui exigeait
+  `^0.13.0` et excluait donc 0.14 à 0.17 (en semver 0.x, `^0.13.0` vaut
+  `>=0.13.0 <0.14.0`). C'était le dernier avertissement de peer non satisfaite à
+  l'installation du design system.
+
 ## [1.0.0-alpha.162] - 2026-10-06
 
 ### Modifié
