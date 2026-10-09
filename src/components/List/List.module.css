@@ -101,9 +101,13 @@
 }
 
 /* Item avec une action secondaire : réserve de la place à droite pour que
-   le contenu du texte ne passe pas sous l'action absolute. */
+   le contenu du texte ne passe pas sous l'action absolute.
+   --space600 (48px) = retrait droit de l'action (--space200, 16px) + sa
+   largeur (--size400, 32px). Était `--space700`, un token qui n'existe pas
+   dans @aexae/comete-design-tokens : la déclaration était invalide et
+   `padding-right` retombait à 0, donc le texte passait SOUS l'action. */
 .item:has(.itemSecondaryAction) {
-  padding-right: var(--space700);
+  padding-right: var(--space600);
 }
 
 /* Flush : annule le retrait horizontal (le vertical / la cible tactile reste).
@@ -111,6 +115,22 @@
 .item.itemFlush {
   padding-left: 0;
   padding-right: 0;
+}
+
+/* Flush AVEC action secondaire : le `padding-right: 0` ci-dessus supprimerait
+   la réserve et le texte repasserait sous l'action. On la rétablit, réduite à
+   la seule largeur de l'action (--size400) puisque le retrait de 16px saute.
+   Spécificité (0,3,0) / (0,4,0) → gagne sur `.item.itemFlush` (0,2,0). */
+.item.itemFlush:has(.itemSecondaryAction),
+.itemButtonWrapper:has(.itemSecondaryAction) .item.itemFlush {
+  padding-right: var(--size400);
+}
+
+/* …et l'action elle-même se cale au bord, pour rester alignée avec le texte
+   mis à plat (sinon elle garderait son retrait de --space200). */
+.item.itemFlush .itemSecondaryAction,
+.itemButtonWrapper:has(.item.itemFlush) .itemSecondaryAction {
+  right: 0;
 }
 
 .list[data-dense] .item {
@@ -146,9 +166,10 @@
 }
 
 /* Réserve la même largeur à droite quand un `.itemSecondaryAction` est
-   sœur du bouton dans `ListItemButton`. */
+   sœur du bouton dans `ListItemButton`. Même correction que plus haut :
+   `--space700` n'existe pas, la réserve était donc nulle. */
 .itemButtonWrapper:has(.itemSecondaryAction) .item {
-  padding-right: var(--space700);
+  padding-right: var(--space600);
 }
 
 /* Reset du `<button>` natif + comportement de bloc cliquable. */

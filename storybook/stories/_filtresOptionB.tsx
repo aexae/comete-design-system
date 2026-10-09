@@ -7,7 +7,7 @@
 // override d'état d'un Button texte) sont fournies par le consommateur via
 // `scrollClassName` / `textActionClassName` — elles vivent dans le module CSS
 // des stories, pas dans ce helper (critère D11).
-import { useEffect, useRef, useState, type ReactElement } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactElement } from "react";
 import { parseDate, Time } from "@internationalized/date";
 import {
   Button,
@@ -611,11 +611,14 @@ export function FiltresPanel({
       isOpen={open}
       onOpenChange={setOpen}
       placement="bottom-left"
-      style={{ width: 720, maxWidth: "calc(100vw - 32px)", maxHeight: "min(calc(100vh - 24px), 520px)", overflow: "hidden" }}
+      // `--popup-padding: 0` → la carte du Popup ne pose AUCUN padding : chaque
+      // zone (recherche, volet gauche, volet droit, pied) porte déjà le sien, et
+      // les filets de séparation doivent filer d'un bord à l'autre.
+      style={{ width: 720, maxWidth: "calc(100vw - 32px)", maxHeight: "min(calc(100vh - 24px), 520px)", overflow: "hidden", "--popup-padding": 0 } as CSSProperties}
       trigger={triggerBtn(false)}
     >
       <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
-        <div style={{ flex: "none", padding: "var(--space200) var(--space200) var(--space150)" }}>
+        <div style={{ flex: "none", padding: "var(--space200)" }}>
           <SearchField
             aria-label="Rechercher dans les filtres"
             placeholder="Rechercher un critère (société, secteur, diplôme…)"
@@ -968,7 +971,7 @@ export function FiltresSheet({
               {views.map((v) => {
                 const n = totalActive(v.filters);
                 return (
-                  <ListItemButton key={v.id} onPress={() => applyView(v)}>
+                  <ListItemButton key={v.id} isFlush onPress={() => applyView(v)}>
                     <ListItemText primary={v.name} secondary={`${n} filtre${n > 1 ? "s" : ""} appliqué${n > 1 ? "s" : ""}`} />
                     {onDeleteView ? (
                       <ListItemSecondaryAction>

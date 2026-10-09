@@ -303,7 +303,7 @@ function SingleYearPicker({
                   appearance="subtle"
                   isInline
                   iconBefore="CloseSmall"
-                  className={styles.calendarButton}
+                  className={[styles.calendarButton, styles.clearButton].join(" ")}
                   isDisabled={isDisabled}
                   aria-label="Effacer"
                   onPress={handleClear}
@@ -653,7 +653,7 @@ function RangeYearPicker({
                   appearance="subtle"
                   isInline
                   iconBefore="CloseSmall"
-                  className={styles.calendarButton}
+                  className={[styles.calendarButton, styles.clearButton].join(" ")}
                   isDisabled={isDisabled}
                   aria-label="Effacer"
                   onPress={handleClear}
