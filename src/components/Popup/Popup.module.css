@@ -13,5 +13,10 @@
 
 .dialog {
   outline: none;
-  padding: var(--space200);
+  /* Padding interne pilotable par le consommateur via --popup-padding (défaut
+     --space200) — même procédé que --menu-popover-width / --focus-ring-offset.
+     Permet à un contenu qui porte DÉJÀ ses propres paddings (volets de la
+     recette « Filtres ») de coller aux bords, sans toucher à l'API publique
+     ni changer quoi que ce soit pour les autres consommateurs (FilterChip). */
+  padding: var(--popup-padding, var(--space200));
 }

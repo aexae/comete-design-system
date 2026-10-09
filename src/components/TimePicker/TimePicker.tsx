@@ -366,7 +366,7 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
                     appearance="subtle"
                     isInline
                     iconBefore="CloseSmall"
-                    className={styles.clockButton}
+                    className={[styles.clockButton, styles.clearButton].join(" ")}
                     isDisabled={isDisabled}
                     aria-label="Effacer"
                     onPress={handleClear}

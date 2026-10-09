@@ -28,6 +28,35 @@ entre versions alpha.
   rendu dans le flux** — sans voile ni piège à focus, sans fermeture au clic
   extérieur / Échap, et sans voler le focus à l'ouverture. Réservé aux
   placements `left` / `right`.
+- **`Popup`** : le padding interne de la carte est désormais pilotable par la
+  variable CSS `--popup-padding` (défaut `--space200`, non-breaking). Permet à
+  un contenu qui porte déjà ses propres retraits de coller aux bords, sans
+  élargir l'API publique du composant. Même procédé que `--menu-popover-width`
+  et `--focus-ring-offset`.
+
+### Modifié
+
+- **Bouton « Effacer » — `Select`, `DatePicker`, `TimePicker`, `MonthPicker`,
+  `WeekPicker`, `YearPicker`** : le bouton n'est plus affiché en permanence. Il
+  est **masqué au repos** et révélé au **survol ou au focus** du champ, en
+  s'ajoutant à l'icône calendrier / horloge (les deux visibles ensemble).
+  Alignement sur la convention déjà en place dans `TextField` / `SearchField`,
+  inchangés. Le masquage utilise `visibility` et non `display` : la place reste
+  réservée, l'icône d'ouverture ne se décale pas. Sur support tactile, faute de
+  survol, le bouton n'apparaît qu'à la prise de focus.
+
+### Corrigé
+
+- **`List` — réserve de l'action secondaire** : `ListItem` et `ListItemButton`
+  réservaient la place à droite via `var(--space700)`, un token **inexistant**
+  dans `@aexae/comete-design-tokens`. La déclaration était invalide, donc
+  `padding-right` retombait à `0` et le contenu textuel passait **sous**
+  l'action secondaire (mesuré à 48 px de recouvrement). Remplacé par
+  `--space600` = retrait de l'action (`--space200`) + sa largeur (`--size400`).
+- **`List` — `isFlush` combiné à une action secondaire** : `isFlush` annulait
+  aussi la réserve droite ci-dessus, ramenant le recouvrement. La réserve est
+  désormais rétablie dans ce cas, réduite à la seule largeur de l'action, et
+  l'action elle-même se cale au bord pour rester alignée sur le texte mis à plat.
 
 ## [1.0.0-alpha.154] - 2026-09-07
 

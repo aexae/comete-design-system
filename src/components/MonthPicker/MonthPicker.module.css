@@ -106,6 +106,19 @@
   flex-shrink: 0;
 }
 
+/* Bouton Effacer — masque au repos, revele au survol ou au focus du champ
+   (meme convention que `TextField`). `visibility` et non `display` : la place
+   reste reservee en permanence, donc l'icone calendrier ne se decale pas quand le
+   bouton apparait. Le bouton vient EN PLUS de cette icone, pas a sa place. */
+.clearButton {
+  visibility: hidden;
+}
+
+.root:hover .clearButton,
+.root:focus-within .clearButton {
+  visibility: visible;
+}
+
 /* Wrapper des boutons trailing (clear + calendrier). Pas de gap entre les
    deux icônes — elles sont collées. Le gap de l'InputContainer reste actif
    entre les segments et ce wrapper. */

@@ -71,6 +71,10 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  /* Masqué au repos — révélé au survol ou au focus du champ (voir plus bas).
+     `visibility` et non `display` : la place reste réservée en permanence, donc
+     le chevron ne se décale pas quand le bouton apparaît. */
+  visibility: hidden;
   width: var(--size300);
   height: var(--size300);
   padding: 0;
@@ -80,6 +84,13 @@
   color: var(--icon-default);
   cursor: pointer;
   outline: none;
+}
+
+/* Révélation au survol ou au focus-within du champ — même convention que
+   `TextField`. Le bouton vient EN PLUS du chevron, pas à sa place. */
+.select:hover .clearButton,
+.select:focus-within .clearButton {
+  visibility: visible;
 }
 
 .clearButton:hover {

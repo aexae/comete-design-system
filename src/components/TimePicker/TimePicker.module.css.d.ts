@@ -1,4 +1,5 @@
 declare const styles: {
+  readonly "clearButton": string;
   readonly "clockButton": string;
   readonly "content": string;
   readonly "dialog": string;
