@@ -4,9 +4,10 @@
 //   • Banner       → global alert, ABOVE the page layout (outside Page.Body)
 //   • SectionMessage → contextual message INSIDE the page content
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { parseDate } from "@internationalized/date";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, screen, userEvent, expect, fn, waitFor } from "storybook/test";
+import { within, screen, userEvent, expect, waitFor } from "storybook/test";
 import type { IconName } from "@aexae/comete-design-system/components";
 import {
   Page,
@@ -34,6 +35,7 @@ import {
   SectionMessage,
   DrawerProvider,
   MonthPicker,
+  DatePicker,
   Banner,
   SideNav,
   Logo,
@@ -47,8 +49,6 @@ import {
   TablePagination,
   TableSelectionBar,
   Checkbox,
-  ToggleButtonGroup,
-  ToggleButton,
   List,
   ListItemButton,
   ListItemAvatar,
@@ -60,6 +60,7 @@ import css from "./PageTemplates.module.css";
 import {
   FiltresPanel,
   ActiveFilterTags,
+  SavedSearchesMenu,
   useSavedViews,
   emptyFilters,
   type Filters,
@@ -383,19 +384,6 @@ const AGENT_ACTIONS: AgentAction[] = [
   { id: "export", label: "Exporter", icon: "Download", roles: ["manager", "partenaire", "client"] },
 ];
 
-// Vues de travail (§2) = segment dans la toolbar. Une vue est un JEU FILTRÉ
-// prédéfini (pas un filtre du panneau) : elle porte son propre prédicat, et son
-// compteur (badge) en découle. Changer de vue change réellement le contenu.
-const AGENT_VIEWS: Array<{ id: string; label: string; match: (a: Agent) => boolean }> = [
-  { id: "tous", label: "Tous", match: () => true },
-  { id: "anomalies", label: "Anomalies", match: (a) => a.status === "critical" },
-  { id: "actifs", label: "Actifs", match: (a) => a.contrat !== "" },
-];
-
-const ROWS_PER_PAGE = 5;
-
-// Espion de navigation (harnais de story) : tient lieu de routeur applicatif.
-const onAgentNavigate = fn();
 
 // -----------------------------------------------------------------------
 // Cœur partagé (§0bis.A) : Table du DS + quatre états + sélection + repli
@@ -414,6 +402,10 @@ interface AgentTableCoreProps {
   onSort: (s: { col: string; dir: SortDir }) => void;
   page: number;
   onPageChange: (p: number) => void;
+  /** Pagination façon story Table « With pagination » : lignes/page pilotables. */
+  rowsPerPage: number;
+  onRowsPerPageChange: (n: number) => void;
+  rowsPerPageOptions: number[];
   /** « Tout effacer » de l'état « aucun résultat » (remet filtres + vue). */
   onClearFilters?: () => void;
   /** Liste de section : « aucun résultat » en UNE ligne (variante compacte, §4). */
@@ -432,6 +424,9 @@ function AgentTableCore({
   onSort,
   page,
   onPageChange,
+  rowsPerPage,
+  onRowsPerPageChange,
+  rowsPerPageOptions,
   onClearFilters,
   compactEmpty = false,
 }: AgentTableCoreProps): React.ReactElement {
@@ -485,11 +480,12 @@ function AgentTableCore({
                   {c.header}
                 </TableHeaderCell>
               ))}
+              <TableHeaderCell width={60} isActionColumn>Actions</TableHeaderCell>
             </TableRow>
           </TableHead>
           <TableBody
             columnCount={columnCount}
-            skeletonRows={ROWS_PER_PAGE}
+            skeletonRows={rowsPerPage}
             isLoading={state === "loading"}
             isEmpty={state === "empty"}
             emptyTitle="Aucun agent"
@@ -503,13 +499,20 @@ function AgentTableCore({
           >
             {isData
               ? pageAgents.map((a) => (
-                  <TableRow key={a.mat} href={`#/agents/${a.mat}`} isSelected={sel.isSelected(a.mat)}>
+                  // Table sélectionnable : le clic sur TOUTE la ligne coche la case
+                  // (getRowClickProps). Le bouton d'actions (MoreVert) garde la
+                  // PRIORITÉ — getRowClickProps ignore les contrôles interactifs
+                  // (comme la story Table « All-in-one »).
+                  <TableRow key={a.mat} isSelected={sel.isSelected(a.mat)} {...sel.getRowClickProps(a.mat)}>
                     <TableCell><Checkbox {...sel.getRowCheckboxProps(a.mat, a.name)} /></TableCell>
                     {cols.map((c) => (
-                      <TableCell key={c.id} align={c.align} hideBelow={c.hideBelow} isRowAnchor={c.id === "agent"}>
+                      <TableCell key={c.id} align={c.align} hideBelow={c.hideBelow}>
                         {c.cell(a)}
                       </TableCell>
                     ))}
+                    <TableCell align="center">
+                      <Button appearance="subtle" density="compact" iconBefore="MoreVert" aria-label={`Actions pour ${a.name}`} />
+                    </TableCell>
                   </TableRow>
                 ))
               : null}
@@ -545,7 +548,16 @@ function AgentTableCore({
         </div>
       )}
 
-      {isData && <TablePagination count={totalCount} page={page} rowsPerPage={ROWS_PER_PAGE} onPageChange={onPageChange} />}
+      {isData && (
+        <TablePagination
+          count={totalCount}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={rowsPerPageOptions}
+          onPageChange={onPageChange}
+          onRowsPerPageChange={onRowsPerPageChange}
+        />
+      )}
     </>
   );
 }
@@ -553,47 +565,60 @@ function AgentTableCore({
 /**
  * **Collection** — recette « Liste » standard (D10), barre de filtres **option B**.
  *
- * `Table` du DS **dé-encartée**, **une seule** toolbar (recherche + **segment de
- * vues** + bouton **« Filtres »** option B dans le slot `filters` : popover deux
- * volets / feuille en compact), tags des critères actifs sous la barre (masqués
- * en compact), lignes cliquables (**D16 : `href`**), tri, pagination, sélection.
+ * `Table` du DS **dé-encartée**, **une seule** toolbar (recherche + bouton
+ * **« Filtres »** option B dans le slot `filters` : popover deux volets / feuille
+ * en compact — fermé par défaut — + **« Filtres enregistrés »**), tags des
+ * critères actifs sous la barre (masqués en compact), tri, **pagination façon
+ * recette « With pagination »** (lignes par page 5/10/25). Table **sélectionnable**
+ * (recette « All-in-one ») : le clic de ligne coche la case, le bouton d'actions
+ * de la ligne garde la **priorité** sur le clic.
  * Colonnes et actions **déclaratives par rôle** (`roles`). **Une facette est
- * câblée** au tableau — « Contrat : CDI uniquement » réduit réellement la liste
+ * câblée** au tableau — « Types de contrats » réduit réellement la liste
  * (compteur + tag + « Réinitialiser ») ; les autres restent démonstratives.
  */
 export const Collection: Story = {
   name: "Collection (liste + filtres)",
   parameters: { design: { type: "figma", url: figmaUrl("4577:13694") } },
   argTypes: {
-    role: { name: "Rôle", control: "inline-radio", options: ["manager", "partenaire", "client"] },
-    state: { name: "État", control: "inline-radio", options: ["data", "loading", "empty", "noResults", "error"] },
+    // Client non proposé : la page Agents n'existe pas dans sa navigation.
+    role: { name: "Rôle", control: "inline-radio", options: ["manager", "partenaire"] },
+    // États de la liste : données, sélection active (barre de sélection), et les
+    // quatre placeholders du Table (chargement / vide / aucun résultat / erreur).
+    state: { name: "État", control: "inline-radio", options: ["data", "selection", "loading", "empty", "noResults", "error"] },
   },
   args: { role: "manager", state: "data" },
   render: function CollectionStory(args) {
     const role = (args as { role?: Role }).role ?? "manager";
     const stateArg = (args as { state?: string }).state ?? "data";
     const [f, setF] = useState<Filters>(emptyFilters);
-    const { views, save } = useSavedViews();
-    const [view, setView] = useState("tous");
+    const { views, save, remove } = useSavedViews();
     const [sort, setSort] = useState<{ col: string; dir: SortDir }>({ col: "agent", dir: "default" });
     const [page, setPage] = useState(0);
+    // Pagination façon story Table « With pagination » : lignes/page pilotables.
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    // Sélection CONTRÔLÉE : l'état « selection » pré-sélectionne deux lignes pour
+    // illustrer la barre de sélection (TableSelectionBar) ; les clics dans la
+    // table restent interactifs via `onSelectionChange`.
+    const [selectedKeys, setSelectedKeys] = useState<Set<string>>(() => new Set());
+    useEffect(() => {
+      setSelectedKeys(stateArg === "selection" ? new Set(AGENTS.slice(0, 2).map((a) => a.mat)) : new Set());
+    }, [stateArg]);
 
     const cols = AGENT_COLUMNS.filter((c) => c.roles.includes(role));
     const actions = AGENT_ACTIONS.filter((a) => a.roles.includes(role));
 
-    // Filtrage LIVE (état « data ») : vue + recherche (nom) + UNE facette câblée
-    // au modèle du tableau — « Contrat : CDI uniquement » (option B `cdiOnly`) ne
-    // garde que les agents sous contrat. Les AUTRES facettes option B restent
-    // démonstratives (tags actifs, sans filtrer ce tableau : modèles distincts).
-    // La boucle est ainsi complète — cocher → liste réduite → compteur + tag →
-    // « Réinitialiser » remet — et « aucun résultat » devient atteignable par une
-    // recherche sans correspondance, pas seulement via le contrôle « État ».
-    const viewMatch = (AGENT_VIEWS.find((v) => v.id === view) ?? AGENT_VIEWS[0]).match;
+    // Filtrage LIVE (état « data ») : recherche (nom) + UNE facette câblée au
+    // modèle du tableau — « Types de contrats » (option B `contrat`) : dès qu'un
+    // type est coché, on ne garde que les agents sous contrat (colonne Contrat
+    // renseignée). Les AUTRES facettes option B restent démonstratives (tags
+    // actifs, sans filtrer ce tableau : modèles distincts). La boucle est ainsi
+    // complète — cocher → liste réduite → compteur + tag → « Réinitialiser » remet
+    // — et « aucun résultat » devient atteignable par une recherche sans
+    // correspondance, pas seulement via le contrôle « État ».
     const needle = f.nameQuery.trim().toLowerCase();
     const live = AGENTS
-      .filter(viewMatch)
       .filter((a) => (needle ? a.name.toLowerCase().includes(needle) : true))
-      .filter((a) => (f.cdiOnly ? a.contrat !== "" : true));
+      .filter((a) => (f.contrat.length > 0 ? a.contrat !== "" : true));
     const sorted = [...live].sort((a, b) => {
       if (sort.dir === "default") return 0;
       const c = AGENT_COLUMNS.find((x) => x.id === sort.col);
@@ -602,15 +627,23 @@ export const Collection: Story = {
       const cmp = va < vb ? -1 : va > vb ? 1 : 0;
       return sort.dir === "ascending" ? cmp : -cmp;
     });
-    const pageAgents = sorted.slice(page * ROWS_PER_PAGE, page * ROWS_PER_PAGE + ROWS_PER_PAGE);
-    const sel = useTableSelection({ keys: pageAgents.map((a) => a.mat) });
-    const columnCount = cols.length + 1; // +1 pour la colonne de sélection
-    // Le contrôle « État » force loading / empty / error ; sinon l'état découle
-    // du filtrage réel (data, ou noResults si le filtrage vide la liste).
-    const state = stateArg === "data" ? (sorted.length === 0 ? "noResults" : "data") : stateArg;
+    const pageAgents = sorted.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+    const sel = useTableSelection({
+      keys: pageAgents.map((a) => a.mat),
+      selectedKeys,
+      onSelectionChange: setSelectedKeys,
+    });
+    const columnCount = cols.length + 2; // +1 sélection, +1 colonne d'actions
+    // Le contrôle « État » force loading / empty / error ; « selection » montre la
+    // barre de sélection sur des données ; sinon l'état découle du filtrage réel
+    // (data, ou noResults si le filtrage vide la liste).
+    const state = stateArg === "selection"
+      ? "data"
+      : stateArg === "data"
+        ? (sorted.length === 0 ? "noResults" : "data")
+        : stateArg;
     const reset = () => {
       setF(emptyFilters());
-      setView("tous");
       setPage(0);
     };
 
@@ -641,32 +674,19 @@ export const Collection: Story = {
               textActionClassName={filtresCss["textAction"]}
             />
           }
-          start={
-            <ToggleButtonGroup
-              aria-label="Vues"
-              size="small"
-              selectionMode="single"
-              selectedKeys={[view]}
-              onSelectionChange={(keys) => {
-                if (keys === "all") return;
-                const k = [...keys][0];
-                if (typeof k === "string") { setView(k); setPage(0); }
-              }}
-            >
-              {AGENT_VIEWS.map((v) => (
-                <ToggleButton key={v.id} id={v.id} badge={String(AGENTS.filter(v.match).length)}>{v.label}</ToggleButton>
-              ))}
-            </ToggleButtonGroup>
-          }
           end={
-            <ButtonGroup>
-              {actions.map((a) =>
-                a.primary
-                  ? <Button key={a.id} color="comete" iconBefore={a.icon} collapseLabel shape="square" aria-label={a.label}>{a.label}</Button>
-                  : <Button key={a.id} appearance="subtle" iconBefore={a.icon} className={css["hideOnMobile"]}>{a.label}</Button>
-              )}
-              <Button appearance="subtle" iconBefore="MoreHoriz" aria-label="Plus d'actions" />
-            </ButtonGroup>
+            <Cluster gap="100">
+              {/* Filtres enregistrés : appliquer / supprimer un jeu de critères. */}
+              <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
+              <ButtonGroup>
+                {actions.map((a) =>
+                  a.primary
+                    ? <Button key={a.id} color="comete" iconBefore={a.icon} collapseLabel shape="square" aria-label={a.label}>{a.label}</Button>
+                    : <Button key={a.id} appearance="subtle" iconBefore={a.icon} className={css["hideOnMobile"]}>{a.label}</Button>
+                )}
+                <Button appearance="subtle" iconBefore="MoreHoriz" aria-label="Plus d'actions" />
+              </ButtonGroup>
+            </Cluster>
           }
         />
         {/* Tags des critères actifs, sous la barre — masqués sous le breakpoint
@@ -675,39 +695,33 @@ export const Collection: Story = {
           <ActiveFilterTags filters={f} onChange={setF} textActionClassName={filtresCss["textAction"]} />
         </div>
         <Page.Body>
-          {/* Harnais de navigation (D16) : intercepte les clics de ligne (a[href])
-              pour tenir lieu de routeur. Empêche toujours la vraie navigation ;
-              n'appelle onAgentNavigate que pour un clic SIMPLE (un clic modifié
-              Ctrl/⌘/milieu est laissé au navigateur). */}
-          <div
-            onClickCapture={(e) => {
-              const anchor = (e.target as Element).closest?.("a[href]");
-              if (!anchor) return;
-              e.preventDefault();
-              if (e.ctrlKey || e.metaKey || e.button !== 0) return;
-              onAgentNavigate(anchor.getAttribute("href"));
-            }}
-          >
-            <AgentTableCore
-              ariaLabel="Liste des agents"
-              cols={cols}
-              columnCount={columnCount}
-              state={state}
-              pageAgents={pageAgents}
-              totalCount={sorted.length}
-              sel={sel}
-              sort={sort}
-              onSort={setSort}
-              page={page}
-              onPageChange={setPage}
-              onClearFilters={reset}
-            />
-          </div>
+          <AgentTableCore
+            ariaLabel="Liste des agents"
+            cols={cols}
+            columnCount={columnCount}
+            state={state}
+            pageAgents={pageAgents}
+            totalCount={sorted.length}
+            sel={sel}
+            sort={sort}
+            onSort={setSort}
+            page={page}
+            onPageChange={setPage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={(n) => { setRowsPerPage(n); setPage(0); }}
+            rowsPerPageOptions={[5, 10, 25]}
+            onClearFilters={reset}
+          />
         </Page.Body>
       </Page>
     );
   },
-  play: async ({ canvasElement, step }) => {
+  // Aucun `play` ici : la recette s'ouvre AU REPOS (filtres fermés, aucun focus,
+  // aucune animation d'ouverture/fermeture). Les interactions sont testées dans
+  // la story « Collection — interactions » ci-dessous.
+};
+
+const collectionPlay: NonNullable<Story["play"]> = async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
     await step("rôles déclaratifs : colonnes & actions (mêmes défs, deux jeux)", async () => {
@@ -718,18 +732,21 @@ export const Collection: Story = {
         AGENT_ACTIONS.filter((a) => a.roles.includes("partenaire")).length,
       );
       const headerText = Array.from(canvasElement.querySelectorAll("th")).map((th) => (th.textContent ?? "").trim()).filter(Boolean);
-      await expect(headerText).toEqual(["Agent", "Matricule", "Contrat", "Heures", "Delta"]);
+      await expect(headerText).toEqual(["Agent", "Matricule", "Contrat", "Heures", "Delta", "Actions"]);
       // Aucun littéral de rôle dans l'affichage (cœur + cellules).
       const displaySource = [AgentTableCore.toString(), ...AGENT_COLUMNS.map((c) => c.cell.toString())].join("\n");
       await expect(/isPartner|isManager|role_code/.test(displaySource)).toBe(false);
     });
 
-    await step("entrée unique des filtres : le bouton « Filtres » vit DANS la toolbar", async () => {
-      await expect(canvas.getAllByRole("button", { name: /^Filtres/ })).toHaveLength(1);
+    await step("toolbar : entrée unique « Filtres » + accès aux filtres enregistrés", async () => {
+      // Une seule entrée vers le panneau de filtres (le bouton « Filtres »)…
+      await expect(canvas.getAllByRole("button", { name: /^Filtres(,|$)/ })).toHaveLength(1);
       const toolbarEl = canvasElement.querySelector<HTMLElement>('[class*="toolbar"]');
       await expect(toolbarEl).not.toBeNull();
       if (toolbarEl) {
-        await expect(within(toolbarEl).getByRole("button", { name: /^Filtres/ })).toBeInTheDocument();
+        await expect(within(toolbarEl).getByRole("button", { name: /^Filtres(,|$)/ })).toBeInTheDocument();
+        // …et le bouton « Filtres enregistrés » pour appliquer un jeu enregistré.
+        await expect(within(toolbarEl).getByRole("button", { name: "Filtres enregistrés" })).toBeInTheDocument();
       }
     });
 
@@ -747,165 +764,355 @@ export const Collection: Story = {
       await waitFor(() => expect(canvas.getByText("7 agents")).toBeInTheDocument());
     });
 
-    await step("clic de ligne (D16) : href + Entrée navigue, Ctrl+clic non", async () => {
-      onAgentNavigate.mockClear();
-      const links = canvas.getAllByRole("link");
-      await expect(links[0]).toHaveAttribute("href", "#/agents/150");
-      links[0]?.focus();
-      await userEvent.keyboard("{Enter}");
-      await expect(onAgentNavigate).toHaveBeenCalledWith("#/agents/150");
-      onAgentNavigate.mockClear();
-      links[0].dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, ctrlKey: true }));
-      await expect(onAgentNavigate).not.toHaveBeenCalled();
+    await step("pagination (style story « With pagination ») : 5 lignes / page sur 7", async () => {
+      // La table pagine comme la recette Table « With pagination » :
+      // 7 agents, 5 par page → l'en-tête + 5 lignes de données côté desktop.
+      const desktopTable = canvasElement.querySelector<HTMLElement>('[class*="tableDesktopOnly"]');
+      await expect(desktopTable).not.toBeNull();
+      if (desktopTable) {
+        await expect(within(desktopTable).getAllByRole("row")).toHaveLength(1 + 5);
+      }
     });
 
-    await step("changement de vue : le contenu change", async () => {
-      // Fait AVANT d'ouvrir le panneau (aucun overlay). « Anomalies » ne garde
-      // que les agents critiques ; retour à « Tous » pour l'étape suivante.
-      const anomalies = canvas.getByRole("radio", { name: /Anomalies/ });
-      await userEvent.click(anomalies);
-      await waitFor(() => expect(canvas.queryAllByText("MARTIN Jean")).toHaveLength(0)); // non-anomalie → sorti
-      await expect(canvas.getAllByText("BERNARD Sophie").length).toBeGreaterThanOrEqual(1); // anomalie → présent
-      await userEvent.click(canvas.getByRole("radio", { name: /Tous/ }));
-      await waitFor(() => expect(canvas.getByText("7 agents")).toBeInTheDocument());
+    await step("table sélectionnable : le clic de ligne coche la case ; le bouton d'actions garde la priorité", async () => {
+      // Comme la recette Table « All-in-one » : getRowClickProps câble le clic de
+      // ligne sur la sélection, mais ignore les contrôles interactifs (le bouton
+      // d'actions a donc la priorité et ne modifie pas la sélection).
+      const desktopTable = within(canvasElement.querySelector<HTMLElement>('[class*="tableDesktopOnly"]') as HTMLElement);
+      const row = desktopTable.getByText("DUPONT Marie").closest("tr") as HTMLElement;
+      const rowCheckbox = within(row).getByRole("checkbox");
+      await expect(rowCheckbox).not.toBeChecked();
+      // Clic sur la cellule du nom (zone non interactive) → la ligne coche la case.
+      await userEvent.click(within(row).getByText("DUPONT Marie"));
+      await expect(rowCheckbox).toBeChecked();
+      // Clic sur le bouton d'actions de la ligne → priorité au bouton : la
+      // sélection ne change pas (la case reste cochée).
+      await userEvent.click(within(row).getByRole("button", { name: /Actions pour DUPONT Marie/ }));
+      await expect(rowCheckbox).toBeChecked();
+      // Reclic sur la ligne → décoche (remise à zéro avant l'étape suivante).
+      await userEvent.click(within(row).getByText("DUPONT Marie"));
+      await expect(rowCheckbox).not.toBeChecked();
     });
 
     // Étape ouvrant le panneau EN DERNIER : rien après elle ne dépend de la page
     // (le panneau — popover large / feuille compacte — recouvre la toolbar).
-    await step("facette câblée « Contrat » : la boucle complète (option B)", async () => {
+    await step("facette câblée « Types de contrats » : la boucle complète (option B)", async () => {
       await expect(canvas.getByText("7 agents")).toBeInTheDocument();
-      await userEvent.click(canvas.getByRole("button", { name: /^Filtres/ }));
+      await userEvent.click(canvas.getByRole("button", { name: /^Filtres(,|$)/ }));
       await screen.findByRole("dialog");
       const dialog = () => within(screen.getByRole("dialog"));
-      // Aller à « Périmètre et contrats » puis cocher « CDI uniquement ».
-      await userEvent.click(dialog().getByRole("button", { name: /Périmètre et contrats/ }));
-      await userEvent.click(dialog().getByRole("switch", { name: /CDI uniquement/ }));
+      // Aller à « Types de contrats » puis cocher « CDI ».
+      await userEvent.click(dialog().getByRole("button", { name: /Types de contrats/ }));
+      await userEvent.click(dialog().getByRole("checkbox", { name: "CDI" }));
       // La liste se réduit (agents sous contrat) → le compteur change.
       await waitFor(() => expect(canvas.getByText("5 agents")).toBeInTheDocument());
-      // Un tag actif « Contrat » apparaît sous la barre (hors du dialog porté).
-      await expect(canvas.getByText(/CDI uniquement/)).toBeInTheDocument();
+      // Un tag actif apparaît sous la barre : il affiche la VALEUR seule (« CDI »,
+      // sans préfixe de facette) ; le contexte « Types de contrats » reste porté
+      // par l'aria-label de la croix de retrait (lecteurs d'écran).
+      const activeFilters = within(canvas.getByRole("group", { name: "Filtres actifs" }));
+      await expect(activeFilters.getByText("CDI")).toBeInTheDocument();
+      await expect(activeFilters.getByRole("button", { name: "Retirer Types de contrats" })).toBeInTheDocument();
       // « Réinitialiser » (pied du panneau) remet tout.
       await userEvent.click(dialog().getByRole("button", { name: "Réinitialiser" }));
       await waitFor(() => expect(canvas.getByText("7 agents")).toBeInTheDocument());
+      // La recette se REPOSE filtres fermés : on referme le panneau via son
+      // déclencheur (toggle) pour que l'état au repos de la story ne laisse
+      // jamais le panneau ouvert.
+      await userEvent.click(canvas.getByRole("button", { name: /^Filtres(,|$)/ }));
+      await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     });
-  },
+};
+
+/**
+ * **Collection — interactions** : même recette que « Collection », avec la
+ * fonction play qui exerce rôles, filtres, recherche, pagination et sélection.
+ * Séparée pour que la recette principale reste au repos (rien ne s'ouvre ni ne
+ * se referme à l'affichage).
+ */
+export const CollectionInteractions: Story = {
+  ...Collection,
+  name: "Collection — interactions (tests)",
+  play: collectionPlay,
 };
 
 // -----------------------------------------------------------------------
-// 1bis. LISTE DE SECTION (§0bis.A) — le MÊME cœur (AgentTableCore) posé DANS une
-// fiche, SANS chrome de page : ni Page.Bar ni Page.Toolbar. Surface de contrôle
-// réduite au niveau section : en-tête (titre + recherche compacte) + tri.
+// 1bis. LISTE DE SECTION — la liste posée DANS une fiche (fiche site), À PLAT
+// (aucune Card). La fiche garde sa Page.Bar ; l'en-tête (sélecteur de site +
+// actions + infos) et la section « Vacations du jour » sont posés SUR LE FOND,
+// séparés par le rythme vertical. La section porte ses PROPRES contrôles
+// (recherche + date + Télécharger), jamais une SECONDE Page.Toolbar.
 
-function SectionList({
-  title,
-  viewerRole,
-  agents,
-}: {
-  title: string;
-  viewerRole: Role;
-  agents: Agent[];
-}): React.ReactElement {
+interface Vacation {
+  id: string;
+  start: string;
+  end: string;
+  moment: "jour" | "nuit";
+  pause?: string;
+  agent?: string;
+  profil: string;
+  activite: string;
+}
+
+const VACATIONS: Vacation[] = [
+  { id: "v1", start: "09:45", end: "17:45", moment: "jour", pause: "Pause 30 min", profil: "Gardiennage", activite: "SSIAP1" },
+  { id: "v2", start: "09:45", end: "17:45", moment: "jour", pause: "Pause 30 min", profil: "Gardiennage", activite: "SSIAP1" },
+  { id: "v3", start: "09:45", end: "17:45", moment: "jour", pause: "Pause 30 min", profil: "Gardiennage", activite: "SSIAP1" },
+  { id: "v4", start: "10:00", end: "18:00", moment: "jour", profil: "SSIAP1", activite: "SSIAP1" },
+];
+
+const SITE_INFO: Array<{ label: string; value: string; muted?: boolean }> = [
+  { label: "Client", value: "Centre commercial Grand Large" },
+  { label: "Société", value: "Alpha" },
+  { label: "Agence", value: "Non renseignée", muted: true },
+  { label: "Secteur", value: "Secteur-site non défini", muted: true },
+  { label: "Téléphone", value: "Non renseigné", muted: true },
+  { label: "Téléphone PTI", value: "Non renseigné", muted: true },
+];
+
+const SITE_ADDRESS = ["Rue Duparc", "97490 Sainte-Clotilde"];
+
+const CONTACTS: Array<{ initials: string; name: string; role: string }> = [
+  { initials: "JB", name: "JERÔME BAILLIF", role: "Responsable côté exploitation" },
+  { initials: "RG", name: "REMOND GUENRICK", role: "Responsable côté client" },
+];
+
+/**
+ * Section « Vacations du jour » : contrôles de SECTION (filtre + navigateur de
+ * date + Télécharger) + bandeau d'alerte « sans agent affecté » + `Table` du DS
+ * **dé-encartée** avec une colonne d'action « Affecter ». Contrôles au niveau
+ * section, jamais une seconde Page.Toolbar ; posée sur le fond (aucune Card).
+ */
+function VacationsSection(): React.ReactElement {
   const [q, setQ] = useState("");
-  const [sort, setSort] = useState<{ col: string; dir: SortDir }>({ col: "agent", dir: "default" });
-  const [page, setPage] = useState(0);
-
-  const cols = AGENT_COLUMNS.filter((c) => c.roles.includes(viewerRole));
   const needle = q.trim().toLowerCase();
-  const filtered = needle ? agents.filter((a) => a.name.toLowerCase().includes(needle)) : agents;
-  const sorted = [...filtered].sort((a, b) => {
-    if (sort.dir === "default") return 0;
-    const c = AGENT_COLUMNS.find((x) => x.id === sort.col);
-    if (!c?.sortValue) return 0;
-    const va = c.sortValue(a), vb = c.sortValue(b);
-    const cmp = va < vb ? -1 : va > vb ? 1 : 0;
-    return sort.dir === "ascending" ? cmp : -cmp;
-  });
-  const pageAgents = sorted.slice(page * ROWS_PER_PAGE, page * ROWS_PER_PAGE + ROWS_PER_PAGE);
-  const sel = useTableSelection({ keys: pageAgents.map((a) => a.mat) });
-  const columnCount = cols.length + 1;
-  const state = sorted.length === 0 ? "noResults" : "data";
-
+  const rows = needle
+    ? VACATIONS.filter((v) => `${v.profil} ${v.activite} ${v.agent ?? ""}`.toLowerCase().includes(needle))
+    : VACATIONS;
   return (
     <Stack gap="200">
-      <Cluster justify="between" align="center" gap="200">
-        <Heading size="small" as="h2">{title}</Heading>
+      {/* Contrôles de SECTION sur UNE SEULE ligne (flex-wrap: nowrap) — pas une
+          Page.Toolbar. La recherche se comprime ; date + téléchargement restent. */}
+      <Cluster justify="between" align="center" gap="150" style={{ flexWrap: "nowrap" }}>
         <div className={css["searchWrapper"]}>
-          <SearchField
-            density="compact"
-            placeholder="Rechercher…"
-            aria-label={`Rechercher dans « ${title} »`}
-            value={q}
-            onChange={(v) => { setQ(v); setPage(0); }}
-          />
+          <SearchField density="compact" placeholder="Filtrer les vacations" aria-label="Filtrer les vacations" value={q} onChange={setQ} />
         </div>
+        <Cluster gap="100" align="center" style={{ flexWrap: "nowrap", flex: "none" }}>
+          {/* Navigateur de jour (chevrons ← date → ) : DatePicker en mode navigation. */}
+          <DatePicker isEditable={false} defaultValue={parseDate("2026-09-14")} aria-label="Jour des vacations" />
+          <Button appearance="subtle" shape="square" iconBefore="Download" aria-label="Télécharger" />
+        </Cluster>
       </Cluster>
-      <AgentTableCore
-        ariaLabel={title}
-        cols={cols}
-        columnCount={columnCount}
-        state={state}
-        pageAgents={pageAgents}
-        totalCount={sorted.length}
-        sel={sel}
-        sort={sort}
-        onSort={setSort}
-        page={page}
-        onPageChange={setPage}
-        compactEmpty
-      />
+
+      {/* Table du DS dé-encartée (aucun Card autour) + colonne d'action. */}
+      <Table aria-label="Vacations du jour">
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell isSortable sortDirection="ascending" onSortChange={() => undefined}>Horaires</TableHeaderCell>
+            <TableHeaderCell>Agent</TableHeaderCell>
+            <TableHeaderCell hideBelow="md">Profil</TableHeaderCell>
+            <TableHeaderCell>Activité</TableHeaderCell>
+            <TableHeaderCell align="right" hideBelow="lg">PP</TableHeaderCell>
+            <TableHeaderCell align="right" hideBelow="lg">PDS</TableHeaderCell>
+            <TableHeaderCell align="right" hideBelow="lg">FDS</TableHeaderCell>
+            <TableHeaderCell align="right"> </TableHeaderCell>
+          </TableRow>
+        </TableHead>
+        <TableBody
+          columnCount={8}
+          isNoResults={rows.length === 0}
+          noResultsTitle="Aucune vacation"
+          noResultsDescription="Aucune vacation ne correspond à la recherche."
+        >
+          {rows.map((v) => (
+            <TableRow key={v.id}>
+              <TableCell>
+                <Stack gap="0">
+                  <Cluster gap="075" align="center">
+                    <Text as="span" weight="medium">{v.start}</Text>
+                    <Icon icon={v.moment === "jour" ? "WbSunny" : "DarkMode"} size={16} color={v.moment === "jour" ? "warning" : "subtlest"} />
+                    <Text as="span" weight="medium">{v.end}</Text>
+                  </Cluster>
+                  {v.pause ? <Text size="small" as="span" color="subtlest">{v.pause}</Text> : null}
+                </Stack>
+              </TableCell>
+              <TableCell>
+                <Cluster gap="075" align="center">
+                  <Avatar size="small" icon="Person" />
+                  <Text as="span" color="subtle">Non affecté</Text>
+                </Cluster>
+              </TableCell>
+              <TableCell hideBelow="md">{v.profil}</TableCell>
+              <TableCell><Tag label={v.activite} appearance="subtle" shape="rounded" /></TableCell>
+              <TableCell align="right" hideBelow="lg"><Text as="span" color="subtlest">—</Text></TableCell>
+              <TableCell align="right" hideBelow="lg"><Text as="span" color="subtlest">—</Text></TableCell>
+              <TableCell align="right" hideBelow="lg"><Text as="span" color="subtlest">—</Text></TableCell>
+              <TableCell align="right">
+                <Button appearance="subtle" shape="square" iconBefore="PersonAdd" aria-label={`Affecter un agent (${v.start}–${v.end})`} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </Stack>
   );
 }
 
 /**
- * **Liste de section** — la liste posée DANS une fiche, sans chrome de page.
+ * **Liste de section (fiche site)** — la liste posée DANS une fiche, **à plat
+ * (aucune Card)**, en deux colonnes.
  *
- * Aucune `Page.Bar`, aucune `Page.Toolbar` : chaque section porte son propre
- * en-tête (`Heading size="small"` + recherche compacte) et rien de plus — **ni
- * segment de vues, ni bouton Filtres**. Le **cœur** (Table, états, sélection,
- * repli) est le **même** que la page (`AgentTableCore`). Deux sections **posées
- * sur le fond** (pas de `Card`), séparées par le seul rythme vertical.
+ * La fiche garde sa `Page.Bar` (« Sites / Fiche site », `Breadcrumbs`). À
+ * **gauche** : les régions descriptives posées sur le fond — **Informations**,
+ * **Adresse** (+ « Voir sur la carte ») et **Contacts**. À **droite** : des
+ * **onglets** (Vacations du jour / Consignes et documents / Main courante) ; la
+ * liste vit dans « Vacations du jour » avec ses **propres contrôles** (filtre +
+ * navigateur de date + Télécharger), un **bandeau d'alerte** et une `Table`
+ * dé-encartée — jamais une seconde `Page.Toolbar`.
  */
 export const ListeDeSection: Story = {
-  name: "Liste de section (dans une fiche)",
+  name: "Liste de section (fiche site)",
   parameters: { design: { type: "figma", url: figmaUrl("4577:13694") } },
-  render: () => (
-    <Page globalActions={null}>
-      <Page.Body>
-        <Stack gap="500">
-          <Heading size="large" as="h1">Site Montparnasse</Heading>
-          <SectionList title="Agents rattachés" viewerRole="manager" agents={AGENTS.slice(0, 4)} />
-          <SectionList title="Agents intérimaires" viewerRole="manager" agents={AGENTS.slice(4)} />
-        </Stack>
-      </Page.Body>
-    </Page>
-  ),
+  render: function FicheSiteStory() {
+    return (
+      <Page
+        globalActions={
+          <>
+            <Button appearance="subtle" density="compact" iconBefore="Search" aria-label="Rechercher" />
+            <Avatar size="medium" initials="A" />
+          </>
+        }
+      >
+        <Page.Bar
+          size="compact"
+          title="Fiche site"
+          leading={<Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Retour aux sites" />}
+        />
+        <Page.Body>
+          <Grid gap="400">
+            {/* COLONNE GAUCHE — régions descriptives posées sur le fond. */}
+            <Grid.Col span={{ mobile: 12, tablet: 4, desktop: 3 }}>
+              <Stack gap="300">
+                {/* Informations */}
+                <Stack gap="150">
+                  <Heading size="xsmall" as="h2">Informations</Heading>
+                  <Stack gap="100">
+                    {SITE_INFO.map((r) => (
+                      <div key={r.label} style={{ display: "grid", gridTemplateColumns: "96px 1fr", gap: "var(--space150)", alignItems: "baseline" }}>
+                        <Text size="small" as="span" color="subtlest">{r.label}</Text>
+                        <span style={{ display: "block", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={r.value}>
+                          <Text as="span" weight="medium" color={r.muted ? "subtlest" : undefined}>{r.value}</Text>
+                        </span>
+                      </div>
+                    ))}
+                  </Stack>
+                </Stack>
+
+                <Divider />
+
+                {/* Adresse (sans carte) + accès « Voir sur la carte ». */}
+                <Stack gap="100">
+                  <Heading size="xsmall" as="h2">Adresse</Heading>
+                  <Stack gap="0">
+                    {SITE_ADDRESS.map((line) => (
+                      <Text key={line} as="span">{line}</Text>
+                    ))}
+                  </Stack>
+                  <Cluster>
+                    <Button appearance="subtle" density="compact" iconBefore="LocationOn">Voir sur la carte</Button>
+                  </Cluster>
+                </Stack>
+
+                <Divider />
+
+                {/* Contacts — déplacés ici (à gauche), plus un onglet. */}
+                <Stack gap="150">
+                  <Heading size="xsmall" as="h2">Contacts</Heading>
+                  {CONTACTS.map((c) => (
+                    <Cluster key={c.name} gap="100" align="center">
+                      <Avatar size="small" initials={c.initials} alt={c.name} />
+                      <Stack gap="0">
+                        <Text as="span" weight="medium">{c.name}</Text>
+                        <Text size="small" as="span" color="subtlest">{c.role}</Text>
+                      </Stack>
+                    </Cluster>
+                  ))}
+                </Stack>
+              </Stack>
+            </Grid.Col>
+
+            {/* COLONNE DROITE — onglets + liste des vacations. */}
+            <Grid.Col span={{ mobile: 12, tablet: 8, desktop: 9 }}>
+              <Tabs>
+                <TabList>
+                  <Tab id="vacations">
+                    Vacations du jour <Badge label={String(VACATIONS.length)} appearance="neutral" importance="medium" />
+                  </Tab>
+                  <Tab id="consignes">Consignes et documents</Tab>
+                  <Tab id="maincourante">Main courante</Tab>
+                </TabList>
+                <TabPanel id="vacations">
+                  <div style={{ paddingTop: "var(--space300)" }}>
+                    <VacationsSection />
+                  </div>
+                </TabPanel>
+                <TabPanel id="consignes">
+                  <div style={{ paddingTop: "var(--space300)" }}>
+                    <SectionMessage appearance="information">
+                      {"Aucune consigne ni document pour ce site."}
+                    </SectionMessage>
+                  </div>
+                </TabPanel>
+                <TabPanel id="maincourante">
+                  <div style={{ paddingTop: "var(--space300)" }}>
+                    <SectionMessage appearance="information">
+                      {"Aucune entrée de main courante pour aujourd'hui."}
+                    </SectionMessage>
+                  </div>
+                </TabPanel>
+              </Tabs>
+            </Grid.Col>
+          </Grid>
+        </Page.Body>
+      </Page>
+    );
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    // Surface de contrôle de niveau page absente : ni segment de vues (radios),
-    // ni bouton « Filtres ». Assertions négatives.
+    // La fiche garde sa Page.Bar, mais AUCUNE surface de niveau page pour la
+    // liste : ni segment de vues (radios), ni bouton « Filtres ».
     await expect(canvas.queryByRole("radio")).toBeNull();
-    await expect(canvas.queryByRole("button", { name: /^Filtres/ })).toBeNull();
-    await expect(canvas.queryByRole("searchbox", { name: /Rechercher un agent/ })).toBeNull();
+    await expect(canvas.queryByRole("button", { name: /^Filtres(,|$)/ })).toBeNull();
 
-    // En-tête : titre de fiche (h1) + 2 sections (h2).
-    await expect(canvas.getAllByRole("heading", { level: 1 })).toHaveLength(1);
-    await expect(canvas.getAllByRole("heading", { level: 2 })).toHaveLength(2);
+    // Colonne GAUCHE : Informations + Adresse (+ carte) + Contacts.
+    await expect(canvas.getByRole("heading", { name: "Informations" })).toBeInTheDocument();
+    await expect(canvas.getByText("Alpha")).toBeInTheDocument();
+    await expect(canvas.getByRole("heading", { name: "Adresse" })).toBeInTheDocument();
+    await expect(canvas.getByText(/Sainte-Clotilde/)).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Voir sur la carte" })).toBeInTheDocument();
+    await expect(canvas.getByRole("heading", { name: "Contacts" })).toBeInTheDocument();
+    await expect(canvas.getByText("JERÔME BAILLIF")).toBeInTheDocument();
+    // Contacts n'est PLUS un onglet (déplacé à gauche).
+    await expect(canvas.queryByRole("tab", { name: /Contacts/ })).toBeNull();
 
-    // Cœur PARTAGÉ : mêmes colonnes (jeu manager), sélection, tri.
-    const searches = canvas.getAllByRole("searchbox");
-    await expect(searches).toHaveLength(2);
-    await expect(canvasElement.querySelector("th[aria-sort]")).not.toBeNull();
+    // Onglets conservés (droite) : Vacations / Consignes / Main courante.
+    await expect(canvas.getByRole("tab", { name: /Vacations du jour/ })).toBeInTheDocument();
+    await expect(canvas.getByRole("tab", { name: /Consignes/ })).toBeInTheDocument();
+    await expect(canvas.getByRole("tab", { name: /Main courante/ })).toBeInTheDocument();
+
+    // Section « Vacations du jour » : contrôles + tableau dé-encarté (plus de
+    // bandeau d'alerte jaune).
+    await expect(canvas.getByRole("button", { name: "Télécharger" })).toBeInTheDocument();
     const headerText = Array.from(canvasElement.querySelectorAll("th")).map((th) => (th.textContent ?? "").trim()).filter(Boolean);
-    await expect(headerText).toContain("Matricule");
-    await expect(headerText).toContain("Delta");
-    await expect(canvas.getAllByRole("checkbox", { name: /Tout sélectionner/ }).length).toBeGreaterThanOrEqual(1);
+    await expect(headerText).toEqual(["Horaires", "Agent", "Profil", "Activité", "PP", "PDS", "FDS"]);
+    await expect(canvas.getAllByText("Gardiennage").length).toBeGreaterThanOrEqual(1);
+    await expect(canvas.getAllByText("Non affecté").length).toBeGreaterThanOrEqual(1);
+    await expect(canvas.getAllByRole("button", { name: /Affecter un agent/ }).length).toBe(VACATIONS.length);
 
-    // « Aucun résultat » = variante COMPACTE (une ligne), sans « Tout effacer ».
-    await userEvent.type(searches[1], "zzzz");
-    await expect(await canvas.findByText(/Aucun résultat pour cette section/)).toBeInTheDocument();
-    await expect(canvas.queryByRole("button", { name: /Tout effacer/ })).toBeNull();
+    // Filtre de SECTION : un terme sans correspondance → « aucune vacation ».
+    const search = canvas.getByRole("searchbox", { name: /Filtrer les vacations/ });
+    await userEvent.type(search, "zzzz");
+    await expect(await canvas.findByText(/Aucune vacation ne correspond/)).toBeInTheDocument();
   },
 };
 
@@ -916,7 +1123,7 @@ const ANATOMIE: Array<{ n: string; el: string; note: string }> = [
   { n: "1", el: "Banner", note: "Alerte globale, au-dessus du layout, hors de Page.Body. À l'intérieur du contenu, c'est SectionMessage — jamais l'inverse." },
   { n: "2", el: "SideNav", note: "À gauche, avec son Provider et son repli ; le SideNav.Trigger vit dans Page.Bar.leading (cf. story Base)." },
   { n: "3", el: "Page.Bar", note: "Titre de l'écran, fil d'Ariane, action primaire." },
-  { n: "4", el: "Page.Toolbar — une seule par écran", note: "search = recherche ; filters = le bouton « Filtres » (recette option B : popover deux volets / feuille en compact) ; start = le segment de vues (§2) ; end = les actions de page." },
+  { n: "4", el: "Page.Toolbar — une seule par écran", note: "search = recherche ; filters = le bouton « Filtres » (recette option B : popover deux volets / feuille en compact) ; end = les actions de page." },
   { n: "5", el: "Rangée de tags des critères actifs", note: "Sous la toolbar (desktop) : les critères posés, groupés par catégorie, « Réinitialiser ». En compact/mobile elle s'efface — le badge du bouton « Filtres » et la feuille portent les critères. L'unique entrée vers les filtres est le bouton « Filtres » de la toolbar." },
   { n: "6", el: "Table", note: "responsive, hideBelow sur les colonnes secondaires, tri, pagination, sélection, lignes interactives." },
 ];
@@ -944,7 +1151,7 @@ const RULES: Array<{ title: string; body: string }> = [
   },
   {
     title: "Une liste vit à deux niveaux",
-    body: "En PAGE, elle porte le chrome (Page.Bar, Page.Toolbar) et la surface de contrôle complète (recherche, vues, bouton Filtres, tags actifs). En LISTE DE SECTION (dans une fiche), aucun chrome de page : un en-tête de section remplace la Page.Bar, et la surface de contrôle se réduit à tri + recherche compacte. Le cœur (table, états, sélection, repli, lignes) est partagé ; la surface de contrôle ne l'est pas.",
+    body: "En PAGE, elle porte le chrome (Page.Bar, Page.Toolbar) et la surface de contrôle complète (recherche, bouton Filtres, filtres enregistrés, tags actifs). En LISTE DE SECTION (dans une fiche), la fiche garde sa Page.Bar mais AUCUNE surface de niveau page pour la liste : chaque section porte ses propres contrôles (recherche, date, actions), posés sur le fond — aucune Card, jamais une seconde Page.Toolbar.",
   },
   {
     title: "La visibilité par rôle est déclarative, à la source",

@@ -235,11 +235,13 @@ type Story = StoryObj;
 // l'ouverture (aucune interaction rejouée automatiquement au montage).
 export const Desktop: Story = {
   // Rôle courant : filtre les facettes visibles dans le popover (déclaratif).
-  // Bascule le contrôle pour voir deux jeux de facettes issus des MÊMES
-  // définitions — manager voit « Périmètre et contrats » et « Emplois », pas le
-  // partenaire.
+  // Bascule le contrôle pour voir deux jeux issus des MÊMES définitions —
+  // manager (11) voit en plus Société/Agence, Secteurs, Types de contrats, Voir
+  // sous-traitants et Disponibilités ; partenaire (6) ne voit que les capacités
+  // (Habilitations → Langues, Emplois inclus). Client n'est pas proposé : la
+  // page Agents n'existe pas dans sa navigation (aucune facette).
   argTypes: {
-    role: { name: "Rôle", control: "inline-radio", options: ["manager", "partenaire", "client"] },
+    role: { name: "Rôle", control: "inline-radio", options: ["manager", "partenaire"] },
   },
   args: { role: "manager" },
   render: (args) => <FiltresOptionB role={(args as { role?: Role }).role} />,
@@ -298,10 +300,13 @@ export const DesktopInteractions: Story = {
       const manager = facetsForRole("manager").map((d) => d.key);
       const partenaire = facetsForRole("partenaire").map((d) => d.key);
       await expect(manager).not.toEqual(partenaire);
-      await expect(manager.length).toBeGreaterThan(partenaire.length);
-      await expect(manager).toContain("perimetre"); // réservé manager…
-      await expect(partenaire).not.toContain("perimetre"); // …masqué au partenaire
-      await expect(partenaire).not.toContain("emploi"); // réservé manager + client
+      await expect(manager.length).toBeGreaterThan(partenaire.length); // 11 > 6
+      await expect(manager).toContain("societe"); // Société/Agence réservé manager…
+      await expect(partenaire).not.toContain("societe"); // …absent au partenaire
+      await expect(partenaire).toContain("emploi"); // Emplois = capacité partagée
+      await expect(partenaire).not.toContain("contrat"); // Types de contrats → manager
+      // Client : aucune facette (la page n'existe pas dans sa navigation).
+      await expect(facetsForRole("client")).toHaveLength(0);
       // Aucun littéral de rôle dans le composant d'AFFICHAGE : la visibilité
       // vient du champ `roles`, jamais d'un test en dur.
       await expect(/isPartner|isManager|role_code/.test(FiltresPanel.toString())).toBe(false);
