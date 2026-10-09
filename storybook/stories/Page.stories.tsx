@@ -203,7 +203,7 @@ export const LongTitle: Story = {
  */
 function ListingPage({ leading }: { leading?: React.ReactNode }) {
   const [f, setF] = useState<Filters>(emptyFilters);
-  const { views, save } = useSavedViews();
+  const { views, save, remove } = useSavedViews();
   return (
     <Page style={{ minHeight: "100vh" }}>
       <Page.Bar title="Agents" leading={leading} />
@@ -234,24 +234,28 @@ function ListingPage({ leading }: { leading?: React.ReactNode }) {
           />
         }
         end={
-          <ButtonGroup>
-            {/* Action primaire — comète (navy) ; en compact, se réduit en
-                icône seule « + » (squared) pour libérer la place */}
-            <Button
-              color="comete"
-              iconBefore="Add"
-              collapseLabel
-              shape="square"
-              aria-label="Nouvel agent"
-            >
-              Nouvel agent
-            </Button>
-            {/* Action secondaire — gris ; masquée sous compact (repliée dans « ⋯ ») */}
-            <Button className={css["hideUnderCompact"]}>Exporter</Button>
-            {/* Menu débordement — gris, icône seule squared (alignée sur les
-                boutons à label de la toolbar, pas ronde) */}
-            <Button shape="square" iconBefore="MoreHoriz" aria-label="Plus d'actions" />
-          </ButtonGroup>
+          <Cluster gap="100">
+            {/* Filtres enregistrés : appliquer / supprimer un jeu de critères. */}
+            <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
+            <ButtonGroup>
+              {/* Action primaire — comète (navy) ; en compact, se réduit en
+                  icône seule « + » (squared) pour libérer la place */}
+              <Button
+                color="comete"
+                iconBefore="Add"
+                collapseLabel
+                shape="square"
+                aria-label="Nouvel agent"
+              >
+                Nouvel agent
+              </Button>
+              {/* Action secondaire — gris ; masquée sous compact (repliée dans « ⋯ ») */}
+              <Button className={css["hideUnderCompact"]}>Exporter</Button>
+              {/* Menu débordement — gris, icône seule squared (alignée sur les
+                  boutons à label de la toolbar, pas ronde) */}
+              <Button shape="square" iconBefore="MoreHoriz" aria-label="Plus d'actions" />
+            </ButtonGroup>
+          </Cluster>
         }
       />
       {/* Tags des critères actifs (façon option B) — vide tant qu'aucun filtre.

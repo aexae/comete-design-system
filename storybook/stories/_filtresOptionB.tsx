@@ -69,19 +69,27 @@ export interface FacetDef {
   roles?: Role[];
 }
 
+// Mapping rôle → facettes (canonique, écran Agents) :
+// - Manager (11) : toutes ci-dessous.
+// - Partenaire (6) : les six facettes « capacité » (Habilitations → Langues).
+// - Client : AUCUNE — la page Agents n'existe pas dans sa navigation ; l'élagage
+//   déclaratif descend jusqu'à zéro (aucune facette ne liste `client`).
+// Réservées au manager : Société/Agence, Secteurs, Voir sous-traitants, Types de
+// contrats, Disponibilités. Partagées manager + partenaire : les six capacités.
 export const FACET_DEFS: FacetDef[] = [
-  { key: "societe", label: "Société / Agence", kind: "multi" },
-  { key: "secteur", label: "Secteurs", kind: "multi" },
-  { key: "habilitation", label: "Habilitations", kind: "multi" },
-  { key: "formalite", label: "Formalités", kind: "multi" },
-  { key: "equipement", label: "Équipements", kind: "multi" },
-  { key: "diplome", label: "Diplômes", kind: "multi" },
-  // Emplois : masqué au partenaire (sous-traitance) — réservé manager + client.
-  { key: "emploi", label: "Emplois", kind: "multi", roles: ["manager", "client"] },
-  { key: "langue", label: "Langues", kind: "multi" },
-  // Périmètre et contrats (sous-traitants / CDI) : décision interne → manager seul.
-  { key: "perimetre", label: "Périmètre et contrats", kind: "switches", roles: ["manager"] },
-  { key: "dispo", label: "Disponibilités", kind: "dispo" },
+  { key: "societe", label: "Société / Agence", kind: "multi", roles: ["manager"] },
+  { key: "secteur", label: "Secteurs", kind: "multi", roles: ["manager"] },
+  { key: "habilitation", label: "Habilitations", kind: "multi", roles: ["manager", "partenaire"] },
+  { key: "formalite", label: "Formalités", kind: "multi", roles: ["manager", "partenaire"] },
+  { key: "equipement", label: "Équipements", kind: "multi", roles: ["manager", "partenaire"] },
+  { key: "diplome", label: "Diplômes", kind: "multi", roles: ["manager", "partenaire"] },
+  { key: "emploi", label: "Emplois", kind: "multi", roles: ["manager", "partenaire"] },
+  { key: "langue", label: "Langues", kind: "multi", roles: ["manager", "partenaire"] },
+  // Voir les agents sous-traitants : interrupteur seul (périmètre) → manager.
+  { key: "sousTraitants", label: "Voir les agents sous-traitants", kind: "switches", roles: ["manager"] },
+  // Types de contrats (CDD / CDI / CDI2) : facette multi → manager.
+  { key: "contrat", label: "Types de contrats", kind: "multi", roles: ["manager"] },
+  { key: "dispo", label: "Disponibilités", kind: "dispo", roles: ["manager"] },
 ];
 
 /** Facettes visibles pour un rôle (source déclarative, sans littéral de rôle). */
@@ -97,6 +105,7 @@ export const MULTI_KEYS = [
   "diplome",
   "emploi",
   "langue",
+  "contrat",
 ] as const;
 export type MultiKey = (typeof MULTI_KEYS)[number];
 
@@ -120,14 +129,14 @@ export const AGENTS: Agent[] = (
     ["DUPONT Marie", "Comète Sécurité", "Événementiel", "SST", "Complètes", "Radio", "CQP APS", "Agent de sécurité", "Français", "CDI", false, "planifies"],
     ["MARTIN Bob", "Comète Sécurité", "Industrie", "H0B0", "Pièce manquante", "Véhicule", "SSIAP 1", "Agent SSIAP", "Français", "CDI", false, "non"],
     ["CHEN Alice", "Comète Sécurité", "Événementiel", "SST", "Complètes", "Radio", "SSIAP 2", "Chef de poste", "Anglais", "CDI", false, "disponibles"],
-    ["CLAIRE Sophie", "Agence Lyon", "Centres commerciaux", "Palpation", "Complètes", "Chien", "CQP APS", "Agent cynophile", "Français", "Vacataire", false, "disponibles"],
+    ["CLAIRE Sophie", "Agence Lyon", "Centres commerciaux", "Palpation", "Complètes", "Chien", "CQP APS", "Agent cynophile", "Français", "CDI2", false, "disponibles"],
     ["BARDET Romain", "Sous-traitant Vigilis", "Logistique / Entrepôts", "SST", "Pièce manquante", "Radio", "CQP APS", "Agent de sécurité", "Espagnol", "CDD", true, "planifies"],
     ["BENOIT Armand", "Agence Lyon", "Tertiaire / Bureaux", "H0B0", "Complètes", "Véhicule", "SSIAP 1", "Agent SSIAP", "Français", "CDI", false, "planifies"],
-    ["BERNARD Alex", "Comète Sécurité", "Industrie", "SST", "Complètes", "Radio", "CQP APS", "Agent de sécurité", "Anglais", "Vacataire", false, "non"],
+    ["BERNARD Alex", "Comète Sécurité", "Industrie", "SST", "Complètes", "Radio", "CQP APS", "Agent de sécurité", "Anglais", "CDI2", false, "non"],
     ["ORSAL Guillaume", "Agence Lyon", "Événementiel", "SST", "Complètes", "Véhicule", "SSIAP 2", "Chef de poste", "Français", "CDI", false, "disponibles"],
     ["COCHARD Cédric", "Sous-traitant Vigilis", "Transports", "Palpation", "Pièce manquante", "Radio", "CQP APS", "Agent de sécurité", "Portugais", "CDD", true, "non"],
     ["ARMAND Fred", "Comète Sécurité", "Centres commerciaux", "Palpation", "Complètes", "Chien", "CQP APS", "Agent cynophile", "Français", "CDI", false, "planifies"],
-    ["BELLANGER Georgie", "Agence Lyon", "Grande distribution", "SST", "Complètes", "Radio", "SSIAP 1", "Agent SSIAP", "Anglais", "Vacataire", false, "disponibles"],
+    ["BELLANGER Georgie", "Agence Lyon", "Grande distribution", "SST", "Complètes", "Radio", "SSIAP 1", "Agent SSIAP", "Anglais", "CDI2", false, "disponibles"],
     ["ANAIS Alfred", "Comète Sécurité", "Hôpitaux / Santé", "H0B0", "Complètes", "Véhicule", "SSIAP 2", "Chef de poste", "Français", "CDI", false, "planifies"],
   ] as const
 ).map((r) => ({
@@ -147,8 +156,8 @@ export const AGENTS: Agent[] = (
 
 export const DISPO_MODES = [
   { id: "tous", label: "Tous" },
-  { id: "planifies", label: "Planifiés en août 2026" },
-  { id: "non", label: "Non planifiés en août 2026" },
+  { id: "planifies", label: "Planifiés" },
+  { id: "non", label: "Non planifiés" },
   { id: "disponibles", label: "Disponibles" },
 ] as const;
 
@@ -170,14 +179,16 @@ export interface Filters {
   diplome: string[];
   emploi: string[];
   langue: string[];
+  /** Types de contrats (CDD / CDI / CDI2) — facette multi. */
+  contrat: string[];
+  /** « Voir les agents sous-traitants » — interrupteur. */
   sousTraitants: boolean;
-  cdiOnly: boolean;
   dispoMode: string;
   nameQuery: string;
 }
 
 export function emptyFilters(): Filters {
-  const f = { sousTraitants: false, cdiOnly: false, dispoMode: "tous", nameQuery: "" } as Filters;
+  const f = { sousTraitants: false, dispoMode: "tous", nameQuery: "" } as Filters;
   MULTI_KEYS.forEach((k) => {
     f[k] = [];
   });
@@ -187,8 +198,9 @@ export function emptyFilters(): Filters {
 // Sélection initiale de la maquette — pensée pour exposer les CAS DURS d'emblée :
 // - `secteur` = 7 valeurs, la 1re étant le libellé TRÈS LONG → le tag prouve à
 //   la fois la troncature (1re valeur) ET l'overflow multi (« +6 ») ;
-// - `cdiOnly` (facette « Périmètre et contrats ») = réservée au manager :
-//   bascule le rôle et ce critère disparaît des tags ET des résultats.
+// - `contrat` (facette « Types de contrats ») + `societe`/`secteur` = réservées
+//   au manager : bascule le rôle et ces critères disparaissent des tags ET des
+//   résultats. Total = 10 critères (1 société + 7 secteurs + 1 diplôme + 1 contrat).
 export function initialFilters(): Filters {
   return {
     ...emptyFilters(),
@@ -203,15 +215,15 @@ export function initialFilters(): Filters {
       "Ferroviaire",
     ],
     diplome: ["SSIAP 2"],
-    cdiOnly: true,
+    contrat: ["CDI"],
   };
 }
 
 export function match(a: Agent, f: Filters): boolean {
   if (!f.sousTraitants && a.sousTraitant) return false;
-  if (f.cdiOnly && a.contrat !== "CDI") return false;
   if (f.dispoMode !== "tous" && a.dispo !== f.dispoMode) return false;
   if (f.nameQuery && !a.nom.toLowerCase().includes(f.nameQuery.toLowerCase())) return false;
+  // `contrat` (types de contrats) est une facette multi comme les autres.
   return MULTI_KEYS.every((k) => !f[k].length || f[k].includes(a[k]));
 }
 
@@ -221,7 +233,6 @@ export const filteredAgents = (f: Filters): Agent[] => AGENTS.filter((a) => matc
 // coche plusieurs valeurs de la même facette).
 function matchExcept(a: Agent, f: Filters, skip: MultiKey): boolean {
   if (!f.sousTraitants && a.sousTraitant) return false;
-  if (f.cdiOnly && a.contrat !== "CDI") return false;
   if (f.dispoMode !== "tous" && a.dispo !== f.dispoMode) return false;
   return MULTI_KEYS.every((k) => k === skip || !f[k].length || f[k].includes(a[k]));
 }
@@ -304,7 +315,7 @@ export const DOMAINS = MULTI_KEYS.reduce(
 );
 
 export function facetCount(f: Filters, key: string): number {
-  if (key === "perimetre") return (f.sousTraitants ? 1 : 0) + (f.cdiOnly ? 1 : 0);
+  if (key === "sousTraitants") return f.sousTraitants ? 1 : 0;
   if (key === "dispo") return f.dispoMode === "tous" ? 0 : 1;
   return (f[key as MultiKey] ?? []).length;
 }
@@ -325,10 +336,7 @@ export function effectiveFilters(f: Filters, role?: Role): Filters {
   MULTI_KEYS.forEach((k) => {
     if (!visible.has(k)) out[k] = [];
   });
-  if (!visible.has("perimetre")) {
-    out.sousTraitants = false;
-    out.cdiOnly = false;
-  }
+  if (!visible.has("sousTraitants")) out.sousTraitants = false;
   if (!visible.has("dispo")) out.dispoMode = "tous";
   return out;
 }
@@ -355,8 +363,7 @@ function groupsOf(f: Filters): { key: string; facet: string; values: string; cou
     const d = FACET_DEFS.find((x) => x.key === k)!;
     out.push({ key: k, facet: d.label, values: f[k].join(", "), count: f[k].length });
   });
-  if (f.cdiOnly) out.push({ key: "cdi", facet: "Contrat", values: "CDI uniquement", count: 1 });
-  if (f.sousTraitants) out.push({ key: "st", facet: "Périmètre", values: "Sous-traitants inclus", count: 1 });
+  if (f.sousTraitants) out.push({ key: "sousTraitants", facet: "Sous-traitants", values: "Inclus", count: 1 });
   if (f.dispoMode !== "tous") {
     const m = DISPO_MODES.find((x) => x.id === f.dispoMode)!;
     out.push({ key: "dispo", facet: "Disponibilité", values: m.label, count: 1 });
@@ -367,7 +374,7 @@ function groupsOf(f: Filters): { key: string; facet: string; values: string; cou
 // Deux jeux de filtres identiques ? (sert à marquer une recherche déjà
 // enregistrée — icône bookmark pleine.)
 export function sameFilters(a: Filters, b: Filters): boolean {
-  if (a.cdiOnly !== b.cdiOnly || a.sousTraitants !== b.sousTraitants || a.dispoMode !== b.dispoMode) return false;
+  if (a.sousTraitants !== b.sousTraitants || a.dispoMode !== b.dispoMode) return false;
   return MULTI_KEYS.every((k) => {
     const x = [...a[k]].sort();
     const y = [...b[k]].sort();
@@ -400,14 +407,9 @@ function OptionControls({ def, filters, onChange }: { def: FacetDef; filters: Fi
   };
   if (def.kind === "switches") {
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)" }}>
-        <Switch isChecked={filters.sousTraitants} onChange={(v) => patch({ sousTraitants: v })}>
-          Inclure les sous-traitants
-        </Switch>
-        <Switch isChecked={filters.cdiOnly} onChange={(v) => patch({ cdiOnly: v })}>
-          CDI uniquement
-        </Switch>
-      </div>
+      <Switch isChecked={filters.sousTraitants} onChange={(v) => patch({ sousTraitants: v })}>
+        Inclure les sous-traitants
+      </Switch>
     );
   }
   if (def.kind === "dispo") {
@@ -854,14 +856,9 @@ export function FiltresSheet({
   const optionControls = (def: FacetDef): ReactElement => {
     if (def.kind === "switches") {
       return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)" }}>
-          <Switch isChecked={filters.sousTraitants} onChange={(v) => patch({ sousTraitants: v })}>
-            Inclure les sous-traitants
-          </Switch>
-          <Switch isChecked={filters.cdiOnly} onChange={(v) => patch({ cdiOnly: v })}>
-            CDI uniquement
-          </Switch>
-        </div>
+        <Switch isChecked={filters.sousTraitants} onChange={(v) => patch({ sousTraitants: v })}>
+          Inclure les sous-traitants
+        </Switch>
       );
     }
     if (def.kind === "dispo") {
@@ -1148,8 +1145,7 @@ export function ActiveFilterTags({
   const groups: ActiveGroup[] = groupsOf(filters).map((g) => ({
     ...g,
     clear: () => {
-      if (g.key === "cdi") setFacet({ cdiOnly: false });
-      else if (g.key === "st") setFacet({ sousTraitants: false });
+      if (g.key === "sousTraitants") setFacet({ sousTraitants: false });
       else if (g.key === "dispo") setFacet({ dispoMode: "tous" });
       else setFacet({ [g.key]: [] });
     },
@@ -1160,11 +1156,13 @@ export function ActiveFilterTags({
   const hiddenCount = groups.length - visibleGroups.length;
 
   const renderChip = (g: ActiveGroup): ReactElement => {
-    // Format DOCUMENTÉ du tag : « Facette : 1re valeur » (1 valeur) ou
-    // « Facette : 1re valeur +N » (≥ 2 ; N = valeurs restantes). La 1re valeur
-    // se TRONQUE (ellipsis) si elle est longue — le « +N » et la croix restent
-    // toujours lisibles (flex: none). Le tag est borné (maxWidth) pour qu'un
-    // libellé long ne pousse jamais le reste de la rangée hors écran.
+    // Format DOCUMENTÉ du tag : la ou les VALEURS seules, sans préfixe de
+    // facette — « 1re valeur » (1 valeur) ou « 1re valeur +N » (≥ 2 ; N =
+    // valeurs restantes). On privilégie le code/valeur au libellé de catégorie :
+    // le contexte de facette reste porté par l'`aria-label` de la croix (lecteurs
+    // d'écran). La 1re valeur se TRONQUE (ellipsis) si elle est longue — le
+    // « +N » et la croix restent toujours lisibles (flex: none). Le tag est borné
+    // (maxWidth) pour qu'une valeur longue ne pousse jamais le reste hors écran.
     const first = g.values.split(", ")[0] ?? "";
     const extra = g.count - 1;
     return (
@@ -1184,7 +1182,6 @@ export function ActiveFilterTags({
           fontWeight: 500,
         }}
       >
-        <span style={{ flex: "none", opacity: 0.65 }}>{g.facet} :</span>
         <span style={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{first}</span>
         {extra > 0 && <span style={{ flex: "none" }}>+{extra}</span>}
         <button
