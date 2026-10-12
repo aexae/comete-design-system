@@ -35,6 +35,7 @@ import {
   TableRow,
   TableHeaderCell,
   TableCell,
+  Bleed,
   Divider,
   Drawer,
   DrawerHeader,
@@ -138,6 +139,16 @@ export const AGENTS: Agent[] = (
     ["ARMAND Fred", "Comète Sécurité", "Centres commerciaux", "Palpation", "Complètes", "Chien", "CQP APS", "Agent cynophile", "Français", "CDI", false, "planifies"],
     ["BELLANGER Georgie", "Agence Lyon", "Grande distribution", "SST", "Complètes", "Radio", "SSIAP 1", "Agent SSIAP", "Anglais", "CDI2", false, "disponibles"],
     ["ANAIS Alfred", "Comète Sécurité", "Hôpitaux / Santé", "H0B0", "Complètes", "Véhicule", "SSIAP 2", "Chef de poste", "Français", "CDI", false, "planifies"],
+    // Sous-traitants de « Sous-traitant Vigilis » — le périmètre du rôle partenaire
+    // (cf. `agentsForRole`). Valeurs variées pour que chaque facette de capacité
+    // propose de vraies options. Masqués côté manager tant que l'interrupteur
+    // « sous-traitants » n'est pas activé.
+    ["LEROY Nadia", "Sous-traitant Vigilis", "Aéroportuaire", "SST", "Complètes", "Radio", "SSIAP 1", "Agent SSIAP", "Français", "CDD", true, "disponibles"],
+    ["PETIT Karim", "Sous-traitant Vigilis", "Centres commerciaux", "H0B0", "Complètes", "Véhicule", "CQP APS", "Agent de sécurité", "Anglais", "CDI2", true, "planifies"],
+    ["ROUX Élodie", "Sous-traitant Vigilis", "Événementiel", "Palpation", "Pièce manquante", "Chien", "CQP APS", "Agent cynophile", "Français", "CDD", true, "non"],
+    ["FABRE Lucas", "Sous-traitant Vigilis", "Industrie", "SST", "Complètes", "Radio", "SSIAP 2", "Chef de poste", "Français", "CDI", true, "disponibles"],
+    ["MERCIER Inès", "Sous-traitant Vigilis", "Hôpitaux / Santé", "H0B0", "Complètes", "Véhicule", "SSIAP 1", "Agent SSIAP", "Espagnol", "CDD", true, "planifies"],
+    ["GAUTIER Paul", "Sous-traitant Vigilis", "Transports", "SST", "Pièce manquante", "Radio", "CQP APS", "Agent de sécurité", "Anglais", "CDD", true, "disponibles"],
   ] as const
 ).map((r) => ({
   nom: r[0],
@@ -153,6 +164,16 @@ export const AGENTS: Agent[] = (
   sousTraitant: r[10],
   dispo: r[11],
 }));
+
+/**
+ * Simule le découpage fait par l'API : dans Link, les lignes arrivent DÉJÀ
+ * restreintes au périmètre du rôle. Manager (ou rôle absent) = tous les agents ;
+ * partenaire = uniquement les sous-traitants de SA société.
+ * Aucune logique de rôle dans les composants d'affichage : la story passe ce jeu.
+ */
+export const PARTENAIRE_SOCIETE = "Sous-traitant Vigilis";
+export const agentsForRole = (role?: Role): Agent[] =>
+  role === "partenaire" ? AGENTS.filter((a) => a.sousTraitant && a.societe === PARTENAIRE_SOCIETE) : AGENTS;
 
 export const DISPO_MODES = [
   { id: "tous", label: "Tous" },
@@ -219,26 +240,36 @@ export function initialFilters(): Filters {
   };
 }
 
-export function match(a: Agent, f: Filters): boolean {
-  if (!f.sousTraitants && a.sousTraitant) return false;
+// `applySousTraitants` : faut-il appliquer l'interrupteur « sous-traitants » ?
+// Vrai par défaut. Faux quand le jeu fourni est DÉJÀ restreint en amont (le
+// partenaire ne gère pas l'interrupteur : son périmètre est fixé par l'API, pas
+// par un filtre). Un simple booléen — aucune chaîne de rôle dans le prédicat.
+export function match(a: Agent, f: Filters, applySousTraitants = true): boolean {
+  if (applySousTraitants && !f.sousTraitants && a.sousTraitant) return false;
   if (f.dispoMode !== "tous" && a.dispo !== f.dispoMode) return false;
   if (f.nameQuery && !a.nom.toLowerCase().includes(f.nameQuery.toLowerCase())) return false;
   // `contrat` (types de contrats) est une facette multi comme les autres.
   return MULTI_KEYS.every((k) => !f[k].length || f[k].includes(a[k]));
 }
 
-export const filteredAgents = (f: Filters): Agent[] => AGENTS.filter((a) => match(a, f));
+export const filteredAgents = (f: Filters, agents: Agent[] = AGENTS, applySousTraitants = true): Agent[] =>
+  agents.filter((a) => match(a, f, applySousTraitants));
 
 // Match en ignorant une facette (comptes qui ne s'effondrent pas quand on
 // coche plusieurs valeurs de la même facette).
-function matchExcept(a: Agent, f: Filters, skip: MultiKey): boolean {
-  if (!f.sousTraitants && a.sousTraitant) return false;
+function matchExcept(a: Agent, f: Filters, skip: MultiKey, applySousTraitants: boolean): boolean {
+  if (applySousTraitants && !f.sousTraitants && a.sousTraitant) return false;
   if (f.dispoMode !== "tous" && a.dispo !== f.dispoMode) return false;
   return MULTI_KEYS.every((k) => k === skip || !f[k].length || f[k].includes(a[k]));
 }
 
-export const optionCount = (f: Filters, key: MultiKey, value: string): number =>
-  AGENTS.filter((a) => a[key] === value && matchExcept(a, f, key)).length;
+export const optionCount = (
+  f: Filters,
+  key: MultiKey,
+  value: string,
+  agents: Agent[] = AGENTS,
+  applySousTraitants = true,
+): number => agents.filter((a) => a[key] === value && matchExcept(a, f, key, applySousTraitants)).length;
 
 // Secteurs d'activité — CAS DUR « facette à ~60 options » : liste longue (bien
 // au-delà des valeurs réellement portées par les agents) → le volet droit
@@ -304,15 +335,36 @@ const SECTEURS = [
   "Zone industrialo-portuaire et plateformes logistiques multimodales du Grand Ouest",
 ];
 
-export const DOMAINS = MULTI_KEYS.reduce(
-  (acc, key) => {
-    acc[key] = key === "secteur"
-      ? SECTEURS
-      : [...new Set(AGENTS.map((a) => a[key]))].sort((x, y) => x.localeCompare(y, "fr"));
-    return acc;
-  },
-  {} as Record<MultiKey, string[]>,
-);
+// Domaines (valeurs proposées par facette) dérivés d'un jeu d'agents ; `secteur`
+// garde la liste longue SECTEURS (cas dur « ~60 options »), indépendante du jeu.
+export const domainsOf = (agents: Agent[]): Record<MultiKey, string[]> =>
+  MULTI_KEYS.reduce(
+    (acc, key) => {
+      acc[key] = key === "secteur"
+        ? SECTEURS
+        : [...new Set(agents.map((a) => a[key]))].sort((x, y) => x.localeCompare(y, "fr"));
+      return acc;
+    },
+    {} as Record<MultiKey, string[]>,
+  );
+
+export const DOMAINS = domainsOf(AGENTS);
+
+/**
+ * Jeu de données d'une recette : les agents (déjà découpés par l'API), les
+ * domaines proposés et le drapeau d'application de l'interrupteur sous-traitants.
+ * UNE seule prop pour les composants ; défaut = le jeu global (tout le monde).
+ */
+export interface FiltresDataset {
+  agents: Agent[];
+  domains: Record<MultiKey, string[]>;
+  applySousTraitants: boolean;
+}
+
+export const DEFAULT_DATASET: FiltresDataset = { agents: AGENTS, domains: DOMAINS, applySousTraitants: true };
+
+const optionCountIn = (f: Filters, key: MultiKey, value: string, ds: FiltresDataset): number =>
+  optionCount(f, key, value, ds.agents, ds.applySousTraitants);
 
 export function facetCount(f: Filters, key: string): number {
   if (key === "sousTraitants") return f.sousTraitants ? 1 : 0;
@@ -336,6 +388,10 @@ export function effectiveFilters(f: Filters, role?: Role): Filters {
   MULTI_KEYS.forEach((k) => {
     if (!visible.has(k)) out[k] = [];
   });
+  // Remise à l'état INACTIF (comme les clés multi) : sans elle, un interrupteur
+  // activé par un manager resterait compté (facetCount = 1) et ferait apparaître
+  // un tag fantôme après bascule en partenaire. Ce `false` est inoffensif pour le
+  // périmètre : un jeu déjà restreint se passe avec `applySousTraitants = false`.
   if (!visible.has("sousTraitants")) out.sousTraitants = false;
   if (!visible.has("dispo")) out.dispoMode = "tous";
   return out;
@@ -399,7 +455,63 @@ export const initialsOf = (nom: string): string =>
 // -----------------------------------------------------------------------
 // Contrôles d'options d'une facette (volet droit du popover / de la feuille).
 
-function OptionControls({ def, filters, onChange }: { def: FacetDef; filters: Filters; onChange: (f: Filters) => void }): ReactElement {
+interface OptionRef {
+  key: MultiKey;
+  value: string;
+}
+
+// « Tout désélectionner » : une case à cocher posée en tête de la liste d'options,
+// au libellé UNIQUE (pas de « tout sélectionner » : on ne coche jamais 60 options
+// d'un geste). Tiret (indéterminé) quand la sélection est partielle, cochée quand
+// tout est sélectionné ; la cocher vide la sélection. Elle agit sur les options
+// AFFICHÉES (`items`) — le domaine d'une facette dans le volet droit, le résultat
+// d'une recherche locale dans la feuille, les correspondances d'une recherche
+// transversale dans le popover — et reste désactivée tant que rien n'est coché.
+function ClearAllRow({
+  items,
+  filters,
+  onChange,
+  dataset,
+}: {
+  items: OptionRef[];
+  filters: Filters;
+  onChange: (f: Filters) => void;
+  dataset: FiltresDataset;
+}): ReactElement {
+  const isOn = (i: OptionRef): boolean => filters[i.key].includes(i.value);
+  const selectable = items.filter((i) => isOn(i) || optionCountIn(filters, i.key, i.value, dataset) > 0);
+  const hasSelection = items.some(isOn);
+  const allSelected = selectable.length > 0 && selectable.every(isOn);
+  const clear = () => {
+    const next: Filters = { ...filters };
+    MULTI_KEYS.forEach((k) => {
+      const drop = items.filter((i) => i.key === k).map((i) => i.value);
+      if (drop.length) next[k] = filters[k].filter((v) => !drop.includes(v));
+    });
+    onChange(next);
+  };
+  return (
+    <Checkbox
+      isChecked={allSelected}
+      isIndeterminate={hasSelection && !allSelected}
+      isDisabled={!hasSelection}
+      onChange={clear}
+      label="Tout désélectionner"
+    />
+  );
+}
+
+function OptionControls({
+  def,
+  filters,
+  onChange,
+  dataset,
+}: {
+  def: FacetDef;
+  filters: Filters;
+  onChange: (f: Filters) => void;
+  dataset: FiltresDataset;
+}): ReactElement {
   const patch = (p: Partial<Filters>) => onChange({ ...filters, ...p });
   const toggleMulti = (key: MultiKey, value: string) => {
     const has = filters[key].includes(value);
@@ -432,10 +544,14 @@ function OptionControls({ def, filters, onChange }: { def: FacetDef; filters: Fi
     );
   }
   const key = def.key as MultiKey;
+  // Options AFFICHÉES : tout le domaine de la facette (pas de filtre local ici).
+  const shown = dataset.domains[key];
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
-      {DOMAINS[key].map((value) => {
-        const n = optionCount(filters, key, value);
+      <ClearAllRow items={shown.map((value) => ({ key, value }))} filters={filters} onChange={onChange} dataset={dataset} />
+      <Divider />
+      {shown.map((value) => {
+        const n = optionCountIn(filters, key, value, dataset);
         const checked = filters[key].includes(value);
         return (
           <div key={value} style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
@@ -512,6 +628,8 @@ export function FiltresPanel({
   onSaveView,
   onDeleteView,
   role,
+  dataset = DEFAULT_DATASET,
+  canSaveViews = true,
   collapseLabel,
   scrollClassName,
   textActionClassName,
@@ -526,6 +644,13 @@ export function FiltresPanel({
   onDeleteView?: (id: string) => void;
   /** Rôle courant : filtre les facettes visibles (déclaratif). Absent = toutes. */
   role?: Role;
+  /** Jeu de données (agents déjà découpés par l'API, domaines, drapeau
+   *  sous-traitants). Défaut = jeu global. */
+  dataset?: FiltresDataset;
+  /** Filtres enregistrés disponibles ? Faux = aucun enregistrement : ni la ligne
+   *  « Filtres enregistrés » ni « Donner un nom / Enregistrer ces filtres ».
+   *  Décidé par l'appelant (un rôle peut ne pas avoir cette fonction). @default true */
+  canSaveViews?: boolean;
   /** Replie le déclencheur en icône seule (carré) sous le breakpoint conteneur
    *  — pour les toolbars responsive. L'`aria-label` reste « Filtres ». Dès que
    *  le bouton est réduit en icône, le panneau s'ouvre en feuille (bottom sheet)
@@ -559,7 +684,7 @@ export function FiltresPanel({
   const q = query.trim().toLowerCase();
   const searchHits = q
     ? visibleMultiKeys.flatMap((k) =>
-        DOMAINS[k].filter((v) => v.toLowerCase().includes(q)).map((v) => ({ key: k, value: v })),
+        dataset.domains[k].filter((v) => v.toLowerCase().includes(q)).map((v) => ({ key: k, value: v })),
       )
     : [];
   const saveView = () => {
@@ -581,7 +706,14 @@ export function FiltresPanel({
       {...(managed ? { onPress: () => setOpen(true), "aria-haspopup": "dialog" as const, "aria-expanded": open } : {})}
     >
       Filtres
-      {total > 0 && <Badge label={String(total)} appearance="information" importance="high" />}
+      {/* Le badge vit dans le même `span` que le libellé (le `gap` du Button ne
+          s'y applique pas) : sans marge il colle au texte. `Badge` n'a pas de
+          prop `style` → enveloppe dédiée, --space100 entre libellé et badge. */}
+      {total > 0 && (
+        <span style={{ display: "inline-flex", marginLeft: "var(--space100)" }}>
+          <Badge label={String(total)} appearance="information" importance="high" />
+        </span>
+      )}
     </Button>
   );
 
@@ -598,6 +730,8 @@ export function FiltresPanel({
           onApplyView={(v) => onChange(v.filters)}
           {...(onDeleteView ? { onDeleteView } : {})}
           role={role}
+          dataset={dataset}
+          canSaveViews={canSaveViews}
           isOpen={open}
           onOpenChange={setOpen}
           scrollClassName={scrollClassName}
@@ -692,8 +826,14 @@ export function FiltresPanel({
                 <p style={{ margin: "0 0 var(--space100)", fontSize: 12, color: "var(--text-subtlest)" }}>
                   {searchHits.length} résultat{searchHits.length > 1 ? "s" : ""} pour « {query.trim()} »
                 </p>
+                {searchHits.length > 0 ? (
+                  <>
+                    <ClearAllRow items={searchHits} filters={filters} onChange={onChange} dataset={dataset} />
+                    <Divider />
+                  </>
+                ) : null}
                 {searchHits.map(({ key, value }) => {
-                  const n = optionCount(filters, key, value);
+                  const n = optionCountIn(filters, key, value, dataset);
                   const facetLabel = FACET_DEFS.find((d) => d.key === key)!.label;
                   return (
                     <div key={`${key}:${value}`} style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
@@ -705,7 +845,7 @@ export function FiltresPanel({
                 })}
               </div>
             ) : (
-              <OptionControls def={curDef} filters={filters} onChange={onChange} />
+              <OptionControls def={curDef} filters={filters} onChange={onChange} dataset={dataset} />
             )}
           </div>
         </div>
@@ -714,7 +854,7 @@ export function FiltresPanel({
         <div style={{ flex: "none", display: "flex", alignItems: "center", gap: "var(--space150)", padding: "var(--space150) var(--space200)", borderTop: "1px solid var(--border-subtle)" }}>
           {savingName === null ? (
             <>
-              {isCurrentSaved ? (
+              {!canSaveViews ? null : isCurrentSaved ? (
                 <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space075)", padding: "0 var(--space075)", fontSize: 13.5, fontWeight: 600, color: "var(--text-default)" }}>
                   <Icon icon="Bookmark" appearance="filled" size={18} />
                   Filtres enregistrés
@@ -771,6 +911,8 @@ export function FiltresSheet({
   onApplyView,
   onDeleteView,
   role,
+  dataset = DEFAULT_DATASET,
+  canSaveViews = true,
   isOpen,
   onOpenChange,
   scrollClassName,
@@ -786,6 +928,13 @@ export function FiltresSheet({
   onDeleteView?: (id: string) => void;
   /** Rôle courant : filtre les facettes visibles (déclaratif). Absent = toutes. */
   role?: Role;
+  /** Jeu de données (agents déjà découpés par l'API, domaines, drapeau
+   *  sous-traitants). Défaut = jeu global. */
+  dataset?: FiltresDataset;
+  /** Filtres enregistrés disponibles ? Faux = aucun enregistrement : ni la ligne
+   *  « Filtres enregistrés » ni « Donner un nom / Enregistrer ces filtres ».
+   *  Décidé par l'appelant (un rôle peut ne pas avoir cette fonction). @default true */
+  canSaveViews?: boolean;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   scrollClassName?: string;
@@ -805,12 +954,14 @@ export function FiltresSheet({
   };
   const clearAll = () => onChange(emptyFilters());
 
-  const results = filteredAgents(filters);
+  const results = filteredAgents(filters, dataset.agents, dataset.applySousTraitants);
   const total = totalActive(filters);
   // Filtre enregistré actuellement appliqué (si les filtres courants
   // correspondent à un enregistrement) : son nom s'affiche sur la ligne.
   const appliedView = total > 0 ? views.find((v) => sameFilters(v.filters, filters)) : undefined;
   const detailDef = facet ? (visibleFacets.find((d) => d.key === facet) ?? null) : null;
+  // Enregistrer : seulement avec des filtres appliqués, non déjà enregistrés.
+  const canSave = canSaveViews && total > 0 && !appliedView;
 
   const openFacet = (key: string) => {
     setOptionQuery("");
@@ -881,7 +1032,7 @@ export function FiltresSheet({
       );
     }
     const key = def.key as MultiKey;
-    const domain = DOMAINS[key];
+    const domain = dataset.domains[key];
     // Liste longue → barre de recherche pour filtrer les options par texte.
     const searchable = domain.length > 8;
     const query = optionQuery.trim().toLowerCase();
@@ -897,8 +1048,10 @@ export function FiltresSheet({
           />
         ) : null}
         <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
+          <ClearAllRow items={shown.map((value) => ({ key, value }))} filters={filters} onChange={onChange} dataset={dataset} />
+          {shown.length > 0 ? <Divider /> : null}
           {shown.map((value) => {
-            const n = optionCount(filters, key, value);
+            const n = optionCountIn(filters, key, value, dataset);
             const checked = filters[key].includes(value);
             return (
               <div key={value} style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
@@ -930,6 +1083,21 @@ export function FiltresSheet({
   const facetValueStyle = { minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: "var(--font-size-ui-s)", color: "var(--text-subtlest)" } as const;
   // `textTransform: none` en inline bat le `.head` du DS (capitales) sans classe.
   const sectionTitleStyle = { textTransform: "none" } as const;
+  // Les lignes DÉBORDENT sur toute la largeur de la feuille (`Bleed` compense le
+  // padding horizontal de `DrawerBody`, --space300) : les états survol / appui /
+  // focus vont d'un bord à l'autre. Chaque ligne reprend ce même retrait en
+  // padding interne → le texte reste aligné sur le titre. (Pas de `isFlush`, qui
+  // collerait l'état de survol au texte.)
+  const bleedInset = "var(--space300)";
+  const rowInset = { paddingLeft: bleedInset, paddingRight: bleedInset } as const;
+  // Ligne avec action secondaire (croix, bouton Touch de 48 px) : le bouton est calé
+  // à --space150 du bord pour que l'ICÔNE (centrée, 24 px) tombe sur la même
+  // colonne que les chevrons des autres lignes ; le texte réserve la place du bouton.
+  const actionOffset = "var(--space150)";
+  const rowInsetWithAction = {
+    paddingLeft: bleedInset,
+    paddingRight: `calc(var(--space600) + ${actionOffset})`,
+  } as const;
 
   return (
     <Drawer
@@ -947,11 +1115,11 @@ export function FiltresSheet({
       <DrawerHeader>
         {/* Chevron retour dans les vues détail / recherches (drill-down). */}
         {showViews || detailDef ? (
-          <Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Retour" onPress={back} />
+          <Button appearance="subtle" density="touch" iconBefore="ChevronLeft" aria-label="Retour" onPress={back} />
         ) : null}
         <strong style={{ flex: 1, minWidth: 0, fontSize: "var(--font-size-ui-m)", fontWeight: "var(--font-weight-semibold)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{sheetTitle}</strong>
         {!showViews && savingName === null ? (
-          <Button appearance="link" className={textActionClassName} onPress={clearAll} isDisabled={total === 0}>
+          <Button appearance="link" density="touch" className={textActionClassName} onPress={clearAll} isDisabled={total === 0}>
             Réinitialiser
           </Button>
         ) : null}
@@ -964,21 +1132,23 @@ export function FiltresSheet({
           views.length === 0 ? (
             <p style={{ padding: "var(--space300) 0", textAlign: "center", color: "var(--text-subtlest)", fontSize: 13 }}>Aucun filtre enregistré.</p>
           ) : (
+            <Bleed inline="300">
             <List aria-label="Filtres enregistrés">
               {views.map((v) => {
                 const n = totalActive(v.filters);
                 return (
-                  <ListItemButton key={v.id} isFlush onPress={() => applyView(v)}>
+                  <ListItemButton key={v.id} style={rowInsetWithAction} onPress={() => applyView(v)}>
                     <ListItemText primary={v.name} secondary={`${n} filtre${n > 1 ? "s" : ""} appliqué${n > 1 ? "s" : ""}`} />
                     {onDeleteView ? (
-                      <ListItemSecondaryAction>
-                        <Button appearance="subtle" iconBefore="Close" aria-label={`Supprimer ${v.name}`} onPress={() => onDeleteView(v.id)} />
+                      <ListItemSecondaryAction style={{ right: actionOffset }}>
+                        <Button appearance="subtle" density="touch" iconBefore="Close" aria-label={`Supprimer ${v.name}`} onPress={() => onDeleteView(v.id)} />
                       </ListItemSecondaryAction>
                     ) : null}
                   </ListItemButton>
                 );
               })}
             </List>
+            </Bleed>
           )
         ) : savingName !== null ? (
           // Enregistrement : vue FOCALISÉE — seuls le champ et ses deux actions
@@ -986,11 +1156,15 @@ export function FiltresSheet({
           // disparaissent le temps de nommer l'enregistrement.
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)", paddingBlock: "var(--space100)" }}>
             <TextField aria-label="Nom de l'enregistrement" placeholder="Nom de l'enregistrement" value={savingName} onChange={setSavingName} />
+            {/* Expliqué ICI, au moment de nommer — pas en permanence dans le pied. */}
+            <p style={{ margin: 0, fontSize: "var(--font-size-ui-xxs)", lineHeight: "var(--line-height-ui-xxs)", color: "var(--text-subtlest)" }}>
+              Vous les retrouverez ensuite dans vos filtres enregistrés, et vous les réappliquerez en un geste.
+            </p>
             <div style={{ display: "flex", gap: "var(--space100)" }}>
-              <Button appearance="contained" color="comete" onPress={saveView} isDisabled={!savingName.trim()} style={{ flex: 1 }}>
+              <Button appearance="contained" color="comete" density="touch" onPress={saveView} isDisabled={!savingName.trim()} style={{ flex: 1 }}>
                 Enregistrer
               </Button>
-              <Button appearance="subtle" onPress={() => setSavingName(null)} style={{ flex: 1 }}>
+              <Button appearance="subtle" density="touch" onPress={() => setSavingName(null)} style={{ flex: 1 }}>
                 Annuler
               </Button>
             </div>
@@ -1001,31 +1175,41 @@ export function FiltresSheet({
           // Colonne flex : l'espace autour du filet entre les deux groupes est
           // porté par le `gap` (une valeur, un endroit), jamais par une marge.
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--space150)" }}>
-            {/* Bloc « enregistrement » : action + collection. */}
+            {canSaveViews ? (
+              <>
+            {/* Collection : accéder aux filtres enregistrés. L'action « donner un nom »
+                n'est PAS ici (elle se mélangeait aux critères) : elle vit dans le pied,
+                à côté de « Voir N agents ». */}
+            <Bleed inline="300">
             <List aria-label="Filtres enregistrés">
-              <ListHead isFlush style={sectionTitleStyle}>Enregistrement</ListHead>
-              <ListItemButton isFlush onPress={() => setSavingName("")} isDisabled={total === 0}>
-                <ListItemText primary="Enregistrer ces filtres" />
-              </ListItemButton>
-              <ListItemButton isFlush onPress={() => setShowViews(true)}>
+              <ListItemButton style={rowInset} onPress={() => setShowViews(true)}>
                 <span style={facetLabelStyle}>Filtres enregistrés</span>
                 <span style={facetTrailingStyle}>
-                  {appliedView ? <span style={facetValueStyle}>{appliedView.name}</span> : null}
+                  {appliedView ? (
+                    <span style={facetValueStyle}>{appliedView.name}</span>
+                  ) : views.length > 0 ? (
+                    <Badge label={String(views.length)} appearance="information" importance="medium" />
+                  ) : null}
                   <Icon icon="ChevronRight" color="subtlest" />
                 </span>
               </ListItemButton>
             </List>
+            </Bleed>
 
             <Divider />
 
+              </>
+            ) : null}
+
             {/* Facettes — libellé prioritaire, valeur en fin de ligne tronquée. */}
+            <Bleed inline="300">
             <List aria-label="Critères">
-              <ListHead isFlush style={sectionTitleStyle}>Critères</ListHead>
+              <ListHead style={{ ...sectionTitleStyle, ...rowInset }}>Critères</ListHead>
               {visibleFacets.map((d) => {
                 const c = facetCount(filters, d.key);
                 const val = facetValue(d);
                 return (
-                  <ListItemButton key={d.key} isFlush onPress={() => openFacet(d.key)}>
+                  <ListItemButton key={d.key} style={rowInset} onPress={() => openFacet(d.key)}>
                     <span style={facetLabelStyle}>{d.label}</span>
                     <span style={facetTrailingStyle}>
                       {val ? (
@@ -1039,6 +1223,7 @@ export function FiltresSheet({
                 );
               })}
             </List>
+            </Bleed>
           </div>
         )}
       </DrawerBody>
@@ -1046,9 +1231,18 @@ export function FiltresSheet({
       {/* Pied masqué pendant l'enregistrement : aucun autre élément actif. */}
       {savingName === null ? (
         <DrawerFooter>
-          <Button appearance="contained" color="comete" onPress={() => onOpenChange(false)} style={{ width: "100%" }}>
-            Voir {results.length} agent{results.length > 1 ? "s" : ""}
-          </Button>
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space150)", width: "100%" }}>
+            {/* Proposé UNIQUEMENT s'il y a des filtres appliqués qui ne correspondent
+                pas déjà à un filtre enregistré. */}
+            {canSave ? (
+              <Button appearance="outlined" density="touch" iconBefore="Bookmark" onPress={() => setSavingName("")} style={{ width: "100%" }}>
+                Donner un nom à ces filtres
+              </Button>
+            ) : null}
+            <Button appearance="contained" color="comete" density="touch" onPress={() => onOpenChange(false)} style={{ width: "100%" }}>
+              Voir {results.length} agent{results.length > 1 ? "s" : ""}
+            </Button>
+          </div>
         </DrawerFooter>
       ) : null}
     </Drawer>
@@ -1238,8 +1432,14 @@ export function ActiveFilterTags({
 // -----------------------------------------------------------------------
 // ResultsTable — tableau des agents filtrés.
 
-export function ResultsTable({ filters }: { filters: Filters }): ReactElement {
-  const results = filteredAgents(filters);
+export function ResultsTable({
+  filters,
+  dataset = DEFAULT_DATASET,
+}: {
+  filters: Filters;
+  dataset?: FiltresDataset;
+}): ReactElement {
+  const results = filteredAgents(filters, dataset.agents, dataset.applySousTraitants);
   return (
     <Table aria-label="Agents">
       <TableHead>

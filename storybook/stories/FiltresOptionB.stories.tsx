@@ -44,6 +44,10 @@ import {
   AGENTS,
   facetsForRole,
   effectiveFilters,
+  agentsForRole,
+  domainsOf,
+  emptyFilters,
+  type FiltresDataset,
   type Filters,
   type Role,
 } from "./_filtresOptionB";
@@ -53,8 +57,10 @@ import {
 // recette « Filtres » partagée (_filtresOptionB). MÊME popup que la story
 // Layout/Page/Toolbar → source unique.
 
-function FiltresOptionB({ role }: { role?: Role }): ReactElement {
-  const [f, setF] = useState<Filters>(initialFilters);
+// `initial` : filtres de départ. Par défaut la page N'EST PAS filtrée ; les stories
+// de test passent `initialFilters()` (cas durs : troncature, +N, rôle).
+function FiltresOptionB({ role, initial }: { role?: Role; initial?: Filters }): ReactElement {
+  const [f, setF] = useState<Filters>(() => initial ?? emptyFilters());
   const { views, save, remove } = useSavedViews();
   // Le rôle change → on NEUTRALISE (n'applique plus) les facettes qu'il ne gère
   // pas : elles disparaissent des tags ET des résultats, pas seulement du
@@ -62,6 +68,16 @@ function FiltresOptionB({ role }: { role?: Role }): ReactElement {
   useEffect(() => {
     setF((prev) => effectiveFilters(prev, role));
   }, [role]);
+  // Jeu de données du rôle : la story SIMULE le découpage fait par l'API (dans
+  // Link, les lignes arrivent déjà restreintes au périmètre du rôle). Les
+  // composants ne connaissent que ce jeu, jamais le rôle. Le partenaire ne gère
+  // pas l'interrupteur « sous-traitants » : son périmètre est déjà fixé en amont.
+  const dataset = useMemo<FiltresDataset>(() => {
+    const agents = agentsForRole(role);
+    return { agents, domains: domainsOf(agents), applySousTraitants: role !== "partenaire" };
+  }, [role]);
+  // Filtres enregistrés : fonction du manager ; le partenaire n'en a pas.
+  const canSaveViews = role !== "partenaire";
   return (
     <div
       style={{
@@ -92,16 +108,20 @@ function FiltresOptionB({ role }: { role?: Role }): ReactElement {
           views={views}
           onSaveView={(name) => save(name, f)}
           role={role}
+          dataset={dataset}
+          canSaveViews={canSaveViews}
           scrollClassName={css["scroll"]}
           textActionClassName={css["textAction"]}
         />
         <div style={{ flex: 1 }} />
-        <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
+        {canSaveViews ? (
+          <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
+        ) : null}
       </div>
 
       <ActiveFilterTags filters={f} onChange={setF} textActionClassName={css["textAction"]} />
 
-      <ResultsTable filters={f} />
+      <ResultsTable filters={f} dataset={dataset} />
     </div>
   );
 }
@@ -109,8 +129,8 @@ function FiltresOptionB({ role }: { role?: Role }): ReactElement {
 // -----------------------------------------------------------------------
 // Recette — mobile (liste + panneau de filtres en drill-down).
 
-function FiltresOptionBMobile(): ReactElement {
-  const [f, setF] = useState<Filters>(initialFilters);
+function FiltresOptionBMobile({ initial }: { initial?: Filters }): ReactElement {
+  const [f, setF] = useState<Filters>(() => initial ?? emptyFilters());
   const [filterOpen, setFilterOpen] = useState(false);
   const { views, save, remove } = useSavedViews();
 
@@ -258,7 +278,7 @@ export const Mobile: Story = {
 // stories visibles ci-dessus.
 export const DesktopInteractions: Story = {
   tags: ["!dev"],
-  render: () => <FiltresOptionB />,
+  render: () => <FiltresOptionB initial={initialFilters()} />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const rowCount = () => canvasElement.querySelectorAll("tbody tr").length;
@@ -310,6 +330,58 @@ export const DesktopInteractions: Story = {
       // Aucun littéral de rôle dans le composant d'AFFICHAGE : la visibilité
       // vient du champ `roles`, jamais d'un test en dur.
       await expect(/isPartner|isManager|role_code/.test(FiltresPanel.toString())).toBe(false);
+      await expect(/isPartner|isManager|role_code/.test(FiltresSheet.toString())).toBe(false);
+    });
+
+    await step("bascule manager → partenaire : l'interrupteur sous-traitants ne laisse aucun tag fantôme", async () => {
+      // Un manager active « Voir les agents sous-traitants » ; en repassant en
+      // partenaire (qui ne gère pas cet interrupteur), le critère ne doit être ni
+      // compté ni affiché. Le périmètre du partenaire vient du jeu de données
+      // (`agentsForRole`), pas de ce filtre.
+      const asManager: Filters = { ...emptyFilters(), sousTraitants: true };
+      await expect(totalActive(asManager)).toBe(1);
+      const asPartner = effectiveFilters(asManager, "partenaire");
+      await expect(asPartner.sousTraitants).toBe(false);
+      await expect(totalActive(asPartner)).toBe(0);
+      // Le jeu du partenaire : uniquement les sous-traitants de SA société.
+      const partner = agentsForRole("partenaire");
+      await expect(partner.length).toBeGreaterThan(0);
+      await expect(partner.every((a) => a.sousTraitant && a.societe === "Sous-traitant Vigilis")).toBe(true);
+      await expect(agentsForRole("manager")).toHaveLength(AGENTS.length);
+      await expect(agentsForRole(undefined)).toHaveLength(AGENTS.length);
+    });
+  },
+};
+
+// Rôle partenaire : le périmètre est celui de l'API (sous-traitants de SA société),
+// pas un filtre. Régression : la story était inversée (salariés Comète / Agence
+// Lyon visibles, zéro sous-traitant Vigilis).
+const ROLE_PARTENAIRE: Role = "partenaire";
+export const DesktopPartenaireInteractions: Story = {
+  tags: ["!dev"],
+  render: () => <FiltresOptionB role={ROLE_PARTENAIRE} initial={initialFilters()} />,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const rows = () => Array.from(canvasElement.querySelectorAll<HTMLElement>("tbody tr"));
+
+    await step("périmètre partenaire : uniquement des agents de « Sous-traitant Vigilis »", async () => {
+      // Les critères hérités du manager (société, secteurs, contrat) sont neutralisés,
+      // le diplôme « SSIAP 2 » reste : on remet à zéro pour voir tout le périmètre.
+      await userEvent.click(canvas.getByRole("button", { name: "Réinitialiser" }));
+      await waitFor(() => expect(rows().length).toBeGreaterThan(0));
+      const texts = rows().map((r) => r.textContent ?? "");
+      await expect(texts.every((t) => t.includes("Sous-traitant Vigilis"))).toBe(true);
+      // Aucun salarié de Comète Sécurité ni d'Agence Lyon.
+      await expect(texts.some((t) => t.includes("Comète Sécurité"))).toBe(false);
+      await expect(texts.some((t) => t.includes("Agence Lyon"))).toBe(false);
+      await expect(rows()).toHaveLength(agentsForRole("partenaire").length);
+      // Un périmètre qui ne se réduit pas à deux lignes : de quoi voir filtrer.
+      await expect(rows().length).toBeGreaterThanOrEqual(8);
+    });
+
+    await step("aucun tag de critère « Sous-traitants » en rôle partenaire", async () => {
+      await expect(canvas.queryByRole("button", { name: /Retirer Sous-traitants/ })).toBeNull();
+      await expect(canvas.queryByRole("group", { name: "Filtres actifs" })).toBeNull();
     });
   },
 };
@@ -317,7 +389,7 @@ export const DesktopInteractions: Story = {
 export const MobileInteractions: Story = {
   tags: ["!dev"],
   globals: { viewport: { value: "phone390" } },
-  render: () => <FiltresOptionBMobile />,
+  render: () => <FiltresOptionBMobile initial={initialFilters()} />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     // Le Drawer est rendu dans un portail (hors canvas) → requêtes via document.
@@ -328,19 +400,36 @@ export const MobileInteractions: Story = {
       await waitFor(() => expect(screen.getByRole("dialog", { name: "Filtres" })).toBeInTheDocument());
     });
 
-    await step("enregistrer les filtres courants", async () => {
-      await userEvent.click(drawer().getByRole("button", { name: /Enregistrer ces filtres/ }));
+    await step("enregistrer les filtres courants (proposé seulement s'ils ne sont pas déjà enregistrés)", async () => {
+      // Distinct des critères : l'action vit dans le pied, pas dans la liste.
+      await expect(drawer().queryByRole("button", { name: /^Enregistrer ces filtres/ })).toBeNull();
+      // L'explication n'est pas affichée en permanence : seulement à l'étape « nommer ».
+      await expect(drawer().queryByText(/Vous les retrouverez ensuite/)).toBeNull();
+      await userEvent.click(drawer().getByRole("button", { name: /Donner un nom à ces filtres/ }));
+      await expect(drawer().getByText(/Vous les retrouverez ensuite/)).toBeInTheDocument();
       await userEvent.type(drawer().getByRole("textbox", { name: "Nom de l'enregistrement" }), "Mes filtres");
       await userEvent.click(drawer().getByRole("button", { name: "Enregistrer" }));
       // De retour à la racine : les filtres courants correspondent désormais à
       // l'enregistrement créé → son nom apparaît sur la ligne « Filtres
-      // enregistrés » (pas de badge, pas de compte).
+      // enregistrés » et l'action d'enregistrement disparaît du pied.
       await waitFor(() => expect(drawer().getByText("Mes filtres")).toBeInTheDocument());
+      await expect(drawer().queryByRole("button", { name: /Donner un nom à ces filtres/ })).toBeNull();
     });
 
     await step("drill-down dans une facette puis retour", async () => {
       await userEvent.click(drawer().getByRole("button", { name: /Langues/ }));
       await waitFor(() => expect(drawer().getByRole("checkbox", { name: "Français" })).toBeInTheDocument());
+      // « Tout désélectionner » (seule action de masse, une case à cocher) :
+      // désactivée tant que rien n'est coché, active dès qu'une option l'est, puis
+      // vide la sélection.
+      const clearAll = () => drawer().getByRole("checkbox", { name: "Tout désélectionner" });
+      await expect(clearAll()).toBeDisabled();
+      const firstEnabled = drawer().getAllByRole("checkbox").find((c) => !(c as HTMLInputElement).disabled);
+      await expect(firstEnabled).toBeDefined();
+      if (firstEnabled) await userEvent.click(firstEnabled);
+      await waitFor(() => expect(clearAll()).toBeEnabled());
+      await userEvent.click(clearAll());
+      await waitFor(() => expect(clearAll()).toBeDisabled());
       await userEvent.click(drawer().getByRole("button", { name: "Retour" }));
       await waitFor(() => expect(drawer().getByRole("button", { name: /Langues/ })).toBeInTheDocument());
     });
