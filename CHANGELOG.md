@@ -40,6 +40,11 @@ entre versions alpha.
   aussi la réserve droite ci-dessus, ramenant le recouvrement. La réserve est
   désormais rétablie dans ce cas, réduite à la seule largeur de l'action, et
   l'action elle-même se cale au bord pour rester alignée sur le texte mis à plat.
+- **`SearchField` / `TextField type="search"` — deux croix d'effacement** : au
+  survol ou au focus d'un champ rempli, Chromium et Safari affichaient leur
+  croix native **en plus** du bouton « Effacer » du DS. L'accessoire natif
+  (`::-webkit-search-cancel-button` et `::-webkit-search-decoration`) est
+  désormais masqué : seul le bouton du DS (`isClearable`) subsiste.
 
 ## [1.0.0-alpha.163] - 2026-10-06
 
