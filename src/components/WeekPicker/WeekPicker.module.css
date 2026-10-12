@@ -70,12 +70,12 @@
   flex-shrink: 0;
 }
 
-/* Bouton Effacer — masque au repos, revele au survol ou au focus du champ
-   (meme convention que `TextField`). `visibility` et non `display` : la place
-   reste reservee en permanence, donc l'icone calendrier ne se decale pas quand le
-   bouton apparait. Le bouton vient EN PLUS de cette icone, pas a sa place. */
-.clearButton {
-  visibility: hidden;
+/* Bouton Effacer — absent au repos (aucune place réservée : même espacement
+   que le champ soit vide ou rempli), révélé au survol ou au focus du champ
+   (même convention que `TextField`). Il vient EN PLUS de l'icône
+   calendrier / horloge, pas à sa place. */
+.trailingButtons .clearButton {
+  display: none;
 }
 
 /* Croix d'effacement : `--icon-subtlest` (même convention que `TextField` et
@@ -85,9 +85,9 @@
   color: var(--icon-subtlest);
 }
 
-.root:hover .clearButton,
-.root:focus-within .clearButton {
-  visibility: visible;
+.root:hover .trailingButtons .clearButton,
+.root:focus-within .trailingButtons .clearButton {
+  display: inline-flex;
 }
 
 /* Wrapper des boutons trailing (clear + calendrier). Pas de gap entre les

@@ -37,6 +37,14 @@ entre versions alpha.
 
 ### Corrigé
 
+- **Sélecteurs date / heure / mois / semaine / année — espace inutile au repos** :
+  le bouton « Effacer », masqué par `visibility: hidden`, **gardait sa place**
+  (26 px) sur un champ rempli : 32 px entre le texte et l'icône calendrier /
+  horloge, contre 6 px sur un champ vide. Il est désormais **absent au repos**
+  (`display: none`) et n'apparaît qu'au survol ou au focus du champ, en plus de
+  l'icône. Même espacement (6 px) que le champ soit vide ou rempli. Un champ dont
+  la largeur suit son contenu s'élargit de 26 px à l'apparition de la croix ;
+  un champ de largeur fixe ou pleine largeur ne bouge pas.
 - **`List` — réserve de l'action secondaire** : `ListItem` et `ListItemButton`
   réservaient la place à droite via `var(--space700)`, un token **inexistant**
   dans `@aexae/comete-design-tokens`. La déclaration était invalide, donc
