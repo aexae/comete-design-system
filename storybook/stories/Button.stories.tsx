@@ -59,6 +59,14 @@ const meta: Meta<ButtonProps> = {
       description: "Icon after the label",
       table: { category: "Icons" },
     },
+    shape: {
+      // Masqué par défaut : `shape` n'agit que sur un bouton icon-only (ou
+      // `collapseLabel` réduit). Sur un bouton à label il n'a aucun effet.
+      // Le control est réactivé explicitement sur la story « Icon only ».
+      control: false,
+      description:
+        "Forme en rendu icône seule : `round` (cercle) ou `square` (coins arrondis de la densité). Sans effet sur un bouton avec label visible.",
+    },
   },
   args: {
     children: "Button",
@@ -342,7 +350,16 @@ export const IconAllColors: Story = {
 /** Bouton icon-only (sans label) */
 export const IconOnly: Story = {
   name: "Icon only",
-  args: { iconBefore: "Image", color: "comete", children: "" },
+  args: { iconBefore: "Image", color: "comete", children: "", shape: "round" },
+  // `shape` n'a d'effet que sur un bouton icon-only : on réactive le control ici.
+  argTypes: {
+    shape: {
+      control: "inline-radio",
+      options: ["round", "square"],
+      description:
+        "`round` = cercle ; `square` = coins arrondis de la densité (alignement toolbar).",
+    },
+  },
   render: (args) => <Button {...args} />,
 };
 
