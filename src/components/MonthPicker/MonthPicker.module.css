@@ -126,6 +126,15 @@
   visibility: visible;
 }
 
+/* Champ vide : l'emplacement du bouton Effacer est réservé (même largeur que
+   rempli → aucun décalage vide / rempli) mais reste invisible, y compris au
+   survol / focus du champ. */
+.clearButton[data-placeholder],
+.root:hover .clearButton[data-placeholder],
+.root:focus-within .clearButton[data-placeholder] {
+  visibility: hidden;
+}
+
 /* Wrapper des boutons trailing (clear + calendrier). Pas de gap entre les
    deux icônes — elles sont collées. Le gap de l'InputContainer reste actif
    entre les segments et ce wrapper. */

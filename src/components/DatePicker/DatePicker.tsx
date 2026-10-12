@@ -345,14 +345,18 @@ function EditableDatePicker<T extends DateValue = DateValue>({
                 )}
               </AriaDateInput>
               <div className={styles.trailingButtons}>
-                {showClear && (
-                  <Button
+                {isClearable && !isReadOnly && (
+<Button
                     appearance="subtle"
                     isInline
                     iconBefore="CloseSmall"
                     className={[styles.calendarButton, styles.clearButton].join(" ")}
-                    isDisabled={isDisabled}
+                    isDisabled={isDisabled || !showClear}
                     aria-label="Effacer"
+                    // Champ vide : emplacement RÉSERVÉ (même encombrement que rempli), inerte
+                    // et invisible (visibility: hidden, donc absent de l'arbre d'accessibilité) —
+                    // pas de décalage entre vide / rempli.
+                    data-placeholder={!showClear || undefined}
                     // Hors du contexte de bouton du champ (bascule du calendrier).
                     slot={null}
                     onPress={handleClear}
@@ -361,7 +365,7 @@ function EditableDatePicker<T extends DateValue = DateValue>({
                     // blur, ce qui peut surprendre l'UX d'édition.
                     onPointerDown={(e) => e.preventDefault()}
                   />
-                )}
+)}
                 <Button
                   appearance="subtle"
                   isInline
@@ -690,20 +694,24 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
                 )}
               </AriaDateInput>
               <div className={styles.trailingButtons}>
-                {showClear && (
-                  <Button
+                {isClearable && !isReadOnly && (
+<Button
                     appearance="subtle"
                     isInline
                     iconBefore="CloseSmall"
                     className={[styles.calendarButton, styles.clearButton].join(" ")}
-                    isDisabled={isDisabled}
+                    isDisabled={isDisabled || !showClear}
                     aria-label="Effacer"
+                    // Champ vide : emplacement RÉSERVÉ (même encombrement que rempli), inerte
+                    // et invisible (visibility: hidden, donc absent de l'arbre d'accessibilité) —
+                    // pas de décalage entre vide / rempli.
+                    data-placeholder={!showClear || undefined}
                     // Hors du contexte de bouton du champ (bascule du calendrier).
                     slot={null}
                     onPress={handleClear}
                     onPointerDown={(e) => e.preventDefault()}
                   />
-                )}
+)}
                 <Button
                   appearance="subtle"
                   isInline

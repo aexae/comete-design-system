@@ -37,6 +37,15 @@ entre versions alpha.
 
 ### Corrigé
 
+- **Sélecteurs date / heure / mois / semaine / année — écart vide ≠ rempli** :
+  le bouton « Effacer » n'était rendu que lorsque le champ avait une valeur ;
+  masqué au repos mais **réservé** (`visibility: hidden`), il décalait l'icône
+  calendrier / horloge de 26 px sur un champ rempli (32 px entre le texte et
+  l'icône) alors qu'un champ vide n'avait que 6 px. L'emplacement est désormais
+  réservé aussi quand le champ est vide : bouton inerte (`disabled`,
+  `data-placeholder`), invisible y compris au survol et au focus. Même
+  espacement dans les deux états. Sans `isClearable`, rien n'est rendu ni
+  réservé.
 - **`List` — réserve de l'action secondaire** : `ListItem` et `ListItemButton`
   réservaient la place à droite via `var(--space700)`, un token **inexistant**
   dans `@aexae/comete-design-tokens`. La déclaration était invalide, donc

@@ -24,7 +24,7 @@ describe("DatePicker", () => {
 
     it("should render calendar button", () => {
       render(<DatePicker aria-label="Date" />);
-      expect(screen.getByRole("button")).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Ouvrir le calendrier" })).toBeInTheDocument();
     });
 
     it("should apply datePicker class on root", () => {
@@ -64,7 +64,7 @@ describe("DatePicker", () => {
 
     it("should open calendar on button click", async () => {
       render(<DatePicker aria-label="Date" />);
-      await userEvent.click(screen.getByRole("button"));
+      await userEvent.click(screen.getByRole("button", { name: "Ouvrir le calendrier" }));
       expect(screen.getByRole("dialog")).toBeInTheDocument();
     });
 
@@ -108,6 +108,35 @@ describe("DatePicker", () => {
       await userEvent.click(within(dialog).getByText("15"));
       expect(onChange).toHaveBeenCalled();
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+
+    it("should reserve an inert clear button slot when empty (same spacing as filled)", () => {
+      const { container } = render(<DatePicker aria-label="Date" />);
+      const clear = container.querySelector<HTMLButtonElement>('button[aria-label="Effacer"]');
+      expect(clear).toBeInTheDocument();
+      expect(clear).toHaveAttribute("data-placeholder");
+      expect(clear).toBeDisabled();
+    });
+
+    it("should render an active clear button when filled", () => {
+      const { container } = render(
+        <DatePicker aria-label="Date" defaultValue={new CalendarDate(2026, 10, 12)} />,
+      );
+      const clear = container.querySelector<HTMLButtonElement>('button[aria-label="Effacer"]');
+      expect(clear).toBeInTheDocument();
+      expect(clear).not.toHaveAttribute("data-placeholder");
+      expect(clear).toBeEnabled();
+    });
+
+    it("should not render any clear button when isClearable is false", () => {
+      const { container } = render(
+        <DatePicker
+          aria-label="Date"
+          isClearable={false}
+          defaultValue={new CalendarDate(2026, 10, 12)}
+        />,
+      );
+      expect(container.querySelector('button[aria-label="Effacer"]')).not.toBeInTheDocument();
     });
 
     it("should clear the value without opening the calendar", async () => {

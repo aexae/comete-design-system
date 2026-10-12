@@ -487,21 +487,25 @@ function SingleWeekPicker({
             />
 
             <div className={styles.trailingButtons}>
-              {showClear && (
-                <Button
+              {isClearable && (
+<Button
                   appearance="subtle"
                   isInline
                   iconBefore="CloseSmall"
                   className={[styles.calendarButton, styles.clearButton].join(" ")}
-                  isDisabled={isDisabled}
+                  isDisabled={isDisabled || !showClear}
                   aria-label="Effacer"
+                    // Champ vide : emplacement RÉSERVÉ (même encombrement que rempli), inerte
+                    // et invisible (visibility: hidden, donc absent de l'arbre d'accessibilité) —
+                    // pas de décalage entre vide / rempli.
+                    data-placeholder={!showClear || undefined}
                   onPress={handleClear}
                   // REASON: empêcher le blur de l'input pendant le click. Sans ça,
                   // le mousedown sur le bouton transfert le focus → input blur →
                   // ne se déclenche jamais.
                   onPointerDown={(e) => e.preventDefault()}
                 />
-              )}
+)}
               <Button
                 appearance="subtle"
                 isInline
@@ -861,21 +865,25 @@ function RangeWeekPicker({
             />
 
             <div className={styles.trailingButtons}>
-              {showClear && (
-                <Button
+              {isClearable && (
+<Button
                   appearance="subtle"
                   isInline
                   iconBefore="CloseSmall"
                   className={[styles.calendarButton, styles.clearButton].join(" ")}
-                  isDisabled={isDisabled}
+                  isDisabled={isDisabled || !showClear}
                   aria-label="Effacer"
+                    // Champ vide : emplacement RÉSERVÉ (même encombrement que rempli), inerte
+                    // et invisible (visibility: hidden, donc absent de l'arbre d'accessibilité) —
+                    // pas de décalage entre vide / rempli.
+                    data-placeholder={!showClear || undefined}
                   onPress={handleClear}
                   // REASON: empêcher le blur de l'input pendant le click. Sans ça,
                   // le mousedown sur le bouton transfert le focus → input blur →
                   // ne se déclenche jamais.
                   onPointerDown={(e) => e.preventDefault()}
                 />
-              )}
+)}
               <Button
                 appearance="subtle"
                 isInline
