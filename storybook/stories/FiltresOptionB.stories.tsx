@@ -44,6 +44,10 @@ import {
   AGENTS,
   facetsForRole,
   effectiveFilters,
+  agentsForRole,
+  domainsOf,
+  emptyFilters,
+  type FiltresDataset,
   type Filters,
   type Role,
 } from "./_filtresOptionB";
@@ -61,6 +65,14 @@ function FiltresOptionB({ role }: { role?: Role }): ReactElement {
   // popover. Visible sans ouvrir le panneau.
   useEffect(() => {
     setF((prev) => effectiveFilters(prev, role));
+  }, [role]);
+  // Jeu de données du rôle : la story SIMULE le découpage fait par l'API (dans
+  // Link, les lignes arrivent déjà restreintes au périmètre du rôle). Les
+  // composants ne connaissent que ce jeu, jamais le rôle. Le partenaire ne gère
+  // pas l'interrupteur « sous-traitants » : son périmètre est déjà fixé en amont.
+  const dataset = useMemo<FiltresDataset>(() => {
+    const agents = agentsForRole(role);
+    return { agents, domains: domainsOf(agents), applySousTraitants: role !== "partenaire" };
   }, [role]);
   return (
     <div
@@ -92,6 +104,7 @@ function FiltresOptionB({ role }: { role?: Role }): ReactElement {
           views={views}
           onSaveView={(name) => save(name, f)}
           role={role}
+          dataset={dataset}
           scrollClassName={css["scroll"]}
           textActionClassName={css["textAction"]}
         />
@@ -101,7 +114,7 @@ function FiltresOptionB({ role }: { role?: Role }): ReactElement {
 
       <ActiveFilterTags filters={f} onChange={setF} textActionClassName={css["textAction"]} />
 
-      <ResultsTable filters={f} />
+      <ResultsTable filters={f} dataset={dataset} />
     </div>
   );
 }
@@ -310,6 +323,56 @@ export const DesktopInteractions: Story = {
       // Aucun littéral de rôle dans le composant d'AFFICHAGE : la visibilité
       // vient du champ `roles`, jamais d'un test en dur.
       await expect(/isPartner|isManager|role_code/.test(FiltresPanel.toString())).toBe(false);
+      await expect(/isPartner|isManager|role_code/.test(FiltresSheet.toString())).toBe(false);
+    });
+
+    await step("bascule manager → partenaire : l'interrupteur sous-traitants ne laisse aucun tag fantôme", async () => {
+      // Un manager active « Voir les agents sous-traitants » ; en repassant en
+      // partenaire (qui ne gère pas cet interrupteur), le critère ne doit être ni
+      // compté ni affiché. Le périmètre du partenaire vient du jeu de données
+      // (`agentsForRole`), pas de ce filtre.
+      const asManager: Filters = { ...emptyFilters(), sousTraitants: true };
+      await expect(totalActive(asManager)).toBe(1);
+      const asPartner = effectiveFilters(asManager, "partenaire");
+      await expect(asPartner.sousTraitants).toBe(false);
+      await expect(totalActive(asPartner)).toBe(0);
+      // Le jeu du partenaire : uniquement les sous-traitants de SA société.
+      const partner = agentsForRole("partenaire");
+      await expect(partner.length).toBeGreaterThan(0);
+      await expect(partner.every((a) => a.sousTraitant && a.societe === "Sous-traitant Vigilis")).toBe(true);
+      await expect(agentsForRole("manager")).toHaveLength(AGENTS.length);
+      await expect(agentsForRole(undefined)).toHaveLength(AGENTS.length);
+    });
+  },
+};
+
+// Rôle partenaire : le périmètre est celui de l'API (sous-traitants de SA société),
+// pas un filtre. Régression : la story était inversée (salariés Comète / Agence
+// Lyon visibles, zéro sous-traitant Vigilis).
+const ROLE_PARTENAIRE: Role = "partenaire";
+export const DesktopPartenaireInteractions: Story = {
+  tags: ["!dev"],
+  render: () => <FiltresOptionB role={ROLE_PARTENAIRE} />,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const rows = () => Array.from(canvasElement.querySelectorAll<HTMLElement>("tbody tr"));
+
+    await step("périmètre partenaire : uniquement des agents de « Sous-traitant Vigilis »", async () => {
+      // Les critères hérités du manager (société, secteurs, contrat) sont neutralisés,
+      // le diplôme « SSIAP 2 » reste : on remet à zéro pour voir tout le périmètre.
+      await userEvent.click(canvas.getByRole("button", { name: "Réinitialiser" }));
+      await waitFor(() => expect(rows().length).toBeGreaterThan(0));
+      const texts = rows().map((r) => r.textContent ?? "");
+      await expect(texts.every((t) => t.includes("Sous-traitant Vigilis"))).toBe(true);
+      // Aucun salarié de Comète Sécurité ni d'Agence Lyon.
+      await expect(texts.some((t) => t.includes("Comète Sécurité"))).toBe(false);
+      await expect(texts.some((t) => t.includes("Agence Lyon"))).toBe(false);
+      await expect(rows()).toHaveLength(agentsForRole("partenaire").length);
+    });
+
+    await step("aucun tag de critère « Sous-traitants » en rôle partenaire", async () => {
+      await expect(canvas.queryByRole("button", { name: /Retirer Sous-traitants/ })).toBeNull();
+      await expect(canvas.queryByRole("group", { name: "Filtres actifs" })).toBeNull();
     });
   },
 };

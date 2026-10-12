@@ -154,6 +154,16 @@ export const AGENTS: Agent[] = (
   dispo: r[11],
 }));
 
+/**
+ * Simule le découpage fait par l'API : dans Link, les lignes arrivent DÉJÀ
+ * restreintes au périmètre du rôle. Manager (ou rôle absent) = tous les agents ;
+ * partenaire = uniquement les sous-traitants de SA société.
+ * Aucune logique de rôle dans les composants d'affichage : la story passe ce jeu.
+ */
+export const PARTENAIRE_SOCIETE = "Sous-traitant Vigilis";
+export const agentsForRole = (role?: Role): Agent[] =>
+  role === "partenaire" ? AGENTS.filter((a) => a.sousTraitant && a.societe === PARTENAIRE_SOCIETE) : AGENTS;
+
 export const DISPO_MODES = [
   { id: "tous", label: "Tous" },
   { id: "planifies", label: "Planifiés" },
@@ -219,26 +229,36 @@ export function initialFilters(): Filters {
   };
 }
 
-export function match(a: Agent, f: Filters): boolean {
-  if (!f.sousTraitants && a.sousTraitant) return false;
+// `applySousTraitants` : faut-il appliquer l'interrupteur « sous-traitants » ?
+// Vrai par défaut. Faux quand le jeu fourni est DÉJÀ restreint en amont (le
+// partenaire ne gère pas l'interrupteur : son périmètre est fixé par l'API, pas
+// par un filtre). Un simple booléen — aucune chaîne de rôle dans le prédicat.
+export function match(a: Agent, f: Filters, applySousTraitants = true): boolean {
+  if (applySousTraitants && !f.sousTraitants && a.sousTraitant) return false;
   if (f.dispoMode !== "tous" && a.dispo !== f.dispoMode) return false;
   if (f.nameQuery && !a.nom.toLowerCase().includes(f.nameQuery.toLowerCase())) return false;
   // `contrat` (types de contrats) est une facette multi comme les autres.
   return MULTI_KEYS.every((k) => !f[k].length || f[k].includes(a[k]));
 }
 
-export const filteredAgents = (f: Filters): Agent[] => AGENTS.filter((a) => match(a, f));
+export const filteredAgents = (f: Filters, agents: Agent[] = AGENTS, applySousTraitants = true): Agent[] =>
+  agents.filter((a) => match(a, f, applySousTraitants));
 
 // Match en ignorant une facette (comptes qui ne s'effondrent pas quand on
 // coche plusieurs valeurs de la même facette).
-function matchExcept(a: Agent, f: Filters, skip: MultiKey): boolean {
-  if (!f.sousTraitants && a.sousTraitant) return false;
+function matchExcept(a: Agent, f: Filters, skip: MultiKey, applySousTraitants: boolean): boolean {
+  if (applySousTraitants && !f.sousTraitants && a.sousTraitant) return false;
   if (f.dispoMode !== "tous" && a.dispo !== f.dispoMode) return false;
   return MULTI_KEYS.every((k) => k === skip || !f[k].length || f[k].includes(a[k]));
 }
 
-export const optionCount = (f: Filters, key: MultiKey, value: string): number =>
-  AGENTS.filter((a) => a[key] === value && matchExcept(a, f, key)).length;
+export const optionCount = (
+  f: Filters,
+  key: MultiKey,
+  value: string,
+  agents: Agent[] = AGENTS,
+  applySousTraitants = true,
+): number => agents.filter((a) => a[key] === value && matchExcept(a, f, key, applySousTraitants)).length;
 
 // Secteurs d'activité — CAS DUR « facette à ~60 options » : liste longue (bien
 // au-delà des valeurs réellement portées par les agents) → le volet droit
@@ -304,15 +324,36 @@ const SECTEURS = [
   "Zone industrialo-portuaire et plateformes logistiques multimodales du Grand Ouest",
 ];
 
-export const DOMAINS = MULTI_KEYS.reduce(
-  (acc, key) => {
-    acc[key] = key === "secteur"
-      ? SECTEURS
-      : [...new Set(AGENTS.map((a) => a[key]))].sort((x, y) => x.localeCompare(y, "fr"));
-    return acc;
-  },
-  {} as Record<MultiKey, string[]>,
-);
+// Domaines (valeurs proposées par facette) dérivés d'un jeu d'agents ; `secteur`
+// garde la liste longue SECTEURS (cas dur « ~60 options »), indépendante du jeu.
+export const domainsOf = (agents: Agent[]): Record<MultiKey, string[]> =>
+  MULTI_KEYS.reduce(
+    (acc, key) => {
+      acc[key] = key === "secteur"
+        ? SECTEURS
+        : [...new Set(agents.map((a) => a[key]))].sort((x, y) => x.localeCompare(y, "fr"));
+      return acc;
+    },
+    {} as Record<MultiKey, string[]>,
+  );
+
+export const DOMAINS = domainsOf(AGENTS);
+
+/**
+ * Jeu de données d'une recette : les agents (déjà découpés par l'API), les
+ * domaines proposés et le drapeau d'application de l'interrupteur sous-traitants.
+ * UNE seule prop pour les composants ; défaut = le jeu global (tout le monde).
+ */
+export interface FiltresDataset {
+  agents: Agent[];
+  domains: Record<MultiKey, string[]>;
+  applySousTraitants: boolean;
+}
+
+export const DEFAULT_DATASET: FiltresDataset = { agents: AGENTS, domains: DOMAINS, applySousTraitants: true };
+
+const optionCountIn = (f: Filters, key: MultiKey, value: string, ds: FiltresDataset): number =>
+  optionCount(f, key, value, ds.agents, ds.applySousTraitants);
 
 export function facetCount(f: Filters, key: string): number {
   if (key === "sousTraitants") return f.sousTraitants ? 1 : 0;
@@ -336,6 +377,10 @@ export function effectiveFilters(f: Filters, role?: Role): Filters {
   MULTI_KEYS.forEach((k) => {
     if (!visible.has(k)) out[k] = [];
   });
+  // Remise à l'état INACTIF (comme les clés multi) : sans elle, un interrupteur
+  // activé par un manager resterait compté (facetCount = 1) et ferait apparaître
+  // un tag fantôme après bascule en partenaire. Ce `false` est inoffensif pour le
+  // périmètre : un jeu déjà restreint se passe avec `applySousTraitants = false`.
   if (!visible.has("sousTraitants")) out.sousTraitants = false;
   if (!visible.has("dispo")) out.dispoMode = "tous";
   return out;
@@ -399,39 +444,63 @@ export const initialsOf = (nom: string): string =>
 // -----------------------------------------------------------------------
 // Contrôles d'options d'une facette (volet droit du popover / de la feuille).
 
+interface OptionRef {
+  key: MultiKey;
+  value: string;
+}
+
 // « Tout désélectionner » : une case à cocher posée en tête de la liste d'options,
 // au libellé UNIQUE (pas de « tout sélectionner » : on ne coche jamais 60 options
 // d'un geste). Tiret (indéterminé) quand la sélection est partielle, cochée quand
 // tout est sélectionné ; la cocher vide la sélection. Elle agit sur les options
-// AFFICHÉES (donc sur le résultat d'une recherche locale) et reste désactivée tant
-// que rien n'est coché.
+// AFFICHÉES (`items`) — le domaine d'une facette dans le volet droit, le résultat
+// d'une recherche locale dans la feuille, les correspondances d'une recherche
+// transversale dans le popover — et reste désactivée tant que rien n'est coché.
 function ClearAllRow({
-  facetKey,
-  values,
+  items,
   filters,
   onChange,
+  dataset,
 }: {
-  facetKey: MultiKey;
-  values: string[];
+  items: OptionRef[];
   filters: Filters;
   onChange: (f: Filters) => void;
+  dataset: FiltresDataset;
 }): ReactElement {
-  const selected = filters[facetKey];
-  const selectable = values.filter((v) => selected.includes(v) || optionCount(filters, facetKey, v) > 0);
-  const hasSelection = values.some((v) => selected.includes(v));
-  const allSelected = selectable.length > 0 && selectable.every((v) => selected.includes(v));
+  const isOn = (i: OptionRef): boolean => filters[i.key].includes(i.value);
+  const selectable = items.filter((i) => isOn(i) || optionCountIn(filters, i.key, i.value, dataset) > 0);
+  const hasSelection = items.some(isOn);
+  const allSelected = selectable.length > 0 && selectable.every(isOn);
+  const clear = () => {
+    const next: Filters = { ...filters };
+    MULTI_KEYS.forEach((k) => {
+      const drop = items.filter((i) => i.key === k).map((i) => i.value);
+      if (drop.length) next[k] = filters[k].filter((v) => !drop.includes(v));
+    });
+    onChange(next);
+  };
   return (
     <Checkbox
       isChecked={allSelected}
       isIndeterminate={hasSelection && !allSelected}
       isDisabled={!hasSelection}
-      onChange={() => onChange({ ...filters, [facetKey]: selected.filter((v) => !values.includes(v)) })}
+      onChange={clear}
       label="Tout désélectionner"
     />
   );
 }
 
-function OptionControls({ def, filters, onChange }: { def: FacetDef; filters: Filters; onChange: (f: Filters) => void }): ReactElement {
+function OptionControls({
+  def,
+  filters,
+  onChange,
+  dataset,
+}: {
+  def: FacetDef;
+  filters: Filters;
+  onChange: (f: Filters) => void;
+  dataset: FiltresDataset;
+}): ReactElement {
   const patch = (p: Partial<Filters>) => onChange({ ...filters, ...p });
   const toggleMulti = (key: MultiKey, value: string) => {
     const has = filters[key].includes(value);
@@ -464,12 +533,14 @@ function OptionControls({ def, filters, onChange }: { def: FacetDef; filters: Fi
     );
   }
   const key = def.key as MultiKey;
+  // Options AFFICHÉES : tout le domaine de la facette (pas de filtre local ici).
+  const shown = dataset.domains[key];
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
-      <ClearAllRow facetKey={key} values={DOMAINS[key]} filters={filters} onChange={onChange} />
+      <ClearAllRow items={shown.map((value) => ({ key, value }))} filters={filters} onChange={onChange} dataset={dataset} />
       <Divider />
-      {DOMAINS[key].map((value) => {
-        const n = optionCount(filters, key, value);
+      {shown.map((value) => {
+        const n = optionCountIn(filters, key, value, dataset);
         const checked = filters[key].includes(value);
         return (
           <div key={value} style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
@@ -546,6 +617,7 @@ export function FiltresPanel({
   onSaveView,
   onDeleteView,
   role,
+  dataset = DEFAULT_DATASET,
   collapseLabel,
   scrollClassName,
   textActionClassName,
@@ -560,6 +632,9 @@ export function FiltresPanel({
   onDeleteView?: (id: string) => void;
   /** Rôle courant : filtre les facettes visibles (déclaratif). Absent = toutes. */
   role?: Role;
+  /** Jeu de données (agents déjà découpés par l'API, domaines, drapeau
+   *  sous-traitants). Défaut = jeu global. */
+  dataset?: FiltresDataset;
   /** Replie le déclencheur en icône seule (carré) sous le breakpoint conteneur
    *  — pour les toolbars responsive. L'`aria-label` reste « Filtres ». Dès que
    *  le bouton est réduit en icône, le panneau s'ouvre en feuille (bottom sheet)
@@ -593,7 +668,7 @@ export function FiltresPanel({
   const q = query.trim().toLowerCase();
   const searchHits = q
     ? visibleMultiKeys.flatMap((k) =>
-        DOMAINS[k].filter((v) => v.toLowerCase().includes(q)).map((v) => ({ key: k, value: v })),
+        dataset.domains[k].filter((v) => v.toLowerCase().includes(q)).map((v) => ({ key: k, value: v })),
       )
     : [];
   const saveView = () => {
@@ -632,6 +707,7 @@ export function FiltresPanel({
           onApplyView={(v) => onChange(v.filters)}
           {...(onDeleteView ? { onDeleteView } : {})}
           role={role}
+          dataset={dataset}
           isOpen={open}
           onOpenChange={setOpen}
           scrollClassName={scrollClassName}
@@ -726,8 +802,14 @@ export function FiltresPanel({
                 <p style={{ margin: "0 0 var(--space100)", fontSize: 12, color: "var(--text-subtlest)" }}>
                   {searchHits.length} résultat{searchHits.length > 1 ? "s" : ""} pour « {query.trim()} »
                 </p>
+                {searchHits.length > 0 ? (
+                  <>
+                    <ClearAllRow items={searchHits} filters={filters} onChange={onChange} dataset={dataset} />
+                    <Divider />
+                  </>
+                ) : null}
                 {searchHits.map(({ key, value }) => {
-                  const n = optionCount(filters, key, value);
+                  const n = optionCountIn(filters, key, value, dataset);
                   const facetLabel = FACET_DEFS.find((d) => d.key === key)!.label;
                   return (
                     <div key={`${key}:${value}`} style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
@@ -739,7 +821,7 @@ export function FiltresPanel({
                 })}
               </div>
             ) : (
-              <OptionControls def={curDef} filters={filters} onChange={onChange} />
+              <OptionControls def={curDef} filters={filters} onChange={onChange} dataset={dataset} />
             )}
           </div>
         </div>
@@ -805,6 +887,7 @@ export function FiltresSheet({
   onApplyView,
   onDeleteView,
   role,
+  dataset = DEFAULT_DATASET,
   isOpen,
   onOpenChange,
   scrollClassName,
@@ -820,6 +903,9 @@ export function FiltresSheet({
   onDeleteView?: (id: string) => void;
   /** Rôle courant : filtre les facettes visibles (déclaratif). Absent = toutes. */
   role?: Role;
+  /** Jeu de données (agents déjà découpés par l'API, domaines, drapeau
+   *  sous-traitants). Défaut = jeu global. */
+  dataset?: FiltresDataset;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   scrollClassName?: string;
@@ -839,7 +925,7 @@ export function FiltresSheet({
   };
   const clearAll = () => onChange(emptyFilters());
 
-  const results = filteredAgents(filters);
+  const results = filteredAgents(filters, dataset.agents, dataset.applySousTraitants);
   const total = totalActive(filters);
   // Filtre enregistré actuellement appliqué (si les filtres courants
   // correspondent à un enregistrement) : son nom s'affiche sur la ligne.
@@ -917,7 +1003,7 @@ export function FiltresSheet({
       );
     }
     const key = def.key as MultiKey;
-    const domain = DOMAINS[key];
+    const domain = dataset.domains[key];
     // Liste longue → barre de recherche pour filtrer les options par texte.
     const searchable = domain.length > 8;
     const query = optionQuery.trim().toLowerCase();
@@ -933,10 +1019,10 @@ export function FiltresSheet({
           />
         ) : null}
         <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
-          <ClearAllRow facetKey={key} values={shown} filters={filters} onChange={onChange} />
+          <ClearAllRow items={shown.map((value) => ({ key, value }))} filters={filters} onChange={onChange} dataset={dataset} />
           {shown.length > 0 ? <Divider /> : null}
           {shown.map((value) => {
-            const n = optionCount(filters, key, value);
+            const n = optionCountIn(filters, key, value, dataset);
             const checked = filters[key].includes(value);
             return (
               <div key={value} style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
@@ -1291,8 +1377,14 @@ export function ActiveFilterTags({
 // -----------------------------------------------------------------------
 // ResultsTable — tableau des agents filtrés.
 
-export function ResultsTable({ filters }: { filters: Filters }): ReactElement {
-  const results = filteredAgents(filters);
+export function ResultsTable({
+  filters,
+  dataset = DEFAULT_DATASET,
+}: {
+  filters: Filters;
+  dataset?: FiltresDataset;
+}): ReactElement {
+  const results = filteredAgents(filters, dataset.agents, dataset.applySousTraitants);
   return (
     <Table aria-label="Agents">
       <TableHead>
