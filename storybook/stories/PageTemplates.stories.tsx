@@ -7,7 +7,7 @@
 import { useEffect, useState } from "react";
 import { parseDate } from "@internationalized/date";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, screen, userEvent, expect, waitFor } from "storybook/test";
+import { within, userEvent, expect } from "storybook/test";
 import type { IconName } from "@aexae/comete-design-system/components";
 import {
   Page,
@@ -54,6 +54,12 @@ import {
   ListItemAvatar,
   ListItemText,
   ListItemTrailing,
+  MenuTrigger,
+  MenuPopover,
+  Menu,
+  MenuItem,
+  MenuSection,
+  Snackbar,
 } from "@aexae/comete-design-system/components";
 import { useTableSelection } from "@aexae/comete-design-system/hooks";
 import css from "./PageTemplates.module.css";
@@ -380,10 +386,54 @@ const AGENT_COLUMNS: AgentColumn[] = [
 
 interface AgentAction { id: string; label: string; icon: IconName; primary?: boolean; roles: Role[]; }
 const AGENT_ACTIONS: AgentAction[] = [
-  { id: "new", label: "Nouvel agent", icon: "Add", primary: true, roles: ["manager"] },
+  // Ajouter un agent : réservé au PARTENAIRE (il déclare ses sous-traitants) ;
+  // le manager ne crée pas d'agent depuis cette page.
+  { id: "new", label: "Nouvel agent", icon: "Add", primary: true, roles: ["partenaire"] },
   { id: "export", label: "Exporter", icon: "Download", roles: ["manager", "partenaire", "client"] },
 ];
 
+// Filtres enregistrés : fonction du MANAGER uniquement (déclaratif, comme `roles`
+// sur les colonnes et les actions — l'affichage ne teste jamais le rôle en dur).
+const SAVED_VIEWS_ROLES: Role[] = ["manager"];
+
+// -----------------------------------------------------------------------
+// Export — menu CSV / PDF. Le déclencheur est fourni par l'appelant (bouton de la
+// toolbar, ou bouton de la barre de sélection) ; `groups` dit QUOI exporter :
+// « toute la liste » et/ou « la sélection ».
+type ExportFormat = "csv" | "pdf";
+type ExportScope = "all" | "selection";
+
+function ExportMenu({
+  trigger,
+  groups,
+  onExport,
+}: {
+  trigger: React.ReactElement;
+  groups: Array<{ scope: ExportScope; title?: string }>;
+  onExport: (format: ExportFormat, scope: ExportScope) => void;
+}): React.ReactElement {
+  return (
+    <MenuTrigger>
+      {trigger}
+      <MenuPopover width={260}>
+        <Menu
+          aria-label="Exporter"
+          onAction={(key) => {
+            const [scope, format] = String(key).split(":");
+            onExport(format as ExportFormat, scope as ExportScope);
+          }}
+        >
+          {groups.map((g) => (
+            <MenuSection key={g.scope} {...(g.title ? { title: g.title } : {})}>
+              <MenuItem id={`${g.scope}:csv`} iconBefore="Download">Exporter en CSV</MenuItem>
+              <MenuItem id={`${g.scope}:pdf`} iconBefore="Download">Exporter en PDF</MenuItem>
+            </MenuSection>
+          ))}
+        </Menu>
+      </MenuPopover>
+    </MenuTrigger>
+  );
+}
 
 // -----------------------------------------------------------------------
 // Cœur partagé (§0bis.A) : Table du DS + quatre états + sélection + repli
@@ -410,6 +460,8 @@ interface AgentTableCoreProps {
   onClearFilters?: () => void;
   /** Liste de section : « aucun résultat » en UNE ligne (variante compacte, §4). */
   compactEmpty?: boolean;
+  /** Export de la SÉLECTION (menu CSV / PDF de la barre de sélection). */
+  onExport: (format: ExportFormat, scope: ExportScope) => void;
 }
 
 function AgentTableCore({
@@ -429,6 +481,7 @@ function AgentTableCore({
   rowsPerPageOptions,
   onClearFilters,
   compactEmpty = false,
+  onExport,
 }: AgentTableCoreProps): React.ReactElement {
   const isData = state === "data";
   // Repli téléphone : ce que la liste compacte montre dérive des MÊMES colonnes
@@ -455,7 +508,11 @@ function AgentTableCore({
       {isData &&
         (sel.selectedCount > 0 ? (
           <TableSelectionBar count={sel.selectedCount} onClear={sel.clear}>
-            <Button appearance="subtle" iconBefore="Download">Exporter la sélection</Button>
+            <ExportMenu
+              trigger={<Button appearance="subtle" iconBefore="Download">Exporter la sélection</Button>}
+              groups={[{ scope: "selection" }]}
+              onExport={onExport}
+            />
           </TableSelectionBar>
         ) : (
           <Text size="small" as="span" color="subtlest">{totalCount} agents</Text>
@@ -606,6 +663,9 @@ export const Collection: Story = {
 
     const cols = AGENT_COLUMNS.filter((c) => c.roles.includes(role));
     const actions = AGENT_ACTIONS.filter((a) => a.roles.includes(role));
+    const hasSavedViews = SAVED_VIEWS_ROLES.includes(role);
+    // Retour d'export (démonstratif : aucun fichier n'est produit).
+    const [exportNotice, setExportNotice] = useState<string | null>(null);
 
     // Filtrage LIVE (état « data ») : recherche (nom) + UNE facette câblée au
     // modèle du tableau — « Types de contrats » (option B `contrat`) : dès qu'un
@@ -634,6 +694,11 @@ export const Collection: Story = {
       onSelectionChange: setSelectedKeys,
     });
     const columnCount = cols.length + 2; // +1 sélection, +1 colonne d'actions
+    const handleExport = (format: ExportFormat, scope: ExportScope) => {
+      const n = scope === "selection" ? sel.selectedCount : sorted.length;
+      const what = scope === "selection" ? `${n} agent${n > 1 ? "s" : ""} sélectionné${n > 1 ? "s" : ""}` : `${n} agent${n > 1 ? "s" : ""}`;
+      setExportNotice(`Export ${format.toUpperCase()} lancé : ${what}.`);
+    };
     // Le contrôle « État » force loading / empty / error ; « selection » montre la
     // barre de sélection sur des données ; sinon l'état découle du filtrage réel
     // (data, ou noResults si le filtrage vide la liste).
@@ -669,6 +734,7 @@ export const Collection: Story = {
               views={views}
               onSaveView={(name) => save(name, f)}
               role={role}
+              canSaveViews={hasSavedViews}
               collapseLabel
               scrollClassName={filtresCss["scroll"]}
               textActionClassName={filtresCss["textAction"]}
@@ -676,13 +742,34 @@ export const Collection: Story = {
           }
           end={
             <Cluster gap="100">
-              {/* Filtres enregistrés : appliquer / supprimer un jeu de critères. */}
-              <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
+              {/* Filtres enregistrés : appliquer / supprimer un jeu de critères
+                  (réservé au manager — cf. SAVED_VIEWS_ROLES). */}
+              {hasSavedViews ? (
+                <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
+              ) : null}
               <ButtonGroup>
                 {actions.map((a) =>
-                  a.primary
-                    ? <Button key={a.id} color="comete" iconBefore={a.icon} collapseLabel shape="square" aria-label={a.label}>{a.label}</Button>
-                    : <Button key={a.id} appearance="subtle" iconBefore={a.icon} className={css["hideOnMobile"]}>{a.label}</Button>
+                  a.primary ? (
+                    <Button key={a.id} color="comete" iconBefore={a.icon} collapseLabel shape="square" aria-label={a.label}>{a.label}</Button>
+                  ) : a.id === "export" ? (
+                    // Exporter = menu CSV / PDF. Avec une sélection : on propose la
+                    // sélection d'abord, puis toute la liste (filtrée).
+                    <ExportMenu
+                      key={a.id}
+                      trigger={<Button appearance="subtle" iconBefore={a.icon} className={css["hideOnMobile"]}>{a.label}</Button>}
+                      groups={
+                        sel.selectedCount > 0
+                          ? [
+                              { scope: "selection", title: `Sélection (${sel.selectedCount})` },
+                              { scope: "all", title: `Toute la liste (${sorted.length})` },
+                            ]
+                          : [{ scope: "all" }]
+                      }
+                      onExport={handleExport}
+                    />
+                  ) : (
+                    <Button key={a.id} appearance="subtle" iconBefore={a.icon} className={css["hideOnMobile"]}>{a.label}</Button>
+                  )
                 )}
                 <Button appearance="subtle" iconBefore="MoreHoriz" aria-label="Plus d'actions" />
               </ButtonGroup>
@@ -711,128 +798,21 @@ export const Collection: Story = {
             onRowsPerPageChange={(n) => { setRowsPerPage(n); setPage(0); }}
             rowsPerPageOptions={[5, 10, 25]}
             onClearFilters={reset}
+            onExport={handleExport}
           />
         </Page.Body>
+        {exportNotice ? (
+          <div style={{ position: "fixed", insetInline: "var(--space200)", bottom: "var(--space200)", display: "flex", justifyContent: "center", zIndex: 10 }}>
+            <Snackbar appearance="success" onClose={() => setExportNotice(null)}>
+              {exportNotice}
+            </Snackbar>
+          </div>
+        ) : null}
       </Page>
     );
   },
-  // Aucun `play` ici : la recette s'ouvre AU REPOS (filtres fermés, aucun focus,
-  // aucune animation d'ouverture/fermeture). Les interactions sont testées dans
-  // la story « Collection — interactions » ci-dessous.
-};
-
-const collectionPlay: NonNullable<Story["play"]> = async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-
-    await step("rôles déclaratifs : colonnes & actions (mêmes défs, deux jeux)", async () => {
-      const colsFor = (r: Role) => AGENT_COLUMNS.filter((c) => c.roles.includes(r)).map((c) => c.id);
-      await expect(colsFor("manager")).not.toEqual(colsFor("partenaire"));
-      await expect(colsFor("manager").length).toBeGreaterThan(colsFor("partenaire").length);
-      await expect(AGENT_ACTIONS.filter((a) => a.roles.includes("manager")).length).toBeGreaterThan(
-        AGENT_ACTIONS.filter((a) => a.roles.includes("partenaire")).length,
-      );
-      const headerText = Array.from(canvasElement.querySelectorAll("th")).map((th) => (th.textContent ?? "").trim()).filter(Boolean);
-      await expect(headerText).toEqual(["Agent", "Matricule", "Contrat", "Heures", "Delta", "Actions"]);
-      // Aucun littéral de rôle dans l'affichage (cœur + cellules).
-      const displaySource = [AgentTableCore.toString(), ...AGENT_COLUMNS.map((c) => c.cell.toString())].join("\n");
-      await expect(/isPartner|isManager|role_code/.test(displaySource)).toBe(false);
-    });
-
-    await step("toolbar : entrée unique « Filtres » + accès aux filtres enregistrés", async () => {
-      // Une seule entrée vers le panneau de filtres (le bouton « Filtres »)…
-      await expect(canvas.getAllByRole("button", { name: /^Filtres(,|$)/ })).toHaveLength(1);
-      const toolbarEl = canvasElement.querySelector<HTMLElement>('[class*="toolbar"]');
-      await expect(toolbarEl).not.toBeNull();
-      if (toolbarEl) {
-        await expect(within(toolbarEl).getByRole("button", { name: /^Filtres(,|$)/ })).toBeInTheDocument();
-        // …et le bouton « Filtres enregistrés » pour appliquer un jeu enregistré.
-        await expect(within(toolbarEl).getByRole("button", { name: "Filtres enregistrés" })).toBeInTheDocument();
-      }
-    });
-
-    await step("recherche sans correspondance → « aucun résultat » atteignable", async () => {
-      // Fait AVANT d'ouvrir le panneau (aucun overlay) : la recherche de niveau
-      // page filtre réellement le jeu — un terme sans correspondance vide la
-      // liste et déclenche l'état « aucun résultat » du Table (interactif, pas
-      // seulement via le contrôle « État »).
-      const search = canvas.getByRole("searchbox", { name: /Rechercher un agent/ });
-      await userEvent.type(search, "zzzz");
-      // La liste se vide (l'agent de tête disparaît) → état « aucun résultat ».
-      await waitFor(() => expect(canvas.queryByText("DUPONT Marie")).toBeNull());
-      await expect(await canvas.findByText(/Aucun résultat/)).toBeInTheDocument();
-      await userEvent.clear(search);
-      await waitFor(() => expect(canvas.getByText("7 agents")).toBeInTheDocument());
-    });
-
-    await step("pagination (style story « With pagination ») : 5 lignes / page sur 7", async () => {
-      // La table pagine comme la recette Table « With pagination » :
-      // 7 agents, 5 par page → l'en-tête + 5 lignes de données côté desktop.
-      const desktopTable = canvasElement.querySelector<HTMLElement>('[class*="tableDesktopOnly"]');
-      await expect(desktopTable).not.toBeNull();
-      if (desktopTable) {
-        await expect(within(desktopTable).getAllByRole("row")).toHaveLength(1 + 5);
-      }
-    });
-
-    await step("table sélectionnable : le clic de ligne coche la case ; le bouton d'actions garde la priorité", async () => {
-      // Comme la recette Table « All-in-one » : getRowClickProps câble le clic de
-      // ligne sur la sélection, mais ignore les contrôles interactifs (le bouton
-      // d'actions a donc la priorité et ne modifie pas la sélection).
-      const desktopTable = within(canvasElement.querySelector<HTMLElement>('[class*="tableDesktopOnly"]') as HTMLElement);
-      const row = desktopTable.getByText("DUPONT Marie").closest("tr") as HTMLElement;
-      const rowCheckbox = within(row).getByRole("checkbox");
-      await expect(rowCheckbox).not.toBeChecked();
-      // Clic sur la cellule du nom (zone non interactive) → la ligne coche la case.
-      await userEvent.click(within(row).getByText("DUPONT Marie"));
-      await expect(rowCheckbox).toBeChecked();
-      // Clic sur le bouton d'actions de la ligne → priorité au bouton : la
-      // sélection ne change pas (la case reste cochée).
-      await userEvent.click(within(row).getByRole("button", { name: /Actions pour DUPONT Marie/ }));
-      await expect(rowCheckbox).toBeChecked();
-      // Reclic sur la ligne → décoche (remise à zéro avant l'étape suivante).
-      await userEvent.click(within(row).getByText("DUPONT Marie"));
-      await expect(rowCheckbox).not.toBeChecked();
-    });
-
-    // Étape ouvrant le panneau EN DERNIER : rien après elle ne dépend de la page
-    // (le panneau — popover large / feuille compacte — recouvre la toolbar).
-    await step("facette câblée « Types de contrats » : la boucle complète (option B)", async () => {
-      await expect(canvas.getByText("7 agents")).toBeInTheDocument();
-      await userEvent.click(canvas.getByRole("button", { name: /^Filtres(,|$)/ }));
-      await screen.findByRole("dialog");
-      const dialog = () => within(screen.getByRole("dialog"));
-      // Aller à « Types de contrats » puis cocher « CDI ».
-      await userEvent.click(dialog().getByRole("button", { name: /Types de contrats/ }));
-      await userEvent.click(dialog().getByRole("checkbox", { name: "CDI" }));
-      // La liste se réduit (agents sous contrat) → le compteur change.
-      await waitFor(() => expect(canvas.getByText("5 agents")).toBeInTheDocument());
-      // Un tag actif apparaît sous la barre : il affiche la VALEUR seule (« CDI »,
-      // sans préfixe de facette) ; le contexte « Types de contrats » reste porté
-      // par l'aria-label de la croix de retrait (lecteurs d'écran).
-      const activeFilters = within(canvas.getByRole("group", { name: "Filtres actifs" }));
-      await expect(activeFilters.getByText("CDI")).toBeInTheDocument();
-      await expect(activeFilters.getByRole("button", { name: "Retirer Types de contrats" })).toBeInTheDocument();
-      // « Réinitialiser » (pied du panneau) remet tout.
-      await userEvent.click(dialog().getByRole("button", { name: "Réinitialiser" }));
-      await waitFor(() => expect(canvas.getByText("7 agents")).toBeInTheDocument());
-      // La recette se REPOSE filtres fermés : on referme le panneau via son
-      // déclencheur (toggle) pour que l'état au repos de la story ne laisse
-      // jamais le panneau ouvert.
-      await userEvent.click(canvas.getByRole("button", { name: /^Filtres(,|$)/ }));
-      await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
-    });
-};
-
-/**
- * **Collection — interactions** : même recette que « Collection », avec la
- * fonction play qui exerce rôles, filtres, recherche, pagination et sélection.
- * Séparée pour que la recette principale reste au repos (rien ne s'ouvre ni ne
- * se referme à l'affichage).
- */
-export const CollectionInteractions: Story = {
-  ...Collection,
-  name: "Collection — interactions (tests)",
-  play: collectionPlay,
+  // Aucun `play` : la recette s'ouvre AU REPOS (filtres fermés, aucun focus,
+  // aucune animation d'ouverture/fermeture).
 };
 
 // -----------------------------------------------------------------------

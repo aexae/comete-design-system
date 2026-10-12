@@ -57,8 +57,10 @@ import {
 // recette « Filtres » partagée (_filtresOptionB). MÊME popup que la story
 // Layout/Page/Toolbar → source unique.
 
-function FiltresOptionB({ role }: { role?: Role }): ReactElement {
-  const [f, setF] = useState<Filters>(initialFilters);
+// `initial` : filtres de départ. Par défaut la page N'EST PAS filtrée ; les stories
+// de test passent `initialFilters()` (cas durs : troncature, +N, rôle).
+function FiltresOptionB({ role, initial }: { role?: Role; initial?: Filters }): ReactElement {
+  const [f, setF] = useState<Filters>(() => initial ?? emptyFilters());
   const { views, save, remove } = useSavedViews();
   // Le rôle change → on NEUTRALISE (n'applique plus) les facettes qu'il ne gère
   // pas : elles disparaissent des tags ET des résultats, pas seulement du
@@ -74,6 +76,8 @@ function FiltresOptionB({ role }: { role?: Role }): ReactElement {
     const agents = agentsForRole(role);
     return { agents, domains: domainsOf(agents), applySousTraitants: role !== "partenaire" };
   }, [role]);
+  // Filtres enregistrés : fonction du manager ; le partenaire n'en a pas.
+  const canSaveViews = role !== "partenaire";
   return (
     <div
       style={{
@@ -105,11 +109,14 @@ function FiltresOptionB({ role }: { role?: Role }): ReactElement {
           onSaveView={(name) => save(name, f)}
           role={role}
           dataset={dataset}
+          canSaveViews={canSaveViews}
           scrollClassName={css["scroll"]}
           textActionClassName={css["textAction"]}
         />
         <div style={{ flex: 1 }} />
-        <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
+        {canSaveViews ? (
+          <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
+        ) : null}
       </div>
 
       <ActiveFilterTags filters={f} onChange={setF} textActionClassName={css["textAction"]} />
@@ -122,8 +129,8 @@ function FiltresOptionB({ role }: { role?: Role }): ReactElement {
 // -----------------------------------------------------------------------
 // Recette — mobile (liste + panneau de filtres en drill-down).
 
-function FiltresOptionBMobile(): ReactElement {
-  const [f, setF] = useState<Filters>(initialFilters);
+function FiltresOptionBMobile({ initial }: { initial?: Filters }): ReactElement {
+  const [f, setF] = useState<Filters>(() => initial ?? emptyFilters());
   const [filterOpen, setFilterOpen] = useState(false);
   const { views, save, remove } = useSavedViews();
 
@@ -271,7 +278,7 @@ export const Mobile: Story = {
 // stories visibles ci-dessus.
 export const DesktopInteractions: Story = {
   tags: ["!dev"],
-  render: () => <FiltresOptionB />,
+  render: () => <FiltresOptionB initial={initialFilters()} />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const rowCount = () => canvasElement.querySelectorAll("tbody tr").length;
@@ -352,7 +359,7 @@ export const DesktopInteractions: Story = {
 const ROLE_PARTENAIRE: Role = "partenaire";
 export const DesktopPartenaireInteractions: Story = {
   tags: ["!dev"],
-  render: () => <FiltresOptionB role={ROLE_PARTENAIRE} />,
+  render: () => <FiltresOptionB role={ROLE_PARTENAIRE} initial={initialFilters()} />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const rows = () => Array.from(canvasElement.querySelectorAll<HTMLElement>("tbody tr"));
@@ -368,6 +375,8 @@ export const DesktopPartenaireInteractions: Story = {
       await expect(texts.some((t) => t.includes("Comète Sécurité"))).toBe(false);
       await expect(texts.some((t) => t.includes("Agence Lyon"))).toBe(false);
       await expect(rows()).toHaveLength(agentsForRole("partenaire").length);
+      // Un périmètre qui ne se réduit pas à deux lignes : de quoi voir filtrer.
+      await expect(rows().length).toBeGreaterThanOrEqual(8);
     });
 
     await step("aucun tag de critère « Sous-traitants » en rôle partenaire", async () => {
@@ -380,7 +389,7 @@ export const DesktopPartenaireInteractions: Story = {
 export const MobileInteractions: Story = {
   tags: ["!dev"],
   globals: { viewport: { value: "phone390" } },
-  render: () => <FiltresOptionBMobile />,
+  render: () => <FiltresOptionBMobile initial={initialFilters()} />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     // Le Drawer est rendu dans un portail (hors canvas) → requêtes via document.

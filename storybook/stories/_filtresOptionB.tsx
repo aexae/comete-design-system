@@ -35,6 +35,7 @@ import {
   TableRow,
   TableHeaderCell,
   TableCell,
+  Bleed,
   Divider,
   Drawer,
   DrawerHeader,
@@ -138,6 +139,16 @@ export const AGENTS: Agent[] = (
     ["ARMAND Fred", "Comète Sécurité", "Centres commerciaux", "Palpation", "Complètes", "Chien", "CQP APS", "Agent cynophile", "Français", "CDI", false, "planifies"],
     ["BELLANGER Georgie", "Agence Lyon", "Grande distribution", "SST", "Complètes", "Radio", "SSIAP 1", "Agent SSIAP", "Anglais", "CDI2", false, "disponibles"],
     ["ANAIS Alfred", "Comète Sécurité", "Hôpitaux / Santé", "H0B0", "Complètes", "Véhicule", "SSIAP 2", "Chef de poste", "Français", "CDI", false, "planifies"],
+    // Sous-traitants de « Sous-traitant Vigilis » — le périmètre du rôle partenaire
+    // (cf. `agentsForRole`). Valeurs variées pour que chaque facette de capacité
+    // propose de vraies options. Masqués côté manager tant que l'interrupteur
+    // « sous-traitants » n'est pas activé.
+    ["LEROY Nadia", "Sous-traitant Vigilis", "Aéroportuaire", "SST", "Complètes", "Radio", "SSIAP 1", "Agent SSIAP", "Français", "CDD", true, "disponibles"],
+    ["PETIT Karim", "Sous-traitant Vigilis", "Centres commerciaux", "H0B0", "Complètes", "Véhicule", "CQP APS", "Agent de sécurité", "Anglais", "CDI2", true, "planifies"],
+    ["ROUX Élodie", "Sous-traitant Vigilis", "Événementiel", "Palpation", "Pièce manquante", "Chien", "CQP APS", "Agent cynophile", "Français", "CDD", true, "non"],
+    ["FABRE Lucas", "Sous-traitant Vigilis", "Industrie", "SST", "Complètes", "Radio", "SSIAP 2", "Chef de poste", "Français", "CDI", true, "disponibles"],
+    ["MERCIER Inès", "Sous-traitant Vigilis", "Hôpitaux / Santé", "H0B0", "Complètes", "Véhicule", "SSIAP 1", "Agent SSIAP", "Espagnol", "CDD", true, "planifies"],
+    ["GAUTIER Paul", "Sous-traitant Vigilis", "Transports", "SST", "Pièce manquante", "Radio", "CQP APS", "Agent de sécurité", "Anglais", "CDD", true, "disponibles"],
   ] as const
 ).map((r) => ({
   nom: r[0],
@@ -618,6 +629,7 @@ export function FiltresPanel({
   onDeleteView,
   role,
   dataset = DEFAULT_DATASET,
+  canSaveViews = true,
   collapseLabel,
   scrollClassName,
   textActionClassName,
@@ -635,6 +647,10 @@ export function FiltresPanel({
   /** Jeu de données (agents déjà découpés par l'API, domaines, drapeau
    *  sous-traitants). Défaut = jeu global. */
   dataset?: FiltresDataset;
+  /** Filtres enregistrés disponibles ? Faux = aucun enregistrement : ni la ligne
+   *  « Filtres enregistrés » ni « Donner un nom / Enregistrer ces filtres ».
+   *  Décidé par l'appelant (un rôle peut ne pas avoir cette fonction). @default true */
+  canSaveViews?: boolean;
   /** Replie le déclencheur en icône seule (carré) sous le breakpoint conteneur
    *  — pour les toolbars responsive. L'`aria-label` reste « Filtres ». Dès que
    *  le bouton est réduit en icône, le panneau s'ouvre en feuille (bottom sheet)
@@ -690,7 +706,14 @@ export function FiltresPanel({
       {...(managed ? { onPress: () => setOpen(true), "aria-haspopup": "dialog" as const, "aria-expanded": open } : {})}
     >
       Filtres
-      {total > 0 && <Badge label={String(total)} appearance="information" importance="high" />}
+      {/* Le badge vit dans le même `span` que le libellé (le `gap` du Button ne
+          s'y applique pas) : sans marge il colle au texte. `Badge` n'a pas de
+          prop `style` → enveloppe dédiée, --space100 entre libellé et badge. */}
+      {total > 0 && (
+        <span style={{ display: "inline-flex", marginLeft: "var(--space100)" }}>
+          <Badge label={String(total)} appearance="information" importance="high" />
+        </span>
+      )}
     </Button>
   );
 
@@ -708,6 +731,7 @@ export function FiltresPanel({
           {...(onDeleteView ? { onDeleteView } : {})}
           role={role}
           dataset={dataset}
+          canSaveViews={canSaveViews}
           isOpen={open}
           onOpenChange={setOpen}
           scrollClassName={scrollClassName}
@@ -830,7 +854,7 @@ export function FiltresPanel({
         <div style={{ flex: "none", display: "flex", alignItems: "center", gap: "var(--space150)", padding: "var(--space150) var(--space200)", borderTop: "1px solid var(--border-subtle)" }}>
           {savingName === null ? (
             <>
-              {isCurrentSaved ? (
+              {!canSaveViews ? null : isCurrentSaved ? (
                 <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space075)", padding: "0 var(--space075)", fontSize: 13.5, fontWeight: 600, color: "var(--text-default)" }}>
                   <Icon icon="Bookmark" appearance="filled" size={18} />
                   Filtres enregistrés
@@ -888,6 +912,7 @@ export function FiltresSheet({
   onDeleteView,
   role,
   dataset = DEFAULT_DATASET,
+  canSaveViews = true,
   isOpen,
   onOpenChange,
   scrollClassName,
@@ -906,6 +931,10 @@ export function FiltresSheet({
   /** Jeu de données (agents déjà découpés par l'API, domaines, drapeau
    *  sous-traitants). Défaut = jeu global. */
   dataset?: FiltresDataset;
+  /** Filtres enregistrés disponibles ? Faux = aucun enregistrement : ni la ligne
+   *  « Filtres enregistrés » ni « Donner un nom / Enregistrer ces filtres ».
+   *  Décidé par l'appelant (un rôle peut ne pas avoir cette fonction). @default true */
+  canSaveViews?: boolean;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   scrollClassName?: string;
@@ -932,7 +961,7 @@ export function FiltresSheet({
   const appliedView = total > 0 ? views.find((v) => sameFilters(v.filters, filters)) : undefined;
   const detailDef = facet ? (visibleFacets.find((d) => d.key === facet) ?? null) : null;
   // Enregistrer : seulement avec des filtres appliqués, non déjà enregistrés.
-  const canSave = total > 0 && !appliedView;
+  const canSave = canSaveViews && total > 0 && !appliedView;
 
   const openFacet = (key: string) => {
     setOptionQuery("");
@@ -1054,6 +1083,21 @@ export function FiltresSheet({
   const facetValueStyle = { minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: "var(--font-size-ui-s)", color: "var(--text-subtlest)" } as const;
   // `textTransform: none` en inline bat le `.head` du DS (capitales) sans classe.
   const sectionTitleStyle = { textTransform: "none" } as const;
+  // Les lignes DÉBORDENT sur toute la largeur de la feuille (`Bleed` compense le
+  // padding horizontal de `DrawerBody`, --space300) : les états survol / appui /
+  // focus vont d'un bord à l'autre. Chaque ligne reprend ce même retrait en
+  // padding interne → le texte reste aligné sur le titre. (Pas de `isFlush`, qui
+  // collerait l'état de survol au texte.)
+  const bleedInset = "var(--space300)";
+  const rowInset = { paddingLeft: bleedInset, paddingRight: bleedInset } as const;
+  // Ligne avec action secondaire (croix, bouton Touch de 48 px) : le bouton est calé
+  // à --space150 du bord pour que l'ICÔNE (centrée, 24 px) tombe sur la même
+  // colonne que les chevrons des autres lignes ; le texte réserve la place du bouton.
+  const actionOffset = "var(--space150)";
+  const rowInsetWithAction = {
+    paddingLeft: bleedInset,
+    paddingRight: `calc(var(--space600) + ${actionOffset})`,
+  } as const;
 
   return (
     <Drawer
@@ -1088,14 +1132,15 @@ export function FiltresSheet({
           views.length === 0 ? (
             <p style={{ padding: "var(--space300) 0", textAlign: "center", color: "var(--text-subtlest)", fontSize: 13 }}>Aucun filtre enregistré.</p>
           ) : (
+            <Bleed inline="300">
             <List aria-label="Filtres enregistrés">
               {views.map((v) => {
                 const n = totalActive(v.filters);
                 return (
-                  <ListItemButton key={v.id} isFlush onPress={() => applyView(v)}>
+                  <ListItemButton key={v.id} style={rowInsetWithAction} onPress={() => applyView(v)}>
                     <ListItemText primary={v.name} secondary={`${n} filtre${n > 1 ? "s" : ""} appliqué${n > 1 ? "s" : ""}`} />
                     {onDeleteView ? (
-                      <ListItemSecondaryAction>
+                      <ListItemSecondaryAction style={{ right: actionOffset }}>
                         <Button appearance="subtle" density="touch" iconBefore="Close" aria-label={`Supprimer ${v.name}`} onPress={() => onDeleteView(v.id)} />
                       </ListItemSecondaryAction>
                     ) : null}
@@ -1103,6 +1148,7 @@ export function FiltresSheet({
                 );
               })}
             </List>
+            </Bleed>
           )
         ) : savingName !== null ? (
           // Enregistrement : vue FOCALISÉE — seuls le champ et ses deux actions
@@ -1129,11 +1175,14 @@ export function FiltresSheet({
           // Colonne flex : l'espace autour du filet entre les deux groupes est
           // porté par le `gap` (une valeur, un endroit), jamais par une marge.
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--space150)" }}>
+            {canSaveViews ? (
+              <>
             {/* Collection : accéder aux filtres enregistrés. L'action « donner un nom »
                 n'est PAS ici (elle se mélangeait aux critères) : elle vit dans le pied,
                 à côté de « Voir N agents ». */}
+            <Bleed inline="300">
             <List aria-label="Filtres enregistrés">
-              <ListItemButton isFlush onPress={() => setShowViews(true)}>
+              <ListItemButton style={rowInset} onPress={() => setShowViews(true)}>
                 <span style={facetLabelStyle}>Filtres enregistrés</span>
                 <span style={facetTrailingStyle}>
                   {appliedView ? (
@@ -1145,17 +1194,22 @@ export function FiltresSheet({
                 </span>
               </ListItemButton>
             </List>
+            </Bleed>
 
             <Divider />
 
+              </>
+            ) : null}
+
             {/* Facettes — libellé prioritaire, valeur en fin de ligne tronquée. */}
+            <Bleed inline="300">
             <List aria-label="Critères">
-              <ListHead isFlush style={sectionTitleStyle}>Critères</ListHead>
+              <ListHead style={{ ...sectionTitleStyle, ...rowInset }}>Critères</ListHead>
               {visibleFacets.map((d) => {
                 const c = facetCount(filters, d.key);
                 const val = facetValue(d);
                 return (
-                  <ListItemButton key={d.key} isFlush onPress={() => openFacet(d.key)}>
+                  <ListItemButton key={d.key} style={rowInset} onPress={() => openFacet(d.key)}>
                     <span style={facetLabelStyle}>{d.label}</span>
                     <span style={facetTrailingStyle}>
                       {val ? (
@@ -1169,6 +1223,7 @@ export function FiltresSheet({
                 );
               })}
             </List>
+            </Bleed>
           </div>
         )}
       </DrawerBody>
