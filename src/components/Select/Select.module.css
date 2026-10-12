@@ -242,7 +242,7 @@
 .groupLabel {
   padding: var(--space100) var(--space150) var(--space025);
   font-family: var(--font-family-primary);
-  font-size: var(--font-size-ui-xxxs);
+  font-size: var(--font-size-ui-xxs);
   line-height: var(--line-height-ui-xxs);
   color: var(--text-subtle);
   text-transform: uppercase;

@@ -40,6 +40,10 @@ entre versions alpha.
   champ a une valeur, au lieu d'être révélé au survol ou au focus (remplace la
   convention décrite plus haut pour ces cinq composants ; `TextField` /
   `SearchField` et `Select` sont inchangés).
+- **`Select` — libellé de groupe** : la taille du libellé des groupes d'options
+  (`.groupLabel`) passe de 10 px (`--font-size-ui-xxxs`) à 12 px
+  (`--font-size-ui-xxs`). L'interligne (16 px) et la mise en capitales sont
+  inchangés.
 - **`DatePicker` — icône et bouton calendrier** : l'icône passe de
   `CalendarMonth` à `CalendarToday`. Le rond de survol des boutons trailing
   (calendrier, Effacer) **englobe tout le dessin de l'icône** : `CalendarToday`
