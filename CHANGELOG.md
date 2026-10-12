@@ -37,6 +37,15 @@ entre versions alpha.
 
 ### Corrigé
 
+- **`TimePicker` — le sélecteur d'heure se referme une fois l'heure choisie** :
+  le popover à tambours restait ouvert après le choix (il ne se fermait qu'au
+  clic extérieur ou à Échap). Il se referme désormais quand l'heure est
+  **complète**, c'est-à-dire au **clic** sur la dernière colonne : minutes en
+  24 h (secondes si `showSeconds`), AM/PM en 12 h. Choisir une heure ne ferme
+  pas (il reste les minutes à choisir). `TimeDrumPicker` expose pour cela
+  `onComplete`, déclenché par un clic et non par le défilement (qui émet en
+  continu et au calage initial des colonnes). `DatePicker`, `MonthPicker`,
+  `WeekPicker` et `YearPicker` se referment déjà au choix.
 - **Sélecteurs date / heure / mois / semaine / année — espace inutile au repos** :
   le bouton « Effacer », masqué par `visibility: hidden`, **gardait sa place**
   (26 px) sur un champ rempli : 32 px entre le texte et l'icône calendrier /

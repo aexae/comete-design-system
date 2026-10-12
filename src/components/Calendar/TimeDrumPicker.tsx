@@ -13,6 +13,13 @@ export interface TimeDrumPickerProps {
   value?: TimeValue | null;
   /** Callback appelé à chaque changement. */
   onChange?: (time: Time) => void;
+  /**
+   * Appelé quand l'utilisateur **clique** une valeur de la DERNIÈRE colonne —
+   * minutes (secondes si affichées) en 24 h, période AM/PM en 12 h : l'heure est
+   * alors complète. Sert à refermer un popover. Le défilement n'y mène pas (il
+   * émet en continu et à l'ouverture, au calage de la colonne).
+   */
+  onComplete?: () => void;
   /** Désactive le sélecteur. */
   isDisabled?: boolean;
   /** Format 12h (AM/PM) ou 24h. @default 24 */
@@ -93,6 +100,8 @@ interface DrumColumnProps {
   values: number[];
   selected: number;
   onSelect: (value: number) => void;
+  /** Appelé après un CLIC sur une valeur (pas après un défilement). */
+  onCommit?: () => void;
   isDisabled: boolean;
   label: string;
   /** Formatage personnalisé de l'affichage. Par défaut : pad(n). */
@@ -103,6 +112,7 @@ function DrumColumn({
   values,
   selected,
   onSelect,
+  onCommit,
   isDisabled,
   label,
   format = pad,
@@ -166,6 +176,7 @@ function DrumColumn({
   const handleClick = (value: number) => {
     if (isDisabled) return;
     onSelect(value);
+    onCommit?.();
   };
 
   // padding haut/bas pour centrer le premier/dernier item
@@ -221,12 +232,15 @@ function DrumColumn({
 interface PeriodColumnProps {
   selected: "AM" | "PM";
   onSelect: (value: "AM" | "PM") => void;
+  /** Appelé après un CLIC sur une période. */
+  onCommit?: () => void;
   isDisabled: boolean;
 }
 
 function PeriodColumn({
   selected,
   onSelect,
+  onCommit,
   isDisabled,
 }: PeriodColumnProps): ReactElement {
   const listRef = useRef<HTMLDivElement>(null);
@@ -259,7 +273,9 @@ function PeriodColumn({
   }, [selected]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClick = (p: "AM" | "PM") => {
-    if (!isDisabled) onSelect(p);
+    if (isDisabled) return;
+    onSelect(p);
+    onCommit?.();
   };
 
   return (
@@ -323,6 +339,7 @@ function PeriodColumn({
 export function TimeDrumPicker({
   value,
   onChange,
+  onComplete,
   isDisabled = false,
   hourCycle = 24,
   showSeconds = false,
@@ -416,6 +433,8 @@ export function TimeDrumPicker({
           setMinute(m);
           handleChange(hour, m, second);
         }}
+        // Dernière colonne en 24 h sans secondes : un clic complète l'heure.
+        {...(!is12h && !showSeconds ? { onCommit: onComplete } : {})}
         isDisabled={isDisabled}
         label="Minutes"
       />
@@ -432,6 +451,8 @@ export function TimeDrumPicker({
               setSecond(s);
               handleChange(hour, minute, s);
             }}
+            // Dernière colonne en 24 h avec secondes.
+            {...(!is12h ? { onCommit: onComplete } : {})}
             isDisabled={isDisabled}
             label="Secondes"
           />
@@ -443,6 +464,8 @@ export function TimeDrumPicker({
         <PeriodColumn
           selected={period}
           onSelect={handlePeriodSelect}
+          // Dernière colonne en 12 h.
+          onCommit={onComplete}
           isDisabled={isDisabled}
         />
       )}
