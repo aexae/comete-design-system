@@ -6,7 +6,9 @@
 .timeDrumPicker {
   display: flex;
   align-items: center;
-  gap: var(--space100);
+  /* Aucun espace entre les colonnes ni autour du « : » : la bande de sélection
+     traverse l'ensemble d'un seul tenant. Le retrait extérieur est conservé. */
+  gap: 0;
   padding: var(--space100);
   user-select: none;
   position: relative;

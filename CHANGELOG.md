@@ -35,6 +35,12 @@ entre versions alpha.
   heure, déjà en `subtlest` sur `TextField`. Les sélecteurs surchargent la
   classe `.comete-icon--default` du `<Icon>` via `:global()`.
 
+- **`TimeDrumPicker` / `TimePicker` — plus d'espace entre les colonnes** : les
+  colonnes (heures, minutes, secondes, AM/PM) et le « : » étaient séparés de
+  `--space100` (8 px). Ils se touchent désormais (`gap: 0`) ; le retrait
+  extérieur du sélecteur est conservé. Le sélecteur à deux colonnes passe de
+  100 px à 84 px de large.
+
 ### Corrigé
 
 - **`TimePicker` — le sélecteur d'heure se referme une fois l'heure choisie** :
