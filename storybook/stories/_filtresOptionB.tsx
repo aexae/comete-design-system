@@ -399,6 +399,38 @@ export const initialsOf = (nom: string): string =>
 // -----------------------------------------------------------------------
 // Contrôles d'options d'une facette (volet droit du popover / de la feuille).
 
+// « Tout désélectionner » : une case à cocher posée en tête de la liste d'options,
+// au libellé UNIQUE (pas de « tout sélectionner » : on ne coche jamais 60 options
+// d'un geste). Tiret (indéterminé) quand la sélection est partielle, cochée quand
+// tout est sélectionné ; la cocher vide la sélection. Elle agit sur les options
+// AFFICHÉES (donc sur le résultat d'une recherche locale) et reste désactivée tant
+// que rien n'est coché.
+function ClearAllRow({
+  facetKey,
+  values,
+  filters,
+  onChange,
+}: {
+  facetKey: MultiKey;
+  values: string[];
+  filters: Filters;
+  onChange: (f: Filters) => void;
+}): ReactElement {
+  const selected = filters[facetKey];
+  const selectable = values.filter((v) => selected.includes(v) || optionCount(filters, facetKey, v) > 0);
+  const hasSelection = values.some((v) => selected.includes(v));
+  const allSelected = selectable.length > 0 && selectable.every((v) => selected.includes(v));
+  return (
+    <Checkbox
+      isChecked={allSelected}
+      isIndeterminate={hasSelection && !allSelected}
+      isDisabled={!hasSelection}
+      onChange={() => onChange({ ...filters, [facetKey]: selected.filter((v) => !values.includes(v)) })}
+      label="Tout désélectionner"
+    />
+  );
+}
+
 function OptionControls({ def, filters, onChange }: { def: FacetDef; filters: Filters; onChange: (f: Filters) => void }): ReactElement {
   const patch = (p: Partial<Filters>) => onChange({ ...filters, ...p });
   const toggleMulti = (key: MultiKey, value: string) => {
@@ -434,6 +466,8 @@ function OptionControls({ def, filters, onChange }: { def: FacetDef; filters: Fi
   const key = def.key as MultiKey;
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
+      <ClearAllRow facetKey={key} values={DOMAINS[key]} filters={filters} onChange={onChange} />
+      <Divider />
       {DOMAINS[key].map((value) => {
         const n = optionCount(filters, key, value);
         const checked = filters[key].includes(value);
@@ -811,6 +845,8 @@ export function FiltresSheet({
   // correspondent à un enregistrement) : son nom s'affiche sur la ligne.
   const appliedView = total > 0 ? views.find((v) => sameFilters(v.filters, filters)) : undefined;
   const detailDef = facet ? (visibleFacets.find((d) => d.key === facet) ?? null) : null;
+  // Enregistrer : seulement avec des filtres appliqués, non déjà enregistrés.
+  const canSave = total > 0 && !appliedView;
 
   const openFacet = (key: string) => {
     setOptionQuery("");
@@ -897,6 +933,8 @@ export function FiltresSheet({
           />
         ) : null}
         <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
+          <ClearAllRow facetKey={key} values={shown} filters={filters} onChange={onChange} />
+          {shown.length > 0 ? <Divider /> : null}
           {shown.map((value) => {
             const n = optionCount(filters, key, value);
             const checked = filters[key].includes(value);
@@ -947,11 +985,11 @@ export function FiltresSheet({
       <DrawerHeader>
         {/* Chevron retour dans les vues détail / recherches (drill-down). */}
         {showViews || detailDef ? (
-          <Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Retour" onPress={back} />
+          <Button appearance="subtle" density="touch" iconBefore="ChevronLeft" aria-label="Retour" onPress={back} />
         ) : null}
         <strong style={{ flex: 1, minWidth: 0, fontSize: "var(--font-size-ui-m)", fontWeight: "var(--font-weight-semibold)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{sheetTitle}</strong>
         {!showViews && savingName === null ? (
-          <Button appearance="link" className={textActionClassName} onPress={clearAll} isDisabled={total === 0}>
+          <Button appearance="link" density="touch" className={textActionClassName} onPress={clearAll} isDisabled={total === 0}>
             Réinitialiser
           </Button>
         ) : null}
@@ -972,7 +1010,7 @@ export function FiltresSheet({
                     <ListItemText primary={v.name} secondary={`${n} filtre${n > 1 ? "s" : ""} appliqué${n > 1 ? "s" : ""}`} />
                     {onDeleteView ? (
                       <ListItemSecondaryAction>
-                        <Button appearance="subtle" iconBefore="Close" aria-label={`Supprimer ${v.name}`} onPress={() => onDeleteView(v.id)} />
+                        <Button appearance="subtle" density="touch" iconBefore="Close" aria-label={`Supprimer ${v.name}`} onPress={() => onDeleteView(v.id)} />
                       </ListItemSecondaryAction>
                     ) : null}
                   </ListItemButton>
@@ -986,11 +1024,15 @@ export function FiltresSheet({
           // disparaissent le temps de nommer l'enregistrement.
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)", paddingBlock: "var(--space100)" }}>
             <TextField aria-label="Nom de l'enregistrement" placeholder="Nom de l'enregistrement" value={savingName} onChange={setSavingName} />
+            {/* Expliqué ICI, au moment de nommer — pas en permanence dans le pied. */}
+            <p style={{ margin: 0, fontSize: "var(--font-size-ui-xxs)", lineHeight: "var(--line-height-ui-xxs)", color: "var(--text-subtlest)" }}>
+              Vous les retrouverez ensuite dans vos filtres enregistrés, et vous les réappliquerez en un geste.
+            </p>
             <div style={{ display: "flex", gap: "var(--space100)" }}>
-              <Button appearance="contained" color="comete" onPress={saveView} isDisabled={!savingName.trim()} style={{ flex: 1 }}>
+              <Button appearance="contained" color="comete" density="touch" onPress={saveView} isDisabled={!savingName.trim()} style={{ flex: 1 }}>
                 Enregistrer
               </Button>
-              <Button appearance="subtle" onPress={() => setSavingName(null)} style={{ flex: 1 }}>
+              <Button appearance="subtle" density="touch" onPress={() => setSavingName(null)} style={{ flex: 1 }}>
                 Annuler
               </Button>
             </div>
@@ -1001,16 +1043,18 @@ export function FiltresSheet({
           // Colonne flex : l'espace autour du filet entre les deux groupes est
           // porté par le `gap` (une valeur, un endroit), jamais par une marge.
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--space150)" }}>
-            {/* Bloc « enregistrement » : action + collection. */}
+            {/* Collection : accéder aux filtres enregistrés. L'action « donner un nom »
+                n'est PAS ici (elle se mélangeait aux critères) : elle vit dans le pied,
+                à côté de « Voir N agents ». */}
             <List aria-label="Filtres enregistrés">
-              <ListHead isFlush style={sectionTitleStyle}>Enregistrement</ListHead>
-              <ListItemButton isFlush onPress={() => setSavingName("")} isDisabled={total === 0}>
-                <ListItemText primary="Enregistrer ces filtres" />
-              </ListItemButton>
               <ListItemButton isFlush onPress={() => setShowViews(true)}>
                 <span style={facetLabelStyle}>Filtres enregistrés</span>
                 <span style={facetTrailingStyle}>
-                  {appliedView ? <span style={facetValueStyle}>{appliedView.name}</span> : null}
+                  {appliedView ? (
+                    <span style={facetValueStyle}>{appliedView.name}</span>
+                  ) : views.length > 0 ? (
+                    <Badge label={String(views.length)} appearance="information" importance="medium" />
+                  ) : null}
                   <Icon icon="ChevronRight" color="subtlest" />
                 </span>
               </ListItemButton>
@@ -1046,9 +1090,18 @@ export function FiltresSheet({
       {/* Pied masqué pendant l'enregistrement : aucun autre élément actif. */}
       {savingName === null ? (
         <DrawerFooter>
-          <Button appearance="contained" color="comete" onPress={() => onOpenChange(false)} style={{ width: "100%" }}>
-            Voir {results.length} agent{results.length > 1 ? "s" : ""}
-          </Button>
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space150)", width: "100%" }}>
+            {/* Proposé UNIQUEMENT s'il y a des filtres appliqués qui ne correspondent
+                pas déjà à un filtre enregistré. */}
+            {canSave ? (
+              <Button appearance="outlined" density="touch" iconBefore="Bookmark" onPress={() => setSavingName("")} style={{ width: "100%" }}>
+                Donner un nom à ces filtres
+              </Button>
+            ) : null}
+            <Button appearance="contained" color="comete" density="touch" onPress={() => onOpenChange(false)} style={{ width: "100%" }}>
+              Voir {results.length} agent{results.length > 1 ? "s" : ""}
+            </Button>
+          </div>
         </DrawerFooter>
       ) : null}
     </Drawer>

@@ -328,19 +328,36 @@ export const MobileInteractions: Story = {
       await waitFor(() => expect(screen.getByRole("dialog", { name: "Filtres" })).toBeInTheDocument());
     });
 
-    await step("enregistrer les filtres courants", async () => {
-      await userEvent.click(drawer().getByRole("button", { name: /Enregistrer ces filtres/ }));
+    await step("enregistrer les filtres courants (proposé seulement s'ils ne sont pas déjà enregistrés)", async () => {
+      // Distinct des critères : l'action vit dans le pied, pas dans la liste.
+      await expect(drawer().queryByRole("button", { name: /^Enregistrer ces filtres/ })).toBeNull();
+      // L'explication n'est pas affichée en permanence : seulement à l'étape « nommer ».
+      await expect(drawer().queryByText(/Vous les retrouverez ensuite/)).toBeNull();
+      await userEvent.click(drawer().getByRole("button", { name: /Donner un nom à ces filtres/ }));
+      await expect(drawer().getByText(/Vous les retrouverez ensuite/)).toBeInTheDocument();
       await userEvent.type(drawer().getByRole("textbox", { name: "Nom de l'enregistrement" }), "Mes filtres");
       await userEvent.click(drawer().getByRole("button", { name: "Enregistrer" }));
       // De retour à la racine : les filtres courants correspondent désormais à
       // l'enregistrement créé → son nom apparaît sur la ligne « Filtres
-      // enregistrés » (pas de badge, pas de compte).
+      // enregistrés » et l'action d'enregistrement disparaît du pied.
       await waitFor(() => expect(drawer().getByText("Mes filtres")).toBeInTheDocument());
+      await expect(drawer().queryByRole("button", { name: /Donner un nom à ces filtres/ })).toBeNull();
     });
 
     await step("drill-down dans une facette puis retour", async () => {
       await userEvent.click(drawer().getByRole("button", { name: /Langues/ }));
       await waitFor(() => expect(drawer().getByRole("checkbox", { name: "Français" })).toBeInTheDocument());
+      // « Tout désélectionner » (seule action de masse, une case à cocher) :
+      // désactivée tant que rien n'est coché, active dès qu'une option l'est, puis
+      // vide la sélection.
+      const clearAll = () => drawer().getByRole("checkbox", { name: "Tout désélectionner" });
+      await expect(clearAll()).toBeDisabled();
+      const firstEnabled = drawer().getAllByRole("checkbox").find((c) => !(c as HTMLInputElement).disabled);
+      await expect(firstEnabled).toBeDefined();
+      if (firstEnabled) await userEvent.click(firstEnabled);
+      await waitFor(() => expect(clearAll()).toBeEnabled());
+      await userEvent.click(clearAll());
+      await waitFor(() => expect(clearAll()).toBeDisabled());
       await userEvent.click(drawer().getByRole("button", { name: "Retour" }));
       await waitFor(() => expect(drawer().getByRole("button", { name: /Langues/ })).toBeInTheDocument());
     });
