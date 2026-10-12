@@ -361,25 +361,21 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
               </AriaDateInput>
 
               <div className={styles.trailingButtons}>
-                {isClearable && !isReadOnly && (
-<Button
+                {showClear && (
+                  <Button
                     appearance="subtle"
                     isInline
                     iconBefore="CloseSmall"
                     className={[styles.clockButton, styles.clearButton].join(" ")}
-                    isDisabled={isDisabled || !showClear}
+                    isDisabled={isDisabled}
                     aria-label="Effacer"
-                    // Champ vide : emplacement RÉSERVÉ (même encombrement que rempli), inerte
-                    // et invisible (visibility: hidden, donc absent de l'arbre d'accessibilité) —
-                    // pas de décalage entre vide / rempli.
-                    data-placeholder={!showClear || undefined}
                     onPress={handleClear}
                     // REASON: empêcher le blur du segment pendant le click. Sans
                     // ça, le mousedown sur le bouton transfert le focus → segment
                     // blur, ce qui peut surprendre l'UX d'édition.
                     onPointerDown={(e) => e.preventDefault()}
                   />
-)}
+                )}
                 <Button
                   appearance="subtle"
                   isInline
