@@ -41,10 +41,12 @@ entre versions alpha.
   convention décrite plus haut pour ces cinq composants ; `TextField` /
   `SearchField` et `Select` sont inchangés).
 - **`DatePicker` — icône et bouton calendrier** : l'icône passe de
-  `CalendarMonth` à `CalendarToday`. Le cercle de survol des boutons trailing
-  (calendrier, Effacer) fait désormais **exactement la taille de l'icône**
-  (24 px) : le `Button` ajoutait 1 px de bordure transparente de chaque côté
-  (26 px), le cercle dépassait l'icône.
+  `CalendarMonth` à `CalendarToday`. Le rond de survol des boutons trailing
+  (calendrier, Effacer) **englobe tout le dessin de l'icône** : `CalendarToday`
+  dessine 18 × 20 px dans sa boîte de 24 px (diagonale ≈ 26,9 px), un rond de
+  24 px (ou de 26 px, avec la bordure transparente du `Button`) laissait dépasser
+  les coins. Le rond fait 28 px (`--size350`) ; il déborde d'1 px en haut et en
+  bas dans le retrait du champ, dont la hauteur ne change pas.
 - **`TimeDrumPicker` / `TimePicker` — plus d'espace entre les colonnes** : les
   colonnes (heures, minutes, secondes, AM/PM) et le « : » étaient séparés de
   `--space100` (8 px). Ils se touchent désormais (`gap: 0`) ; le retrait
