@@ -28,6 +28,13 @@ entre versions alpha.
   réservée, l'icône d'ouverture ne se décale pas. Sur support tactile, faute de
   survol, le bouton n'apparaît qu'à la prise de focus.
 
+- **Croix d'effacement — `TextField` / `SearchField`, `Select`, `DatePicker`,
+  `MonthPicker`, `WeekPicker`, `YearPicker`, `TimePicker`** : la croix utilise
+  désormais `--icon-subtlest` partout. Elle était en `--icon-default` (plus
+  foncée) sur `Select` et sur les sélecteurs de date / mois / semaine / année /
+  heure, déjà en `subtlest` sur `TextField`. Les sélecteurs surchargent la
+  classe `.comete-icon--default` du `<Icon>` via `:global()`.
+
 ### Corrigé
 
 - **`List` — réserve de l'action secondaire** : `ListItem` et `ListItemButton`

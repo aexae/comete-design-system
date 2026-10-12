@@ -114,6 +114,13 @@
   visibility: hidden;
 }
 
+/* Croix d'effacement : `--icon-subtlest` (même convention que `TextField` et
+   `Select`). Le `<Icon>` de comete-icons pose sa propre classe
+   `.comete-icon--default` qui fixe un `color` → on la surcharge via `:global()`. */
+.clearButton :global(.comete-icon--default) {
+  color: var(--icon-subtlest);
+}
+
 .root:hover .clearButton,
 .root:focus-within .clearButton {
   visibility: visible;
