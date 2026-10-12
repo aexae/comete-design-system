@@ -68,7 +68,7 @@ const LEAD: Rich[] = [
   { b: "structure" },
   " et le ",
   { b: "comportement" },
-  ". Il ne dit pas quelles colonnes, quelles vues ni quels filtres afficher : ça se décide écran par écran, avec le produit.",
+  ". Il ne dit pas quelles colonnes ni quels filtres afficher : ça se décide écran par écran, avec le produit.",
 ];
 
 const ZONES_INTRO =
@@ -143,20 +143,16 @@ interface Rule {
 const RULES: Rule[] = [
   {
     n: "01",
-    title: "Une vue n'est pas un filtre",
+    title: "Tout critère passe par le bouton Filtres",
     why: [
-      "Un ",
+      "La barre d'outils n'a pas de sélecteur d'état : un ",
       { b: "état de travail" },
-      ", comme anomalies, en cours ou terminé, est une ",
-      { b: "vue" },
-      " : elle vit dans la barre d'outils, bien visible, parce qu'on en change souvent. Un ",
+      ", comme anomalies, en cours ou terminé, est un ",
       { b: "critère" },
-      ", comme un site, une prestation ou un profil, est un ",
-      { b: "filtre" },
-      " : il vit dans le bouton Filtres. Tous les écrans n'ont pas de vues ; tous ont des filtres.",
+      " comme un site, une prestation ou un profil. Tous se posent au même endroit, le bouton Filtres, et s'affichent ensuite sous la barre d'outils, dans les critères actifs.",
     ],
-    ok: "« Anomalies » dans la barre d'outils, à côté de « Toutes ».",
-    ko: "« Anomalies » noyé dans le panneau de filtres avec les secteurs et les profils.",
+    ok: "« Anomalies » dans le panneau de filtres, avec les secteurs et les profils.",
+    ko: "Un sélecteur « Toutes / Anomalies / Actives » ajouté dans la barre d'outils.",
   },
   {
     n: "02",
@@ -237,10 +233,9 @@ const MODALE_BODY: Rich[] = [
 ];
 
 const GLOSSAIRE: Array<{ term: string; def: string }> = [
-  { term: "Vue", def: "Un état de travail qu'on sélectionne dans la barre d'outils : toutes, anomalies, en cours. Présent seulement sur certains écrans." },
-  { term: "Filtre", def: "Un critère qu'on pose dans le panneau : un secteur, un profil, une période." },
+  { term: "Filtre", def: "Un critère qu'on pose dans le panneau : un secteur, un profil, une période, un état de travail." },
   { term: "Barre de page", def: "La bande du haut : affordance de navigation, titre, actions." },
-  { term: "Barre d'outils", def: "La bande juste en dessous : recherche, filtres, vues, actions. Une seule par écran." },
+  { term: "Barre d'outils", def: "La bande juste en dessous : recherche, filtres, actions. Une seule par écran." },
   { term: "Liste de section", def: "Une liste qui vit à l'intérieur d'une fiche, et non comme sujet de l'écran." },
   { term: "Dé-encarter", def: "Retirer les cartes qui servaient de conteneur, et poser les sections sur le fond." },
 ];
