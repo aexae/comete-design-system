@@ -102,24 +102,27 @@
   flex-shrink: 0;
 }
 
-/* Bouton Effacer — masque au repos, revele au survol ou au focus du champ
-   (meme convention que `TextField`). `visibility` et non `display` : la place
-   reste reservee en permanence, donc l'icone calendrier ne se decale pas quand le
-   bouton apparait. Le bouton vient EN PLUS de cette icone, pas a sa place. */
-.clearButton {
-  visibility: hidden;
+/* Boutons trailing (calendrier + Effacer) : le cercle de survol fait EXACTEMENT la
+   taille de l'icône (24 px). Le `Button` ajoutait 1 px de bordure transparente de
+   chaque côté (26 px) → cercle plus grand que l'icône. Spécificité (0,3,0) pour
+   battre `.inline.iconOnly` et les classes de densité du Button. */
+.datePicker .trailingButtons .calendarButton {
+  box-sizing: border-box;
+  width: var(--size300);
+  height: var(--size300);
+  min-width: var(--size300);
+  min-height: var(--size300);
+  border: 0;
 }
 
+/* Bouton Effacer — TOUJOURS visible dès que le champ a une valeur (il n'est
+   plus masqué au repos ni révélé au survol / focus). Il vient EN PLUS de
+   l'icône calendrier / horloge, pas à sa place. */
 /* Croix d'effacement : `--icon-subtlest` (même convention que `TextField` et
    `Select`). Le `<Icon>` de comete-icons pose sa propre classe
    `.comete-icon--default` qui fixe un `color` → on la surcharge via `:global()`. */
 .clearButton :global(.comete-icon--default) {
   color: var(--icon-subtlest);
-}
-
-.datePicker:hover .clearButton,
-.datePicker:focus-within .clearButton {
-  visibility: visible;
 }
 
 /* Wrapper des boutons trailing (clear + calendrier). Pas de gap entre les

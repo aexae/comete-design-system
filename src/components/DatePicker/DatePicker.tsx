@@ -365,7 +365,7 @@ function EditableDatePicker<T extends DateValue = DateValue>({
                 <Button
                   appearance="subtle"
                   isInline
-                  iconBefore="CalendarMonth"
+                  iconBefore="CalendarToday"
                   className={styles.calendarButton}
                   isDisabled={isDisabled}
                   aria-label="Ouvrir le calendrier"
@@ -707,7 +707,7 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
                 <Button
                   appearance="subtle"
                   isInline
-                  iconBefore="CalendarMonth"
+                  iconBefore="CalendarToday"
                   className={styles.calendarButton}
                   isDisabled={isDisabled}
                   aria-label="Ouvrir le calendrier"

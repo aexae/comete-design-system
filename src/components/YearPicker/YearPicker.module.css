@@ -64,24 +64,14 @@
   flex-shrink: 0;
 }
 
-/* Bouton Effacer — masque au repos, revele au survol ou au focus du champ
-   (meme convention que `TextField`). `visibility` et non `display` : la place
-   reste reservee en permanence, donc l'icone calendrier ne se decale pas quand le
-   bouton apparait. Le bouton vient EN PLUS de cette icone, pas a sa place. */
-.clearButton {
-  visibility: hidden;
-}
-
+/* Bouton Effacer — TOUJOURS visible dès que le champ a une valeur (il n'est
+   plus masqué au repos ni révélé au survol / focus). Il vient EN PLUS de
+   l'icône calendrier / horloge, pas à sa place. */
 /* Croix d'effacement : `--icon-subtlest` (même convention que `TextField` et
    `Select`). Le `<Icon>` de comete-icons pose sa propre classe
    `.comete-icon--default` qui fixe un `color` → on la surcharge via `:global()`. */
 .clearButton :global(.comete-icon--default) {
   color: var(--icon-subtlest);
-}
-
-.root:hover .clearButton,
-.root:focus-within .clearButton {
-  visibility: visible;
 }
 
 /* Wrapper des boutons trailing (clear + calendrier). Pas de gap entre les

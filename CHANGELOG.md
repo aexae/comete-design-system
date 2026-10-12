@@ -35,6 +35,16 @@ entre versions alpha.
   heure, déjà en `subtlest` sur `TextField`. Les sélecteurs surchargent la
   classe `.comete-icon--default` du `<Icon>` via `:global()`.
 
+- **Bouton « Effacer » — `DatePicker`, `TimePicker`, `MonthPicker`, `WeekPicker`,
+  `YearPicker`** : il n'est plus masqué. Il reste **toujours visible** dès que le
+  champ a une valeur, au lieu d'être révélé au survol ou au focus (remplace la
+  convention décrite plus haut pour ces cinq composants ; `TextField` /
+  `SearchField` et `Select` sont inchangés).
+- **`DatePicker` — icône et bouton calendrier** : l'icône passe de
+  `CalendarMonth` à `CalendarToday`. Le cercle de survol des boutons trailing
+  (calendrier, Effacer) fait désormais **exactement la taille de l'icône**
+  (24 px) : le `Button` ajoutait 1 px de bordure transparente de chaque côté
+  (26 px), le cercle dépassait l'icône.
 - **`TimeDrumPicker` / `TimePicker` — plus d'espace entre les colonnes** : les
   colonnes (heures, minutes, secondes, AM/PM) et le « : » étaient séparés de
   `--space100` (8 px). Ils se touchent désormais (`gap: 0`) ; le retrait
@@ -43,6 +53,11 @@ entre versions alpha.
 
 ### Corrigé
 
+- **`TimePicker` (saisie) — boutons non calés à droite** : quand le champ
+  s'agrandissait, le bouton « Effacer » et l'icône horloge restaient collés au
+  texte (le champ de saisie `.timeInput` était dimensionné sur son contenu).
+  Il occupe désormais la largeur disponible, comme `.dateInput` du `DatePicker` :
+  les boutons restent calés à droite.
 - **`TimePicker` — le sélecteur d'heure se referme une fois l'heure choisie** :
   le popover à tambours restait ouvert après le choix (il ne se fermait qu'au
   clic extérieur ou à Échap). Il se referme désormais quand l'heure est
