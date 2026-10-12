@@ -1133,9 +1133,11 @@ const G_TITLE = "Anatomie d'un écran de liste";
 const G_INTRO =
   "Premier gabarit de page (D10). La recette fixe la structure et le comportement ; elle laisse au produit le choix des colonnes, des vues et des facettes.";
 const G_SIX = "Les six éléments, dans l'ordre";
-const G_D16_TITLE = "Le clic de ligne — doctrine D16";
+const G_D16_TITLE = "Le clic de ligne";
 const G_D16 =
-  "Navigation quand l'objet a une page à lui : href sur la cellule primaire + isRowAnchor (les modificateurs Ctrl/⌘+clic et clic-milieu doivent marcher). Modale : réservée à la confirmation, pas à la consultation.";
+  "Si l'objet de la ligne a une page de détail, le clic de ligne doit être une vraie navigation : un `href` posé sur la cellule primaire, étendu à la ligne via `isRowAnchor`. Pourquoi un vrai lien et pas un `onClick` JavaScript : avec un lien natif, Ctrl/⌘+clic ouvre dans un nouvel onglet, le clic-milieu marche, le clavier et les lecteurs d'écran voient un lien — un `onClick` casse tout ça. C'est exactement le défaut relevé dans l'audit Famille 2 sur les listes actuelles de Link.";
+const G_D16_MODALE =
+  "1. La modale sert à confirmer, pas à consulter : ouvrir une fiche en modale au clic de ligne prive l'utilisateur d'URL, d'historique et du nouvel onglet. Donc confirmation de suppression en modale, oui ; consultation d'un agent ou d'un site, non — page dédiée.";
 const G_TOOLBAR_TITLE = "Une seule toolbar de niveau page par écran";
 const G_TOOLBAR =
   "Une liste de section porte ses contrôles réduits au niveau section, jamais une seconde Page.Toolbar. Ce que la recette ne décide pas : quelles colonnes, quelles vues, quelles facettes — ça appartient au produit, écran par écran.";
@@ -1202,6 +1204,7 @@ export const Guidelines: Story = {
             <Stack gap="100">
               <Heading size="small" as="h2">{G_D16_TITLE}</Heading>
               <Text color="subtle">{G_D16}</Text>
+              <Text color="subtle">{G_D16_MODALE}</Text>
             </Stack>
 
             <Stack gap="100">
