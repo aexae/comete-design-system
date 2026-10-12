@@ -1,5 +1,5 @@
 // Tests unitaires du composant DatePicker
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { CalendarDate } from "@internationalized/date";
 import { describe, expect, it, vi } from "vitest";
@@ -66,6 +66,62 @@ describe("DatePicker", () => {
       render(<DatePicker aria-label="Date" />);
       await userEvent.click(screen.getByRole("button"));
       expect(screen.getByRole("dialog")).toBeInTheDocument();
+    });
+
+    it("should close calendar when the calendar button is clicked again", async () => {
+      render(<DatePicker aria-label="Date" />);
+      const button = screen.getByRole("button", { name: "Ouvrir le calendrier" });
+      await userEvent.click(button);
+      expect(screen.getByRole("dialog")).toBeInTheDocument();
+      await userEvent.click(button);
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+
+    it("should reflect the open state on the calendar button (aria-expanded)", async () => {
+      render(<DatePicker aria-label="Date" />);
+      const button = screen.getByRole("button", { name: "Ouvrir le calendrier" });
+      expect(button).toHaveAttribute("aria-expanded", "false");
+      await userEvent.click(button);
+      expect(button).toHaveAttribute("aria-expanded", "true");
+      await userEvent.click(button);
+      expect(button).toHaveAttribute("aria-expanded", "false");
+    });
+
+    it("should not leave the calendar button in a pressed state after opening", async () => {
+      render(<DatePicker aria-label="Date" />);
+      const button = screen.getByRole("button", { name: "Ouvrir le calendrier" });
+      await userEvent.click(button);
+      expect(button).not.toHaveAttribute("data-pressed");
+    });
+
+    it("should close calendar and call onChange when a date is picked", async () => {
+      const onChange = vi.fn();
+      render(
+        <DatePicker
+          aria-label="Date"
+          defaultValue={new CalendarDate(2026, 10, 12)}
+          onChange={onChange}
+        />,
+      );
+      await userEvent.click(screen.getByRole("button", { name: "Ouvrir le calendrier" }));
+      const dialog = screen.getByRole("dialog");
+      await userEvent.click(within(dialog).getByText("15"));
+      expect(onChange).toHaveBeenCalled();
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    });
+
+    it("should clear the value without opening the calendar", async () => {
+      const onChange = vi.fn();
+      render(
+        <DatePicker
+          aria-label="Date"
+          defaultValue={new CalendarDate(2026, 10, 12)}
+          onChange={onChange}
+        />,
+      );
+      await userEvent.click(screen.getByRole("button", { name: "Effacer" }));
+      expect(onChange).toHaveBeenCalledWith(null);
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     });
 
     it("should append custom className", () => {

@@ -45,6 +45,17 @@ entre versions alpha.
   croix native **en plus** du bouton « Effacer » du DS. L'accessoire natif
   (`::-webkit-search-cancel-button` et `::-webkit-search-decoration`) est
   désormais masqué : seul le bouton du DS (`isClearable`) subsiste.
+- **`DatePicker` (saisie, date et plage) — bouton calendrier** : trois défauts
+  liés. Le `DatePicker` de React Aria injecte dans **tous** ses boutons un contexte
+  (`isPressed: state.isOpen`, `onPress` = ouverture seule, `aria-expanded`) qui
+  pilote **son propre** état d'ouverture, distinct de celui du DS. Résultat : le
+  bouton restait coloré en état « appuyé » une fois le calendrier ouvert, un
+  second clic sur l'icône ne refermait pas le calendrier, et « Effacer » héritait
+  lui aussi de ce contexte. Le bouton calendrier est désormais sorti du contexte
+  (`slot={null}`) : il **ouvre et referme** le calendrier, expose
+  `aria-haspopup="dialog"` et `aria-expanded` à jour, et ne reste plus appuyé.
+  « Effacer » est lui aussi sorti du contexte. Choisir une date (ou une plage
+  complète) **referme** le calendrier.
 
 ## [1.0.0-alpha.163] - 2026-10-06
 
