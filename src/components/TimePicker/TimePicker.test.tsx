@@ -1,5 +1,5 @@
 // Tests unitaires du composant TimePicker
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { Time } from "@internationalized/date";
@@ -32,6 +32,31 @@ describe("TimePicker", () => {
       const segments = container.querySelectorAll(".segment");
       // hour + literal (:) + minute = 3 segments minimum
       expect(segments.length).toBeGreaterThanOrEqual(3);
+    });
+  });
+
+  describe("fermeture du sélecteur d'heure", () => {
+    const openPicker = async () => {
+      await userEvent.click(screen.getByRole("button", { name: "Ouvrir le sélecteur d'heure" }));
+    };
+    const option = (column: string, text: string) =>
+      within(screen.getByRole("listbox", { name: column })).getByRole("option", { name: text });
+
+    it("should stay open when an hour is picked", async () => {
+      render(<TimePicker aria-label="Heure" defaultValue={new Time(14, 30)} />);
+      await openPicker();
+      await userEvent.click(option("Heures", "09"));
+      expect(screen.getByRole("listbox", { name: "Minutes" })).toBeInTheDocument();
+    });
+
+    it("should close once the time is complete (minute picked) and keep the value", async () => {
+      const onChange = vi.fn();
+      render(<TimePicker aria-label="Heure" defaultValue={new Time(14, 30)} onChange={onChange} />);
+      await openPicker();
+      await userEvent.click(option("Heures", "09"));
+      await userEvent.click(option("Minutes", "45"));
+      expect(onChange).toHaveBeenLastCalledWith(new Time(9, 45, 0));
+      expect(screen.queryByRole("listbox", { name: "Minutes" })).not.toBeInTheDocument();
     });
   });
 

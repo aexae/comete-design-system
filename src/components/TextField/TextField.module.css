@@ -29,6 +29,17 @@
   color: var(--text-subtlest);
 }
 
+/* `type="search"` : Chromium / Safari ajoutent leur propre croix d'effacement
+   (au survol et au focus, dès qu'il y a une valeur) en plus du bouton `Effacer`
+   du DS → deux croix côte à côte. On masque l'accessoire natif : le bouton du DS
+   (`isClearable`) reste l'unique contrôle, avec son libellé accessible. */
+.input::-webkit-search-cancel-button,
+.input::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
 .textField[data-disabled] .input {
   color: var(--text-disabled);
   cursor: not-allowed;
@@ -82,7 +93,7 @@
   border: none;
   border-radius: var(--radius0375);
   background: transparent;
-  color: var(--icon-default);
+  color: var(--icon-subtlest);
   cursor: pointer;
   outline: none;
 }

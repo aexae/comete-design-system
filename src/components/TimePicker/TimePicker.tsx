@@ -394,6 +394,8 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
               <TimeDrumPicker
                 value={currentValue}
                 onChange={handleDrumChange}
+                // Heure complète choisie (clic sur la dernière colonne) → ferme.
+                onComplete={() => setIsOpen(false)}
                 isDisabled={isDisabled}
                 hourCycle={ariaProps.hourCycle}
                 showSeconds={showSeconds}
@@ -496,6 +498,8 @@ function NonEditableTimePicker({
                 <TimeDrumPicker
                   value={resolvedValue}
                   onChange={handleTimeSelect}
+                  // Heure complète choisie (clic sur la dernière colonne) → ferme.
+                  onComplete={() => setIsOpen(false)}
                   isDisabled={isDisabled}
                   hourCycle={hourCycle}
                   showSeconds={showSeconds}

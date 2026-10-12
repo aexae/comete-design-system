@@ -262,7 +262,7 @@ export function Select({
                       }
                     }}
                   >
-                    <Icon icon="CloseSmall" size={16} spacing="none" />
+                    <Icon icon="CloseSmall" size={16} spacing="none" color="subtlest" />
                   </span>
                 )}
                 <Icon

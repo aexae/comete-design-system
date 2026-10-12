@@ -28,8 +28,51 @@ entre versions alpha.
   réservée, l'icône d'ouverture ne se décale pas. Sur support tactile, faute de
   survol, le bouton n'apparaît qu'à la prise de focus.
 
+- **Croix d'effacement — `TextField` / `SearchField`, `Select`, `DatePicker`,
+  `MonthPicker`, `WeekPicker`, `YearPicker`, `TimePicker`** : la croix utilise
+  désormais `--icon-subtlest` partout. Elle était en `--icon-default` (plus
+  foncée) sur `Select` et sur les sélecteurs de date / mois / semaine / année /
+  heure, déjà en `subtlest` sur `TextField`. Les sélecteurs surchargent la
+  classe `.comete-icon--default` du `<Icon>` via `:global()`.
+
+- **Bouton « Effacer » — `DatePicker`, `TimePicker`, `MonthPicker`, `WeekPicker`,
+  `YearPicker`** : il n'est plus masqué. Il reste **toujours visible** dès que le
+  champ a une valeur, au lieu d'être révélé au survol ou au focus (remplace la
+  convention décrite plus haut pour ces cinq composants ; `TextField` /
+  `SearchField` et `Select` sont inchangés).
+- **`Select` — libellé de groupe** : la taille du libellé des groupes d'options
+  (`.groupLabel`) passe de 10 px (`--font-size-ui-xxxs`) à 12 px
+  (`--font-size-ui-xxs`). L'interligne (16 px) et la mise en capitales sont
+  inchangés.
+- **`DatePicker` — icône et bouton calendrier** : l'icône passe de
+  `CalendarMonth` à `CalendarToday`. Le rond de survol des boutons trailing
+  (calendrier, Effacer) **englobe tout le dessin de l'icône** : `CalendarToday`
+  dessine 18 × 20 px dans sa boîte de 24 px (diagonale ≈ 26,9 px), un rond de
+  24 px (ou de 26 px, avec la bordure transparente du `Button`) laissait dépasser
+  les coins. Le rond fait 28 px (`--size350`) ; il déborde d'1 px en haut et en
+  bas dans le retrait du champ, dont la hauteur ne change pas.
+- **`TimeDrumPicker` / `TimePicker` — plus d'espace entre les colonnes** : les
+  colonnes (heures, minutes, secondes, AM/PM) et le « : » étaient séparés de
+  `--space100` (8 px). Ils se touchent désormais (`gap: 0`) ; le retrait
+  extérieur du sélecteur est conservé. Le sélecteur à deux colonnes passe de
+  100 px à 84 px de large.
+
 ### Corrigé
 
+- **`TimePicker` (saisie) — boutons non calés à droite** : quand le champ
+  s'agrandissait, le bouton « Effacer » et l'icône horloge restaient collés au
+  texte (le champ de saisie `.timeInput` était dimensionné sur son contenu).
+  Il occupe désormais la largeur disponible, comme `.dateInput` du `DatePicker` :
+  les boutons restent calés à droite.
+- **`TimePicker` — le sélecteur d'heure se referme une fois l'heure choisie** :
+  le popover à tambours restait ouvert après le choix (il ne se fermait qu'au
+  clic extérieur ou à Échap). Il se referme désormais quand l'heure est
+  **complète**, c'est-à-dire au **clic** sur la dernière colonne : minutes en
+  24 h (secondes si `showSeconds`), AM/PM en 12 h. Choisir une heure ne ferme
+  pas (il reste les minutes à choisir). `TimeDrumPicker` expose pour cela
+  `onComplete`, déclenché par un clic et non par le défilement (qui émet en
+  continu et au calage initial des colonnes). `DatePicker`, `MonthPicker`,
+  `WeekPicker` et `YearPicker` se referment déjà au choix.
 - **`List` — réserve de l'action secondaire** : `ListItem` et `ListItemButton`
   réservaient la place à droite via `var(--space700)`, un token **inexistant**
   dans `@aexae/comete-design-tokens`. La déclaration était invalide, donc
@@ -40,6 +83,22 @@ entre versions alpha.
   aussi la réserve droite ci-dessus, ramenant le recouvrement. La réserve est
   désormais rétablie dans ce cas, réduite à la seule largeur de l'action, et
   l'action elle-même se cale au bord pour rester alignée sur le texte mis à plat.
+- **`SearchField` / `TextField type="search"` — deux croix d'effacement** : au
+  survol ou au focus d'un champ rempli, Chromium et Safari affichaient leur
+  croix native **en plus** du bouton « Effacer » du DS. L'accessoire natif
+  (`::-webkit-search-cancel-button` et `::-webkit-search-decoration`) est
+  désormais masqué : seul le bouton du DS (`isClearable`) subsiste.
+- **`DatePicker` (saisie, date et plage) — bouton calendrier** : trois défauts
+  liés. Le `DatePicker` de React Aria injecte dans **tous** ses boutons un contexte
+  (`isPressed: state.isOpen`, `onPress` = ouverture seule, `aria-expanded`) qui
+  pilote **son propre** état d'ouverture, distinct de celui du DS. Résultat : le
+  bouton restait coloré en état « appuyé » une fois le calendrier ouvert, un
+  second clic sur l'icône ne refermait pas le calendrier, et « Effacer » héritait
+  lui aussi de ce contexte. Le bouton calendrier est désormais sorti du contexte
+  (`slot={null}`) : il **ouvre et referme** le calendrier, expose
+  `aria-haspopup="dialog"` et `aria-expanded` à jour, et ne reste plus appuyé.
+  « Effacer » est lui aussi sorti du contexte. Choisir une date (ou une plage
+  complète) **referme** le calendrier.
 
 ## [1.0.0-alpha.163] - 2026-10-06
 

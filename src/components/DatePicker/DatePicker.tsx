@@ -236,13 +236,11 @@ function EditableDatePicker<T extends DateValue = DateValue>({
         | ((value: DateValue) => void)
         | undefined;
       onChangeProp?.(newDate);
+      // Date choisie → le calendrier se referme.
+      setIsOpen(false);
     },
     [ariaProps.onChange],
   );
-
-  const openPopover = useCallback(() => {
-    setIsOpen(true);
-  }, []);
 
   // Vide la valeur. Replace le focus sur le premier segment.
   const handleClear = useCallback(() => {
@@ -355,6 +353,8 @@ function EditableDatePicker<T extends DateValue = DateValue>({
                     className={[styles.calendarButton, styles.clearButton].join(" ")}
                     isDisabled={isDisabled}
                     aria-label="Effacer"
+                    // Hors du contexte de bouton du champ (bascule du calendrier).
+                    slot={null}
                     onPress={handleClear}
                     // REASON: empêcher le blur du segment pendant le click. Sans
                     // ça, le mousedown sur le bouton transfert le focus → segment
@@ -365,11 +365,16 @@ function EditableDatePicker<T extends DateValue = DateValue>({
                 <Button
                   appearance="subtle"
                   isInline
-                  iconBefore="CalendarMonth"
+                  iconBefore="CalendarToday"
                   className={styles.calendarButton}
                   isDisabled={isDisabled}
                   aria-label="Ouvrir le calendrier"
-                  onPress={isDisabled ? undefined : openPopover}
+                  // Hors du contexte de bouton de React Aria (voir ci-dessus) : le
+                  // DS gère l'ouverture ET la fermeture de son calendrier.
+                  slot={null}
+                  aria-haspopup="dialog"
+                  aria-expanded={isOpen}
+                  onPress={() => setIsOpen(!isOpen)}
                 />
               </div>
             </InputContainer>
@@ -565,13 +570,11 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
         | ((value: RangeValue<DateValue>) => void)
         | undefined;
       onChangeProp?.(newRange);
+      // Plage complète choisie (début ET fin) → le calendrier se referme.
+      setIsOpen(false);
     },
     [ariaProps.onChange],
   );
-
-  const openPopover = useCallback(() => {
-    setIsOpen(true);
-  }, []);
 
   // Vide la valeur. Replace le focus sur le premier segment.
   const handleClear = useCallback(() => {
@@ -695,6 +698,8 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
                     className={[styles.calendarButton, styles.clearButton].join(" ")}
                     isDisabled={isDisabled}
                     aria-label="Effacer"
+                    // Hors du contexte de bouton du champ (bascule du calendrier).
+                    slot={null}
                     onPress={handleClear}
                     onPointerDown={(e) => e.preventDefault()}
                   />
@@ -702,11 +707,16 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
                 <Button
                   appearance="subtle"
                   isInline
-                  iconBefore="CalendarMonth"
+                  iconBefore="CalendarToday"
                   className={styles.calendarButton}
                   isDisabled={isDisabled}
                   aria-label="Ouvrir le calendrier"
-                  onPress={isDisabled ? undefined : openPopover}
+                  // Hors du contexte de bouton de React Aria (voir ci-dessus) : le
+                  // DS gère l'ouverture ET la fermeture de son calendrier.
+                  slot={null}
+                  aria-haspopup="dialog"
+                  aria-expanded={isOpen}
+                  onPress={() => setIsOpen(!isOpen)}
                 />
               </div>
             </InputContainer>
