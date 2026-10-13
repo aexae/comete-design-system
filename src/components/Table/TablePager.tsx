@@ -18,6 +18,15 @@ export interface TablePagerProps {
   pageCount: number;
   /** Callback quand la page change (nouvelle page 0-indexée). */
   onPageChange: (nextPage: number) => void;
+  /**
+   * Nombre d'emplacements de pages numérotées affichés (largeur stable) :
+   * - `7` (défaut) — `1 2 3 4 5 … N`, `1 … c-1 c c+1 … N`, `1 … N-4 … N` ;
+   * - `5` — `1 2 3 … N`, `1 … c … N`, `1 … N-2 N-1 N` ;
+   * - `3` — fenêtre glissante de trois pages autour de la courante (`1 2 3`, `3 4 5`…),
+   *   pour les barres étroites ; première / dernière via précédente / suivante.
+   * @default 7
+   */
+  visiblePages?: 3 | 5 | 7;
   /** Densité — taille des boutons (28 / 32 / 40 px). Hérite d'un `DensityProvider`. */
   density?: Density;
   /** Nom accessible du repère de navigation. @default "Pagination" */
@@ -35,18 +44,38 @@ export type TablePagerItem = number | "ellipsis-start" | "ellipsis-end";
 // Logique des pages
 
 /**
- * Pages à afficher (7 emplacements au plus, largeur stable) : `1 2 3 4 5 … N` près
- * du début, `1 … N-4 … N` près de la fin, `1 … c-1 c c+1 … N` au milieu.
- * `current` et le résultat sont 1-based.
+ * Pages à afficher (`slots` emplacements au plus, largeur stable). `current` et le
+ * résultat sont 1-based. Avec 7 emplacements : `1 2 3 4 5 … N` près du début,
+ * `1 … N-4 … N` près de la fin, `1 … c-1 c c+1 … N` au milieu. Avec 3 : fenêtre
+ * glissante de trois pages consécutives centrée sur la courante.
  */
-export function getPageItems(current: number, total: number): TablePagerItem[] {
-  const MAX = 7;
-  if (total <= MAX) return Array.from({ length: total }, (_, i) => i + 1);
-  if (current <= 4) return [1, 2, 3, 4, 5, "ellipsis-end", total];
-  if (current >= total - 3) {
-    return [1, "ellipsis-start", total - 4, total - 3, total - 2, total - 1, total];
+export function getPageItems(current: number, total: number, slots: 3 | 5 | 7 = 7): TablePagerItem[] {
+  if (total <= slots) return Array.from({ length: total }, (_, i) => i + 1);
+
+  if (slots === 3) {
+    const start = Math.min(Math.max(current - 1, 1), total - 2);
+    return [start, start + 1, start + 2];
   }
-  return [1, "ellipsis-start", current - 1, current, current + 1, "ellipsis-end", total];
+
+  // 5 ou 7 : première et dernière toujours là, deux ellipses au plus.
+  const siblings = Math.floor((slots - 5) / 2);
+  if (current <= slots - 3) {
+    return [...Array.from({ length: slots - 2 }, (_, i) => i + 1), "ellipsis-end", total];
+  }
+  if (current >= total - slots + 4) {
+    return [
+      1,
+      "ellipsis-start",
+      ...Array.from({ length: slots - 2 }, (_, i) => total - slots + 3 + i),
+    ];
+  }
+  return [
+    1,
+    "ellipsis-start",
+    ...Array.from({ length: 2 * siblings + 1 }, (_, i) => current - siblings + i),
+    "ellipsis-end",
+    total,
+  ];
 }
 
 // -----------------------------------------------------------------------
@@ -70,6 +99,7 @@ export function TablePager({
   page,
   pageCount,
   onPageChange,
+  visiblePages = 7,
   density,
   "aria-label": ariaLabel = "Pagination",
   className,
@@ -100,7 +130,7 @@ export function TablePager({
         </span>
       </AriaButton>
 
-      {getPageItems(current + 1, pageCount).map((item) =>
+      {getPageItems(current + 1, pageCount, visiblePages).map((item) =>
         typeof item === "string" ? (
           <span key={item} className={styles.ellipsis} aria-hidden="true">
             …

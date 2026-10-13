@@ -28,6 +28,31 @@ describe("getPageItems", () => {
   });
 });
 
+describe("getPageItems — emplacements réduits", () => {
+  it("should slide a 3-page window around the current page", () => {
+    expect(getPageItems(1, 8, 3)).toEqual([1, 2, 3]);
+    expect(getPageItems(4, 8, 3)).toEqual([3, 4, 5]);
+    expect(getPageItems(8, 8, 3)).toEqual([6, 7, 8]);
+  });
+
+  it("should list every page when there are 3 or fewer, whatever the slots", () => {
+    expect(getPageItems(2, 3, 3)).toEqual([1, 2, 3]);
+    expect(getPageItems(1, 2, 3)).toEqual([1, 2]);
+  });
+
+  it("should use 5 slots: 1 2 3 … N / 1 … c … N / 1 … N-2 N-1 N", () => {
+    expect(getPageItems(1, 20, 5)).toEqual([1, 2, 3, "ellipsis-end", 20]);
+    expect(getPageItems(2, 20, 5)).toEqual([1, 2, 3, "ellipsis-end", 20]);
+    expect(getPageItems(10, 20, 5)).toEqual([1, "ellipsis-start", 10, "ellipsis-end", 20]);
+    expect(getPageItems(19, 20, 5)).toEqual([1, "ellipsis-start", 18, 19, 20]);
+    expect(getPageItems(20, 20, 5)).toEqual([1, "ellipsis-start", 18, 19, 20]);
+  });
+
+  it.each([3, 5, 7] as const)("should keep a stable slot count (%i) once there are more pages", (slots) => {
+    for (let c = 1; c <= 30; c += 1) expect(getPageItems(c, 30, slots)).toHaveLength(slots);
+  });
+});
+
 describe("TablePager", () => {
   it("should render a navigation landmark named 'Pagination' by default", () => {
     render(<TablePager page={0} pageCount={8} onPageChange={() => undefined} />);
@@ -79,6 +104,13 @@ describe("TablePager", () => {
     rerender(<TablePager page={7} pageCount={8} onPageChange={() => undefined} />);
     expect(screen.getByRole("button", { name: "Page précédente" })).toBeEnabled();
     expect(screen.getByRole("button", { name: "Page suivante" })).toBeDisabled();
+  });
+
+  it("should render only 3 page buttons with visiblePages={3}", () => {
+    render(<TablePager page={3} pageCount={8} visiblePages={3} onPageChange={() => undefined} />);
+    const pages = screen.getAllByRole("button", { name: /^Page \d+$/ }).map((b) => b.textContent);
+    expect(pages).toEqual(["3", "4", "5"]);
+    expect(screen.getByRole("button", { name: "Page 4" })).toHaveAttribute("aria-current", "page");
   });
 
   it("should render nothing when there is a single page or fewer", () => {

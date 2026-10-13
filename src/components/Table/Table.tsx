@@ -362,6 +362,11 @@ export interface TablePaginationProps {
    * sélecteur « résultats par page » n'est pas affiché.
    */
   onRowsPerPageChange?: (nextRowsPerPage: number) => void;
+  /**
+   * Nombre d'emplacements de pages numérotées (`3` | `5` | `7`) — voir
+   * {@link TablePagerProps.visiblePages}. `3` pour une barre étroite. @default 7
+   */
+  visiblePages?: 3 | 5 | 7;
   /** Libellé du sélecteur. @default "Résultats par page :" */
   labelRowsPerPage?: string;
   /** Fonction rendant le libellé « N à M sur Total ». */
@@ -965,6 +970,7 @@ export function TablePagination({
   rowsPerPageOptions = DEFAULT_ROWS_PER_PAGE_OPTIONS,
   onPageChange,
   onRowsPerPageChange,
+  visiblePages,
   labelRowsPerPage = "Résultats par page :",
   labelDisplayedRows = defaultLabelDisplayedRows,
   density,
@@ -1013,6 +1019,7 @@ export function TablePagination({
           page={page}
           pageCount={lastPage + 1}
           onPageChange={onPageChange}
+          visiblePages={visiblePages}
           density={effectiveDensity}
         />
       </div>

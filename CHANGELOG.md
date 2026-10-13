@@ -49,7 +49,9 @@ entre versions alpha.
   au plus, largeur stable), page courante pleine (`aria-current="page"`), précédente /
   suivante désactivées aux extrémités, taille selon la densité (28 / 32 / 40 px). Props :
   `page` (0-indexée), `pageCount`, `onPageChange`, `density`, `aria-label`.
-  `TablePagination` le compose ; `Table.Pagination` est aussi exposé.
+  `visiblePages` (`3` | `5` | `7`, défaut `7`) réduit le nombre d'emplacements de pages
+  — `3` = fenêtre glissante de trois pages, pour les barres étroites (relayé par
+  `TablePagination`). `TablePagination` le compose ; `Table.Pagination` est aussi exposé.
 
 ### Modifié
 

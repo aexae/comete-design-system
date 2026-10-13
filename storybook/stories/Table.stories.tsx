@@ -726,6 +726,7 @@ export const Pagination: Story = {
           page={page}
           rowsPerPage={rowsPerPage}
           rowsPerPageOptions={[25, 50, 100]}
+          visiblePages={3}
           onPageChange={setPage}
           onRowsPerPageChange={(n) => {
             setRowsPerPage(n);
