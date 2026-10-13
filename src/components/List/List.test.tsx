@@ -54,6 +54,50 @@ describe("List", () => {
     expect(screen.getByRole("list")).not.toHaveAttribute("data-dense");
   });
 
+  it("should apply data-dividers when hasDividers is true", () => {
+    render(
+      <List aria-label="divided" hasDividers>
+        <ListItem>A</ListItem>
+        <ListItem>B</ListItem>
+      </List>,
+    );
+    expect(screen.getByRole("list")).toHaveAttribute("data-dividers", "true");
+  });
+
+  it("should NOT apply data-dividers by default", () => {
+    render(
+      <List aria-label="plain">
+        <ListItem>A</ListItem>
+      </List>,
+    );
+    expect(screen.getByRole("list")).not.toHaveAttribute("data-dividers");
+  });
+
+  it("should mark a ListItem as unread (data-unread + hidden « Non lu »)", () => {
+    render(
+      <List aria-label="messages">
+        <ListItem isUnread>Message</ListItem>
+        <ListItem>Lu</ListItem>
+      </List>,
+    );
+    const [unread, read] = screen.getAllByRole("listitem");
+    expect(unread).toHaveAttribute("data-unread", "true");
+    expect(unread).toHaveTextContent("Non lu");
+    expect(read).not.toHaveAttribute("data-unread");
+    expect(read).not.toHaveTextContent("Non lu");
+  });
+
+  it("should mark a ListItemButton as unread and keep it a single accessible button", () => {
+    render(
+      <List aria-label="messages">
+        <ListItemButton isUnread>Message</ListItemButton>
+      </List>,
+    );
+    const button = screen.getByRole("button");
+    expect(button).toHaveAttribute("data-unread", "true");
+    expect(button).toHaveAccessibleName(/Non lu/);
+  });
+
   it("should apply data-gap when gap is set", () => {
     render(
       <List aria-label="spaced" gap="150">

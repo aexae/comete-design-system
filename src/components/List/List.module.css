@@ -40,6 +40,14 @@
   overflow: hidden;
 }
 
+/* Séparateurs subtle (prop `hasDividers`) : filet fin entre les items, en
+   `box-shadow` inset (aucun décalage). Ni après le dernier item, ni avant un
+   `ListHead` (le titre de section sépare déjà). `:is()` cible l'item statique
+   (`.item`) et le wrapper de `ListItemButton` (`.itemButtonWrapper`). */
+.list[data-dividers] > :is(.item, .itemButtonWrapper):not(:last-child):not(:has(+ .head)) {
+  box-shadow: inset 0 calc(-1 * var(--size0125)) 0 var(--border-subtle);
+}
+
 /* --------------------------------------------------------------------------
    ListHead — sous-titre de section
    -------------------------------------------------------------------------- */
@@ -143,6 +151,25 @@
 .item[data-selected] {
   background-color: var(--background-selected-subtlest-default);
   color: var(--text-selected);
+}
+
+/* Item non lu (prop `isUnread`) : texte principal en gras + pastille dans la marge
+   gauche (centrée verticalement, hors du flux : n'altère pas l'alignement du
+   contenu). `.item` porte `position: relative` (ancre). */
+.item[data-unread]::before {
+  content: "";
+  position: absolute;
+  left: var(--space050);
+  top: 50%;
+  width: var(--space100);
+  height: var(--space100);
+  transform: translateY(-50%);
+  border-radius: var(--radius-round);
+  background-color: var(--background-selected-bold-default);
+}
+
+.item[data-unread] .itemTextPrimary {
+  font-weight: var(--font-weight-semibold);
 }
 
 /* Item désactivé — texte sourd, curseur not-allowed sur les boutons. */

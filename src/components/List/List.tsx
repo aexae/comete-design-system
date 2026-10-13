@@ -7,6 +7,7 @@
 import { Children, isValidElement, type CSSProperties, type ReactElement, type ReactNode } from "react";
 import {
   Button as AriaButton,
+  VisuallyHidden,
   type ButtonProps as AriaButtonProps,
 } from "react-aria-components";
 import { Skeleton } from "../Skeleton/index.js";
@@ -43,6 +44,14 @@ export interface ListProps {
    * @default false
    */
   isBordered?: boolean;
+  /**
+   * Affiche un **séparateur subtle** (filet fin `--border-subtle`) entre les items.
+   * Peint en `box-shadow` inset : aucun décalage de la mise en page. Pas de filet
+   * après le dernier item ni avant un `ListHead`. À préférer à `gap` quand les
+   * lignes sont jointives et nombreuses ; `gap` sépare par l'air, sans filet.
+   * @default false
+   */
+  hasDividers?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -113,6 +122,12 @@ export interface ListItemProps {
   isSelected?: boolean;
   /** Désactive visuellement l'item. @default false */
   isDisabled?: boolean;
+  /**
+   * Marque l'item comme **non lu** (notification, message, évènement à traiter) :
+   * texte principal en gras + pastille bleue dans la marge gauche. L'état est aussi
+   * annoncé aux lecteurs d'écran (« Non lu », masqué visuellement). @default false
+   */
+  isUnread?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -126,6 +141,12 @@ export interface ListItemButtonProps
   extends Omit<AriaButtonProps, "className" | "style" | "children"> {
   /** Marque l'item comme sélectionné (état visuel + `aria-current`). */
   isSelected?: boolean;
+  /**
+   * Marque l'item comme **non lu** : texte principal en gras + pastille bleue dans la
+   * marge gauche, annoncé aux lecteurs d'écran (« Non lu », masqué visuellement).
+   * @default false
+   */
+  isUnread?: boolean;
   /**
    * Annule le padding **horizontal** de l'item (le vertical / la cible tactile
    * de 44 px est conservé). À utiliser quand un conteneur parent porte déjà le
@@ -263,6 +284,7 @@ export interface ListItemTrailingProps {
 export function List({
   isDense = false,
   isBordered = false,
+  hasDividers = false,
   gap,
   className,
   style,
@@ -327,6 +349,7 @@ export function List({
       style={style}
       data-dense={isDense || undefined}
       data-bordered={isBordered || undefined}
+      data-dividers={hasDividers || undefined}
       data-gap={gap}
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledBy}
@@ -380,6 +403,7 @@ ListHead.displayName = "ListHead";
 export function ListItem({
   isSelected = false,
   isDisabled = false,
+  isUnread = false,
   className,
   style,
   children,
@@ -390,8 +414,10 @@ export function ListItem({
       style={style}
       data-selected={isSelected || undefined}
       data-disabled={isDisabled || undefined}
+      data-unread={isUnread || undefined}
       aria-current={isSelected ? "true" : undefined}
     >
+      {isUnread && <VisuallyHidden>Non lu</VisuallyHidden>}
       {children}
     </li>
   );
@@ -433,6 +459,7 @@ function splitSecondaryAction(children: ReactNode): {
  */
 export function ListItemButton({
   isSelected = false,
+  isUnread = false,
   isFlush = false,
   className,
   style,
@@ -452,8 +479,10 @@ export function ListItemButton({
           .join(" ")}
         style={style}
         data-selected={isSelected || undefined}
+        data-unread={isUnread || undefined}
         aria-current={isSelected ? "true" : undefined}
       >
+        {isUnread && <VisuallyHidden>Non lu</VisuallyHidden>}
         {main}
       </AriaButton>
       {secondary}
