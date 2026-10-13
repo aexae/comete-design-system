@@ -1,7 +1,7 @@
 // BottomNav — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { type ReactNode, useEffect, useRef, useState } from "react";
-import { within, userEvent, expect, waitFor } from "storybook/test";
+import { type ReactNode, type Ref, type RefObject, useEffect, useRef, useState } from "react";
+import { within, screen, userEvent, expect, waitFor } from "storybook/test";
 import {
   BottomNav,
   BottomNavItem,
@@ -12,6 +12,8 @@ import {
   Menu,
   MenuItem,
   MenuSection,
+  MenuTrigger,
+  Popover,
   Text,
 } from "@aexae/comete-design-system/components";
 import type { IconName } from "@aexae/comete-icons";
@@ -281,9 +283,16 @@ function InteractiveBottomNav({
  * sur mobile. Utilisé par toutes les stories de barre complète pour un contexte
  * cohérent.
  */
-function PhoneScreen({ children }: { children: ReactNode }): ReactNode {
+function PhoneScreen({
+  children,
+  screenRef,
+}: {
+  children: ReactNode;
+  /** Ref de l'écran : sert de LIMITE (`boundaryElement`) aux popovers de la barre. */
+  screenRef?: Ref<HTMLDivElement>;
+}): ReactNode {
   return (
-    <div className={css["screen"]}>
+    <div ref={screenRef} className={css["screen"]}>
       {children}
       {/* Home indicator iOS, comme dans la story field tool */}
       <div aria-hidden className={css["homeIndicator"]} />
@@ -373,103 +382,146 @@ export const LongLabel: NavStory = {
 // -----------------------------------------------------------------------
 // Popup example — item "Plus" à droite qui ouvre un menu d'actions secondaires
 
-function BottomNavWithPopupRight() {
+function BottomNavWithPopupRight({
+  boundaryRef,
+}: {
+  /** Écran du téléphone : le popover ne peut pas en sortir. */
+  boundaryRef: RefObject<HTMLElement | null>;
+}) {
   const [selected, setSelected] = useState("Accueil");
   const [popupOpen, setPopupOpen] = useState(false);
-  const wrapperRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!popupOpen) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-        setPopupOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [popupOpen]);
-
+  // Un seul item actif : menu ouvert → aucun item de page n'est sélectionné.
   const activeItem = popupOpen ? null : selected;
 
   return (
-    <div ref={wrapperRef} style={{ position: "relative", display: "flex", width: "100%" }}>
-      {popupOpen && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: "calc(100% + var(--space200))",
-            right: 0,
-            minWidth: 240,
-            background: "var(--background-default-default)",
-            borderRadius: "var(--radius100)",
-            boxShadow: "var(--elevation-medium)",
-            zIndex: 10,
-            overflow: "hidden",
-          }}
+    <BottomNav>
+      <BottomNavItem
+        label="Accueil"
+        icon="Home"
+        isSelected={activeItem === "Accueil"}
+        onClick={() => { setSelected("Accueil"); }}
+      />
+      <BottomNavItem
+        label="Agenda"
+        icon="CalendarMonth"
+        isSelected={activeItem === "Agenda"}
+        onClick={() => { setSelected("Agenda"); }}
+      />
+      <BottomNavItem
+        label="Notifications"
+        icon="Notifications"
+        badge="5"
+        isSelected={activeItem === "Notifications"}
+        onClick={() => { setSelected("Notifications"); }}
+      />
+      <BottomNavItem
+        label="Profil"
+        icon="Person"
+        isSelected={activeItem === "Profil"}
+        onClick={() => { setSelected("Profil"); }}
+      />
+      {/* « Plus » ouvre le `Popover` du DS via un `MenuTrigger` : ouverture,
+          fermeture (clic extérieur, Échap, choix d'une action) et placement sont
+          gérés par le composant — plus de div positionnée à la main. */}
+      <MenuTrigger isOpen={popupOpen} onOpenChange={setPopupOpen}>
+        <BottomNavItem label="Plus" icon="MoreHoriz" isOpen={popupOpen} />
+        <Popover
+          // Au-dessus de l'item, aligné sur son bord droit ; si la place manque,
+          // il se retourne. `boundaryElement` = l'écran : le popover reste
+          // entièrement dans l'écran (décalé si besoin, hauteur bornée).
+          placement="top end"
+          offset={8}
+          boundaryElement={boundaryRef.current ?? undefined}
+          style={{ minWidth: 240 }}
         >
-          <Menu
-            aria-label="Plus"
-            onAction={() => { setPopupOpen(false); }}
-          >
+          <Menu aria-label="Plus" onAction={() => { setPopupOpen(false); }}>
             <MenuSection title="Plus">
               <MenuItem id="settings" iconBefore="Settings">Paramètres</MenuItem>
               <MenuItem id="help" iconBefore="Home">Aide</MenuItem>
               <MenuItem id="logout" iconBefore="Person">Déconnexion</MenuItem>
             </MenuSection>
           </Menu>
-        </div>
-      )}
-      <BottomNav>
-        <BottomNavItem
-          label="Accueil"
-          icon="Home"
-          isSelected={activeItem === "Accueil"}
-          onClick={() => { setSelected("Accueil"); setPopupOpen(false); }}
-        />
-        <BottomNavItem
-          label="Agenda"
-          icon="CalendarMonth"
-          isSelected={activeItem === "Agenda"}
-          onClick={() => { setSelected("Agenda"); setPopupOpen(false); }}
-        />
-        <BottomNavItem
-          label="Notifications"
-          icon="Notifications"
-          badge="5"
-          isSelected={activeItem === "Notifications"}
-          onClick={() => { setSelected("Notifications"); setPopupOpen(false); }}
-        />
-        <BottomNavItem
-          label="Profil"
-          icon="Person"
-          isSelected={activeItem === "Profil"}
-          onClick={() => { setSelected("Profil"); setPopupOpen(false); }}
-        />
-        <BottomNavItem
-          label="Plus"
-          icon="MoreHoriz"
-          isOpen={popupOpen}
-          onClick={() => { setPopupOpen((o) => !o); }}
-        />
-      </BottomNav>
-    </div>
+        </Popover>
+      </MenuTrigger>
+    </BottomNav>
+  );
+}
+
+function WithPopupRightDemo(): ReactNode {
+  const screenRef = useRef<HTMLDivElement>(null);
+  return (
+    <PhoneScreen screenRef={screenRef}>
+      <BottomNavWithPopupRight boundaryRef={screenRef} />
+    </PhoneScreen>
   );
 }
 
 /**
- * Un item "Plus" à droite ouvre un menu d'actions secondaires.
- * Le popup s'aligne sur le bord droit du container (right: 0).
+ * Un item « Plus » à droite ouvre un menu d'actions secondaires dans un
+ * **`Popover`** du DS (via `MenuTrigger`).
+ *
+ * - placement `top end` : au-dessus de l'item, aligné sur son bord droit ;
+ * - `boundaryElement` = l'écran du téléphone : le popover **ne sort pas de
+ *   l'écran** (retournement si la place manque, décalage, hauteur bornée) ;
+ * - fermeture par clic extérieur, Échap ou choix d'une action.
  */
 export const WithPopupRight: Story = {
   name: "With popup (right item)",
   parameters: { layout: "centered", design: { type: "figma", url: figmaUrl("2524:18591") } },
-  render: () => (
-    <PhoneScreen>
-      <BottomNavWithPopupRight />
-    </PhoneScreen>
-  ),
+  render: () => <WithPopupRightDemo />,
+};
+
+// Test (masqué du sidebar) : le `play` ne se rejoue donc PAS à l'ouverture de la
+// story visible ci-dessus. Vérifie le Popover du DS : ouverture au-dessus de
+// « Plus », inclusion dans l'écran du téléphone, fermeture (Échap, action).
+export const WithPopupRightInteractions: Story = {
+  tags: ["!dev"],
+  render: () => <WithPopupRightDemo />,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    // Référence prise AVANT l'ouverture : menu ouvert, le bouton perd son libellé
+    // (remplacé par l'icône de fermeture) et le reste de la page est masqué aux
+    // technologies d'assistance.
+    const trigger = canvas.getByRole("button", { name: "Plus" });
+    const plus = () => trigger;
+    const menu = () => screen.queryByRole("menu");
+
+    await step("fermé au départ", async () => {
+      await expect(plus()).toHaveAttribute("aria-haspopup", "true");
+      await expect(menu()).toBeNull();
+    });
+
+    await step("s'ouvre dans un Popover, au-dessus de « Plus », sans sortir de l'écran", async () => {
+      await userEvent.click(plus());
+      const m = await screen.findByRole("menu");
+      await expect(plus()).toHaveAttribute("aria-expanded", "true");
+      const popover = m.closest("[data-trigger]") ?? m.parentElement;
+      const rect = (popover as HTMLElement).getBoundingClientRect();
+      const phone = canvasElement.querySelector<HTMLElement>('[class*="screen"]');
+      await expect(phone).not.toBeNull();
+      const bounds = (phone as HTMLElement).getBoundingClientRect();
+      // Entièrement dans l'écran du téléphone…
+      await expect(rect.left).toBeGreaterThanOrEqual(bounds.left);
+      await expect(rect.right).toBeLessThanOrEqual(bounds.right);
+      await expect(rect.top).toBeGreaterThanOrEqual(bounds.top);
+      await expect(rect.bottom).toBeLessThanOrEqual(bounds.bottom);
+      // …et au-dessus de la barre (placement « top »).
+      await expect(rect.bottom).toBeLessThanOrEqual(plus().getBoundingClientRect().top);
+    });
+
+    await step("se referme avec Échap", async () => {
+      await userEvent.keyboard("{Escape}");
+      await waitFor(() => expect(menu()).toBeNull());
+      await expect(plus()).toHaveAttribute("aria-expanded", "false");
+    });
+
+    await step("se referme au choix d'une action", async () => {
+      await userEvent.click(plus());
+      await userEvent.click(await screen.findByRole("menuitem", { name: "Paramètres" }));
+      await waitFor(() => expect(menu()).toBeNull());
+    });
+  },
 };
 
 // -----------------------------------------------------------------------
