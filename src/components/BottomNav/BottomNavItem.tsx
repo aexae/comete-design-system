@@ -43,7 +43,7 @@ export interface BottomNavItemProps {
  *
  * Item individuel de la BottomNav.
  * Gère les états hover, pressed, focus (via FocusRing) et disabled via React Aria.
- * Utilise un cross-fade avec rotation pour la transition vers l'icône Cancel
+ * Utilise un cross-fade avec rotation pour la transition vers l'icône Close (croix seule, sans cercle)
  * lorsque `isOpen` est true.
  */
 export function BottomNavItem({
@@ -91,9 +91,9 @@ export function BottomNavItem({
               </span>
               <span className={styles.iconClose}>
                 <Icon
-                  icon="Cancel"
+                  icon="Close"
                   size={24}
-                  appearance="filled"
+                  appearance="outlined"
                   color={closeColor}
                 />
               </span>

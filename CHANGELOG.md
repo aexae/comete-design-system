@@ -80,7 +80,8 @@ entre versions alpha.
   supprimé), le libellé reste **visible** (nom accessible conservé).
   `BottomNavAction` est inchangé. Le bleu (`--text-selected`) reste réservé à
   `data-selected` : un item qui ouvre un popup n'est pas sélectionné.
-  `prefers-reduced-motion` désactive les transitions.
+  L'icône de fermeture est la **croix seule** (`Close`), plus la croix dans un cercle
+  (`Cancel`). `prefers-reduced-motion` désactive les transitions.
 - **Bouton « Effacer » — `Select`, `DatePicker`, `TimePicker`, `MonthPicker`,
   `WeekPicker`, `YearPicker`** : le bouton n'est plus affiché en permanence. Il
   est **masqué au repos** et révélé au **survol ou au focus** du champ, en
