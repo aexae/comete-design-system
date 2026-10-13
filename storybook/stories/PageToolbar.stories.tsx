@@ -94,7 +94,7 @@ export const Full: Story = {
     // La recette « Filtres » (option B) vit DANS la barre : bouton « Filtres »
     // dans le slot `filters`, recherche + actions sur la même ligne. Tags des
     // critères actifs sous la barre. Popup partagée avec Recipes/Filtres.
-    const [f, setF] = useState<Filters>(initialFilters);
+    const [f, setF] = useState<Filters>(emptyFilters);
     const { views, save, remove } = useSavedViews();
     return (
       <Gutters>
@@ -158,7 +158,7 @@ export const Full: Story = {
 export const SearchOnly: Story = {
   name: "Search only",
   render: function SearchOnlyToolbar() {
-    const [f, setF] = useState<Filters>(() => ({ ...emptyFilters(), secteur: ["Événementiel"] }));
+    const [f, setF] = useState<Filters>(emptyFilters);
     const { views, save } = useSavedViews();
     return (
       <Gutters>

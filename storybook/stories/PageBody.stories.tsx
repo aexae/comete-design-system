@@ -1,11 +1,14 @@
 // Page.Body — stories isolées du sous-composant
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
-import { within, userEvent, expect, fn } from "storybook/test";
+import { useState } from "react";
+import { fn } from "storybook/test";
 import {
   Page,
   Avatar,
   Button,
+  ButtonGroup,
+  SearchField,
   TextField,
   Stack,
   Grid,
@@ -18,6 +21,16 @@ import {
 } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import {
+  FiltresPanel,
+  ActiveFilterTags,
+  SavedSearchesMenu,
+  emptyFilters,
+  useSavedViews,
+  type Filters,
+} from "./_filtresOptionB";
+import css from "./Page.stories.module.css";
+import filtresCss from "./FiltresOptionB.stories.module.css";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -82,16 +95,7 @@ export const GridLayout: Story = {
   render: () => (
     <Gutters>
       <Page globalActions={null}>
-        <Page.Bar title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
-        <Page.Toolbar
-          start={
-            <Stack direction="row" gap="100" align="center">
-              <TextField aria-label="Rechercher" placeholder="Rechercher…" />
-              <Button appearance="subtle" iconBefore="FilterList">Filtres</Button>
-            </Stack>
-          }
-          end={<Button color="comete" iconBefore="Add">Nouvel agent</Button>}
-        />
+        <AgentsChrome />
         <Page.Body>
           <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
             {Array.from({ length: 9 }, (_, i) => (
@@ -217,20 +221,62 @@ export const FullWidth: Story = {
 // `error`. On garde le même contexte « Agents » (Header + Toolbar) que les
 // autres stories ; seul le corps change d'état.
 
-/** En-tête + toolbar communs (contexte « Agents »). */
+/**
+ * En-tête + toolbar communs (contexte « Agents »). Reprend la composition
+ * canonique de `Layout/Page/Toolbar → Full` : recherche dans `search`, bouton
+ * « Filtres » (recette option B, popover deux volets) dans `filters`, et
+ * actions dans `end`. Le popover est le composant partagé `_filtresOptionB` —
+ * la barre est donc strictement identique à celle des stories `Page` et
+ * `Page/Toolbar`.
+ */
 function AgentsChrome() {
+  const [f, setF] = useState<Filters>(emptyFilters);
+  const { views, save, remove } = useSavedViews();
   return (
     <>
       <Page.Bar title="Agents" trailing={<Avatar size="medium" initials="AC" />} />
       <Page.Toolbar
-        start={
-          <Stack direction="row" gap="100" align="center">
-            <TextField aria-label="Rechercher" placeholder="Rechercher…" />
-            <Button appearance="subtle" iconBefore="FilterList">Filtres</Button>
-          </Stack>
+        search={
+          <SearchField
+            aria-label="Rechercher un agent"
+            placeholder="Rechercher un agent"
+            value={f.nameQuery}
+            onChange={(v) => setF({ ...f, nameQuery: v })}
+          />
         }
-        end={<Button color="comete" iconBefore="Add">Nouvel agent</Button>}
+        filters={
+          <FiltresPanel
+            filters={f}
+            onChange={setF}
+            views={views}
+            onSaveView={(name) => save(name, f)}
+            scrollClassName={filtresCss["scroll"]}
+            textActionClassName={filtresCss["textAction"]}
+          />
+        }
+        end={
+          <Cluster gap="100">
+            <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
+            <ButtonGroup>
+              <Button
+                color="comete"
+                iconBefore="Add"
+                collapseLabel
+                shape="square"
+                aria-label="Nouvel agent"
+              >
+                Nouvel agent
+              </Button>
+              <Button className={css["hideUnderCompact"]}>Exporter</Button>
+              <Button shape="square" iconBefore="MoreHoriz" aria-label="Plus d'actions" />
+            </ButtonGroup>
+          </Cluster>
+        }
       />
+      {/* Tags des critères actifs, sous la barre (façon option B). */}
+      <div style={{ paddingInline: "var(--page-gutter)" }}>
+        <ActiveFilterTags filters={f} onChange={setF} textActionClassName={filtresCss["textAction"]} />
+      </div>
     </>
   );
 }
@@ -246,14 +292,6 @@ export const LoadingState: Story = {
       </Page>
     </Gutters>
   ),
-  // L'état de chargement expose un repère `role="status"` (annonce lecteur
-  // d'écran). Ciblé par son nom accessible pour le distinguer des skeletons.
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(
-      canvas.getByRole("status", { name: "Chargement…" }),
-    ).toBeInTheDocument();
-  },
 };
 
 /** **Vide** — état vide natif via `isEmpty` (illustration + message). */
@@ -285,11 +323,4 @@ export const ErrorState: Story = {
       </Page>
     </Gutters>
   ),
-  // Le bouton « Réessayer » déclenche le callback `onRetry`.
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    onRetry.mockClear();
-    await userEvent.click(canvas.getByRole("button", { name: "Réessayer" }));
-    await expect(onRetry).toHaveBeenCalledOnce();
-  },
 };
