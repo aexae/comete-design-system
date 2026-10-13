@@ -1,21 +1,23 @@
 // SideNav.Item — stories avec props exposées dans les controls
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
-import { SideNavItem } from "@aexae/comete-design-system/components";
+import { SideNav, SideNavItem } from "@aexae/comete-design-system/components";
 import type { SideNavItemProps } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { MainCouranteShell } from "./_appShell";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
+/** Le composant est montré DANS le template applicatif (Page.Bar + SideNav + contenu). */
 function NavContext({ children }: { children: ReactNode }) {
   return (
-    <div style={{ width: 240, background: "var(--background-surface-default)", padding: "var(--space075) var(--space100)" }}>
-      {children}
-    </div>
+    <MainCouranteShell
+      nav={<SideNav.Section title="Manager">{children}</SideNav.Section>}
+    />
   );
 }
 
@@ -51,7 +53,7 @@ const meta = {
         />
       ),
     },
-    layout: "centered",
+    layout: "fullscreen",
     design: { type: "figma", url: figmaUrl("4277:13347") },
   },
   decorators: [

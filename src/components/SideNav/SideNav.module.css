@@ -1,17 +1,13 @@
 /* SideNav — Comete Design System
-   Pattern Jira : en mode replié (collapsed), la sidebar occupe 0px et
-   disparaît ; la réouverture se fait via `<SideNav.Trigger />` (placé côté
-   consommateur dans `Page.Bar`). Au survol du Trigger (peek), la sidebar
-   s'affiche en OVERLAY par-dessus le contenu : le container garde une largeur
-   de 0 (le contenu principal NE bouge PAS), et la `<nav>` passe en
-   `position: absolute` puis glisse depuis la gauche (translateX -100% → 0)
-   avec une ombre portée. Pas de transition de largeur, donc aucun reflow ni
-   layout shift. En mode déployé (non replié), rien de tout ça : la nav est en
-   flux et pousse le contenu, comme un panneau latéral classique. */
+   Navigation latérale PERMANENTE (tablette / desktop) : `expanded` (240px) ou
+   `rail` (80px). Elle ne disparaît jamais et ne s'agrandit jamais au survol ; le
+   passage de l'un à l'autre se fait par le bouton de bascule de l'en-tête (ou
+   Ctrl/Cmd+Shift+E). Toujours en flux : elle pousse le contenu, comme un panneau
+   latéral classique. Sur mobile web, l'app l'affiche dans un `Drawer` (left) ;
+   en app mobile, pas de SideNav (BottomNav). */
 
 /* ------------------------------------------------------------------ */
-/* Container — flex child ; porte la largeur en flux (déployé) et sert
-   de contexte de positionnement pour l'overlay de peek (replié).      */
+/* Container — flex child ; porte la largeur en flux (240px déployé, 80px en rail). */
 
 .container {
   /* Largeur du rail : 80px (maquette Figma « ❖ Side navigation »). Items de 64px
@@ -31,15 +27,8 @@
   width: var(--sidenav-rail-width);
 }
 
-/* Replié (hidden) : aucune largeur réservée — le contenu principal occupe toute
-   la place. Reste ainsi même en peek (l'overlay ne repousse pas le contenu). */
-.container[data-collapsed] {
-  width: 0;
-}
-
 /* ------------------------------------------------------------------ */
-/* SideNav — en flux quand déployé (pousse le contenu) ; overlay glissant
-   quand replié.                                                        */
+/* SideNav — toujours en flux (pousse le contenu).                      */
 
 .sideNav {
   /* Retrait horizontal COMMUN (en plus de la gouttière de 8px de la nav) : en-tête,
@@ -58,35 +47,6 @@
   box-sizing: border-box;
 }
 
-/* Replié : la nav quitte le flux et devient un overlay. Masquée par défaut
-   (hors écran à gauche, transparente et non focusable), prête à glisser. Le
-   fond, la bordure et le padding de base sont conservés. */
-.sideNav[data-collapsed] {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 240px;
-  z-index: var(--z-index-sticky);
-  transform: translateX(-100%);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition:
-    transform var(--duration-normal) var(--easing-default),
-    opacity var(--duration-normal) var(--easing-default),
-    visibility var(--duration-normal) var(--easing-default);
-}
-
-/* Peek : la nav glisse par-dessus le contenu (translateX 0) avec une ombre
-   portée. Le container garde width: 0 → le contenu principal ne bouge pas. */
-.sideNav[data-collapsed][data-peeking] {
-  transform: translateX(0);
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  box-shadow: var(--elevation-small);
-}
-
 /* ------------------------------------------------------------------ */
 /* Body — zone scrollable entre header et footer épinglés.
    Seules les sections + items défilent ; header et footer restent fixes.   */
@@ -99,14 +59,19 @@
 
   /* Gouttière réservée en permanence : les items ne se décalent pas quand le
      thumb apparaît au survol, et leur fond hover/selected s'arrête avant elle
-     (ne passe jamais sous la scrollbar). */
+     (ne passe jamais sous la scrollbar). Elle est logée DANS la gouttière droite de
+     la nav (marge négative égale à sa largeur) : l'espace avant et après un item
+     est identique (8px de chaque côté) — avant, la gouttière s'ajoutait au retrait
+     de droite (~19px à droite pour 8px à gauche). */
+  --sidenav-scrollbar-width: 8px;
   scrollbar-gutter: stable;
+  margin-inline-end: calc(-1 * var(--sidenav-scrollbar-width));
 
-  /* Firefox : scrollbar fine, thumb transparent au repos (transition douce
-     de la couleur, révélée au survol de la nav ci-dessous). */
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
-  transition: scrollbar-color var(--duration-normal) var(--easing-default);
+  /* Chrome / Safari : scrollbar de 8px stylée par `::-webkit-scrollbar` (plus bas).
+     Les propriétés standard (`scrollbar-width` / `scrollbar-color`) y PRENDRAIENT le
+     pas (Chrome ≥ 121 : barre « thin » d'~10px) et fausseraient la gouttière : elles
+     sont donc réservées aux navigateurs sans `::-webkit-scrollbar` (Firefox), voir le
+     bloc `@supports` juste après `.body`. */
 
   /* Indicateur de débordement — CSS pur (technique des scroll-shadows) :
      un fondu discret apparaît en bas tant qu'il reste du contenu, et en haut
@@ -124,15 +89,26 @@
   background-attachment: local, local, scroll, scroll;
 }
 
-/* Au survol de la nav ENTIÈRE (header/corps/footer), le thumb devient visible.
-   Le scroll reste fonctionnel en permanence ; seul l'affichage du thumb est
-   conditionné. Track toujours transparent. */
-.sideNav:hover .body {
-  scrollbar-color: var(--border-default) transparent;
+/* Firefox : scrollbar fine, thumb transparent au repos (transition douce de la
+   couleur), révélé au survol de la nav ENTIÈRE. */
+@supports not selector(::-webkit-scrollbar) {
+  .body {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color var(--duration-normal) var(--easing-default);
+  }
+
+  .sideNav:hover .body {
+    scrollbar-color: var(--border-default) transparent;
+  }
 }
 
+/* Chrome / Safari — au survol de la nav ENTIÈRE (header/corps/footer), le thumb
+   devient visible. Le scroll reste fonctionnel en permanence ; seul l'affichage du
+   thumb est conditionné. Track toujours transparent. */
+
 .body::-webkit-scrollbar {
-  width: 8px;
+  width: var(--sidenav-scrollbar-width);
 }
 
 .body::-webkit-scrollbar-track {
@@ -218,7 +194,7 @@
   text-overflow: ellipsis;
 }
 
-/* Bouton de bascule (replier/déployer) — poussé à droite en déployé/peek,
+/* Bouton de bascule (réduire en rail / déployer) — poussé à droite en déployé,
    centré en rail (cf. section Rail). */
 .headerToggle {
   margin-left: auto;
@@ -497,11 +473,6 @@
   margin-top: var(--space100);
 }
 
-/* Mode collapsed (hidden) : la sidebar est invisible (width 0 + overflow
-   hidden). Aucun besoin de masquer le contenu individuellement — l'overflow
-   s'en charge. Le consommateur place `<SideNav.Trigger />` dans le `leading` de
-   sa `Page.Bar` pour rouvrir (cas mobile). */
-
 /* ------------------------------------------------------------------ */
 /* Rail (80px) — maquette Figma « ❖ Side navigation » (17480:10191)     */
 /*
@@ -533,6 +504,7 @@
 .sideNav[data-mode="rail"] .body {
   scrollbar-gutter: auto;
   scrollbar-width: none;
+  margin-inline-end: 0;
 }
 
 .sideNav[data-mode="rail"] .body::-webkit-scrollbar {

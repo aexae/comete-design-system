@@ -438,7 +438,7 @@ describe("SideNav", () => {
       expect(nav.parentElement).toHaveAttribute("data-mode", "rail");
     });
 
-    it("should NOT peek (grow) when the rail is hovered", async () => {
+    it("should NOT grow when the rail is hovered", async () => {
       vi.useFakeTimers();
       try {
         renderRail();
@@ -471,74 +471,62 @@ describe("SideNav", () => {
     });
   });
 
-  // Overlay mobile web ----------------------------------------------------
+  // Mode permanent : pas de repli, pas de peek, pas de Trigger ---------------
 
-  describe("isOverlay (mobile web)", () => {
-    const Harness = ({ onModeChange }: { onModeChange?: (m: string) => void }) => (
-      <SideNav.Provider isOverlay defaultMode="hidden" onModeChange={onModeChange}>
-        <SideNav.Trigger />
-        <SideNav>
-          <SideNav.Header companyName="App" />
-          <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
-        </SideNav>
-        <main>contenu</main>
-      </SideNav.Provider>
-    );
-
-    it("should never reserve width and stay hidden until opened", () => {
-      render(<Harness />);
-      const nav = screen.getByRole("navigation", { hidden: true });
-      expect(nav.parentElement).toHaveAttribute("data-collapsed");
-      expect(nav).not.toHaveAttribute("data-peeking");
-    });
-
-    it("should open as an overlay (not pushing) when the trigger is pressed", async () => {
-      render(<Harness />);
-      await userEvent.click(screen.getByRole("button", { name: /navigation/i }));
-      const nav = screen.getByRole("navigation");
-      expect(nav).toHaveAttribute("data-mode", "expanded");
-      expect(nav).toHaveAttribute("data-peeking");
-      // Le conteneur reste en mode « sans largeur » : le contenu n'est pas poussé.
-      expect(nav.parentElement).toHaveAttribute("data-collapsed");
-    });
-
-    it("should close on Escape, on item click and on outside press", async () => {
-      const onModeChange = vi.fn();
-      render(<Harness onModeChange={onModeChange} />);
-      const trigger = () => screen.getByRole("button", { name: /navigation/i });
-
-      await userEvent.click(trigger());
-      await userEvent.keyboard("{Escape}");
-      expect(onModeChange).toHaveBeenLastCalledWith("hidden");
-
-      await userEvent.click(trigger());
-      const link = screen.getByRole("link", { name: "Agents" });
-      link.addEventListener("click", (e) => e.preventDefault(), { once: true });
-      await userEvent.click(link);
-      expect(onModeChange).toHaveBeenLastCalledWith("hidden");
-
-      await userEvent.click(trigger());
-      await userEvent.click(screen.getByText("contenu"));
-      expect(onModeChange).toHaveBeenLastCalledWith("hidden");
-    });
-
-    it("should treat rail as hidden (no rail on mobile web)", () => {
+  describe("navigation permanente", () => {
+    it("should never expose a collapsed or peeking state", () => {
       render(
-        <SideNav.Provider isOverlay defaultMode="rail">
+        <SideNav.Provider>
           <SideNav>
             <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
           </SideNav>
         </SideNav.Provider>,
       );
-      expect(screen.getByRole("navigation", { hidden: true })).toHaveAttribute("data-mode", "hidden");
+      const nav = screen.getByRole("navigation");
+      expect(nav).not.toHaveAttribute("data-collapsed");
+      expect(nav).not.toHaveAttribute("data-peeking");
+      expect(nav.parentElement).not.toHaveAttribute("data-collapsed");
     });
 
-    it("should not render the header toggle in overlay mode (only the Trigger)", async () => {
-      render(<Harness />);
-      await userEvent.click(screen.getByRole("button", { name: /navigation/i }));
-      // Ouvert : le Trigger s'appelle « Réduire la navigation » ; le bouton de bascule
-      // de l'en-tête (même libellé en expanded) ne doit PAS s'y ajouter.
-      expect(screen.getAllByRole("button", { name: "Réduire la navigation" })).toHaveLength(1);
+    it("should no longer expose the removed Trigger / hidden mode API", () => {
+      expect((SideNav as unknown as Record<string, unknown>)["Trigger"]).toBeUndefined();
+    });
+
+    it("should toggle expanded ⇄ rail with Ctrl+Shift+E (never hidden)", async () => {
+      const onModeChange = vi.fn();
+      render(
+        <SideNav.Provider onModeChange={onModeChange}>
+          <SideNav>
+            <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
+          </SideNav>
+        </SideNav.Provider>,
+      );
+      await userEvent.keyboard("{Control>}{Shift>}E{/Shift}{/Control}");
+      expect(onModeChange).toHaveBeenLastCalledWith("rail");
+      await userEvent.keyboard("{Control>}{Shift>}E{/Shift}{/Control}");
+      expect(onModeChange).toHaveBeenLastCalledWith("expanded");
+    });
+
+    it("should hide the header toggle when showToggle is false (Drawer on mobile web)", () => {
+      render(
+        <SideNav.Provider>
+          <SideNav>
+            <SideNav.Header companyName="App" showToggle={false} />
+          </SideNav>
+        </SideNav.Provider>,
+      );
+      expect(screen.queryByRole("button", { name: /navigation/i })).toBeNull();
+    });
+
+    it("should show the header toggle by default under a Provider", () => {
+      render(
+        <SideNav.Provider>
+          <SideNav>
+            <SideNav.Header companyName="App" />
+          </SideNav>
+        </SideNav.Provider>,
+      );
+      expect(screen.getByRole("button", { name: "Réduire la navigation" })).toBeInTheDocument();
     });
   });
 });
