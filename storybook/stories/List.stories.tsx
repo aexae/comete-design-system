@@ -344,9 +344,9 @@ export const Interactive: Story = {
 };
 
 /**
- * **Non lu** — `isUnread` sur `ListItem` / `ListItemButton` : texte principal en gras +
- * pastille bleue dans la marge gauche, et « Non lu » annoncé aux lecteurs d'écran
- * (masqué visuellement). Ici une boîte de notifications : ouvrir un message le marque lu.
+ * **Non lu** — `isUnread` sur `ListItem` / `ListItemButton` : texte principal en medium +
+ * pastille (`Badge` information) après le contenu, en fin de ligne, et « Non lu » annoncé
+ * aux lecteurs d'écran (masqué visuellement). Ici une boîte de notifications : ouvrir un message le marque lu.
  * Les séparateurs subtle (`hasDividers`) aident à suivre une liste dense.
  */
 export const Unread: Story = {
@@ -402,9 +402,9 @@ export const UnreadInteractions: Story = {
 };
 
 /**
- * **Séparateurs** — `hasDividers` affiche un filet subtle (`--border-subtle`) entre les
- * items : pas de filet après le dernier item ni avant un `ListHead`. Pour séparer par
- * l'air plutôt que par un filet, voir `gap`.
+ * **Séparateurs** — `hasDividers` affiche un filet subtle (`--border-subtle`) entre chaque
+ * item, y compris entre la fin d'une section et le `ListHead` suivant ; pas de filet
+ * après le dernier élément. Pour séparer par l'air plutôt que par un filet, voir `gap`.
  */
 export const Dividers: Story = {
   args: { hasDividers: true },

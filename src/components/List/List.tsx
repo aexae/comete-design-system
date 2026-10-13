@@ -10,6 +10,7 @@ import {
   VisuallyHidden,
   type ButtonProps as AriaButtonProps,
 } from "react-aria-components";
+import { Badge } from "../Badge/index.js";
 import { Skeleton } from "../Skeleton/index.js";
 import { DataStateMessage } from "../_states/DataStateMessage.js";
 import styles from "./List.module.css";
@@ -45,10 +46,11 @@ export interface ListProps {
    */
   isBordered?: boolean;
   /**
-   * Affiche un **séparateur subtle** (filet fin `--border-subtle`) entre les items.
-   * Peint en `box-shadow` inset : aucun décalage de la mise en page. Pas de filet
-   * après le dernier item ni avant un `ListHead`. À préférer à `gap` quand les
-   * lignes sont jointives et nombreuses ; `gap` sépare par l'air, sans filet.
+   * Affiche un **séparateur subtle** (filet fin `--border-subtle`) entre chaque item
+   * — y compris entre la fin d'une section et le `ListHead` suivant. Peint en
+   * `box-shadow` inset : aucun décalage de la mise en page. Pas de filet après le
+   * dernier élément de la liste. À préférer à `gap` quand les lignes sont
+   * jointives et nombreuses ; `gap` sépare par l'air, sans filet.
    * @default false
    */
   hasDividers?: boolean;
@@ -124,8 +126,9 @@ export interface ListItemProps {
   isDisabled?: boolean;
   /**
    * Marque l'item comme **non lu** (notification, message, évènement à traiter) :
-   * texte principal en gras + pastille bleue dans la marge gauche. L'état est aussi
-   * annoncé aux lecteurs d'écran (« Non lu », masqué visuellement). @default false
+   * texte principal en medium + pastille (`Badge` information) **après** le contenu,
+   * en fin de ligne. L'état est aussi annoncé aux lecteurs d'écran (« Non lu »,
+   * masqué visuellement). @default false
    */
   isUnread?: boolean;
   /** Classe CSS additionnelle. */
@@ -142,8 +145,9 @@ export interface ListItemButtonProps
   /** Marque l'item comme sélectionné (état visuel + `aria-current`). */
   isSelected?: boolean;
   /**
-   * Marque l'item comme **non lu** : texte principal en gras + pastille bleue dans la
-   * marge gauche, annoncé aux lecteurs d'écran (« Non lu », masqué visuellement).
+   * Marque l'item comme **non lu** : texte principal en medium + pastille (`Badge`
+   * information) après le contenu, en fin de ligne ; annoncé aux lecteurs d'écran
+   * (« Non lu », masqué visuellement).
    * @default false
    */
   isUnread?: boolean;
@@ -419,11 +423,24 @@ export function ListItem({
     >
       {isUnread && <VisuallyHidden>Non lu</VisuallyHidden>}
       {children}
+      {isUnread && <UnreadBadge />}
     </li>
   );
 }
 
 ListItem.displayName = "ListItem";
+
+// -----------------------------------------------------------------------
+// Pastille « non lu » — `Badge` information (point) en fin de ligne, décoratif :
+// l'état est porté par le texte masqué « Non lu ».
+
+function UnreadBadge(): ReactElement {
+  return (
+    <span className={styles.unreadBadge} aria-hidden="true">
+      <Badge appearance="information" importance="low" />
+    </span>
+  );
+}
 
 // -----------------------------------------------------------------------
 // Helper interne — sépare `<ListItemSecondaryAction>` du reste des enfants
@@ -484,6 +501,7 @@ export function ListItemButton({
       >
         {isUnread && <VisuallyHidden>Non lu</VisuallyHidden>}
         {main}
+        {isUnread && <UnreadBadge />}
       </AriaButton>
       {secondary}
     </li>

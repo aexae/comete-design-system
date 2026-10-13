@@ -40,11 +40,12 @@
   overflow: hidden;
 }
 
-/* Séparateurs subtle (prop `hasDividers`) : filet fin entre les items, en
-   `box-shadow` inset (aucun décalage). Ni après le dernier item, ni avant un
-   `ListHead` (le titre de section sépare déjà). `:is()` cible l'item statique
-   (`.item`) et le wrapper de `ListItemButton` (`.itemButtonWrapper`). */
-.list[data-dividers] > :is(.item, .itemButtonWrapper):not(:last-child):not(:has(+ .head)) {
+/* Séparateurs subtle (prop `hasDividers`) : filet fin sous chaque item, en
+   `box-shadow` inset (aucun décalage) — y compris entre la fin d'une section et
+   le `ListHead` suivant. Pas de filet après le dernier élément. `:is()` cible
+   l'item statique (`.item`) et le wrapper de `ListItemButton`
+   (`.itemButtonWrapper`). */
+.list[data-dividers] > :is(.item, .itemButtonWrapper):not(:last-child) {
   box-shadow: inset 0 calc(-1 * var(--size0125)) 0 var(--border-subtle);
 }
 
@@ -153,23 +154,18 @@
   color: var(--text-selected);
 }
 
-/* Item non lu (prop `isUnread`) : texte principal en gras + pastille dans la marge
-   gauche (centrée verticalement, hors du flux : n'altère pas l'alignement du
-   contenu). `.item` porte `position: relative` (ancre). */
-.item[data-unread]::before {
-  content: "";
-  position: absolute;
-  left: var(--space050);
-  top: 50%;
-  width: var(--space100);
-  height: var(--space100);
-  transform: translateY(-50%);
-  border-radius: var(--radius-round);
-  background-color: var(--background-selected-bold-default);
+/* Item non lu (prop `isUnread`) : texte principal en medium + pastille (`Badge`
+   information) APRÈS le contenu, en fin de ligne. `margin-inline-start: auto`
+   la pousse au bord même si le texte ne remplit pas la ligne. */
+.item[data-unread] .itemTextPrimary {
+  font-weight: var(--font-weight-medium);
 }
 
-.item[data-unread] .itemTextPrimary {
-  font-weight: var(--font-weight-semibold);
+.unreadBadge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  margin-inline-start: auto;
 }
 
 /* Item désactivé — texte sourd, curseur not-allowed sur les boutons. */

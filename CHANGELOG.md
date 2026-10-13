@@ -12,11 +12,12 @@ entre versions alpha.
 ### Ajouté
 
 - **`List` — `hasDividers`** : séparateur **subtle** (`--border-subtle`) entre les items,
-  en `box-shadow` inset (aucun décalage), sans filet après le dernier item ni avant un
-  `ListHead`. Complète `gap` (séparation par l'air).
-- **`ListItem` / `ListItemButton` — `isUnread`** : item **non lu** — texte principal en gras
-  et pastille bleue dans la marge gauche ; « Non lu » est annoncé aux lecteurs d'écran
-  (masqué visuellement). Stories « Unread » et « Dividers ».
+  en `box-shadow` inset (aucun décalage), y compris entre la fin d'une section et le
+  `ListHead` suivant, sans filet après le dernier élément. Complète `gap` (séparation
+  par l'air).
+- **`ListItem` / `ListItemButton` — `isUnread`** : item **non lu** — texte principal en
+  medium et pastille (`Badge` information) après le contenu, en fin de ligne ; « Non lu »
+  est annoncé aux lecteurs d'écran (masqué visuellement). Stories « Unread » et « Dividers ».
 - **`Table` — `rowSeparation`** (`none` | `dividers` | `striped` | `elevated`, défaut
   `none`) : séparation visuelle des lignes pour les grands écrans — filet fin entre
   chaque ligne, bandes une ligne sur deux, ou ligne survolée **surélevée** (ombre
