@@ -105,6 +105,37 @@
   transition: background-color var(--duration-fast) var(--easing-default);
 }
 
+/* Séparation des lignes (prop `rowSeparation`, pensée pour les grands écrans).
+   Les filets sont peints en `box-shadow` inset sur les CELLULES (pas en
+   `border` sur la ligne) → aucun décalage d'une ligne au survol, quelle que
+   soit la densité. `:where()` garde une spécificité faible : hover et sélection
+   (déclarés plus bas) gardent la main sur les bandes. */
+:where(.table[data-row-separation="dividers"] .body) .row:not(:last-child) .cell {
+  box-shadow: inset 0 calc(-1 * var(--size0125)) 0 var(--border-subtle);
+}
+
+:where(.table[data-row-separation="striped"] .body) .row:nth-child(even) {
+  background-color: var(--background-neutral-subtlest-default);
+}
+
+/* Surélévation au survol (façon Gmail) : un filet très discret entre les lignes
+   (le plus léger du DS, `--border-subtle`) ET la ligne survolée qui passe
+   au-dessus de ses voisines (z-index) avec une ombre. Le filet reste en
+   `box-shadow` sur les cellules : aucun décalage au survol. */
+:where(.table[data-row-separation="elevated"] .body) .row {
+  position: relative;
+}
+
+:where(.table[data-row-separation="elevated"] .body) .row:not(:last-child) .cell {
+  box-shadow: inset 0 calc(-1 * var(--size0125)) 0 var(--border-subtle);
+}
+
+:where(.table[data-row-separation="elevated"] .body) .row:hover {
+  z-index: 1;
+  background-color: var(--background-surface-default);
+  box-shadow: var(--elevation-medium);
+}
+
 /* Row cliquable → cursor pointer + hover subtil */
 .row[data-clickable]:hover {
   background-color: var(--background-neutral-subtler-hovered);
@@ -260,6 +291,12 @@
   opacity: 1;
 }
 
+/* Colonne non triée : au survol, la flèche haut est un APERÇU du tri croissant —
+   atténuée, pour ne pas se confondre avec un tri réellement actif. */
+.headerCell[data-sort-direction="default"] .headerSortIcon {
+  color: var(--icon-subtlest);
+}
+
 /* Tri actif — flèche plus sombre. */
 .headerCell[data-sort-direction="ascending"] .headerSortIcon,
 .headerCell[data-sort-direction="descending"] .headerSortIcon {
@@ -300,14 +337,25 @@
 .pagination {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: var(--space200);
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space100) var(--space300);
   padding: var(--space050) var(--space100);
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-xs);
   color: var(--text-subtle);
   border-top: var(--size025) solid var(--border-subtle);
+}
+
+/* Droite : plage affichée + navigation entre pages. */
+.paginationEnd {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space100) var(--space300);
+  margin-inline-start: auto;
 }
 
 .paginationRowsPerPage {
@@ -319,12 +367,6 @@
 .paginationLabel {
   font-weight: var(--font-weight-regular);
   white-space: nowrap;
-}
-
-.paginationControls {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space025);
 }
 
 /* --------------------------------------------------------------------------

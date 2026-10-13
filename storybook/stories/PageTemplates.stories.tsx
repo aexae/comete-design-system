@@ -504,7 +504,7 @@ function AgentTableCore({
           Masqués hors état « données ». */}
       {isData &&
         (sel.selectedCount > 0 ? (
-          <TableSelectionBar count={sel.selectedCount} onClear={sel.clear}>
+          <TableSelectionBar count={sel.selectedCount} total={totalCount}>
             <ExportMenu
               trigger={<Button appearance="subtle" iconBefore="Download">Exporter la sélection</Button>}
               groups={[{ scope: "selection" }]}
@@ -793,7 +793,7 @@ export const Collection: Story = {
             onPageChange={setPage}
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={(n) => { setRowsPerPage(n); setPage(0); }}
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[5, 25, 50]}
             onClearFilters={reset}
             onExport={handleExport}
           />

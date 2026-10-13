@@ -23,5 +23,8 @@ export type {
   TableSelectionBarProps,
   TableAlign,
   TableHideBelow,
+  TableRowSeparation,
   TableSortDirection,
 } from "./Table";
+export { TablePager } from "./TablePager";
+export type { TablePagerProps } from "./TablePager";

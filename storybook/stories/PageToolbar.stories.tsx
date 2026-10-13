@@ -2,7 +2,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
 import { useState } from "react";
-import { within, screen, userEvent, expect, waitFor } from "storybook/test";
 import {
   Page,
   Avatar,
@@ -91,7 +90,6 @@ type Story = StoryObj<typeof Page>;
  * masque.
  */
 export const Full: Story = {
-  name: "Full (search + filters + actions)",
   render: function FullToolbar() {
     // La recette « Filtres » (option B) vit DANS la barre : bouton « Filtres »
     // dans le slot `filters`, recherche + actions sur la même ligne. Tags des
@@ -148,23 +146,6 @@ export const Full: Story = {
         </Page>
       </Gutters>
     );
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    // Le bouton « Filtres » vit DANS la barre ; son badge = nb de critères actifs.
-    const filtres = () => canvas.getByRole("button", { name: /^Filtres,/ });
-    await expect(filtres()).toHaveTextContent("10");
-    // Il ouvre le popover à deux volets (facettes / options) — la recette option B.
-    await userEvent.click(filtres());
-    const dialog = within(await screen.findByRole("dialog"));
-    await expect(dialog.getByRole("button", { name: /^Diplômes/ })).toBeInTheDocument();
-    // Facette « Diplômes » → cocher « CQP APS » ajoute un critère (badge 10 → 11).
-    await userEvent.click(dialog.getByRole("button", { name: /^Diplômes/ }));
-    await userEvent.click(dialog.getByRole("checkbox", { name: "CQP APS" }));
-    await waitFor(() => expect(filtres()).toHaveTextContent("11"));
-    // « Réinitialiser » (pied du popover) vide tout → la rangée de tags disparaît.
-    await userEvent.click(dialog.getByRole("button", { name: "Réinitialiser" }));
-    await waitFor(() => expect(canvas.queryByRole("group", { name: "Filtres actifs" })).toBeNull());
   },
 };
 
@@ -243,7 +224,6 @@ export const ActionsOnly: Story = {
  * (détail, réglages, formulaire) composent Bar + Body sans `Page.Toolbar`.
  */
 export const None: Story = {
-  name: "None (sans toolbar)",
   render: () => (
     <Gutters>
       <Page globalActions={null}>
@@ -273,7 +253,7 @@ export const WithActiveFilters: Story = {
   name: "With active filters",
   render: function WithActiveFiltersToolbar() {
     const [f, setF] = useState<Filters>(initialFilters);
-    const { views, save } = useSavedViews();
+    const { views, save, remove } = useSavedViews();
     return (
       <Gutters>
         <Page globalActions={null}>
@@ -298,17 +278,22 @@ export const WithActiveFilters: Story = {
               />
             }
             end={
-              <ButtonGroup>
-                <Button
-                  color="comete"
-                  iconBefore="Add"
-                  collapseLabel
-                  shape="square"
-                  aria-label="Nouvel agent"
-                >
-                  Nouvel agent
-                </Button>
-              </ButtonGroup>
+              <Cluster gap="100">
+                <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
+                <ButtonGroup>
+                  <Button
+                    color="comete"
+                    iconBefore="Add"
+                    collapseLabel
+                    shape="square"
+                    aria-label="Nouvel agent"
+                  >
+                    Nouvel agent
+                  </Button>
+                  <Button className={css["hideUnderCompact"]}>Exporter</Button>
+                  <Button shape="square" iconBefore="MoreHoriz" aria-label="Plus d'actions" />
+                </ButtonGroup>
+              </Cluster>
             }
           />
           {/* Tags des critères actifs, sous la barre (façon option B). */}

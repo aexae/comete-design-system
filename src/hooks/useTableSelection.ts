@@ -10,7 +10,6 @@
 // lignes actuellement affichées). Les clés sélectionnées d'autres pages
 // persistent dans la sélection ; seul `clear()` vide tout.
 import { useCallback, useMemo, useState } from "react";
-import type { MouseEvent as ReactMouseEvent } from "react";
 
 export interface UseTableSelectionOptions<K = string> {
   /**
@@ -48,13 +47,12 @@ export interface TableRowCheckboxProps {
 }
 
 /**
- * Props à étaler sur `TableRow` pour rendre **toute la ligne** cliquable
- * (bascule la sélection). Amélioration pointeur : la `Checkbox` reste le
- * contrôle clavier ; le `onClick` ignore les clics venant d'un contrôle
- * interactif (case, bouton, lien) pour éviter un double toggle.
+ * Props à étaler sur `TableRow` pour rendre **toute la ligne** cliquable (mode
+ * sélectionnable : un clic sur la ligne coche la case). Un contrôle interactif de
+ * la ligne (case, bouton, lien) garde la priorité — `TableRow` ignore leurs clics.
  */
 export interface TableRowClickProps {
-  onClick: (event: ReactMouseEvent<HTMLElement>) => void;
+  onToggleSelect: () => void;
 }
 
 export interface UseTableSelectionResult<K = string> {
@@ -103,7 +101,7 @@ export interface UseTableSelectionResult<K = string> {
  * ```tsx
  * const sel = useTableSelection({ keys: pageRows.map((r) => r.id) });
  *
- * <Table.SelectionBar count={sel.selectedCount} onClear={sel.clear}>…</Table.SelectionBar>
+ * <Table.SelectionBar count={sel.selectedCount} total={rows.length}>…</Table.SelectionBar>
  * <Table aria-label="Agents">
  *   <TableHead>
  *     <TableRow>
@@ -231,13 +229,9 @@ export function useTableSelection<K = string>(
 
   const getRowClickProps = useCallback(
     (key: K): TableRowClickProps => ({
-      onClick: (event) => {
-        // Laisse les contrôles interactifs (case à cocher, bouton, lien) gérer
-        // leur propre clic → évite le double toggle quand on clique la case.
-        const target = event.target as HTMLElement | null;
-        if (target?.closest('input,button,a,label,[role="checkbox"]')) return;
-        toggle(key);
-      },
+      // Le filtrage des contrôles interactifs (case, bouton, lien) est fait par
+      // `TableRow` : un bouton dans la ligne a la priorité sur le clic de ligne.
+      onToggleSelect: () => toggle(key),
     }),
     [toggle],
   );

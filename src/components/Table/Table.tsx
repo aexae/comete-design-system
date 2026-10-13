@@ -6,8 +6,8 @@
 import type { CSSProperties, ReactElement, ReactNode } from "react";
 import { Children, cloneElement, createContext, isValidElement, useContext } from "react";
 import { VisuallyHidden } from "react-aria-components";
-import { Button } from "../Button/index.js";
 import { Icon } from "../Icon/index.js";
+import { TablePager } from "./TablePager.js";
 import { Select } from "../Select/index.js";
 import { Skeleton } from "../Skeleton/index.js";
 import { DataStateMessage } from "../_states/DataStateMessage.js";
@@ -39,8 +39,19 @@ export type TableAlign = "left" | "center" | "right";
 export type TableHideBelow = "sm" | "md" | "lg";
 
 /**
+ * Séparation visuelle des lignes du corps (utile sur grand écran, où de longues
+ * lignes sans repère sont difficiles à suivre) :
+ * - `none`     — aucune séparation (défaut, comportement historique) ;
+ * - `dividers` — un filet fin entre chaque ligne ;
+ * - `striped`  — bandes : une ligne sur deux teintée ;
+ * - `elevated` — pas de filet : la ligne survolée se **surélève** (ombre légère,
+ *   façon Gmail) et ressort du reste de la liste.
+ */
+export type TableRowSeparation = "none" | "dividers" | "striped" | "elevated";
+
+/**
  * État de tri d'une colonne :
- * - `default`     — colonne non triée (icône double flèche)
+ * - `default`     — colonne non triée (flèche haut atténuée au survol seulement)
  * - `ascending`   — tri croissant (flèche haut)
  * - `descending`  — tri décroissant (flèche bas)
  */
@@ -83,6 +94,12 @@ export interface TableProps {
    * conteneur, aucun impact de mise en page). @default false
    */
   responsive?: boolean;
+  /**
+   * Séparation visuelle des lignes du corps : `none` | `dividers` | `striped` |
+   * `elevated`. Pensé pour les grands écrans. Voir {@link TableRowSeparation}.
+   * @default "none"
+   */
+  rowSeparation?: TableRowSeparation;
   /** Label accessible du tableau. */
   "aria-label"?: string;
   /** ID d'un élément qui labellise le tableau. */
@@ -182,6 +199,16 @@ export interface TableRowProps {
    */
   onPress?: () => void;
   /**
+   * Mode **sélectionnable** : un clic sur la ligne bascule sa sélection (équivalent
+   * de cocher la case). Un contrôle interactif **dans** la ligne (case à cocher,
+   * bouton, lien — y compris l'ancre `href`/`onPress` de la cellule primaire) a la
+   * **priorité** : son propre clic n'active jamais la ligne. Les clics faits pendant
+   * une sélection de texte sont ignorés. Compatible avec `href`/`onPress` : la
+   * sélection prend le clic de ligne, l'ancre reste activable par son propre clic.
+   * À brancher sur `useTableSelection().getRowClickProps(key)`.
+   */
+  onToggleSelect?: () => void;
+  /**
    * @deprecated Utiliser `href` (navigation) ou `onPress` (action). Le
    * `onClick` posé sur le `<tr>` ne crée ni rôle, ni ordre de tabulation, ni
    * gestion clavier : la ligne cliquable reste invisible au clavier et aux
@@ -240,8 +267,9 @@ export interface TableCellProps {
 export interface TableHeaderCellProps extends TableCellProps {
   /**
    * Rend la colonne triable — clic sur l'en-tête change le tri.
-   * L'indicateur (`UnfoldMore` / `KeyboardArrowUp` / `KeyboardArrowDown`)
-   * s'affiche automatiquement selon `sortDirection`.
+   * L'indicateur (flèche `KeyboardArrowUp` / `KeyboardArrowDown`) s'affiche
+   * automatiquement selon `sortDirection` ; au survol d'une colonne non triée, la
+   * flèche haut apparaît atténuée (aperçu du tri croissant).
    * @default false
    */
   isSortable?: boolean;
@@ -269,18 +297,18 @@ export interface TableSelectionBarProps {
    * rend rien quand `count` vaut 0 (elle apparaît dès qu'il y a une sélection).
    */
   count: number;
+  /**
+   * Nombre total de lignes sélectionnables (toutes pages) — précise le libellé :
+   * « 3 lignes sélectionnées **sur 120** ».
+   */
+  total?: number;
   /** Actions groupées (boutons) affichées à droite (supprimer, exporter…). */
   children?: ReactNode;
   /**
-   * Callback de désélection globale — rend un bouton « Tout désélectionner »
-   * avant les actions.
+   * Libellé personnalisé (reçoit le compte et le total). Par défaut :
+   * « N ligne(s) sélectionnée(s) [sur T] ».
    */
-  onClear?: () => void;
-  /**
-   * Libellé personnalisé (reçoit le compte). Par défaut :
-   * « N ligne(s) sélectionnée(s) ».
-   */
-  label?: (count: number) => string;
+  label?: (count: number, total?: number) => string;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -323,20 +351,25 @@ export interface TablePaginationProps {
   /** Nombre de lignes par page. */
   rowsPerPage: number;
   /**
-   * Options pour le sélecteur "lignes par page".
-   * @default [10, 25, 50]
+   * Options pour le sélecteur « résultats par page ».
+   * @default [25, 50, 100]
    */
   rowsPerPageOptions?: number[];
   /** Callback quand la page change (nouvelle page 0-indexée). */
   onPageChange: (nextPage: number) => void;
   /**
-   * Callback quand le nombre de lignes par page change. Si non fourni, le
-   * sélecteur "lignes par page" n'est pas affiché.
+   * Callback quand le nombre de résultats par page change. Si non fourni, le
+   * sélecteur « résultats par page » n'est pas affiché.
    */
   onRowsPerPageChange?: (nextRowsPerPage: number) => void;
-  /** Libellé "lignes par page". @default "Lignes par page :" */
+  /**
+   * Nombre d'emplacements de pages numérotées (`3` | `5` | `7`) — voir
+   * {@link TablePagerProps.visiblePages}. `3` pour une barre étroite. @default 7
+   */
+  visiblePages?: 3 | 5 | 7;
+  /** Libellé du sélecteur. @default "Résultats par page :" */
   labelRowsPerPage?: string;
-  /** Fonction rendant le libellé "N-M sur Total". */
+  /** Fonction rendant le libellé « N à M sur Total ». */
   labelDisplayedRows?: (info: TablePaginationLabelInfo) => string;
   /** Densité — hérite du parent `Table` par défaut. */
   density?: Density;
@@ -397,6 +430,7 @@ function TableRoot({
   stickyHeader = false,
   maxHeight,
   responsive = false,
+  rowSeparation = "none",
   "aria-label": ariaLabel,
   "aria-labelledby": ariaLabelledBy,
 }: TableProps): ReactElement {
@@ -407,6 +441,7 @@ function TableRoot({
       style={style}
       data-density={effectiveDensity}
       data-sticky-header={stickyHeader || undefined}
+      data-row-separation={rowSeparation === "none" ? undefined : rowSeparation}
       aria-label={ariaLabel}
       aria-labelledby={ariaLabelledBy}
     >
@@ -598,9 +633,11 @@ export function TableRow({
   style,
   href,
   onPress,
+  onToggleSelect,
   onClick,
 }: TableRowProps): ReactElement {
   const isInteractive = href !== undefined || onPress !== undefined;
+  const isSelectable = onToggleSelect !== undefined;
 
   if (process.env.NODE_ENV !== "production") {
     if (href !== undefined && onPress !== undefined) {
@@ -708,6 +745,12 @@ export function TableRow({
 
   const handleRowClick: React.MouseEventHandler<HTMLTableRowElement> = (e) => {
     if (hitsInternalInteractive(e.target as Element) || hasTextSelection()) return;
+    // Mode sélectionnable : le clic de ligne coche la case (la sélection prend le
+    // pas sur la délégation à l'ancre ; un contrôle interne garde la priorité).
+    if (isSelectable) {
+      onToggleSelect();
+      return;
+    }
     delegateToAnchor(e);
   };
 
@@ -725,9 +768,9 @@ export function TableRow({
       className={[styles.row, className].filter(Boolean).join(" ")}
       style={style}
       data-selected={isSelected || undefined}
-      data-clickable={isInteractive || onClick ? "true" : undefined}
+      data-clickable={isInteractive || isSelectable || onClick ? "true" : undefined}
       aria-selected={isSelected || undefined}
-      onClick={isInteractive ? handleRowClick : onClick}
+      onClick={isInteractive || isSelectable ? handleRowClick : onClick}
       onAuxClick={isInteractive ? handleRowAuxClick : undefined}
     >
       <RowAnchorContext.Provider value={isInteractive ? { href, onPress } : null}>
@@ -840,14 +883,10 @@ export function TableHeaderCell({
     }
   };
 
-  // Icône d'indicateur — `UnfoldMore` par défaut (double flèche), flèche
-  // simple quand un tri est actif.
-  const sortIcon =
-    sortDirection === "ascending"
-      ? "KeyboardArrowUp"
-      : sortDirection === "descending"
-        ? "KeyboardArrowDown"
-        : "UnfoldMore";
+  // Icône d'indicateur — flèche simple, jamais la double flèche « expand ». Colonne
+  // non triée : au survol, la flèche haut est un APERÇU du prochain tri (croissant),
+  // atténuée ; quand un tri est actif, la flèche reflète sa direction.
+  const sortIcon = sortDirection === "descending" ? "KeyboardArrowDown" : "KeyboardArrowUp";
 
   const ariaSort: React.AriaAttributes["aria-sort"] =
     !isSortable
@@ -897,19 +936,20 @@ TableHeaderCell.displayName = "TableHeaderCell";
 // -----------------------------------------------------------------------
 // TablePagination — contrôles de pagination (rows-per-page + prev/next)
 
-const DEFAULT_ROWS_PER_PAGE_OPTIONS = [10, 25, 50];
+const DEFAULT_ROWS_PER_PAGE_OPTIONS = [25, 50, 100];
 
 function defaultLabelDisplayedRows({
   from,
   to,
   count,
 }: TablePaginationLabelInfo): string {
-  return `${from}–${to} sur ${count}`;
+  return `${from} à ${to} sur ${count}`;
 }
 
 /**
- * TablePagination — Contrôles de pagination pour un `Table`. À rendre
- * en dessous du `<Table>`. Contrôlé — le parent gère `page` et
+ * TablePagination — Contrôles de pagination pour un `Table` : « Résultats par page »
+ * (sélecteur), plage affichée « 1–25 sur 200 » et pages précédente / suivante. À rendre
+ * en dessous du `<Table>` ; la navigation entre pages est `TablePager` (`Table.Pager`). Contrôlé — le parent gère `page` et
  * `rowsPerPage` et applique lui-même la découpe du dataset.
  *
  * ```tsx
@@ -930,7 +970,8 @@ export function TablePagination({
   rowsPerPageOptions = DEFAULT_ROWS_PER_PAGE_OPTIONS,
   onPageChange,
   onRowsPerPageChange,
-  labelRowsPerPage = "Lignes par page :",
+  visiblePages,
+  labelRowsPerPage = "Résultats par page :",
   labelDisplayedRows = defaultLabelDisplayedRows,
   density,
   className,
@@ -940,8 +981,6 @@ export function TablePagination({
   const lastPage = Math.max(0, Math.ceil(count / rowsPerPage) - 1);
   const from = count === 0 ? 0 : page * rowsPerPage + 1;
   const to = Math.min(count, (page + 1) * rowsPerPage);
-  const canPrev = page > 0;
-  const canNext = page < lastPage;
 
   const rowsPerPageItems = rowsPerPageOptions.map((n) => ({
     value: String(n),
@@ -953,10 +992,9 @@ export function TablePagination({
       className={[styles.pagination, className].filter(Boolean).join(" ")}
       style={style}
       data-density={effectiveDensity}
-      role="navigation"
-      aria-label="Pagination"
     >
-      {onRowsPerPageChange && (
+      {/* Gauche : résultats par page. */}
+      {onRowsPerPageChange ? (
         <div className={styles.paginationRowsPerPage}>
           <span className={styles.paginationLabel}>{labelRowsPerPage}</span>
           <Select
@@ -969,26 +1007,20 @@ export function TablePagination({
             density={effectiveDensity}
           />
         </div>
+      ) : (
+        <span />
       )}
-      <span className={styles.paginationLabel}>
-        {labelDisplayedRows({ from, to, count })}
-      </span>
-      <div className={styles.paginationControls}>
-        <Button
-          appearance="subtle"
-          density="compact"
-          iconBefore="ChevronLeft"
-          aria-label="Page précédente"
-          isDisabled={!canPrev}
-          onPress={() => onPageChange(page - 1)}
-        />
-        <Button
-          appearance="subtle"
-          density="compact"
-          iconBefore="ChevronRight"
-          aria-label="Page suivante"
-          isDisabled={!canNext}
-          onPress={() => onPageChange(page + 1)}
+      {/* Droite : plage affichée (annoncée aux lecteurs d'écran) + navigation. */}
+      <div className={styles.paginationEnd}>
+        <span className={styles.paginationLabel} aria-live="polite">
+          {labelDisplayedRows({ from, to, count })}
+        </span>
+        <TablePager
+          page={page}
+          pageCount={lastPage + 1}
+          onPageChange={onPageChange}
+          visiblePages={visiblePages}
+          density={effectiveDensity}
         />
       </div>
     </div>
@@ -1042,11 +1074,12 @@ TableView.displayName = "TableView";
 
 /**
  * TableSelectionBar — barre d'actions contextuelle affichée au-dessus du
- * tableau quand des lignes sont sélectionnées (« N lignes sélectionnées » +
- * actions groupées). Ne rend rien quand `count` vaut 0.
+ * tableau quand des lignes sont sélectionnées (« N lignes sélectionnées sur T » +
+ * actions groupées). Ne rend rien quand `count` vaut 0. Pas de bouton « Tout
+ * désélectionner » : la case à cocher d'en-tête du tableau joue ce rôle.
  *
  * ```tsx
- * <Table.SelectionBar count={selected.size} onClear={() => setSelected(new Set())}>
+ * <Table.SelectionBar count={selected.size} total={rows.length}>
  *   <Button appearance="subtle" iconBefore="Delete">Supprimer</Button>
  * </Table.SelectionBar>
  * <Table aria-label="…">…</Table>
@@ -1054,8 +1087,8 @@ TableView.displayName = "TableView";
  */
 export function TableSelectionBar({
   count,
+  total,
   children,
-  onClear,
   label,
   className,
   style,
@@ -1063,8 +1096,9 @@ export function TableSelectionBar({
   if (count <= 0) return null;
 
   const text = label
-    ? label(count)
-    : `${count} ligne${count > 1 ? "s" : ""} sélectionnée${count > 1 ? "s" : ""}`;
+    ? label(count, total)
+    : `${count} ligne${count > 1 ? "s" : ""} sélectionnée${count > 1 ? "s" : ""}` +
+      (total !== undefined ? ` sur ${total}` : "");
 
   return (
     <div
@@ -1078,16 +1112,7 @@ export function TableSelectionBar({
       <span className={styles.selectionBarCount} aria-live="polite">
         {text}
       </span>
-      {(onClear || children) && (
-        <div className={styles.selectionBarActions}>
-          {onClear && (
-            <Button appearance="subtle" onPress={onClear}>
-              Tout désélectionner
-            </Button>
-          )}
-          {children}
-        </div>
-      )}
+      {children && <div className={styles.selectionBarActions}>{children}</div>}
     </div>
   );
 }
@@ -1109,9 +1134,15 @@ export interface TableComponent {
   View: typeof TableView;
   /** Barre d'actions contextuelle « N lignes sélectionnées ». */
   SelectionBar: typeof TableSelectionBar;
+  /** Pied de tableau : « Résultats par page », plage affichée et navigation entre pages. */
+  Pagination: typeof TablePagination;
+  /** Navigation entre pages seule (précédente / pages numérotées / suivante). */
+  Pager: typeof TablePager;
 }
 
 export const Table: TableComponent = Object.assign(TableRoot, {
   View: TableView,
   SelectionBar: TableSelectionBar,
+  Pagination: TablePagination,
+  Pager: TablePager,
 });

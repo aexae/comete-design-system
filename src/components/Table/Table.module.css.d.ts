@@ -7,7 +7,7 @@ declare const styles: {
   readonly "headerLabel": string;
   readonly "headerSortIcon": string;
   readonly "pagination": string;
-  readonly "paginationControls": string;
+  readonly "paginationEnd": string;
   readonly "paginationLabel": string;
   readonly "paginationRowsPerPage": string;
   readonly "queryContainer": string;

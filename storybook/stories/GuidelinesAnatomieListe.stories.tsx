@@ -389,8 +389,8 @@ function Schema(): ReactElement {
                 <TablePagination
                   count={4}
                   page={0}
-                  rowsPerPage={10}
-                  rowsPerPageOptions={[10, 25, 50]}
+                  rowsPerPage={25}
+                  rowsPerPageOptions={[25, 50, 100]}
                   onPageChange={() => undefined}
                   onRowsPerPageChange={() => undefined}
                 />

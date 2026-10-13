@@ -1,0 +1,82 @@
+/* ==========================================================================
+   Pagination — Comète Design System
+   Navigation entre pages. 100 % tokens, zéro valeur hardcodée.
+   ========================================================================== */
+
+.pagination {
+  --pagination-button-size: var(--size400);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space025);
+  font-family: var(--font-family-primary);
+}
+
+/* Densité : la taille des boutons suit celle du composant parent. */
+.pagination[data-density="compact"] {
+  --pagination-button-size: var(--size300);
+}
+
+.pagination[data-density="touch"] {
+  --pagination-button-size: var(--size500);
+}
+
+/* Bouton de page / précédente / suivante. */
+.button {
+  min-width: var(--pagination-button-size);
+  height: var(--pagination-button-size);
+  padding: 0 var(--space075);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--radius100);
+  background: transparent;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xs);
+  color: var(--text-default);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--easing-default),
+              color var(--duration-fast) var(--easing-default);
+}
+
+.button[data-hovered] {
+  background-color: var(--background-neutral-subtler-hovered);
+}
+
+.button[data-pressed] {
+  background-color: var(--background-neutral-subtler-pressed);
+}
+
+.button[data-focus-visible] {
+  outline: var(--size025) solid var(--border-focused);
+  outline-offset: var(--size0125);
+}
+
+/* Page courante : pleine (comète), texte inversé. Déclarée après hover/pressed. */
+.button[aria-current="page"] {
+  background-color: var(--background-comete-bold-default);
+  color: var(--text-inverted);
+  cursor: default;
+}
+
+/* Précédente / suivante désactivées : icône atténuée, pas de hover. */
+.button[data-disabled] {
+  color: var(--text-disabled);
+  background: transparent;
+  cursor: not-allowed;
+}
+
+.icon {
+  display: inline-flex;
+}
+
+.ellipsis {
+  min-width: var(--pagination-button-size);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-subtle);
+  user-select: none;
+}

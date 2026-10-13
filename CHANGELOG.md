@@ -11,6 +11,17 @@ entre versions alpha.
 
 ### Ajouté
 
+- **`Table` — `rowSeparation`** (`none` | `dividers` | `striped` | `elevated`, défaut
+  `none`) : séparation visuelle des lignes pour les grands écrans — filet fin entre
+  chaque ligne, bandes une ligne sur deux, ou ligne survolée **surélevée** (ombre
+  légère, façon Gmail, avec un filet très discret entre les lignes). Filets en `box-shadow` sur les cellules : aucun
+  décalage au survol.
+- **`TableRow` — `onToggleSelect`** : mode **sélectionnable**. Un clic sur la ligne
+  coche la case ; un contrôle interactif dans la ligne (case, bouton, lien, ancre
+  `href`/`onPress`) garde la **priorité**. `useTableSelection().getRowClickProps(key)`
+  le renvoie prêt à étaler.
+- **`Table.SelectionBar` — `total`** : précise le libellé, « 3 lignes sélectionnées
+  **sur 120** ». `label` reçoit aussi le total.
 - **SideNav — rail de 80 px** : nouvel état **rail** (`mode="rail"`), pour tablette
   et desktop. Rail de **80 px** (maquette Figma) : chaque item empile l'icône
   (24 px) et un libellé court (10 px) dessous, barre de sélection de 4 × 20 px,
@@ -33,7 +44,24 @@ entre versions alpha.
   destination (`Page.Bar` compacte avec « Retour » + `List` en deux sections),
   sélectionné comme ses voisines, sans état ouvert.
 
+- **`TablePager` / `Table.Pager`** (sous-composant de `Table`) : navigation entre pages —
+  précédente / suivante encadrent des pages numérotées `1 2 3 4 5 … 8` (7 emplacements
+  au plus, largeur stable), page courante pleine (`aria-current="page"`), précédente /
+  suivante désactivées aux extrémités, taille selon la densité (28 / 32 / 40 px). Props :
+  `page` (0-indexée), `pageCount`, `onPageChange`, `density`, `aria-label`.
+  `visiblePages` (`3` | `5` | `7`, défaut `7`) réduit le nombre d'emplacements de pages
+  — `3` = fenêtre glissante de trois pages, pour les barres étroites (relayé par
+  `TablePagination`). `TablePagination` le compose ; `Table.Pagination` est aussi exposé.
+
 ### Modifié
+
+- **`TableHeaderCell` triable — icône de tri** : plus de double flèche « expand »
+  (`UnfoldMore`). Au survol d'une colonne non triée, la **flèche haut** apparaît
+  atténuée (aperçu du tri croissant) ; un tri actif garde sa flèche pleine.
+- **`TablePagination`** : le sélecteur s'intitule « **Résultats par page** » (au lieu de
+  « Lignes par page ») et propose **25 / 50 / 100** par défaut — **10 retiré**.
+- **`TablePagination`** : mise en page revue — « **Résultats par page** » à gauche,
+  « **1 à 25 sur 248** » (annoncé aux lecteurs d'écran) et la `Pagination` à droite.
 
 - **`BottomNavItem` — état ouvert allégé (item « Plus »)** : l'état
   `aria-expanded` animait cinq choses en parallèle (fond, croisement d'icônes avec
@@ -57,6 +85,14 @@ entre versions alpha.
 
 ### Changements cassants (BREAKING)
 
+- **`Table.SelectionBar`** : la prop **`onClear`** et le bouton « Tout
+  désélectionner » sont **supprimés** (doublon avec la case à cocher d'en-tête du
+  tableau). Retirer `onClear` des usages.
+- **`useTableSelection().getRowClickProps(key)`** renvoie `{ onToggleSelect }` (à étaler
+  sur `TableRow`, inchangé côté usage) au lieu de `{ onClick }` ; le filtrage des
+  contrôles interactifs est désormais fait par `TableRow`.
+- **`TablePagination`** : `rowsPerPageOptions` par défaut `[25, 50, 100]` (était
+  `[10, 25, 50]`) ; libellé par défaut « Résultats par page : ».
 - **SideNav — mode replié (`collapsed` / `hidden`) supprimé.** La navigation est
   permanente : `SideNavMode` vaut `"expanded" | "rail"`. Sur mobile web, utiliser un
   `Drawer placement="left"`.
