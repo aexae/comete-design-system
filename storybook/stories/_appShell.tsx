@@ -59,9 +59,9 @@ export function MainCouranteNav() {
  * (tablette / desktop) ou passe par-dessus (Drawer, mobile web). À placer dans
  * un `Page`, sous une `Page.Bar`.
  */
-export function DemoPageContent() {
+export function DemoPageContent({ isLoading = false }: { isLoading?: boolean }) {
   return (
-    <Page.Body>
+    <Page.Body isLoading={isLoading}>
       <SectionMessage appearance="information" style={{ marginBottom: 16 }}>
         Message d&apos;accueil (texte par défaut)
       </SectionMessage>
@@ -86,6 +86,8 @@ export interface MainCouranteShellProps {
   nav: ReactNode;
   /** Contenu principal de la page. @default <DemoPageContent /> */
   body?: ReactNode;
+  /** Affiche le squelette de chargement dans le contenu par défaut (ignoré si `body` est fourni). */
+  isPageLoading?: boolean;
   /** Mode initial de la navigation. @default "expanded" */
   mode?: SideNavMode;
   /** Logo de marque passé à `SideNav.Header` (défaut : logo icône Comète). */
@@ -105,7 +107,8 @@ export interface MainCouranteShellProps {
  */
 export function MainCouranteShell({
   nav,
-  body = <DemoPageContent />,
+  isPageLoading = false,
+  body = <DemoPageContent isLoading={isPageLoading} />,
   mode = "expanded",
   logo = <Logo product="cafe" format="icon" />,
   header,

@@ -200,6 +200,11 @@ function MobileWebDemo() {
                 showToggle={false}
               />
               <MainCouranteNav />
+              <SideNav.Footer>
+                <SideNav.FooterBrand>
+                  <Logo size={14} product="link" appearance="neutral" format="logo" />
+                </SideNav.FooterBrand>
+              </SideNav.Footer>
             </SideNav>
           </div>
         </SideNav.Provider>
@@ -265,6 +270,7 @@ export const Loading: Story = {
   parameters: { controls: { disable: true } },
   render: () => (
     <MainCouranteShell
+      isPageLoading
       nav={
         <>
           <SideNav.Skeleton count={4} />
