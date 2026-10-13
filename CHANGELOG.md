@@ -29,8 +29,22 @@ entre versions alpha.
   `placement="left"`, par-dessus le contenu ; **tablette et desktop** = navigation
   permanente, déployée ou en rail, qui ne disparaît jamais.
 
+- **Story BottomNav « Plus en page »** : l'alternative au popup — « Plus » est une
+  destination (`Page.Bar` compacte avec « Retour » + `List` en deux sections),
+  sélectionné comme ses voisines, sans état ouvert.
+
 ### Modifié
 
+- **`BottomNavItem` — état ouvert allégé (item « Plus »)** : l'état
+  `aria-expanded` animait cinq choses en parallèle (fond, croisement d'icônes avec
+  `rotate`/`scale`, agrandissement et descente de l'icône, effacement du
+  libellé). Il ne garde qu'**un seul signal** : le croisement d'icônes en
+  **fondu pur** (`--duration-fast`). Plus de `transform`, plus de fond (`::before`
+  supprimé), le libellé reste **visible** (nom accessible conservé).
+  `BottomNavAction` est inchangé. Le bleu (`--text-selected`) reste réservé à
+  `data-selected` : un item qui ouvre un popup n'est pas sélectionné.
+  L'icône de fermeture est la **croix seule** (`Close`), plus la croix dans un cercle
+  (`Cancel`). `prefers-reduced-motion` désactive les transitions.
 - **SideNav — retrait horizontal homogène** : en-tête, items, séparateurs, titres de
   section et pied partagent désormais **le même bord gauche** (variable
   `--sidenav-inset`, 20 px depuis le bord de la nav) ; ils étaient à 16 / 20 / 24 px.

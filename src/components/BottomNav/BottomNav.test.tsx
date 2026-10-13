@@ -1,4 +1,5 @@
 // Tests unitaires des composants BottomNav et BottomNavItem
+import { readFileSync } from "node:fs";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
@@ -208,5 +209,46 @@ describe("BottomNavItem", () => {
       </BottomNav>
     );
     expect(screen.getAllByRole("button")).toHaveLength(3);
+  });
+});
+
+// -----------------------------------------------------------------------
+// BottomNavItem — état ouvert : garde CSS (les CSS Modules sont inertes en jsdom)
+
+describe("BottomNavItem — état ouvert (CSS)", () => {
+  const css = readFileSync("src/components/BottomNav/BottomNavItem.module.css", "utf8")
+    // Les commentaires citent volontairement les anciennes règles : on les ignore.
+    .replace(/\/\*[\s\S]*?\*\//g, "");
+
+  /** Corps des règles dont le sélecteur correspond à `selector`. */
+  const bodies = (selector: RegExp) =>
+    [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+      .filter(([, sel]) => selector.test(sel ?? ""))
+      .map(([, , body]) => body ?? "");
+
+  it("should not give --text-selected to an open item (blue belongs to data-selected)", () => {
+    const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)];
+    const offenders = rules.filter(
+      ([, sel, body]) => /aria-expanded/.test(sel ?? "") && /--text-selected|--background-selected/.test(body ?? ""),
+    );
+    expect(offenders).toHaveLength(0);
+  });
+
+  it("should not declare a transform transition on iconWrapper, iconSource or iconClose", () => {
+    for (const cls of ["iconWrapper", "iconSource", "iconClose"]) {
+      for (const body of bodies(new RegExp(String.raw`\.${cls}\b`))) {
+        expect(body).not.toMatch(/transition[^;]*transform/);
+        expect(body).not.toMatch(/transform\s*:/);
+      }
+    }
+  });
+
+  it("should keep the label visible when open", () => {
+    expect(css).not.toMatch(/aria-expanded="true"\]\s*\.label/);
+  });
+
+  it("should open with a pure cross-fade: opacity only, --duration-fast", () => {
+    const rule = bodies(/^\s*\.iconSource,\s*\.iconClose\s*$/)[0] ?? "";
+    expect(rule).toMatch(/transition:\s*opacity var\(--duration-fast\)/);
   });
 });

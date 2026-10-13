@@ -1,17 +1,27 @@
 // BottomNav — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { type ReactNode, useEffect, useRef, useState } from "react";
-import { within, userEvent, expect, waitFor } from "storybook/test";
+import { type ReactNode, type Ref, type RefObject, useEffect, useRef, useState } from "react";
+import { within, screen, userEvent, expect, waitFor } from "storybook/test";
 import {
   BottomNav,
   BottomNavItem,
+  Button,
   Drawer,
   DrawerBody,
   DrawerHeader,
   Icon,
+  List,
+  ListHead,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  ListItemTrailing,
   Menu,
   MenuItem,
   MenuSection,
+  MenuTrigger,
+  Page,
+  Popover,
   Text,
 } from "@aexae/comete-design-system/components";
 import type { IconName } from "@aexae/comete-icons";
@@ -47,13 +57,15 @@ const meta = {
               avoid={[
                 "Un desktop avec navigation riche → SideNav.",
                 "Une barre globale marque/compte → Page.Bar.",
-                "Plus de 5 destinations → regrouper via un item « Plus » (Menu).",
+                "Plus de 5 destinations → les regrouper dans un item « Plus » (popup ou page). Jamais pour une action de création : c'est le rôle du FAB.",
               ]}
               best={[
                 "3 à 5 items avec icône + libellé court ; un seul actif reflétant la vue courante.",
                 "Icônes explicites et cohérentes ; réserver le débordement à un menu « Plus ».",
                 "Masquer la BottomNav au scroll descendant pour gagner de l'espace, la réafficher au scroll montant.",
                 "Avec un bouton d'action central (BottomNav.Action) : exactement 2 items de chaque côté (2 + Action + 2).",
+                "« Plus » ≠ FAB. L'item « Plus » regroupe des **destinations** secondaires : il mène quelque part (page) ou garde le contexte (popup), puis se sélectionne ou se referme. Le FAB (`BottomNav.Action`) lance une **action** de création : il ouvre un tiroir, ne se sélectionne jamais et n'est pas une destination.",
+                "Ne pas mélanger : pas de destinations derrière le FAB, pas d'actions de création derrière « Plus ».",
               ]}
               accessibility={[
                 "Chaque item a un libellé (visible ou `aria-label`) ; item courant via `aria-current`.",
@@ -64,9 +76,9 @@ const meta = {
                 example: (
                   <div style={{ width: "100%" }}>
                     <BottomNav>
-                      <BottomNavItem label="Accueil" icon="Home" isSelected />
-                      <BottomNavItem label="Rapports" icon="Assignment" />
-                      <BottomNavItem label="Profil" icon="Person" />
+                      <BottomNavItem label="Tableau de bord" icon="Dashboard" isSelected />
+                      <BottomNavItem label="Ma fiche" icon="Assignment" />
+                      <BottomNavItem label="Planning" icon="CalendarMonth" />
                     </BottomNav>
                   </div>
                 ),
@@ -76,9 +88,9 @@ const meta = {
                 example: (
                   <div style={{ width: "100%" }}>
                     <BottomNav>
-                      <BottomNavItem label="Accueil" icon="Home" isSelected />
+                      <BottomNavItem label="Tableau de bord" icon="Dashboard" isSelected />
                       <BottomNavItem label="Rapports et analyses détaillés" icon="Assignment" />
-                      <BottomNavItem label="Profil" icon="Person" />
+                      <BottomNavItem label="Planning" icon="CalendarMonth" />
                     </BottomNav>
                   </div>
                 ),
@@ -102,7 +114,7 @@ const meta = {
   argTypes: {
     icon: {
       control: "select",
-      options: ["Home", "CalendarMonth", "Person", "Notifications", "Star", "Add"],
+      options: ["Dashboard", "Assignment", "CalendarMonth", "Comment", "Star", "MoreHoriz"],
     },
     isSelected: { control: "boolean" },
     isOpen: { control: "boolean" },
@@ -111,8 +123,8 @@ const meta = {
     onClick: { action: "clicked" },
   },
   args: {
-    label: "Accueil",
-    icon: "Home",
+    label: "Planning",
+    icon: "CalendarMonth",
     isSelected: false,
     isOpen: false,
     isDisabled: false,
@@ -150,7 +162,7 @@ export const Selected: Story = {
 
 /**
  * Item interactif qui ouvre un popup.
- * Démarre en état default. Cliquer → isOpen + popup affiché + icône → Cancel.
+ * Démarre en état default. Cliquer → isOpen + popup affiché + icône → croix (Close).
  * Re-cliquer ou cliquer ailleurs → ferme le popup.
  */
 export const Open: Story = {
@@ -190,17 +202,17 @@ export const Open: Story = {
             }}
           >
             <Menu aria-label="Actions" onAction={() => { setIsOpen(false); }}>
-              <MenuSection title="Créer">
-                <MenuItem id="event" iconBefore="CalendarMonth">Nouvel événement</MenuItem>
-                <MenuItem id="note" iconBefore="Notes">Nouvelle note</MenuItem>
+              <MenuSection title="Main courante">
+                <MenuItem id="events" iconBefore="MenuBook">Main courante</MenuItem>
+                <MenuItem id="patrols" iconBefore="Patrol">Rondes</MenuItem>
               </MenuSection>
             </Menu>
           </div>
         )}
         <BottomNav>
           <BottomNavItem
-            label="Créer"
-            icon="Add"
+            label="Plus"
+            icon="MoreHoriz"
             isOpen={isOpen}
             onClick={() => { setIsOpen((o) => !o); }}
           />
@@ -281,9 +293,16 @@ function InteractiveBottomNav({
  * sur mobile. Utilisé par toutes les stories de barre complète pour un contexte
  * cohérent.
  */
-function PhoneScreen({ children }: { children: ReactNode }): ReactNode {
+function PhoneScreen({
+  children,
+  screenRef,
+}: {
+  children: ReactNode;
+  /** Ref de l'écran : sert de LIMITE (`boundaryElement`) aux popovers de la barre. */
+  screenRef?: Ref<HTMLDivElement>;
+}): ReactNode {
   return (
-    <div className={css["screen"]}>
+    <div ref={screenRef} className={css["screen"]}>
       {children}
       {/* Home indicator iOS, comme dans la story field tool */}
       <div aria-hidden className={css["homeIndicator"]} />
@@ -291,22 +310,48 @@ function PhoneScreen({ children }: { children: ReactNode }): ReactNode {
   );
 }
 
-const FOUR_ITEMS: NavItemDef[] = [
-  { label: "Accueil", icon: "Home" },
-  { label: "Agenda", icon: "CalendarMonth" },
-  { label: "Notifications", icon: "Notifications", badge: "3" },
-  { label: "Profil", icon: "Person" },
+// Destinations RÉELLES de Link (comete_webapp : navConfig.js, locales/fr/mce.json).
+// Ces libellés sont plus longs que de simples exemples : ils révèlent la
+// troncature à 10 px, et la barre de Link porte jusqu'à SIX emplacements
+// (5 destinations + « Plus »).
+const MANAGER_ITEMS: NavItemDef[] = [
+  { label: "Tableau de bord", icon: "Dashboard" },
+  { label: "Agents", icon: "Group" },
+  { label: "Sites", icon: "Site" },
+  { label: "Pointages", icon: "Clockings" },
 ];
 
-const FIVE_ITEMS: NavItemDef[] = [
-  { label: "Accueil", icon: "Home" },
-  { label: "Agenda", icon: "CalendarMonth" },
-  { label: "Notifications", icon: "Notifications", badge: "5" },
+const AGENT_ITEMS: NavItemDef[] = [
+  { label: "Tableau de bord", icon: "Dashboard" },
+  { label: "Ma fiche", icon: "Assignment" },
+  { label: "Planning", icon: "CalendarMonth" },
+  { label: "Demandes", icon: "Comment", badge: "3" },
   { label: "Missions", icon: "Star" },
-  { label: "Profil", icon: "Person" },
 ];
 
-/** Quatre items — contrôle « Item actif » pour activer chaque item. */
+const PLUS_ITEM: NavItemDef = { label: "Plus", icon: "MoreHoriz" };
+
+/** Entrées derrière le « Plus » (popup ou page) — libellés de Link. */
+const PLUS_SECTIONS: { title: string; entries: { label: string; icon: IconName }[] }[] = [
+  {
+    title: "Main courante",
+    entries: [
+      { label: "Main courante", icon: "MenuBook" },
+      { label: "Formulaires d'évènements", icon: "EventNote" },
+      { label: "Rondes", icon: "Patrol" },
+      { label: "Formulaires", icon: "FormEdit" },
+    ],
+  },
+  {
+    title: "Administration",
+    entries: [
+      { label: "Utilisateurs", icon: "Group" },
+      { label: "Droits d'accès", icon: "ManageAccounts" },
+    ],
+  },
+];
+
+/** Quatre items — **Manager** (Tableau de bord, Agents, Sites, Pointages). Contrôle « Item actif ». */
 export const FourItems: NavStory = {
   name: "Four items",
   parameters: {
@@ -314,17 +359,17 @@ export const FourItems: NavStory = {
     design: { type: "figma", url: figmaUrl("2524:18591") },
   },
   argTypes: {
-    active: { name: "Item actif", control: "radio", options: FOUR_ITEMS.map((i) => i.label) },
+    active: { name: "Item actif", control: "radio", options: (MANAGER_ITEMS).map((i) => i.label) },
   },
-  args: { active: "Accueil" },
+  args: { active: "Tableau de bord" },
   render: (args) => (
     <PhoneScreen>
-      <InteractiveBottomNav items={FOUR_ITEMS} active={args.active} />
+      <InteractiveBottomNav items={MANAGER_ITEMS} active={args.active} />
     </PhoneScreen>
   ),
 };
 
-/** Cinq items (maximum recommandé) — contrôle « Item actif ». */
+/** Cinq items (maximum recommandé) — **Agent**. Contrôle « Item actif ». */
 export const FiveItems: NavStory = {
   name: "Five items",
   parameters: {
@@ -332,21 +377,21 @@ export const FiveItems: NavStory = {
     design: { type: "figma", url: figmaUrl("2524:18591") },
   },
   argTypes: {
-    active: { name: "Item actif", control: "radio", options: FIVE_ITEMS.map((i) => i.label) },
+    active: { name: "Item actif", control: "radio", options: (AGENT_ITEMS).map((i) => i.label) },
   },
-  args: { active: "Accueil" },
+  args: { active: "Tableau de bord" },
   render: (args) => (
     <PhoneScreen>
-      <InteractiveBottomNav items={FIVE_ITEMS} active={args.active} />
+      <InteractiveBottomNav items={AGENT_ITEMS} active={args.active} />
     </PhoneScreen>
   ),
 };
 
 const LONG_LABEL_ITEMS: NavItemDef[] = [
-  { label: "Accueil", icon: "Home" },
+  { label: "Tableau de bord", icon: "Dashboard" },
   { label: "Rapports et analyses détaillés", icon: "Assignment" },
   { label: "Planning des interventions", icon: "CalendarMonth" },
-  { label: "Profil", icon: "Person" },
+  { label: "Missions", icon: "Star" },
 ];
 
 /**
@@ -362,7 +407,7 @@ export const LongLabel: NavStory = {
   argTypes: {
     active: { name: "Item actif", control: "radio", options: LONG_LABEL_ITEMS.map((i) => i.label) },
   },
-  args: { active: "Accueil" },
+  args: { active: "Tableau de bord" },
   render: (args) => (
     <PhoneScreen>
       <InteractiveBottomNav items={LONG_LABEL_ITEMS} active={args.active} />
@@ -373,103 +418,241 @@ export const LongLabel: NavStory = {
 // -----------------------------------------------------------------------
 // Popup example — item "Plus" à droite qui ouvre un menu d'actions secondaires
 
-function BottomNavWithPopupRight() {
-  const [selected, setSelected] = useState("Accueil");
+function BottomNavWithPopupRight({
+  boundaryRef,
+}: {
+  /** Écran du téléphone : le popover ne peut pas en sortir. */
+  boundaryRef: RefObject<HTMLElement | null>;
+}) {
+  const [selected, setSelected] = useState("Tableau de bord");
   const [popupOpen, setPopupOpen] = useState(false);
-  const wrapperRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!popupOpen) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-        setPopupOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [popupOpen]);
-
+  // Un seul item actif : menu ouvert → aucun item de page n'est sélectionné.
   const activeItem = popupOpen ? null : selected;
 
   return (
-    <div ref={wrapperRef} style={{ position: "relative", display: "flex", width: "100%" }}>
-      {popupOpen && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: "calc(100% + var(--space200))",
-            right: 0,
-            minWidth: 240,
-            background: "var(--background-default-default)",
-            borderRadius: "var(--radius100)",
-            boxShadow: "var(--elevation-medium)",
-            zIndex: 10,
-            overflow: "hidden",
-          }}
+    <BottomNav>
+      {MANAGER_ITEMS.map((item) => (
+        <BottomNavItem
+          key={item.label}
+          label={item.label}
+          icon={item.icon}
+          badge={item.badge}
+          isSelected={activeItem === item.label}
+          onClick={() => { setSelected(item.label); }}
+        />
+      ))}
+      {/* « Plus » ouvre le `Popover` du DS via un `MenuTrigger` : ouverture,
+          fermeture (clic extérieur, Échap, choix d'une entrée) et placement sont
+          gérés par le composant — plus de div positionnée à la main. */}
+      <MenuTrigger isOpen={popupOpen} onOpenChange={setPopupOpen}>
+        <BottomNavItem label={PLUS_ITEM.label} icon={PLUS_ITEM.icon} isOpen={popupOpen} />
+        <Popover
+          // Au-dessus de l'item, aligné sur son bord droit ; si la place manque,
+          // il se retourne. `boundaryElement` = l'écran : le popover reste
+          // entièrement dans l'écran (décalé si besoin, hauteur bornée).
+          placement="top end"
+          offset={8}
+          boundaryElement={boundaryRef.current ?? undefined}
+          style={{ minWidth: 240 }}
         >
-          <Menu
-            aria-label="Plus"
-            onAction={() => { setPopupOpen(false); }}
-          >
-            <MenuSection title="Plus">
-              <MenuItem id="settings" iconBefore="Settings">Paramètres</MenuItem>
-              <MenuItem id="help" iconBefore="Home">Aide</MenuItem>
-              <MenuItem id="logout" iconBefore="Person">Déconnexion</MenuItem>
-            </MenuSection>
+          <Menu aria-label="Plus" onAction={() => { setPopupOpen(false); }}>
+            {PLUS_SECTIONS.map((section) => (
+              <MenuSection key={section.title} title={section.title}>
+                {section.entries.map((entry) => (
+                  <MenuItem key={entry.label} id={entry.label} iconBefore={entry.icon}>
+                    {entry.label}
+                  </MenuItem>
+                ))}
+              </MenuSection>
+            ))}
           </Menu>
-        </div>
-      )}
-      <BottomNav>
-        <BottomNavItem
-          label="Accueil"
-          icon="Home"
-          isSelected={activeItem === "Accueil"}
-          onClick={() => { setSelected("Accueil"); setPopupOpen(false); }}
-        />
-        <BottomNavItem
-          label="Agenda"
-          icon="CalendarMonth"
-          isSelected={activeItem === "Agenda"}
-          onClick={() => { setSelected("Agenda"); setPopupOpen(false); }}
-        />
-        <BottomNavItem
-          label="Notifications"
-          icon="Notifications"
-          badge="5"
-          isSelected={activeItem === "Notifications"}
-          onClick={() => { setSelected("Notifications"); setPopupOpen(false); }}
-        />
-        <BottomNavItem
-          label="Profil"
-          icon="Person"
-          isSelected={activeItem === "Profil"}
-          onClick={() => { setSelected("Profil"); setPopupOpen(false); }}
-        />
-        <BottomNavItem
-          label="Plus"
-          icon="MoreHoriz"
-          isOpen={popupOpen}
-          onClick={() => { setPopupOpen((o) => !o); }}
-        />
-      </BottomNav>
-    </div>
+        </Popover>
+      </MenuTrigger>
+    </BottomNav>
+  );
+}
+
+function WithPopupRightDemo(): ReactNode {
+  const screenRef = useRef<HTMLDivElement>(null);
+  return (
+    <PhoneScreen screenRef={screenRef}>
+      <BottomNavWithPopupRight boundaryRef={screenRef} />
+    </PhoneScreen>
   );
 }
 
 /**
- * Un item "Plus" à droite ouvre un menu d'actions secondaires.
- * Le popup s'aligne sur le bord droit du container (right: 0).
+ * La barre **Manager** (Tableau de bord, Agents, Sites, Pointages) + un item « Plus » à droite qui ouvre un menu de destinations secondaires dans un
+ * **`Popover`** du DS (via `MenuTrigger`).
+ *
+ * - placement `top end` : au-dessus de l'item, aligné sur son bord droit ;
+ * - `boundaryElement` = l'écran du téléphone : le popover **ne sort pas de
+ *   l'écran** (retournement si la place manque, décalage, hauteur bornée) ;
+ * - fermeture par clic extérieur, Échap ou choix d'une action.
  */
 export const WithPopupRight: Story = {
   name: "With popup (right item)",
   parameters: { layout: "centered", design: { type: "figma", url: figmaUrl("2524:18591") } },
-  render: () => (
+  render: () => <WithPopupRightDemo />,
+};
+
+// Test (masqué du sidebar) : le `play` ne se rejoue donc PAS à l'ouverture de la
+// story visible ci-dessus. Vérifie le Popover du DS : ouverture au-dessus de
+// « Plus », inclusion dans l'écran du téléphone, fermeture (Échap, action).
+export const WithPopupRightInteractions: Story = {
+  tags: ["!dev"],
+  render: () => <WithPopupRightDemo />,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    // Référence prise AVANT l'ouverture : menu ouvert, React Aria masque le reste de
+    // la page aux technologies d'assistance (le bouton sort de l'arbre d'accessibilité).
+    const trigger = canvas.getByRole("button", { name: "Plus" });
+    const plus = () => trigger;
+    const menu = () => screen.queryByRole("menu");
+
+    await step("fermé au départ", async () => {
+      await expect(plus()).toHaveAttribute("aria-haspopup", "true");
+      await expect(menu()).toBeNull();
+    });
+
+    await step("s'ouvre dans un Popover, au-dessus de « Plus », sans sortir de l'écran", async () => {
+      await userEvent.click(plus());
+      const m = await screen.findByRole("menu");
+      await expect(plus()).toHaveAttribute("aria-expanded", "true");
+      // Le libellé reste visible à l'état ouvert : nom accessible conservé.
+      await expect(canvas.getByRole("button", { name: "Plus", hidden: true })).toBe(trigger);
+      const popover = m.closest("[data-trigger]") ?? m.parentElement;
+      const rect = (popover as HTMLElement).getBoundingClientRect();
+      const phone = canvasElement.querySelector<HTMLElement>('[class*="screen"]');
+      await expect(phone).not.toBeNull();
+      const bounds = (phone as HTMLElement).getBoundingClientRect();
+      // Entièrement dans l'écran du téléphone…
+      await expect(rect.left).toBeGreaterThanOrEqual(bounds.left);
+      await expect(rect.right).toBeLessThanOrEqual(bounds.right);
+      await expect(rect.top).toBeGreaterThanOrEqual(bounds.top);
+      await expect(rect.bottom).toBeLessThanOrEqual(bounds.bottom);
+      // …et au-dessus de la barre (placement « top »).
+      await expect(rect.bottom).toBeLessThanOrEqual(plus().getBoundingClientRect().top);
+    });
+
+    await step("se referme avec Échap", async () => {
+      await userEvent.keyboard("{Escape}");
+      await waitFor(() => expect(menu()).toBeNull());
+      await expect(plus()).toHaveAttribute("aria-expanded", "false");
+    });
+
+    await step("se referme au choix d'une action", async () => {
+      await userEvent.click(plus());
+      await userEvent.click(await screen.findByRole("menuitem", { name: "Main courante" }));
+      await waitFor(() => expect(menu()).toBeNull());
+    });
+  },
+};
+
+// -----------------------------------------------------------------------
+// « Plus » en page — l'alternative au popup : une destination, pas un calque
+//
+// Libellés réels de Link (voir PLUS_SECTIONS). Toute la
+// structure (écran, zone de page qui défile) passe par le CSS module.
+
+function PlusPageDemo(): ReactNode {
+  return (
     <PhoneScreen>
-      <BottomNavWithPopupRight />
+      <div className={css["pageFill"]}>
+        <Page globalActions={null}>
+          {/* Une seule affordance de navigation dans `leading` : le retour. */}
+          <Page.Bar
+            size="compact"
+            title="Plus"
+            leading={<Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Retour" />}
+          />
+          <Page.Body>
+            <List aria-label="Plus">
+              {PLUS_SECTIONS.flatMap((section) => [
+                <ListHead key={`head-${section.title}`}>{section.title}</ListHead>,
+                ...section.entries.map((entry) => (
+                  <ListItemButton key={entry.label}>
+                    <ListItemIcon>
+                      <Icon icon={entry.icon} size={24} color="subtle" />
+                    </ListItemIcon>
+                    <ListItemText primary={entry.label} />
+                    <ListItemTrailing>
+                      <Icon icon="ChevronRight" size={24} color="subtlest" />
+                    </ListItemTrailing>
+                  </ListItemButton>
+                )),
+              ])}
+            </List>
+          </Page.Body>
+        </Page>
+      </div>
+      {/* « Plus » est une destination : sélectionné comme ses voisines, jamais
+          `isOpen` — pas d'icône de fermeture, rien ne se referme. */}
+      <BottomNav>
+        {AGENT_ITEMS.map((item) => (
+          <BottomNavItem key={item.label} label={item.label} icon={item.icon} badge={item.badge} />
+        ))}
+        <BottomNavItem label="Plus" icon="MoreHoriz" isSelected />
+      </BottomNav>
     </PhoneScreen>
-  ),
+  );
+}
+
+/**
+ * **Plus en page** — l'alternative au popup : « Plus » n'ouvre pas de calque,
+ * c'est une **destination** qui mène à un écran (barre de page avec retour,
+ * liste en deux sections). Le « Plus » reste **sélectionné** (bleu, comme ses
+ * voisines), sans état ouvert ni icône de fermeture.
+ *
+ * Le popup garde le contexte de la page mais plafonne à quelques entrées ; la
+ * page n'a pas de plafond, entre dans l'historique du navigateur et laisse le
+ * « Plus » sélectionné.
+ */
+export const PlusPage: Story = {
+  name: "Plus en page",
+  parameters: { layout: "centered", controls: { disable: true } },
+  render: () => <PlusPageDemo />,
+};
+
+// Test (masqué du sidebar) : le `play` ne se rejoue pas à l'ouverture de la story.
+export const PlusPageInteractions: Story = {
+  tags: ["!dev"],
+  parameters: { layout: "centered" },
+  render: () => <PlusPageDemo />,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("la barre de page expose le titre « Plus »", async () => {
+      await expect(canvas.getByRole("heading", { level: 1, name: "Plus" })).toBeInTheDocument();
+    });
+
+    await step("« Retour » est présent et atteignable au clavier", async () => {
+      const back = canvas.getByRole("button", { name: "Retour" });
+      await userEvent.tab();
+      await expect(back).toHaveFocus();
+    });
+
+    await step("« Plus » est une destination : sélectionné, sans aria-expanded", async () => {
+      const nav = within(canvas.getByRole("navigation"));
+      const plus = nav.getByRole("button", { name: "Plus" });
+      await expect(plus).not.toHaveAttribute("aria-expanded");
+      await expect(plus).toHaveAttribute("aria-current");
+    });
+
+    await step("la liste expose les six entrées attendues", async () => {
+      const list = within(canvas.getByRole("list", { name: "Plus" }));
+      const names = list.getAllByRole("button").map((b) => b.textContent);
+      await expect(names).toEqual([
+        "Main courante",
+        "Formulaires d'évènements",
+        "Rondes",
+        "Formulaires",
+        "Utilisateurs",
+        "Droits d'accès",
+      ]);
+    });
+  },
 };
 
 // -----------------------------------------------------------------------
@@ -539,7 +722,8 @@ function MceActionRow({
  * de chaque côté) + tiroir `Drawer`.
  */
 function FieldToolRecipe(): ReactNode {
-  const [selected, setSelected] = useState("Accueil");
+  // Aucun item actif par défaut : la page courante est inconnue de la recette.
+  const [selected, setSelected] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
 
   // Un seul item actif : tiroir ouvert → aucun item de page n'est sélectionné.
@@ -554,16 +738,16 @@ function FieldToolRecipe(): ReactNode {
           fourni par PhoneScreen. */}
       <BottomNav>
         <BottomNavItem
-          label="Accueil"
-          icon="Home"
-          isSelected={activeItem === "Accueil"}
-          onClick={() => { setSelected("Accueil"); }}
+          label="Tableau de bord"
+          icon="Dashboard"
+          isSelected={activeItem === "Tableau de bord"}
+          onClick={() => { setSelected("Tableau de bord"); }}
         />
         <BottomNavItem
-          label="Main courante"
-          icon="MenuBook"
-          isSelected={activeItem === "Main courante"}
-          onClick={() => { setSelected("Main courante"); }}
+          label="Ma fiche"
+          icon="Assignment"
+          isSelected={activeItem === "Ma fiche"}
+          onClick={() => { setSelected("Ma fiche"); }}
         />
         <BottomNav.Action
           icon="Add"
@@ -573,15 +757,15 @@ function FieldToolRecipe(): ReactNode {
         />
         <BottomNavItem
           label="Planning"
-          icon="CalendarClock"
+          icon="CalendarMonth"
           isSelected={activeItem === "Planning"}
           onClick={() => { setSelected("Planning"); }}
         />
         <BottomNavItem
-          label="Plus"
-          icon="MoreHoriz"
-          isSelected={activeItem === "Plus"}
-          onClick={() => { setSelected("Plus"); }}
+          label="MCE"
+          icon="FormEdit"
+          isSelected={activeItem === "MCE"}
+          onClick={() => { setSelected("MCE"); }}
         />
       </BottomNav>
 
@@ -644,15 +828,27 @@ export const FieldToolMce: Story = {
       <FieldToolRecipe />
     </PhoneScreen>
   ),
+};
+
+export const FieldToolMceInteractions: Story = {
+  tags: ["!dev"],
+  parameters: { layout: "centered" },
+  render: () => (
+    <PhoneScreen>
+      <FieldToolRecipe />
+    </PhoneScreen>
+  ),
   // Le FAB central (BottomNav.Action) ouvre le tiroir (aria-expanded → true) ;
-  // Échap le referme ; l'item sélectionné porte aria-current="page".
+  // Échap le referme ; aucun item n'est sélectionné par défaut.
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
 
-    // Item sélectionné au repos : aria-current="page".
-    const accueil = canvas.getByRole("button", { name: "Accueil" });
-    await expect(accueil).toHaveAttribute("aria-current", "page");
+    // Au repos : aucun item sélectionné ; un clic sur un item le sélectionne.
+    const tableauDeBord = canvas.getByRole("button", { name: "Tableau de bord" });
+    await expect(tableauDeBord).not.toHaveAttribute("aria-current");
+    await userEvent.click(tableauDeBord);
+    await expect(tableauDeBord).toHaveAttribute("aria-current", "page");
 
     // Clic sur l'Action → ouvre le tiroir (Drawer) et passe aria-expanded=true.
     const action = canvas.getByRole("button", { name: /outils terrain/i });

@@ -22,6 +22,14 @@
   position: relative;
 }
 
+/* Zone de page (Page.Bar + contenu) au-dessus de la barre : prend la place
+   restante de l'écran et défile seule. */
+.pageFill {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
 /* Home indicator iOS dans la safe-area basse (ancré à l'écran). */
 .homeIndicator {
   position: absolute;
