@@ -162,7 +162,7 @@ function MobileWebDemo() {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <Page globalActions={null} style={{ minHeight: "100vh" }}>
+      <Page globalActions={null} style={{ height: "100vh", overflowY: "auto" }}>
         <Page.Bar
           title="Accueil"
           leading={
