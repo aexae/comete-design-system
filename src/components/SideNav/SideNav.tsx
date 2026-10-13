@@ -6,7 +6,6 @@ import { Children,
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
   type ReactElement,
   type ReactNode, type CSSProperties } from "react";
@@ -17,28 +16,36 @@ import { Divider } from "../Divider/index.js";
 import { Skeleton } from "../Skeleton/index.js";
 import styles from "./SideNav.module.css";
 
+// `process` n'est pas typé ici (le DS build avec `types: []`, sans @types/node).
+// Déclaration locale minimale : le bundler du consommateur remplace
+// `process.env.NODE_ENV` par une constante à la compilation.
+declare const process: { env: { NODE_ENV?: string } };
+
 // -----------------------------------------------------------------------
-// Context partagé (couvre SideNav + SideNav.Trigger + SideNavHeader)
+// Context partagé (couvre SideNav + SideNavHeader)
+
+/**
+ * Mode d'affichage de la navigation latérale (tablette et desktop).
+ * - `expanded` — panneau complet 240px (logo + libellés + sections nommées).
+ * - `rail` — rail 80px : icône + libellé court dessous.
+ *
+ * La navigation ne disparaît **jamais** et ne s'agrandit **jamais au survol** : on
+ * passe de l'un à l'autre par le bouton de bascule de l'en-tête ou par
+ * `Ctrl/Cmd+Shift+E`. Sur **mobile web**, l'app l'affiche dans un `Drawer`
+ * (`placement="left"`) ; en **app mobile**, il n'y a pas de SideNav (la `BottomNav`
+ * porte seule la navigation).
+ */
+export type SideNavMode = "expanded" | "rail";
 
 interface SideNavContextValue {
-  isCollapsed: boolean;
-  /** Toggle du mode collapsed. */
-  onToggleCollapse?: () => void;
-  /** Vrai quand la nav est affichée en overlay (peek). */
-  isPeeking: boolean;
-  /** Marque la zone Trigger (Page.Bar.leading) comme survolée. */
-  setTriggerHover?: (hovered: boolean) => void;
-  /** Marque la nav (overlay) comme survolée. */
-  setNavHover?: (hovered: boolean) => void;
-  /** Marque le focus clavier comme présent à l'intérieur de la nav overlay. */
-  setNavFocused?: (focused: boolean) => void;
-  /** Ferme le peek immédiatement (ex. clic sur un item → navigation). */
-  closePeek?: () => void;
+  /** Mode d'affichage courant. */
+  mode: SideNavMode;
+  /** Change le mode (déployer / réduire en rail). Absent hors `SideNav.Provider`. */
+  setMode?: (mode: SideNavMode) => void;
 }
 
 const SideNavContext = createContext<SideNavContextValue>({
-  isCollapsed: false,
-  isPeeking: false,
+  mode: "expanded",
 });
 
 /** Hook pour accéder à l'état du SideNav parent. */
@@ -64,12 +71,17 @@ export interface SideNavProps {
 
 export interface SideNavProviderProps {
   children: ReactNode;
-  /** Mode réduit (controlled). */
-  isCollapsed?: boolean;
-  /** Mode réduit initial (uncontrolled). @default false */
-  defaultCollapsed?: boolean;
-  /** Callback déclenché à chaque changement de l'état collapsed. */
-  onCollapsedChange?: (collapsed: boolean) => void;
+  /** Mode d'affichage (controlled) : `expanded` | `rail`. */
+  mode?: SideNavMode;
+  /** Mode d'affichage initial (uncontrolled). @default "expanded" */
+  defaultMode?: SideNavMode;
+  /** Callback déclenché à chaque changement de mode. */
+  onModeChange?: (mode: SideNavMode) => void;
+  /**
+   * Active le raccourci clavier global `Ctrl/Cmd+Shift+E` qui bascule
+   * `expanded` ⇄ `rail`. @default true
+   */
+  enableShortcut?: boolean;
 }
 
 export interface SideNavHeaderProps {
@@ -80,6 +92,12 @@ export interface SideNavHeaderProps {
   /** Description courte sous le nom. */
   description?: string;
   className?: string;
+  /**
+   * Affiche le bouton de bascule `expanded` ⇄ `rail` (rendu seulement sous un
+   * `SideNav.Provider`). À désactiver quand la nav n'a pas de rail — par exemple
+   * dans un `Drawer` sur mobile web. @default true
+   */
+  showToggle?: boolean;
 }
 
 export interface SideNavItemProps {
@@ -151,11 +169,6 @@ export interface SideNavEmptyProps {
   className?: string;
 }
 
-export interface SideNavTriggerProps {
-  /** Classe CSS additionnelle. */
-  className?: string;
-}
-
 // -----------------------------------------------------------------------
 // SideNavHeader
 
@@ -164,7 +177,19 @@ export function SideNavHeader({
   companyName,
   description,
   className,
+  showToggle: showToggleProp = true,
 }: SideNavHeaderProps): ReactElement {
+  const { mode, setMode } = useContext(SideNavContext);
+  // Le bouton de bascule vit DANS la nav (décision produit). Rendu seulement sous
+  // un `SideNav.Provider` (setMode disponible) et si `showToggle` n'est pas
+  // désactivé. En rail, il déploie ; en expanded, il réduit en rail.
+  const showToggle = showToggleProp && Boolean(setMode);
+  const willExpand = mode === "rail";
+  const toggleIcon = willExpand ? "LeftPanelOpen" : "LeftPanelClose";
+  const toggleLabel = willExpand
+    ? "Déployer la navigation"
+    : "Réduire la navigation";
+
   return (
     <div className={[styles.header, className].filter(Boolean).join(" ")}>
       {logo && <span className={styles.headerLogo}>{logo}</span>}
@@ -176,8 +201,19 @@ export function SideNavHeader({
           )}
         </div>
       )}
-      {/* Pas de bouton collapse ici — le toggle est exclusivement géré par
-          `<SideNav.Trigger />` dans `Page.Bar.leading`. */}
+      {showToggle && (
+        // `title` (tooltip natif avec le raccourci) porté par l'enveloppe : le
+        // Button du DS n'expose pas `title` ; l'`aria-label` reste sur le bouton.
+        <span className={styles.headerToggle} title={`${toggleLabel} (Ctrl+Shift+E)`}>
+          <Button
+            appearance="subtle"
+            color="subtlest"
+            iconBefore={toggleIcon}
+            onPress={() => setMode?.(willExpand ? "expanded" : "rail")}
+            aria-label={toggleLabel}
+          />
+        </span>
+      )}
     </div>
   );
 }
@@ -198,6 +234,21 @@ export function SideNavItem({
   onClick,
   className,
 }: SideNavItemProps): ReactElement {
+  const { mode } = useContext(SideNavContext);
+  const isRail = mode === "rail";
+
+  // En rail, l'icône est l'élément principal (libellé court dessous) : un item
+  // sans icône y serait mal aligné et illisible — on le signale en développement.
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "production" && isRail && !iconBefore) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `SideNav.Item « ${label} » : une icône (\`iconBefore\`) est requise en ` +
+          `mode rail — sans elle, l'item est mal aligné.`,
+      );
+    }
+  }, [isRail, iconBefore, label]);
+
   const iconColor = isDisabled ? "disabled" : isSelected ? "selected" : "subtle";
   const iconAppearance = isSelected ? "filled" : "outlined";
 
@@ -242,6 +293,9 @@ export function SideNavItem({
   const ariaProps = {
     "aria-current": isSelected ? ("page" as const) : undefined,
     "aria-disabled": isDisabled || undefined,
+    // En rail, le libellé (10px) est visible mais peut être tronqué : tooltip natif
+    // avec le libellé complet. Le nom accessible vient du texte visible.
+    title: isRail ? label : undefined,
     onClick: isDisabled ? undefined : onClick,
   };
 
@@ -471,152 +525,78 @@ export function SideNavEmpty({
 SideNavEmpty.displayName = "SideNav.Empty";
 
 // -----------------------------------------------------------------------
-// SideNavTrigger — bouton standalone à placer dans le `leading` d'une Page.Bar
+// SideNav.Provider — détient le mode (expanded / rail)
 
 /**
- * SideNav.Trigger — bouton de toggle à placer dans `Page.Bar.leading`.
- * Lit son état depuis le `<SideNav.Provider>` parent (commun avec la
- * `<SideNav>`).
+ * SideNav.Provider — wrapper à placer **au-dessus** de la `<SideNav>`. Détient le
+ * mode d'affichage partagé entre la nav et son bouton de bascule.
  *
- * Comportement :
- * - **Click / Enter** (clavier) : toggle replié/déployé. Le mode déployé est
- *   en flux et pousse le contenu (panneau latéral classique).
- * - **Hover** (pointeur, en replié) : déclenche le *peek* — la SideNav
- *   s'affiche en **overlay glissant** par-dessus le contenu, **sans le
- *   pousser** (le contenu ne bouge pas). Le peek reste ouvert tant que le
- *   pointeur est sur le Trigger OU la nav, ou qu'un focus clavier est dans la
- *   nav ; il se ferme après un court délai une fois hors des deux. Le peek est
- *   une affordance *pointer-only* : au clavier, on déploie via Click/Enter.
+ * Mode controlled : passer `mode` + `onModeChange`.
+ * Mode uncontrolled : passer `defaultMode` (défaut `"expanded"`).
  *
- * ```tsx
- * <SideNav.Provider isCollapsed={c} onCollapsedChange={setC}>
- *   <SideNav>...</SideNav>
- *   <Page>
- *     <Page.Bar leading={<SideNav.Trigger />} />
- *   </Page>
- * </SideNav.Provider>
- * ```
- */
-export function SideNavTrigger({
-  className,
-}: SideNavTriggerProps): ReactElement {
-  const { isCollapsed, onToggleCollapse, setTriggerHover } = useContext(
-    SideNavContext,
-  );
-  return (
-    <Button
-      appearance="subtle"
-      color="subtlest"
-      iconBefore={isCollapsed ? "LeftPanelOpen" : "LeftPanelClose"}
-      onPress={onToggleCollapse}
-      onHoverStart={() => setTriggerHover?.(true)}
-      onHoverEnd={() => setTriggerHover?.(false)}
-      aria-expanded={!isCollapsed}
-      aria-label={isCollapsed ? "Développer la navigation" : "Réduire la navigation"}
-      className={className}
-    />
-  );
-}
-
-SideNavTrigger.displayName = "SideNav.Trigger";
-
-// -----------------------------------------------------------------------
-// SideNav.Provider — détient le state partagé (isCollapsed, peek)
-
-/**
- * SideNav.Provider — wrapper à placer **au-dessus** de la `<SideNav>` ET
- * du `<Page>` qui contient le `<SideNav.Trigger />`. Détient le state
- * partagé (collapsed + peek hover) pour que les deux puissent se
- * coordonner.
- *
- * Mode controlled : passer `isCollapsed` + `onCollapsedChange`.
- * Mode uncontrolled : passer `defaultCollapsed`.
+ * ### Règles par plateforme (le DS ne pose aucune media query, l'app décide)
+ * - **App mobile** : **pas de SideNav** — la `BottomNav` porte seule la
+ *   navigation.
+ * - **Mobile navigateur web (< 768px)** : la SideNav passe **par-dessus** le
+ *   viewport, dans un `Drawer placement="left"` ouvert par un bouton hamburger
+ *   (`Page.Bar.leading`) ; elle ne pousse jamais le contenu. Dans le Drawer,
+ *   utiliser `<SideNav.Header showToggle={false} />` (pas de rail sur mobile).
+ * - **Tablette et desktop (≥ 768px)** : la nav est **permanente** et ne disparaît
+ *   jamais. `expanded` (240px) ou **`rail` (80px)** ; le rail est **fixe** : il ne
+ *   s'agrandit pas au survol, on bascule par le bouton de la nav ou
+ *   `Ctrl/Cmd+Shift+E` (`expanded` ⇄ `rail`, choix **persisté par l'app**).
+ *   Défaut conseillé : `expanded` à partir de 1024px, `rail` entre 768 et 1024px.
  *
  * ```tsx
- * const [collapsed, setCollapsed] = useState(false);
+ * const [mode, setMode] = useState<SideNavMode>("expanded");
  *
- * <SideNav.Provider isCollapsed={collapsed} onCollapsedChange={setCollapsed}>
+ * <SideNav.Provider mode={mode} onModeChange={setMode}>
  *   <div style={{ display: "flex" }}>
  *     <SideNav>
- *       <SideNav.Header ... />
- *       <SideNav.Section title="...">...</SideNav.Section>
+ *       <SideNav.Header logo={<Logo format="icon" />} companyName="…" />
+ *       <SideNav.Section title="…">
+ *         <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="/" />
+ *       </SideNav.Section>
  *     </SideNav>
- *     <Page>
- *       <Page.Bar leading={<SideNav.Trigger />} title="..." />
- *     </Page>
+ *     <Page>…</Page>
  *   </div>
  * </SideNav.Provider>
  * ```
  */
-/** Délai de tolérance avant fermeture du peek — évite les fermetures
- *  accidentelles lors d'un déplacement en diagonale (Trigger → nav). */
-const PEEK_CLOSE_DELAY_MS = 200;
-
 export function SideNavProvider({
   children,
-  isCollapsed: controlled,
-  defaultCollapsed = false,
-  onCollapsedChange,
+  mode: controlledMode,
+  defaultMode = "expanded",
+  onModeChange,
+  enableShortcut = true,
 }: SideNavProviderProps): ReactElement {
-  const [internalCollapsed, setInternalCollapsed] = useState(defaultCollapsed);
-  const [triggerHover, setTriggerHover] = useState(false);
-  const [navHover, setNavHover] = useState(false);
-  const [navFocused, setNavFocused] = useState(false);
-  const [peekOpen, setPeekOpen] = useState(false);
+  const [internalMode, setInternalMode] = useState<SideNavMode>(defaultMode);
+  const mode = controlledMode ?? internalMode;
 
-  const isCollapsed = controlled ?? internalCollapsed;
-
-  // Le peek reste ouvert tant que le pointeur survole le Trigger OU la nav,
-  // ou qu'un focus clavier est à l'intérieur de la nav. Il ne se ferme que
-  // lorsque NI hover NI focus ne sont présents, après un court délai.
-  const wantOpen = triggerHover || navHover || navFocused;
-
-  useEffect(() => {
-    if (!isCollapsed) {
-      setPeekOpen(false);
-      return undefined;
-    }
-    if (wantOpen) {
-      setPeekOpen(true);
-      return undefined;
-    }
-    const timer = setTimeout(() => setPeekOpen(false), PEEK_CLOSE_DELAY_MS);
-    return () => clearTimeout(timer);
-  }, [wantOpen, isCollapsed]);
-
-  const onToggleCollapse = useCallback(() => {
-    const next = !isCollapsed;
-    setInternalCollapsed(next);
-    onCollapsedChange?.(next);
-  }, [isCollapsed, onCollapsedChange]);
-
-  // Fermeture immédiate (clic sur un item → navigation). On remet aussi les
-  // drapeaux hover/focus à zéro pour que l'overlay reste fermé tant que le
-  // pointeur ne quitte pas puis ne revient pas sur la nav.
-  const closePeek = useCallback(() => {
-    setTriggerHover(false);
-    setNavHover(false);
-    setNavFocused(false);
-    setPeekOpen(false);
-  }, []);
-
-  const isPeeking = isCollapsed && peekOpen;
-
-  // Valeur de contexte mémoïsée : le Provider re-render à chaque micro-changement
-  // d'état hover/focus pendant un survol — sans ça, tous les consommateurs
-  // (`SideNav`, `SideNav.Trigger`, `useSideNav`) re-render à chaque frame.
-  const value = useMemo(
-    () => ({
-      isCollapsed,
-      onToggleCollapse,
-      isPeeking,
-      setTriggerHover,
-      setNavHover,
-      setNavFocused,
-      closePeek,
-    }),
-    [isCollapsed, onToggleCollapse, isPeeking, closePeek],
+  const setMode = useCallback(
+    (next: SideNavMode) => {
+      setInternalMode(next);
+      onModeChange?.(next);
+    },
+    [onModeChange],
   );
+
+  // Raccourci clavier global : Ctrl/Cmd+Shift+E bascule expanded ⇄ rail.
+  useEffect(() => {
+    if (!enableShortcut) return undefined;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === "E" || e.key === "e")) {
+        e.preventDefault();
+        setMode(mode === "expanded" ? "rail" : "expanded");
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [enableShortcut, mode, setMode]);
+
+  // Valeur de contexte mémoïsée : évite de re-render tous les consommateurs
+  // (`SideNav`, `SideNav.Header`, `useSideNav`) à chaque rendu du Provider.
+  const value = useMemo(() => ({ mode, setMode }), [mode, setMode]);
 
   return (
     <SideNavContext.Provider value={value}>{children}</SideNavContext.Provider>
@@ -631,12 +611,12 @@ SideNavProvider.displayName = "SideNav.Provider";
 /**
  * SideNav — Comete Design System
  *
- * Navigation latérale composable. Lit son état (isCollapsed + peek) depuis
- * le `<SideNav.Provider>` parent — doit donc toujours être placée à
- * l'intérieur de celui-ci.
+ * Navigation latérale composable, **permanente** (tablette / desktop) : `expanded`
+ * (240px) ou `rail` (80px), jamais masquée et jamais agrandie au survol. Lit son
+ * mode depuis le `<SideNav.Provider>` parent — à placer à l'intérieur de celui-ci.
  *
  * ```tsx
- * <SideNav.Provider isCollapsed={c} onCollapsedChange={setC}>
+ * <SideNav.Provider>
  *   <SideNav>
  *     <SideNav.Header ... />
  *     <SideNav.Section title="Navigation">
@@ -652,8 +632,7 @@ export function SideNav({
   style,
   "aria-label": ariaLabel = "Navigation principale",
 }: SideNavProps): ReactElement {
-  const { isCollapsed, isPeeking, setNavHover, setNavFocused, closePeek } =
-    useContext(SideNavContext);
+  const { mode } = useContext(SideNavContext);
 
   // Header et Footer restent épinglés en haut/bas ; tout le reste (sections +
   // items) est regroupé dans un corps qui défile (overflow-y: auto). On
@@ -672,46 +651,12 @@ export function SideNav({
     };
   }, [children]);
 
-  // Fermeture du peek au clic sur un item : écouteur natif délégué sur la nav
-  // (plutôt qu'un `onClick` JSX, qui violerait les règles jsx-a11y sur un
-  // élément non-interactif). Actif uniquement quand la nav est en overlay.
-  const navRef = useRef<HTMLElement>(null);
-  useEffect(() => {
-    const el = navRef.current;
-    if (!el || !isPeeking) return undefined;
-    const onClick = () => closePeek?.();
-    el.addEventListener("click", onClick);
-    return () => el.removeEventListener("click", onClick);
-  }, [isPeeking, closePeek]);
-
   return (
-    <div
-      className={styles.container}
-      data-collapsed={isCollapsed || undefined}
-      style={style}
-    >
+    <div className={styles.container} data-mode={mode} style={style}>
       <nav
-        ref={navRef}
         aria-label={ariaLabel}
         className={[styles.sideNav, className].filter(Boolean).join(" ")}
-        data-collapsed={isCollapsed || undefined}
-        data-peeking={isPeeking || undefined}
-        /* En collapsed, la nav est un overlay non focusable/non cliquable tant
-           qu'elle n'est pas en peek (pointer-events: none + visibility: hidden
-           via le CSS) — ces handlers ne s'y déclenchent donc pas. En peek, ils
-           maintiennent l'overlay ouvert tant que le pointeur OU le focus
-           clavier y sont. Le clic sur un item (fermeture du peek) est géré par
-           un écouteur natif via `navRef`. */
-        onMouseEnter={() => setNavHover?.(true)}
-        onMouseLeave={() => setNavHover?.(false)}
-        onFocusCapture={() => setNavFocused?.(true)}
-        onBlurCapture={(e) => {
-          // Ne remet à false que si le focus quitte réellement la nav (pas un
-          // simple déplacement entre items).
-          if (!e.currentTarget.contains(e.relatedTarget)) {
-            setNavFocused?.(false);
-          }
-        }}
+        data-mode={mode}
       >
         {header}
         <div className={styles.body}>{body}</div>
@@ -733,5 +678,4 @@ SideNav.Section = SideNavSection;
 SideNav.Divider = SideNavDivider;
 SideNav.Footer = SideNavFooter;
 SideNav.FooterBrand = SideNavFooterBrand;
-SideNav.Trigger = SideNavTrigger;
 SideNav.Provider = SideNavProvider;

@@ -9,11 +9,11 @@ export {
   SideNavDivider,
   SideNavFooter,
   SideNavFooterBrand,
-  SideNavTrigger,
   SideNavProvider,
   useSideNav,
 } from "./SideNav";
 export type {
+  SideNavMode,
   SideNavProps,
   SideNavHeaderProps,
   SideNavItemProps,
@@ -24,6 +24,5 @@ export type {
   SideNavDividerProps,
   SideNavFooterProps,
   SideNavFooterBrandProps,
-  SideNavTriggerProps,
   SideNavProviderProps,
 } from "./SideNav";

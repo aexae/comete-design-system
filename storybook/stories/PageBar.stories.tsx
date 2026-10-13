@@ -141,8 +141,8 @@ export const Large: Story = {
 
 /**
  * **Bar — page racine, responsive** : une **seule** affordance de navigation
- * dans `leading` — ici le menu hamburger (un `<SideNav.Trigger />` en contexte
- * réel). Aucune `size` forcée : le titre suit la **largeur de la Page** via
+ * dans `leading` — ici le menu hamburger (mobile web : il ouvre la SideNav dans un
+ * `Drawer`). Aucune `size` forcée : le titre suit la **largeur de la Page** via
  * `@container`.
  *
  * 👉 Redimensionne le cadre (poignée en bas à droite) : sous 768px la barre

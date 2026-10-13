@@ -245,23 +245,21 @@ const AGENTS = [
  * **Base** — Structure de base : Banner + SideNav + Page (avec Page.Bar).
  *
  * - Banner globale en haut du viewport
- * - SideNav à gauche (avec collapse/expand)
- * - Page.Bar + Page.Body dans la zone principale (le SideNav.Trigger vit dans le
- *   `leading` de la Page.Bar ; les actions globales via `Page globalActions`)
+ * - SideNav à gauche, permanente (déployée ou en rail ; bouton de bascule dans son en-tête)
+ * - Page.Bar + Page.Body dans la zone principale (actions globales via
+ *   `Page globalActions`)
  */
 export const Base: Story = {
   name: "Base (Banner + SideNav + Page.Bar)",
   parameters: { design: { type: "figma", url: figmaUrl("4319:15827") } },
   render: function BaseStory() {
-    const [collapsed, setCollapsed] = useState(false);
-
     function FooterLogo() {
-      const { isCollapsed } = useSideNav();
-      return <Logo size={14} product="link" appearance="neutral" format={isCollapsed ? "icon" : "logo"} />;
+      const { mode } = useSideNav();
+      return <Logo size={14} product="link" appearance="neutral" format={mode === "rail" ? "icon" : "logo"} />;
     }
 
     return (
-      <SideNav.Provider isCollapsed={collapsed} onCollapsedChange={setCollapsed}>
+      <SideNav.Provider>
       <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
         {/* Banner globale — pleine largeur, au-dessus de tout */}
         <Banner appearance="warning">
@@ -269,8 +267,7 @@ export const Base: Story = {
           <Button appearance="link" isInline>En savoir plus</Button>
         </Banner>
 
-        {/* Zone principale : SideNav + contenu côte à côte. La nav en
-            peek (overlay absolute) ne déborde QUE dans cette zone. */}
+        {/* Zone principale : SideNav + contenu côte à côte. */}
         <div style={{ display: "flex", flex: 1, minHeight: 0, position: "relative" }}>
           {/* SideNav */}
           <SideNav>
@@ -313,7 +310,7 @@ export const Base: Story = {
               }
               style={{ flex: 1, minHeight: 0 }}
             >
-              <Page.Bar title="Accueil" leading={<SideNav.Trigger />} />
+              <Page.Bar title="Accueil" />
               <Page.Toolbar
                 search={
                   <SearchField

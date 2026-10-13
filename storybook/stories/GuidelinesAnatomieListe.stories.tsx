@@ -94,13 +94,13 @@ const ZONES: Zone[] = [
   {
     n: "2",
     el: "Navigation latérale",
-    note: "Le menu de gauche, repliable. Le bouton qui le replie vit dans la barre de page, à gauche du titre.",
-    tech: "SideNav + SideNavProvider ; SideNav.Trigger dans Page.Bar leading.",
+    note: "Le menu de gauche, permanent sur tablette et desktop : déployé (240 px) ou réduit en rail (80 px), jamais masqué, jamais agrandi au survol. Le bouton de bascule est dans son en-tête. Sur mobile web il s'ouvre dans un tiroir ; en app mobile, il n'y en a pas.",
+    tech: "SideNav + SideNav.Provider (mode expanded / rail) ; mobile web : Drawer placement=\"left\".",
   },
   {
     n: "3",
     el: "Barre de page",
-    note: "Trois zones : à gauche une seule affordance de navigation, soit le bouton de repli soit un retour ; au centre le titre de l'écran ; à droite les actions. Il n'y a pas de fil d'Ariane.",
+    note: "Trois zones : à gauche une seule affordance de navigation (un retour, ou le hamburger du tiroir en mobile web) ; au centre le titre de l'écran ; à droite les actions. Il n'y a pas de fil d'Ariane.",
     tech: "Page.Bar : leading, title (rendu en h1), trailing. Props : size large ou compact.",
   },
   {
@@ -285,9 +285,8 @@ const TechNote = ({ audience, children }: { audience: Audience; children: ReactN
 // Schéma — recomposé avec les composants du DS
 
 function Schema(): ReactElement {
-  const [collapsed, setCollapsed] = useState(false);
   return (
-    <SideNav.Provider isCollapsed={collapsed} onCollapsedChange={setCollapsed}>
+    <SideNav.Provider>
     <Stack gap="150">
       {/* 1 — Alerte globale */}
       <Cluster gap="150" align="center" style={{ flexWrap: "nowrap" }}>
@@ -331,7 +330,7 @@ function Schema(): ReactElement {
               <Cluster gap="150" align="center" justify="between" style={{ flexWrap: "nowrap" }}>
                 <Cluster gap="150" align="center" style={{ flexWrap: "nowrap" }}>
                   <Num n="3" />
-                  <SideNav.Trigger />
+                  <Button appearance="subtle" density="compact" iconBefore="ArrowBack" aria-label="Retour" />
                   <Heading size="small" as="div">Titre de l’écran</Heading>
                 </Cluster>
                 <Button color="comete" density="compact">Action</Button>

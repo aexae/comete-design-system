@@ -9,6 +9,53 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Ajouté
+
+- **SideNav — rail de 80 px** : nouvel état **rail** (`mode="rail"`), pour tablette
+  et desktop. Rail de **80 px** (maquette Figma) : chaque item empile l'icône
+  (24 px) et un libellé court (10 px) dessous, barre de sélection de 4 × 20 px,
+  titres de section (12 px) et séparateurs sur toute la largeur utile. Le rail est
+  **fixe** : il ne s'agrandit **jamais au survol**. On passe de `expanded` (240 px) à
+  `rail` par le bouton de bascule de l'en-tête ou `Ctrl/Cmd+Shift+E` (désactivable
+  via `enableShortcut`). Custom property `--sidenav-rail-width`. En rail,
+  `SideNav.Item` requiert une icône (`iconBefore`) — un `console.warn` le signale en
+  dev. Type `SideNavMode` exporté.
+- **SideNav.Header — `showToggle`** (défaut `true`) : retire le bouton de bascule
+  `expanded` ⇄ `rail` de l'en-tête (utile dans un `Drawer` sur mobile web, où il n'y a
+  pas de rail).
+- **SideNav — règles par plateforme** (documentées sur le composant et dans
+  Storybook) : **app mobile** = pas de SideNav, la `BottomNav` porte seule la
+  navigation ; **mobile navigateur web** = la SideNav s'affiche dans un `Drawer`
+  `placement="left"`, par-dessus le contenu ; **tablette et desktop** = navigation
+  permanente, déployée ou en rail, qui ne disparaît jamais.
+
+### Modifié
+
+- **SideNav — retrait horizontal homogène** : en-tête, items, séparateurs, titres de
+  section et pied partagent désormais **le même bord gauche** (variable
+  `--sidenav-inset`, 20 px depuis le bord de la nav) ; ils étaient à 16 / 20 / 24 px.
+  L'espace **avant et après un item est identique** (8 px de chaque côté) : la
+  gouttière de défilement (8 px) est logée dans la marge droite de la nav au lieu de
+  s'y ajouter (19 px à droite pour 8 px à gauche auparavant). La largeur déployée reste
+  240 px (items de 224 px + 2 × 8 px, conforme à la maquette).
+- **SideNav — titre de section** : `.sectionHeading` passe de 10 px à **12 px**
+  (`--font-size-ui-xxs`).
+
+### Changements cassants (BREAKING)
+
+- **SideNav — mode replié (`collapsed` / `hidden`) supprimé.** La navigation est
+  permanente : `SideNavMode` vaut `"expanded" | "rail"`. Sur mobile web, utiliser un
+  `Drawer placement="left"`.
+- **SideNav — peek au survol supprimé.** Plus aucun agrandissement au survol (rail
+  comme déployé) : on bascule par le bouton de la nav ou `Ctrl/Cmd+Shift+E`.
+- **`SideNav.Trigger` (`SideNavTrigger`, `SideNavTriggerProps`) supprimé** : il
+  servait à rouvrir la nav repliée. Pour le hamburger mobile web, utiliser un
+  `Button` qui ouvre le `Drawer`.
+- **`SideNav.Provider` — props `isCollapsed` / `defaultCollapsed` / `onCollapsedChange`
+  supprimées** → utiliser `mode` / `defaultMode` / `onModeChange`.
+- **`useSideNav()`** ne renvoie plus que `{ mode, setMode }` (`isCollapsed`,
+  `onToggleCollapse`, `isPeeking`, `closePeek` et les setters de survol sont retirés).
+
 ## [1.0.0-alpha.164] - 2026-10-13
 
 ### Ajouté

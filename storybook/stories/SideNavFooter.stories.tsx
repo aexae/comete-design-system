@@ -4,21 +4,16 @@ import type { ReactNode } from "react";
 import { SideNav, Logo, Text } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { MainCouranteShell, MainCouranteNav } from "./_appShell";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
+/** Le composant est montré DANS le template applicatif (Page.Bar + SideNav + contenu). */
 function NavContext({ children }: { children: ReactNode }) {
-  return (
-    <div style={{
-      width: 256, height: 200, background: "var(--background-surface-default)",
-      display: "flex", flexDirection: "column", border: "1px solid var(--border-default)"
-    }}>
-      {children}
-    </div>
-  );
+  return <MainCouranteShell footer={children} nav={<MainCouranteNav />} />;
 }
 
 function SideNavFooterStory(props: { children?: ReactNode }) {
@@ -61,7 +56,7 @@ const meta = {
         />
       ),
     },
-    layout: "centered",
+    layout: "fullscreen",
     design: { type: "figma", url: figmaUrl("4404:3856") },
   },
 } satisfies Meta<typeof SideNavFooterStory>;

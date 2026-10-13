@@ -58,7 +58,7 @@ export interface PageBarProps {
   /**
    * Zone unique à gauche du titre. Une seule affordance de navigation à la
    * fois (jamais deux) :
-   * - **page racine** → menu hamburger (typiquement `<SideNav.Trigger />`) ;
+   * - **page racine** → menu hamburger (mobile web : ouvre la SideNav dans un `Drawer`) ;
    * - **page de détail** → bouton retour, qui *remplace* le hamburger.
    *
    * La visibilité du hamburger est **pilotée par l'app** : elle ne le rend que
@@ -191,7 +191,7 @@ const PageContext = createContext<PageContextValue>({
  *
  * // Les actions globales sont portées par le layout, une seule fois.
  * <Page globalActions={<AppGlobalActions />}>
- *   <Page.Bar title="Agents" leading={<SideNav.Trigger />} />
+ *   <Page.Bar title="Agents" />
  *   <Page.Toolbar
  *     start={<><SearchField /><Button>Filtres</Button></>}
  *     end={<Button appearance="contained" color="comete">Nouvel agent</Button>}
@@ -259,7 +259,7 @@ Page.displayName = "Page";
  * ```tsx
  * // Le trio (notifications, réglages, avatar) est injecté par le layout Page.
  * <Page>
- *   <Page.Bar title="Accueil" leading={<SideNav.Trigger />} />
+ *   <Page.Bar title="Accueil" />
  *   <Page.Toolbar start={<SearchField />} end={<Button color="comete">Nouveau</Button>} />
  *   <Page.Body>…</Page.Body>
  * </Page>

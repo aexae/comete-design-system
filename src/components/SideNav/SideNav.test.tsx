@@ -1,5 +1,5 @@
 // Tests unitaires pour le composant SideNav
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { SideNav } from "./SideNav";
@@ -415,5 +415,118 @@ describe("SideNav", () => {
     // …mais header et footer restent en dehors (épinglés).
     expect(body?.textContent).not.toContain("Ma marque");
     expect(body?.textContent).not.toContain("Pied de page");
+  });
+  // Rail (80px) ---------------------------------------------------------
+
+  describe("mode rail", () => {
+    const renderRail = () =>
+      render(
+        <SideNav.Provider defaultMode="rail">
+          <SideNav>
+            <SideNav.Header companyName="App" />
+            <SideNav.Section title="Manager">
+              <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
+            </SideNav.Section>
+          </SideNav>
+        </SideNav.Provider>,
+      );
+
+    it("should expose the rail mode on the container and the nav", () => {
+      renderRail();
+      const nav = screen.getByRole("navigation");
+      expect(nav).toHaveAttribute("data-mode", "rail");
+      expect(nav.parentElement).toHaveAttribute("data-mode", "rail");
+    });
+
+    it("should NOT grow when the rail is hovered", async () => {
+      vi.useFakeTimers();
+      try {
+        renderRail();
+        const nav = screen.getByRole("navigation");
+        act(() => {
+          nav.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
+          nav.dispatchEvent(new MouseEvent("mouseenter"));
+        });
+        await act(async () => {
+          await vi.advanceTimersByTimeAsync(1000);
+        });
+        expect(nav).not.toHaveAttribute("data-peeking");
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it("should keep the visible item label in the rail (accessible name from the text)", () => {
+      renderRail();
+      const link = screen.getByRole("link", { name: "Agents" });
+      expect(link).not.toHaveAttribute("aria-label");
+      // Libellé complet en tooltip natif (le libellé du rail est tronqué à 10px).
+      expect(link).toHaveAttribute("title", "Agents");
+    });
+
+    it("should expand to the full panel from the header toggle", async () => {
+      renderRail();
+      await userEvent.click(screen.getByRole("button", { name: "Déployer la navigation" }));
+      expect(screen.getByRole("navigation")).toHaveAttribute("data-mode", "expanded");
+    });
+  });
+
+  // Mode permanent : pas de repli, pas de peek, pas de Trigger ---------------
+
+  describe("navigation permanente", () => {
+    it("should never expose a collapsed or peeking state", () => {
+      render(
+        <SideNav.Provider>
+          <SideNav>
+            <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
+          </SideNav>
+        </SideNav.Provider>,
+      );
+      const nav = screen.getByRole("navigation");
+      expect(nav).not.toHaveAttribute("data-collapsed");
+      expect(nav).not.toHaveAttribute("data-peeking");
+      expect(nav.parentElement).not.toHaveAttribute("data-collapsed");
+    });
+
+    it("should no longer expose the removed Trigger / hidden mode API", () => {
+      expect((SideNav as unknown as Record<string, unknown>)["Trigger"]).toBeUndefined();
+    });
+
+    it("should toggle expanded ⇄ rail with Ctrl+Shift+E (never hidden)", async () => {
+      const onModeChange = vi.fn();
+      render(
+        <SideNav.Provider onModeChange={onModeChange}>
+          <SideNav>
+            <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
+          </SideNav>
+        </SideNav.Provider>,
+      );
+      await userEvent.keyboard("{Control>}{Shift>}E{/Shift}{/Control}");
+      expect(onModeChange).toHaveBeenLastCalledWith("rail");
+      await userEvent.keyboard("{Control>}{Shift>}E{/Shift}{/Control}");
+      expect(onModeChange).toHaveBeenLastCalledWith("expanded");
+    });
+
+    it("should hide the header toggle when showToggle is false (Drawer on mobile web)", () => {
+      render(
+        <SideNav.Provider>
+          <SideNav>
+            <SideNav.Header companyName="App" showToggle={false} />
+          </SideNav>
+        </SideNav.Provider>,
+      );
+      expect(screen.queryByRole("button", { name: /navigation/i })).toBeNull();
+    });
+
+    it("should show the header toggle by default under a Provider", () => {
+      render(
+        <SideNav.Provider>
+          <SideNav>
+            <SideNav.Header companyName="App" />
+          </SideNav>
+        </SideNav.Provider>,
+      );
+      expect(screen.getByRole("button", { name: "Réduire la navigation" })).toBeInTheDocument();
+    });
   });
 });

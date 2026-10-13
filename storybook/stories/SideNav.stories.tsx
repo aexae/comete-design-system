@@ -1,44 +1,51 @@
 // SideNav — story principale (composition complète)
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, userEvent, expect } from "storybook/test";
-import { SideNav, Logo } from "@aexae/comete-design-system/components";
+import { useState } from "react";
+import { within, userEvent, expect, waitFor } from "storybook/test";
+import { SideNav, Logo, Page, Button, Drawer } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
-import { MainCouranteShell, MainCouranteNav } from "./_appShell";
+import { MainCouranteShell, MainCouranteNav, DemoPageContent } from "./_appShell";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
-type StoryArgs = { initialCollapsed: boolean };
-
-const meta: Meta<StoryArgs> = {
+const meta: Meta = {
   title: "Navigation/SideNav",
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "La navigation latérale affiche la structure hiérarchique de l'application dans un panneau vertical permanent ou repliable. Elle permet de naviguer entre les sections et sous-sections tout en visualisant la position courante." },
+      description: {
+        component:
+          "La navigation latérale affiche la structure hiérarchique de l'application dans un panneau vertical permanent (déployé ou en rail). Elle permet de naviguer entre les sections et sous-sections tout en visualisant la position courante.\n\n" +
+          "**Règles par plateforme** — le DS ne pose aucune media query, l'app choisit le mode :\n\n" +
+          "- **App mobile** : pas de SideNav ; la **BottomNav** porte seule la navigation.\n" +
+          "- **Mobile navigateur web** (< 768 px) : la SideNav s'affiche dans un **`Drawer` à gauche**, par-dessus le viewport ; elle ne pousse jamais le contenu.\n" +
+          "- **Tablette et desktop** : elle est **permanente** : déployée (240 px) ou réduite en **rail de 80 px** (`mode=\"rail\"`), elle ne disparaît **jamais** ; elle ne s'agrandit **jamais au survol** — on le déploie par le bouton de bascule ou `Ctrl/Cmd+Shift+E`.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
             <GuidelinesFlat
               when={[
                 "Navigation principale persistante d'une application, sur le côté (sections, rubriques).",
-                "Quand la hiérarchie de navigation est riche et bénéficie d'un mode replié (collapse).",
+                "Quand la hiérarchie de navigation est riche et bénéficie d'un rail réduit (80 px) sur tablette et desktop.",
               ]}
               avoid={[
-                "Une navigation d'app mobile → BottomNav.",
+                "Une navigation d'app mobile → BottomNav (pas de SideNav en app mobile).",
+                "Faire disparaître la navigation sur tablette / desktop : elle se réduit en rail de 80 px, jamais en `hidden`.",
                 "Une barre supérieure globale (marque, compte, actions) → Page.Bar.",
                 "Naviguer entre vues d'une même page → Tabs.",
               ]}
               best={[
                 "Structurer avec SideNavSection/Item ; un seul item actif reflétant la route courante.",
-                "Prévoir l'état replié (icônes + tooltips) ; garder l'ordre stable entre les pages.",
+                "Prévoir le rail (80 px : icône + libellé court) ; garder l'ordre stable entre les pages.",
               ]}
               accessibility={[
                 "Repère de navigation (`nav`) avec un libellé ; un seul item courant (`aria-current`).",
-                "Utilisable au clavier ; en mode replié, chaque icône garde un nom accessible.",
+                "Utilisable au clavier ; en rail, le libellé court reste visible et le libellé complet est en tooltip.",
               ]}
             />
           }
@@ -48,39 +55,19 @@ const meta: Meta<StoryArgs> = {
     layout: "fullscreen",
     design: { type: "figma", url: figmaUrl("4319:15156") },
   },
-  argTypes: {
-    initialCollapsed: { control: "boolean" },
-  },
-  args: { initialCollapsed: false },
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** SideNav autonome : `SideNav.Provider` + `SideNav` (Header + corps + Footer),
- *  hors contexte de Page. C'est l'élément `<SideNav>` qui porte la largeur de 240px.
- *  Déployée par défaut. */
+/**
+ * **Default** — template applicatif : `Page.Bar` pleine largeur + SideNav permanente
+ * (`SideNav.Provider` + `SideNav` : Header + corps + Footer) + contenu de page. La nav
+ * est déployée (240 px) et **pousse** le contenu ; le bouton de l'en-tête la réduit en
+ * rail (`Ctrl/Cmd+Shift+E`).
+ */
 export const Default: Story = {
-  render: () => (
-    <SideNav.Provider>
-      {/* `.sidenav` fait `height: 100%` → le parent doit avoir une hauteur définie. */}
-      <div style={{ display: "flex", height: "100vh" }}>
-        <SideNav>
-          <SideNav.Header
-            logo={<Logo product="cafe" format="icon" />}
-            companyName="Pro Sécurité"
-            description="Main Courante"
-          />
-          <MainCouranteNav />
-          <SideNav.Footer>
-            <SideNav.FooterBrand>
-              <Logo size={14} />
-            </SideNav.FooterBrand>
-          </SideNav.Footer>
-        </SideNav>
-      </div>
-    </SideNav.Provider>
-  ),
+  render: () => <MainCouranteShell nav={<MainCouranteNav />} />,
   // Navigation clavier : Tab passe d'un item à l'autre, Enter active l'item
   // focalisé. La navigation réelle (href) est interceptée pour ne pas quitter
   // la story.
@@ -96,7 +83,10 @@ export const Default: Story = {
     };
     canvasElement.addEventListener("click", onClickCapture, true);
     try {
-      // Tab entre dans la nav → premier item focusable.
+      // Tab entre dans la nav → d'abord le bouton de bascule de l'en-tête…
+      await userEvent.tab();
+      await expect(canvas.getByRole("button", { name: "Réduire la navigation" })).toHaveFocus();
+      // …puis le premier item.
       await userEvent.tab();
       const accueil = canvas.getByRole("link", { name: "Accueil" });
       await expect(accueil).toHaveFocus();
@@ -116,23 +106,158 @@ export const Default: Story = {
   },
 };
 
-/** Mode réduit : la SideNav est totalement invisible. Le Trigger dans
- *  `Page.Bar.leading` permet de rouvrir (click) ou de peek (hover). */
-export const Collapsed: Story = {
-  args: { initialCollapsed: true },
-  render: (args) => (
-    <MainCouranteShell nav={<MainCouranteNav />} initialCollapsed={args.initialCollapsed} />
-  ),
-  // Le Trigger déplie / replie la navigation : son `aria-expanded` reflète
-  // l'état (false = replié, true = déployé) et bascule à chaque clic.
-  play: async ({ canvasElement }) => {
+/**
+ * **Rail (80 px)** — tablette et desktop. La navigation se réduit à un rail de
+ * 80 px (icône 24 px + libellé court dessous) et ne disparaît jamais. Le rail est
+ * **fixe** : il ne s'agrandit pas au survol ; on le déploie par le bouton de
+ * bascule de l'en-tête ou `Ctrl/Cmd+Shift+E`.
+ */
+export const Rail: Story = {
+  name: "Rail (80 px)",
+  parameters: { design: { type: "figma", url: figmaUrl("17480:10191") } },
+  render: () => <MainCouranteShell nav={<MainCouranteNav />} mode="rail" />,
+};
+
+// Test (masqué du sidebar) : le `play` ne se rejoue pas à l'ouverture de la story.
+export const RailInteractions: Story = {
+  tags: ["!dev"],
+  render: Rail.render,
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole("button", { name: /navigation/i });
-    await expect(trigger).toHaveAttribute("aria-expanded", "false");
-    await userEvent.click(trigger);
-    await expect(trigger).toHaveAttribute("aria-expanded", "true");
-    await userEvent.click(trigger);
-    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    const container = () => canvasElement.querySelector("nav")?.parentElement as HTMLElement;
+    const nav = () => canvasElement.querySelector("nav") as HTMLElement;
+    const main = () => canvasElement.querySelector("main") as HTMLElement;
+
+    await step("rail de 80 px, libellé visible sous l'icône", async () => {
+      await expect(Math.round(container().getBoundingClientRect().width)).toBe(80);
+      await expect(canvas.getByText("Agents")).toBeVisible();
+    });
+
+    await step("ne s'agrandit PAS au survol (le contenu ne bouge pas)", async () => {
+      const mainLeft = main().getBoundingClientRect().left;
+      await userEvent.hover(nav());
+      await new Promise((r) => setTimeout(r, 400));
+      await expect(Math.round(container().getBoundingClientRect().width)).toBe(80);
+      await expect(Math.round(nav().getBoundingClientRect().width)).toBe(80);
+      await expect(main().getBoundingClientRect().left).toBe(mainLeft);
+    });
+
+    await step("se déploie par le bouton de bascule", async () => {
+      await userEvent.click(canvas.getByRole("button", { name: "Déployer la navigation" }));
+      // La largeur s'anime (transition) : on attend la valeur finale.
+      await waitFor(() => expect(Math.round(container().getBoundingClientRect().width)).toBe(240));
+    });
+  },
+};
+
+/**
+ * **Mobile navigateur web (< 768 px)** — la SideNav s'affiche dans un **`Drawer` à
+ * gauche** : elle passe **par-dessus** le contenu (voile cliquable) et ne le pousse
+ * jamais. Le hamburger de la `Page.Bar` l'ouvre ; elle se referme au voile, à Échap ou
+ * au choix d'une rubrique. Pas de rail sur mobile : `showToggle={false}` retire le
+ * bouton de bascule de l'en-tête. (En **app mobile**, pas de SideNav : la BottomNav
+ * porte seule la navigation.)
+ */
+function MobileWebDemo() {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <>
+      <Page globalActions={null} style={{ height: "100vh", overflowY: "auto" }}>
+        <Page.Bar
+          title="Accueil"
+          leading={
+            <Button
+              appearance="subtle"
+              color="subtlest"
+              iconBefore="Menu"
+              aria-label="Ouvrir la navigation"
+              aria-expanded={isOpen}
+              onPress={() => setIsOpen(true)}
+            />
+          }
+        />
+        <DemoPageContent />
+      </Page>
+      <Drawer
+        isOpen={isOpen}
+        onOpenChange={setIsOpen}
+        placement="left"
+        size="240px"
+        aria-label="Navigation principale"
+      >
+        <SideNav.Provider>
+          {/* Un clic sur une rubrique ferme le Drawer (navigation). Le conteneur
+              donne toute la hauteur du Drawer à la nav. */}
+          <div
+            style={{ height: "100%" }}
+            onClickCapture={(e) => { if ((e.target as HTMLElement).closest("a")) setIsOpen(false); }}
+          >
+            <SideNav>
+              <SideNav.Header
+                logo={<Logo product="cafe" format="icon" />}
+                companyName="Pro Sécurité"
+                description="Main Courante"
+                showToggle={false}
+              />
+              <MainCouranteNav />
+              <SideNav.Footer>
+                <SideNav.FooterBrand>
+                  <Logo size={14} product="link" appearance="neutral" format="logo" />
+                </SideNav.FooterBrand>
+              </SideNav.Footer>
+            </SideNav>
+          </div>
+        </SideNav.Provider>
+      </Drawer>
+    </>
+  );
+}
+
+export const MobileWeb: Story = {
+  name: "Mobile web (Drawer left)",
+  // Viewport mobile réel : le Drawer (portal + position: fixed) prend la taille d'un téléphone.
+  globals: { viewport: { value: "cometeMobileAgent", isRotated: false } },
+  parameters: { layout: "fullscreen", controls: { disable: true } },
+  render: () => <MobileWebDemo />,
+};
+
+export const MobileWebInteractions: Story = {
+  tags: ["!dev"],
+  globals: { viewport: { value: "cometeMobileAgent", isRotated: false } },
+  parameters: { layout: "fullscreen" },
+  render: () => <MobileWebDemo />,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const hamburger = () => canvas.getByRole("button", { name: "Ouvrir la navigation" });
+    const drawer = () => document.querySelector('[role="dialog"]');
+
+    await step("fermé au départ, contenu visible", async () => {
+      await expect(drawer()).toBeNull();
+      await expect(canvas.getByText("Agent 1")).toBeVisible();
+    });
+
+    await step("le hamburger ouvre la nav dans un Drawer, par-dessus le contenu", async () => {
+      await userEvent.click(hamburger());
+      await waitFor(() => expect(drawer()).not.toBeNull());
+      const dialog = within(drawer() as HTMLElement);
+      await expect(dialog.getByRole("link", { name: "Agents" })).toBeInTheDocument();
+      // Pas de rail sur mobile : aucun bouton de bascule dans l'en-tête.
+      await expect(dialog.queryByRole("button", { name: /navigation/i })).toBeNull();
+    });
+
+    await step("se referme avec Échap", async () => {
+      await userEvent.keyboard("{Escape}");
+      await waitFor(() => expect(drawer()).toBeNull());
+    });
+
+    await step("se referme au choix d'une rubrique", async () => {
+      await userEvent.click(hamburger());
+      await waitFor(() => expect(drawer()).not.toBeNull());
+      const link = within(drawer() as HTMLElement).getByRole("link", { name: "Agents" });
+      link.addEventListener("click", (e) => e.preventDefault(), { once: true });
+      await userEvent.click(link);
+      await waitFor(() => expect(drawer()).toBeNull());
+    });
   },
 };
 
@@ -145,6 +270,7 @@ export const Loading: Story = {
   parameters: { controls: { disable: true } },
   render: () => (
     <MainCouranteShell
+      isPageLoading
       nav={
         <>
           <SideNav.Skeleton count={4} />
@@ -175,34 +301,6 @@ export const Empty: Story = {
       }
     />
   ),
-};
-
-/**
- * **Peek au survol** — la SideNav est repliée ; survoler le `SideNav.Trigger`
- * (dans le header) l'affiche en **overlay glissant** par-dessus le contenu.
- * Le contenu principal (« Contenu principal », à droite) **ne bouge pas** : le
- * container garde une largeur de 0. Le `play` survole le Trigger pour figer
- * l'overlay, puis vérifie que le contenu n'a pas été décalé.
- */
-export const Peek: Story = {
-  name: "Peek (survol du Trigger)",
-  args: { initialCollapsed: true },
-  render: (args) => (
-    <MainCouranteShell nav={<MainCouranteNav />} initialCollapsed={args.initialCollapsed} />
-  ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const main = canvasElement.querySelector("main");
-    const container = canvasElement.querySelector("nav")?.parentElement;
-    const mainLeftBefore = main?.getBoundingClientRect().left;
-
-    await userEvent.hover(canvas.getByRole("button", { name: /navigation/i }));
-
-    // Overlay (pas push) : le contenu principal n'a pas changé de position…
-    await expect(main?.getBoundingClientRect().left).toBe(mainLeftBefore);
-    // …et le container ne réserve toujours aucune largeur.
-    await expect(container?.getBoundingClientRect().width).toBe(0);
-  },
 };
 
 /**
