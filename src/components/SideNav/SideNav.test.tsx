@@ -1,5 +1,5 @@
 // Tests unitaires pour le composant SideNav
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { SideNav } from "./SideNav";
@@ -415,5 +415,130 @@ describe("SideNav", () => {
     // …mais header et footer restent en dehors (épinglés).
     expect(body?.textContent).not.toContain("Ma marque");
     expect(body?.textContent).not.toContain("Pied de page");
+  });
+  // Rail (80px) ---------------------------------------------------------
+
+  describe("mode rail", () => {
+    const renderRail = () =>
+      render(
+        <SideNav.Provider defaultMode="rail">
+          <SideNav>
+            <SideNav.Header companyName="App" />
+            <SideNav.Section title="Manager">
+              <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
+            </SideNav.Section>
+          </SideNav>
+        </SideNav.Provider>,
+      );
+
+    it("should expose the rail mode on the container and the nav", () => {
+      renderRail();
+      const nav = screen.getByRole("navigation");
+      expect(nav).toHaveAttribute("data-mode", "rail");
+      expect(nav.parentElement).toHaveAttribute("data-mode", "rail");
+    });
+
+    it("should NOT peek (grow) when the rail is hovered", async () => {
+      vi.useFakeTimers();
+      try {
+        renderRail();
+        const nav = screen.getByRole("navigation");
+        act(() => {
+          nav.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
+          nav.dispatchEvent(new MouseEvent("mouseenter"));
+        });
+        await act(async () => {
+          await vi.advanceTimersByTimeAsync(1000);
+        });
+        expect(nav).not.toHaveAttribute("data-peeking");
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it("should keep the visible item label in the rail (accessible name from the text)", () => {
+      renderRail();
+      const link = screen.getByRole("link", { name: "Agents" });
+      expect(link).not.toHaveAttribute("aria-label");
+      // Libellé complet en tooltip natif (le libellé du rail est tronqué à 10px).
+      expect(link).toHaveAttribute("title", "Agents");
+    });
+
+    it("should expand to the full panel from the header toggle", async () => {
+      renderRail();
+      await userEvent.click(screen.getByRole("button", { name: "Déployer la navigation" }));
+      expect(screen.getByRole("navigation")).toHaveAttribute("data-mode", "expanded");
+    });
+  });
+
+  // Overlay mobile web ----------------------------------------------------
+
+  describe("isOverlay (mobile web)", () => {
+    const Harness = ({ onModeChange }: { onModeChange?: (m: string) => void }) => (
+      <SideNav.Provider isOverlay defaultMode="hidden" onModeChange={onModeChange}>
+        <SideNav.Trigger />
+        <SideNav>
+          <SideNav.Header companyName="App" />
+          <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
+        </SideNav>
+        <main>contenu</main>
+      </SideNav.Provider>
+    );
+
+    it("should never reserve width and stay hidden until opened", () => {
+      render(<Harness />);
+      const nav = screen.getByRole("navigation", { hidden: true });
+      expect(nav.parentElement).toHaveAttribute("data-collapsed");
+      expect(nav).not.toHaveAttribute("data-peeking");
+    });
+
+    it("should open as an overlay (not pushing) when the trigger is pressed", async () => {
+      render(<Harness />);
+      await userEvent.click(screen.getByRole("button", { name: /navigation/i }));
+      const nav = screen.getByRole("navigation");
+      expect(nav).toHaveAttribute("data-mode", "expanded");
+      expect(nav).toHaveAttribute("data-peeking");
+      // Le conteneur reste en mode « sans largeur » : le contenu n'est pas poussé.
+      expect(nav.parentElement).toHaveAttribute("data-collapsed");
+    });
+
+    it("should close on Escape, on item click and on outside press", async () => {
+      const onModeChange = vi.fn();
+      render(<Harness onModeChange={onModeChange} />);
+      const trigger = () => screen.getByRole("button", { name: /navigation/i });
+
+      await userEvent.click(trigger());
+      await userEvent.keyboard("{Escape}");
+      expect(onModeChange).toHaveBeenLastCalledWith("hidden");
+
+      await userEvent.click(trigger());
+      const link = screen.getByRole("link", { name: "Agents" });
+      link.addEventListener("click", (e) => e.preventDefault(), { once: true });
+      await userEvent.click(link);
+      expect(onModeChange).toHaveBeenLastCalledWith("hidden");
+
+      await userEvent.click(trigger());
+      await userEvent.click(screen.getByText("contenu"));
+      expect(onModeChange).toHaveBeenLastCalledWith("hidden");
+    });
+
+    it("should treat rail as hidden (no rail on mobile web)", () => {
+      render(
+        <SideNav.Provider isOverlay defaultMode="rail">
+          <SideNav>
+            <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
+          </SideNav>
+        </SideNav.Provider>,
+      );
+      expect(screen.getByRole("navigation", { hidden: true })).toHaveAttribute("data-mode", "hidden");
+    });
+
+    it("should not render the header toggle in overlay mode (only the Trigger)", async () => {
+      render(<Harness />);
+      await userEvent.click(screen.getByRole("button", { name: /navigation/i }));
+      // Ouvert : le Trigger s'appelle « Réduire la navigation » ; le bouton de bascule
+      // de l'en-tête (même libellé en expanded) ne doit PAS s'y ajouter.
+      expect(screen.getAllByRole("button", { name: "Réduire la navigation" })).toHaveLength(1);
+    });
   });
 });

@@ -14,10 +14,9 @@
    de contexte de positionnement pour l'overlay de peek (replié).      */
 
 .container {
-  /* Géométrie partagée de la colonne d'icônes (rail ET peek) : garantit que
-     l'icône est centrée dans la même largeur dans les deux rendus, donc qu'elle
-     ne bouge pas pendant l'expansion du peek. */
-  --sidenav-rail-width: 56px;
+  /* Largeur du rail : 80px (maquette Figma « ❖ Side navigation »). Items de 64px
+     (8px de gouttière de chaque côté), icône 24px + libellé court dessous. */
+  --sidenav-rail-width: 80px;
 
   position: relative;
   width: 240px;
@@ -26,8 +25,8 @@
   transition: width var(--duration-normal) var(--easing-default);
 }
 
-/* Rail : largeur réduite à la colonne d'icônes. Le contenu principal occupe le
-   reste ; en peek, le container garde 56px (l'overlay ne pousse pas). */
+/* Rail : largeur fixe de 80px. Le contenu principal occupe le reste. Le rail ne
+   s'agrandit JAMAIS au survol (aucun peek en rail). */
 .container[data-mode="rail"] {
   width: var(--sidenav-rail-width);
 }
@@ -43,6 +42,11 @@
    quand replié.                                                        */
 
 .sideNav {
+  /* Retrait horizontal COMMUN (en plus de la gouttière de 8px de la nav) : en-tête,
+     items, séparateurs, titres de section et pied partagent ainsi le MÊME bord
+     gauche (20px depuis le bord de la nav) — avant : 16 / 20 / 24px. */
+  --sidenav-inset: var(--space150);
+
   width: 100%;
   height: 100%;
   display: flex;
@@ -158,7 +162,7 @@
   align-items: center;
   gap: var(--space150);
   min-height: 72px;
-  padding: var(--space300) var(--space100) var(--space100) var(--space100);
+  padding: var(--space300) var(--sidenav-inset) var(--space100);
   flex-shrink: 0;
 }
 
@@ -229,7 +233,7 @@
   display: flex;
   align-items: center;
   gap: var(--space150);
-  padding: var(--space075) var(--space150);
+  padding: var(--space075) var(--sidenav-inset);
   height: calc(var(--size300) + 2 * var(--space075));
   border: none;
   border-radius: var(--radius0375);
@@ -337,9 +341,9 @@
 }
 
 .sectionHeading {
-  padding: var(--space200) var(--space200) var(--space025);
+  padding: var(--space200) var(--sidenav-inset) var(--space025);
   font-family: var(--font-family-primary);
-  font-size: var(--font-size-ui-xxxs);
+  font-size: var(--font-size-ui-xxs);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-ui-xxs);
   color: var(--text-subtle);
@@ -355,7 +359,7 @@
 
 .divider {
   height: 2px;
-  margin: var(--space075) var(--space150);
+  margin: var(--space075) var(--sidenav-inset);
   background: var(--border-subtle);
   border: none;
   border-radius: 1px;
@@ -371,7 +375,7 @@
 .footer {
   display: flex;
   flex-direction: column;
-  padding: var(--space200);
+  padding: var(--space200) var(--sidenav-inset);
   margin-top: auto;
   flex-shrink: 0;
 }
@@ -408,7 +412,7 @@
   display: flex;
   align-items: center;
   gap: var(--space150);
-  padding: var(--space075) var(--space150);
+  padding: var(--space075) var(--sidenav-inset);
   height: calc(var(--size300) + 2 * var(--space075));
   box-sizing: border-box;
 }
@@ -423,7 +427,7 @@
 
 /* Placeholder de titre de section — aligné sur `.sectionHeading`. */
 .skeletonSectionTitle {
-  padding: var(--space200) var(--space200) var(--space025);
+  padding: var(--space200) var(--sidenav-inset) var(--space025);
 }
 
 /* Placeholder d'en-tête — aligné sur `.header`. */
@@ -432,7 +436,7 @@
   align-items: center;
   gap: var(--space150);
   min-height: 72px;
-  padding: var(--space300) var(--space100) var(--space100) var(--space100);
+  padding: var(--space300) var(--sidenav-inset) var(--space100);
 }
 
 .skeletonHeaderContent {
@@ -499,123 +503,96 @@
    sa `Page.Bar` pour rouvrir (cas mobile). */
 
 /* ------------------------------------------------------------------ */
-/* Rail (mode icônes, 56px)                                            */
+/* Rail (80px) — maquette Figma « ❖ Side navigation » (17480:10191)     */
 /*
-   Toutes les règles « rail » ci-dessous sont scopées `:not([data-peeking])` :
-   en peek, la nav retrouve EXACTEMENT le rendu déployé (libellés, titres de
-   section, marque complète) et s'élargit — cf. section Peek. L'icône reste
-   centrée dans la colonne de `--sidenav-rail-width`, identique au peek, donc
-   elle ne bouge pas pendant l'expansion. */
-
-.sideNav[data-mode="rail"] {
-  /* La colonne de 56px porte elle-même le centrage : plus de gouttière. */
-  padding-inline: 0;
-  /* Largeur explicite en px (et non 100%) pour que le peek anime `width`
-     de 56 → 240 (interpolation entre deux longueurs px). */
-  width: var(--sidenav-rail-width);
-  transition:
-    width var(--duration-normal) var(--easing-default),
-    box-shadow var(--duration-normal) var(--easing-default);
-}
-
-/* Peek : la nav quitte le flux et GRANDIT de 56 → 240px par-dessus le contenu
-   (le rail « grandit »), avec une ombre portée. Le container garde 56px → le
-   contenu principal ne bouge pas. Les icônes (colonne 56px partagée) restent
-   fixes ; seuls les libellés apparaissent (cf. fondu ci-dessous). */
-.sideNav[data-mode="rail"][data-peeking] {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 240px;
-  z-index: var(--z-index-sticky);
-  box-shadow: var(--elevation-small);
-}
-
-/* Libellés (items, titres de section, nom de marque) : fondu + léger glissement
-   avec un court délai après le début de l'expansion. */
-.sideNav[data-mode="rail"][data-peeking] .itemContent,
-.sideNav[data-mode="rail"][data-peeking] .itemTitle,
-.sideNav[data-mode="rail"][data-peeking] .sectionHeading,
-.sideNav[data-mode="rail"][data-peeking] .headerContent {
-  animation: sidenav-peek-label var(--duration-normal) var(--easing-default) 60ms both;
-}
-
-@keyframes sidenav-peek-label {
-  from {
-    opacity: 0;
-    transform: translateX(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Respect des préférences de mouvement réduit : pas d'animation de libellé. */
-@media (prefers-reduced-motion: reduce) {
-  .sideNav[data-mode="rail"] {
-    transition: none;
-  }
-  .sideNav[data-mode="rail"][data-peeking] .itemContent,
-  .sideNav[data-mode="rail"][data-peeking] .itemTitle,
-  .sideNav[data-mode="rail"][data-peeking] .sectionHeading,
-  .sideNav[data-mode="rail"][data-peeking] .headerContent {
-    animation: none;
-  }
-}
+   Rail FIXE : aucun agrandissement au survol (pas de peek). Il se déploie par le
+   bouton de bascule ou Ctrl/Cmd+Shift+E. Gouttière de 8px (héritée de
+   `.sideNav`) → items de 64px dans un rail de 80px. Chaque item empile l'icône
+   (24px) et un libellé court (10px, centré) ; le titre de section reste visible
+   (12px) ; le séparateur prend toute la largeur utile. */
 
 /* Header en rail : seul le bouton « déployer » subsiste, centré (la marque est
    représentée par le pied de marque en bas). Logo + nom + description masqués. */
-.sideNav[data-mode="rail"]:not([data-peeking]) .header {
+.sideNav[data-mode="rail"] .header {
   justify-content: center;
   gap: 0;
   padding-inline: 0;
 }
 
-.sideNav[data-mode="rail"]:not([data-peeking]) .headerContent,
-.sideNav[data-mode="rail"]:not([data-peeking]) .headerLogo {
+.sideNav[data-mode="rail"] .headerContent,
+.sideNav[data-mode="rail"] .headerLogo {
   display: none;
 }
 
-.sideNav[data-mode="rail"]:not([data-peeking]) .headerToggle {
+.sideNav[data-mode="rail"] .headerToggle {
   margin: 0 auto;
 }
 
-/* Colonne d'icônes partagée rail ↔ peek : l'icône est centrée dans une cellule
-   de `--sidenav-rail-width` dans les DEUX rendus (rail et peek). C'est la
-   contrainte structurante : pendant l'expansion du peek, l'icône ne bouge pas.
-   S'applique donc à tout le mode rail (peek inclus). */
+/* Corps : pas de gouttière de défilement réservée en rail (elle rognait ~11px des
+   64px d'un item) et pas de scrollbar visible — le défilement reste fonctionnel. */
+.sideNav[data-mode="rail"] .body {
+  scrollbar-gutter: auto;
+  scrollbar-width: none;
+}
+
+.sideNav[data-mode="rail"] .body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Item : colonne icône + libellé, centrée. */
 .sideNav[data-mode="rail"] .item {
-  padding: 0;
-  gap: 0;
-}
-
-.sideNav[data-mode="rail"] .iconBefore {
-  flex: 0 0 var(--sidenav-rail-width);
-  display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
+  gap: var(--space025);
+  height: auto;
+  min-height: var(--size400);
+  padding: var(--space075) var(--space050);
+  text-align: center;
 }
 
-/* Rail hors peek : icône seule (libellé + iconAfter masqués). L'état
-   sélectionné (fond accent) reste rendu sur la colonne. */
-.sideNav[data-mode="rail"]:not([data-peeking]) .itemContent,
-.sideNav[data-mode="rail"]:not([data-peeking]) .iconAfter {
+.sideNav[data-mode="rail"] .itemContent {
+  flex: none;
+  width: 100%;
+  align-items: center;
+}
+
+.sideNav[data-mode="rail"] .itemTitle {
+  width: 100%;
+  font-size: var(--font-size-ui-xxxs);
+  line-height: var(--line-height-ui-xxs);
+  text-align: center;
+}
+
+/* Description et icône secondaire : absentes du rail. */
+.sideNav[data-mode="rail"] .itemDescription,
+.sideNav[data-mode="rail"] .iconAfter {
   display: none;
 }
 
-/* Sections : le titre disparaît ; les séparateurs explicites deviennent une
-   barre courte centrée (26px) marquant la frontière entre groupes. */
-.sideNav[data-mode="rail"]:not([data-peeking]) .sectionHeading {
-  display: none;
+/* Indicateur de sélection : barre de 4 × 20px calée à gauche (maquette). */
+.sideNav[data-mode="rail"] .itemSelected::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: var(--size050);
+  height: var(--size250);
+  transform: translateY(-50%);
+  border-radius: 0 var(--radius050) var(--radius050) 0;
+  background: var(--border-selected);
 }
 
-.sideNav[data-mode="rail"]:not([data-peeking]) .divider {
-  width: 26px;
-  margin-inline: auto;
+/* Titre de section : conservé (12px), retrait réduit pour tenir dans 64px. */
+.sideNav[data-mode="rail"] .sectionHeading {
+  padding-inline: var(--space050);
 }
 
-/* Pied de marque : réduit (le libellé n'apparaît qu'en peek/déployé). */
-.sideNav[data-mode="rail"]:not([data-peeking]) .footer {
+/* Séparateur : toute la largeur utile (64px). */
+.sideNav[data-mode="rail"] .divider {
+  margin-inline: 0;
+}
+
+/* Pied de marque : sans retrait horizontal (le libellé n'existe qu'en déployé). */
+.sideNav[data-mode="rail"] .footer {
   padding-inline: 0;
 }

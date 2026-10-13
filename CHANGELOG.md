@@ -11,24 +11,42 @@ entre versions alpha.
 
 ### Ajouté
 
-- **SideNav** : troisième état **rail** (56px, icônes seules) via une API `mode`
-  (`"expanded" | "rail" | "hidden"`) sur `SideNav.Provider`
-  (`mode`/`defaultMode`/`onModeChange`). Le **peek** au survol du rail s'anime
-  désormais en **grandissement de largeur** (56 → 240px) par-dessus le contenu,
-  avec la colonne d'icônes alignée au pixel (custom property
-  `--sidenav-rail-width`). Le bouton de bascule vit dans la nav (header / tête de
-  rail / header du peek) ; raccourci clavier `Ctrl/Cmd+Shift+E` (expanded ⇄ rail,
-  désactivable via `enableShortcut`). En mode rail, `SideNav.Item` requiert une
-  icône (`iconBefore`) — un `console.warn` le signale en dev. Type `SideNavMode`
+- **SideNav — rail de 80 px et API `mode`** : troisième état **rail**
+  (`"expanded" | "rail" | "hidden"`) via `mode` / `defaultMode` / `onModeChange` sur
+  `SideNav.Provider`. Rail de **80 px** (maquette Figma) : chaque item empile
+  l'icône (24 px) et un libellé court (10 px) dessous, barre de sélection de
+  4 × 20 px, titres de section (12 px) et séparateurs sur toute la largeur utile.
+  Le rail est **fixe** : il **ne s'agrandit pas au survol** (aucun peek en rail) ;
+  on le déploie par le bouton de la nav ou `Ctrl/Cmd+Shift+E`
+  (`expanded` ⇄ `rail`, désactivable via `enableShortcut`). Custom property
+  `--sidenav-rail-width`. En rail, `SideNav.Item` requiert une icône
+  (`iconBefore`) — un `console.warn` le signale en dev. Type `SideNavMode`
   exporté.
+- **SideNav.Provider — `isOverlay` (mobile web)** : la navigation passe
+  **par-dessus** le viewport et ne pousse jamais le contenu. Seul `expanded`
+  l'affiche (ouverte par `SideNav.Trigger`) ; elle se referme à Échap, au clic sur
+  un item ou en dehors. `rail` est traité comme `hidden`, et le bouton de bascule de
+  l'en-tête n'est pas rendu.
+- **SideNav — règles par plateforme** (documentées sur le composant) : app mobile
+  = pas de SideNav (la `BottomNav` porte seule la navigation) ; mobile web =
+  overlay ; tablette et desktop = rail de 80 px, la navigation ne disparaît jamais.
+
+### Modifié
+
+- **SideNav — retrait horizontal homogène et titre de section** : en-tête, items,
+  séparateurs, titres de section et pied partagent désormais **le même bord gauche**
+  (variable `--sidenav-inset`, 20 px depuis le bord de la nav) ; ils étaient à
+  16 / 20 / 24 px. Le titre de section (`.sectionHeading`) passe de 10 px à **12 px**
+  (`--font-size-ui-xxs`). La largeur déployée reste 240 px (items de 224 px + 2 × 8 px,
+  conforme à la maquette).
 
 ### Déprécié
 
 - **SideNav.Provider** : `isCollapsed` / `defaultCollapsed` / `onCollapsedChange`
   → utiliser `mode` / `defaultMode` / `onModeChange` (`true` correspond à
   `"hidden"`). Les alias restent fonctionnels.
-- **SideNav.Trigger** : déprécié sur desktop (remplacé par le rail) ; réservé
-  désormais au cas `hidden`/mobile (hamburger ouvrant la nav en `Drawer`).
+- **SideNav.Trigger** : déprécié sur tablette et desktop (remplacé par le rail) ;
+  réservé au mobile web (hamburger ouvrant la nav en overlay).
 
 ## [1.0.0-alpha.164] - 2026-10-13
 
