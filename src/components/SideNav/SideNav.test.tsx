@@ -438,6 +438,50 @@ describe("SideNav", () => {
       expect(nav.parentElement).toHaveAttribute("data-mode", "rail");
     });
 
+    const renderSection = (mode: "expanded" | "rail") =>
+      render(
+        <SideNav.Provider defaultMode={mode}>
+          <SideNav>
+            <SideNav.Section title="Administration" shortTitle="Admin">
+              <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
+            </SideNav.Section>
+          </SideNav>
+        </SideNav.Provider>,
+      );
+
+    it("should use shortTitle instead of title when the nav is in rail", () => {
+      renderSection("rail");
+      expect(screen.getByText("Admin")).toBeInTheDocument();
+      expect(screen.queryByText("Administration")).not.toBeInTheDocument();
+    });
+
+    it("should keep the full title in a native tooltip when shortened", () => {
+      renderSection("rail");
+      expect(screen.getByText("Admin")).toHaveAttribute("title", "Administration");
+    });
+
+    it("should ignore shortTitle when the nav is expanded", () => {
+      renderSection("expanded");
+      expect(screen.getByText("Administration")).toBeInTheDocument();
+      expect(screen.queryByText("Admin")).not.toBeInTheDocument();
+    });
+
+    it("should fall back to title in rail when no shortTitle is given", () => {
+      render(
+        <SideNav.Provider defaultMode="rail">
+          <SideNav>
+            <SideNav.Section title="Administration">
+              <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
+            </SideNav.Section>
+          </SideNav>
+        </SideNav.Provider>,
+      );
+      const heading = screen.getByText("Administration");
+      expect(heading).toBeInTheDocument();
+      // Pas d'infobulle : rien n'a été raccourci, elle n'apporterait rien.
+      expect(heading).not.toHaveAttribute("title");
+    });
+
     it("should NOT grow when the rail is hovered", async () => {
       vi.useFakeTimers();
       try {

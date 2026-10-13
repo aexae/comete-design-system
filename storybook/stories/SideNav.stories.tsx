@@ -22,8 +22,8 @@ const meta: Meta = {
           "La navigation latérale affiche la structure hiérarchique de l'application dans un panneau vertical permanent (déployé ou en rail). Elle permet de naviguer entre les sections et sous-sections tout en visualisant la position courante.\n\n" +
           "**Règles par plateforme** — le DS ne pose aucune media query, l'app choisit le mode :\n\n" +
           "- **App mobile** : pas de SideNav ; la **BottomNav** porte seule la navigation.\n" +
-          "- **Mobile navigateur web** (< 768 px) : la SideNav s'affiche dans un **`Drawer` à gauche**, par-dessus le viewport ; elle ne pousse jamais le contenu.\n" +
-          "- **Tablette et desktop** : elle est **permanente** : déployée (240 px) ou réduite en **rail de 80 px** (`mode=\"rail\"`), elle ne disparaît **jamais** ; elle ne s'agrandit **jamais au survol** — on le déploie par le bouton de bascule ou `Ctrl/Cmd+Shift+E`.",
+          "- **Mobile navigateur web et tablette** (< 1200 px) : la SideNav s'affiche dans un **`Drawer` à gauche**, par-dessus le viewport ; elle ne pousse jamais le contenu. La tablette suit **exactement** la règle du mobile web — elle n'a pas la largeur d'un rail de 80 px ET d'un contenu confortable.\n" +
+          "- **Desktop seulement** (≥ 1200 px, breakpoint `lg`) : elle est **permanente** : déployée (240 px) ou réduite en **rail de 80 px** (`mode=\"rail\"`), elle ne disparaît **jamais** ; elle ne s'agrandit **jamais au survol** — on le déploie par le bouton de bascule ou `Ctrl/Cmd+Shift+E`.",
       },
       page: () => (
         <DocsTabsPage
@@ -31,11 +31,11 @@ const meta: Meta = {
             <GuidelinesFlat
               when={[
                 "Navigation principale persistante d'une application, sur le côté (sections, rubriques).",
-                "Quand la hiérarchie de navigation est riche et bénéficie d'un rail réduit (80 px) sur tablette et desktop.",
+                "Quand la hiérarchie de navigation est riche et bénéficie d'un rail réduit (80 px) — desktop uniquement (≥ 1200 px).",
               ]}
               avoid={[
                 "Une navigation d'app mobile → BottomNav (pas de SideNav en app mobile).",
-                "Faire disparaître la navigation sur tablette / desktop : elle se réduit en rail de 80 px, jamais en `hidden`.",
+                "Faire disparaître la navigation sur desktop : elle se réduit en rail de 80 px, jamais complètement. Sous 1200 px en revanche (tablette comprise), il n'y a pas de nav permanente du tout.",
                 "Une barre supérieure globale (marque, compte, actions) → Page.Bar.",
                 "Naviguer entre vues d'une même page → Tabs.",
               ]}
@@ -107,13 +107,13 @@ export const Default: Story = {
 };
 
 /**
- * **Rail (80 px)** — tablette et desktop. La navigation se réduit à un rail de
+ * **Rail (80 px)** — desktop uniquement (≥ 1200 px). La navigation se réduit à un rail de
  * 80 px (icône 24 px + libellé court dessous) et ne disparaît jamais. Le rail est
  * **fixe** : il ne s'agrandit pas au survol ; on le déploie par le bouton de
  * bascule de l'en-tête ou `Ctrl/Cmd+Shift+E`.
  */
 export const Rail: Story = {
-  name: "Rail (80 px)",
+  name: "Rail (80 px, desktop)",
   parameters: { design: { type: "figma", url: figmaUrl("17480:10191") } },
   render: () => <MainCouranteShell nav={<MainCouranteNav />} mode="rail" />,
 };
@@ -151,7 +151,7 @@ export const RailInteractions: Story = {
 };
 
 /**
- * **Mobile navigateur web (< 768 px)** — la SideNav s'affiche dans un **`Drawer` à
+ * **Mobile navigateur web et tablette (< 1200 px)** — la SideNav s'affiche dans un **`Drawer` à
  * gauche** : elle passe **par-dessus** le contenu (voile cliquable) et ne le pousse
  * jamais. Le hamburger de la `Page.Bar` l'ouvre ; elle se referme au voile, à Échap ou
  * au choix d'une rubrique. Pas de rail sur mobile : `showToggle={false}` retire le
@@ -214,7 +214,7 @@ function MobileWebDemo() {
 }
 
 export const MobileWeb: Story = {
-  name: "Mobile web (Drawer left)",
+  name: "Mobile et tablette (Drawer left)",
   // Viewport mobile réel : le Drawer (portal + position: fixed) prend la taille d'un téléphone.
   globals: { viewport: { value: "cometeMobileAgent", isRotated: false } },
   parameters: { layout: "fullscreen", controls: { disable: true } },
@@ -367,7 +367,7 @@ export const Scrollable: Story = {
             <SideNav.Item label="Anomalies" iconBefore="Warning" href="/issues" />
           </SideNav.Section>
           <SideNav.Divider />
-          <SideNav.Section title="Administration">
+          <SideNav.Section title="Administration" shortTitle="Admin">
             <SideNav.Item label="Utilisateurs" iconBefore="Group" href="/users" />
             <SideNav.Item label="Droits" iconBefore="ManageAccounts" href="/permissions" />
             <SideNav.Item label="Licences" iconBefore="Key" href="/licences" />

@@ -319,9 +319,16 @@
 .sectionHeading {
   padding: var(--space200) var(--sidenav-inset) var(--space025);
   font-family: var(--font-family-primary);
-  font-size: var(--font-size-ui-xxs);
+  /* Taille pilotable par le consommateur via --sidenav-section-heading-size
+     (défaut --font-size-ui-xxs) — même procédé que --menu-popover-width ou
+     --popup-padding. En rail, la largeur utile tombe à 80px moins les retraits :
+     un intitulé de section un peu long s'y tronque (ellipsis ci-dessous). La
+     variable permet de le réduire pour qu'il tienne, sans toucher au mode
+     déployé ni aux autres consommateurs. `line-height` suit la même variable
+     pour que l'interligne reste proportionnel. */
+  font-size: var(--sidenav-section-heading-size, var(--font-size-ui-xxs));
   font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-ui-xxs);
+  line-height: var(--sidenav-section-heading-line, var(--line-height-ui-xxs));
   color: var(--text-subtle);
   text-transform: uppercase;
   letter-spacing: var(--letter-spacing-normal);
@@ -554,12 +561,21 @@
   background: var(--border-selected);
 }
 
-/* Titre de section : conservé (12px), retrait réduit pour tenir dans 64px. */
+/* Titre de section en rail : retrait réduit, et typo descendue d'un cran à
+   `xxxs` (10px). Le rail ne laisse qu'une soixantaine de pixels utiles — à
+   12px, un intitulé de la longueur de « MANAGER » se tronquait déjà.
+   La variable --sidenav-section-heading-size reste prioritaire : le défaut
+   `xxxs` ne vaut que si le consommateur n'a rien imposé.
+   S'il se tronque encore (mot long type « ADMINISTRATION », qui déborde même
+   à 8px), c'est la prop `shortTitle` de `SideNav.Section` qu'il faut — on
+   raccourcit le mot plutôt que de le rapetisser. */
 .sideNav[data-mode="rail"] .sectionHeading {
   padding-inline: var(--space050);
+  font-size: var(--sidenav-section-heading-size, var(--font-size-ui-xxxs));
+  line-height: var(--sidenav-section-heading-line, var(--line-height-ui-xxxs));
 }
 
-/* Séparateur : toute la largeur utile (64px). */
+/* Séparateur : toute la largeur utile du rail. */
 .sideNav[data-mode="rail"] .divider {
   margin-inline: 0;
 }
