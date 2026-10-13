@@ -394,6 +394,27 @@ describe("Table", () => {
     expect(container.querySelector("svg")).not.toBeNull();
   });
 
+  it("should preview the ascending arrow (never the 'expand' double arrow) on an unsorted column", () => {
+    const iconOf = (dir: TableSortDirection) => {
+      const { container, unmount } = render(
+        <Table aria-label="x">
+          <TableHead>
+            <TableRow>
+              <TableHeaderCell isSortable sortDirection={dir}>Name</TableHeaderCell>
+            </TableRow>
+          </TableHead>
+        </Table>,
+      );
+      const html = container.querySelector("svg")?.innerHTML ?? "";
+      unmount();
+      return html;
+    };
+    // Colonne non triée = même flèche haut que le tri croissant (aperçu), et
+    // différente du tri décroissant.
+    expect(iconOf("default")).toBe(iconOf("ascending"));
+    expect(iconOf("default")).not.toBe(iconOf("descending"));
+  });
+
   it("should set aria-sort=none when isSortable is true and no direction", () => {
     render(
       <Table aria-label="x">
@@ -521,6 +542,84 @@ describe("Table", () => {
   });
 });
 
+describe("Table — rowSeparation (grands écrans)", () => {
+  const renderTable = (rowSeparation?: "none" | "dividers" | "striped" | "hover") =>
+    render(
+      <Table aria-label="x" rowSeparation={rowSeparation}>
+        <TableBody>
+          <TableRow><TableCell>a</TableCell></TableRow>
+        </TableBody>
+      </Table>,
+    );
+
+  it("should not set data-row-separation by default", () => {
+    renderTable();
+    expect(screen.getByRole("table")).not.toHaveAttribute("data-row-separation");
+  });
+
+  it.each(["dividers", "striped", "hover"] as const)(
+    "should expose data-row-separation=%s",
+    (mode) => {
+      renderTable(mode);
+      expect(screen.getByRole("table")).toHaveAttribute("data-row-separation", mode);
+    },
+  );
+});
+
+describe("TableRow — mode sélectionnable (onToggleSelect)", () => {
+  const setup = (extra?: { href?: string }) => {
+    const onToggleSelect = vi.fn();
+    const onAction = vi.fn();
+    render(
+      <Table aria-label="x">
+        <TableBody>
+          <TableRow onToggleSelect={onToggleSelect} {...extra}>
+            <TableCell>Nom</TableCell>
+            <TableCell data-testid="plain">Texte</TableCell>
+            <TableCell>
+              <button type="button" onClick={onAction}>Actions</button>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    return { onToggleSelect, onAction };
+  };
+
+  it("should toggle the selection when the row is clicked", () => {
+    const { onToggleSelect } = setup();
+    fireEvent.click(screen.getByText("Texte"));
+    expect(onToggleSelect).toHaveBeenCalledOnce();
+  });
+
+  it("should give priority to a button inside the row (no row toggle)", () => {
+    const { onToggleSelect, onAction } = setup();
+    fireEvent.click(screen.getByRole("button", { name: "Actions" }));
+    expect(onAction).toHaveBeenCalledOnce();
+    expect(onToggleSelect).not.toHaveBeenCalled();
+  });
+
+  it("should mark the row as clickable", () => {
+    setup();
+    expect(screen.getByText("Texte").closest("tr")).toHaveAttribute("data-clickable", "true");
+  });
+
+  it("should let the row click select (not navigate) when the row also has an href", () => {
+    const { onToggleSelect } = setup({ href: "/sites/1" });
+    const anchorClick = vi.fn();
+    screen.getByRole("link", { name: "Nom" }).addEventListener("click", anchorClick);
+    fireEvent.click(screen.getByText("Texte"));
+    expect(onToggleSelect).toHaveBeenCalledOnce();
+    expect(anchorClick).not.toHaveBeenCalled();
+  });
+
+  it("should still let the anchor navigate on its own click without toggling", () => {
+    const { onToggleSelect } = setup({ href: "/sites/1" });
+    fireEvent.click(screen.getByRole("link", { name: "Nom" }));
+    expect(onToggleSelect).not.toHaveBeenCalled();
+  });
+});
+
 describe("TablePagination", () => {
   it("should render the default 'N–M sur Total' label", () => {
     render(
@@ -607,7 +706,22 @@ describe("TablePagination", () => {
         onPageChange={() => undefined}
       />,
     );
-    expect(screen.queryByText("Lignes par page :")).not.toBeInTheDocument();
+    expect(screen.queryByText("Résultats par page :")).not.toBeInTheDocument();
+  });
+
+  it("should not offer 10 results per page by default (25 / 50 / 100)", () => {
+    render(
+      <TablePagination
+        count={300}
+        page={0}
+        rowsPerPage={25}
+        onPageChange={() => undefined}
+        onRowsPerPageChange={() => undefined}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /Résultats par page/ }));
+    const options = screen.getAllByRole("option").map((o) => o.textContent);
+    expect(options).toEqual(["25", "50", "100"]);
   });
 
   it("should render the rows-per-page picker when onRowsPerPageChange is provided", () => {
@@ -620,7 +734,7 @@ describe("TablePagination", () => {
         onRowsPerPageChange={() => undefined}
       />,
     );
-    expect(screen.getByText("Lignes par page :")).toBeInTheDocument();
+    expect(screen.getByText("Résultats par page :")).toBeInTheDocument();
   });
 
   it("should render a custom labelDisplayedRows", () => {
@@ -895,11 +1009,25 @@ describe("Table.SelectionBar", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it("should render a clear button that calls onClear", () => {
-    const onClear = vi.fn();
-    render(<TableSelectionBar count={2} onClear={onClear} />);
-    fireEvent.click(screen.getByRole("button", { name: "Tout désélectionner" }));
-    expect(onClear).toHaveBeenCalledOnce();
+  it("should NOT render a 'Tout désélectionner' button (the header checkbox does it)", () => {
+    render(<TableSelectionBar count={2} />);
+    expect(screen.queryByRole("button")).toBeNull();
+    expect(screen.queryByText("Tout désélectionner")).toBeNull();
+  });
+
+  it("should specify the total: 'N lignes sélectionnées sur T'", () => {
+    render(<TableSelectionBar count={3} total={120} />);
+    expect(screen.getByText("3 lignes sélectionnées sur 120")).toBeInTheDocument();
+  });
+
+  it("should keep the singular form with a total", () => {
+    render(<TableSelectionBar count={1} total={25} />);
+    expect(screen.getByText("1 ligne sélectionnée sur 25")).toBeInTheDocument();
+  });
+
+  it("should pass the total to a custom label", () => {
+    render(<TableSelectionBar count={2} total={10} label={(n, t) => `${n}/${t}`} />);
+    expect(screen.getByText("2/10")).toBeInTheDocument();
   });
 
   it("should accept a custom label", () => {

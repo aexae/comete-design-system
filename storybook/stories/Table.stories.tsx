@@ -836,7 +836,7 @@ export const SelectionToolbar: Story = {
       <div style={{ display: "flex", flexDirection: "column", gap: "var(--space150)" }}>
         <Table.SelectionBar
           count={selection.selectedCount}
-          onClear={selection.clear}
+          total={ROWS.length}
         >
           <Button appearance="subtle" iconBefore="Delete">
             Supprimer
@@ -951,6 +951,42 @@ export const Virtualized: Story = {
 };
 
 /**
+ * **Séparation des lignes (grands écrans)** — prop `rowSeparation` : sur un grand
+ * écran, de longues lignes sans repère sont difficiles à suivre. Trois modes en plus
+ * du défaut `none` : `dividers` (un filet fin entre chaque ligne), `striped` (bandes,
+ * une ligne sur deux) et `hover` (un filet uniquement sous la ligne survolée).
+ */
+export const RowSeparation: Story = {
+  name: "Row separation (grands écrans)",
+  argTypes: {
+    rowSeparation: { control: "inline-radio", options: ["none", "dividers", "striped", "hover"] },
+  },
+  args: { rowSeparation: "dividers" },
+  render: (args) => (
+    <Table {...args} aria-label="Séparation des lignes">
+      <TableHead>
+        <TableRow>
+          <TableHeaderCell>Title</TableHeaderCell>
+          <TableHeaderCell>Status</TableHeaderCell>
+          <TableHeaderCell>User</TableHeaderCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {ROWS.map((r) => (
+          <TableRow key={r.id}>
+            <TableCell>{r.title}</TableCell>
+            <TableCell>
+              <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
+            </TableCell>
+            <TableCell>{r.user}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  ),
+};
+
+/**
  * WithPagination — 200 lignes découpées par `TablePagination`. Le parent
  * garde l'état `page` / `rowsPerPage` et slice le dataset lui-même.
  */
@@ -958,7 +994,7 @@ export const WithPagination: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("4765:3311") } },
   render: function WithPaginationStory(args) {
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(25);
 
     const paged = useMemo(
       () => LARGE_DATASET.slice(page * rowsPerPage, (page + 1) * rowsPerPage),
@@ -995,7 +1031,7 @@ export const WithPagination: Story = {
           count={LARGE_DATASET.length}
           page={page}
           rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[10, 25, 50]}
+          rowsPerPageOptions={[25, 50, 100]}
           onPageChange={setPage}
           onRowsPerPageChange={(n) => {
             setRowsPerPage(n);
@@ -1051,8 +1087,8 @@ export const LoadingState: Story = {
       <TablePagination
         count={200}
         page={0}
-        rowsPerPage={10}
-        rowsPerPageOptions={[10, 25, 50]}
+        rowsPerPage={25}
+        rowsPerPageOptions={[25, 50, 100]}
         onPageChange={noop}
         onRowsPerPageChange={noop}
       />

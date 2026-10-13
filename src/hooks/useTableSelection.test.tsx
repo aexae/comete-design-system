@@ -1,6 +1,5 @@
 // Tests unitaires pour useTableSelection
 import { act, renderHook } from "@testing-library/react";
-import type { MouseEvent as ReactMouseEvent } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { useTableSelection } from "./useTableSelection";
 
@@ -169,25 +168,13 @@ describe("useTableSelection — prop-getters", () => {
 });
 
 describe("useTableSelection — getRowClickProps (clic sur toute la ligne)", () => {
-  // Construit un faux MouseEvent dont `target` supporte `closest()` (jsdom).
-  const eventFrom = (el: Element) =>
-    ({ target: el }) as unknown as ReactMouseEvent<HTMLElement>;
-
-  it("should toggle when the click is on a non-interactive cell", () => {
+  // Le filtrage des contrôles interactifs (case, bouton, lien) est fait par
+  // `TableRow` (voir Table.test.tsx) : le hook fournit seulement le toggle.
+  it("should toggle the row through onToggleSelect", () => {
     const { result } = renderHook(() => useTableSelection({ keys: PAGE }));
-    const cell = document.createElement("td");
-    act(() => result.current.getRowClickProps("1").onClick(eventFrom(cell)));
+    act(() => result.current.getRowClickProps("1").onToggleSelect());
     expect(result.current.isSelected("1")).toBe(true);
-  });
-
-  it("should IGNORE clicks originating from an interactive control (no double toggle)", () => {
-    const { result } = renderHook(() => useTableSelection({ keys: PAGE }));
-    // La Checkbox de React Aria rend un <label> — un clic dessus doit être
-    // ignoré par le onClick de ligne (la case gère déjà son propre toggle).
-    const label = document.createElement("label");
-    const input = document.createElement("input");
-    label.appendChild(input);
-    act(() => result.current.getRowClickProps("1").onClick(eventFrom(input)));
+    act(() => result.current.getRowClickProps("1").onToggleSelect());
     expect(result.current.isSelected("1")).toBe(false);
   });
 });
