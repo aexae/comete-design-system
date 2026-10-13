@@ -952,37 +952,45 @@ export const Virtualized: Story = {
 
 /**
  * **Séparation des lignes (grands écrans)** — prop `rowSeparation` : sur un grand
- * écran, de longues lignes sans repère sont difficiles à suivre. Trois modes en plus
- * du défaut `none` : `dividers` (un filet fin entre chaque ligne), `striped` (bandes,
- * une ligne sur deux) et `hover` (un filet uniquement sous la ligne survolée).
+ * écran, de longues lignes sans repère sont difficiles à suivre. Modes : `none`
+ * (défaut), `dividers` (filet fin), `striped` (bandes) et `elevated` — **sans
+ * filet** : la ligne survolée se surélève (ombre légère) à la manière de Gmail.
+ * Ici, 60 lignes pour juger l'effet sur une vraie liste : survole-les.
  */
 export const RowSeparation: Story = {
   name: "Row separation (grands écrans)",
+  parameters: { layout: "padded" },
   argTypes: {
-    rowSeparation: { control: "inline-radio", options: ["none", "dividers", "striped", "hover"] },
+    rowSeparation: { control: "inline-radio", options: ["none", "dividers", "striped", "elevated"] },
   },
-  args: { rowSeparation: "dividers" },
+  args: { rowSeparation: "elevated" },
   render: (args) => (
-    <Table {...args} aria-label="Séparation des lignes">
-      <TableHead>
-        <TableRow>
-          <TableHeaderCell>Title</TableHeaderCell>
-          <TableHeaderCell>Status</TableHeaderCell>
-          <TableHeaderCell>User</TableHeaderCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {ROWS.map((r) => (
-          <TableRow key={r.id}>
-            <TableCell>{r.title}</TableCell>
-            <TableCell>
-              <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
-            </TableCell>
-            <TableCell>{r.user}</TableCell>
+    <div style={{ maxWidth: 960 }}>
+      <Table {...args} aria-label="Séparation des lignes" maxHeight={560} stickyHeader>
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell width={80}>#</TableHeaderCell>
+            <TableHeaderCell>Title</TableHeaderCell>
+            <TableHeaderCell>Status</TableHeaderCell>
+            <TableHeaderCell>User</TableHeaderCell>
+            <TableHeaderCell>Key</TableHeaderCell>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHead>
+        <TableBody>
+          {LARGE_DATASET.slice(0, 60).map((r) => (
+            <TableRow key={r.id}>
+              <TableCell>{r.id}</TableCell>
+              <TableCell>{r.title}</TableCell>
+              <TableCell>
+                <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
+              </TableCell>
+              <TableCell>{r.user}</TableCell>
+              <TableCell>{r.key}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   ),
 };
 

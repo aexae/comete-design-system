@@ -5,7 +5,7 @@
 // hauteur, son padding et son typographie en conséquence.
 import type { CSSProperties, ReactElement, ReactNode } from "react";
 import { Children, cloneElement, createContext, isValidElement, useContext } from "react";
-import { VisuallyHidden } from "react-aria-components";
+import { Button as AriaButton, VisuallyHidden } from "react-aria-components";
 import { Button } from "../Button/index.js";
 import { Icon } from "../Icon/index.js";
 import { Select } from "../Select/index.js";
@@ -44,9 +44,10 @@ export type TableHideBelow = "sm" | "md" | "lg";
  * - `none`     — aucune séparation (défaut, comportement historique) ;
  * - `dividers` — un filet fin entre chaque ligne ;
  * - `striped`  — bandes : une ligne sur deux teintée ;
- * - `hover`    — un filet uniquement sous la ligne survolée.
+ * - `elevated` — pas de filet : la ligne survolée se **surélève** (ombre légère,
+ *   façon Gmail) et ressort du reste de la liste.
  */
-export type TableRowSeparation = "none" | "dividers" | "striped" | "hover";
+export type TableRowSeparation = "none" | "dividers" | "striped" | "elevated";
 
 /**
  * État de tri d'une colonne :
@@ -95,7 +96,7 @@ export interface TableProps {
   responsive?: boolean;
   /**
    * Séparation visuelle des lignes du corps : `none` | `dividers` | `striped` |
-   * `hover`. Pensé pour les grands écrans. Voir {@link TableRowSeparation}.
+   * `elevated`. Pensé pour les grands écrans. Voir {@link TableRowSeparation}.
    * @default "none"
    */
   rowSeparation?: TableRowSeparation;
@@ -361,6 +362,14 @@ export interface TablePaginationProps {
    * sélecteur « résultats par page » n'est pas affiché.
    */
   onRowsPerPageChange?: (nextRowsPerPage: number) => void;
+  /**
+   * Affiche la liste de **pages numérotées** (1 2 3 … 8) entre « précédente » et
+   * « suivante », comme les design systems courants (Atlassian, Ant, Polaris). Les
+   * pages voisines de la courante, la première et la dernière sont toujours
+   * atteignables ; « … » marque les pages masquées. Le conteneur passe à la ligne
+   * quand la place manque. @default true
+   */
+  showPageNumbers?: boolean;
   /** Libellé du sélecteur. @default "Résultats par page :" */
   labelRowsPerPage?: string;
   /** Fonction rendant le libellé "N-M sur Total". */
@@ -932,6 +941,24 @@ TableHeaderCell.displayName = "TableHeaderCell";
 
 const DEFAULT_ROWS_PER_PAGE_OPTIONS = [25, 50, 100];
 
+/** Élément de la liste de pages : un numéro (1-based) ou une ellipse (début / fin). */
+type PageItem = number | "ellipsis-start" | "ellipsis-end";
+
+/**
+ * Pages à afficher (7 emplacements au plus, largeur stable) : `1 2 3 4 5 … N` près
+ * du début, `1 … N-4 … N` près de la fin, `1 … c-1 c c+1 … N` au milieu.
+ * `current` et le résultat sont 1-based.
+ */
+export function getPageItems(current: number, total: number): PageItem[] {
+  const MAX = 7;
+  if (total <= MAX) return Array.from({ length: total }, (_, i) => i + 1);
+  if (current <= 4) return [1, 2, 3, 4, 5, "ellipsis-end", total];
+  if (current >= total - 3) {
+    return [1, "ellipsis-start", total - 4, total - 3, total - 2, total - 1, total];
+  }
+  return [1, "ellipsis-start", current - 1, current, current + 1, "ellipsis-end", total];
+}
+
 function defaultLabelDisplayedRows({
   from,
   to,
@@ -943,7 +970,7 @@ function defaultLabelDisplayedRows({
 /**
  * TablePagination — Contrôles de pagination pour un `Table` : « Résultats par page »
  * (sélecteur), plage affichée « 1–25 sur 200 » et pages précédente / suivante. À rendre
- * en dessous du `<Table>`. Contrôlé — le parent gère `page` et
+ * en dessous du `<Table>`. Pages numérotées avec ellipses (`showPageNumbers`). Contrôlé — le parent gère `page` et
  * `rowsPerPage` et applique lui-même la découpe du dataset.
  *
  * ```tsx
@@ -964,6 +991,7 @@ export function TablePagination({
   rowsPerPageOptions = DEFAULT_ROWS_PER_PAGE_OPTIONS,
   onPageChange,
   onRowsPerPageChange,
+  showPageNumbers = true,
   labelRowsPerPage = "Résultats par page :",
   labelDisplayedRows = defaultLabelDisplayedRows,
   density,
@@ -1016,6 +1044,29 @@ export function TablePagination({
           isDisabled={!canPrev}
           onPress={() => onPageChange(page - 1)}
         />
+        {showPageNumbers && lastPage > 0 && (
+          <div className={styles.paginationPages}>
+            {getPageItems(page + 1, lastPage + 1).map((item) =>
+              typeof item === "string" ? (
+                <span key={item} className={styles.paginationEllipsis} aria-hidden="true">
+                  …
+                </span>
+              ) : (
+                <AriaButton
+                  key={item}
+                  className={styles.paginationPage}
+                  aria-label={`Page ${item}`}
+                  aria-current={item === page + 1 ? "page" : undefined}
+                  onPress={() => {
+                    if (item !== page + 1) onPageChange(item - 1);
+                  }}
+                >
+                  {item}
+                </AriaButton>
+              ),
+            )}
+          </div>
+        )}
         <Button
           appearance="subtle"
           density="compact"

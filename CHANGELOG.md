@@ -11,10 +11,11 @@ entre versions alpha.
 
 ### Ajouté
 
-- **`Table` — `rowSeparation`** (`none` | `dividers` | `striped` | `hover`, défaut
+- **`Table` — `rowSeparation`** (`none` | `dividers` | `striped` | `elevated`, défaut
   `none`) : séparation visuelle des lignes pour les grands écrans — filet fin entre
-  chaque ligne, bandes une ligne sur deux, ou filet uniquement sous la ligne
-  survolée. Filets en `box-shadow` sur les cellules : aucun décalage au survol.
+  chaque ligne, bandes une ligne sur deux, ou ligne survolée **surélevée** (ombre
+  légère, façon Gmail, sans filet). Filets en `box-shadow` sur les cellules : aucun
+  décalage au survol.
 - **`TableRow` — `onToggleSelect`** : mode **sélectionnable**. Un clic sur la ligne
   coche la case ; un contrôle interactif dans la ligne (case, bouton, lien, ancre
   `href`/`onPress`) garde la **priorité**. `useTableSelection().getRowClickProps(key)`
@@ -50,6 +51,10 @@ entre versions alpha.
   atténuée (aperçu du tri croissant) ; un tri actif garde sa flèche pleine.
 - **`TablePagination`** : le sélecteur s'intitule « **Résultats par page** » (au lieu de
   « Lignes par page ») et propose **25 / 50 / 100** par défaut — **10 retiré**.
+- **`TablePagination` — pages numérotées** (`showPageNumbers`, défaut `true`) : entre
+  « précédente » et « suivante », une liste `1 2 3 4 5 … 8` (style Atlassian / Ant) —
+  7 emplacements au plus (largeur stable), page courante marquée (`aria-current`),
+  première et dernière toujours atteignables. `false` pour garder les seules flèches.
 - **`BottomNavItem` — état ouvert allégé (item « Plus »)** : l'état
   `aria-expanded` animait cinq choses en parallèle (fond, croisement d'icônes avec
   `rotate`/`scale`, agrandissement et descente de l'icône, effacement du

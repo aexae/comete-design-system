@@ -118,8 +118,16 @@
   background-color: var(--background-neutral-subtlest-default);
 }
 
-:where(.table[data-row-separation="hover"] .body) .row:hover .cell {
-  box-shadow: inset 0 calc(-1 * var(--size0125)) 0 var(--border-default);
+/* Surélévation au survol (façon Gmail) : pas de filet — la ligne survolée passe
+   au-dessus de ses voisines (z-index) avec une ombre légère. */
+:where(.table[data-row-separation="elevated"] .body) .row {
+  position: relative;
+}
+
+:where(.table[data-row-separation="elevated"] .body) .row:hover {
+  z-index: 1;
+  background-color: var(--background-surface-default);
+  box-shadow: var(--elevation-medium);
 }
 
 /* Row cliquable → cursor pointer + hover subtil */
@@ -324,6 +332,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  flex-wrap: wrap;
   gap: var(--space200);
   padding: var(--space050) var(--space100);
   font-family: var(--font-family-primary);
@@ -348,6 +357,63 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space025);
+}
+
+/* Pages numérotées (1 2 3 … 8) — style Atlassian / Ant : la page courante est
+   pleine, les autres discrètes ; « … » marque les pages masquées. */
+.paginationPages {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space025);
+}
+
+.paginationPage {
+  min-width: var(--size400);
+  height: var(--size400);
+  padding: 0 var(--space075);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--radius100);
+  background: transparent;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xs);
+  color: var(--text-subtle);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--easing-default),
+              color var(--duration-fast) var(--easing-default);
+}
+
+.paginationPage[data-hovered] {
+  background-color: var(--background-neutral-subtler-hovered);
+  color: var(--text-default);
+}
+
+.paginationPage[data-pressed] {
+  background-color: var(--background-neutral-subtler-pressed);
+}
+
+.paginationPage[data-focus-visible] {
+  outline: var(--size025) solid var(--border-focused);
+  outline-offset: var(--size0125);
+}
+
+.paginationPage[aria-current="page"] {
+  background-color: var(--background-selected-subtlest-default);
+  color: var(--text-selected);
+  cursor: default;
+}
+
+.paginationEllipsis {
+  min-width: var(--size400);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-subtlest);
+  user-select: none;
 }
 
 /* --------------------------------------------------------------------------

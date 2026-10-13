@@ -8,6 +8,7 @@ import {
   TableHead,
   TableHeaderCell,
   TablePagination,
+  getPageItems,
   TableRow,
   TableView,
   TableSelectionBar,
@@ -543,7 +544,7 @@ describe("Table", () => {
 });
 
 describe("Table — rowSeparation (grands écrans)", () => {
-  const renderTable = (rowSeparation?: "none" | "dividers" | "striped" | "hover") =>
+  const renderTable = (rowSeparation?: "none" | "dividers" | "striped" | "elevated") =>
     render(
       <Table aria-label="x" rowSeparation={rowSeparation}>
         <TableBody>
@@ -557,7 +558,7 @@ describe("Table — rowSeparation (grands écrans)", () => {
     expect(screen.getByRole("table")).not.toHaveAttribute("data-row-separation");
   });
 
-  it.each(["dividers", "striped", "hover"] as const)(
+  it.each(["dividers", "striped", "elevated"] as const)(
     "should expose data-row-separation=%s",
     (mode) => {
       renderTable(mode);
@@ -617,6 +618,31 @@ describe("TableRow — mode sélectionnable (onToggleSelect)", () => {
     const { onToggleSelect } = setup({ href: "/sites/1" });
     fireEvent.click(screen.getByRole("link", { name: "Nom" }));
     expect(onToggleSelect).not.toHaveBeenCalled();
+  });
+});
+
+describe("getPageItems", () => {
+  it("should list every page when there are 7 or fewer", () => {
+    expect(getPageItems(1, 1)).toEqual([1]);
+    expect(getPageItems(3, 7)).toEqual([1, 2, 3, 4, 5, 6, 7]);
+  });
+
+  it("should collapse the end near the start: 1 2 3 4 5 … N", () => {
+    expect(getPageItems(1, 20)).toEqual([1, 2, 3, 4, 5, "ellipsis-end", 20]);
+    expect(getPageItems(4, 20)).toEqual([1, 2, 3, 4, 5, "ellipsis-end", 20]);
+  });
+
+  it("should collapse both sides in the middle: 1 … c-1 c c+1 … N", () => {
+    expect(getPageItems(10, 20)).toEqual([1, "ellipsis-start", 9, 10, 11, "ellipsis-end", 20]);
+  });
+
+  it("should collapse the start near the end: 1 … N-4 … N", () => {
+    expect(getPageItems(20, 20)).toEqual([1, "ellipsis-start", 16, 17, 18, 19, 20]);
+    expect(getPageItems(17, 20)).toEqual([1, "ellipsis-start", 16, 17, 18, 19, 20]);
+  });
+
+  it("should always return 7 slots once there are more than 7 pages (stable width)", () => {
+    for (let c = 1; c <= 30; c += 1) expect(getPageItems(c, 30)).toHaveLength(7);
   });
 });
 
@@ -722,6 +748,56 @@ describe("TablePagination", () => {
     fireEvent.click(screen.getByRole("button", { name: /Résultats par page/ }));
     const options = screen.getAllByRole("option").map((o) => o.textContent);
     expect(options).toEqual(["25", "50", "100"]);
+  });
+
+  it("should render numbered pages with the current one marked aria-current", () => {
+    render(
+      <TablePagination count={200} page={1} rowsPerPage={25} onPageChange={() => undefined} />,
+    );
+    // 8 pages, page courante 2 → 1 2 3 4 5 … 8
+    expect(screen.getByRole("button", { name: "Page 2" })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("button", { name: "Page 1" })).not.toHaveAttribute("aria-current");
+    expect(screen.getByRole("button", { name: "Page 8" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Page 6" })).toBeNull();
+  });
+
+  it("should go to the clicked page (0-indexed)", () => {
+    const onPageChange = vi.fn();
+    render(
+      <TablePagination count={200} page={0} rowsPerPage={25} onPageChange={onPageChange} />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Page 3" }));
+    expect(onPageChange).toHaveBeenCalledWith(2);
+  });
+
+  it("should not call onPageChange when the current page is clicked", () => {
+    const onPageChange = vi.fn();
+    render(
+      <TablePagination count={200} page={0} rowsPerPage={25} onPageChange={onPageChange} />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Page 1" }));
+    expect(onPageChange).not.toHaveBeenCalled();
+  });
+
+  it("should hide the page numbers with showPageNumbers={false}", () => {
+    render(
+      <TablePagination
+        count={200}
+        page={0}
+        rowsPerPage={25}
+        showPageNumbers={false}
+        onPageChange={() => undefined}
+      />,
+    );
+    expect(screen.queryByRole("button", { name: "Page 1" })).toBeNull();
+    expect(screen.getByRole("button", { name: "Page suivante" })).toBeInTheDocument();
+  });
+
+  it("should not render page numbers when there is a single page", () => {
+    render(
+      <TablePagination count={10} page={0} rowsPerPage={25} onPageChange={() => undefined} />,
+    );
+    expect(screen.queryByRole("button", { name: "Page 1" })).toBeNull();
   });
 
   it("should render the rows-per-page picker when onRowsPerPageChange is provided", () => {
