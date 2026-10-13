@@ -68,6 +68,18 @@ entre versions alpha.
 
 ### Modifié
 
+- **`BottomNavItem` — animation de l'état ouvert (item « Plus »)** : au clic,
+  fond, icône et libellé partageaient des durées différentes (100 ms / 200 ms) et
+  le libellé était **retiré du DOM d'un coup**, ce qui recentrait le contenu
+  instantanément avant que l'icône ne s'anime (saut). Désormais : tout l'état
+  ouvert utilise `--duration-normal` (200 ms) + `--easing-default`, comme
+  `BottomNavAction` ; le libellé reste dans le DOM et s'efface par **fondu** ;
+  l'icône descend au centre et grossit par `transform` seule (aucun reflow, pas de
+  saut de mise en page) ; le fondu source ↔ fermer passe de `scale(0)` à
+  `scale(0.5)` (les deux icônes ne disparaissent plus au même instant).
+  Conséquences : le **nom accessible « Plus » est conservé** menu ouvert (il
+  disparaissait avec le libellé) et `prefers-reduced-motion` désactive les
+  transitions.
 - **Bouton « Effacer » — `Select`, `DatePicker`, `TimePicker`, `MonthPicker`,
   `WeekPicker`, `YearPicker`** : le bouton n'est plus affiché en permanence. Il
   est **masqué au repos** et révélé au **survol ou au focus** du champ, en

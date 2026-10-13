@@ -480,9 +480,8 @@ export const WithPopupRightInteractions: Story = {
   render: () => <WithPopupRightDemo />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    // Référence prise AVANT l'ouverture : menu ouvert, le bouton perd son libellé
-    // (remplacé par l'icône de fermeture) et le reste de la page est masqué aux
-    // technologies d'assistance.
+    // Référence prise AVANT l'ouverture : menu ouvert, React Aria masque le reste de
+    // la page aux technologies d'assistance (le bouton sort de l'arbre d'accessibilité).
     const trigger = canvas.getByRole("button", { name: "Plus" });
     const plus = () => trigger;
     const menu = () => screen.queryByRole("menu");
@@ -496,6 +495,8 @@ export const WithPopupRightInteractions: Story = {
       await userEvent.click(plus());
       const m = await screen.findByRole("menu");
       await expect(plus()).toHaveAttribute("aria-expanded", "true");
+      // Le libellé reste dans le DOM (fondu CSS) : nom accessible conservé.
+      await expect(canvas.getByRole("button", { name: "Plus", hidden: true })).toBe(trigger);
       const popover = m.closest("[data-trigger]") ?? m.parentElement;
       const rect = (popover as HTMLElement).getBoundingClientRect();
       const phone = canvasElement.querySelector<HTMLElement>('[class*="screen"]');
