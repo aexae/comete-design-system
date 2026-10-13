@@ -1,7 +1,7 @@
 // Table — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useMemo, useState } from "react";
-import type { ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { within, userEvent, expect, fn } from "storybook/test";
 import {
   Avatar,
@@ -182,6 +182,9 @@ const STATUS_APPEARANCE: Record<Row["status"], "subtle" | "bold"> = {
 // -----------------------------------------------------------------------
 // Stories
 
+// -----------------------------------------------------------------------
+// Bases — rendu, alignement, densité
+
 /** Table basique — en-tête + 5 lignes. */
 export const Default: Story = {
   render: (args) => (
@@ -210,8 +213,78 @@ export const Default: Story = {
   ),
 };
 
+/** Alignement de colonne — left (défaut), center, right. */
+export const Alignment: Story = {
+  render: (args) => (
+    <Table {...args} aria-label="Alignements">
+      <TableHead>
+        <TableRow>
+          <TableHeaderCell align="left">Left</TableHeaderCell>
+          <TableHeaderCell align="center">Center</TableHeaderCell>
+          <TableHeaderCell align="right">Right</TableHeaderCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        <TableRow>
+          <TableCell align="left">Alpha</TableCell>
+          <TableCell align="center">42</TableCell>
+          <TableCell align="right">1 234,56 €</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell align="left">Beta</TableCell>
+          <TableCell align="center">7</TableCell>
+          <TableCell align="right">99,00 €</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell align="left">Gamma</TableCell>
+          <TableCell align="center">128</TableCell>
+          <TableCell align="right">2 500,00 €</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  ),
+};
+
+/**
+ * **Densités** — compact (≈ 32 px), default (≈ 40 px) et touch (≈ 48 px) : la densité
+ * règle la hauteur des lignes. À piloter par `density` ou un `DensityProvider`.
+ */
+export const Densities: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--space300)" }}>
+      {(["compact", "default", "touch"] as const).map((density) => (
+        <Table key={density} density={density} aria-label={`Densité ${density}`}>
+          <TableHead>
+            <TableRow>
+              <TableHeaderCell>{`Title (${density})`}</TableHeaderCell>
+              <TableHeaderCell>Status</TableHeaderCell>
+              <TableHeaderCell>User</TableHeaderCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {ROWS.slice(0, 3).map((r) => (
+              <TableRow key={r.id}>
+                <TableCell>{r.title}</TableCell>
+                <TableCell>
+                  <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
+                </TableCell>
+                <TableCell>{r.user}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      ))}
+    </div>
+  ),
+};
+
+// -----------------------------------------------------------------------
+// Colonnes et cellules — tri, cellules riches
+
 /** Colonnes triables — clic sur l'en-tête cycle default → asc → desc. */
 export const Sortable: Story = {
+  name: "Sorting",
   render: function SortableStory(args) {
     type Column = "title" | "status" | "user" | "key";
     const [sortColumn, setSortColumn] = useState<Column | null>("title");
@@ -295,110 +368,6 @@ export const Sortable: Story = {
 };
 
 /**
- * Sélection multiple — checkbox par ligne + checkbox `select all` dans
- * l'en-tête. L'état `isSelected` sur `TableRow` donne le fond visuel
- * de sélection.
- */
-export const WithSelection: Story = {
-  name: "With selection",
-  render: function SelectionStory(args) {
-    // Tout l'état de sélection (Set, toggle, tout-sélectionner, indeterminate)
-    // vient de `useTableSelection` — la story ne réécrit plus ce boilerplate.
-    const selection = useTableSelection({
-      keys: ROWS.map((r) => r.id),
-      defaultSelectedKeys: ["1", "3"],
-    });
-
-    return (
-      <Table {...args} aria-label="Sélection multiple">
-        <TableHead>
-          <TableRow>
-            <TableHeaderCell width={40}>
-              <Checkbox {...selection.getSelectAllProps()} />
-            </TableHeaderCell>
-            <TableHeaderCell>Title</TableHeaderCell>
-            <TableHeaderCell>Status</TableHeaderCell>
-            <TableHeaderCell>User</TableHeaderCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {ROWS.map((r) => (
-            // Clic sur toute la ligne = toggle (amélioration pointeur ;
-            // la Checkbox reste le contrôle clavier, cf. getRowClickProps).
-            <TableRow
-              key={r.id}
-              isSelected={selection.isSelected(r.id)}
-              {...selection.getRowClickProps(r.id)}
-            >
-              <TableCell>
-                <Checkbox
-                  {...selection.getRowCheckboxProps(r.id, `Sélectionner ${r.title}`)}
-                />
-              </TableCell>
-              <TableCell>{r.title}</TableCell>
-              <TableCell>
-                <Tag
-                  label={r.status}
-                  appearance={STATUS_APPEARANCE[r.status]}
-                  shape="rounded"
-                />
-              </TableCell>
-              <TableCell>{r.user}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    );
-  },
-  // Preuve d'intégration du hook `useTableSelection` (câblage Checkbox
-  // d'en-tête ↔ lignes ↔ TableRow isSelected). S'exécute en Browser Mode.
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const bodyRows = () =>
-      canvas.getAllByRole("row").filter((r) => r.querySelector("td"));
-
-    // État initial : 2/4 sélectionnées (["1","3"]) → en-tête indeterminate,
-    // libellé « Tout sélectionner ».
-    const header = () =>
-      canvas.getByRole("checkbox", { name: "Tout sélectionner" });
-    await expect(header()).toBeInTheDocument();
-
-    // Clic « tout sélectionner » → toutes les lignes du corps sélectionnées,
-    // l'en-tête bascule sur « Tout désélectionner ».
-    await userEvent.click(header());
-    for (const r of bodyRows()) {
-      await expect(r).toHaveAttribute("aria-selected", "true");
-    }
-    await expect(
-      canvas.getByRole("checkbox", { name: "Tout désélectionner" }),
-    ).toBeInTheDocument();
-
-    // Re-clic → plus aucune ligne sélectionnée.
-    await userEvent.click(
-      canvas.getByRole("checkbox", { name: "Tout désélectionner" }),
-    );
-    for (const r of bodyRows()) {
-      await expect(r).not.toHaveAttribute("aria-selected");
-    }
-
-    // Clic sur le CORPS d'une ligne (pas la case) → la ligne se sélectionne
-    // (getRowClickProps) et sa case reflète l'état.
-    const firstRow = bodyRows()[0];
-    if (!firstRow) throw new Error("aucune ligne de données");
-    const titleCell = within(firstRow).getAllByRole("cell")[1];
-    if (!titleCell) throw new Error("cellule titre absente");
-    await userEvent.click(titleCell);
-    await expect(firstRow).toHaveAttribute("aria-selected", "true");
-    await expect(within(firstRow).getByRole("checkbox")).toBeChecked();
-
-    // Clic sur la CASE de cette même ligne → un SEUL toggle (le onClick de
-    // ligne ignore le clic sur la case) → la ligne se désélectionne.
-    await userEvent.click(within(firstRow).getByRole("checkbox"));
-    await expect(firstRow).not.toHaveAttribute("aria-selected");
-  },
-};
-
-/**
  * Cellules riches — Avatar + texte, Tag de statut, colonne d'actions
  * (bouton icône) alignée à droite avec largeur fixe.
  */
@@ -457,67 +426,125 @@ export const RichCells: Story = {
   ),
 };
 
+// -----------------------------------------------------------------------
+// Sélection — cases, barre de sélection, clic de ligne
+
 /**
- * **`onClick` déprécié → préférez `href` / `onPress`.** Cette story montre le
- * chemin historique : `onClick` sur `<tr>`, encore fonctionnel mais **invisible
- * au clavier et aux lecteurs d'écran** (ni rôle, ni tabulation). Pour une ligne
- * cliquable accessible, voir *Clickable rows — navigation (href)* et
- * *— action (onPress)*.
+ * **Sélection** — case à cocher par ligne + case « tout sélectionner » (indéterminée
+ * quand une partie seulement est cochée) dans l'en-tête. Un clic sur la ligne coche
+ * la case, un bouton dans la ligne garde la priorité (`onToggleSelect`). Dès qu'il y a
+ * une sélection, `Table.SelectionBar` affiche « N lignes sélectionnées sur T » et les
+ * actions groupées. Tout l'état vient de `useTableSelection`.
  */
-export const ClickableRows: Story = {
-  name: "Clickable rows (onClick — déprécié)",
-  render: function ClickableStory(args) {
-    const [openedRow, setOpenedRow] = useState<string | null>(null);
-    return (
-      <div>
-        <Table {...args} aria-label="Lignes cliquables">
-          <TableHead>
-            <TableRow>
-              <TableHeaderCell>Title</TableHeaderCell>
-              <TableHeaderCell>Status</TableHeaderCell>
-              <TableHeaderCell>User</TableHeaderCell>
-              <TableHeaderCell>Key</TableHeaderCell>
+function SelectionDemo(args: ComponentProps<typeof Table>) {
+  const selection = useTableSelection({
+    keys: ROWS.map((r) => r.id),
+    defaultSelectedKeys: ["1", "3"],
+  });
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--space150)" }}>
+      <Table.SelectionBar count={selection.selectedCount} total={ROWS.length}>
+        <Button appearance="subtle" iconBefore="Delete">
+          Supprimer
+        </Button>
+      </Table.SelectionBar>
+      <Table {...args} aria-label="Sélection multiple">
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell width={40}>
+              <Checkbox {...selection.getSelectAllProps()} />
+            </TableHeaderCell>
+            <TableHeaderCell>Title</TableHeaderCell>
+            <TableHeaderCell>Status</TableHeaderCell>
+            <TableHeaderCell>User</TableHeaderCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {ROWS.map((r) => (
+            <TableRow
+              key={r.id}
+              isSelected={selection.isSelected(r.id)}
+              {...selection.getRowClickProps(r.id)}
+            >
+              <TableCell>
+                <Checkbox
+                  {...selection.getRowCheckboxProps(r.id, `Sélectionner ${r.title}`)}
+                />
+              </TableCell>
+              <TableCell>{r.title}</TableCell>
+              <TableCell>
+                <Tag
+                  label={r.status}
+                  appearance={STATUS_APPEARANCE[r.status]}
+                  shape="rounded"
+                />
+              </TableCell>
+              <TableCell>{r.user}</TableCell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {ROWS.map((r) => (
-              <TableRow
-                key={r.id}
-                isSelected={openedRow === r.id}
-                onClick={() =>
-                  setOpenedRow((prev) => (prev === r.id ? null : r.id))
-                }
-              >
-                <TableCell>{r.title}</TableCell>
-                <TableCell>
-                  <Tag
-                    label={r.status}
-                    appearance={STATUS_APPEARANCE[r.status]}
-                    shape="rounded"
-                  />
-                </TableCell>
-                <TableCell>{r.user}</TableCell>
-                <TableCell>{r.key}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <p
-          style={{
-            marginTop: "var(--space200)",
-            color: "var(--text-subtle)",
-            fontSize: "var(--font-size-ui-xs)",
-          }}
-        >
-          Ligne ouverte :{" "}
-          <strong>
-            {openedRow ? ROWS.find((r) => r.id === openedRow)?.title : "(aucune)"}
-          </strong>
-        </p>
-      </div>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
+export const Selection: Story = {
+  render: (args) => <SelectionDemo {...args} />,
+};
+
+// Test (masqué du sidebar) : le `play` ne se rejoue pas à l'ouverture de la story.
+// Preuve d'intégration de `useTableSelection` (case d'en-tête ↔ lignes ↔ TableRow
+// isSelected ↔ barre de sélection). S'exécute en Browser Mode.
+export const SelectionInteractions: Story = {
+  tags: ["!dev"],
+  render: (args) => <SelectionDemo {...args} />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const bodyRows = () =>
+      canvas.getAllByRole("row").filter((r) => r.querySelector("td"));
+
+    // État initial : 2/4 sélectionnées → barre « 2 lignes sélectionnées sur 5 ».
+    const header = () =>
+      canvas.getByRole("checkbox", { name: "Tout sélectionner" });
+    await expect(header()).toBeInTheDocument();
+    await expect(canvas.getByText(/2 lignes sélectionnées sur/)).toBeInTheDocument();
+
+    // Clic « tout sélectionner » → toutes les lignes du corps sélectionnées,
+    // l'en-tête bascule sur « Tout désélectionner ».
+    await userEvent.click(header());
+    for (const r of bodyRows()) {
+      await expect(r).toHaveAttribute("aria-selected", "true");
+    }
+    await expect(
+      canvas.getByRole("checkbox", { name: "Tout désélectionner" }),
+    ).toBeInTheDocument();
+
+    // Re-clic → plus aucune ligne sélectionnée (la barre disparaît).
+    await userEvent.click(
+      canvas.getByRole("checkbox", { name: "Tout désélectionner" }),
     );
+    for (const r of bodyRows()) {
+      await expect(r).not.toHaveAttribute("aria-selected");
+    }
+
+    // Clic sur le CORPS d'une ligne (pas la case) → la ligne se sélectionne et sa
+    // case reflète l'état.
+    const firstRow = bodyRows()[0];
+    if (!firstRow) throw new Error("aucune ligne de données");
+    const titleCell = within(firstRow).getAllByRole("cell")[1];
+    if (!titleCell) throw new Error("cellule titre absente");
+    await userEvent.click(titleCell);
+    await expect(firstRow).toHaveAttribute("aria-selected", "true");
+    await expect(within(firstRow).getByRole("checkbox")).toBeChecked();
+
+    // Clic sur la CASE de cette même ligne → un SEUL toggle → désélectionnée.
+    await userEvent.click(within(firstRow).getByRole("checkbox"));
+    await expect(firstRow).not.toHaveAttribute("aria-selected");
   },
 };
+
+// -----------------------------------------------------------------------
+// Lignes cliquables — navigation (href), action (onPress)
 
 // Ouvertures simulées (actions Storybook) pour les lignes interactives.
 const onNavigate = fn();
@@ -529,8 +556,8 @@ const onOpenPanel = fn();
  * survol. Le clic ailleurs sur la ligne délègue au lien. Le conteneur intercepte
  * la navigation réelle (href relatifs) pour la story.
  */
-export const ClickableRowLink: Story = {
-  name: "Clickable rows — navigation (href)",
+export const RowLink: Story = {
+  name: "Row link",
   parameters: { controls: { disable: true } },
   render: () => (
     <div
@@ -595,8 +622,8 @@ export const ClickableRowLink: Story = {
  * `<button>` : Espace/Entrée l'activent, le clic ailleurs sur la ligne délègue.
  * À utiliser quand le détail s'ouvre en panneau sans quitter la liste.
  */
-export const ClickableRowPress: Story = {
-  name: "Clickable rows — action (onPress)",
+export const RowAction: Story = {
+  name: "Row action",
   parameters: { controls: { disable: true } },
   render: () => (
     <Table aria-label="Pointages (panneau)">
@@ -650,60 +677,185 @@ export const ClickableRowPress: Story = {
   },
 };
 
+// -----------------------------------------------------------------------
+// Grands jeux de données — pagination, virtualisation, séparation des lignes
+
 /**
- * Densité — 3 niveaux (compact / default / touch) impactent la hauteur
- * de ligne. À contrôler via le toolbar Storybook `args.density`.
+ * WithPagination — 200 lignes découpées par `TablePagination`. Le parent
+ * garde l'état `page` / `rowsPerPage` et slice le dataset lui-même.
  */
-export const DensityCompact: Story = {
-  name: "Density — compact",
-  args: { density: "compact" },
-  render: Default.render,
+export const Pagination: Story = {
+  parameters: { design: { type: "figma", url: figmaUrl("4765:3311") } },
+  render: function WithPaginationStory(args) {
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(25);
+
+    const paged = useMemo(
+      () => LARGE_DATASET.slice(page * rowsPerPage, (page + 1) * rowsPerPage),
+      [page, rowsPerPage],
+    );
+
+    return (
+      <div>
+        <Table {...args} aria-label="Projets paginés">
+          <TableHead>
+            <TableRow>
+              <TableHeaderCell width={80}>#</TableHeaderCell>
+              <TableHeaderCell>Title</TableHeaderCell>
+              <TableHeaderCell>Status</TableHeaderCell>
+              <TableHeaderCell>User</TableHeaderCell>
+              <TableHeaderCell>Key</TableHeaderCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {paged.map((r) => (
+              <TableRow key={r.id}>
+                <TableCell>{r.id}</TableCell>
+                <TableCell>{r.title}</TableCell>
+                <TableCell>
+                  <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
+                </TableCell>
+                <TableCell>{r.user}</TableCell>
+                <TableCell>{r.key}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <TablePagination
+          count={LARGE_DATASET.length}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={[25, 50, 100]}
+          onPageChange={setPage}
+          onRowsPerPageChange={(n) => {
+            setRowsPerPage(n);
+            setPage(0);
+          }}
+        />
+      </div>
+    );
+  },
 };
 
-export const DensityTouch: Story = {
-  name: "Density — touch",
-  args: { density: "touch" },
-  render: Default.render,
-};
+// -----------------------------------------------------------------------
+// Dataset large — utilisé par Virtualized et WithPagination
 
-/** Alignement de colonne — left (défaut), center, right. */
-export const Alignment: Story = {
+interface LargeRow {
+  id: number;
+  title: string;
+  status: Row["status"];
+  user: string;
+  key: string;
+}
+
+const USERS = ["John Doe", "Jane Smith", "Alice Chen", "Bob Martin", "Sophie Claire"];
+const STATUSES: Row["status"][] = ["Actif", "En attente", "Suspendu"];
+
+const LARGE_DATASET: LargeRow[] = Array.from({ length: 200 }, (_, i) => ({
+  id: i + 1,
+  title: `Projet ${String(i + 1).padStart(3, "0")}`,
+  status: STATUSES[i % STATUSES.length],
+  user: USERS[i % USERS.length],
+  key: `CODE-${String(i + 1).padStart(4, "0")}`,
+}));
+
+/**
+ * Virtualized — équivalent Comète de l'exemple MUI "Virtualized Table".
+ * 200 lignes rendues dans un container scrollable à hauteur fixe, avec un
+ * `<thead>` sticky. Pas de librairie externe : le browser gère la fenêtre
+ * de rendu. Pour un vrai windowing, brancher `react-virtuoso` ou
+ * `react-window` par-dessus les mêmes primitives `TableRow` / `TableCell`.
+ */
+export const Virtualized: Story = {
+  parameters: { design: { type: "figma", url: figmaUrl("4765:3311") } },
   render: (args) => (
-    <Table {...args} aria-label="Alignements">
+    // En-tête collant + hauteur bornée gérés nativement par la Table
+    // (`stickyHeader` + `maxHeight`) — plus de wrapper ni de styles inline.
+    <Table
+      {...args}
+      aria-label="Large dataset — 200 lignes"
+      stickyHeader
+      maxHeight={400}
+    >
       <TableHead>
         <TableRow>
-          <TableHeaderCell align="left">Left</TableHeaderCell>
-          <TableHeaderCell align="center">Center</TableHeaderCell>
-          <TableHeaderCell align="right">Right</TableHeaderCell>
+          <TableHeaderCell width={80}>#</TableHeaderCell>
+          <TableHeaderCell>Title</TableHeaderCell>
+          <TableHeaderCell>Status</TableHeaderCell>
+          <TableHeaderCell>User</TableHeaderCell>
+          <TableHeaderCell>Key</TableHeaderCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        <TableRow>
-          <TableCell align="left">Alpha</TableCell>
-          <TableCell align="center">42</TableCell>
-          <TableCell align="right">1 234,56 €</TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell align="left">Beta</TableCell>
-          <TableCell align="center">7</TableCell>
-          <TableCell align="right">99,00 €</TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell align="left">Gamma</TableCell>
-          <TableCell align="center">128</TableCell>
-          <TableCell align="right">2 500,00 €</TableCell>
-        </TableRow>
+        {LARGE_DATASET.map((r) => (
+          <TableRow key={r.id}>
+            <TableCell>{r.id}</TableCell>
+            <TableCell>{r.title}</TableCell>
+            <TableCell>
+              <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
+            </TableCell>
+            <TableCell>{r.user}</TableCell>
+            <TableCell>{r.key}</TableCell>
+          </TableRow>
+        ))}
       </TableBody>
     </Table>
   ),
 };
 
 /**
+ * **Séparation des lignes (grands écrans)** — prop `rowSeparation` : sur un grand
+ * écran, de longues lignes sans repère sont difficiles à suivre. Modes : `none`
+ * (défaut), `dividers` (filet fin), `striped` (bandes) et `elevated` — **sans
+ * filet** : la ligne survolée se surélève (ombre légère) à la manière de Gmail.
+ * Ici, 60 lignes pour juger l'effet sur une vraie liste : survole-les.
+ */
+export const RowSeparation: Story = {
+  name: "Row separation",
+  parameters: { layout: "padded" },
+  argTypes: {
+    rowSeparation: { control: "inline-radio", options: ["none", "dividers", "striped", "elevated"] },
+  },
+  args: { rowSeparation: "elevated" },
+  render: (args) => (
+    <div style={{ maxWidth: 960 }}>
+      <Table {...args} aria-label="Séparation des lignes" maxHeight={560} stickyHeader>
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell width={80}>#</TableHeaderCell>
+            <TableHeaderCell>Title</TableHeaderCell>
+            <TableHeaderCell>Status</TableHeaderCell>
+            <TableHeaderCell>User</TableHeaderCell>
+            <TableHeaderCell>Key</TableHeaderCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {LARGE_DATASET.slice(0, 60).map((r) => (
+            <TableRow key={r.id}>
+              <TableCell>{r.id}</TableCell>
+              <TableCell>{r.title}</TableCell>
+              <TableCell>
+                <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
+              </TableCell>
+              <TableCell>{r.user}</TableCell>
+              <TableCell>{r.key}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  ),
+};
+
+// -----------------------------------------------------------------------
+// Composition complète
+
+/**
  * Combinaison complète — sélection + tri + actions par ligne + colonnes
  * de largeurs variées. Représentatif d'une page « liste » typique.
  */
-export const AllInOne: Story = {
-  name: "All-in-one",
+export const FullExample: Story = {
+  name: "Full example",
   render: function AllInOneStory(args) {
     type Column = "title" | "user" | "key";
     const selection = useTableSelection({ keys: ROWS.map((r) => r.id) });
@@ -806,237 +958,6 @@ export const AllInOne: Story = {
   },
 };
 
-/**
- * Sélection multiple avec toolbar contextuelle — pattern d'action bar
- * par-dessus la table quand des lignes sont sélectionnées (compte du
- * nombre de lignes + actions bulk).
- */
-export const SelectionToolbar: Story = {
-  name: "Selection toolbar",
-  render: function ToolbarStory(args) {
-    const selection = useTableSelection({
-      keys: ROWS.map((r) => r.id),
-      defaultSelectedKeys: ["1", "2"],
-    });
-    return (
-      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space150)" }}>
-        <Table.SelectionBar
-          count={selection.selectedCount}
-          total={ROWS.length}
-        >
-          <Button appearance="subtle" iconBefore="Delete">
-            Supprimer
-          </Button>
-        </Table.SelectionBar>
-        <Table {...args} aria-label="Table avec toolbar">
-          <TableHead>
-            <TableRow>
-              <TableHeaderCell width={40}>
-                <Checkbox {...selection.getSelectAllProps()} />
-              </TableHeaderCell>
-              <TableHeaderCell>Title</TableHeaderCell>
-              <TableHeaderCell>Status</TableHeaderCell>
-              <TableHeaderCell>User</TableHeaderCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {ROWS.map((r) => (
-              // Clic sur toute la ligne = toggle (cohérent avec With selection).
-              <TableRow
-                key={r.id}
-                isSelected={selection.isSelected(r.id)}
-                {...selection.getRowClickProps(r.id)}
-              >
-                <TableCell>
-                  <Checkbox
-                    {...selection.getRowCheckboxProps(r.id, `Sélectionner ${r.title}`)}
-                  />
-                </TableCell>
-                <TableCell>{r.title}</TableCell>
-                <TableCell>
-                  <Tag
-                    label={r.status}
-                    appearance={STATUS_APPEARANCE[r.status]}
-                    shape="rounded"
-                  />
-                </TableCell>
-                <TableCell>{r.user}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    );
-  },
-};
-
-// -----------------------------------------------------------------------
-// Dataset large — utilisé par Virtualized et WithPagination
-
-interface LargeRow {
-  id: number;
-  title: string;
-  status: Row["status"];
-  user: string;
-  key: string;
-}
-
-const USERS = ["John Doe", "Jane Smith", "Alice Chen", "Bob Martin", "Sophie Claire"];
-const STATUSES: Row["status"][] = ["Actif", "En attente", "Suspendu"];
-
-const LARGE_DATASET: LargeRow[] = Array.from({ length: 200 }, (_, i) => ({
-  id: i + 1,
-  title: `Projet ${String(i + 1).padStart(3, "0")}`,
-  status: STATUSES[i % STATUSES.length],
-  user: USERS[i % USERS.length],
-  key: `CODE-${String(i + 1).padStart(4, "0")}`,
-}));
-
-/**
- * Virtualized — équivalent Comète de l'exemple MUI "Virtualized Table".
- * 200 lignes rendues dans un container scrollable à hauteur fixe, avec un
- * `<thead>` sticky. Pas de librairie externe : le browser gère la fenêtre
- * de rendu. Pour un vrai windowing, brancher `react-virtuoso` ou
- * `react-window` par-dessus les mêmes primitives `TableRow` / `TableCell`.
- */
-export const Virtualized: Story = {
-  parameters: { design: { type: "figma", url: figmaUrl("4765:3311") } },
-  render: (args) => (
-    // En-tête collant + hauteur bornée gérés nativement par la Table
-    // (`stickyHeader` + `maxHeight`) — plus de wrapper ni de styles inline.
-    <Table
-      {...args}
-      aria-label="Large dataset — 200 lignes"
-      stickyHeader
-      maxHeight={400}
-    >
-      <TableHead>
-        <TableRow>
-          <TableHeaderCell width={80}>#</TableHeaderCell>
-          <TableHeaderCell>Title</TableHeaderCell>
-          <TableHeaderCell>Status</TableHeaderCell>
-          <TableHeaderCell>User</TableHeaderCell>
-          <TableHeaderCell>Key</TableHeaderCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {LARGE_DATASET.map((r) => (
-          <TableRow key={r.id}>
-            <TableCell>{r.id}</TableCell>
-            <TableCell>{r.title}</TableCell>
-            <TableCell>
-              <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
-            </TableCell>
-            <TableCell>{r.user}</TableCell>
-            <TableCell>{r.key}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  ),
-};
-
-/**
- * **Séparation des lignes (grands écrans)** — prop `rowSeparation` : sur un grand
- * écran, de longues lignes sans repère sont difficiles à suivre. Modes : `none`
- * (défaut), `dividers` (filet fin), `striped` (bandes) et `elevated` — **sans
- * filet** : la ligne survolée se surélève (ombre légère) à la manière de Gmail.
- * Ici, 60 lignes pour juger l'effet sur une vraie liste : survole-les.
- */
-export const RowSeparation: Story = {
-  name: "Row separation (grands écrans)",
-  parameters: { layout: "padded" },
-  argTypes: {
-    rowSeparation: { control: "inline-radio", options: ["none", "dividers", "striped", "elevated"] },
-  },
-  args: { rowSeparation: "elevated" },
-  render: (args) => (
-    <div style={{ maxWidth: 960 }}>
-      <Table {...args} aria-label="Séparation des lignes" maxHeight={560} stickyHeader>
-        <TableHead>
-          <TableRow>
-            <TableHeaderCell width={80}>#</TableHeaderCell>
-            <TableHeaderCell>Title</TableHeaderCell>
-            <TableHeaderCell>Status</TableHeaderCell>
-            <TableHeaderCell>User</TableHeaderCell>
-            <TableHeaderCell>Key</TableHeaderCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {LARGE_DATASET.slice(0, 60).map((r) => (
-            <TableRow key={r.id}>
-              <TableCell>{r.id}</TableCell>
-              <TableCell>{r.title}</TableCell>
-              <TableCell>
-                <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
-              </TableCell>
-              <TableCell>{r.user}</TableCell>
-              <TableCell>{r.key}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
-  ),
-};
-
-/**
- * WithPagination — 200 lignes découpées par `TablePagination`. Le parent
- * garde l'état `page` / `rowsPerPage` et slice le dataset lui-même.
- */
-export const WithPagination: Story = {
-  parameters: { design: { type: "figma", url: figmaUrl("4765:3311") } },
-  render: function WithPaginationStory(args) {
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(25);
-
-    const paged = useMemo(
-      () => LARGE_DATASET.slice(page * rowsPerPage, (page + 1) * rowsPerPage),
-      [page, rowsPerPage],
-    );
-
-    return (
-      <div>
-        <Table {...args} aria-label="Projets paginés">
-          <TableHead>
-            <TableRow>
-              <TableHeaderCell width={80}>#</TableHeaderCell>
-              <TableHeaderCell>Title</TableHeaderCell>
-              <TableHeaderCell>Status</TableHeaderCell>
-              <TableHeaderCell>User</TableHeaderCell>
-              <TableHeaderCell>Key</TableHeaderCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {paged.map((r) => (
-              <TableRow key={r.id}>
-                <TableCell>{r.id}</TableCell>
-                <TableCell>{r.title}</TableCell>
-                <TableCell>
-                  <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
-                </TableCell>
-                <TableCell>{r.user}</TableCell>
-                <TableCell>{r.key}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          count={LARGE_DATASET.length}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[25, 50, 100]}
-          onPageChange={setPage}
-          onRowsPerPageChange={(n) => {
-            setRowsPerPage(n);
-            setPage(0);
-          }}
-        />
-      </div>
-    );
-  },
-};
-
 // -----------------------------------------------------------------------
 // États natifs (chargement / vide / erreur)
 //
@@ -1069,8 +990,7 @@ function StatesHead() {
  * pagination) : la coquille reste en place, seules les lignes passent en
  * skeleton via `isLoading`.
  */
-export const LoadingState: Story = {
-  name: "Loading",
+export const Loading: Story = {
   parameters: { controls: { disable: true } },
   render: () => (
     <div style={{ width: 640 }}>
@@ -1091,8 +1011,7 @@ export const LoadingState: Story = {
 };
 
 /** **Vide** — état vide natif via `isEmpty` (illustration + message), sur le même gabarit. */
-export const EmptyState: Story = {
-  name: "Empty",
+export const Empty: Story = {
   parameters: { controls: { disable: true } },
   render: () => (
     <div style={{ width: 640 }}>
@@ -1114,7 +1033,7 @@ export const EmptyState: Story = {
  * distinct de l'état vide (aucune donnée du tout) : le libellé invite à ajuster
  * la recherche, avec une action « Réinitialiser les filtres ».
  */
-export const NoResultsState: Story = {
+export const NoResults: Story = {
   name: "No results",
   parameters: { controls: { disable: true } },
   render: () => (
@@ -1303,8 +1222,8 @@ const onOpenDetail = fn();
  * repli liste le sont aussi — **même destination, même geste** ; jamais le hover
  * comme seul signal.
  */
-export const TableToListRecipe: Story = {
-  name: "Table → List (repli téléphone)",
+export const TableToList: Story = {
+  name: "Table to list",
   parameters: { controls: { disable: true }, layout: "fullscreen" },
   render: () => (
     <div style={{ width: 360, padding: "var(--space200)" }}>
@@ -1758,8 +1677,8 @@ function TableCardRecipe({ initialView }: { initialView: "table" | "cards" }) {
  * est inutilisable. Les cartes sont une vue alternative choisie écran par
  * écran. Décision du doc d'audit — ne pas la rouvrir.
  */
-export const TableCardsToggleRecipe: Story = {
-  name: "Recette — Table ↔ cartes (bascule)",
+export const TableToCards: Story = {
+  name: "Table to cards",
   parameters: { controls: { disable: true }, layout: "fullscreen" },
   render: () => <TableCardRecipe initialView="table" />,
   play: async ({ canvasElement }) => {

@@ -44,6 +44,13 @@ entre versions alpha.
   destination (`Page.Bar` compacte avec « Retour » + `List` en deux sections),
   sélectionné comme ses voisines, sans état ouvert.
 
+- **`Pagination`** (nouveau composant) : navigation entre pages — précédente /
+  suivante encadrent des pages numérotées `1 2 3 4 5 … 8` (7 emplacements au plus,
+  largeur stable), page courante pleine (`aria-current="page"`), précédente / suivante
+  désactivées aux extrémités, taille selon la densité (28 / 32 / 40 px). Props : `page`
+  (0-indexée), `pageCount`, `onPageChange`, `density`, `aria-label`. `TablePagination`
+  le compose.
+
 ### Modifié
 
 - **`TableHeaderCell` triable — icône de tri** : plus de double flèche « expand »
@@ -51,14 +58,9 @@ entre versions alpha.
   atténuée (aperçu du tri croissant) ; un tri actif garde sa flèche pleine.
 - **`TablePagination`** : le sélecteur s'intitule « **Résultats par page** » (au lieu de
   « Lignes par page ») et propose **25 / 50 / 100** par défaut — **10 retiré**.
-- **`TablePagination` — pages numérotées** (`showPageNumbers`, défaut `true`) : entre
-  « précédente » et « suivante », une liste `1 2 3 4 5 … 8` (style Atlassian / Ant) —
-  7 emplacements au plus (largeur stable), page courante marquée (`aria-current`),
-  première et dernière toujours atteignables. `false` pour garder les seules flèches.
-  Mise en page revue : **info à gauche** (« 1–25 sur 200 résultats », annoncée aux
-  lecteurs d'écran), **contrôles à droite** (résultats par page + navigation) ;
-  précédente / suivante partagent le style des boutons de page, dont la taille suit
-  la densité du tableau (28 / 32 / 40 px).
+- **`TablePagination`** : mise en page revue — « **Résultats par page** » à gauche,
+  « **1 à 25 sur 248** » (annoncé aux lecteurs d'écran) et la `Pagination` à droite.
+
 - **`BottomNavItem` — état ouvert allégé (item « Plus »)** : l'état
   `aria-expanded` animait cinq choses en parallèle (fond, croisement d'icônes avec
   `rotate`/`scale`, agrandissement et descente de l'icône, effacement du

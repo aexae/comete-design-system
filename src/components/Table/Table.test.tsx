@@ -8,7 +8,6 @@ import {
   TableHead,
   TableHeaderCell,
   TablePagination,
-  getPageItems,
   TableRow,
   TableView,
   TableSelectionBar,
@@ -621,31 +620,6 @@ describe("TableRow — mode sélectionnable (onToggleSelect)", () => {
   });
 });
 
-describe("getPageItems", () => {
-  it("should list every page when there are 7 or fewer", () => {
-    expect(getPageItems(1, 1)).toEqual([1]);
-    expect(getPageItems(3, 7)).toEqual([1, 2, 3, 4, 5, 6, 7]);
-  });
-
-  it("should collapse the end near the start: 1 2 3 4 5 … N", () => {
-    expect(getPageItems(1, 20)).toEqual([1, 2, 3, 4, 5, "ellipsis-end", 20]);
-    expect(getPageItems(4, 20)).toEqual([1, 2, 3, 4, 5, "ellipsis-end", 20]);
-  });
-
-  it("should collapse both sides in the middle: 1 … c-1 c c+1 … N", () => {
-    expect(getPageItems(10, 20)).toEqual([1, "ellipsis-start", 9, 10, 11, "ellipsis-end", 20]);
-  });
-
-  it("should collapse the start near the end: 1 … N-4 … N", () => {
-    expect(getPageItems(20, 20)).toEqual([1, "ellipsis-start", 16, 17, 18, 19, 20]);
-    expect(getPageItems(17, 20)).toEqual([1, "ellipsis-start", 16, 17, 18, 19, 20]);
-  });
-
-  it("should always return 7 slots once there are more than 7 pages (stable width)", () => {
-    for (let c = 1; c <= 30; c += 1) expect(getPageItems(c, 30)).toHaveLength(7);
-  });
-});
-
 describe("TablePagination", () => {
   it("should render the default 'N–M sur Total' label", () => {
     render(
@@ -656,7 +630,7 @@ describe("TablePagination", () => {
         onPageChange={() => undefined}
       />,
     );
-    expect(screen.getByText("1–10 sur 100 résultats")).toBeInTheDocument();
+    expect(screen.getByText("1 à 10 sur 100")).toBeInTheDocument();
   });
 
   it("should render '0' bounds when count is zero", () => {
@@ -668,7 +642,7 @@ describe("TablePagination", () => {
         onPageChange={() => undefined}
       />,
     );
-    expect(screen.getByText("0–0 sur 0 résultats")).toBeInTheDocument();
+    expect(screen.getByText("0 à 0 sur 0")).toBeInTheDocument();
   });
 
   it("should call onPageChange with next page when clicking 'Page suivante'", () => {
@@ -777,20 +751,6 @@ describe("TablePagination", () => {
     );
     fireEvent.click(screen.getByRole("button", { name: "Page 1" }));
     expect(onPageChange).not.toHaveBeenCalled();
-  });
-
-  it("should hide the page numbers with showPageNumbers={false}", () => {
-    render(
-      <TablePagination
-        count={200}
-        page={0}
-        rowsPerPage={25}
-        showPageNumbers={false}
-        onPageChange={() => undefined}
-      />,
-    );
-    expect(screen.queryByRole("button", { name: "Page 1" })).toBeNull();
-    expect(screen.getByRole("button", { name: "Page suivante" })).toBeInTheDocument();
   });
 
   it("should not render page numbers when there is a single page", () => {

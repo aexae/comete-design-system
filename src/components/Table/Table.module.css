@@ -335,7 +335,6 @@
    -------------------------------------------------------------------------- */
 
 .pagination {
-  --pagination-button-size: var(--size400);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -349,16 +348,7 @@
   border-top: var(--size025) solid var(--border-subtle);
 }
 
-/* Densité : la taille des boutons de page suit celle du tableau. */
-.pagination[data-density="compact"] {
-  --pagination-button-size: var(--size300);
-}
-
-.pagination[data-density="touch"] {
-  --pagination-button-size: var(--size500);
-}
-
-/* Contrôles (à droite) : résultats par page + navigation. */
+/* Droite : plage affichée + navigation entre pages. */
 .paginationEnd {
   display: inline-flex;
   align-items: center;
@@ -377,79 +367,6 @@
 .paginationLabel {
   font-weight: var(--font-weight-regular);
   white-space: nowrap;
-}
-
-.paginationControls {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space025);
-}
-
-/* Pages numérotées (1 2 3 … 8) — style Atlassian / Ant : la page courante est
-   pleine, les autres discrètes ; « … » marque les pages masquées. */
-.paginationPages {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space025);
-}
-
-.paginationPage {
-  min-width: var(--pagination-button-size);
-  height: var(--pagination-button-size);
-  padding: 0 var(--space075);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: var(--radius100);
-  background: transparent;
-  font-family: var(--font-family-primary);
-  font-size: var(--font-size-ui-xs);
-  font-weight: var(--font-weight-medium);
-  line-height: var(--line-height-ui-xs);
-  color: var(--text-subtle);
-  cursor: pointer;
-  transition: background-color var(--duration-fast) var(--easing-default),
-              color var(--duration-fast) var(--easing-default);
-}
-
-.paginationPage[data-hovered] {
-  background-color: var(--background-neutral-subtler-hovered);
-  color: var(--text-default);
-}
-
-.paginationPage[data-pressed] {
-  background-color: var(--background-neutral-subtler-pressed);
-}
-
-.paginationPage[data-focus-visible] {
-  outline: var(--size025) solid var(--border-focused);
-  outline-offset: var(--size0125);
-}
-
-.paginationPage[aria-current="page"] {
-  background-color: var(--background-selected-subtlest-default);
-  color: var(--text-selected);
-  cursor: default;
-}
-
-/* Précédente / suivante : mêmes boutons que les pages, icône seule. */
-.paginationPage[data-disabled] {
-  opacity: var(--opacity-disabled);
-  cursor: not-allowed;
-}
-
-.paginationIcon {
-  display: inline-flex;
-}
-
-.paginationEllipsis {
-  min-width: var(--pagination-button-size);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-subtlest);
-  user-select: none;
 }
 
 /* --------------------------------------------------------------------------
