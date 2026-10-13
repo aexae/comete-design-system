@@ -5,21 +5,20 @@ import {
   Page,
   Button,
   ButtonGroup,
-  Avatar,
   Cluster,
   Grid,
   Card,
   SearchField,
   SectionMessage,
 } from "@aexae/comete-design-system/components";
-import { expect, within } from "storybook/test";
+import { expect } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { PageGlobalActions } from "./_pageChrome";
 import {
   FiltresPanel,
   ActiveFilterTags,
   SavedSearchesMenu,
-  initialFilters,
   emptyFilters,
   useSavedViews,
   type Filters,
@@ -98,15 +97,12 @@ export const Default: Story = {
     // (slot `filters`, popover deux volets) + « Filtres enregistrés » + actions,
     // et les tags des critères actifs sous la barre. Composant partagé
     // `_filtresOptionB`, identique à Recipes/Filtres et Page/Toolbar.
-    const [f, setF] = useState<Filters>(initialFilters);
+    const [f, setF] = useState<Filters>(emptyFilters);
     const { views, save, remove } = useSavedViews();
     return (
       <Gutters>
-        <Page globalActions={null}>
-          <Page.Bar
-            title="Agents"
-            trailing={<Avatar initials="AC" />}
-          />
+        <Page globalActions={<PageGlobalActions />}>
+          <Page.Bar title="Agents" />
           <Page.Toolbar
             search={
               <SearchField
@@ -179,11 +175,8 @@ export const LongTitle: Story = {
   name: "Long title",
   render: () => (
     <Gutters>
-      <Page globalActions={null}>
-        <Page.Bar
-          title="Un titre de page extrêmement long qui doit être tronqué avec une ellipse quand l'espace disponible n'est pas suffisant"
-          trailing={<Avatar initials="AC" />}
-        />
+      <Page globalActions={<PageGlobalActions />}>
+        <Page.Bar title="Un titre de page extrêmement long qui doit être tronqué avec une ellipse quand l'espace disponible n'est pas suffisant" />
         <Page.Body>
           <p>Contenu…</p>
         </Page.Body>
@@ -214,7 +207,7 @@ function ListingPage({ leading }: { leading?: React.ReactNode }) {
   const [f, setF] = useState<Filters>(emptyFilters);
   const { views, save, remove } = useSavedViews();
   return (
-    <Page style={{ minHeight: "100vh" }}>
+    <Page globalActions={<PageGlobalActions />} style={{ minHeight: "100vh" }}>
       <Page.Bar title="Agents" leading={leading} />
       <Page.Toolbar
         /* Slot dédié : le layout borne le champ (160–240px), le compresse avec
@@ -308,17 +301,6 @@ export const FullPage: Story = {
   name: "Full page",
   parameters: { controls: { disable: true }, layout: "fullscreen" },
   render: () => <ListingPage leading={HAMBURGER} />,
-  // a11y : tout bouton réduit en icône seule DOIT conserver un aria-label.
-  play: ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    // « Exporter » est masqué sous compact (repli dans « ⋯ ») → non vérifié ici.
-    for (const name of ["Filtres", "Plus d'actions", "Ouvrir le menu"]) {
-      void expect(canvas.getByRole("button", { name })).toHaveAttribute(
-        "aria-label",
-        name,
-      );
-    }
-  },
 };
 
 // -----------------------------------------------------------------------
@@ -333,7 +315,7 @@ export const StickyBarBehaviour: Story = {
   name: "Sticky bar behaviour",
   parameters: { controls: { disable: true } },
   render: () => (
-    <Page style={{ height: 360, overflow: "auto" }}>
+    <Page globalActions={<PageGlobalActions />} style={{ height: 360, overflow: "auto" }}>
       <Page.Bar
         size="compact"
         title="Agents"

@@ -16,6 +16,7 @@ import {
 } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { PageGlobalActions } from "./_pageChrome";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -65,35 +66,6 @@ type Story = StoryObj<typeof Page>;
 // -----------------------------------------------------------------------
 // Helpers
 
-/**
- * Actions globales d'un gabarit **racine** (accueil, listing) : notifications,
- * réglages, avatar. Le bouton « Réglages » est une entrée de navigation vers
- * les préférences de l'application — il n'a de sens qu'à ce niveau.
- */
-function BarActions() {
-  return (
-    <>
-      <Button appearance="subtle" iconBefore="Notifications" aria-label="Notifications" />
-      <Button appearance="subtle" iconBefore="Settings" aria-label="Réglages" />
-      <Avatar size="medium" initials="AC" />
-    </>
-  );
-}
-
-/**
- * Actions globales d'une page de **détail** : notifications + avatar, sans
- * « Réglages ». Sur une fiche ou une page de préférences, un bouton Paramètres
- * dans l'appbar ferait doublon avec le contenu de la page elle-même.
- */
-function DetailActions() {
-  return (
-    <>
-      <Button appearance="subtle" iconBefore="Notifications" aria-label="Notifications" />
-      <Avatar size="medium" initials="AC" />
-    </>
-  );
-}
-
 /** Cadre borné + contenu long, pour visualiser l'épinglage (sticky) de la compacte. */
 function ScrollFrame({ children }: { children: ReactNode }) {
   return (
@@ -140,7 +112,7 @@ const barFiller = Array.from({ length: 24 }, (_, i) => (
 export const Large: Story = {
   render: () => (
     <Gutters>
-      <Page globalActions={<BarActions />}>
+      <Page globalActions={<PageGlobalActions />}>
         <Page.Bar size="large" title="Accueil" />
         <Page.Body>
           <p>Contenu de la page…</p>
@@ -185,7 +157,7 @@ export const RootResponsive: Story = {
         borderRadius: "var(--radius200)",
       }}
     >
-      <Page globalActions={<BarActions />} style={{ height: "100%" }}>
+      <Page globalActions={<PageGlobalActions />} style={{ height: "100%" }}>
         <Page.Bar
           title="Accueil"
           leading={
@@ -205,7 +177,7 @@ export const RootResponsive: Story = {
 export const Compact: Story = {
   render: () => (
     <ScrollFrame>
-      <Page globalActions={<DetailActions />} style={{ height: "100%" }}>
+      <Page globalActions={<PageGlobalActions />} style={{ height: "100%" }}>
         <Page.Bar
           size="compact"
           title="Fiche agent"
@@ -223,9 +195,11 @@ export const Compact: Story = {
     const canvas = within(canvasElement);
     // leading
     await expect(canvas.getByRole("button", { name: "Retour" })).toBeInTheDocument();
-    // trailing (globalActions) — page de détail : notifications + avatar, et
-    // PAS de « Réglages » (il ferait doublon avec le contenu d'une page de
-    // préférences ; cf. DetailActions).
+    // trailing (globalActions) : la loupe précède les notifications, et il n'y
+    // a plus de bouton « Réglages » — remplacé par la recherche globale.
+    await expect(
+      canvas.getByRole("button", { name: "Recherche globale" }),
+    ).toBeInTheDocument();
     await expect(
       canvas.getByRole("button", { name: "Notifications" }),
     ).toBeInTheDocument();
@@ -241,7 +215,7 @@ export const LongTitle: Story = {
   name: "Long title",
   render: () => (
     <ScrollFrame>
-      <Page globalActions={<BarActions />} style={{ height: "100%" }}>
+      <Page globalActions={<PageGlobalActions />} style={{ height: "100%" }}>
         <Page.Bar
           size="compact"
           title="Un titre de page extrêmement long qui doit être tronqué avec une ellipse quand l'espace disponible n'est pas suffisant"
@@ -277,7 +251,7 @@ export const WithToolbar: Story = {
   name: "With toolbar",
   render: () => (
     <Gutters>
-      <Page globalActions={<BarActions />}>
+      <Page globalActions={<PageGlobalActions />}>
         <Page.Bar size="large" title="Agents" />
         <Page.Toolbar
           start={
