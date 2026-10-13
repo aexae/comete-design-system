@@ -762,10 +762,10 @@ function FieldToolRecipe(): ReactNode {
           onClick={() => { setSelected("Planning"); }}
         />
         <BottomNavItem
-          label="Plus"
-          icon="MoreHoriz"
-          isSelected={activeItem === "Plus"}
-          onClick={() => { setSelected("Plus"); }}
+          label="MCE"
+          icon="FormEdit"
+          isSelected={activeItem === "MCE"}
+          onClick={() => { setSelected("MCE"); }}
         />
       </BottomNav>
 
