@@ -401,45 +401,6 @@ export const UnreadInteractions: Story = {
   },
 };
 
-/**
- * **Séparateurs** — `hasDividers` affiche un filet subtle (`--border-subtle`) entre chaque
- * item, y compris entre la fin d'une section et le `ListHead` suivant ; pas de filet
- * après le dernier élément. Pour séparer par l'air plutôt que par un filet, voir `gap`.
- */
-export const Dividers: Story = {
-  args: { hasDividers: true },
-  render: (args) => (
-    <List {...args} aria-label="Paramètres">
-      <ListHead>Compte</ListHead>
-      <ListItem>
-        <ListItemIcon>
-          <Icon icon="Person" />
-        </ListItemIcon>
-        <ListItemText primary="Profil" />
-      </ListItem>
-      <ListItem>
-        <ListItemIcon>
-          <Icon icon="Notifications" />
-        </ListItemIcon>
-        <ListItemText primary="Notifications" />
-      </ListItem>
-      <ListHead>Application</ListHead>
-      <ListItem>
-        <ListItemIcon>
-          <Icon icon="Settings" />
-        </ListItemIcon>
-        <ListItemText primary="Préférences" />
-      </ListItem>
-      <ListItem>
-        <ListItemIcon>
-          <Icon icon="Help" />
-        </ListItemIcon>
-        <ListItemText primary="Aide" />
-      </ListItem>
-    </List>
-  ),
-};
-
 /** Sections multiples séparées par des `ListHead`. */
 export const WithSections: Story = {
   name: "With section heads",

@@ -17,7 +17,7 @@ entre versions alpha.
   par l'air).
 - **`ListItem` / `ListItemButton` — `isUnread`** : item **non lu** — texte principal en
   medium et pastille (`Badge` information) après le contenu, en fin de ligne ; « Non lu »
-  est annoncé aux lecteurs d'écran (masqué visuellement). Stories « Unread » et « Dividers ».
+  est annoncé aux lecteurs d'écran (masqué visuellement). Story « Unread » (séparateurs activés via `hasDividers`).
 - **`Table` — `rowSeparation`** (`none` | `dividers` | `striped` | `elevated`, défaut
   `none`) : séparation visuelle des lignes pour les grands écrans — filet fin entre
   chaque ligne, bandes une ligne sur deux, ou ligne survolée **surélevée** (ombre
