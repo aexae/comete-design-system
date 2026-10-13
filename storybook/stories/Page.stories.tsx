@@ -130,8 +130,17 @@ export const Default: Story = {
               <Cluster gap="100">
                 <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
                 <ButtonGroup>
-                  <Button color="comete" iconBefore="Add">Nouvel agent</Button>
-                  <Button>Exporter</Button>
+                  <Button
+                    color="comete"
+                    iconBefore="Add"
+                    collapseLabel
+                    shape="square"
+                    aria-label="Nouvel agent"
+                  >
+                    Nouvel agent
+                  </Button>
+                  <Button className={css["hideUnderCompact"]}>Exporter</Button>
+                  <Button shape="square" iconBefore="MoreHoriz" aria-label="Plus d'actions" />
                 </ButtonGroup>
               </Cluster>
             }
@@ -167,7 +176,7 @@ export const Default: Story = {
 
 /** Titre très long — ellipsize proprement. */
 export const LongTitle: Story = {
-  name: "Long title (ellipsis)",
+  name: "Long title",
   render: () => (
     <Gutters>
       <Page globalActions={null}>
@@ -296,7 +305,7 @@ const HAMBURGER = (
  * la démo — en contexte réel, l'app ne le rend que SideNav repliée.
  */
 export const FullPage: Story = {
-  name: "Full page (responsive)",
+  name: "Full page",
   parameters: { controls: { disable: true }, layout: "fullscreen" },
   render: () => <ListingPage leading={HAMBURGER} />,
   // a11y : tout bouton réduit en icône seule DOIT conserver un aria-label.
@@ -321,7 +330,7 @@ export const FullPage: Story = {
  * play function vérifie ce contrat pour éviter une régression.
  */
 export const StickyBarBehaviour: Story = {
-  name: "Sticky bar behaviour (compact)",
+  name: "Sticky bar behaviour",
   parameters: { controls: { disable: true } },
   render: () => (
     <Page style={{ height: 360, overflow: "auto" }}>

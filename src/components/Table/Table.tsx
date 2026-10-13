@@ -7,7 +7,7 @@ import type { CSSProperties, ReactElement, ReactNode } from "react";
 import { Children, cloneElement, createContext, isValidElement, useContext } from "react";
 import { VisuallyHidden } from "react-aria-components";
 import { Icon } from "../Icon/index.js";
-import { Pagination } from "../Pagination/index.js";
+import { TablePager } from "./TablePager.js";
 import { Select } from "../Select/index.js";
 import { Skeleton } from "../Skeleton/index.js";
 import { DataStateMessage } from "../_states/DataStateMessage.js";
@@ -944,7 +944,7 @@ function defaultLabelDisplayedRows({
 /**
  * TablePagination — Contrôles de pagination pour un `Table` : « Résultats par page »
  * (sélecteur), plage affichée « 1–25 sur 200 » et pages précédente / suivante. À rendre
- * en dessous du `<Table>` ; la navigation entre pages est le composant `Pagination`. Contrôlé — le parent gère `page` et
+ * en dessous du `<Table>` ; la navigation entre pages est `TablePager` (`Table.Pager`). Contrôlé — le parent gère `page` et
  * `rowsPerPage` et applique lui-même la découpe du dataset.
  *
  * ```tsx
@@ -1009,7 +1009,7 @@ export function TablePagination({
         <span className={styles.paginationLabel} aria-live="polite">
           {labelDisplayedRows({ from, to, count })}
         </span>
-        <Pagination
+        <TablePager
           page={page}
           pageCount={lastPage + 1}
           onPageChange={onPageChange}
@@ -1127,9 +1127,15 @@ export interface TableComponent {
   View: typeof TableView;
   /** Barre d'actions contextuelle « N lignes sélectionnées ». */
   SelectionBar: typeof TableSelectionBar;
+  /** Pied de tableau : « Résultats par page », plage affichée et navigation entre pages. */
+  Pagination: typeof TablePagination;
+  /** Navigation entre pages seule (précédente / pages numérotées / suivante). */
+  Pager: typeof TablePager;
 }
 
 export const Table: TableComponent = Object.assign(TableRoot, {
   View: TableView,
   SelectionBar: TableSelectionBar,
+  Pagination: TablePagination,
+  Pager: TablePager,
 });

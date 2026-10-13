@@ -35,7 +35,6 @@ export * from "./Menu";
 export * from "./ModalDialog";
 export * from "./MonthPicker";
 export * from "./Page";
-export * from "./Pagination";
 export * from "./SideNav";
 export * from "./Popover";
 export * from "./ProgressBar";

@@ -737,6 +737,46 @@ export const Pagination: Story = {
   },
 };
 
+/**
+ * **Pager** — la navigation entre pages seule (`Table.Pager`) : précédente / suivante et
+ * pages numérotées `1 2 3 4 5 … N` (7 emplacements au plus, largeur stable), page
+ * courante pleine (`aria-current="page"`). `TablePagination` le compose avec « Résultats
+ * par page » et la plage affichée ; à utiliser seul pour une liste ou une galerie.
+ */
+export const Pager: Story = {
+  parameters: { controls: { disable: true } },
+  render: function PagerStory() {
+    const [page, setPage] = useState(24);
+    return <Table.Pager page={page} pageCount={50} onPageChange={setPage} />;
+  },
+};
+
+// Test (masqué du sidebar) : précédente / suivante / page directe.
+export const PagerInteractions: Story = {
+  tags: ["!dev"],
+  render: function PagerInteractionsStory() {
+    const [page, setPage] = useState(0);
+    return <Table.Pager page={page} pageCount={10} onPageChange={setPage} />;
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const current = () => canvas.getByRole("button", { current: "page" });
+
+    await expect(current()).toHaveAccessibleName("Page 1");
+    await expect(canvas.getByRole("button", { name: "Page précédente" })).toBeDisabled();
+
+    await userEvent.click(canvas.getByRole("button", { name: "Page suivante" }));
+    await expect(current()).toHaveAccessibleName("Page 2");
+
+    await userEvent.click(canvas.getByRole("button", { name: "Page 4" }));
+    await expect(current()).toHaveAccessibleName("Page 4");
+
+    await userEvent.click(canvas.getByRole("button", { name: "Page 10" }));
+    await expect(current()).toHaveAccessibleName("Page 10");
+    await expect(canvas.getByRole("button", { name: "Page suivante" })).toBeDisabled();
+  },
+};
+
 // -----------------------------------------------------------------------
 // Dataset large — utilisé par Virtualized et WithPagination
 
@@ -999,7 +1039,7 @@ export const Loading: Story = {
         <TableBody isLoading columnCount={5} skeletonRows={10} />
       </Table>
       <TablePagination
-        count={200}
+        count={100}
         page={0}
         rowsPerPage={25}
         rowsPerPageOptions={[25, 50, 100]}

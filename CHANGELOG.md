@@ -44,12 +44,12 @@ entre versions alpha.
   destination (`Page.Bar` compacte avec « Retour » + `List` en deux sections),
   sélectionné comme ses voisines, sans état ouvert.
 
-- **`Pagination`** (nouveau composant) : navigation entre pages — précédente /
-  suivante encadrent des pages numérotées `1 2 3 4 5 … 8` (7 emplacements au plus,
-  largeur stable), page courante pleine (`aria-current="page"`), précédente / suivante
-  désactivées aux extrémités, taille selon la densité (28 / 32 / 40 px). Props : `page`
-  (0-indexée), `pageCount`, `onPageChange`, `density`, `aria-label`. `TablePagination`
-  le compose.
+- **`TablePager` / `Table.Pager`** (sous-composant de `Table`) : navigation entre pages —
+  précédente / suivante encadrent des pages numérotées `1 2 3 4 5 … 8` (7 emplacements
+  au plus, largeur stable), page courante pleine (`aria-current="page"`), précédente /
+  suivante désactivées aux extrémités, taille selon la densité (28 / 32 / 40 px). Props :
+  `page` (0-indexée), `pageCount`, `onPageChange`, `density`, `aria-label`.
+  `TablePagination` le compose ; `Table.Pagination` est aussi exposé.
 
 ### Modifié
 

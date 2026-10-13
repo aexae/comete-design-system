@@ -65,12 +65,30 @@ type Story = StoryObj<typeof Page>;
 // -----------------------------------------------------------------------
 // Helpers
 
-/** Actions globales type d'une Page.Bar : notifications, réglages, avatar. */
+/**
+ * Actions globales d'un gabarit **racine** (accueil, listing) : notifications,
+ * réglages, avatar. Le bouton « Réglages » est une entrée de navigation vers
+ * les préférences de l'application — il n'a de sens qu'à ce niveau.
+ */
 function BarActions() {
   return (
     <>
       <Button appearance="subtle" iconBefore="Notifications" aria-label="Notifications" />
       <Button appearance="subtle" iconBefore="Settings" aria-label="Réglages" />
+      <Avatar size="medium" initials="AC" />
+    </>
+  );
+}
+
+/**
+ * Actions globales d'une page de **détail** : notifications + avatar, sans
+ * « Réglages ». Sur une fiche ou une page de préférences, un bouton Paramètres
+ * dans l'appbar ferait doublon avec le contenu de la page elle-même.
+ */
+function DetailActions() {
+  return (
+    <>
+      <Button appearance="subtle" iconBefore="Notifications" aria-label="Notifications" />
       <Avatar size="medium" initials="AC" />
     </>
   );
@@ -153,7 +171,7 @@ export const Large: Story = {
  * montré pour la démo.
  */
 export const RootResponsive: Story = {
-  name: "Root page (responsive)",
+  name: "Root page",
   render: () => (
     <div
       style={{
@@ -185,10 +203,9 @@ export const RootResponsive: Story = {
  * défile dessous, la barre reste visible.
  */
 export const Compact: Story = {
-  name: "Compact (pinned)",
   render: () => (
     <ScrollFrame>
-      <Page globalActions={<BarActions />} style={{ height: "100%" }}>
+      <Page globalActions={<DetailActions />} style={{ height: "100%" }}>
         <Page.Bar
           size="compact"
           title="Fiche agent"
@@ -206,11 +223,13 @@ export const Compact: Story = {
     const canvas = within(canvasElement);
     // leading
     await expect(canvas.getByRole("button", { name: "Retour" })).toBeInTheDocument();
-    // trailing (globalActions)
+    // trailing (globalActions) — page de détail : notifications + avatar, et
+    // PAS de « Réglages » (il ferait doublon avec le contenu d'une page de
+    // préférences ; cf. DetailActions).
     await expect(
       canvas.getByRole("button", { name: "Notifications" }),
     ).toBeInTheDocument();
-    await expect(canvas.getByRole("button", { name: "Réglages" })).toBeInTheDocument();
+    await expect(canvas.queryByRole("button", { name: "Réglages" })).toBeNull();
   },
 };
 
@@ -219,7 +238,7 @@ export const Compact: Story = {
  * sans pousser les actions trailing.
  */
 export const LongTitle: Story = {
-  name: "Long title (ellipsis)",
+  name: "Long title",
   render: () => (
     <ScrollFrame>
       <Page globalActions={<BarActions />} style={{ height: "100%" }}>
