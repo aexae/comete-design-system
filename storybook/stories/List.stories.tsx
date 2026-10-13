@@ -1,7 +1,7 @@
 // List — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { within, expect } from "storybook/test";
+import { within, expect, userEvent, waitFor } from "storybook/test";
 import {
   Avatar,
   Badge,
@@ -210,6 +210,7 @@ const meta = {
   argTypes: {
     isDense: { control: "boolean" },
     isBordered: { control: "boolean" },
+    hasDividers: { control: "boolean" },
   },
   // Contrainte de largeur uniquement — la bordure est maintenant portée par
   // la prop `isBordered` sur List, plus par le décorateur.
@@ -339,6 +340,64 @@ export const Interactive: Story = {
         ))}
       </List>
     );
+  },
+};
+
+/**
+ * **Non lu** — `isUnread` sur `ListItem` / `ListItemButton` : texte principal en medium +
+ * pastille (`Badge` information) après le contenu, en fin de ligne, et « Non lu » annoncé
+ * aux lecteurs d'écran (masqué visuellement). Ici une boîte de notifications : ouvrir un message le marque lu.
+ * Les séparateurs subtle (`hasDividers`) aident à suivre une liste dense.
+ */
+export const Unread: Story = {
+  name: "Unread (non lu)",
+  args: { hasDividers: true },
+  render: function UnreadStory(args) {
+    const [unread, setUnread] = useState<Set<string>>(new Set(["1", "3"]));
+    const messages = [
+      { id: "1", title: "Nouvelle demande de congé", detail: "Marie Dupont · 10:32", icon: "Notifications" as const },
+      { id: "2", title: "Planning publié", detail: "Semaine 42 · hier", icon: "CalendarMonth" as const },
+      { id: "3", title: "Anomalie de pointage", detail: "Site Alpha · hier", icon: "Warning" as const },
+      { id: "4", title: "Rappel : ronde de nuit", detail: "Lundi", icon: "Patrol" as const },
+    ];
+    return (
+      <List {...args} aria-label="Notifications">
+        {messages.map((m) => (
+          <ListItemButton
+            key={m.id}
+            isUnread={unread.has(m.id)}
+            onPress={() =>
+              setUnread((prev) => {
+                const next = new Set(prev);
+                next.delete(m.id);
+                return next;
+              })
+            }
+          >
+            <ListItemIcon>
+              <Icon icon={m.icon} />
+            </ListItemIcon>
+            <ListItemText primary={m.title} secondary={m.detail} />
+          </ListItemButton>
+        ))}
+      </List>
+    );
+  },
+};
+
+// Test (masqué du sidebar) : le `play` ne se rejoue pas à l'ouverture de la story.
+export const UnreadInteractions: Story = {
+  tags: ["!dev"],
+  args: Unread.args,
+  render: Unread.render,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const first = canvas.getByRole("button", { name: /Nouvelle demande de congé/ });
+    // Non lu : annoncé (« Non lu »), puis lu après ouverture.
+    await expect(first).toHaveAccessibleName(/Non lu/);
+    await userEvent.click(first);
+    await waitFor(() => expect(first).not.toHaveAttribute("data-unread"));
+    await expect(first).not.toHaveAccessibleName(/Non lu/);
   },
 };
 

@@ -17,6 +17,7 @@ declare const styles: {
   readonly "skeletonRow": string;
   readonly "skeletonText": string;
   readonly "stateItem": string;
+  readonly "unreadBadge": string;
 };
 export = styles;
 
