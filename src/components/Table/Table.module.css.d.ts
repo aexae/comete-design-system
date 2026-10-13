@@ -9,6 +9,8 @@ declare const styles: {
   readonly "pagination": string;
   readonly "paginationControls": string;
   readonly "paginationEllipsis": string;
+  readonly "paginationEnd": string;
+  readonly "paginationIcon": string;
   readonly "paginationLabel": string;
   readonly "paginationPage": string;
   readonly "paginationPages": string;

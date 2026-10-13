@@ -14,7 +14,7 @@ entre versions alpha.
 - **`Table` — `rowSeparation`** (`none` | `dividers` | `striped` | `elevated`, défaut
   `none`) : séparation visuelle des lignes pour les grands écrans — filet fin entre
   chaque ligne, bandes une ligne sur deux, ou ligne survolée **surélevée** (ombre
-  légère, façon Gmail, sans filet). Filets en `box-shadow` sur les cellules : aucun
+  légère, façon Gmail, avec un filet très discret entre les lignes). Filets en `box-shadow` sur les cellules : aucun
   décalage au survol.
 - **`TableRow` — `onToggleSelect`** : mode **sélectionnable**. Un clic sur la ligne
   coche la case ; un contrôle interactif dans la ligne (case, bouton, lien, ancre
@@ -55,6 +55,10 @@ entre versions alpha.
   « précédente » et « suivante », une liste `1 2 3 4 5 … 8` (style Atlassian / Ant) —
   7 emplacements au plus (largeur stable), page courante marquée (`aria-current`),
   première et dernière toujours atteignables. `false` pour garder les seules flèches.
+  Mise en page revue : **info à gauche** (« 1–25 sur 200 résultats », annoncée aux
+  lecteurs d'écran), **contrôles à droite** (résultats par page + navigation) ;
+  précédente / suivante partagent le style des boutons de page, dont la taille suit
+  la densité du tableau (28 / 32 / 40 px).
 - **`BottomNavItem` — état ouvert allégé (item « Plus »)** : l'état
   `aria-expanded` animait cinq choses en parallèle (fond, croisement d'icônes avec
   `rotate`/`scale`, agrandissement et descente de l'icône, effacement du

@@ -6,7 +6,6 @@
 import type { CSSProperties, ReactElement, ReactNode } from "react";
 import { Children, cloneElement, createContext, isValidElement, useContext } from "react";
 import { Button as AriaButton, VisuallyHidden } from "react-aria-components";
-import { Button } from "../Button/index.js";
 import { Icon } from "../Icon/index.js";
 import { Select } from "../Select/index.js";
 import { Skeleton } from "../Skeleton/index.js";
@@ -964,7 +963,7 @@ function defaultLabelDisplayedRows({
   to,
   count,
 }: TablePaginationLabelInfo): string {
-  return `${from}–${to} sur ${count}`;
+  return `${from}–${to} sur ${count} résultats`;
 }
 
 /**
@@ -1018,63 +1017,70 @@ export function TablePagination({
       role="navigation"
       aria-label="Pagination"
     >
-      {onRowsPerPageChange && (
-        <div className={styles.paginationRowsPerPage}>
-          <span className={styles.paginationLabel}>{labelRowsPerPage}</span>
-          <Select
-            aria-label={labelRowsPerPage}
-            items={rowsPerPageItems}
-            value={String(rowsPerPage)}
-            onChange={(v) => {
-              if (v !== null) onRowsPerPageChange(Number(v));
-            }}
-            density={effectiveDensity}
-          />
-        </div>
-      )}
-      <span className={styles.paginationLabel}>
+      {/* Info à gauche : plage affichée + total. aria-live → annoncée au changement de page. */}
+      <span className={styles.paginationLabel} aria-live="polite">
         {labelDisplayedRows({ from, to, count })}
       </span>
-      <div className={styles.paginationControls}>
-        <Button
-          appearance="subtle"
-          density="compact"
-          iconBefore="ChevronLeft"
-          aria-label="Page précédente"
-          isDisabled={!canPrev}
-          onPress={() => onPageChange(page - 1)}
-        />
-        {showPageNumbers && lastPage > 0 && (
-          <div className={styles.paginationPages}>
-            {getPageItems(page + 1, lastPage + 1).map((item) =>
-              typeof item === "string" ? (
-                <span key={item} className={styles.paginationEllipsis} aria-hidden="true">
-                  …
-                </span>
-              ) : (
-                <AriaButton
-                  key={item}
-                  className={styles.paginationPage}
-                  aria-label={`Page ${item}`}
-                  aria-current={item === page + 1 ? "page" : undefined}
-                  onPress={() => {
-                    if (item !== page + 1) onPageChange(item - 1);
-                  }}
-                >
-                  {item}
-                </AriaButton>
-              ),
-            )}
+      <div className={styles.paginationEnd}>
+        {onRowsPerPageChange && (
+          <div className={styles.paginationRowsPerPage}>
+            <span className={styles.paginationLabel}>{labelRowsPerPage}</span>
+            <Select
+              aria-label={labelRowsPerPage}
+              items={rowsPerPageItems}
+              value={String(rowsPerPage)}
+              onChange={(v) => {
+                if (v !== null) onRowsPerPageChange(Number(v));
+              }}
+              density={effectiveDensity}
+            />
           </div>
         )}
-        <Button
-          appearance="subtle"
-          density="compact"
-          iconBefore="ChevronRight"
-          aria-label="Page suivante"
-          isDisabled={!canNext}
-          onPress={() => onPageChange(page + 1)}
-        />
+        <div className={styles.paginationControls}>
+          <AriaButton
+            className={styles.paginationPage}
+            aria-label="Page précédente"
+            isDisabled={!canPrev}
+            onPress={() => onPageChange(page - 1)}
+          >
+            <span className={styles.paginationIcon} aria-hidden="true">
+              <Icon icon="ChevronLeft" size={20} />
+            </span>
+          </AriaButton>
+          {showPageNumbers && lastPage > 0 && (
+            <div className={styles.paginationPages}>
+              {getPageItems(page + 1, lastPage + 1).map((item) =>
+                typeof item === "string" ? (
+                  <span key={item} className={styles.paginationEllipsis} aria-hidden="true">
+                    …
+                  </span>
+                ) : (
+                  <AriaButton
+                    key={item}
+                    className={styles.paginationPage}
+                    aria-label={`Page ${item}`}
+                    aria-current={item === page + 1 ? "page" : undefined}
+                    onPress={() => {
+                      if (item !== page + 1) onPageChange(item - 1);
+                    }}
+                  >
+                    {item}
+                  </AriaButton>
+                ),
+              )}
+            </div>
+          )}
+          <AriaButton
+            className={styles.paginationPage}
+            aria-label="Page suivante"
+            isDisabled={!canNext}
+            onPress={() => onPageChange(page + 1)}
+          >
+            <span className={styles.paginationIcon} aria-hidden="true">
+              <Icon icon="ChevronRight" size={20} />
+            </span>
+          </AriaButton>
+        </div>
       </div>
     </div>
   );

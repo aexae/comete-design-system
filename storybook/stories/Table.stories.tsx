@@ -524,12 +524,10 @@ const onNavigate = fn();
 const onOpenPanel = fn();
 
 /**
- * **Lignes cliquables — navigation (`href`).** La cellule primaire (ici marquée
- * `isRowAnchor`, la 1re colonne étant la sélection) rend un vrai `<a href>` :
- * focusable, Ctrl/⌘+clic → nouvel onglet, URL au survol. Le clic ailleurs sur
- * la ligne délègue au lien ; le clic sur la checkbox de sélection ne navigue
- * pas. Le conteneur intercepte la navigation réelle (href relatifs) pour la
- * story.
+ * **Lignes cliquables — navigation (`href`).** La cellule primaire (par défaut la
+ * 1re) rend un vrai `<a href>` : focusable, Ctrl/⌘+clic → nouvel onglet, URL au
+ * survol. Le clic ailleurs sur la ligne délègue au lien. Le conteneur intercepte
+ * la navigation réelle (href relatifs) pour la story.
  */
 export const ClickableRowLink: Story = {
   name: "Clickable rows — navigation (href)",
@@ -547,9 +545,6 @@ export const ClickableRowLink: Story = {
       <Table aria-label="Projets (navigation)">
         <TableHead>
           <TableRow>
-            <TableHeaderCell width={40} isActionColumn>
-              Sélection
-            </TableHeaderCell>
             <TableHeaderCell>Projet</TableHeaderCell>
             <TableHeaderCell>Statut</TableHeaderCell>
             <TableHeaderCell>Responsable</TableHeaderCell>
@@ -558,10 +553,7 @@ export const ClickableRowLink: Story = {
         <TableBody>
           {ROWS.map((r) => (
             <TableRow key={r.id} href={`/projets/${r.id}`}>
-              <TableCell>
-                <Checkbox aria-label={`Sélectionner ${r.title}`} />
-              </TableCell>
-              <TableCell isRowAnchor>{r.title}</TableCell>
+              <TableCell>{r.title}</TableCell>
               <TableCell>
                 <Tag
                   label={r.status}
@@ -595,12 +587,6 @@ export const ClickableRowLink: Story = {
     await userEvent.click(canvas.getByText("John Doe"));
     await expect(onNavigate).toHaveBeenCalledWith("/projets/1");
 
-    // 4) Clic sur la checkbox de sélection → NE navigue PAS.
-    onNavigate.mockClear();
-    await userEvent.click(
-      canvas.getByRole("checkbox", { name: /Sélectionner Alpha project/ }),
-    );
-    await expect(onNavigate).not.toHaveBeenCalled();
   },
 };
 

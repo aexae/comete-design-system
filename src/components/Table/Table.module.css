@@ -118,10 +118,16 @@
   background-color: var(--background-neutral-subtlest-default);
 }
 
-/* Surélévation au survol (façon Gmail) : pas de filet — la ligne survolée passe
-   au-dessus de ses voisines (z-index) avec une ombre légère. */
+/* Surélévation au survol (façon Gmail) : un filet très discret entre les lignes
+   (le plus léger du DS, `--border-subtle`) ET la ligne survolée qui passe
+   au-dessus de ses voisines (z-index) avec une ombre. Le filet reste en
+   `box-shadow` sur les cellules : aucun décalage au survol. */
 :where(.table[data-row-separation="elevated"] .body) .row {
   position: relative;
+}
+
+:where(.table[data-row-separation="elevated"] .body) .row:not(:last-child) .cell {
+  box-shadow: inset 0 calc(-1 * var(--size0125)) 0 var(--border-subtle);
 }
 
 :where(.table[data-row-separation="elevated"] .body) .row:hover {
@@ -329,17 +335,37 @@
    -------------------------------------------------------------------------- */
 
 .pagination {
+  --pagination-button-size: var(--size400);
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   flex-wrap: wrap;
-  gap: var(--space200);
+  gap: var(--space100) var(--space300);
   padding: var(--space050) var(--space100);
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-xs);
   color: var(--text-subtle);
   border-top: var(--size025) solid var(--border-subtle);
+}
+
+/* Densité : la taille des boutons de page suit celle du tableau. */
+.pagination[data-density="compact"] {
+  --pagination-button-size: var(--size300);
+}
+
+.pagination[data-density="touch"] {
+  --pagination-button-size: var(--size500);
+}
+
+/* Contrôles (à droite) : résultats par page + navigation. */
+.paginationEnd {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space100) var(--space300);
+  margin-inline-start: auto;
 }
 
 .paginationRowsPerPage {
@@ -368,8 +394,8 @@
 }
 
 .paginationPage {
-  min-width: var(--size400);
-  height: var(--size400);
+  min-width: var(--pagination-button-size);
+  height: var(--pagination-button-size);
   padding: 0 var(--space075);
   display: inline-flex;
   align-items: center;
@@ -407,8 +433,18 @@
   cursor: default;
 }
 
+/* Précédente / suivante : mêmes boutons que les pages, icône seule. */
+.paginationPage[data-disabled] {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}
+
+.paginationIcon {
+  display: inline-flex;
+}
+
 .paginationEllipsis {
-  min-width: var(--size400);
+  min-width: var(--pagination-button-size);
   display: inline-flex;
   align-items: center;
   justify-content: center;

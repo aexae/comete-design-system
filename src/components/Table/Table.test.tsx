@@ -656,7 +656,7 @@ describe("TablePagination", () => {
         onPageChange={() => undefined}
       />,
     );
-    expect(screen.getByText("1–10 sur 100")).toBeInTheDocument();
+    expect(screen.getByText("1–10 sur 100 résultats")).toBeInTheDocument();
   });
 
   it("should render '0' bounds when count is zero", () => {
@@ -668,7 +668,7 @@ describe("TablePagination", () => {
         onPageChange={() => undefined}
       />,
     );
-    expect(screen.getByText("0–0 sur 0")).toBeInTheDocument();
+    expect(screen.getByText("0–0 sur 0 résultats")).toBeInTheDocument();
   });
 
   it("should call onPageChange with next page when clicking 'Page suivante'", () => {
