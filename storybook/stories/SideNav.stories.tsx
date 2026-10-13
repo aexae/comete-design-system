@@ -161,36 +161,23 @@ export const RailInteractions: Story = {
 function MobileWebDemo() {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div
-      style={{
-        width: 390,
-        height: 640,
-        margin: "0 auto",
-        display: "flex",
-        flexDirection: "column",
-        position: "relative",
-        overflow: "hidden",
-        border: "1px solid var(--border-default)",
-        backgroundColor: "var(--black-4)",
-        transform: "translateZ(0)", // contient le Drawer (position: fixed) dans le cadre
-      }}
-    >
-      <Page.Bar
-        title="Accueil"
-        leading={
-          <Button
-            appearance="subtle"
-            color="subtlest"
-            iconBefore="Menu"
-            aria-label="Ouvrir la navigation"
-            aria-expanded={isOpen}
-            onPress={() => setIsOpen(true)}
-          />
-        }
-      />
-      <Page.Body>
+    <>
+      <Page globalActions={null} style={{ minHeight: "100vh" }}>
+        <Page.Bar
+          title="Accueil"
+          leading={
+            <Button
+              appearance="subtle"
+              color="subtlest"
+              iconBefore="Menu"
+              aria-label="Ouvrir la navigation"
+              aria-expanded={isOpen}
+              onPress={() => setIsOpen(true)}
+            />
+          }
+        />
         <DemoPageContent />
-      </Page.Body>
+      </Page>
       <Drawer
         isOpen={isOpen}
         onOpenChange={setIsOpen}
@@ -199,8 +186,12 @@ function MobileWebDemo() {
         aria-label="Navigation principale"
       >
         <SideNav.Provider>
-          {/* Un clic sur une rubrique ferme le Drawer (navigation). */}
-          <div onClickCapture={(e) => { if ((e.target as HTMLElement).closest("a")) setIsOpen(false); }}>
+          {/* Un clic sur une rubrique ferme le Drawer (navigation). Le conteneur
+              donne toute la hauteur du Drawer à la nav. */}
+          <div
+            style={{ height: "100%" }}
+            onClickCapture={(e) => { if ((e.target as HTMLElement).closest("a")) setIsOpen(false); }}
+          >
             <SideNav>
               <SideNav.Header
                 logo={<Logo product="cafe" format="icon" />}
@@ -213,18 +204,22 @@ function MobileWebDemo() {
           </div>
         </SideNav.Provider>
       </Drawer>
-    </div>
+    </>
   );
 }
 
 export const MobileWeb: Story = {
   name: "Mobile web (Drawer left)",
-  parameters: { layout: "centered", controls: { disable: true } },
+  // Viewport mobile réel : le Drawer (portal + position: fixed) prend la taille d'un téléphone.
+  globals: { viewport: { value: "cometeMobileAgent", isRotated: false } },
+  parameters: { layout: "fullscreen", controls: { disable: true } },
   render: () => <MobileWebDemo />,
 };
 
 export const MobileWebInteractions: Story = {
   tags: ["!dev"],
+  globals: { viewport: { value: "cometeMobileAgent", isRotated: false } },
+  parameters: { layout: "fullscreen" },
   render: () => <MobileWebDemo />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -233,7 +228,7 @@ export const MobileWebInteractions: Story = {
 
     await step("fermé au départ, contenu visible", async () => {
       await expect(drawer()).toBeNull();
-      await expect(canvas.getByText("Tableau de bord")).toBeVisible();
+      await expect(canvas.getByText("Agent 1")).toBeVisible();
     });
 
     await step("le hamburger ouvre la nav dans un Drawer, par-dessus le contenu", async () => {

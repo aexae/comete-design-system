@@ -1,16 +1,14 @@
 // Coquille applicative "Main Courante" partagée par les stories SideNav.
-// Reproduit le template réel de l'app : Page.Bar "Accueil" pleine largeur,
-// SideNav permanente (marque Pro Sécurité + slot de navigation + footer comète
-// link) et Page.Body avec un vrai contenu. Fichier NON indexé par Storybook (pas
+// Reproduit le template réel de l'app : SideNav permanente pleine hauteur (marque
+// Pro Sécurité + slot de navigation + footer comète link) à gauche, et la Page
+// (Page.Bar "Accueil" + contenu de Layout/Page) à droite. Fichier NON indexé par Storybook (pas
 // de suffixe .stories).
 import { useState, type ReactNode } from "react";
 import {
   SideNav,
   Page,
   Logo,
-  Heading,
-  Text,
-  Stack,
+  SectionMessage,
   Grid,
   Card,
   useSideNav,
@@ -56,39 +54,30 @@ export function MainCouranteNav() {
 }
 
 /**
- * Contenu de page de démonstration : de quoi VOIR que la nav pousse le contenu
- * (tablette / desktop) ou passe par-dessus (Drawer, mobile web).
+ * Contenu de page de démonstration — repris de `Layout/Page › Default` (message
+ * d'accueil + grille de cartes) : de quoi VOIR que la nav pousse le contenu
+ * (tablette / desktop) ou passe par-dessus (Drawer, mobile web). À placer dans
+ * un `Page`, sous une `Page.Bar`.
  */
 export function DemoPageContent() {
   return (
-    <Stack gap="300" padding="300">
-      <Stack gap="050">
-        <Heading size="medium" as="h2">Tableau de bord</Heading>
-        <Text color="subtle">Synthèse de l’activité des sites sur la semaine en cours.</Text>
-      </Stack>
-      <Grid gap="200">
-        {[
-          ["Agents en poste", "148"],
-          ["Vacations non pourvues", "7"],
-          ["Anomalies à traiter", "12"],
-          ["Sites actifs", "36"],
-        ].map(([label, value]) => (
-          <Grid.Col key={label} span={{ mobile: 12, tablet: 6, desktop: 3 }}>
-            <Card>
-              <Stack gap="050" padding="200">
-                <Text size="small" color="subtle">{label}</Text>
-                <Heading size="large" as="div">{value}</Heading>
-              </Stack>
+    <Page.Body>
+      <SectionMessage appearance="information" style={{ marginBottom: 16 }}>
+        Message d&apos;accueil (texte par défaut)
+      </SectionMessage>
+      <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
+        {Array.from({ length: 9 }, (_, i) => (
+          <Grid.Col key={i}>
+            <Card appearance="outlined">
+              <div style={{ padding: "var(--space200)" }}>
+                <strong>Agent {i + 1}</strong>
+                <p style={{ margin: "var(--space100) 0 0" }}>Description courte</p>
+              </div>
             </Card>
           </Grid.Col>
         ))}
       </Grid>
-      <Text>
-        Le contenu occupe toute la place restante : la navigation latérale est permanente
-        (déployée ou en rail), elle pousse le contenu et ne le recouvre jamais sur
-        tablette et desktop.
-      </Text>
-    </Stack>
+    </Page.Body>
   );
 }
 
@@ -126,38 +115,30 @@ export function MainCouranteShell({
   const [current, setCurrent] = useState<SideNavMode>(mode);
   return (
     <SideNav.Provider mode={current} onModeChange={setCurrent}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          height: "100vh",
-          backgroundColor: "var(--black-4)",
-        }}
-      >
-        {/* Header pleine largeur — jamais recouvert par la nav */}
-        <Page.Bar title={title} />
-
-        {/* Zone sous le header : SideNav + contenu côte à côte */}
-        <div style={{ display: "flex", flex: 1, overflow: "hidden", position: "relative" }}>
-          <SideNav>
-            {header ?? (
-              <SideNav.Header
-                logo={logo}
-                companyName="Pro Sécurité"
-                description="Main Courante"
-              />
-            )}
-            {nav}
-            {footer ?? (
-              <SideNav.Footer>
-                <SideNav.FooterBrand>
-                  <FooterLogo />
-                </SideNav.FooterBrand>
-              </SideNav.Footer>
-            )}
-          </SideNav>
-          <Page.Body>{body}</Page.Body>
-        </div>
+      {/* La SideNav occupe toute la hauteur de la page ; la Page (Bar + contenu)
+          prend le reste et défile seule. */}
+      <div style={{ display: "flex", height: "100vh" }}>
+        <SideNav>
+          {header ?? (
+            <SideNav.Header
+              logo={logo}
+              companyName="Pro Sécurité"
+              description="Main Courante"
+            />
+          )}
+          {nav}
+          {footer ?? (
+            <SideNav.Footer>
+              <SideNav.FooterBrand>
+                <FooterLogo />
+              </SideNav.FooterBrand>
+            </SideNav.Footer>
+          )}
+        </SideNav>
+        <Page globalActions={null} style={{ flex: 1, minWidth: 0, overflowY: "auto" }}>
+          <Page.Bar title={title} />
+          {body}
+        </Page>
       </div>
     </SideNav.Provider>
   );
