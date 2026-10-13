@@ -5,14 +5,22 @@ import { within, screen, userEvent, expect, waitFor } from "storybook/test";
 import {
   BottomNav,
   BottomNavItem,
+  Button,
   Drawer,
   DrawerBody,
   DrawerHeader,
   Icon,
+  List,
+  ListHead,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  ListItemTrailing,
   Menu,
   MenuItem,
   MenuSection,
   MenuTrigger,
+  Page,
   Popover,
   Text,
 } from "@aexae/comete-design-system/components";
@@ -495,7 +503,7 @@ export const WithPopupRightInteractions: Story = {
       await userEvent.click(plus());
       const m = await screen.findByRole("menu");
       await expect(plus()).toHaveAttribute("aria-expanded", "true");
-      // Le libellé reste dans le DOM (fondu CSS) : nom accessible conservé.
+      // Le libellé reste visible à l'état ouvert : nom accessible conservé.
       await expect(canvas.getByRole("button", { name: "Plus", hidden: true })).toBe(trigger);
       const popover = m.closest("[data-trigger]") ?? m.parentElement;
       const rect = (popover as HTMLElement).getBoundingClientRect();
@@ -521,6 +529,131 @@ export const WithPopupRightInteractions: Story = {
       await userEvent.click(plus());
       await userEvent.click(await screen.findByRole("menuitem", { name: "Paramètres" }));
       await waitFor(() => expect(menu()).toBeNull());
+    });
+  },
+};
+
+// -----------------------------------------------------------------------
+// « Plus » en page — l'alternative au popup : une destination, pas un calque
+//
+// Libellés repris de navConfig.js / locales/fr/mce.json (Link). Toute la
+// structure (écran, zone de page qui défile) passe par le CSS module.
+
+const PLUS_SECTIONS: { title: string; entries: { label: string; icon: IconName }[] }[] = [
+  {
+    title: "Main courante",
+    entries: [
+      { label: "Main courante", icon: "MenuBook" },
+      { label: "Formulaires d'évènements", icon: "EventNote" },
+      { label: "Rondes", icon: "Patrol" },
+      { label: "Formulaires", icon: "FormEdit" },
+    ],
+  },
+  {
+    title: "Administration",
+    entries: [
+      { label: "Utilisateurs", icon: "Group" },
+      { label: "Droits d'accès", icon: "ManageAccounts" },
+    ],
+  },
+];
+
+function PlusPageDemo(): ReactNode {
+  return (
+    <PhoneScreen>
+      <div className={css["pageFill"]}>
+        <Page globalActions={null}>
+          {/* Une seule affordance de navigation dans `leading` : le retour. */}
+          <Page.Bar
+            size="compact"
+            title="Plus"
+            leading={<Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Retour" />}
+          />
+          <Page.Body>
+            <List aria-label="Plus">
+              {PLUS_SECTIONS.flatMap((section) => [
+                <ListHead key={`head-${section.title}`}>{section.title}</ListHead>,
+                ...section.entries.map((entry) => (
+                  <ListItemButton key={entry.label}>
+                    <ListItemIcon>
+                      <Icon icon={entry.icon} size={24} color="subtle" />
+                    </ListItemIcon>
+                    <ListItemText primary={entry.label} />
+                    <ListItemTrailing>
+                      <Icon icon="ChevronRight" size={24} color="subtlest" />
+                    </ListItemTrailing>
+                  </ListItemButton>
+                )),
+              ])}
+            </List>
+          </Page.Body>
+        </Page>
+      </div>
+      {/* « Plus » est une destination : sélectionné comme ses voisines, jamais
+          `isOpen` — pas d'icône de fermeture, rien ne se referme. */}
+      <BottomNav>
+        <BottomNavItem label="Accueil" icon="Home" />
+        <BottomNavItem label="Agenda" icon="CalendarMonth" />
+        <BottomNavItem label="Notifications" icon="Notifications" badge="5" />
+        <BottomNavItem label="Profil" icon="Person" />
+        <BottomNavItem label="Plus" icon="MoreHoriz" isSelected />
+      </BottomNav>
+    </PhoneScreen>
+  );
+}
+
+/**
+ * **Plus en page** — l'alternative au popup : « Plus » n'ouvre pas de calque,
+ * c'est une **destination** qui mène à un écran (barre de page avec retour,
+ * liste en deux sections). Le « Plus » reste **sélectionné** (bleu, comme ses
+ * voisines), sans état ouvert ni icône de fermeture.
+ *
+ * Le popup garde le contexte de la page mais plafonne à quelques entrées ; la
+ * page n'a pas de plafond, entre dans l'historique du navigateur et laisse le
+ * « Plus » sélectionné.
+ */
+export const PlusPage: Story = {
+  name: "Plus en page",
+  parameters: { layout: "centered", controls: { disable: true } },
+  render: () => <PlusPageDemo />,
+};
+
+// Test (masqué du sidebar) : le `play` ne se rejoue pas à l'ouverture de la story.
+export const PlusPageInteractions: Story = {
+  tags: ["!dev"],
+  parameters: { layout: "centered" },
+  render: () => <PlusPageDemo />,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("la barre de page expose le titre « Plus »", async () => {
+      await expect(canvas.getByRole("heading", { level: 1, name: "Plus" })).toBeInTheDocument();
+    });
+
+    await step("« Retour » est présent et atteignable au clavier", async () => {
+      const back = canvas.getByRole("button", { name: "Retour" });
+      await userEvent.tab();
+      await expect(back).toHaveFocus();
+    });
+
+    await step("« Plus » est une destination : sélectionné, sans aria-expanded", async () => {
+      const nav = within(canvas.getByRole("navigation"));
+      const plus = nav.getByRole("button", { name: "Plus" });
+      await expect(plus).not.toHaveAttribute("aria-expanded");
+      await expect(plus).toHaveAttribute("aria-current");
+    });
+
+    await step("la liste expose les six entrées attendues", async () => {
+      const list = within(canvas.getByRole("list", { name: "Plus" }));
+      const names = list.getAllByRole("button").map((b) => b.textContent);
+      await expect(names).toEqual([
+        "Main courante",
+        "Formulaires d'évènements",
+        "Rondes",
+        "Formulaires",
+        "Utilisateurs",
+        "Droits d'accès",
+      ]);
     });
   },
 };

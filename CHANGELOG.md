@@ -29,6 +29,10 @@ entre versions alpha.
   `placement="left"`, par-dessus le contenu ; **tablette et desktop** = navigation
   permanente, déployée ou en rail, qui ne disparaît jamais.
 
+- **Story BottomNav « Plus en page »** : l'alternative au popup — « Plus » est une
+  destination (`Page.Bar` compacte avec « Retour » + `List` en deux sections),
+  sélectionné comme ses voisines, sans état ouvert.
+
 ### Modifié
 
 - **SideNav — retrait horizontal homogène** : en-tête, items, séparateurs, titres de
@@ -68,18 +72,15 @@ entre versions alpha.
 
 ### Modifié
 
-- **`BottomNavItem` — animation de l'état ouvert (item « Plus »)** : au clic,
-  fond, icône et libellé partageaient des durées différentes (100 ms / 200 ms) et
-  le libellé était **retiré du DOM d'un coup**, ce qui recentrait le contenu
-  instantanément avant que l'icône ne s'anime (saut). Désormais : tout l'état
-  ouvert utilise `--duration-normal` (200 ms) + `--easing-default`, comme
-  `BottomNavAction` ; le libellé reste dans le DOM et s'efface par **fondu** ;
-  l'icône descend au centre et grossit par `transform` seule (aucun reflow, pas de
-  saut de mise en page) ; le fondu source ↔ fermer passe de `scale(0)` à
-  `scale(0.5)` (les deux icônes ne disparaissent plus au même instant).
-  Conséquences : le **nom accessible « Plus » est conservé** menu ouvert (il
-  disparaissait avec le libellé) et `prefers-reduced-motion` désactive les
-  transitions.
+- **`BottomNavItem` — état ouvert allégé (item « Plus »)** : l'état
+  `aria-expanded` animait cinq choses en parallèle (fond, croisement d'icônes avec
+  `rotate`/`scale`, agrandissement et descente de l'icône, effacement du
+  libellé). Il ne garde qu'**un seul signal** : le croisement d'icônes en
+  **fondu pur** (`--duration-fast`). Plus de `transform`, plus de fond (`::before`
+  supprimé), le libellé reste **visible** (nom accessible conservé).
+  `BottomNavAction` est inchangé. Le bleu (`--text-selected`) reste réservé à
+  `data-selected` : un item qui ouvre un popup n'est pas sélectionné.
+  `prefers-reduced-motion` désactive les transitions.
 - **Bouton « Effacer » — `Select`, `DatePicker`, `TimePicker`, `MonthPicker`,
   `WeekPicker`, `YearPicker`** : le bouton n'est plus affiché en permanence. Il
   est **masqué au repos** et révélé au **survol ou au focus** du champ, en
