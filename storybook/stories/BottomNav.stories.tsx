@@ -329,14 +329,6 @@ const AGENT_ITEMS: NavItemDef[] = [
   { label: "Missions", icon: "Star" },
 ];
 
-const CLIENT_ITEMS: NavItemDef[] = [
-  { label: "Tableau de bord", icon: "Dashboard" },
-  { label: "Sites", icon: "Site" },
-  { label: "Devis", icon: "Quote" },
-  { label: "Factures", icon: "Invoices" },
-  { label: "Prestataire", icon: "SubContractor" },
-];
-
 const PLUS_ITEM: NavItemDef = { label: "Plus", icon: "MoreHoriz" };
 
 /** Entrées derrière le « Plus » (popup ou page) — libellés de Link. */
@@ -395,42 +387,6 @@ export const FiveItems: NavStory = {
   ),
 };
 
-/** Cinq items — **Client** (Tableau de bord, Sites, Devis, Factures, Prestataire). */
-export const FiveItemsClient: NavStory = {
-  name: "Five items (client)",
-  parameters: {
-    controls: { include: ["active"] },
-    design: { type: "figma", url: figmaUrl("2524:18591") },
-  },
-  argTypes: {
-    active: { name: "Item actif", control: "radio", options: (CLIENT_ITEMS).map((i) => i.label) },
-  },
-  args: { active: "Tableau de bord" },
-  render: (args) => (
-    <PhoneScreen>
-      <InteractiveBottomNav items={CLIENT_ITEMS} active={args.active} />
-    </PhoneScreen>
-  ),
-};
-
-/** **Six emplacements** — la barre réelle de Link : 5 destinations + « Plus » (agent). Les libellés réels révèlent la troncature à 10 px. */
-export const SixSlots: NavStory = {
-  name: "Six slots (with Plus)",
-  parameters: {
-    controls: { include: ["active"] },
-    design: { type: "figma", url: figmaUrl("2524:18591") },
-  },
-  argTypes: {
-    active: { name: "Item actif", control: "radio", options: ([...AGENT_ITEMS, PLUS_ITEM]).map((i) => i.label) },
-  },
-  args: { active: "Tableau de bord" },
-  render: (args) => (
-    <PhoneScreen>
-      <InteractiveBottomNav items={[...AGENT_ITEMS, PLUS_ITEM]} active={args.active} />
-    </PhoneScreen>
-  ),
-};
-
 const LONG_LABEL_ITEMS: NavItemDef[] = [
   { label: "Tableau de bord", icon: "Dashboard" },
   { label: "Rapports et analyses détaillés", icon: "Assignment" },
@@ -476,7 +432,7 @@ function BottomNavWithPopupRight({
 
   return (
     <BottomNav>
-      {AGENT_ITEMS.map((item) => (
+      {MANAGER_ITEMS.map((item) => (
         <BottomNavItem
           key={item.label}
           label={item.label}
@@ -527,7 +483,7 @@ function WithPopupRightDemo(): ReactNode {
 }
 
 /**
- * Un item « Plus » à droite ouvre un menu de destinations secondaires dans un
+ * La barre **Manager** (Tableau de bord, Agents, Sites, Pointages) + un item « Plus » à droite qui ouvre un menu de destinations secondaires dans un
  * **`Popover`** du DS (via `MenuTrigger`).
  *
  * - placement `top end` : au-dessus de l'item, aligné sur son bord droit ;
@@ -867,6 +823,16 @@ export const FieldToolMce: Story = {
     layout: "centered",
     design: { type: "figma", url: figmaUrl("2524:18591") },
   },
+  render: () => (
+    <PhoneScreen>
+      <FieldToolRecipe />
+    </PhoneScreen>
+  ),
+};
+
+export const FieldToolMceInteractions: Story = {
+  tags: ["!dev"],
+  parameters: { layout: "centered" },
   render: () => (
     <PhoneScreen>
       <FieldToolRecipe />
