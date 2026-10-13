@@ -9,6 +9,8 @@ entre versions alpha.
 
 ## [Unreleased]
 
+## [1.0.0-alpha.164] - 2026-10-13
+
 ### Ajouté
 
 - **`Popup`** : le padding interne de la carte est désormais pilotable par la
@@ -99,6 +101,12 @@ entre versions alpha.
   `aria-haspopup="dialog"` et `aria-expanded` à jour, et ne reste plus appuyé.
   « Effacer » est lui aussi sorti du contexte. Choisir une date (ou une plage
   complète) **referme** le calendrier.
+- **Logo, rendu hors tokens** (e-mails, exports, page sans la feuille des tokens) :
+  le suffixe et la signature Comète prenaient un gris unique `#6F8488`, à 3,9:1 sur
+  blanc et 3,0:1 sur navy, sous le seuil AA. Bump `@aexae/comete-logos` → `0.13.1`
+  (racine + storybook), qui donne un ton de repli par apparence : 5,6:1 (`brand`),
+  8,9:1 (`neutral`), 6,5:1 (`inverse`). Aucun changement de rendu avec les tokens
+  chargés, aucun changement d'API.
 
 ## [1.0.0-alpha.163] - 2026-10-06
 
