@@ -109,9 +109,8 @@ export function BottomNavItem({
                 </span>
               )}
             </span>
-            {/* Toujours rendu : masqué par un fondu CSS quand le menu est ouvert (voir
-                BottomNavItem.module.css) — pas de saut de mise en page, nom accessible
-                conservé. */}
+            {/* Toujours rendu et visible, y compris à l'état ouvert : seul le croisement
+                d'icônes signale l'ouverture (voir BottomNavItem.module.css). */}
             <span className={styles.label}>{label}</span>
           </span>
           {isFocusVisible && <FocusRing borderRadius="round" position="inside" />}

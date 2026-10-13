@@ -21,25 +21,9 @@
   border-radius: var(--radius150);
 }
 
-/* Fond sélection via pseudo-element — fade in/out au lieu du slide */
-.item::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  border-radius: inherit;
-  background-color: var(--background-selected-subtlest-default);
-  opacity: 0;
-  transition: opacity var(--duration-normal) var(--easing-default);
-  pointer-events: none;
-}
-
-/* État sélectionné : PAS de fond — seuls le texte et l'icône changent de couleur
-   (le fond via ::before reste réservé à l'état ouvert aria-expanded). */
-
-.item[aria-expanded="true"]::before {
-  opacity: 1;
-}
+/* État sélectionné : PAS de fond — seuls le texte et l'icône changent de couleur.
+   L'état ouvert (aria-expanded) n'en a pas non plus : le bleu (--text-selected)
+   n'appartient qu'à `data-selected`. */
 
 /* Zone contenu : icône + label */
 
@@ -64,15 +48,15 @@
   width: var(--size300);
   height: var(--size300);
   flex-shrink: 0;
-  transition: transform var(--duration-normal) var(--easing-default);
 }
 
 /* ==========================================================================
-   Icon cross-fade (non-morph) — swap source ↔ close avec rotation
+   Icon cross-fade (fondu pur) — swap source ↔ close
 
-   Tout l'état ouvert (fond, icône, libellé) partage `--duration-normal` +
-   `--easing-default` — la même durée / courbe que `BottomNavAction` (le bouton
-   central) : un seul mouvement cohérent à l'ouverture comme à la fermeture.
+   Seul signal de l'état ouvert : un fondu d'icône en `--duration-fast`. Rien ne
+   se déplace ni ne change de taille, et le libellé reste lisible. Délibérément
+   plus sobre que `BottomNavAction` : l'item est une destination, le FAB ouvre un
+   tiroir — les deux n'ont pas à s'animer pareil.
    ========================================================================== */
 
 .iconSource,
@@ -82,28 +66,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity var(--duration-normal) var(--easing-default),
-              transform var(--duration-normal) var(--easing-default);
+  transition: opacity var(--duration-fast) var(--easing-default);
 }
 
 .iconSource {
   opacity: 1;
-  transform: rotate(0deg) scale(1);
 }
 
 .iconClose {
   opacity: 0;
-  transform: rotate(-90deg) scale(0.5);
 }
 
 .item[aria-expanded="true"] .iconSource {
   opacity: 0;
-  transform: rotate(90deg) scale(0.5);
 }
 
 .item[aria-expanded="true"] .iconClose {
   opacity: 1;
-  transform: rotate(0deg) scale(1);
 }
 
 /* ==========================================================================
@@ -132,8 +111,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: color var(--duration-fast) var(--easing-default),
-              opacity var(--duration-normal) var(--easing-default);
+  transition: color var(--duration-fast) var(--easing-default);
 }
 
 /* ==========================================================================
@@ -145,25 +123,11 @@
 }
 
 /* ==========================================================================
-   État open (aria-expanded) — ouvre un popup
+   État open (aria-expanded) — ouvre un popup : fondu d'icône uniquement (voir
+   plus haut). Pas de bleu : l'item n'est pas sélectionné.
    ========================================================================== */
 
-/* Ouvert : le libellé s'efface en fondu et l'icône, agrandie, descend au centre de
-   la cellule — le tout par `transform` / `opacity` (pas de reflow). Le libellé
-   reste dans le DOM : mise en page stable (aucun saut) et nom accessible conservé. */
-.item[aria-expanded="true"] .label {
-  opacity: 0;
-}
-
-.item[aria-expanded="true"] .iconWrapper {
-  /* Décalage = demi-hauteur du libellé + son espacement : l'icône se centre. */
-  transform: translateY(calc((var(--line-height-ui-xxs) + var(--space025)) / 2))
-             scale(calc(32 / 24));
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .item::before,
-  .iconWrapper,
   .iconSource,
   .iconClose,
   .label {
