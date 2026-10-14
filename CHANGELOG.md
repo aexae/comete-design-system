@@ -11,6 +11,24 @@ entre versions alpha.
 
 ### Ajouté
 
+- **`QuickActions`** (nouveau composant) : menu d'actions rapides du FAB (`BottomNav.Action`) —
+  pattern « speed dial », des **pastilles flottantes** au-dessus d'un voile (libellé à
+  gauche, pastille d'icône circulaire à droite). Rend **uniquement la couche flottante** (le
+  déclencheur reste le FAB, inchangé). Construit sur `ModalOverlay` / `Modal` / `Dialog`
+  (react-aria-components) : voile, piège de focus, Échap, retour du focus sur le déclencheur,
+  apparition décalée. API : `actions` (2 à 5 : `id`, `icon`, `label`, `tone`, `onPress`),
+  `isOpen`, `onOpenChange`, `aria-label` (« Actions rapides »). **Règle de couleur (ADR 0002)** :
+  `tone` = nature de l'action, jamais son identité — palette sémantique des autres composants
+  (`comete` par défaut, `critical`, `warning`, `success`, `information`), sans restriction de
+  type ; la couleur ne va que sur la **pastille d'icône**, jamais sur la rangée. Garde-fou sur
+  la **composition** : avertissement en développement au-delà de 2 tons distincts ou de plus
+  d'une action `critical` (le composant rend quand même). Pas de description, pas de bouton
+  « Fermer », plafond à 5 actions (avertissement en développement) ; au-delà ou pour expliquer
+  une action : tiroir (`Drawer`).
+- **`BottomNav.Action` ouvert** : le FAB remonte au-dessus du voile de `QuickActions`
+  (z-index appliqué uniquement quand `aria-expanded="true"`, aucun z-index sur la barre
+  basse). Son socle (contour) reste sous le voile, comme la barre : le contour du FAB garde
+  son rendu d'origine. Comportement, rotation et `aria-expanded` inchangés.
 - **`List` — `hasDividers`** : séparateur **subtle** (`--border-subtle`) entre les items,
   en `box-shadow` inset (aucun décalage), y compris entre la fin d'une section et le
   `ListHead` suivant, sans filet après le dernier élément. Complète `gap` (séparation

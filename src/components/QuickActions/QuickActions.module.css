@@ -1,0 +1,185 @@
+/* ==========================================================================
+   QuickActions — Comète Design System
+   Pastilles flottantes au-dessus d'un voile (pattern « speed dial »).
+   100 % tokens, zéro valeur hardcodée.
+
+   RÈGLE DE COULEUR (ADR 0002, « une couleur, un sens ») : la couleur porte la
+   NATURE de l'action, jamais son identité, et ne va QUE sur la pastille d'icône
+   (`.tile`) — jamais sur la rangée (`.row`), qui reste neutre (surface).
+   Palette sémantique (comete, critical, warning, success, information) ; le garde-fou
+   (≤ 2 tons distincts, ≤ 1 critical) est un avertissement en développement.
+   ========================================================================== */
+
+/* Voile plein écran, liste ancrée en bas. */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-index-overlay);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background-color: var(--blanket-default);
+}
+
+.overlay[data-entering] {
+  animation: overlay-in var(--duration-normal) var(--easing-default);
+}
+
+.overlay[data-exiting] {
+  animation: overlay-out var(--duration-fast) var(--easing-default);
+}
+
+/* Le conteneur (modal / dialogue / liste) couvre toute la largeur ET la zone réservée au
+   FAB : on le rend transparent aux clics, seules les rangées les captent. Ainsi un tap dans
+   le vide — voile, ou zone du FAB — atteint le voile et ferme la couche. Pendant l'ouverture,
+   React Aria rend le reste de la page inerte (FAB compris) : un tap sur le FAB traverse donc
+   jusqu'au voile, qui ferme — sans jamais rouvrir. */
+.modal {
+  width: 100%;
+  z-index: var(--z-index-modal);
+  outline: none;
+  pointer-events: none;
+}
+
+.dialog {
+  outline: none;
+  pointer-events: none;
+}
+
+/* Liste : réserve la place du FAB et de la barre en bas, pour que la dernière rangée
+   ne passe pas sous lui. `--quick-actions-offset` est surchargeable (barre plus haute). */
+.list {
+  --quick-actions-offset: calc(var(--size800) * 2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space150);
+  margin: 0;
+  padding: var(--space200) var(--space200) calc(var(--quick-actions-offset) + env(safe-area-inset-bottom, 0px));
+  list-style: none;
+}
+
+/* Apparition décalée (la rangée proche du FAB d'abord). `--qa-index` est posé par rangée. */
+.item {
+  animation: row-in var(--duration-normal) var(--easing-default) both;
+  animation-delay: calc(var(--qa-index, 0) * var(--duration-fast) / 2);
+}
+
+/* Rangée : libellé à gauche, pastille d'icône à droite. Fond de SURFACE neutre — jamais
+   coloré, quel que soit le ton. */
+.row {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space200);
+  width: 100%;
+  min-height: calc(var(--size500) + var(--space200));
+  padding: var(--space100) var(--space100) var(--space100) var(--space300);
+  border: 0;
+  border-radius: var(--radius-round);
+  background-color: var(--background-surface-default);
+  box-shadow: var(--elevation-medium);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-s);
+  line-height: var(--line-height-ui-s);
+  font-weight: var(--font-weight-regular);
+  color: var(--text-default);
+  text-align: start;
+  cursor: pointer;
+  outline: none;
+  transition: background-color var(--duration-fast) var(--easing-default);
+}
+
+.row[data-hovered] {
+  background-color: var(--background-neutral-subtlest-hovered);
+}
+
+.row[data-pressed] {
+  background-color: var(--background-neutral-subtlest-pressed);
+}
+
+.row[data-focus-visible] {
+  box-shadow: var(--elevation-medium), 0 0 0 var(--size025) var(--background-focused-default);
+}
+
+.label {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Pastille d'icône circulaire — c'est ELLE qui porte la couleur (le ton). */
+.tile {
+  flex-shrink: 0;
+  display: inline-grid;
+  place-items: center;
+  width: var(--size500);
+  height: var(--size500);
+  border-radius: var(--radius-round);
+}
+
+.tile[data-tone="comete"] {
+  background-color: var(--background-comete-subtlest-default);
+}
+
+.tile[data-tone="comete"] .glyph {
+  color: var(--icon-brand);
+}
+
+.tile[data-tone="critical"] {
+  background-color: var(--background-critical-subtlest-default);
+}
+
+.tile[data-tone="critical"] .glyph {
+  color: var(--text-critical);
+}
+
+.tile[data-tone="warning"] {
+  background-color: var(--background-warning-subtlest-default);
+}
+
+.tile[data-tone="warning"] .glyph {
+  color: var(--text-warning);
+}
+
+.tile[data-tone="success"] {
+  background-color: var(--background-success-subtlest-default);
+}
+
+.tile[data-tone="success"] .glyph {
+  color: var(--text-success);
+}
+
+.tile[data-tone="information"] {
+  background-color: var(--background-information-subtlest-default);
+}
+
+.tile[data-tone="information"] .glyph {
+  color: var(--text-information);
+}
+
+@keyframes overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes overlay-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes row-in {
+  from { transform: translateY(var(--space200)); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay[data-entering],
+  .overlay[data-exiting],
+  .item {
+    animation: none;
+  }
+
+  .row {
+    transition: none;
+  }
+}
