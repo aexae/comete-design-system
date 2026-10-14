@@ -1,10 +1,10 @@
 // QuickActions — stories Storybook (menu d'actions rapides du FAB)
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, screen, userEvent, expect, waitFor, fn } from "storybook/test";
-import { QuickActions } from "@aexae/comete-design-system/components";
+import { QuickActions, type QuickAction } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
-import { QuickActionsDemo } from "./_quickActionsDemo";
+import { QuickActionsDemo, MCE_QUICK_ACTIONS } from "./_quickActionsDemo";
 
 // -----------------------------------------------------------------------
 // Meta
@@ -61,6 +61,12 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof QuickActions>;
 
+/** Args du bac à sable : les actions (sans `onPress`, non sérialisable) et l'ouverture initiale. */
+type PlaygroundArgs = {
+  actions: { id: string; icon: string; label: string; tone?: string }[];
+  initialOpen: boolean;
+};
+
 // -----------------------------------------------------------------------
 // Stories — la couche est plein écran : viewport mobile pour que voile, pastilles et FAB
 // s'alignent.
@@ -70,10 +76,33 @@ type Story = StoryObj<typeof QuickActions>;
  * « Démarrer une ronde ». Deux entrées, toutes du ton par défaut — MCE n'a aucune notion de
  * gravité ; c'est l'icône et le verbe qui distinguent, pas la couleur. Touche le « + » pour ouvrir.
  */
-export const Default: Story = {
+export const Default: StoryObj<PlaygroundArgs> = {
   globals: { viewport: { value: "cometeMobileAgent", isRotated: false } },
-  parameters: { controls: { disable: true } },
-  render: () => <QuickActionsDemo />,
+  parameters: { controls: { include: ["actions", "initialOpen"] } },
+  argTypes: {
+    actions: {
+      name: "actions",
+      description:
+        "Les pastilles : ajoute / retire des objets (2 à 5), change `label` (le texte), `icon` (nom d'icône, ex. \"Camera\") et `tone` (`comete` | `critical` | `warning` | `success` | `information`). Plus de 2 tons distincts ou plus d'un `critical` : avertissement dans la console.",
+      control: "object",
+    },
+    initialOpen: {
+      name: "Ouverte au départ",
+      description: "Ouvre la couche dès le rendu, pour régler les pastilles sans cliquer le « + ».",
+      control: "boolean",
+    },
+  },
+  args: {
+    actions: MCE_QUICK_ACTIONS,
+    initialOpen: false,
+  },
+  render: (args) => (
+    <QuickActionsDemo
+      key={String(args.initialOpen)}
+      initialOpen={args.initialOpen}
+      actions={args.actions as Omit<QuickAction, "onPress">[]}
+    />
+  ),
 };
 
 // Test (masqué du sidebar) : ouverture, focus piégé, Échap, retour du focus, action.

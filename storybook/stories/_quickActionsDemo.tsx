@@ -25,11 +25,14 @@ export const MCE_QUICK_ACTIONS: Omit<QuickAction, "onPress">[] = [
 export function QuickActionsDemo({
   actions = MCE_QUICK_ACTIONS,
   onAction,
+  initialOpen = false,
 }: {
   actions?: Omit<QuickAction, "onPress">[];
   onAction?: (id: string) => void;
+  /** Ouvre la couche dès le rendu (utile pour régler les actions dans les controls). */
+  initialOpen?: boolean;
 }): ReactNode {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(initialOpen);
   const [selected, setSelected] = useState<string | null>(null);
   return (
     <div className={css["fullScreen"]}>
