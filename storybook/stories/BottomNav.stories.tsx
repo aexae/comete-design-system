@@ -873,9 +873,10 @@ export const FieldToolMceInteractions: Story = {
  * voile, une par action rapide (libellé à gauche, pastille d'icône à droite) — au lieu d'un
  * tiroir.
  *
- * - **Couleur = nature, pas identité** (ADR 0002) : seule « Signaler une anomalie » est
- *   `critical` ; les autres sont `default`. La couleur ne va que sur la pastille d'icône,
- *   jamais sur la rangée ;
+ * - **Vocabulaire réel** : les deux actions du FAB de l'agent en MCE (Link) — « Déclarer un
+ *   évènement » et « Démarrer une ronde ». Aucune n'est `critical` : MCE n'a aucune notion de
+ *   gravité ; ce sont l'icône et le verbe qui distinguent, pas la couleur (ADR 0002 — la
+ *   couleur porte la nature, jamais l'identité) ;
  * - une rangée = un libellé et rien d'autre (pas de description : une action qui a besoin
  *   d'être expliquée est une entrée de **tiroir**, voir la recette ci-dessus) ;
  * - pas de « Fermer » : le FAB pivote en croix et le voile est touchable ; Échap ferme

@@ -9,12 +9,17 @@ import {
 } from "@aexae/comete-design-system/components";
 import css from "./BottomNav.stories.module.css";
 
-/** Actions rapides MCE — `critical` seulement pour le signalement (nature, pas identité). */
+/**
+ * Actions du FAB en MCE — celles de l'AGENT sur le terrain, libellés de Link (`fab.declare_event`,
+ * `fab.start_round`). Deux entrées, aucune « critical » : MCE n'a aucune notion de gravité ni
+ * d'urgence, donc les deux sont du ton par défaut ; ce sont l'icône et le verbe qui distinguent,
+ * pas la couleur. Pas de « Scanner un pointeau » (un pointeau ne se scanne qu'à l'intérieur d'une
+ * ronde en cours : ce n'est pas une création) ni de « Voir les MCE remplis » (navigation →
+ * page « Plus »).
+ */
 export const MCE_QUICK_ACTIONS: Omit<QuickAction, "onPress">[] = [
-  { id: "report", icon: "Report", label: "Signaler une anomalie", tone: "critical" },
-  { id: "scan", icon: "Scanner", label: "Scanner un équipement", tone: "default" },
-  { id: "round", icon: "Patrol", label: "Démarrer une ronde", tone: "default" },
-  { id: "log", icon: "MenuBook", label: "Nouvelle main courante", tone: "default" },
+  { id: "event", icon: "Campaign", label: "Déclarer un évènement" },
+  { id: "patrol", icon: "Patrol", label: "Démarrer une ronde" },
 ];
 
 export function QuickActionsDemo({

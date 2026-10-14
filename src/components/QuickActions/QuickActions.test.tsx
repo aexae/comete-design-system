@@ -117,12 +117,12 @@ describe("QuickActions — règle de couleur (ADR 0002)", () => {
     body: body ?? "",
   }));
 
-  it("should expose the tone on the icon tile (data-tone), default when omitted", () => {
+  it("should expose the tone on the icon tile (data-tone), « comete » when omitted", () => {
     render(<QuickActions actions={ACTIONS} isOpen onOpenChange={() => undefined} />);
     const critical = screen.getByRole("button", { name: "Signaler une anomalie" });
     const normal = screen.getByRole("button", { name: "Scanner un équipement" });
     expect(critical.querySelector("[data-tone]")).toHaveAttribute("data-tone", "critical");
-    expect(normal.querySelector("[data-tone]")).toHaveAttribute("data-tone", "default");
+    expect(normal.querySelector("[data-tone]")).toHaveAttribute("data-tone", "comete");
   });
 
   it("should give a critical tone --text-critical on its icon", () => {
@@ -142,21 +142,82 @@ describe("QuickActions — règle de couleur (ADR 0002)", () => {
     expect(base?.body).toMatch(/background-color:\s*var\(--background-surface-default\)/);
   });
 
-  it("should only define the two tones (default, critical) in the CSS", () => {
+  it("should define the five semantic tones, and only those (no tone per action)", () => {
     const tones = new Set([...css.matchAll(/\[data-tone="([^"]+)"\]/g)].map((m) => m[1]));
-    expect([...tones].sort()).toEqual(["critical", "default"]);
+    expect([...tones].sort()).toEqual(["comete", "critical", "information", "success", "warning"]);
   });
 
-  it("should reject any other tone at the type level", () => {
-    const bad: QuickAction = {
-      id: "x",
+  it("should accept the whole palette at the type level (no restriction)", () => {
+    const palette: QuickAction["tone"][] = ["comete", "critical", "warning", "success", "information"];
+    expect(palette).toHaveLength(5);
+  });
+});
+
+describe("QuickActions — garde-fou de composition (avertissement, jamais de blocage)", () => {
+  const make = (tones: (QuickAction["tone"])[]): QuickAction[] =>
+    tones.map((tone, i) => ({
+      id: String(i),
       icon: "Star",
-      label: "x",
-      // @ts-expect-error — aucun autre ton que « default » et « critical »
-      tone: "success",
+      label: `Action ${i + 1}`,
+      tone,
       onPress: () => undefined,
-    };
-    expect(bad.id).toBe("x");
+    }));
+
+  it("should warn when a menu uses more than two distinct tones, explaining why", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    render(
+      <QuickActions
+        actions={make(["comete", "warning", "success"])}
+        isOpen
+        onOpenChange={() => undefined}
+      />,
+    );
+    expect(warn).toHaveBeenCalledOnce();
+    const message = String(warn.mock.calls[0]?.[0]);
+    expect(message).toMatch(/3 tons distincts/);
+    expect(message).toContain("La couleur porte la nature de l'action, pas son identité.");
+    expect(message).toContain("Au-delà de deux tons dans un même menu");
+  });
+
+  it("should still render every action when it warns (warn, never break)", () => {
+    vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    render(
+      <QuickActions
+        actions={make(["comete", "warning", "success", "information"])}
+        isOpen
+        onOpenChange={() => undefined}
+      />,
+    );
+    expect(screen.getAllByRole("button", { name: /^Action d$/ })).toHaveLength(4);
+  });
+
+  it("should not warn with two distinct tones", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    render(
+      <QuickActions
+        actions={make(["comete", "comete", "critical"])}
+        isOpen
+        onOpenChange={() => undefined}
+      />,
+    );
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it("should warn when more than one action is critical", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    render(
+      <QuickActions actions={make(["critical", "critical"])} isOpen onOpenChange={() => undefined} />,
+    );
+    expect(warn).toHaveBeenCalledOnce();
+    const message = String(warn.mock.calls[0]?.[0]);
+    expect(message).toMatch(/2 actions portent le ton "critical"/);
+    expect(message).toContain("Au-delà de deux tons dans un même menu");
+  });
+
+  it("should not warn with a single critical action", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    render(<QuickActions actions={make(["critical", undefined])} isOpen onOpenChange={() => undefined} />);
+    expect(warn).not.toHaveBeenCalled();
   });
 });
 

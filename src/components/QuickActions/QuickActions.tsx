@@ -22,14 +22,23 @@ declare const process: { env: { NODE_ENV?: string } };
 /** Nombre maximal d'actions : au-delà, plus de place entre le FAB et la barre de page. */
 const MAX_ACTIONS = 5;
 
+/** Nombre maximal de tons distincts dans un même menu (garde-fou de composition). */
+const MAX_DISTINCT_TONES = 2;
+
+const TONE_RATIONALE =
+  "La couleur porte la nature de l'action, pas son identité. Au-delà de deux tons dans un " +
+  "même menu, elle cesse de signaler le danger et se met à distinguer les entrées entre elles.";
+
 // -----------------------------------------------------------------------
 // Types publics
 
 /**
- * Nature d'une action — **pas son identité**. Voir la règle de couleur de
- * {@link QuickActions}. Il n'existe volontairement aucun autre ton.
+ * Nature d'une action — **pas son identité** : la palette sémantique des autres composants
+ * (`Button` `color`, `Badge` `appearance`). Voir la règle de couleur de {@link QuickActions}.
+ * Aucune restriction au niveau du type : le garde-fou est sur la **composition** (avertissement
+ * en développement).
  */
-export type QuickActionTone = "default" | "critical";
+export type QuickActionTone = "comete" | "critical" | "warning" | "success" | "information";
 
 export interface QuickAction {
   /** Identifiant stable (clé de rendu). */
@@ -39,9 +48,9 @@ export interface QuickAction {
   /** Libellé de l'action — et rien d'autre : pas de seconde ligne de description. */
   label: string;
   /**
-   * Nature de l'action, pas son identité : `critical` pour un **signalement**,
-   * `default` (défaut) pour tout le reste. La couleur ne va que sur la pastille d'icône.
-   * @default "default"
+   * Nature de l'action, pas son identité (`comete`, `critical`, `warning`, `success`,
+   * `information`). La couleur ne va que sur la pastille d'icône, jamais sur la rangée.
+   * @default "comete"
    */
   tone?: QuickActionTone;
   /** Appelé au choix de l'action ; le menu se referme ensuite. */
@@ -76,14 +85,16 @@ export interface QuickActionsProps {
  * réassembler à la main à partir de `Button` + un `div` absolu + un écouteur `mousedown`.
  *
  * ### Règle de couleur (ADR 0002 — « une couleur, un sens »)
- * La couleur porte la **nature** de l'action, jamais son **identité**.
- * - `tone: "critical"` → pastille d'icône teintée critique (`--background-critical-*`),
- *   icône `--text-critical`. **Réservé aux actions de signalement.**
- * - `tone: "default"` → pastille d'icône teintée marque (`--background-comete-*`),
- *   icône de marque.
- * - **Aucun autre ton** : pas de vert, pas de violet, pas une teinte par action. Si chaque
- *   action reçoit sa couleur pour être reconnaissable, le rouge cesse de vouloir dire
- *   « danger ».
+ * La couleur porte la **nature** de l'action, jamais son **identité**. `tone` reprend la
+ * palette sémantique des autres composants (`Button` `color`, `Badge` `appearance`) :
+ * `comete` (défaut), `critical`, `warning`, `success`, `information`. Le type ne restreint
+ * rien — on n'interdit pas une valeur par crainte qu'elle soit mal employée.
+ * - **Le garde-fou est sur la composition**, parce que c'est là qu'est le risque : en
+ *   développement, un avertissement est émis quand un même menu utilise **plus de deux tons
+ *   distincts**, ou quand **plus d'une** action porte `critical`. Le composant rend quand
+ *   même : on avertit, on ne casse pas.
+ * - Si chaque action reçoit sa teinte pour être reconnaissable, le rouge cesse de vouloir
+ *   dire « danger » et se met à vouloir dire « scanner un équipement ».
  * - La couleur va **uniquement sur la pastille d'icône, jamais sur la rangée entière** :
  *   des rangées pleines saturées s'aplatissent vers le même gris sur un voile sombre en
  *   forte luminosité, et en deutéranopie un rouge et un vert pleins se confondent. Avec
@@ -130,12 +141,30 @@ export function QuickActions({
   onOpenChange,
   "aria-label": ariaLabel = "Actions rapides",
 }: QuickActionsProps): ReactElement {
-  if (process.env.NODE_ENV !== "production" && actions.length > MAX_ACTIONS) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      `QuickActions : ${actions.length} actions reçues, ${MAX_ACTIONS} au maximum — au-delà, ` +
-        `il n'y a plus de place entre le FAB et la barre de page. Utiliser un tiroir (Drawer).`,
-    );
+  if (process.env.NODE_ENV !== "production") {
+    if (actions.length > MAX_ACTIONS) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `QuickActions : ${actions.length} actions reçues, ${MAX_ACTIONS} au maximum — au-delà, ` +
+          `il n'y a plus de place entre le FAB et la barre de page. Utiliser un tiroir (Drawer).`,
+      );
+    }
+    const tones = new Set(actions.map((a) => a.tone ?? "comete"));
+    if (tones.size > MAX_DISTINCT_TONES) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `QuickActions : ${tones.size} tons distincts dans un même menu (${[...tones].join(", ")}). ` +
+          TONE_RATIONALE,
+      );
+    }
+    const criticalCount = actions.filter((a) => a.tone === "critical").length;
+    if (criticalCount > 1) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `QuickActions : ${criticalCount} actions portent le ton "critical" — une seule au plus. ` +
+          TONE_RATIONALE,
+      );
+    }
   }
 
   return (
@@ -167,7 +196,7 @@ export function QuickActions({
                   }}
                 >
                   <span className={styles.label}>{action.label}</span>
-                  <span className={styles.tile} data-tone={action.tone ?? "default"} aria-hidden="true">
+                  <span className={styles.tile} data-tone={action.tone ?? "comete"} aria-hidden="true">
                     <Icon icon={action.icon} size={24} className={styles.glyph} />
                   </span>
                 </AriaButton>

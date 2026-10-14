@@ -6,7 +6,8 @@
    RÈGLE DE COULEUR (ADR 0002, « une couleur, un sens ») : la couleur porte la
    NATURE de l'action, jamais son identité, et ne va QUE sur la pastille d'icône
    (`.tile`) — jamais sur la rangée (`.row`), qui reste neutre (surface).
-   Deux tons seulement : `default` (marque) et `critical` (signalement).
+   Palette sémantique (comete, critical, warning, success, information) ; le garde-fou
+   (≤ 2 tons distincts, ≤ 1 critical) est un avertissement en développement.
    ========================================================================== */
 
 /* Voile plein écran, liste ancrée en bas. */
@@ -116,11 +117,11 @@
   border-radius: var(--radius-round);
 }
 
-.tile[data-tone="default"] {
+.tile[data-tone="comete"] {
   background-color: var(--background-comete-subtlest-default);
 }
 
-.tile[data-tone="default"] .glyph {
+.tile[data-tone="comete"] .glyph {
   color: var(--icon-brand);
 }
 
@@ -130,6 +131,30 @@
 
 .tile[data-tone="critical"] .glyph {
   color: var(--text-critical);
+}
+
+.tile[data-tone="warning"] {
+  background-color: var(--background-warning-subtlest-default);
+}
+
+.tile[data-tone="warning"] .glyph {
+  color: var(--text-warning);
+}
+
+.tile[data-tone="success"] {
+  background-color: var(--background-success-subtlest-default);
+}
+
+.tile[data-tone="success"] .glyph {
+  color: var(--text-success);
+}
+
+.tile[data-tone="information"] {
+  background-color: var(--background-information-subtlest-default);
+}
+
+.tile[data-tone="information"] .glyph {
+  color: var(--text-information);
 }
 
 @keyframes overlay-in {
