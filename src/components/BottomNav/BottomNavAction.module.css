@@ -41,6 +41,18 @@
   pointer-events: none;
 }
 
+/* FAB ouvert : le FAB et son socle remontent AU-DESSUS du voile de `QuickActions`
+   (z-index du modal + 1) pour rester cliquables — c'est lui qui referme. Uniquement à
+   l'état ouvert, et SANS z-index sur la barre basse : un z-index sur `.nav` créerait un
+   contexte d'empilement où le FAB resterait prisonnier sous le voile. */
+.action[aria-expanded="true"] {
+  z-index: calc(var(--z-index-modal) + 2);
+}
+
+.actionCradle:has(+ .action[aria-expanded="true"]) {
+  z-index: calc(var(--z-index-modal) + 1);
+}
+
 /* Icône : pivote de 45° quand l'action est ouverte (+ → ×). */
 .actionIcon {
   display: grid;

@@ -40,6 +40,7 @@ export * from "./Popover";
 export * from "./ProgressBar";
 export * from "./ProgressIndicator";
 export * from "./Popup";
+export * from "./QuickActions";
 export * from "./Radio";
 export * from "./SearchField";
 export * from "./SectionMessage";

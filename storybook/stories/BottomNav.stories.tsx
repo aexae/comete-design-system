@@ -28,6 +28,7 @@ import type { IconName } from "@aexae/comete-icons";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 import css from "./BottomNav.stories.module.css";
+import { QuickActionsDemo } from "./_quickActionsDemo";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -864,4 +865,29 @@ export const FieldToolMceInteractions: Story = {
       expect(body.queryByRole("dialog")).not.toBeInTheDocument(),
     );
   },
+};
+
+/**
+ * **QuickActions — recette** (à côté de la recette tiroir ci-dessus, pour comparer). Le FAB
+ * (`BottomNav.Action`) ouvre `QuickActions` : des **pastilles flottantes** au-dessus d'un
+ * voile, une par action rapide (libellé à gauche, pastille d'icône à droite) — au lieu d'un
+ * tiroir.
+ *
+ * - **Couleur = nature, pas identité** (ADR 0002) : seule « Signaler une anomalie » est
+ *   `critical` ; les autres sont `default`. La couleur ne va que sur la pastille d'icône,
+ *   jamais sur la rangée ;
+ * - une rangée = un libellé et rien d'autre (pas de description : une action qui a besoin
+ *   d'être expliquée est une entrée de **tiroir**, voir la recette ci-dessus) ;
+ * - pas de « Fermer » : le FAB pivote en croix et le voile est touchable ; Échap ferme
+ *   aussi, et le focus revient sur le FAB ;
+ * - 5 actions au plus.
+ *
+ * La couche est plein écran : la story tourne en **viewport mobile** pour que voile,
+ * pastilles et FAB s'alignent.
+ */
+export const QuickActionsRecipe: Story = {
+  name: "With FAB — quick actions",
+  globals: { viewport: { value: "cometeMobileAgent", isRotated: false } },
+  parameters: { controls: { disable: true }, layout: "fullscreen" },
+  render: () => <QuickActionsDemo />,
 };
