@@ -106,11 +106,16 @@ const meta = {
     design: { type: "figma", url: figmaUrl("2524:18591") },
   },
   decorators: [
-    (Story: () => ReactNode) => (
-      <div style={{ display: "flex", justifyContent: "center", width: 402 }}>
+    // Cadre de 402px pour les stories « item » ; les stories plein viewport (`noFrame`, ex.
+    // recette QuickActions) s'en passent : un cadre fixe les ferait rétrécir / déborder.
+    (Story: () => ReactNode, context: { parameters: { noFrame?: boolean } }) =>
+      context.parameters.noFrame ? (
         <Story />
-      </div>
-    ),
+      ) : (
+        <div style={{ display: "flex", justifyContent: "center", width: 402 }}>
+          <Story />
+        </div>
+      ),
   ],
   argTypes: {
     icon: {
@@ -889,6 +894,6 @@ export const FieldToolMceInteractions: Story = {
 export const QuickActionsRecipe: Story = {
   name: "With FAB — quick actions",
   globals: { viewport: { value: "cometeMobileAgent", isRotated: false } },
-  parameters: { controls: { disable: true }, layout: "fullscreen" },
+  parameters: { controls: { disable: true }, layout: "fullscreen", noFrame: true },
   render: () => <QuickActionsDemo />,
 };

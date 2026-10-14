@@ -97,6 +97,7 @@
    voile, les pastilles et le FAB s'alignent, la story tourne dans un VRAI viewport mobile
    (viewport Storybook) et la barre est ancrée en bas de ce viewport. */
 .fullScreen {
+  width: 100%;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

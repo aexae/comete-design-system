@@ -2,9 +2,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, screen, userEvent, expect, waitFor, fn } from "storybook/test";
 import { QuickActions, type QuickAction } from "@aexae/comete-design-system/components";
+import type { IconName } from "@aexae/comete-icons";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
-import { QuickActionsDemo, MCE_QUICK_ACTIONS } from "./_quickActionsDemo";
+import { QuickActionsDemo } from "./_quickActionsDemo";
 
 // -----------------------------------------------------------------------
 // Meta
@@ -61,11 +62,100 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof QuickActions>;
 
-/** Args du bac à sable : les actions (sans `onPress`, non sérialisable) et l'ouverture initiale. */
+/** Nombre maximal de pastilles réglables (le plafond du composant). */
+const SLOTS = [1, 2, 3, 4, 5] as const;
+
+const TONES = ["comete", "critical", "warning", "success", "information"] as const;
+
+/** Icônes proposées dans les controls (n'importe quel nom d'icône reste possible via le code). */
+const ICON_OPTIONS = [
+  "Campaign", "Patrol", "Report", "Scanner", "Camera", "Add", "EventNote", "MenuBook", "FormEdit",
+  "Notifications", "Warning", "CheckCircle", "Send", "Call", "Mic", "LocationOn", "Star", "Flag",
+] as const satisfies readonly IconName[];
+
+/**
+ * Args du bac à sable — un control PAR pastille (`label1`, `icon1`, `tone1`… jusqu'à 5) et le
+ * nombre de pastilles affichées. Les pastilles au-delà de `count` sont masquées dans le panneau.
+ */
 type PlaygroundArgs = {
-  actions: { id: string; icon: string; label: string; tone?: string }[];
+  count: number;
   initialOpen: boolean;
+} & Record<`label${1 | 2 | 3 | 4 | 5}`, string> &
+  Record<`icon${1 | 2 | 3 | 4 | 5}`, IconName> &
+  Record<`tone${1 | 2 | 3 | 4 | 5}`, (typeof TONES)[number]>;
+
+const PLAYGROUND_ARGTYPES = Object.fromEntries([
+  [
+    "count",
+    {
+      name: "Nombre de pastilles",
+      description: "De 2 à 5 (le plafond : au-delà, plus de place entre le FAB et la barre de page).",
+      control: { type: "range", min: 2, max: 5, step: 1 },
+      table: { category: "Menu" },
+    },
+  ],
+  [
+    "initialOpen",
+    {
+      name: "Ouverte au départ",
+      description: "Ouvre la couche dès le rendu, pour régler les pastilles sans cliquer le « + ».",
+      control: "boolean",
+      table: { category: "Menu" },
+    },
+  ],
+  ...SLOTS.flatMap((n) => {
+    const cat = { category: `Pastille ${n}` };
+    // Les pastilles 3 à 5 n'apparaissent dans le panneau que si `count` les affiche.
+    const cond = n > 2 ? { if: { arg: "count", gte: n } } : {};
+    return [
+      [`label${n}`, { name: "Texte", control: "text", table: cat, ...cond }],
+      [`icon${n}`, { name: "Icône", control: "select", options: ICON_OPTIONS, table: cat, ...cond }],
+      [
+        `tone${n}`,
+        {
+          name: "Couleur (ton)",
+          description: "Nature de l'action, pas son identité : plus de 2 tons distincts ou plus d'un `critical` → avertissement en console.",
+          control: "inline-radio",
+          options: TONES,
+          table: cat,
+          ...cond,
+        },
+      ],
+    ];
+  }),
+]);
+
+const PLAYGROUND_ARGS: PlaygroundArgs = {
+  count: 2,
+  initialOpen: false,
+  // Pastilles 1 et 2 : les actions du FAB de l'agent en MCE (libellés de Link).
+  label1: "Déclarer un évènement",
+  icon1: "Campaign",
+  tone1: "comete",
+  label2: "Démarrer une ronde",
+  icon2: "Patrol",
+  tone2: "comete",
+  // Pastilles 3 à 5 : emplacements libres, à renommer dans les controls.
+  label3: "Action 3",
+  icon3: "Camera",
+  tone3: "comete",
+  label4: "Action 4",
+  icon4: "Send",
+  tone4: "comete",
+  label5: "Action 5",
+  icon5: "Flag",
+  tone5: "comete",
 };
+
+/** Reconstruit la liste d'actions à partir des controls. */
+function actionsFromArgs(args: PlaygroundArgs): Omit<QuickAction, "onPress">[] {
+  return SLOTS.slice(0, args.count).map((n) => ({
+    id: `slot${n}`,
+    label: args[`label${n}`],
+    icon: args[`icon${n}`],
+    tone: args[`tone${n}`],
+  }));
+}
 
 // -----------------------------------------------------------------------
 // Stories — la couche est plein écran : viewport mobile pour que voile, pastilles et FAB
@@ -75,32 +165,23 @@ type PlaygroundArgs = {
  * Les actions du FAB de l'agent en MCE (libellés de Link) : « Déclarer un évènement » et
  * « Démarrer une ronde ». Deux entrées, toutes du ton par défaut — MCE n'a aucune notion de
  * gravité ; c'est l'icône et le verbe qui distinguent, pas la couleur. Touche le « + » pour ouvrir.
+ *
+ * **Bac à sable** : un control par pastille (texte, icône, ton) et le nombre de pastilles — règle-les
+ * dans le panneau « Controls » ; « Ouverte au départ » affiche la couche sans cliquer le « + ».
  */
 export const Default: StoryObj<PlaygroundArgs> = {
   globals: { viewport: { value: "cometeMobileAgent", isRotated: false } },
-  parameters: { controls: { include: ["actions", "initialOpen"] } },
-  argTypes: {
-    actions: {
-      name: "actions",
-      description:
-        "Les pastilles : ajoute / retire des objets (2 à 5), change `label` (le texte), `icon` (nom d'icône, ex. \"Camera\") et `tone` (`comete` | `critical` | `warning` | `success` | `information`). Plus de 2 tons distincts ou plus d'un `critical` : avertissement dans la console.",
-      control: "object",
-    },
-    initialOpen: {
-      name: "Ouverte au départ",
-      description: "Ouvre la couche dès le rendu, pour régler les pastilles sans cliquer le « + ».",
-      control: "boolean",
-    },
+  parameters: {
+    // Les props du composant (isOpen, actions…) ne sont pas réglables ici : on ne montre que les controls du bac à sable.
+    controls: { exclude: ["isOpen", "onOpenChange", "actions", "aria-label"] },
   },
-  args: {
-    actions: MCE_QUICK_ACTIONS,
-    initialOpen: false,
-  },
+  argTypes: PLAYGROUND_ARGTYPES,
+  args: PLAYGROUND_ARGS,
   render: (args) => (
     <QuickActionsDemo
       key={String(args.initialOpen)}
       initialOpen={args.initialOpen}
-      actions={args.actions as Omit<QuickAction, "onPress">[]}
+      actions={actionsFromArgs(args)}
     />
   ),
 };
