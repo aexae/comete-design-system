@@ -128,8 +128,8 @@ const PLAYGROUND_ARGTYPES = Object.fromEntries([
 
 const PLAYGROUND_ARGS: PlaygroundArgs = {
   count: 2,
-  // Ouvert par défaut : les réglages (texte, icône, ton, nombre) se voient tout de suite.
-  menuOpen: true,
+  // Fermé par défaut : on ouvre avec le « + » ou le control « Menu ouvert ».
+  menuOpen: false,
   // Pastilles 1 et 2 : les actions du FAB de l'agent en MCE (libellés de Link).
   label1: "Déclarer un évènement",
   icon1: "Campaign",
