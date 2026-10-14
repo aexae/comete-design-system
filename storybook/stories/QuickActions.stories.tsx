@@ -1,5 +1,6 @@
 // QuickActions — stories Storybook (menu d'actions rapides du FAB)
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useArgs } from "storybook/preview-api";
 import { within, screen, userEvent, expect, waitFor, fn } from "storybook/test";
 import { QuickActions, type QuickAction } from "@aexae/comete-design-system/components";
 import type { IconName } from "@aexae/comete-icons";
@@ -79,7 +80,7 @@ const ICON_OPTIONS = [
  */
 type PlaygroundArgs = {
   count: number;
-  initialOpen: boolean;
+  menuOpen: boolean;
 } & Record<`label${1 | 2 | 3 | 4 | 5}`, string> &
   Record<`icon${1 | 2 | 3 | 4 | 5}`, IconName> &
   Record<`tone${1 | 2 | 3 | 4 | 5}`, (typeof TONES)[number]>;
@@ -95,10 +96,10 @@ const PLAYGROUND_ARGTYPES = Object.fromEntries([
     },
   ],
   [
-    "initialOpen",
+    "menuOpen",
     {
-      name: "Ouverte au départ",
-      description: "Ouvre la couche dès le rendu, pour régler les pastilles sans cliquer le « + ».",
+      name: "Menu ouvert",
+      description: "Ouvre / ferme la couche. Synchronisé avec le « + » : le toucher bascule aussi ce control.",
       control: "boolean",
       table: { category: "Menu" },
     },
@@ -127,7 +128,8 @@ const PLAYGROUND_ARGTYPES = Object.fromEntries([
 
 const PLAYGROUND_ARGS: PlaygroundArgs = {
   count: 2,
-  initialOpen: false,
+  // Ouvert par défaut : les réglages (texte, icône, ton, nombre) se voient tout de suite.
+  menuOpen: true,
   // Pastilles 1 et 2 : les actions du FAB de l'agent en MCE (libellés de Link).
   label1: "Déclarer un évènement",
   icon1: "Campaign",
@@ -167,7 +169,7 @@ function actionsFromArgs(args: PlaygroundArgs): Omit<QuickAction, "onPress">[] {
  * gravité ; c'est l'icône et le verbe qui distinguent, pas la couleur. Touche le « + » pour ouvrir.
  *
  * **Bac à sable** : un control par pastille (texte, icône, ton) et le nombre de pastilles — règle-les
- * dans le panneau « Controls » ; « Ouverte au départ » affiche la couche sans cliquer le « + ».
+ * dans le panneau « Controls » ; « Menu ouvert » ouvre / ferme la couche (et suit le « + »).
  */
 export const Default: StoryObj<PlaygroundArgs> = {
   globals: { viewport: { value: "cometeMobileAgent", isRotated: false } },
@@ -177,13 +179,17 @@ export const Default: StoryObj<PlaygroundArgs> = {
   },
   argTypes: PLAYGROUND_ARGTYPES,
   args: PLAYGROUND_ARGS,
-  render: (args) => (
-    <QuickActionsDemo
-      key={String(args.initialOpen)}
-      initialOpen={args.initialOpen}
-      actions={actionsFromArgs(args)}
-    />
-  ),
+  render: function PlaygroundStory(args) {
+    // `menuOpen` est l'état réel de la couche : le « + » le met à jour dans le panneau Controls.
+    const [, updateArgs] = useArgs<PlaygroundArgs>();
+    return (
+      <QuickActionsDemo
+        open={args.menuOpen}
+        onOpenChange={(menuOpen) => updateArgs({ menuOpen })}
+        actions={actionsFromArgs(args)}
+      />
+    );
+  },
 };
 
 // Test (masqué du sidebar) : ouverture, focus piégé, Échap, retour du focus, action.

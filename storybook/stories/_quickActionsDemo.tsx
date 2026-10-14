@@ -26,13 +26,24 @@ export function QuickActionsDemo({
   actions = MCE_QUICK_ACTIONS,
   onAction,
   initialOpen = false,
+  open: controlledOpen,
+  onOpenChange,
 }: {
   actions?: Omit<QuickAction, "onPress">[];
   onAction?: (id: string) => void;
-  /** Ouvre la couche dès le rendu (utile pour régler les actions dans les controls). */
+  /** Ouvre la couche dès le rendu (mode non contrôlé). */
   initialOpen?: boolean;
+  /** Ouverture pilotée de l'extérieur (controls Storybook) — prioritaire sur l'état interne. */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }): ReactNode {
-  const [open, setOpen] = useState(initialOpen);
+  const [internalOpen, setInternalOpen] = useState(initialOpen);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = (next: boolean | ((o: boolean) => boolean)) => {
+    const value = typeof next === "function" ? next(open) : next;
+    setInternalOpen(value);
+    onOpenChange?.(value);
+  };
   const [selected, setSelected] = useState<string | null>(null);
   return (
     <div className={css["fullScreen"]}>
