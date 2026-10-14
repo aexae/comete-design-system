@@ -25,15 +25,21 @@ declare const process: { env: { NODE_ENV?: string } };
 // Context partagé (couvre SideNav + SideNavHeader)
 
 /**
- * Mode d'affichage de la navigation latérale (tablette et desktop).
+ * Mode d'affichage de la navigation latérale — **desktop uniquement**
+ * (≥ 1200px, le breakpoint `lg` de `BREAKPOINTS`).
  * - `expanded` — panneau complet 240px (logo + libellés + sections nommées).
  * - `rail` — rail 80px : icône + libellé court dessous.
  *
- * La navigation ne disparaît **jamais** et ne s'agrandit **jamais au survol** : on
- * passe de l'un à l'autre par le bouton de bascule de l'en-tête ou par
- * `Ctrl/Cmd+Shift+E`. Sur **mobile web**, l'app l'affiche dans un `Drawer`
- * (`placement="left"`) ; en **app mobile**, il n'y a pas de SideNav (la `BottomNav`
- * porte seule la navigation).
+ * À ce format la navigation ne disparaît **jamais** et ne s'agrandit **jamais
+ * au survol** : on passe de l'un à l'autre par le bouton de bascule de l'en-tête
+ * ou par `Ctrl/Cmd+Shift+E`.
+ *
+ * **Sous 1200px (tablette comprise), il n'y a pas de nav permanente.** La
+ * tablette suit la règle du mobile web : l'app affiche la nav dans un `Drawer`
+ * (`placement="left"`), par-dessus le contenu, derrière un hamburger. Une
+ * tablette n'a pas la largeur d'un rail de 80px ET d'un contenu confortable.
+ * En **app mobile**, il n'y a pas de SideNav du tout (la `BottomNav` porte
+ * seule la navigation).
  */
 export type SideNavMode = "expanded" | "rail";
 
@@ -121,7 +127,26 @@ export interface SideNavItemProps {
 }
 
 export interface SideNavSectionProps {
+  /** Intitulé de la section, affiché en mode `expanded`. */
   title?: string;
+  /**
+   * Intitulé **abrégé**, utilisé à la place de `title` en mode `rail`.
+   *
+   * Le rail ne laisse qu'une soixantaine de pixels utiles : un intitulé un peu
+   * long y est tronqué, et aucune taille de police lisible n'y change quoi que
+   * ce soit (« ADMINISTRATION » déborde encore à 8px). On raccourit donc le mot
+   * plutôt que de le rapetisser — « Administration » → « Admin ».
+   *
+   * Absent, le `title` est utilisé tel quel et peut se tronquer. Quand les deux
+   * diffèrent, l'intitulé complet reste disponible en infobulle native, comme
+   * pour les libellés d'items réduits.
+   *
+   * **Quel levier choisir** — les deux sont complémentaires :
+   * - l'intitulé dépasse de beaucoup (un mot long) → `shortTitle` ;
+   * - il ne dépasse que de quelques pixels (« MANAGER ») → réduire
+   *   `--sidenav-section-heading-size`, qui laisse le libellé intact.
+   */
+  shortTitle?: string;
   children: ReactNode;
   className?: string;
 }
@@ -329,12 +354,27 @@ SideNavItem.displayName = "SideNav.Item";
 
 export function SideNavSection({
   title,
+  shortTitle,
   children,
   className,
 }: SideNavSectionProps): ReactElement {
+  const { mode } = useContext(SideNavContext);
+  // En rail, on affiche l'abrégé s'il existe — raccourcir le mot plutôt que de
+  // le rapetisser. L'intitulé complet reste en infobulle quand il diffère.
+  const isRail = mode === "rail";
+  const heading = isRail && shortTitle ? shortTitle : title;
+  const fullTitle = isRail && shortTitle && title !== shortTitle ? title : undefined;
+
   return (
     <div className={[styles.section, className].filter(Boolean).join(" ")}>
-      {title && <div className={styles.sectionHeading}>{title}</div>}
+      {heading && (
+        <div
+          className={styles.sectionHeading}
+          {...(fullTitle ? { title: fullTitle } : {})}
+        >
+          {heading}
+        </div>
+      )}
       {children}
     </div>
   );
@@ -537,15 +577,17 @@ SideNavEmpty.displayName = "SideNav.Empty";
  * ### Règles par plateforme (le DS ne pose aucune media query, l'app décide)
  * - **App mobile** : **pas de SideNav** — la `BottomNav` porte seule la
  *   navigation.
- * - **Mobile navigateur web (< 768px)** : la SideNav passe **par-dessus** le
- *   viewport, dans un `Drawer placement="left"` ouvert par un bouton hamburger
- *   (`Page.Bar.leading`) ; elle ne pousse jamais le contenu. Dans le Drawer,
- *   utiliser `<SideNav.Header showToggle={false} />` (pas de rail sur mobile).
- * - **Tablette et desktop (≥ 768px)** : la nav est **permanente** et ne disparaît
- *   jamais. `expanded` (240px) ou **`rail` (80px)** ; le rail est **fixe** : il ne
- *   s'agrandit pas au survol, on bascule par le bouton de la nav ou
- *   `Ctrl/Cmd+Shift+E` (`expanded` ⇄ `rail`, choix **persisté par l'app**).
- *   Défaut conseillé : `expanded` à partir de 1024px, `rail` entre 768 et 1024px.
+ * - **Mobile navigateur web ET tablette (< 1200px)** : la SideNav passe
+ *   **par-dessus** le viewport, dans un `Drawer placement="left"` ouvert par un
+ *   bouton hamburger (`Page.Bar.leading`) ; elle ne pousse jamais le contenu.
+ *   Dans le Drawer, utiliser `<SideNav.Header showToggle={false} />` — il n'y a
+ *   pas de rail à ce format. La tablette suit **exactement** la règle du mobile
+ *   web : elle n'a pas la largeur d'un rail de 80px ET d'un contenu confortable.
+ * - **Desktop (≥ 1200px, breakpoint `lg`)** : la nav est **permanente** et ne
+ *   disparaît jamais. `expanded` (240px) ou **`rail` (80px)** ; le rail est
+ *   **fixe** : il ne s'agrandit pas au survol, on bascule par le bouton de la
+ *   nav ou `Ctrl/Cmd+Shift+E` (`expanded` ⇄ `rail`, choix **persisté par
+ *   l'app**). Défaut conseillé : `expanded`.
  *
  * ```tsx
  * const [mode, setMode] = useState<SideNavMode>("expanded");
@@ -611,9 +653,11 @@ SideNavProvider.displayName = "SideNav.Provider";
 /**
  * SideNav — Comete Design System
  *
- * Navigation latérale composable, **permanente** (tablette / desktop) : `expanded`
- * (240px) ou `rail` (80px), jamais masquée et jamais agrandie au survol. Lit son
- * mode depuis le `<SideNav.Provider>` parent — à placer à l'intérieur de celui-ci.
+ * Navigation latérale composable, **permanente sur desktop** (≥ 1200px) :
+ * `expanded` (240px) ou `rail` (80px), jamais masquée et jamais agrandie au
+ * survol. Sous 1200px (tablette comprise), l'app l'affiche dans un `Drawer`
+ * plutôt que de la rendre en permanence. Lit son mode depuis le
+ * `<SideNav.Provider>` parent — à placer à l'intérieur de celui-ci.
  *
  * ```tsx
  * <SideNav.Provider>

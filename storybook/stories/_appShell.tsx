@@ -44,7 +44,7 @@ export function MainCouranteNav() {
         <SideNav.Item label="Formulaires" iconBefore="FormEdit" href="/forms" />
       </SideNav.Section>
       <SideNav.Divider />
-      <SideNav.Section title="Administration">
+      <SideNav.Section title="Administration" shortTitle="Admin">
         <SideNav.Item label="Utilisateurs" iconBefore="Group" href="/users" />
         <SideNav.Item label="Droits" iconBefore="ManageAccounts" href="/permissions" />
         <SideNav.Item label="Licences" iconBefore="Key" href="/licences" />
@@ -56,7 +56,8 @@ export function MainCouranteNav() {
 /**
  * Contenu de page de démonstration — repris de `Layout/Page › Default` (message
  * d'accueil + grille de cartes) : de quoi VOIR que la nav pousse le contenu
- * (tablette / desktop) ou passe par-dessus (Drawer, mobile web). À placer dans
+ * (desktop ≥ 1200 px) ou passe par-dessus (Drawer — mobile web ET tablette).
+ * À placer dans
  * un `Page`, sous une `Page.Bar`.
  */
 export function DemoPageContent({ isLoading = false }: { isLoading?: boolean }) {

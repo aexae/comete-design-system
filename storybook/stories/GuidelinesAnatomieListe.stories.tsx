@@ -94,8 +94,8 @@ const ZONES: Zone[] = [
   {
     n: "2",
     el: "Navigation latérale",
-    note: "Le menu de gauche, permanent sur tablette et desktop : déployé (240 px) ou réduit en rail (80 px), jamais masqué, jamais agrandi au survol. Le bouton de bascule est dans son en-tête. Sur mobile web il s'ouvre dans un tiroir ; en app mobile, il n'y en a pas.",
-    tech: "SideNav + SideNav.Provider (mode expanded / rail) ; mobile web : Drawer placement=\"left\".",
+    note: "Le menu de gauche, permanent sur desktop uniquement (≥ 1200 px) : déployé (240 px) ou réduit en rail (80 px), jamais masqué, jamais agrandi au survol. Le bouton de bascule est dans son en-tête. Sous 1200 px (tablette comprise), il s'ouvre dans un tiroir ; en app mobile, il n'y en a pas.",
+    tech: "SideNav + SideNav.Provider (mode expanded / rail, desktop ≥ 1200 px) ; sous 1200 px (mobile web ET tablette) : Drawer placement=\"left\".",
   },
   {
     n: "3",
@@ -315,7 +315,7 @@ function Schema(): ReactElement {
                 <SideNav.Item label="Sites" iconBefore="LocationOn" href="#" />
               </SideNav.Section>
               <SideNav.Divider />
-              <SideNav.Section title="Administration">
+              <SideNav.Section title="Administration" shortTitle="Admin">
                 <SideNav.Item label="Utilisateurs" iconBefore="Group" href="#" />
                 <SideNav.Item label="Droits" iconBefore="ManageAccounts" href="#" />
               </SideNav.Section>
