@@ -41,7 +41,7 @@ const meta = {
                 "La couleur reste sur la **pastille d'icône** ; la rangée est toujours neutre (surface) — le libellé porte l'information.",
                 "Une rangée = un libellé, rien d'autre : pas de seconde ligne de description.",
                 "Pas de bouton « Fermer » : le FAB pivote en croix et le voile est touchable ; Échap ferme aussi.",
-                "Pas de `z-index` sur la barre basse : le FAB y resterait prisonnier sous le voile. Le FAB et son socle remontent d'eux-mêmes quand il est ouvert.",
+                "Pas de `z-index` sur la barre basse : le FAB y resterait prisonnier sous le voile. Le FAB remonte de lui-même au-dessus du voile quand il est ouvert ; son contour reste sous le voile, avec la barre.",
               ]}
               accessibility={[
                 "La couche est un dialogue nommé (`aria-label`, « Actions rapides » par défaut) : le focus y est piégé, Échap ferme, et le focus **revient sur le FAB** à la fermeture.",

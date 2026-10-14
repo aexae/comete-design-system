@@ -22,9 +22,10 @@ entre versions alpha.
   aucun autre ton — et la couleur ne va que sur la **pastille d'icône**, jamais sur la rangée.
   Pas de description, pas de bouton « Fermer », plafond à 5 actions (avertissement en
   développement) ; au-delà ou pour expliquer une action : tiroir (`Drawer`).
-- **`BottomNav.Action` ouvert** : le FAB et son socle remontent au-dessus du voile de
-  `QuickActions` (z-index appliqué uniquement quand `aria-expanded="true"`, aucun z-index sur
-  la barre basse). Comportement, rotation et `aria-expanded` inchangés.
+- **`BottomNav.Action` ouvert** : le FAB remonte au-dessus du voile de `QuickActions`
+  (z-index appliqué uniquement quand `aria-expanded="true"`, aucun z-index sur la barre
+  basse). Son socle (contour) reste sous le voile, comme la barre : le contour du FAB garde
+  son rendu d'origine. Comportement, rotation et `aria-expanded` inchangés.
 - **`List` — `hasDividers`** : séparateur **subtle** (`--border-subtle`) entre les items,
   en `box-shadow` inset (aucun décalage), y compris entre la fin d'une section et le
   `ListHead` suivant, sans filet après le dernier élément. Complète `gap` (séparation

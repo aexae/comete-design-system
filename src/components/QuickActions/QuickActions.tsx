@@ -102,8 +102,8 @@ export interface QuickActionsProps {
  * ### Intégration avec `BottomNav.Action`
  * - Ne pas poser de `z-index` sur la barre basse : il créerait un contexte d'empilement
  *   où le FAB resterait **prisonnier sous le voile**, donc incliquable alors que c'est lui
- *   qui referme. Le FAB et son socle remontent d'eux-mêmes au-dessus du voile quand
- *   `aria-expanded="true"`.
+ *   qui referme. Le FAB remonte de lui-même au-dessus du voile quand `aria-expanded="true"` ;
+ *   son contour (socle) reste sous le voile, avec la barre.
  * - Tant que la couche est ouverte, React Aria rend le reste de la page **inerte** (FAB
  *   compris) : un tap sur le FAB traverse donc jusqu'au voile, qui **ferme** — sans jamais
  *   rouvrir. Les conteneurs de la couche sont transparents aux clics (seules les rangées les
