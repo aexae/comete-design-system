@@ -1,4 +1,5 @@
 // Tests unitaires pour le composant Table et ses sous-composants
+import { readFileSync } from "node:fs";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import {
@@ -542,8 +543,20 @@ describe("Table", () => {
   });
 });
 
+describe("TableHeaderCell — icône de tri subtle (garde CSS)", () => {
+  const css = readFileSync("src/components/Table/Table.module.css", "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+  const colors = [...css.matchAll(/([^{}]*\.headerSortIcon[^{}]*)\{([^{}]*)\}/g)]
+    .map(([, , body]) => (body ?? "").match(/(?:^|;|\s)color:\s*([^;]+);/)?.[1]?.trim())
+    .filter(Boolean);
+
+  it("should colour the sort icon with --icon-subtle only, in every state", () => {
+    expect(colors.length).toBeGreaterThan(0);
+    for (const c of colors) expect(c).toBe("var(--icon-subtle)");
+  });
+});
+
 describe("Table — rowSeparation (grands écrans)", () => {
-  const renderTable = (rowSeparation?: "none" | "dividers" | "striped" | "elevated") =>
+  const renderTable = (rowSeparation?: "none" | "dividers" | "striped" | "hovered" | "elevated") =>
     render(
       <Table aria-label="x" rowSeparation={rowSeparation}>
         <TableBody>
@@ -557,7 +570,7 @@ describe("Table — rowSeparation (grands écrans)", () => {
     expect(screen.getByRole("table")).not.toHaveAttribute("data-row-separation");
   });
 
-  it.each(["dividers", "striped", "elevated"] as const)(
+  it.each(["dividers", "striped", "hovered", "elevated"] as const)(
     "should expose data-row-separation=%s",
     (mode) => {
       renderTable(mode);

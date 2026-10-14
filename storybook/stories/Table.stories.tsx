@@ -847,7 +847,8 @@ export const Virtualized: Story = {
 /**
  * **Séparation des lignes (grands écrans)** — prop `rowSeparation` : sur un grand
  * écran, de longues lignes sans repère sont difficiles à suivre. Modes : `none`
- * (défaut), `dividers` (filet fin), `striped` (bandes) et `elevated` — **sans
+ * (défaut), `dividers` (filet fin), `striped` (bandes), `hovered` (fond de survol + filet
+ * **uniquement sur la ligne survolée**) et `elevated` — **sans
  * filet** : la ligne survolée se surélève (ombre légère) à la manière de Gmail.
  * Ici, 60 lignes pour juger l'effet sur une vraie liste : survole-les.
  */
@@ -855,7 +856,7 @@ export const RowSeparation: Story = {
   name: "Row separation",
   parameters: { layout: "padded" },
   argTypes: {
-    rowSeparation: { control: "inline-radio", options: ["none", "dividers", "striped", "elevated"] },
+    rowSeparation: { control: "inline-radio", options: ["none", "dividers", "striped", "hovered", "elevated"] },
   },
   args: { rowSeparation: "elevated" },
   render: (args) => (

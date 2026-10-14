@@ -11,6 +11,8 @@ entre versions alpha.
 
 ### Ajouté
 
+- **`Table` — `rowSeparation="hovered"`** : la ligne survolée reçoit son fond de survol **et** un
+  filet ; les autres lignes restent nues.
 - **`QuickActions`** (nouveau composant) : menu d'actions rapides du FAB (`BottomNav.Action`) —
   pattern « speed dial », des **pastilles flottantes** au-dessus d'un voile (libellé à
   gauche, pastille d'icône circulaire à droite). Rend **uniquement la couche flottante** (le
@@ -80,6 +82,8 @@ entre versions alpha.
 
 ### Modifié
 
+- **`TableHeaderCell` triable — icône de tri subtle** : la flèche utilise `--icon-subtle` dans tous
+  les états (aperçu au survol, tri actif).
 - **`TableHeaderCell` triable — icône de tri** : plus de double flèche « expand »
   (`UnfoldMore`). Au survol d'une colonne non triée, la **flèche haut** apparaît
   atténuée (aperçu du tri croissant) ; un tri actif garde sa flèche pleine.

@@ -44,10 +44,12 @@ export type TableHideBelow = "sm" | "md" | "lg";
  * - `none`     — aucune séparation (défaut, comportement historique) ;
  * - `dividers` — un filet fin entre chaque ligne ;
  * - `striped`  — bandes : une ligne sur deux teintée ;
+ * - `hovered`  — la ligne survolée reçoit son fond de survol **et** un filet ; les autres
+ *   lignes restent nues ;
  * - `elevated` — pas de filet : la ligne survolée se **surélève** (ombre légère,
  *   façon Gmail) et ressort du reste de la liste.
  */
-export type TableRowSeparation = "none" | "dividers" | "striped" | "elevated";
+export type TableRowSeparation = "none" | "dividers" | "striped" | "hovered" | "elevated";
 
 /**
  * État de tri d'une colonne :
@@ -96,7 +98,7 @@ export interface TableProps {
   responsive?: boolean;
   /**
    * Séparation visuelle des lignes du corps : `none` | `dividers` | `striped` |
-   * `elevated`. Pensé pour les grands écrans. Voir {@link TableRowSeparation}.
+   * `hovered` | `elevated`. Pensé pour les grands écrans. Voir {@link TableRowSeparation}.
    * @default "none"
    */
   rowSeparation?: TableRowSeparation;
@@ -269,7 +271,7 @@ export interface TableHeaderCellProps extends TableCellProps {
    * Rend la colonne triable — clic sur l'en-tête change le tri.
    * L'indicateur (flèche `KeyboardArrowUp` / `KeyboardArrowDown`) s'affiche
    * automatiquement selon `sortDirection` ; au survol d'une colonne non triée, la
-   * flèche haut apparaît atténuée (aperçu du tri croissant).
+   * flèche haut apparaît (aperçu du tri croissant). L'icône est toujours **subtle**.
    * @default false
    */
   isSortable?: boolean;
