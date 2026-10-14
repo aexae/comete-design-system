@@ -6,9 +6,6 @@ import {
   BottomNav,
   BottomNavItem,
   Button,
-  Drawer,
-  DrawerBody,
-  DrawerHeader,
   Icon,
   List,
   ListHead,
@@ -22,7 +19,6 @@ import {
   MenuTrigger,
   Page,
   Popover,
-  Text,
 } from "@aexae/comete-design-system/components";
 import type { IconName } from "@aexae/comete-icons";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
@@ -65,7 +61,7 @@ const meta = {
                 "Icônes explicites et cohérentes ; réserver le débordement à un menu « Plus ».",
                 "Masquer la BottomNav au scroll descendant pour gagner de l'espace, la réafficher au scroll montant.",
                 "Avec un bouton d'action central (BottomNav.Action) : exactement 2 items de chaque côté (2 + Action + 2).",
-                "« Plus » ≠ FAB. L'item « Plus » regroupe des **destinations** secondaires : il mène quelque part (page) ou garde le contexte (popup), puis se sélectionne ou se referme. Le FAB (`BottomNav.Action`) lance une **action** de création : il ouvre un tiroir, ne se sélectionne jamais et n'est pas une destination.",
+                "« Plus » ≠ FAB. L'item « Plus » regroupe des **destinations** secondaires : il mène quelque part (page) ou garde le contexte (popup), puis se sélectionne ou se referme. Le FAB (`BottomNav.Action`) lance une **action** de création : il ouvre un menu d'actions (`QuickActions`), ne se sélectionne jamais et n'est pas une destination.",
                 "Ne pas mélanger : pas de destinations derrière le FAB, pas d'actions de création derrière « Plus ».",
               ]}
               accessibility={[
@@ -662,228 +658,19 @@ export const PlusPageInteractions: Story = {
 };
 
 // -----------------------------------------------------------------------
-// Recette de référence « outil terrain MCE » — BottomNav.Action + Drawer
-//
-// Cas d'usage : application de terrain (Maîtrise du Cycle d'Exploitation) où
-// l'action primaire est un FAB central (`BottomNav.Action`) qui ouvre un tiroir
-// bas. Le tiroir EST le composant `Drawer` du DS (placement="bottom",
-// size="auto", swipeable) ; son CONTENU (2 actions) est un pattern de story — le
-// DS fournit le contenant. Toute la structure passe par le CSS module de la
-// story : aucun inline style de structure.
-
-interface MceAction {
-  id: string;
-  icon: IconName;
-  title: string;
-  description: string;
-}
-
-const MCE_ACTIONS: MceAction[] = [
-  {
-    id: "scan",
-    icon: "Scanner",
-    title: "Scanner un équipement",
-    description: "Identifier via QR code ou code-barres",
-  },
-  {
-    id: "report",
-    icon: "Report",
-    title: "Signaler une anomalie",
-    description: "Créer un rapport d'incident sur site",
-  },
-];
+// Recette FAB — BottomNav.Action + QuickActions
 
 /**
- * Ligne d'action du tiroir — PATTERN de contenu démontré dans la story (pastille
- * icône + titre + description + chevron). Ce n'est PAS un composant du DS : le DS
- * fournit le contenant (`Drawer`) ; le contenu reste à la charge de l'app.
- */
-function MceActionRow({
-  icon,
-  title,
-  description,
-  onPress,
-}: {
-  icon: IconName;
-  title: string;
-  description: string;
-  onPress: () => void;
-}): ReactNode {
-  return (
-    <button type="button" onClick={onPress} className={css["actionRow"]}>
-      <span aria-hidden className={css["actionRowIcon"]}>
-        <Icon icon={icon} size={24} appearance="filled" color="brand" />
-      </span>
-      <span className={css["actionRowText"]}>
-        <Text size="medium" weight="bold" as="span">{title}</Text>
-        <Text size="small" color="subtle" as="span">{description}</Text>
-      </span>
-      <Icon icon="ChevronRight" size={24} color="subtlest" />
-    </button>
-  );
-}
-
-/**
- * Recette MCE complète : barre encochée (`BottomNav.Action` central + 2 items
- * de chaque côté) + tiroir `Drawer`.
- */
-function FieldToolRecipe(): ReactNode {
-  // Aucun item actif par défaut : la page courante est inconnue de la recette.
-  const [selected, setSelected] = useState<string | null>(null);
-  const [sheetOpen, setSheetOpen] = useState(false);
-
-  // Un seul item actif : tiroir ouvert → aucun item de page n'est sélectionné.
-  const activeItem = sheetOpen ? null : selected;
-  const closeSheet = () => { setSheetOpen(false); };
-
-  return (
-    <>
-      {/* Barre basse — items + bouton d'action central (BottomNav.Action).
-          Règle : exactement 2 items de chaque côté (2 + Action + 2) ; la barre
-          réserve l'emplacement central automatiquement. Le home indicator est
-          fourni par PhoneScreen. */}
-      <BottomNav>
-        <BottomNavItem
-          label="Tableau de bord"
-          icon="Dashboard"
-          isSelected={activeItem === "Tableau de bord"}
-          onClick={() => { setSelected("Tableau de bord"); }}
-        />
-        <BottomNavItem
-          label="Ma fiche"
-          icon="Assignment"
-          isSelected={activeItem === "Ma fiche"}
-          onClick={() => { setSelected("Ma fiche"); }}
-        />
-        <BottomNav.Action
-          icon="Add"
-          aria-label={sheetOpen ? "Fermer les outils terrain" : "Ouvrir les outils terrain"}
-          isOpen={sheetOpen}
-          onPress={() => { setSheetOpen((o) => !o); }}
-        />
-        <BottomNavItem
-          label="Planning"
-          icon="CalendarMonth"
-          isSelected={activeItem === "Planning"}
-          onClick={() => { setSelected("Planning"); }}
-        />
-        <BottomNavItem
-          label="MCE"
-          icon="FormEdit"
-          isSelected={activeItem === "MCE"}
-          onClick={() => { setSelected("MCE"); }}
-        />
-      </BottomNav>
-
-      {/* Tiroir bas = composant Drawer du DS : hauteur ajustée au contenu
-          (size="auto"), scrim cliquable, handle draggable (swipeable). */}
-      <Drawer
-        isOpen={sheetOpen}
-        onOpenChange={setSheetOpen}
-        placement="bottom"
-        size="auto"
-        swipeable
-        aria-label="Outils terrain"
-      >
-        <DrawerHeader onClose={closeSheet}>Outils terrain</DrawerHeader>
-        <DrawerBody>
-          {/* Contenu = pattern de story (2 grosses actions), pas un composant DS */}
-          <div className={css["sheetActions"]}>
-            {MCE_ACTIONS.map((action) => (
-              <MceActionRow
-                key={action.id}
-                icon={action.icon}
-                title={action.title}
-                description={action.description}
-                onPress={closeSheet}
-              />
-            ))}
-          </div>
-        </DrawerBody>
-      </Drawer>
-    </>
-  );
-}
-
-/**
- * Outil terrain MCE — **recette de référence**. Le bouton d'action central
- * `BottomNav.Action` ouvre un **tiroir bas** (`Drawer`) proposant deux actions
- * de création rapide : scanner un équipement, signaler une anomalie.
- *
- * - le tiroir est le **composant `Drawer`** du DS (`placement="bottom"`,
- *   `size="auto"` = hauteur ajustée au contenu, `swipeable` = handle) ; il gère
- *   le **scrim cliquable** et la fermeture par **drag du handle vers le bas** ;
- * - fermeture via le scrim, le handle (drag ≥ 40px) ou le bouton du header ;
- * - le **contenu** du tiroir (2 actions : icône + titre + description + chevron)
- *   est un **pattern de story**, pas un composant — le DS fournit le contenant ;
- * - **aucun inline style de structure** : toute la mise en page vit dans le CSS
- *   module de la story.
- *
- * **Règle de composition (obligatoire)** : le `BottomNav.Action` central doit
- * toujours être flanqué d'**exactement 2 items de chaque côté** (2 + Action + 2).
- */
-export const FieldToolMce: Story = {
-  name: "With FAB",
-  parameters: {
-    controls: { disable: true },
-    layout: "centered",
-    design: { type: "figma", url: figmaUrl("2524:18591") },
-  },
-  render: () => (
-    <PhoneScreen>
-      <FieldToolRecipe />
-    </PhoneScreen>
-  ),
-};
-
-export const FieldToolMceInteractions: Story = {
-  tags: ["!dev"],
-  parameters: { layout: "centered" },
-  render: () => (
-    <PhoneScreen>
-      <FieldToolRecipe />
-    </PhoneScreen>
-  ),
-  // Le FAB central (BottomNav.Action) ouvre le tiroir (aria-expanded → true) ;
-  // Échap le referme ; aucun item n'est sélectionné par défaut.
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
-
-    // Au repos : aucun item sélectionné ; un clic sur un item le sélectionne.
-    const tableauDeBord = canvas.getByRole("button", { name: "Tableau de bord" });
-    await expect(tableauDeBord).not.toHaveAttribute("aria-current");
-    await userEvent.click(tableauDeBord);
-    await expect(tableauDeBord).toHaveAttribute("aria-current", "page");
-
-    // Clic sur l'Action → ouvre le tiroir (Drawer) et passe aria-expanded=true.
-    const action = canvas.getByRole("button", { name: /outils terrain/i });
-    await expect(action).not.toHaveAttribute("aria-expanded");
-    await userEvent.click(action);
-    await expect(action).toHaveAttribute("aria-expanded", "true");
-    await expect(await body.findByRole("dialog")).toBeInTheDocument();
-
-    // Échap ferme le tiroir : aria-expanded retombe et le dialog disparaît.
-    await userEvent.keyboard("{Escape}");
-    await waitFor(() => expect(action).not.toHaveAttribute("aria-expanded"));
-    await waitFor(() =>
-      expect(body.queryByRole("dialog")).not.toBeInTheDocument(),
-    );
-  },
-};
-
-/**
- * **QuickActions — recette** (à côté de la recette tiroir ci-dessus, pour comparer). Le FAB
- * (`BottomNav.Action`) ouvre `QuickActions` : des **pastilles flottantes** au-dessus d'un
- * voile, une par action rapide (libellé à gauche, pastille d'icône à droite) — au lieu d'un
- * tiroir.
+ * **Recette FAB** — le bouton d'action central (`BottomNav.Action`) ouvre `QuickActions` : des
+ * **pastilles flottantes** au-dessus d'un voile, une par action rapide (libellé à gauche,
+ * pastille d'icône à droite).
  *
  * - **Vocabulaire réel** : les deux actions du FAB de l'agent en MCE (Link) — « Déclarer un
  *   évènement » et « Démarrer une ronde ». Aucune n'est `critical` : MCE n'a aucune notion de
  *   gravité ; ce sont l'icône et le verbe qui distinguent, pas la couleur (ADR 0002 — la
  *   couleur porte la nature, jamais l'identité) ;
  * - une rangée = un libellé et rien d'autre (pas de description : une action qui a besoin
- *   d'être expliquée est une entrée de **tiroir**, voir la recette ci-dessus) ;
+ *   d'être expliquée est une entrée de **tiroir** (`Drawer`)) ;
  * - pas de « Fermer » : le FAB pivote en croix et le voile est touchable ; Échap ferme
  *   aussi, et le focus revient sur le FAB ;
  * - 5 actions au plus.

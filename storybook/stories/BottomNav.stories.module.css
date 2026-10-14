@@ -44,54 +44,6 @@
   z-index: 2;
 }
 
-/* ---- Contenu du tiroir : liste des actions ---- */
-
-.sheetActions {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Ligne d'action (pastille icône + titre + description + chevron). */
-.actionRow {
-  display: flex;
-  align-items: center;
-  gap: var(--space200);
-  width: 100%;
-  padding: var(--space150);
-  background: none;
-  border: none;
-  border-radius: var(--radius150);
-  cursor: pointer;
-  text-align: left;
-}
-
-.actionRow:hover {
-  background-color: var(--background-neutral-subtlest-default);
-}
-
-.actionRow:focus-visible {
-  outline: 2px solid var(--border-focused);
-  outline-offset: -2px;
-}
-
-.actionRowIcon {
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  width: var(--size600);
-  height: var(--size600);
-  border-radius: var(--radius-round);
-  background-color: var(--background-brand-subtlest-default);
-}
-
-.actionRowText {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space025);
-  flex: 1;
-  min-width: 0;
-}
-
 /* ---- Écran mobile plein viewport (recette QuickActions) ----
    La couche flottante de `QuickActions` est plein écran (`position: fixed`) : pour que le
    voile, les pastilles et le FAB s'alignent, la story tourne dans un VRAI viewport mobile
