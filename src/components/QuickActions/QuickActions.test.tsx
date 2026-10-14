@@ -188,7 +188,8 @@ describe("QuickActions — garde-fou de composition (avertissement, jamais de bl
         onOpenChange={() => undefined}
       />,
     );
-    expect(screen.getAllByRole("button", { name: /^Action d$/ })).toHaveLength(4);
+    // Seules les rangées comptent (la couche ajoute aussi un bouton de fermeture masqué).
+    expect(screen.getAllByRole("button", { name: /^Action \d$/ })).toHaveLength(4);
   });
 
   it("should not warn with two distinct tones", () => {
