@@ -29,10 +29,14 @@ describe("getPageItems", () => {
 });
 
 describe("getPageItems — emplacements réduits", () => {
-  it("should slide a 3-page window around the current page", () => {
-    expect(getPageItems(1, 8, 3)).toEqual([1, 2, 3]);
-    expect(getPageItems(4, 8, 3)).toEqual([3, 4, 5]);
-    expect(getPageItems(8, 8, 3)).toEqual([6, 7, 8]);
+  it("should slide a 3-page window around the current page, with ellipses where pages are hidden", () => {
+    expect(getPageItems(1, 8, 3)).toEqual([1, 2, 3, "ellipsis-end"]);
+    expect(getPageItems(4, 8, 3)).toEqual(["ellipsis-start", 3, 4, 5, "ellipsis-end"]);
+    expect(getPageItems(8, 8, 3)).toEqual(["ellipsis-start", 6, 7, 8]);
+  });
+
+  it("should mask the middle pages with ellipses for a large volume: 1 … 4 5 6 … 12", () => {
+    expect(getPageItems(5, 12)).toEqual([1, "ellipsis-start", 4, 5, 6, "ellipsis-end", 12]);
   });
 
   it("should list every page when there are 3 or fewer, whatever the slots", () => {
@@ -48,8 +52,14 @@ describe("getPageItems — emplacements réduits", () => {
     expect(getPageItems(20, 20, 5)).toEqual([1, "ellipsis-start", 18, 19, 20]);
   });
 
-  it.each([3, 5, 7] as const)("should keep a stable slot count (%i) once there are more pages", (slots) => {
+  it.each([5, 7] as const)("should keep a stable slot count (%i) once there are more pages", (slots) => {
     for (let c = 1; c <= 30; c += 1) expect(getPageItems(c, 30, slots)).toHaveLength(slots);
+  });
+
+  it("should always show exactly 3 page numbers in the 3-slot window", () => {
+    for (let c = 1; c <= 30; c += 1) {
+      expect(getPageItems(c, 30, 3).filter((i) => typeof i === "number")).toHaveLength(3);
+    }
   });
 });
 

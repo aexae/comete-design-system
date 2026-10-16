@@ -22,8 +22,9 @@ export interface TablePagerProps {
    * Nombre d'emplacements de pages numérotées affichés (largeur stable) :
    * - `7` (défaut) — `1 2 3 4 5 … N`, `1 … c-1 c c+1 … N`, `1 … N-4 … N` ;
    * - `5` — `1 2 3 … N`, `1 … c … N`, `1 … N-2 N-1 N` ;
-   * - `3` — fenêtre glissante de trois pages autour de la courante (`1 2 3`, `3 4 5`…),
-   *   pour les barres étroites ; première / dernière via précédente / suivante.
+   * - `3` — fenêtre glissante de trois pages autour de la courante, bornée par des points de
+   *   suspension là où des pages sont masquées (`1 2 3 …`, `… 4 5 6 …`, `… 10 11 12`), pour
+   *   les barres étroites ; première / dernière via précédente / suivante.
    * @default 7
    */
   visiblePages?: 3 | 5 | 7;
@@ -46,15 +47,24 @@ export type TablePagerItem = number | "ellipsis-start" | "ellipsis-end";
 /**
  * Pages à afficher (`slots` emplacements au plus, largeur stable). `current` et le
  * résultat sont 1-based. Avec 7 emplacements : `1 2 3 4 5 … N` près du début,
- * `1 … N-4 … N` près de la fin, `1 … c-1 c c+1 … N` au milieu. Avec 3 : fenêtre
- * glissante de trois pages consécutives centrée sur la courante.
+ * `1 … N-4 … N` près de la fin, `1 … c-1 c c+1 … N` au milieu — les pages intermédiaires
+ * sont masquées par des points de suspension quand le volume est important. Avec 3 : fenêtre
+ * de trois pages consécutives centrée sur la courante, avec « … » du côté où des pages sont
+ * masquées.
  */
 export function getPageItems(current: number, total: number, slots: 3 | 5 | 7 = 7): TablePagerItem[] {
   if (total <= slots) return Array.from({ length: total }, (_, i) => i + 1);
 
   if (slots === 3) {
     const start = Math.min(Math.max(current - 1, 1), total - 2);
-    return [start, start + 1, start + 2];
+    const end = start + 2;
+    return [
+      ...(start > 1 ? (["ellipsis-start"] as const) : []),
+      start,
+      start + 1,
+      end,
+      ...(end < total ? (["ellipsis-end"] as const) : []),
+    ];
   }
 
   // 5 ou 7 : première et dernière toujours là, deux ellipses au plus.

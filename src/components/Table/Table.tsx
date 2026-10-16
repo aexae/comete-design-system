@@ -46,10 +46,8 @@ export type TableHideBelow = "sm" | "md" | "lg";
  * - `striped`  — bandes : une ligne sur deux teintée ;
  * - `hovered`  — la ligne survolée reçoit son fond de survol **et** un filet ; les autres
  *   lignes restent nues ;
- * - `elevated` — pas de filet : la ligne survolée se **surélève** (ombre légère,
- *   façon Gmail) et ressort du reste de la liste.
  */
-export type TableRowSeparation = "none" | "dividers" | "striped" | "hovered" | "elevated";
+export type TableRowSeparation = "none" | "dividers" | "striped" | "hovered";
 
 /**
  * État de tri d'une colonne :
@@ -98,7 +96,7 @@ export interface TableProps {
   responsive?: boolean;
   /**
    * Séparation visuelle des lignes du corps : `none` | `dividers` | `striped` |
-   * `hovered` | `elevated`. Pensé pour les grands écrans. Voir {@link TableRowSeparation}.
+   * `hovered`. Pensé pour les grands écrans. Voir {@link TableRowSeparation}.
    * @default "none"
    */
   rowSeparation?: TableRowSeparation;
@@ -924,7 +922,7 @@ export function TableHeaderCell({
           <span className={styles.headerLabel}>{children}</span>
           {isSortable && (
             <span className={styles.headerSortIcon} aria-hidden="true">
-              <Icon icon={sortIcon} size={16} />
+              <Icon icon={sortIcon} size={16} color="subtle" />
             </span>
           )}
         </span>

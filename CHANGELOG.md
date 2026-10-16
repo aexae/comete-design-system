@@ -38,11 +38,10 @@ entre versions alpha.
 - **`ListItem` / `ListItemButton` — `isUnread`** : item **non lu** — texte principal en
   medium et pastille (`Badge` information) après le contenu, en fin de ligne ; « Non lu »
   est annoncé aux lecteurs d'écran (masqué visuellement). Story « Unread » (séparateurs activés via `hasDividers`).
-- **`Table` — `rowSeparation`** (`none` | `dividers` | `striped` | `elevated`, défaut
+- **`Table` — `rowSeparation`** (`none` | `dividers` | `striped` | `hovered`, défaut
   `none`) : séparation visuelle des lignes pour les grands écrans — filet fin entre
-  chaque ligne, bandes une ligne sur deux, ou ligne survolée **surélevée** (ombre
-  légère, façon Gmail, avec un filet très discret entre les lignes). Filets en `box-shadow` sur les cellules : aucun
-  décalage au survol.
+  chaque ligne, bandes une ligne sur deux, ou fond de survol + filet uniquement sur la ligne
+  survolée. Filets en `box-shadow` sur les cellules : aucun décalage au survol.
 - **`TableRow` — `onToggleSelect`** : mode **sélectionnable**. Un clic sur la ligne
   coche la case ; un contrôle interactif dans la ligne (case, bouton, lien, ancre
   `href`/`onPress`) garde la **priorité**. `useTableSelection().getRowClickProps(key)`

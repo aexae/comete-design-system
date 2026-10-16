@@ -476,13 +476,11 @@ interface AgentTableCoreProps {
   onClearFilters?: () => void;
   /** Liste de section : « aucun résultat » en UNE ligne (variante compacte, §4). */
   compactEmpty?: boolean;
-  /** Export de la SÉLECTION (menu CSV / PDF de la barre de sélection). */
-  onExport: (format: ExportFormat, scope: ExportScope) => void;
   /**
-   * Toolbar **contextuelle** : quand des lignes sont sélectionnées, une barre « N agents
-   * sélectionnés sur T » avec le bouton « Exporter la sélection » remplace le compteur.
-   * Désactivée : seul le compteur reste (la sélection s'exporte alors via le menu « Exporter »
-   * de la toolbar de page). @default true
+   * Toolbar **contextuelle** : quand des lignes sont sélectionnées, une barre « N lignes
+   * sélectionnées sur T » remplace le compteur. Pas de bouton d'export dans la barre : la
+   * sélection s'exporte via le menu « Exporter » de la toolbar de page. Désactivée : seul le
+   * compteur reste. @default true
    */
   showContextToolbar?: boolean;
 }
@@ -504,7 +502,6 @@ function AgentTableCore({
   rowsPerPageOptions,
   onClearFilters,
   compactEmpty = false,
-  onExport,
   showContextToolbar = true,
 }: AgentTableCoreProps): React.ReactElement {
   const isData = state === "data";
@@ -531,13 +528,7 @@ function AgentTableCore({
           Masqués hors état « données ». */}
       {isData &&
         (showContextToolbar && sel.selectedCount > 0 ? (
-          <TableSelectionBar count={sel.selectedCount} total={totalCount}>
-            <ExportMenu
-              trigger={<Button appearance="subtle" iconBefore="Download">Exporter la sélection</Button>}
-              groups={[{ scope: "selection" }]}
-              onExport={onExport}
-            />
-          </TableSelectionBar>
+          <TableSelectionBar count={sel.selectedCount} total={totalCount} />
         ) : (
           <Text size="small" as="span" color="subtlest">{totalCount} agents</Text>
         ))}
@@ -666,7 +657,7 @@ export const Collection: Story = {
     // États de la liste : données, sélection active (barre de sélection), et les
     // quatre placeholders du Table (chargement / vide / aucun résultat / erreur).
     state: { name: "État", control: "inline-radio", options: ["data", "selection", "loading", "empty", "noResults", "error"] },
-    // Toolbar contextuelle : sélectionne une ligne → barre « N agents sélectionnés » + « Exporter la sélection ».
+    // Toolbar contextuelle : sélectionne une ligne → barre « N lignes sélectionnées sur T ».
     showContextToolbar: { name: "Toolbar contextuelle (showContextToolbar)", control: "boolean" },
   },
   args: { role: "manager", state: "data", showContextToolbar: true },
@@ -825,7 +816,6 @@ export const Collection: Story = {
             onRowsPerPageChange={(n) => { setRowsPerPage(n); setPage(0); }}
             rowsPerPageOptions={[25, 50, 100]}
             onClearFilters={reset}
-            onExport={handleExport}
             showContextToolbar={showContextToolbar}
           />
         </Page.Body>

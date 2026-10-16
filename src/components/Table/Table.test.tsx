@@ -549,14 +549,34 @@ describe("TableHeaderCell — icône de tri subtle (garde CSS)", () => {
     .map(([, , body]) => (body ?? "").match(/(?:^|;|\s)color:\s*([^;]+);/)?.[1]?.trim())
     .filter(Boolean);
 
-  it("should colour the sort icon with --icon-subtle only, in every state", () => {
+  it("should colour the sort icon wrapper with --icon-subtle only, in every state", () => {
     expect(colors.length).toBeGreaterThan(0);
     for (const c of colors) expect(c).toBe("var(--icon-subtle)");
+  });
+
+  it("should render the sort <Icon> itself in the subtle colour (not the default one)", () => {
+    // Le wrapper colore en `--icon-subtle`, mais le glyphe a sa propre couleur : il doit
+    // être demandé en « subtle », sinon il reste en `--icon-default` (sombre).
+    for (const dir of ["default", "ascending", "descending"] as const) {
+      const { container, unmount } = render(
+        <Table aria-label="x">
+          <TableHead>
+            <TableRow>
+              <TableHeaderCell isSortable sortDirection={dir}>Name</TableHeaderCell>
+            </TableRow>
+          </TableHead>
+        </Table>,
+      );
+      const svg = container.querySelector("svg");
+      expect(svg?.getAttribute("class") ?? "").toMatch(/subtle/);
+      expect(svg?.getAttribute("class") ?? "").not.toMatch(/--default/);
+      unmount();
+    }
   });
 });
 
 describe("Table — rowSeparation (grands écrans)", () => {
-  const renderTable = (rowSeparation?: "none" | "dividers" | "striped" | "hovered" | "elevated") =>
+  const renderTable = (rowSeparation?: "none" | "dividers" | "striped" | "hovered") =>
     render(
       <Table aria-label="x" rowSeparation={rowSeparation}>
         <TableBody>
@@ -570,7 +590,7 @@ describe("Table — rowSeparation (grands écrans)", () => {
     expect(screen.getByRole("table")).not.toHaveAttribute("data-row-separation");
   });
 
-  it.each(["dividers", "striped", "hovered", "elevated"] as const)(
+  it.each(["dividers", "striped", "hovered"] as const)(
     "should expose data-row-separation=%s",
     (mode) => {
       renderTable(mode);
