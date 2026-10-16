@@ -682,13 +682,13 @@ export const RowAction: Story = {
 
 /**
  * WithPagination — 300 lignes (12 pages à 25) découpées par `TablePagination` ; les pages
- * intermédiaires sont masquées par des points de suspension (`1 … 4 5 6 … 12`). Le parent
+ * intermédiaires sont masquées par des points de suspension, 4 numéros au plus (`1 … 5 6 … 12`). Le parent
  * garde l'état `page` / `rowsPerPage` et slice le dataset lui-même.
  */
 export const Pagination: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("4765:3311") } },
   render: function WithPaginationStory(args) {
-    // Page 5 sur 12 à l'ouverture : « 1 … 4 5 6 … 12 » (les pages intermédiaires sont masquées).
+    // Page 5 sur 12 à l'ouverture : « 1 … 5 6 … 12 » (4 numéros au plus, pages intermédiaires masquées).
     const [page, setPage] = useState(4);
     const [rowsPerPage, setRowsPerPage] = useState(25);
 
@@ -770,8 +770,8 @@ export const PagerInteractions: Story = {
     await userEvent.click(canvas.getByRole("button", { name: "Page suivante" }));
     await expect(current()).toHaveAccessibleName("Page 2");
 
-    await userEvent.click(canvas.getByRole("button", { name: "Page 4" }));
-    await expect(current()).toHaveAccessibleName("Page 4");
+    await userEvent.click(canvas.getByRole("button", { name: "Page 3" }));
+    await expect(current()).toHaveAccessibleName("Page 3");
 
     await userEvent.click(canvas.getByRole("button", { name: "Page 10" }));
     await expect(current()).toHaveAccessibleName("Page 10");

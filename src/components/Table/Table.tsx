@@ -364,9 +364,9 @@ export interface TablePaginationProps {
   onRowsPerPageChange?: (nextRowsPerPage: number) => void;
   /**
    * Nombre d'emplacements de pages numérotées (`3` | `5` | `7`) — voir
-   * {@link TablePagerProps.visiblePages}. `3` pour une barre étroite. @default 7
+   * {@link TablePagerProps.visiblePages}. `4` : jamais plus de 4 numéros (défaut). @default 4
    */
-  visiblePages?: 3 | 5 | 7;
+  visiblePages?: 3 | 4 | 5 | 7;
   /** Libellé du sélecteur. @default "Résultats par page :" */
   labelRowsPerPage?: string;
   /** Fonction rendant le libellé « N à M sur Total ». */
