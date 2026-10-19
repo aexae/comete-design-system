@@ -118,15 +118,17 @@
   background-color: var(--background-neutral-subtlest-default);
 }
 
-/* Survol marqué (`hovered`) : la ligne survolée reçoit un fond SUBTLEST (le même que les bandes
-   de `striped`) ET un filet — les autres lignes restent nues. Filet en `box-shadow` sur les
-   cellules : aucun décalage. */
+/* Survol marqué (`hovered`) : la ligne survolée reçoit un fond SUBTLEST (état survolé) ET un
+   filet au-dessus et en dessous — les autres lignes restent nues. Filets en `box-shadow` sur
+   les cellules : aucun décalage. */
 :where(.table[data-row-separation="hovered"] .body) .row:hover {
-  background-color: var(--background-neutral-subtlest-default);
+  background-color: var(--background-neutral-subtlest-hovered);
 }
 
 :where(.table[data-row-separation="hovered"] .body) .row:hover .cell {
-  box-shadow: inset 0 calc(-1 * var(--size0125)) 0 var(--border-default);
+  box-shadow:
+    inset 0 var(--size0125) 0 var(--border-default),
+    inset 0 calc(-1 * var(--size0125)) 0 var(--border-default);
 }
 
 /* Row cliquable → cursor pointer + hover subtil */
