@@ -681,13 +681,15 @@ export const RowAction: Story = {
 // Grands jeux de données — pagination, virtualisation, séparation des lignes
 
 /**
- * WithPagination — 200 lignes découpées par `TablePagination`. Le parent
+ * WithPagination — 300 lignes (12 pages à 25) découpées par `TablePagination` ; les pages
+ * intermédiaires sont masquées par des points de suspension, 4 numéros au plus (`1 … 5 6 … 12`). Le parent
  * garde l'état `page` / `rowsPerPage` et slice le dataset lui-même.
  */
 export const Pagination: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("4765:3311") } },
   render: function WithPaginationStory(args) {
-    const [page, setPage] = useState(0);
+    // Page 5 sur 12 à l'ouverture : « 1 … 5 6 … 12 » (4 numéros au plus, pages intermédiaires masquées).
+    const [page, setPage] = useState(4);
     const [rowsPerPage, setRowsPerPage] = useState(25);
 
     const paged = useMemo(
@@ -726,7 +728,6 @@ export const Pagination: Story = {
           page={page}
           rowsPerPage={rowsPerPage}
           rowsPerPageOptions={[25, 50, 100]}
-          visiblePages={3}
           onPageChange={setPage}
           onRowsPerPageChange={(n) => {
             setRowsPerPage(n);
@@ -769,8 +770,8 @@ export const PagerInteractions: Story = {
     await userEvent.click(canvas.getByRole("button", { name: "Page suivante" }));
     await expect(current()).toHaveAccessibleName("Page 2");
 
-    await userEvent.click(canvas.getByRole("button", { name: "Page 4" }));
-    await expect(current()).toHaveAccessibleName("Page 4");
+    await userEvent.click(canvas.getByRole("button", { name: "Page 3" }));
+    await expect(current()).toHaveAccessibleName("Page 3");
 
     await userEvent.click(canvas.getByRole("button", { name: "Page 10" }));
     await expect(current()).toHaveAccessibleName("Page 10");
@@ -792,7 +793,7 @@ interface LargeRow {
 const USERS = ["John Doe", "Jane Smith", "Alice Chen", "Bob Martin", "Sophie Claire"];
 const STATUSES: Row["status"][] = ["Actif", "En attente", "Suspendu"];
 
-const LARGE_DATASET: LargeRow[] = Array.from({ length: 200 }, (_, i) => ({
+const LARGE_DATASET: LargeRow[] = Array.from({ length: 300 }, (_, i) => ({
   id: i + 1,
   title: `Projet ${String(i + 1).padStart(3, "0")}`,
   status: STATUSES[i % STATUSES.length],
@@ -847,17 +848,17 @@ export const Virtualized: Story = {
 /**
  * **Séparation des lignes (grands écrans)** — prop `rowSeparation` : sur un grand
  * écran, de longues lignes sans repère sont difficiles à suivre. Modes : `none`
- * (défaut), `dividers` (filet fin), `striped` (bandes) et `elevated` — **sans
- * filet** : la ligne survolée se surélève (ombre légère) à la manière de Gmail.
+ * (défaut), `dividers` (filet fin), `striped` (bandes), `hovered` (fond de survol + filet
+ * **uniquement sur la ligne survolée**).
  * Ici, 60 lignes pour juger l'effet sur une vraie liste : survole-les.
  */
 export const RowSeparation: Story = {
   name: "Row separation",
   parameters: { layout: "padded" },
   argTypes: {
-    rowSeparation: { control: "inline-radio", options: ["none", "dividers", "striped", "elevated"] },
+    rowSeparation: { control: "inline-radio", options: ["none", "dividers", "striped", "hovered"] },
   },
-  args: { rowSeparation: "elevated" },
+  args: { rowSeparation: "hovered" },
   render: (args) => (
     <div style={{ maxWidth: 960 }}>
       <Table {...args} aria-label="Séparation des lignes" maxHeight={560} stickyHeader>

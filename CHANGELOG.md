@@ -11,6 +11,8 @@ entre versions alpha.
 
 ### Ajouté
 
+- **`Table` — `rowSeparation="hovered"`** : la ligne survolée reçoit son fond de survol **et** un
+  filet ; les autres lignes restent nues.
 - **`QuickActions`** (nouveau composant) : menu d'actions rapides du FAB (`BottomNav.Action`) —
   pattern « speed dial », des **pastilles flottantes** au-dessus d'un voile (libellé à
   gauche, pastille d'icône circulaire à droite). Rend **uniquement la couche flottante** (le
@@ -36,11 +38,10 @@ entre versions alpha.
 - **`ListItem` / `ListItemButton` — `isUnread`** : item **non lu** — texte principal en
   medium et pastille (`Badge` information) après le contenu, en fin de ligne ; « Non lu »
   est annoncé aux lecteurs d'écran (masqué visuellement). Story « Unread » (séparateurs activés via `hasDividers`).
-- **`Table` — `rowSeparation`** (`none` | `dividers` | `striped` | `elevated`, défaut
+- **`Table` — `rowSeparation`** (`none` | `dividers` | `striped` | `hovered`, défaut
   `none`) : séparation visuelle des lignes pour les grands écrans — filet fin entre
-  chaque ligne, bandes une ligne sur deux, ou ligne survolée **surélevée** (ombre
-  légère, façon Gmail, avec un filet très discret entre les lignes). Filets en `box-shadow` sur les cellules : aucun
-  décalage au survol.
+  chaque ligne, bandes une ligne sur deux, ou fond de survol + filet uniquement sur la ligne
+  survolée. Filets en `box-shadow` sur les cellules : aucun décalage au survol.
 - **`TableRow` — `onToggleSelect`** : mode **sélectionnable**. Un clic sur la ligne
   coche la case ; un contrôle interactif dans la ligne (case, bouton, lien, ancre
   `href`/`onPress`) garde la **priorité**. `useTableSelection().getRowClickProps(key)`
@@ -74,12 +75,14 @@ entre versions alpha.
   au plus, largeur stable), page courante pleine (`aria-current="page"`), précédente /
   suivante désactivées aux extrémités, taille selon la densité (28 / 32 / 40 px). Props :
   `page` (0-indexée), `pageCount`, `onPageChange`, `density`, `aria-label`.
-  `visiblePages` (`3` | `5` | `7`, défaut `7`) réduit le nombre d'emplacements de pages
-  — `3` = fenêtre glissante de trois pages, pour les barres étroites (relayé par
-  `TablePagination`). `TablePagination` le compose ; `Table.Pagination` est aussi exposé.
+  Jamais plus de **4 numéros** (`visiblePages="4"`, défaut : `1 2 3 … 12`, `1 … 5 6 … 12`,
+  `1 … 10 11 12`) — les pages intermédiaires sont masquées par des points de suspension ;
+  `3` | `5` | `7` restent disponibles (relayé par `TablePagination`). `TablePagination` le compose ; `Table.Pagination` est aussi exposé.
 
 ### Modifié
 
+- **`TableHeaderCell` triable — icône de tri subtle** : la flèche utilise `--icon-subtle` dans tous
+  les états (aperçu au survol, tri actif).
 - **`TableHeaderCell` triable — icône de tri** : plus de double flèche « expand »
   (`UnfoldMore`). Au survol d'une colonne non triée, la **flèche haut** apparaît
   atténuée (aperçu du tri croissant) ; un tri actif garde sa flèche pleine.

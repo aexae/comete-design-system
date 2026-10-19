@@ -231,6 +231,9 @@ function MiniTableRow({ cells, isHeader }: { cells: React.ReactNode[]; isHeader?
 // -----------------------------------------------------------------------
 // 1. COLLECTION
 
+const EXTRA_LASTNAMES = ["LEROY", "ROUX", "DAVID", "BERTRAND", "MOREL", "FOURNIER", "GIRARD", "BONNET", "DUPUIS", "LAMBERT", "FONTAINE", "ROUSSEAU", "VINCENT", "MULLER", "LEFEVRE", "FAURE", "ANDRE", "MERCIER", "BLANC", "GUERIN"];
+const EXTRA_FIRSTNAMES = ["Paul", "Julie", "Marc", "Emma", "Hugo", "Léa", "Théo", "Sarah", "Nicolas", "Inès", "Antoine", "Chloé", "Maxime", "Camille", "Louis"];
+
 const AGENTS = [
   { initials: "DM", name: "DUPONT Marie", mat: "150", contrat: "151.67", heures: "151.67", delta: "0.00", status: "success" as const },
   { initials: "MJ", name: "MARTIN Jean", mat: "A752", contrat: "", heures: "", delta: "", status: "neutral" as const },
@@ -239,6 +242,22 @@ const AGENTS = [
   { initials: "RC", name: "ROBERT Camille", mat: "88", contrat: "", heures: "", delta: "", status: "neutral" as const },
   { initials: "RA", name: "RICHARD Alain", mat: "274", contrat: "151.67", heures: "160.00", delta: "+8.33", status: "critical" as const },
   { initials: "MC", name: "MOREAU Claire", mat: "119", contrat: "151.67", heures: "151.67", delta: "0.00", status: "success" as const },
+  // Données de démo générées (déterministes) : de quoi paginer (65 agents → 3 pages à 25).
+  ...Array.from({ length: 58 }, (_, i) => {
+    const last = EXTRA_LASTNAMES[i % EXTRA_LASTNAMES.length] ?? "MARTIN";
+    const first = EXTRA_FIRSTNAMES[(i * 7) % EXTRA_FIRSTNAMES.length] ?? "Paul";
+    const unplanned = i % 5 === 0;
+    const late = i % 3 === 0;
+    return {
+      initials: `${last[0]}${first[0]}`,
+      name: `${last} ${first}`,
+      mat: String(300 + i),
+      contrat: unplanned ? "" : "151.67",
+      heures: unplanned ? "" : late ? "140.00" : "151.67",
+      delta: unplanned ? "" : late ? "-11.67" : "0.00",
+      status: unplanned ? ("neutral" as const) : late ? ("critical" as const) : ("success" as const),
+    };
+  }),
 ];
 
 /**
@@ -457,8 +476,13 @@ interface AgentTableCoreProps {
   onClearFilters?: () => void;
   /** Liste de section : « aucun résultat » en UNE ligne (variante compacte, §4). */
   compactEmpty?: boolean;
-  /** Export de la SÉLECTION (menu CSV / PDF de la barre de sélection). */
-  onExport: (format: ExportFormat, scope: ExportScope) => void;
+  /**
+   * Toolbar **contextuelle** : quand des lignes sont sélectionnées, une barre « N lignes
+   * sélectionnées sur T » remplace le compteur. Pas de bouton d'export dans la barre : la
+   * sélection s'exporte via le menu « Exporter » de la toolbar de page. Désactivée : seul le
+   * compteur reste. @default true
+   */
+  showContextToolbar?: boolean;
 }
 
 function AgentTableCore({
@@ -478,7 +502,7 @@ function AgentTableCore({
   rowsPerPageOptions,
   onClearFilters,
   compactEmpty = false,
-  onExport,
+  showContextToolbar = true,
 }: AgentTableCoreProps): React.ReactElement {
   const isData = state === "data";
   // Repli téléphone : ce que la liste compacte montre dérive des MÊMES colonnes
@@ -503,14 +527,8 @@ function AgentTableCore({
       {/* Sélection active → barre contextuelle ; sinon le compteur de résultats.
           Masqués hors état « données ». */}
       {isData &&
-        (sel.selectedCount > 0 ? (
-          <TableSelectionBar count={sel.selectedCount} total={totalCount}>
-            <ExportMenu
-              trigger={<Button appearance="subtle" iconBefore="Download">Exporter la sélection</Button>}
-              groups={[{ scope: "selection" }]}
-              onExport={onExport}
-            />
-          </TableSelectionBar>
+        (showContextToolbar && sel.selectedCount > 0 ? (
+          <TableSelectionBar count={sel.selectedCount} total={totalCount} />
         ) : (
           <Text size="small" as="span" color="subtlest">{totalCount} agents</Text>
         ))}
@@ -623,7 +641,7 @@ function AgentTableCore({
  * **« Filtres »** option B dans le slot `filters` : popover deux volets / feuille
  * en compact — fermé par défaut — + **« Filtres enregistrés »**), tags des
  * critères actifs sous la barre (masqués en compact), tri, **pagination façon
- * recette « With pagination »** (lignes par page 5/10/25). Table **sélectionnable**
+ * recette « With pagination »** (résultats par page 25/50/100). Table **sélectionnable**
  * (recette « All-in-one ») : le clic de ligne coche la case, le bouton d'actions
  * de la ligne garde la **priorité** sur le clic.
  * Colonnes et actions **déclaratives par rôle** (`roles`). **Une facette est
@@ -639,17 +657,20 @@ export const Collection: Story = {
     // États de la liste : données, sélection active (barre de sélection), et les
     // quatre placeholders du Table (chargement / vide / aucun résultat / erreur).
     state: { name: "État", control: "inline-radio", options: ["data", "selection", "loading", "empty", "noResults", "error"] },
+    // Toolbar contextuelle : sélectionne une ligne → barre « N lignes sélectionnées sur T ».
+    showContextToolbar: { name: "Toolbar contextuelle (showContextToolbar)", control: "boolean" },
   },
-  args: { role: "manager", state: "data" },
+  args: { role: "manager", state: "data", showContextToolbar: true },
   render: function CollectionStory(args) {
     const role = (args as { role?: Role }).role ?? "manager";
     const stateArg = (args as { state?: string }).state ?? "data";
+    const showContextToolbar = (args as { showContextToolbar?: boolean }).showContextToolbar ?? true;
     const [f, setF] = useState<Filters>(emptyFilters);
     const { views, save, remove } = useSavedViews();
     const [sort, setSort] = useState<{ col: string; dir: SortDir }>({ col: "agent", dir: "default" });
     const [page, setPage] = useState(0);
     // Pagination façon story Table « With pagination » : lignes/page pilotables.
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsPerPage, setRowsPerPage] = useState(25);
     // Sélection CONTRÔLÉE : l'état « selection » pré-sélectionne deux lignes pour
     // illustrer la barre de sélection (TableSelectionBar) ; les clics dans la
     // table restent interactifs via `onSelectionChange`.
@@ -793,9 +814,9 @@ export const Collection: Story = {
             onPageChange={setPage}
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={(n) => { setRowsPerPage(n); setPage(0); }}
-            rowsPerPageOptions={[5, 25, 50]}
+            rowsPerPageOptions={[25, 50, 100]}
             onClearFilters={reset}
-            onExport={handleExport}
+            showContextToolbar={showContextToolbar}
           />
         </Page.Body>
         {exportNotice ? (

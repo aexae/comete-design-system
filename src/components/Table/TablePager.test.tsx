@@ -3,36 +3,74 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TablePager, getPageItems } from "./TablePager";
 
-describe("getPageItems", () => {
-  it("should list every page when there are 7 or fewer", () => {
+describe("getPageItems — 4 numéros maximum (défaut)", () => {
+  it("should list every page when there are 4 or fewer", () => {
     expect(getPageItems(1, 1)).toEqual([1]);
-    expect(getPageItems(3, 7)).toEqual([1, 2, 3, 4, 5, 6, 7]);
+    expect(getPageItems(2, 4)).toEqual([1, 2, 3, 4]);
+  });
+
+  it("should collapse the end near the start: 1 2 3 … N", () => {
+    expect(getPageItems(1, 12)).toEqual([1, 2, 3, "ellipsis-end", 12]);
+    expect(getPageItems(3, 12)).toEqual([1, 2, 3, "ellipsis-end", 12]);
+  });
+
+  it("should mask the middle pages in the middle: 1 … c c+1 … N", () => {
+    expect(getPageItems(5, 12)).toEqual([1, "ellipsis-start", 5, 6, "ellipsis-end", 12]);
+    expect(getPageItems(4, 12)).toEqual([1, "ellipsis-start", 4, 5, "ellipsis-end", 12]);
+  });
+
+  it("should collapse the start near the end: 1 … N-2 N-1 N", () => {
+    expect(getPageItems(12, 12)).toEqual([1, "ellipsis-start", 10, 11, 12]);
+    expect(getPageItems(10, 12)).toEqual([1, "ellipsis-start", 10, 11, 12]);
+  });
+
+  it("should never show more than 4 page numbers, whatever the volume", () => {
+    for (const total of [5, 6, 8, 12, 30, 200]) {
+      for (let c = 1; c <= total; c += 1) {
+        const numbers = getPageItems(c, total).filter((i) => typeof i === "number");
+        expect(numbers.length).toBeLessThanOrEqual(4);
+        expect(numbers).toContain(c); // la page courante reste visible
+        expect(numbers).toContain(1);
+        expect(numbers).toContain(total);
+      }
+    }
+  });
+});
+
+describe("getPageItems — 7 emplacements", () => {
+  it("should list every page when there are 7 or fewer", () => {
+    expect(getPageItems(1, 1, 7)).toEqual([1]);
+    expect(getPageItems(3, 7, 7)).toEqual([1, 2, 3, 4, 5, 6, 7]);
   });
 
   it("should collapse the end near the start: 1 2 3 4 5 … N", () => {
-    expect(getPageItems(1, 20)).toEqual([1, 2, 3, 4, 5, "ellipsis-end", 20]);
-    expect(getPageItems(4, 20)).toEqual([1, 2, 3, 4, 5, "ellipsis-end", 20]);
+    expect(getPageItems(1, 20, 7)).toEqual([1, 2, 3, 4, 5, "ellipsis-end", 20]);
+    expect(getPageItems(4, 20, 7)).toEqual([1, 2, 3, 4, 5, "ellipsis-end", 20]);
   });
 
   it("should collapse both sides in the middle: 1 … c-1 c c+1 … N", () => {
-    expect(getPageItems(10, 20)).toEqual([1, "ellipsis-start", 9, 10, 11, "ellipsis-end", 20]);
+    expect(getPageItems(10, 20, 7)).toEqual([1, "ellipsis-start", 9, 10, 11, "ellipsis-end", 20]);
   });
 
   it("should collapse the start near the end: 1 … N-4 … N", () => {
-    expect(getPageItems(20, 20)).toEqual([1, "ellipsis-start", 16, 17, 18, 19, 20]);
-    expect(getPageItems(17, 20)).toEqual([1, "ellipsis-start", 16, 17, 18, 19, 20]);
+    expect(getPageItems(20, 20, 7)).toEqual([1, "ellipsis-start", 16, 17, 18, 19, 20]);
+    expect(getPageItems(17, 20, 7)).toEqual([1, "ellipsis-start", 16, 17, 18, 19, 20]);
   });
 
   it("should always return 7 slots once there are more than 7 pages (stable width)", () => {
-    for (let c = 1; c <= 30; c += 1) expect(getPageItems(c, 30)).toHaveLength(7);
+    for (let c = 1; c <= 30; c += 1) expect(getPageItems(c, 30, 7)).toHaveLength(7);
   });
 });
 
 describe("getPageItems — emplacements réduits", () => {
-  it("should slide a 3-page window around the current page", () => {
-    expect(getPageItems(1, 8, 3)).toEqual([1, 2, 3]);
-    expect(getPageItems(4, 8, 3)).toEqual([3, 4, 5]);
-    expect(getPageItems(8, 8, 3)).toEqual([6, 7, 8]);
+  it("should slide a 3-page window around the current page, with ellipses where pages are hidden", () => {
+    expect(getPageItems(1, 8, 3)).toEqual([1, 2, 3, "ellipsis-end"]);
+    expect(getPageItems(4, 8, 3)).toEqual(["ellipsis-start", 3, 4, 5, "ellipsis-end"]);
+    expect(getPageItems(8, 8, 3)).toEqual(["ellipsis-start", 6, 7, 8]);
+  });
+
+  it("should mask the middle pages with ellipses for a large volume: 1 … 4 5 6 … 12", () => {
+    expect(getPageItems(5, 12, 7)).toEqual([1, "ellipsis-start", 4, 5, 6, "ellipsis-end", 12]);
   });
 
   it("should list every page when there are 3 or fewer, whatever the slots", () => {
@@ -48,8 +86,14 @@ describe("getPageItems — emplacements réduits", () => {
     expect(getPageItems(20, 20, 5)).toEqual([1, "ellipsis-start", 18, 19, 20]);
   });
 
-  it.each([3, 5, 7] as const)("should keep a stable slot count (%i) once there are more pages", (slots) => {
+  it.each([5, 7] as const)("should keep a stable slot count (%i) once there are more pages", (slots) => {
     for (let c = 1; c <= 30; c += 1) expect(getPageItems(c, 30, slots)).toHaveLength(slots);
+  });
+
+  it("should always show exactly 3 page numbers in the 3-slot window", () => {
+    for (let c = 1; c <= 30; c += 1) {
+      expect(getPageItems(c, 30, 3).filter((i) => typeof i === "number")).toHaveLength(3);
+    }
   });
 });
 
