@@ -1,6 +1,7 @@
 // Tests unitaires pour le composant List et ses sous-composants
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { Avatar } from "../Avatar";
 import {
   List,
   ListHead,
@@ -96,6 +97,23 @@ describe("List", () => {
     const button = screen.getByRole("button");
     expect(button).toHaveAttribute("data-unread", "true");
     expect(button).toHaveAccessibleName(/Non lu/);
+  });
+
+  it("should expose the Avatar size on ListItemAvatar (data-size, « medium » by default)", () => {
+    render(
+      <List aria-label="contacts" hasDividers>
+        <ListItem>
+          <ListItemAvatar><Avatar size="large" initials="AB" /></ListItemAvatar>
+          <ListItemText primary="Large" />
+        </ListItem>
+        <ListItem>
+          <ListItemAvatar><Avatar initials="CD" /></ListItemAvatar>
+          <ListItemText primary="Défaut" />
+        </ListItem>
+      </List>,
+    );
+    const slots = document.querySelectorAll("[data-size]");
+    expect([...slots].map((s) => s.getAttribute("data-size"))).toEqual(["large", "medium"]);
   });
 
   it("should apply data-gap when gap is set", () => {

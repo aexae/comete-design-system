@@ -46,10 +46,10 @@ export interface ListProps {
    */
   isBordered?: boolean;
   /**
-   * Affiche un **séparateur subtle** (filet fin `--border-subtle`) entre chaque item
-   * — y compris entre la fin d'une section et le `ListHead` suivant. Peint en
-   * `box-shadow` inset : aucun décalage de la mise en page. Pas de filet après le
-   * dernier élément de la liste. À préférer à `gap` quand les lignes sont
+   * Affiche un **séparateur subtle** (filet fin `--border-subtle`) entre chaque item. Le
+   * filet est **inset** : il démarre à l'aplomb du texte et ne passe **jamais sous l'icône ni
+   * l'avatar de gauche** ; il redevient pleine largeur avant un `ListHead` (séparateur de
+   * section). Aucun décalage de la mise en page. Pas de filet après le dernier élément. À préférer à `gap` quand les lignes sont
    * jointives et nombreuses ; `gap` sépare par l'air, sans filet.
    * @default false
    */
@@ -126,8 +126,8 @@ export interface ListItemProps {
   isDisabled?: boolean;
   /**
    * Marque l'item comme **non lu** (notification, message, évènement à traiter) :
-   * texte principal en medium + pastille (`Badge` information) **après** le contenu,
-   * en fin de ligne. L'état est aussi annoncé aux lecteurs d'écran (« Non lu »,
+   * texte principal **et** sous-texte en semibold (600) + pastille (`Badge` information)
+   * **après** le contenu, en fin de ligne. L'état est aussi annoncé aux lecteurs d'écran (« Non lu »,
    * masqué visuellement). @default false
    */
   isUnread?: boolean;
@@ -145,8 +145,8 @@ export interface ListItemButtonProps
   /** Marque l'item comme sélectionné (état visuel + `aria-current`). */
   isSelected?: boolean;
   /**
-   * Marque l'item comme **non lu** : texte principal en medium + pastille (`Badge`
-   * information) après le contenu, en fin de ligne ; annoncé aux lecteurs d'écran
+   * Marque l'item comme **non lu** : texte principal et sous-texte en semibold (600) +
+   * pastille (`Badge` information) après le contenu, en fin de ligne ; annoncé aux lecteurs d'écran
    * (« Non lu », masqué visuellement).
    * @default false
    */
@@ -609,10 +609,19 @@ export function ListItemAvatar({
   className,
   style,
 }: ListItemAvatarProps): ReactElement {
+  // La taille de l'`<Avatar>` enfant (défaut « medium ») est exposée en `data-size` : le CSS
+  // en déduit le retrait des séparateurs (`hasDividers`), qui ne passent pas sous l'avatar.
+  const avatarSize =
+    isValidElement(children) && typeof (children.props as { size?: unknown }).size === "string"
+      ? (children.props as { size: string }).size
+      : isValidElement(children)
+        ? "medium"
+        : undefined;
   return (
     <span
       className={[styles.itemAvatar, className].filter(Boolean).join(" ")}
       style={style}
+      data-size={avatarSize}
     >
       {children}
     </span>

@@ -344,7 +344,7 @@ export const Interactive: Story = {
 };
 
 /**
- * **Non lu** — `isUnread` sur `ListItem` / `ListItemButton` : texte principal en medium +
+ * **Non lu** — `isUnread` sur `ListItem` / `ListItemButton` : texte principal et sous-texte en semibold (600) +
  * pastille (`Badge` information) après le contenu, en fin de ligne, et « Non lu » annoncé
  * aux lecteurs d'écran (masqué visuellement). Ici une boîte de notifications : ouvrir un message le marque lu.
  * Les séparateurs subtle (`hasDividers`) aident à suivre une liste dense.
