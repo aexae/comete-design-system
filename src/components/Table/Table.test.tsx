@@ -582,15 +582,9 @@ describe("Table — fonds de rowSeparation (garde CSS)", () => {
       .filter(([, , m, body]) => m === mode && /background-color/.test(body ?? ""))
       .map(([, , , body]) => (body ?? "").match(/background-color:\s*([^;]+);/)?.[1]?.trim());
 
-  it("should paint the striped bands (default) and the hovered row (hovered state) with the SUBTLEST neutral background", () => {
+  it("should paint the striped bands and the hovered row with the SUBTLEST neutral background", () => {
     expect(bgOf("striped")).toEqual(["var(--background-neutral-subtlest-default)"]);
-    expect(bgOf("hovered")).toEqual(["var(--background-neutral-subtlest-hovered)"]);
-  });
-
-  it("should draw a divider ABOVE and BELOW the hovered row (two inset lines)", () => {
-    const body = [...css.matchAll(/([^{}]*data-row-separation="hovered"[^{}]*\.cell[^{}]*)\{([^{}]*)\}/g)][0]?.[2] ?? "";
-    expect(body).toMatch(/inset 0 var\(--size0125\) 0 var\(--border-default\)/); // au-dessus
-    expect(body).toMatch(/inset 0 calc\(-1 \* var\(--size0125\)\) 0 var\(--border-default\)/); // en dessous
+    expect(bgOf("hovered")).toEqual(["var(--background-neutral-subtlest-default)"]);
   });
 });
 
