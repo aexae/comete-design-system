@@ -575,6 +575,19 @@ describe("TableHeaderCell — icône de tri subtle (garde CSS)", () => {
   });
 });
 
+describe("Table — fonds de rowSeparation (garde CSS)", () => {
+  const css = readFileSync("src/components/Table/Table.module.css", "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+  const bgOf = (mode: string) =>
+    [...css.matchAll(/([^{}]*data-row-separation="([^"]+)"[^{}]*)\{([^{}]*)\}/g)]
+      .filter(([, , m, body]) => m === mode && /background-color/.test(body ?? ""))
+      .map(([, , , body]) => (body ?? "").match(/background-color:\s*([^;]+);/)?.[1]?.trim());
+
+  it("should paint the striped bands and the hovered row with the SUBTLEST neutral background", () => {
+    expect(bgOf("striped")).toEqual(["var(--background-neutral-subtlest-default)"]);
+    expect(bgOf("hovered")).toEqual(["var(--background-neutral-subtlest-default)"]);
+  });
+});
+
 describe("Table — rowSeparation (grands écrans)", () => {
   const renderTable = (rowSeparation?: "none" | "dividers" | "striped" | "hovered") =>
     render(
