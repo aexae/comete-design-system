@@ -40,13 +40,77 @@
   overflow: hidden;
 }
 
-/* Séparateurs subtle (prop `hasDividers`) : filet fin sous chaque item, en
-   `box-shadow` inset (aucun décalage) — y compris entre la fin d'une section et
-   le `ListHead` suivant. Pas de filet après le dernier élément. `:is()` cible
-   l'item statique (`.item`) et le wrapper de `ListItemButton`
-   (`.itemButtonWrapper`). */
-.list[data-dividers] > :is(.item, .itemButtonWrapper):not(:last-child) {
-  box-shadow: inset 0 calc(-1 * var(--size0125)) 0 var(--border-subtle);
+/* Séparateurs subtle (prop `hasDividers`) : filet fin sous chaque item, posé en
+   pseudo-élément absolu (aucun décalage de mise en page). Le filet est INSET : il démarre
+   à l'aplomb du TEXTE et ne passe jamais sous l'icône ni l'avatar de gauche (le retrait =
+   padding gauche + largeur du slot de tête + gap). Entre la fin d'une section et le
+   `ListHead` suivant, il redevient pleine largeur (séparateur de section). Pas de filet
+   après le dernier élément. `:is()` cible l'item statique (`.item`) et le wrapper de
+   `ListItemButton` (`.itemButtonWrapper`) ; les deux sont `position: relative`. */
+.list[data-dividers] > :is(.item, .itemButtonWrapper) {
+  --_divider-pad: var(--space200);
+  --_divider-leading: 0px;
+  --_divider-gap: 0px;
+}
+
+/* Item mis à plat (`isFlush`) : pas de retrait gauche. */
+.list[data-dividers] > :is(.item, .itemButtonWrapper):has(.itemFlush) {
+  --_divider-pad: 0px;
+}
+
+/* Slot de tête : icône (largeur mini 24px) ou avatar (largeur = taille de l'avatar). */
+.list[data-dividers] > :is(.item, .itemButtonWrapper):has(.itemIcon) {
+  --_divider-leading: var(--size300);
+  --_divider-gap: var(--space150);
+}
+
+.list[data-dividers] > :is(.item, .itemButtonWrapper):has(.itemAvatar) {
+  --_divider-leading: var(--size400); /* medium (défaut) si la taille est inconnue */
+  --_divider-gap: var(--space150);
+}
+
+.list[data-dividers] > :is(.item, .itemButtonWrapper):has(.itemAvatar[data-size="xsmall"]) {
+  --_divider-leading: var(--size200);
+}
+
+.list[data-dividers] > :is(.item, .itemButtonWrapper):has(.itemAvatar[data-size="small"]) {
+  --_divider-leading: var(--size300);
+}
+
+.list[data-dividers] > :is(.item, .itemButtonWrapper):has(.itemAvatar[data-size="medium"]) {
+  --_divider-leading: var(--size400);
+}
+
+.list[data-dividers] > :is(.item, .itemButtonWrapper):has(.itemAvatar[data-size="large"]) {
+  --_divider-leading: var(--size500);
+}
+
+.list[data-dividers] > :is(.item, .itemButtonWrapper):has(.itemAvatar[data-size="xlarge"]) {
+  --_divider-leading: var(--size800);
+}
+
+.list[data-dividers] > :is(.item, .itemButtonWrapper):has(.itemAvatar[data-size="xxlarge"]) {
+  --_divider-leading: var(--size1200);
+}
+
+.list[data-dividers] > :is(.item, .itemButtonWrapper):has(.itemAvatar[data-size="xxxlarge"]) {
+  --_divider-leading: var(--size1600);
+}
+
+.list[data-dividers] > :is(.item, .itemButtonWrapper):not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: calc(var(--_divider-pad) + var(--_divider-leading) + var(--_divider-gap));
+  height: var(--size0125);
+  background-color: var(--border-subtle);
+  pointer-events: none;
+}
+
+/* Fin de section (avant un `ListHead`) : filet pleine largeur. */
+.list[data-dividers] > :is(.item, .itemButtonWrapper):has(+ .head)::after {
+  left: 0;
 }
 
 /* --------------------------------------------------------------------------
@@ -154,11 +218,12 @@
   color: var(--text-selected);
 }
 
-/* Item non lu (prop `isUnread`) : texte principal en medium + pastille (`Badge`
-   information) APRÈS le contenu, en fin de ligne. `margin-inline-start: auto`
+/* Item non lu (prop `isUnread`) : texte principal ET sous-texte en semibold (600) + pastille
+   (`Badge` information) APRÈS le contenu, en fin de ligne. `margin-inline-start: auto`
    la pousse au bord même si le texte ne remplit pas la ligne. */
-.item[data-unread] .itemTextPrimary {
-  font-weight: var(--font-weight-medium);
+.item[data-unread] .itemTextPrimary,
+.item[data-unread] .itemTextSecondary {
+  font-weight: var(--font-weight-semibold);
 }
 
 .unreadBadge {

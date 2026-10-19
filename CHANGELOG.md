@@ -32,11 +32,11 @@ entre versions alpha.
   basse). Son socle (contour) reste sous le voile, comme la barre : le contour du FAB garde
   son rendu d'origine. Comportement, rotation et `aria-expanded` inchangés.
 - **`List` — `hasDividers`** : séparateur **subtle** (`--border-subtle`) entre les items,
-  en `box-shadow` inset (aucun décalage), y compris entre la fin d'une section et le
-  `ListHead` suivant, sans filet après le dernier élément. Complète `gap` (séparation
-  par l'air).
-- **`ListItem` / `ListItemButton` — `isUnread`** : item **non lu** — texte principal en
-  medium et pastille (`Badge` information) après le contenu, en fin de ligne ; « Non lu »
+  **inset** : il démarre à l'aplomb du texte et ne passe jamais sous l'icône ni l'avatar de
+  gauche (pseudo-élément, aucun décalage) ; pleine largeur avant un `ListHead`, sans filet
+  après le dernier élément. Complète `gap` (séparation par l'air).
+- **`ListItem` / `ListItemButton` — `isUnread`** : item **non lu** — texte principal et
+  sous-texte en semibold (600) et pastille (`Badge` information) après le contenu, en fin de ligne ; « Non lu »
   est annoncé aux lecteurs d'écran (masqué visuellement). Story « Unread » (séparateurs activés via `hasDividers`).
 - **`Table` — `rowSeparation`** (`none` | `dividers` | `striped` | `hovered`, défaut
   `none`) : séparation visuelle des lignes pour les grands écrans — filet fin entre
