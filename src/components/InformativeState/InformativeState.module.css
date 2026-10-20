@@ -11,7 +11,13 @@
   align-items: center;
   justify-content: center;
   gap: var(--space300);
-  min-width: var(--size3200);
+  /* Le plancher cède quand la place manque. `box-sizing` vaut `content-box`
+     ici : les 256px s'entendent HORS padding, et les 2 x 48px s'y ajoutaient,
+     soit 352px imposés. Dans un conteneur étroit (cadre mobile de 380px,
+     modale confinée) cela débordait horizontalement — or l'état vide sert
+     surtout sur mobile. On retranche donc le padding de la part disponible.
+     Comportement inchangé dès qu'il y a la place : min() retient 256px. */
+  min-width: min(var(--size3200), calc(100% - var(--space600) * 2));
   max-width: var(--size6400);
   padding: var(--space600);
   flex-grow: 1;

@@ -51,6 +51,21 @@
    Modal (centering wrapper)
    ========================================================================== */
 
+/* Confiné dans un conteneur (prop `container`) : le voile suit CE conteneur,
+   pas la fenêtre — il doit être positionné (`position: relative`). Même
+   procédé que `BottomNav.ActionMenu`. */
+.overlay.contained {
+  position: absolute;
+}
+
+/* Confinée, la modale doit pouvoir remplir son cadre : sans dimensions sur
+   `.modal`, un `height: 100%` posé sur le dialog n'aurait rien contre quoi se
+   résoudre, et sa largeur serait celle de son contenu. */
+.overlay.contained .modal {
+  width: 100%;
+  height: 100%;
+}
+
 .modal {
   z-index: var(--z-index-modal);
   outline: none;
@@ -196,6 +211,35 @@
 /* ==========================================================================
    Footer
    ========================================================================== */
+
+/* Sans header (`showHeader={false}`) : le corps reprend le retrait haut que
+   le header fournissait. Sans ça, le contenu — une palette de recherche, par
+   exemple — se colle au bord supérieur du dialog. */
+/* Bloc épinglé : il vit AU-DESSUS du corps et ne défile pas avec lui.
+   Pendant de `DrawerHeader` côté modale, pour les surfaces dont la
+   commande doit rester sous la main pendant qu'on parcourt le contenu
+   (le champ d'une palette de recherche, par exemple). Sans lui, la
+   commande partirait avec le contenu, ou il faudrait un second
+   ascenseur imbriqué — qui n'hériterait pas de l'ascenseur thémé du
+   corps, les pseudo-éléments ::-webkit-scrollbar ne se transmettant pas. */
+.pinned {
+  flex-shrink: 0;
+  padding: 0 var(--space300) var(--space200);
+}
+
+.noHeader .body {
+  padding-top: var(--space300);
+}
+
+/* Sans header, c'est le bloc épinglé qui porte le retrait haut : sinon le
+   corps ajouterait le sien sous lui et doublerait l'écart. */
+.noHeader .pinned {
+  padding-top: var(--space300);
+}
+
+.noHeader:has(.pinned) .body {
+  padding-top: 0;
+}
 
 .footer {
   display: flex;

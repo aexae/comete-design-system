@@ -17,16 +17,20 @@ import { Avatar, Button } from "@aexae/comete-design-system/components";
 export function GlobalSearchButton({
   onPress,
   isExpanded,
+  density,
 }: {
   onPress: () => void;
   /** Reflète l'état déplié du champ (`aria-expanded`). */
   isExpanded?: boolean;
+  /** Densité du `Button`, pour suivre celle des actions voisines. */
+  density?: "default" | "compact";
 }): ReactElement {
   return (
     <Button
       appearance="subtle"
       iconBefore="Search"
       aria-label="Recherche globale"
+      {...(density ? { density } : {})}
       {...(isExpanded === undefined ? {} : { "aria-expanded": isExpanded })}
       onPress={onPress}
     />

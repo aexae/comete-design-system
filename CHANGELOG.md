@@ -11,6 +11,22 @@ entre versions alpha.
 
 ### Ajouté
 
+- **`ModalDialog` — `showHeader`** : à `false`, masque le header (titre, icône d'apparence,
+  croix) pour les surfaces dont le contenu commence par sa propre commande — une palette de
+  recherche, où le champ tient lieu d'en-tête et `esc` remplace la croix. Le `title` reste
+  **obligatoire** et reste rendu, masqué visuellement : c'est lui qui donne son nom
+  accessible au dialog (React Aria le lit via `slot="title"`). Défaut `true`, comportement
+  inchangé.
+- **`ModalDialog` — `pinned`** : contenu **épinglé** entre le header et le body, hors de la
+  zone qui défile. Pendant de `DrawerHeader` côté modale, pour les surfaces dont la commande
+  doit rester sous la main pendant qu'on parcourt le contenu (le champ d'une palette de
+  recherche). À préférer à un conteneur défilant imbriqué : celui-ci reçoit l'ascenseur du
+  système et non celui du DS, les pseudo-éléments `::-webkit-scrollbar` ne se transmettant
+  pas aux descendants. Sans header, c'est le bloc épinglé qui porte le retrait haut.
+- **`ModalDialog` — `container`** : confine la modale **et son voile** dans un conteneur
+  plutôt que dans la fenêtre (cadre mobile d'une story, zone applicative qui doit rester
+  visible autour). Le conteneur doit être positionné (`position: relative`). Même procédé
+  que `BottomNav.ActionMenu` (`UNSTABLE_portalContainer`).
 - **`Table` — `rowSeparation="hovered"`** : la ligne survolée reçoit son fond de survol **et** un
   filet ; les autres lignes restent nues.
 - **`QuickActions`** (nouveau composant) : menu d'actions rapides du FAB (`BottomNav.Action`) —
@@ -78,6 +94,14 @@ entre versions alpha.
   Jamais plus de **4 numéros** (`visiblePages="4"`, défaut : `1 2 3 … 12`, `1 … 5 6 … 12`,
   `1 … 10 11 12`) — les pages intermédiaires sont masquées par des points de suspension ;
   `3` | `5` | `7` restent disponibles (relayé par `TablePagination`). `TablePagination` le compose ; `Table.Pagination` est aussi exposé.
+
+### Corrigé
+
+- **`InformativeState`** : le plancher de largeur cède quand la place manque. `box-sizing`
+  vaut `content-box` ici : les 256px s'entendaient HORS padding et les 2 × 48px s'y
+  ajoutaient, soit 352px imposés — l'état débordait horizontalement dans un conteneur
+  étroit (cadre mobile, modale confinée), or il sert surtout là. Comportement inchangé dès
+  qu'il y a la place.
 
 ### Modifié
 

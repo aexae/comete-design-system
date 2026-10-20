@@ -72,6 +72,8 @@ import {
   type Filters,
 } from "./_filtresOptionB";
 import filtresCss from "./FiltresOptionB.stories.module.css";
+import { GlobalSearchButton } from "./_pageChrome";
+import { GlobalSearchDialog, useGlobalSearch } from "./_rechercheGlobale";
 
 // -----------------------------------------------------------------------
 // Figma
@@ -272,6 +274,8 @@ export const Base: Story = {
   name: "Base (Banner + SideNav + Page.Bar)",
   parameters: { design: { type: "figma", url: figmaUrl("4319:15827") } },
   render: function BaseStory() {
+    const search = useGlobalSearch();
+
     function FooterLogo() {
       const { mode } = useSideNav();
       return <Logo size={14} product="link" appearance="neutral" format={mode === "rail" ? "icon" : "logo"} />;
@@ -323,12 +327,23 @@ export const Base: Story = {
             <Page
               globalActions={
                 <>
+                  <GlobalSearchButton
+                    density="compact"
+                    onPress={search.open}
+                    isExpanded={search.isSearching}
+                  />
                   <Button appearance="subtle" density="compact" iconBefore="Notifications" aria-label="Notifications" />
                   <Avatar size="medium" initials="AC" />
                 </>
               }
               style={{ flex: 1, minHeight: 0 }}
             >
+              <GlobalSearchDialog
+                isOpen={search.isSearching}
+                query={search.query}
+                onQueryChange={search.setQuery}
+                onClose={search.close}
+              />
               <Page.Bar title="Accueil" />
               <Page.Toolbar
                 search={
@@ -971,15 +986,26 @@ export const ListeDeSection: Story = {
   name: "Liste de section (fiche site)",
   parameters: { design: { type: "figma", url: figmaUrl("4577:13694") } },
   render: function FicheSiteStory() {
+    const search = useGlobalSearch();
     return (
       <Page
         globalActions={
           <>
-            <Button appearance="subtle" density="compact" iconBefore="Search" aria-label="Rechercher" />
+            <GlobalSearchButton
+              density="compact"
+              onPress={search.open}
+              isExpanded={search.isSearching}
+            />
             <Avatar size="medium" initials="A" />
           </>
         }
       >
+        <GlobalSearchDialog
+          isOpen={search.isSearching}
+          query={search.query}
+          onQueryChange={search.setQuery}
+          onClose={search.close}
+        />
         <Page.Bar
           size="compact"
           title="Fiche site"
