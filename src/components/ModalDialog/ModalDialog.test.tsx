@@ -38,6 +38,41 @@ describe("ModalDialog", () => {
     expect(screen.getByRole("heading", { name: "Modal Title" })).toBeInTheDocument();
   });
 
+  // showHeader ------------------------------------------------------------
+
+  it("should hide the close button when showHeader is false", () => {
+    const onClose = vi.fn();
+    render(
+      <ModalDialog isOpen title="Recherche globale" showHeader={false} onClose={onClose}>
+        <p>Body</p>
+      </ModalDialog>
+    );
+    expect(screen.queryByRole("button", { name: "Fermer" })).not.toBeInTheDocument();
+  });
+
+  it("should keep an accessible name when showHeader is false", () => {
+    render(
+      <ModalDialog isOpen title="Recherche globale" showHeader={false}>
+        <p>Body</p>
+      </ModalDialog>
+    );
+    // Le titre reste dans le DOM, hors écran : sans lui le dialog perdrait son
+    // nom accessible (React Aria le lit via `slot="title"`).
+    expect(screen.getByRole("heading", { name: "Recherche globale" })).toBeInTheDocument();
+    expect(screen.getByRole("dialog")).toHaveAccessibleName("Recherche globale");
+  });
+
+  it("should show the header by default", () => {
+    const onClose = vi.fn();
+    render(
+      <ModalDialog isOpen title="Avec header" onClose={onClose}>
+        <p>Body</p>
+      </ModalDialog>
+    );
+    expect(screen.getByRole("button", { name: "Fermer" })).toBeInTheDocument();
+    expect(screen.getByRole("dialog")).toHaveAccessibleName("Avec header");
+  });
+
   it("should render footer content", () => {
     render(
       <ModalDialog isOpen title="Test" footer={<button>Confirm</button>}>
@@ -140,5 +175,28 @@ describe("ModalDialog", () => {
     );
     await userEvent.keyboard("{Escape}");
     expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it("should render pinned content outside the scrolling body", () => {
+    render(
+      <ModalDialog title="Palette" isOpen pinned={<input aria-label="Chercher" />}>
+        <p>Résultats</p>
+      </ModalDialog>,
+    );
+    const pinned = screen.getByLabelText("Chercher").parentElement;
+    const body = screen.getByText("Résultats").parentElement;
+    expect(pinned).toHaveClass("pinned");
+    expect(body).toHaveClass("body");
+    // le bloc épinglé n'est PAS dans le corps qui défile
+    expect(body).not.toContainElement(screen.getByLabelText("Chercher"));
+  });
+
+  it("should not render a pinned block when the prop is omitted", () => {
+    render(
+      <ModalDialog title="Simple" isOpen>
+        <p>Corps</p>
+      </ModalDialog>,
+    );
+    expect(document.querySelector(".pinned")).toBeNull();
   });
 });
