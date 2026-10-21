@@ -11,6 +11,9 @@ entre versions alpha.
 
 ### Ajouté
 
+- **Tokens `text-subtle-inverted` / `text-subtlest-inverted`** : deux variantes de texte
+  inversé pour hiérarchiser du texte secondaire sur une surface inversée (fond foncé en
+  thème clair, fond clair en thème sombre). Bump `@aexae/comete-design-tokens` → `0.18.0`.
 - **`ModalDialog` — `showHeader`** : à `false`, masque le header (titre, icône d'apparence,
   croix) pour les surfaces dont le contenu commence par sa propre commande — une palette de
   recherche, où le champ tient lieu d'en-tête et `esc` remplace la croix. Le `title` reste
