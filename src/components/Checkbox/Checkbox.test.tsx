@@ -1,4 +1,5 @@
 // Tests unitaires du composant Checkbox
+import { readFileSync } from "node:fs";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
@@ -123,5 +124,15 @@ describe("Checkbox", () => {
       const { container } = render(<Checkbox className="custom" />);
       expect(container.querySelector(".custom")).toBeInTheDocument();
     });
+  });
+});
+
+describe("Checkbox — contexte de positionnement", () => {
+  it("should be a positioned ancestor so the visually hidden native input stays inside it", () => {
+    // `<input>` masqué par React Aria (`position: absolute`) : sans ancêtre positionné proche, il
+    // se cale sur un ancêtre lointain et son focus fait défiler ce parent (popup blanche).
+    const css = readFileSync("src/components/Checkbox/Checkbox.module.css", "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+    const root = /\.checkbox\s*\{([^}]*)\}/.exec(css)?.[1] ?? "";
+    expect(root).toMatch(/position:\s*relative/);
   });
 });

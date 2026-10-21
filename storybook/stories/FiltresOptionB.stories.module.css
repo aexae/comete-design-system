@@ -37,6 +37,18 @@
   background: var(--background-neutral-bold-default);
 }
 
+/* Feuille mobile (bottom sheet « Filtres ») : AUCUN couloir de scrollbar. Sur la feuille, le
+   défilement se fait au doigt / à la molette ; une gouttière réservée (ou une piste de 8 px)
+   laisserait une bande blanche à droite, où l'état de survol / d'appui des lignes ne
+   va plus d'un bord à l'autre. On masque donc la barre (le contenu reste défilable). */
+section[role="dialog"][aria-label="Filtres"] .scroll.scroll {
+  scrollbar-gutter: auto;
+  scrollbar-width: none;
+}
+section[role="dialog"][aria-label="Filtres"] .scroll.scroll::-webkit-scrollbar {
+  display: none;
+}
+
 /* Racine de la feuille : colonne flex dont le `gap` porte l'espace autour du
    filet entre le bloc « enregistrement » et les facettes (une valeur, un
    endroit — jamais une marge sur le filet). Le `gap` s'applique de part et

@@ -15,6 +15,9 @@
   padding: 0;
   list-style: none;
   width: 100%;
+  /* `width: 100%` + bordure (`isBordered`) : sans border-box la liste dépasse de
+     2 × la bordure et fait apparaître un défilement horizontal dans son parent. */
+  box-sizing: border-box;
 }
 
 /* Espacement vertical entre items (prop `gap`) — séparation sans filet.

@@ -1,4 +1,5 @@
 // Tests unitaires pour le composant List et ses sous-composants
+import { readFileSync } from "node:fs";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Avatar } from "../Avatar";
@@ -581,5 +582,16 @@ describe("ListItemTrailing", () => {
     );
     expect(container.querySelector('[data-align="end"]')).not.toBeNull();
     expect(screen.getByText("Contact sans trailing")).toBeInTheDocument();
+  });
+});
+
+describe("List — boîte (isBordered)", () => {
+  it("should size the root in border-box so a bordered list never overflows its parent", () => {
+    // `width: 100%` + bordure en content-box dépasse de 2 × la bordure : un parent en
+    // `overflow: auto` affiche alors un défilement horizontal.
+    const css = readFileSync("src/components/List/List.module.css", "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+    const root = /\.list\s*\{([^}]*)\}/.exec(css)?.[1] ?? "";
+    expect(root).toMatch(/width:\s*100%/);
+    expect(root).toMatch(/box-sizing:\s*border-box/);
   });
 });

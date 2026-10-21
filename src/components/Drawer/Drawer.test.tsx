@@ -437,3 +437,25 @@ describe("Drawer — mode non modal", () => {
     warn.mockRestore();
   });
 });
+
+describe("Drawer — couloir de scrollbar de la page", () => {
+  const gutter = () => document.documentElement.style.getPropertyValue("scrollbar-gutter");
+
+  it("should release the page scrollbar gutter while a modal drawer is open", () => {
+    // React Aria pose `scrollbar-gutter: stable` sur <html> : le voile s'arrête avant ce
+    // couloir et laisse une bande blanche. Le Drawer le libère tant qu'il est ouvert.
+    const { unmount } = renderDrawer({ isOpen: true });
+    expect(gutter()).toBe("auto");
+    unmount();
+    expect(gutter()).toBe("");
+  });
+
+  it("should not touch the page scrollbar gutter when closed or non modal", () => {
+    renderDrawer({ isOpen: false });
+    expect(gutter()).toBe("");
+    const { unmount } = renderDrawer({ isOpen: true, isModal: false, placement: "right" });
+    expect(gutter()).toBe("");
+    unmount();
+  });
+});
+

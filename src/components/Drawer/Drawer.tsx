@@ -187,6 +187,24 @@ export function Drawer({
     return () => unregister(uid);
   }, [nonModal, isOpen, uid, placement, stacking, size, register, unregister]);
 
+  // React Aria verrouille le défilement de la page en posant, sur <html>,
+  // `overflow: hidden` ET `scrollbar-gutter: stable` : le couloir de la barre de
+  // défilement reste réservé, mais le voile (`position: fixed; inset: 0`) s'arrête
+  // avant lui → une bande blanche non voilée, à droite, qui contraste avec le reste de
+  // la page. On libère ce couloir tant qu'un drawer modal est ouvert (la page est de
+  // toute façon masquée par le voile). L'effet du parent s'exécute après ceux des
+  // enfants (donc après React Aria) ; au nettoyage on ne retire que notre valeur.
+  useLayoutEffect(() => {
+    if (nonModal || !isOpen || typeof document === "undefined") return undefined;
+    const root = document.documentElement;
+    root.style.setProperty("scrollbar-gutter", "auto");
+    return () => {
+      if (root.style.getPropertyValue("scrollbar-gutter") === "auto") {
+        root.style.removeProperty("scrollbar-gutter");
+      }
+    };
+  }, [nonModal, isOpen]);
+
   // Only the first drawer in the stack renders the blanket
   const isFirstInStack = stack.length === 0 || stack[0]?.id === uid;
   const showBlanket = isFirstInStack;

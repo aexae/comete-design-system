@@ -34,6 +34,7 @@ import {
   FiltresSheet,
   SavedSearchesMenu,
   ActiveFilterTags,
+  useFiltresPanelControl,
   ResultsTable,
   useSavedViews,
   initialFilters,
@@ -78,6 +79,8 @@ function FiltresOptionB({ role, initial }: { role?: Role; initial?: Filters }): 
   }, [role]);
   // Filtres enregistrés : fonction du manager ; le partenaire n'en a pas.
   const canSaveViews = role !== "partenaire";
+  // Le corps d'un tag actif rouvre le panneau sur sa facette.
+  const panel = useFiltresPanelControl();
   return (
     <div
       style={{
@@ -112,6 +115,7 @@ function FiltresOptionB({ role, initial }: { role?: Role; initial?: Filters }): 
           canSaveViews={canSaveViews}
           scrollClassName={css["scroll"]}
           textActionClassName={css["textAction"]}
+          {...panel.panelProps}
         />
         <div style={{ flex: 1 }} />
         {canSaveViews ? (
@@ -119,7 +123,7 @@ function FiltresOptionB({ role, initial }: { role?: Role; initial?: Filters }): 
         ) : null}
       </div>
 
-      <ActiveFilterTags filters={f} onChange={setF} textActionClassName={css["textAction"]} />
+      <ActiveFilterTags filters={f} onChange={setF} textActionClassName={css["textAction"]} onOpenFacet={panel.openFacet} />
 
       <ResultsTable filters={f} dataset={dataset} />
     </div>
@@ -239,7 +243,7 @@ const meta = {
         component:
           "Recette « Filtres » (maquette Claude Design). Panneau unique : " +
           "desktop = recherche + bouton Filtres (popover à deux volets), filtres " +
-          "enregistrés en action à droite, tags actifs regroupés par catégorie (+N) et " +
+          "enregistrés en action à droite, tags actifs nommés par facette (« Secteurs : 2 ») et " +
           "tableau ; mobile = liste d'agents + panneau de filtres en drill-down (liste des " +
           "facettes → détail, recherche dans les catégories longues). Comptes vivants, " +
           "mini-recherche transversale, filtres enregistrés. 100 % composants + tokens du design system.",
@@ -309,9 +313,45 @@ export const DesktopInteractions: Story = {
       await waitFor(() => expect(rowCount()).toBeLessThanOrEqual(before));
     });
 
+    await step("une seule case « Tout sélectionner / Tout désélectionner » en tête de la liste", async () => {
+      const dialog = within(screen.getByRole("dialog"));
+      const selectAll = () => dialog.getByRole("checkbox", { name: "Tout sélectionner" });
+      const clearAll = () => dialog.getByRole("checkbox", { name: "Tout désélectionner" });
+      // « Anglais » est la seule option cochable de la facette (« Français » est à 0) : tout est
+      // donc sélectionné → la case propose « Tout désélectionner » (cochée) ; l'autre libellé est absent.
+      await expect(clearAll()).toBeChecked();
+      await expect(dialog.queryByRole("checkbox", { name: "Tout sélectionner" })).toBeNull();
+      // La décocher vide la facette → la MÊME case redevient « Tout sélectionner ».
+      await userEvent.click(clearAll());
+      await waitFor(() => expect(selectAll()).not.toBeChecked());
+      await expect(dialog.queryByRole("checkbox", { name: "Tout désélectionner" })).toBeNull();
+      // Et la cocher re-sélectionne les options cochables.
+      await userEvent.click(selectAll());
+      await waitFor(() => expect(clearAll()).toBeChecked());
+    });
+
     await step("fermer le panneau avec Échap", async () => {
       await userEvent.keyboard("{Escape}");
       await waitFor(() => expect(canvas.getByRole("button", { name: /Filtres,/ })).toHaveAttribute("aria-expanded", "false"));
+    });
+
+    await step("tags actifs : facette nommée, compteur franc, corps = rouvre la facette, croix = facette entière", async () => {
+      const tags = () => within(canvas.getByRole("group", { name: "Filtres actifs" }));
+      // La facette est TOUJOURS nommée, suivie de « : » ; ≥ 2 valeurs → le seul compteur « 7 » (pas « 1re valeur +N »).
+      const secteurs = tags().getByRole("button", { name: "Secteurs, 7 valeurs" });
+      await expect(secteurs).toHaveTextContent(/^Secteurs\s:7$/);
+      await expect(tags().getByRole("button", { name: "Diplômes, SSIAP 2" })).toHaveTextContent(/^Diplômes\s:SSIAP 2$/);
+      // Le CORPS du tag rouvre le panneau sur la facette du tag.
+      await userEvent.click(secteurs);
+      await waitFor(() => expect(screen.getByRole("dialog")).toBeInTheDocument());
+      const dialog = within(screen.getByRole("dialog"));
+      await expect(dialog.getByRole("button", { name: /^Secteurs/ })).toHaveAttribute("aria-current", "true");
+      await expect(dialog.getByRole("checkbox", { name: "Industrie" })).toBeChecked();
+      await userEvent.click(dialog.getByRole("button", { name: "Voir les résultats" }));
+      await waitFor(() => expect(canvas.getByRole("button", { name: /Filtres,/ })).toHaveAttribute("aria-expanded", "false"));
+      // La CROIX efface la facette ENTIÈRE (les 7 valeurs), comme l'annonce le tag.
+      await userEvent.click(tags().getByRole("button", { name: "Retirer Secteurs" }));
+      await waitFor(() => expect(tags().queryByRole("button", { name: /^Secteurs/ })).toBeNull());
     });
 
     await step("rôles déclaratifs : deux rôles → deux jeux de facettes, sans littéral", async () => {
@@ -417,21 +457,34 @@ export const MobileInteractions: Story = {
     });
 
     await step("drill-down dans une facette puis retour", async () => {
-      await userEvent.click(drawer().getByRole("button", { name: /Langues/ }));
-      await waitFor(() => expect(drawer().getByRole("checkbox", { name: "Français" })).toBeInTheDocument());
-      // « Tout désélectionner » (seule action de masse, une case à cocher) :
-      // désactivée tant que rien n'est coché, active dès qu'une option l'est, puis
-      // vide la sélection.
+      await userEvent.click(drawer().getByRole("button", { name: /Secteurs/ }));
+      await waitFor(() => expect(drawer().getByRole("checkbox", { name: /Tout (dés)?sélectionner/ })).toBeInTheDocument());
+      // UNE seule case à cocher d'action de masse, au même endroit, qui change de rôle :
+      // « Tout sélectionner » tant que tout n'est pas coché (tiret si partiel), puis
+      // « Tout désélectionner » une fois tout coché.
+      const selectAll = () => drawer().getByRole("checkbox", { name: "Tout sélectionner" });
       const clearAll = () => drawer().getByRole("checkbox", { name: "Tout désélectionner" });
-      await expect(clearAll()).toBeDisabled();
-      const firstEnabled = drawer().getAllByRole("checkbox").find((c) => !(c as HTMLInputElement).disabled);
+      // Les filtres initiaux peuvent déjà cocher toute la facette : on repart d'un état vide.
+      if (drawer().queryByRole("checkbox", { name: "Tout désélectionner" })) {
+        await userEvent.click(clearAll());
+        await waitFor(() => expect(selectAll()).toBeInTheDocument());
+      }
+      await expect(selectAll()).toBeEnabled();
+      await expect(drawer().queryByRole("button", { name: /Tout (dés)?sélectionner/ })).toBeNull();
+      // Cocher une option → sélection partielle : la case reste « Tout sélectionner » (tiret).
+      const firstEnabled = drawer().getAllByRole("checkbox").find((c) => !(c as HTMLInputElement).disabled && c !== selectAll());
       await expect(firstEnabled).toBeDefined();
       if (firstEnabled) await userEvent.click(firstEnabled);
-      await waitFor(() => expect(clearAll()).toBeEnabled());
+      await waitFor(() => expect((selectAll() as HTMLInputElement).indeterminate).toBe(true));
+      // Tout sélectionner → la même case devient « Tout désélectionner ».
+      await userEvent.click(selectAll());
+      await waitFor(() => expect(clearAll()).toBeChecked());
+      await expect(drawer().queryByRole("checkbox", { name: "Tout sélectionner" })).toBeNull();
+      // Tout désélectionner → retour à « Tout sélectionner ».
       await userEvent.click(clearAll());
-      await waitFor(() => expect(clearAll()).toBeDisabled());
+      await waitFor(() => expect(selectAll()).not.toBeChecked());
       await userEvent.click(drawer().getByRole("button", { name: "Retour" }));
-      await waitFor(() => expect(drawer().getByRole("button", { name: /Langues/ })).toBeInTheDocument());
+      await waitFor(() => expect(drawer().getByRole("button", { name: /Secteurs/ })).toBeInTheDocument());
     });
 
     await step("« Voir N agents » ferme la feuille", async () => {

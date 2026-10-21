@@ -460,23 +460,38 @@ interface OptionRef {
   value: string;
 }
 
-// « Tout désélectionner » : une case à cocher posée en tête de la liste d'options,
-// au libellé UNIQUE (pas de « tout sélectionner » : on ne coche jamais 60 options
-// d'un geste). Tiret (indéterminé) quand la sélection est partielle, cochée quand
-// tout est sélectionné ; la cocher vide la sélection. Elle agit sur les options
-// AFFICHÉES (`items`) — le domaine d'une facette dans le volet droit, le résultat
-// d'une recherche locale dans la feuille, les correspondances d'une recherche
-// transversale dans le popover — et reste désactivée tant que rien n'est coché.
+// « Tout sélectionner / Tout désélectionner » : UNE seule case à cocher posée en tête de la
+// liste d'options, au même endroit, qui change de rôle selon l'état — « Tout sélectionner »
+// (décochée, ou tiret si la sélection est partielle : la cocher coche toutes les options
+// SÉLECTIONNABLES affichées ; celles à 0 résultat, grisées, restent décochées), puis « Tout
+// désélectionner » (cochée) une fois tout sélectionné, qui vide la sélection. Elle agit sur
+// les options AFFICHÉES (`items`) — le domaine d'une facette dans le volet droit, le résultat
+// d'une recherche locale dans la feuille, les correspondances d'une recherche transversale
+// dans le popover — et n'est désactivée que s'il n'y a rien à cocher ni à décocher.
+//
+// `tall` (feuille mobile, cibles tactiles) : la ligne a la MÊME hauteur qu'une ligne de liste
+// du DS (24 px de texte + 2 × `--space125`) — homogène avec « Filtres enregistrés ».
 function ClearAllRow({
   items,
   filters,
   onChange,
   dataset,
+  tall = false,
+  withDivider = false,
+  tightTop = false,
 }: {
   items: OptionRef[];
   filters: Filters;
   onChange: (f: Filters) => void;
   dataset: FiltresDataset;
+  tall?: boolean;
+  /** Pose le filet de séparation sous la case : 8 px de blanc entre le TEXTE et le filet, et
+   *  8 px entre le filet et la première option (voir le calcul ci-dessous). */
+  withDivider?: boolean;
+  /** Case posée en TÊTE de la vue (aucun champ de recherche avant elle) : annule le padding haut
+   *  de la ligne haute (`tall`) pour que le TEXTE soit à 12 px du filet de l'en-tête (8 px du
+   *  filet qui le suit). */
+  tightTop?: boolean;
 }): ReactElement {
   const isOn = (i: OptionRef): boolean => filters[i.key].includes(i.value);
   const selectable = items.filter((i) => isOn(i) || optionCountIn(filters, i.key, i.value, dataset) > 0);
@@ -490,14 +505,52 @@ function ClearAllRow({
     });
     onChange(next);
   };
-  return (
+  const selectAll = () => {
+    const next: Filters = { ...filters };
+    MULTI_KEYS.forEach((k) => {
+      const add = selectable.filter((i) => i.key === k && !filters[k].includes(i.value)).map((i) => i.value);
+      if (add.length) next[k] = [...filters[k], ...add];
+    });
+    onChange(next);
+  };
+  const toggle = (
     <Checkbox
       isChecked={allSelected}
       isIndeterminate={hasSelection && !allSelected}
-      isDisabled={!hasSelection}
-      onChange={clear}
-      label="Tout désélectionner"
+      isDisabled={selectable.length === 0}
+      onChange={allSelected ? clear : selectAll}
+      label={allSelected ? "Tout désélectionner" : "Tout sélectionner"}
     />
+  );
+  const row = tall ? (
+    <div style={{ display: "flex", alignItems: "center", boxSizing: "border-box", minHeight: "calc(var(--size300) + 2 * var(--space125))" }}>
+      {toggle}
+    </div>
+  ) : (
+    toggle
+  );
+  if (!withDivider) return row;
+  // Blanc autour du filet = 8 px (--space100) de chaque côté, composé de la marge de 4 px du
+  // `Divider` (--space050) et d'un second palier de 4 px :
+  // - au-dessus : `gap` de 4 px entre la case et le filet ; la ligne haute (`tall`) annule en plus
+  //   son padding bas (--space125) par une marge négative → texte → filet = 8 px ;
+  // - au-dessous : le `gap` de 4 px de la colonne parente s'ajoute à la marge du filet →
+  //   filet → première option = 8 px ;
+  // - en tête de vue (`tightTop`, facette sans recherche) : 4 px séparent déjà le filet de l'en-tête
+  //   du corps du Drawer ; on annule le padding haut de la ligne (--space125) et on en garde 8 px
+  //   de plus → 12 px entre le filet de l'en-tête et le texte (les autres écarts restent à 8 px).
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--space050)",
+        ...(tall && tightTop ? { marginTop: "calc(-1 * var(--space125) + var(--space100))" } : {}),
+      }}
+    >
+      <div style={tall ? { marginBottom: "calc(-1 * var(--space125))" } : undefined}>{row}</div>
+      <Divider />
+    </div>
   );
 }
 
@@ -547,9 +600,8 @@ function OptionControls({
   // Options AFFICHÉES : tout le domaine de la facette (pas de filtre local ici).
   const shown = dataset.domains[key];
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
-      <ClearAllRow items={shown.map((value) => ({ key, value }))} filters={filters} onChange={onChange} dataset={dataset} />
-      <Divider />
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--space050)" }}>
+      <ClearAllRow items={shown.map((value) => ({ key, value }))} filters={filters} onChange={onChange} dataset={dataset} withDivider />
       {shown.map((value) => {
         const n = optionCountIn(filters, key, value, dataset);
         const checked = filters[key].includes(value);
@@ -633,6 +685,10 @@ export function FiltresPanel({
   collapseLabel,
   scrollClassName,
   textActionClassName,
+  isOpen: isOpenProp,
+  onOpenChange: onOpenChangeProp,
+  facet: facetProp,
+  onFacetChange: onFacetChangeProp,
 }: {
   filters: Filters;
   onChange: (f: Filters) => void;
@@ -658,9 +714,26 @@ export function FiltresPanel({
   collapseLabel?: boolean;
   scrollClassName?: string;
   textActionClassName?: string;
+  /** Panneau ouvert (mode CONTRÔLÉ, ex. rouvert depuis le corps d'un tag actif). Absent = état interne. */
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** Facette affichée (clé de `FACET_DEFS`) — contrôlée, comme `isOpen`. Sur la feuille compacte,
+   *  elle ouvre directement la vue détail de cette facette. */
+  facet?: string;
+  onFacetChange?: (facet: string) => void;
 }): ReactElement {
-  const [open, setOpen] = useState(false);
-  const [cat, setCat] = useState<string>("societe");
+  const [openState, setOpenState] = useState(false);
+  const [catState, setCatState] = useState<string>("societe");
+  const open = isOpenProp ?? openState;
+  const setOpen = (o: boolean) => {
+    if (isOpenProp === undefined) setOpenState(o);
+    onOpenChangeProp?.(o);
+  };
+  const cat = facetProp ?? catState;
+  const setCat = (k: string) => {
+    setCatState(k);
+    onFacetChangeProp?.(k);
+  };
   const [query, setQuery] = useState("");
   const [savingName, setSavingName] = useState<string | null>(null);
   const rootRef = useRef<HTMLSpanElement>(null);
@@ -736,6 +809,7 @@ export function FiltresPanel({
           onOpenChange={setOpen}
           scrollClassName={scrollClassName}
           textActionClassName={textActionClassName}
+          {...(facetProp ? { requestedFacet: facetProp } : {})}
         />
       </span>
     );
@@ -757,7 +831,7 @@ export function FiltresPanel({
         <div style={{ flex: "none", padding: "var(--space200)" }}>
           <SearchField
             aria-label="Rechercher dans les filtres"
-            placeholder="Rechercher un critère (société, secteur, diplôme…)"
+            placeholder="Rechercher une société, un secteur, un diplôme..."
             value={query}
             onChange={setQuery}
           />
@@ -822,15 +896,12 @@ export function FiltresPanel({
           {/* Volet droit : options de la facette courante, ou résultats de recherche. */}
           <div className={scrollClassName} style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "var(--space200)" }}>
             {q ? (
-              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space050)" }}>
                 <p style={{ margin: "0 0 var(--space100)", fontSize: 12, color: "var(--text-subtlest)" }}>
                   {searchHits.length} résultat{searchHits.length > 1 ? "s" : ""} pour « {query.trim()} »
                 </p>
                 {searchHits.length > 0 ? (
-                  <>
-                    <ClearAllRow items={searchHits} filters={filters} onChange={onChange} dataset={dataset} />
-                    <Divider />
-                  </>
+                  <ClearAllRow items={searchHits} filters={filters} onChange={onChange} dataset={dataset} withDivider />
                 ) : null}
                 {searchHits.map(({ key, value }) => {
                   const n = optionCountIn(filters, key, value, dataset);
@@ -917,6 +988,7 @@ export function FiltresSheet({
   onOpenChange,
   scrollClassName,
   textActionClassName,
+  requestedFacet,
 }: {
   filters: Filters;
   onChange: (f: Filters) => void;
@@ -939,8 +1011,14 @@ export function FiltresSheet({
   onOpenChange: (open: boolean) => void;
   scrollClassName?: string;
   textActionClassName?: string;
+  /** À l'ouverture, descend directement dans cette facette (clé de `FACET_DEFS`) — ex. depuis le
+   *  corps d'un tag actif. */
+  requestedFacet?: string;
 }): ReactElement {
   const [facet, setFacet] = useState<string | null>(null);
+  useEffect(() => {
+    if (isOpen && requestedFacet) setFacet(requestedFacet);
+  }, [isOpen, requestedFacet]);
   const [showViews, setShowViews] = useState(false);
   const [savingName, setSavingName] = useState<string | null>(null);
   // Recherche locale dans une catégorie à liste longue (ex. « Secteurs »).
@@ -1047,9 +1125,8 @@ export function FiltresSheet({
             onChange={setOptionQuery}
           />
         ) : null}
-        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space075)" }}>
-          <ClearAllRow items={shown.map((value) => ({ key, value }))} filters={filters} onChange={onChange} dataset={dataset} />
-          {shown.length > 0 ? <Divider /> : null}
+        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space050)" }}>
+          <ClearAllRow items={shown.map((value) => ({ key, value }))} filters={filters} onChange={onChange} dataset={dataset} tall withDivider={shown.length > 0} tightTop={!searchable} />
           {shown.map((value) => {
             const n = optionCountIn(filters, key, value, dataset);
             const checked = filters[key].includes(value);
@@ -1069,6 +1146,12 @@ export function FiltresSheet({
       </div>
     );
   };
+
+  const startsWithSelectAll =
+    detailDef !== null &&
+    detailDef.kind !== "switches" &&
+    detailDef.kind !== "dispo" &&
+    dataset.domains[detailDef.key as MultiKey].length <= 8;
 
   const facetValue = (d: FacetDef): string => {
     if (d.kind === "dispo") return filters.dispoMode === "tous" ? "" : (DISPO_MODES.find((m) => m.id === filters.dispoMode)?.label ?? "");
@@ -1170,11 +1253,18 @@ export function FiltresSheet({
             </div>
           </div>
         ) : detailDef ? (
-          optionControls(detailDef)
+          // Vue détail d'une facette : un peu d'air sous le filet de l'en-tête (le corps du
+          // Drawer n'a pas de padding haut) — pour la recherche comme l'interrupteur. Sans champ
+          // de recherche, la vue commence par « Tout sélectionner » : son texte est alors à 12 px du
+          // filet de l'en-tête (8 px du filet qui le suit) (pas de padding ici, `tightTop` en bas).
+          <div style={{ paddingTop: startsWithSelectAll ? 0 : "var(--space150)" }}>{optionControls(detailDef)}</div>
         ) : (
-          // Colonne flex : l'espace autour du filet entre les deux groupes est
-          // porté par le `gap` (une valeur, un endroit), jamais par une marge.
-          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space150)" }}>
+          // Colonne flex SANS `gap` : l'espace autour du filet entre les deux groupes est
+          // celui du `Divider` (marge de 4 px de chaque côté) + le padding de la ligne
+          // (--space125) au-dessus et celui du titre « Critères » en dessous — soit ~16 px de
+          // blanc de part et d'autre, au lieu des ~33 px d'un `gap` empilé sur la marge du
+          // `Divider` et le padding du titre.
+          <div style={{ display: "flex", flexDirection: "column" }}>
             {canSaveViews ? (
               <>
             {/* Collection : accéder aux filtres enregistrés. L'action « donner un nom »
@@ -1319,6 +1409,34 @@ export function SavedSearchesMenu({
 }
 
 // -----------------------------------------------------------------------
+// useFiltresPanelControl — relie la rangée de tags actifs au panneau : le corps d'un tag rouvre
+// `FiltresPanel` sur la facette du tag. `panelProps` se répand sur `FiltresPanel`, `openFacet`
+// se passe à `ActiveFilterTags` (`onOpenFacet`).
+
+export function useFiltresPanelControl(): {
+  panelProps: { isOpen: boolean; onOpenChange: (open: boolean) => void; facet: string | undefined; onFacetChange: (facet: string) => void };
+  openFacet: (facet: string) => void;
+} {
+  const [isOpen, setIsOpen] = useState(false);
+  const [facet, setFacet] = useState<string | undefined>(undefined);
+  return {
+    panelProps: {
+      isOpen,
+      onOpenChange: (open) => {
+        setIsOpen(open);
+        if (!open) setFacet(undefined);
+      },
+      facet,
+      onFacetChange: setFacet,
+    },
+    openFacet: (key) => {
+      setFacet(key);
+      setIsOpen(true);
+    },
+  };
+}
+
+// -----------------------------------------------------------------------
 // ActiveFilterTags — tags des filtres actifs, groupés par catégorie, sous la
 // barre. `textActionClassName` = « Réinitialiser » (bouton texte discret).
 
@@ -1326,10 +1444,14 @@ export function ActiveFilterTags({
   filters,
   onChange,
   textActionClassName,
+  onOpenFacet,
 }: {
   filters: Filters;
   onChange: (f: Filters) => void;
   textActionClassName?: string;
+  /** Rend le CORPS des tags navigable : l'appelant rouvre le panneau sur la facette du tag
+   *  (`useFiltresPanelControl().openFacet`). Absent = tags décoratifs (seule la croix agit). */
+  onOpenFacet?: (facet: string) => void;
 }): ReactElement | null {
   const [chipsExpanded, setChipsExpanded] = useState(false);
   const setFacet = (patch: Partial<Filters>) => onChange({ ...filters, ...patch });
@@ -1350,34 +1472,53 @@ export function ActiveFilterTags({
   const hiddenCount = groups.length - visibleGroups.length;
 
   const renderChip = (g: ActiveGroup): ReactElement => {
-    // Format DOCUMENTÉ du tag : la ou les VALEURS seules, sans préfixe de
-    // facette — « 1re valeur » (1 valeur) ou « 1re valeur +N » (≥ 2 ; N =
-    // valeurs restantes). On privilégie le code/valeur au libellé de catégorie :
-    // le contexte de facette reste porté par l'`aria-label` de la croix (lecteurs
-    // d'écran). La 1re valeur se TRONQUE (ellipsis) si elle est longue — le
-    // « +N » et la croix restent toujours lisibles (flex: none). Le tag est borné
-    // (maxWidth) pour qu'une valeur longue ne pousse jamais le reste hors écran.
-    const first = g.values.split(", ")[0] ?? "";
-    const extra = g.count - 1;
+    // Format DOCUMENTÉ du tag : la FACETTE est toujours nommée, suivie de sa valeur (1 valeur) ou
+    // du seul compteur (≥ 2) — « Secteurs : Nord », « Secteurs : 2 » — jamais « 1re valeur +N », qui ne
+    // montrait qu'une valeur sur plusieurs. Le deux-points sépare ; aucune distinction visuelle
+    // (même graisse régulière et même couleur pour la facette et la valeur). Le nom de facette ne se tronque pas ; la valeur (ellipsis) cède si
+    // elle est longue, et la croix reste toujours visible. La croix EFFACE LA FACETTE entière (toutes
+    // ses valeurs), comme l'annonce le tag. Le corps du tag, s'il est navigable (`onOpenFacet`),
+    // rouvre le panneau sur cette facette. Le compteur seul étant elliptique à l'oral, le bouton
+    // porte un nom accessible explicite (« Secteurs, 2 valeurs »).
+    const value = g.count > 1 ? String(g.count) : (g.values.split(", ")[0] ?? "");
+    const label = g.count > 1 ? `${g.facet}, ${g.count} valeurs` : `${g.facet}, ${value}`;
+    const body = (
+      <>
+        <span style={{ flex: "none" }}>{g.facet}&nbsp;:</span>
+        <span style={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{value}</span>
+      </>
+    );
+    const bodyStyle = { display: "inline-flex", alignItems: "center", gap: "var(--space050)", minWidth: 0, color: "inherit", font: "inherit" } as const;
     return (
       <span
         key={g.key}
         style={{
           display: "inline-flex",
           alignItems: "center",
-          gap: "var(--space075)",
+          gap: "var(--space050)",
           height: 28,
-          maxWidth: 260,
+          maxWidth: 320,
           padding: "0 var(--space075) 0 var(--space150)",
           borderRadius: "var(--radius-round)",
           background: "var(--background-brand-subtlest-default)",
           color: "var(--text-brand)",
           fontSize: 12.5,
-          fontWeight: 500,
+          fontWeight: 400,
         }}
       >
-        <span style={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{first}</span>
-        {extra > 0 && <span style={{ flex: "none" }}>+{extra}</span>}
+        {onOpenFacet ? (
+          <button
+            type="button"
+            onClick={() => onOpenFacet(g.key)}
+            aria-haspopup="dialog"
+            aria-label={label}
+            style={{ ...bodyStyle, padding: 0, border: 0, background: "none", cursor: "pointer" }}
+          >
+            {body}
+          </button>
+        ) : (
+          <span style={bodyStyle}>{body}</span>
+        )}
         <button
           type="button"
           onClick={g.clear}
@@ -1397,7 +1538,6 @@ export function ActiveFilterTags({
       aria-label="Filtres actifs"
       style={{ display: "flex", alignItems: "center", gap: "var(--space075)", minHeight: 40, flexWrap: "wrap" }}
     >
-      <span style={{ flex: "none", fontSize: 12, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--text-subtlest)" }}>Filtres</span>
       {visibleGroups.map(renderChip)}
       {hiddenCount > 0 && (
         <button
