@@ -11,6 +11,10 @@ entre versions alpha.
 
 ### Ajouté
 
+- **Icônes `WorkRange`, `Security` et `Today`** disponibles via `<Icon icon="…" />`, et
+  `CalendarToday` réalignée sur Material `calendar_today` (bump `@aexae/comete-icons` → `0.9.1`).
+  La peer dependency s'élargit en `^0.8.0 || ^0.9.0` (non cassant). Icons 0.9.1 exporte aussi
+  `getIconByOmnisId` / `omnisIcons` : correspondance ID d'icône Omnis → icône du paquet.
 - **Garde anti-drift des tokens** (`src/tokens/cssTokens.test.ts`) : toute custom property
   lue par le DS (CSS Modules et TSX, fallbacks imbriqués inclus) doit exister dans
   `@aexae/comete-design-tokens` ou être déclarée par le DS. Un token disparu derrière un
