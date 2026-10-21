@@ -11,6 +11,10 @@ entre versions alpha.
 
 ### Ajouté
 
+- **Garde anti-drift des tokens** (`src/tokens/cssTokens.test.ts`) : toute custom property
+  lue par le DS (CSS Modules et TSX, fallbacks imbriqués inclus) doit exister dans
+  `@aexae/comete-design-tokens` ou être déclarée par le DS. Un token disparu derrière un
+  fallback fait désormais échouer la CI. Exceptions runtime listées explicitement.
 - **Tokens `text-subtle-inverted` / `text-subtlest-inverted`** : deux variantes de texte
   inversé pour hiérarchiser du texte secondaire sur une surface inversée (fond foncé en
   thème clair, fond clair en thème sombre). Bump `@aexae/comete-design-tokens` → `0.18.0`.
@@ -100,6 +104,10 @@ entre versions alpha.
 
 ### Corrigé
 
+- **`SectionMessage`** (titre, contenu) et **`Breadcrumbs`** (page courante) : `--text-primary`,
+  token inexistant, remplacé par `--text-default`. La couleur était héritée du parent.
+- **`Avatar`** (`size="xxlarge"`) : `--radius125` n'existait pas, le coin était carré. Le
+  token (10 px) est ajouté dans `@aexae/comete-design-tokens`. Bump → `0.19.0`.
 - **`InformativeState`** : le plancher de largeur cède quand la place manque. `box-sizing`
   vaut `content-box` ici : les 256px s'entendaient HORS padding et les 2 × 48px s'y
   ajoutaient, soit 352px imposés — l'état débordait horizontalement dans un conteneur

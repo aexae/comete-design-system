@@ -38,7 +38,7 @@
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-ui-s);
   letter-spacing: var(--letter-spacing-normal);
-  color: var(--text-primary);
+  color: var(--text-default);
   width: 100%;
 }
 
@@ -49,7 +49,7 @@
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-primary);
+  color: var(--text-default);
   width: 100%;
 }
 
