@@ -1,7 +1,16 @@
 // Tests unitaires du composant Button
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { readFileSync } from "node:fs";
 import { describe, expect, it, vi } from "vitest";
+import {
+  declarationValue,
+  readTokenValues,
+  resolveCssValue,
+  ruleBody,
+  splitTopLevel,
+  toPx,
+} from "../../tokens/cssTokens.testUtils";
 import { Button } from "./Button";
 
 // NOTE: Vitest transforme les CSS Modules en proxy identité ({ button: "button", ... })
@@ -226,6 +235,22 @@ describe("Button", () => {
       const btn = screen.getByRole("button", { name: "Nouvel agent" });
       expect(btn).toHaveClass("shapeSquare");
       expect(btn).toHaveClass("collapsible");
+    });
+  });
+
+  describe("proportions CSS", () => {
+    // REASON: jsdom ne calcule pas les var() ; on résout la déclaration du CSS
+    // Module avec les valeurs réelles de comete-design-tokens.
+    it("should keep touch horizontal padding at least twice the vertical padding when density is touch", () => {
+      const css = readFileSync("src/components/Button/Button.module.css", "utf8");
+      const padding = declarationValue(ruleBody(css, ".densityTouch"), "padding");
+      const [paddingY = "", paddingX = paddingY] = splitTopLevel(padding, /\s/);
+      const tokens = readTokenValues();
+
+      const y = toPx(resolveCssValue(paddingY, tokens));
+      const x = toPx(resolveCssValue(paddingX, tokens));
+
+      expect(x).toBeGreaterThanOrEqual(2 * y);
     });
   });
 });

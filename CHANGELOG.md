@@ -128,6 +128,9 @@ entre versions alpha.
 
 ### Modifié
 
+- **`Button`** (`density="touch"`) : padding horizontal porté de 12 px à 16 px (`--space200`)
+  pour respecter la règle padding X ≥ 2 × padding Y (8 px), vérifiée par un test. Le bouton
+  touch s'élargit de 8 px. `--control-padding-x-touch` (12 px) reste celui des champs.
 - **`TableHeaderCell` triable — icône de tri subtle** : la flèche utilise `--icon-subtle` dans tous
   les états (aperçu au survol, tri actif).
 - **`TableHeaderCell` triable — icône de tri** : plus de double flèche « expand »
