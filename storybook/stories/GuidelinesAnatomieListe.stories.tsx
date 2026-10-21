@@ -72,7 +72,7 @@ const LEAD: Rich[] = [
 ];
 
 const ZONES_INTRO =
-  "Un écran de liste se lit de haut en bas, et de gauche à droite. Les numéros du schéma renvoient à la légende dessous. Une zone est conditionnelle : elle n'existe que sur les écrans qui en ont besoin.";
+  "Un écran de liste se lit de haut en bas, et de gauche à droite. Les numéros du schéma renvoient à la légende dessous, qui nomme chaque zone par son composant du design system. Une zone est conditionnelle : elle n'existe que sur les écrans qui en ont besoin.";
 const FIG_CAPTION =
   "La zone 5 est en pointillés : elle est conditionnelle. Les proportions sont indicatives.";
 
@@ -87,52 +87,54 @@ interface Zone {
 const ZONES: Zone[] = [
   {
     n: "1",
-    el: "Alerte globale",
-    note: "Un message qui concerne toute l'application : maintenance, incident. Elle se place au-dessus de la mise en page, jamais dans le contenu. Un message qui ne concerne qu'une section se met dans cette section.",
+    el: "Banner",
+    note: "L'alerte globale : un message qui concerne toute l'application (maintenance, incident). Le Banner se place au-dessus de la mise en page, jamais dans le Page.Body. Un message qui ne concerne qu'une section se met dans cette section, avec un SectionMessage.",
     tech: "Banner, hors de Page.Body. Dans le contenu : SectionMessage.",
   },
   {
     n: "2",
-    el: "Navigation latérale",
-    note: "Le menu de gauche, permanent sur desktop uniquement (≥ 1200 px) : déployé (240 px) ou réduit en rail (80 px), jamais masqué, jamais agrandi au survol. Le bouton de bascule est dans son en-tête. Sous 1200 px (tablette comprise), il s'ouvre dans un tiroir ; en app mobile, il n'y en a pas.",
+    el: "SideNav",
+    note: "Le menu de gauche, permanent sur desktop uniquement (≥ 1200 px) : le SideNav est déployé (240 px, mode expanded) ou réduit en rail (80 px, mode rail), jamais masqué, jamais agrandi au survol. Le bouton de bascule est dans son en-tête. Sous 1200 px, tablette comprise, il disparaît de l'écran : on l'ouvre dans un Drawer depuis le hamburger du Page.Bar. En app mobile, il n'y en a pas.",
     tech: "SideNav + SideNav.Provider (mode expanded / rail, desktop ≥ 1200 px) ; sous 1200 px (mobile web ET tablette) : Drawer placement=\"left\".",
   },
   {
     n: "3",
-    el: "Barre de page",
-    note: "Trois zones : à gauche une seule affordance de navigation (un retour, ou le hamburger du tiroir en mobile web) ; au centre le titre de l'écran ; à droite les actions. Il n'y a pas de fil d'Ariane.",
-    tech: "Page.Bar : leading, title (rendu en h1), trailing. Props : size large ou compact.",
+    el: "Page.Bar",
+    note: "La barre de page, en trois parties : à gauche une seule affordance de navigation (un retour, ou le hamburger du Drawer en mobile web), suivie du titre de l'écran, aligné à gauche ; à droite les « Actions app », celles qui valent pour toute l'application (recherche, notifications, réglages), les mêmes sur tous les écrans. Il n'y a pas de fil d'Ariane.",
+    tech: "Page.Bar : leading, title (rendu en h1, aligné à gauche), trailing. Les Actions app viennent du layout (Page globalActions), pas de la page. Props : size large ou compact.",
   },
   {
     n: "4",
-    el: "Barre d'outils",
+    el: "Page.Toolbar",
     note: (
       <>
-        La recherche, le bouton Filtres et les actions de page.{" "}
+        {"La barre d'outils : la recherche (SearchField), le bouton Filtres et les « Actions page », celles qui agissent sur cette page, comme exporter ou créer. Elles changent d'un écran à l'autre, contrairement aux Actions app du Page.Bar. "}
         <Text size="medium" as="span" weight="bold">
           Une seule par écran.
         </Text>
       </>
     ),
-    tech: "Page.Toolbar : search, filters, end.",
+    tech: "Page.Toolbar : search, filters, end (les Actions page).",
   },
   {
     n: "5",
-    el: "Critères actifs",
+    el: "Filtres actifs (Tag)",
     optional: true,
-    note: "Les filtres posés, affichés sous la barre d'outils pour qu'on sache pourquoi la liste est réduite. On y lit la valeur seule, sans rappeler le nom du filtre : « Nord », pas « Secteur : Nord ». Cette rangée disparaît quand aucun filtre n'est posé, et sur mobile où le compteur du bouton Filtres prend le relais.",
-    tech: "Rangée de Tag retirables + « Réinitialiser ».",
+    note: "Les filtres posés, affichés sous le Page.Toolbar pour qu'on sache pourquoi la liste est réduite. Chaque filtre nomme sa facette, suivie de sa valeur (« Secteurs : Nord ») ou de leur nombre quand il y en a plusieurs (« Secteurs : 2 »). La croix retire toute la facette ; le corps du tag rouvre le panneau sur cette facette. Cette rangée disparaît quand aucun filtre n'est posé, et sur mobile où le compteur du bouton Filtres prend le relais.",
+    tech: "Rangée de tags (ActiveFilterTags) : facette + valeur, croix = facette entière, corps = onOpenFacet ; + « Réinitialiser ».",
   },
   {
     n: "6",
-    el: "Le tableau",
-    note: "Trié, paginé, sélectionnable, avec des lignes cliquables. Les colonnes secondaires disparaissent quand l'écran rétrécit, et sur téléphone le tableau devient une liste compacte.",
+    el: "Le contenu",
+    note: "Ce que l'écran liste. Ici une Table : triée, paginée, sélectionnable, avec des lignes cliquables. Les colonnes secondaires disparaissent quand l'écran rétrécit, et sur téléphone la Table devient une List compacte.",
     tech: "Table responsive, hideBelow sur les colonnes secondaires, useTableSelection, motif TableToList en mobile.",
   },
 ];
 
 interface Rule {
   n: string;
+  /** Règle destinée aux développeurs : n'apparaît que si le public « Développeur » est sélectionné. */
+  devOnly?: boolean;
   title: string;
   why: Rich[];
   ok: string;
@@ -145,14 +147,14 @@ const RULES: Rule[] = [
     n: "01",
     title: "Tout critère passe par le bouton Filtres",
     why: [
-      "La barre d'outils n'a pas de sélecteur d'état : un ",
+      "Le Page.Toolbar n'a pas de sélecteur d'état : un ",
       { b: "état de travail" },
       ", comme anomalies, en cours ou terminé, est un ",
       { b: "critère" },
-      " comme un site, une prestation ou un profil. Tous se posent au même endroit, le bouton Filtres, et s'affichent ensuite sous la barre d'outils, dans les critères actifs.",
+      " comme un site, une prestation ou un profil. Tous se posent au même endroit, le bouton Filtres, et s'affichent ensuite sous le Page.Toolbar, dans les filtres actifs.",
     ],
     ok: "« Anomalies » dans le panneau de filtres, avec les secteurs et les profils.",
-    ko: "Un sélecteur « Toutes / Anomalies / Actives » ajouté dans la barre d'outils.",
+    ko: "Un sélecteur « Toutes / Anomalies / Actives » ajouté dans le Page.Toolbar.",
   },
   {
     n: "02",
@@ -162,25 +164,26 @@ const RULES: Rule[] = [
       { b: "au-dessus" },
       " de la page : un panneau, une feuille, un menu. Une section, un tableau, une rangée de tags sont ",
       { b: "posés" },
-      " sur la page : ils se distinguent par l'espace et un filet, pas par une boîte. La carte reste légitime quand elle délimite un objet, par exemple la fiche d'un site.",
+      " sur la page : ils se distinguent par l'espace et un filet, pas par une boîte. La Card reste légitime quand elle délimite un objet, par exemple la fiche d'un site.",
     ],
-    ok: "Le tableau directement sur le fond, séparé par un filet.",
-    ko: "Le tableau dans une carte, les filtres dans une autre carte à côté.",
+    ok: "La Table directement sur le fond, séparée par un filet.",
+    ko: "La Table dans une Card, les filtres dans une autre Card à côté.",
   },
   {
     n: "03",
     title: "Une liste vit à deux niveaux",
     why: [
       { b: "En page" },
-      ", la liste est le sujet de l'écran : elle a droit à toute la barre d'outils. ",
+      ", la liste est le sujet de l'écran : elle a droit à tout le Page.Toolbar. ",
       { b: "Dans une fiche" },
-      ", la liste n'est qu'une section parmi d'autres : elle porte ses propres contrôles réduits, posés sur le fond, et jamais une seconde barre d'outils de niveau page.",
+      ", la liste n'est qu'une section parmi d'autres : elle porte ses propres contrôles réduits, posés sur le fond, et jamais un second Page.Toolbar de niveau page.",
     ],
     ok: "Dans une fiche site : un titre de section, une recherche, un sélecteur de date.",
-    ko: "Dans une fiche : une deuxième barre d'outils complète, avec son bouton Filtres.",
+    ko: "Dans une fiche : un deuxième Page.Toolbar complet, avec son bouton Filtres.",
   },
   {
     n: "04",
+    devOnly: true,
     title: "Ce que voit chaque rôle se déclare à la source",
     why: [
       "Un manager et un partenaire ne voient pas les mêmes colonnes ni les mêmes filtres. Cette différence se déclare ",
@@ -200,14 +203,14 @@ const RULES: Rule[] = [
     n: "05",
     title: "Entre deux sections, c'est l'espace qui sépare",
     why: [
-      "Puisqu'on n'utilise ni carte ni fond coloré, ce sont le ",
+      "Puisqu'on n'utilise ni Card ni fond coloré, ce sont le ",
       { b: "vide" },
       " et la ",
       { b: "taille du titre" },
       " qui disent où une section finit et où la suivante commence.",
     ],
-    ok: "Un grand espace vertical, un titre de section plus petit que celui de la page, et toujours le même ordre : titre, puis tableau, puis pagination.",
-    ko: "Un fond gris ou une carte pour marquer la limite.",
+    ok: "Un grand espace vertical, un titre de section plus petit que celui de la page, et toujours le même ordre : titre, puis Table, puis TablePagination.",
+    ko: "Un fond gris ou une Card pour marquer la limite.",
     tech: (
       <>
         Espacement vertical au moins égal à <Code>--space500</Code> entre deux sections. Titre de
@@ -234,17 +237,27 @@ const MODALE_BODY: Rich[] = [
 
 const GLOSSAIRE: Array<{ term: string; def: string }> = [
   { term: "Filtre", def: "Un critère qu'on pose dans le panneau : un secteur, un profil, une période, un état de travail." },
-  { term: "Barre de page", def: "La bande du haut : affordance de navigation, titre, actions." },
-  { term: "Barre d'outils", def: "La bande juste en dessous : recherche, filtres, actions. Une seule par écran." },
+  { term: "Page.Bar", def: "La barre de page, la bande du haut : affordance de navigation, titre à gauche, Actions app." },
+  { term: "Actions app", def: "Les actions générales à l'application (recherche, notifications, réglages), à droite de la barre de page. Les mêmes sur tous les écrans." },
+  { term: "Page.Toolbar", def: "La barre d'outils, la bande juste en dessous : recherche, filtres, Actions page. Une seule par écran." },
+  { term: "Actions page", def: "Les actions contextuelles à la page (exporter, créer…), à droite de la barre d'outils. Elles changent d'un écran à l'autre." },
+  { term: "SideNav", def: "La navigation latérale : déployée (expanded) ou en rail sur desktop, dans un Drawer sous 1200 px." },
   { term: "Liste de section", def: "Une liste qui vit à l'intérieur d'une fiche, et non comme sujet de l'écran." },
-  { term: "Dé-encarter", def: "Retirer les cartes qui servaient de conteneur, et poser les sections sur le fond." },
+  { term: "Dé-encarter", def: "Retirer les Card qui servaient de conteneur, et poser les sections sur le fond." },
 ];
 
 // -----------------------------------------------------------------------
 // Briques
 
+/**
+ * Marqueur numéroté du schéma et de la légende. Le `Badge` s'ajuste à son texte (un « 1 » est plus
+ * étroit qu'un « 4 ») et un parent flex le comprime : on le pose dans une cellule de largeur fixe,
+ * qui ne rétrécit pas et le centre, pour que tous les marqueurs occupent la même place.
+ */
 const Num = ({ n }: { n: string }): ReactElement => (
-  <Badge label={n} appearance="information" importance="high" />
+  <span style={{ display: "inline-flex", flex: "none", justifyContent: "center", minWidth: "var(--size300)" }}>
+    <Badge label={n} appearance="information" importance="high" />
+  </span>
 );
 
 /** Zone du schéma : filet + padding, tokens du DS uniquement. */
@@ -333,7 +346,7 @@ function Schema(): ReactElement {
                   <Button appearance="subtle" density="compact" iconBefore="ArrowBack" aria-label="Retour" />
                   <Heading size="small" as="div">Titre de l’écran</Heading>
                 </Cluster>
-                <Button color="comete" density="compact">Action</Button>
+                <Button color="comete" density="compact">Actions app</Button>
               </Cluster>
             </div>
 
@@ -347,7 +360,7 @@ function Schema(): ReactElement {
                   </div>
                   <Button appearance="outlined" iconBefore="Tune" density="compact">Filtres</Button>
                 </Cluster>
-                <Button appearance="outlined" density="compact">Actions</Button>
+                <Button appearance="outlined" density="compact">Actions page</Button>
               </Cluster>
             </div>
 
@@ -355,14 +368,14 @@ function Schema(): ReactElement {
             <div style={frame(true)}>
               <Cluster gap="100" align="center">
                 <Num n="5" />
-                <Tag label="Nord" color="information" appearance="subtle" onRemove={() => undefined} />
-                <Tag label="ADS" color="information" appearance="subtle" onRemove={() => undefined} />
-                <Tag label="Temps plein" color="information" appearance="subtle" onRemove={() => undefined} />
+                <Tag label="Secteurs : Nord" color="information" appearance="subtle" onRemove={() => undefined} />
+                <Tag label="Diplômes : SSIAP 2" color="information" appearance="subtle" onRemove={() => undefined} />
+                <Tag label="Types de contrats : 2" color="information" appearance="subtle" onRemove={() => undefined} />
                 <Button appearance="link">Réinitialiser</Button>
               </Cluster>
             </div>
 
-            {/* 6 — Tableau */}
+            {/* 6 — Contenu (ici un tableau) */}
             <div style={frame()}>
               <Stack gap="100">
                 <div>
@@ -407,8 +420,13 @@ function Schema(): ReactElement {
 // -----------------------------------------------------------------------
 // Page
 
+const COUNT_WORDS = ["zéro", "une", "deux", "trois", "quatre", "cinq", "six"];
+
 function GuidelinesAnatomie(): ReactElement {
   const [audience, setAudience] = useState<Audience>("tous");
+  // La règle réservée aux développeurs ne s'affiche que pour le public « Développeur » ; les
+  // numéros se suivent sans trou quand elle est masquée.
+  const rules = RULES.filter((r) => !r.devOnly || audience === "dev");
 
   const audienceGroup = (label: string, labels: Record<Audience, string>): ReactElement => (
     <ToggleButtonGroup
@@ -475,15 +493,18 @@ function GuidelinesAnatomie(): ReactElement {
 
             {/* Les cinq règles */}
             <Stack gap="200">
-              <Heading size="medium" as="h2">Les cinq règles</Heading>
+              <Heading size="medium" as="h2">
+                {rules.length === 1 ? "La règle" : `Les ${COUNT_WORDS[rules.length] ?? rules.length} règles`}
+              </Heading>
               <Grid gap="300">
-                {RULES.map((r, i) => (
+                {rules.map((r, i) => (
                   <Grid.Col key={r.n} span={{ mobile: 12, desktop: 6 }}>
                     <Stack gap="150">
                       {i >= 2 && <Divider />}
                       <Cluster gap="150" align="baseline" style={{ flexWrap: "nowrap" }}>
-                        <Text size="medium" weight="bold" color="subtlest" as="span">{r.n}</Text>
+                        <Text size="medium" weight="bold" color="subtlest" as="span">{String(i + 1).padStart(2, "0")}</Text>
                         <Heading size="xsmall" as="h3">{r.title}</Heading>
+                        {r.devOnly && <Tag label="Développeur" color="neutral" appearance="subtle" />}
                       </Cluster>
                       <Text size="medium" color="subtle" as="p">
                         <RichText parts={r.why} />
@@ -570,9 +591,10 @@ export default meta;
 type Story = StoryObj;
 
 /**
- * **Anatomie d'un écran de liste** — page de guidelines (six zones, cinq règles,
- * clic de ligne, vocabulaire), recomposée uniquement avec des composants du DS.
- * Le sélecteur de public révèle les notes techniques (« Développeur »).
+ * **Anatomie d'un écran de liste** — page de guidelines (six zones, règles, clic de
+ * ligne, vocabulaire), recomposée uniquement avec des composants du DS. Le sélecteur
+ * de public révèle les notes techniques et la règle réservée aux développeurs
+ * (« Développeur »).
  */
 export const Anatomie: Story = {
   name: "Guidelines (page)",
