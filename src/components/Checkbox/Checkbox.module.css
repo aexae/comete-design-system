@@ -13,6 +13,12 @@
 /* Base — align-items: flex-start aligne le haut de l'indicateur avec le haut
    du labelGroup (qui pousse sa première ligne via padding-top). Recette Figma. */
 .checkbox {
+  /* Contexte de positionnement : l'`<input>` natif est masqué par React Aria
+     (`VisuallyHidden`, `position: absolute`). Sans ancêtre positionné proche, il se
+     retrouve calé sur un ancêtre lointain (ex. un popover) : au focus, le navigateur
+     fait défiler ce parent — même en `overflow: hidden` — pour le « révéler », et le
+     contenu disparaît (popup blanche). */
+  position: relative;
   display: flex;
   align-items: flex-start;
   /* 4px = (32 − 24) / 2, exactement la débordement du halo 32×32 sur l'indicateur 24×24.

@@ -102,6 +102,18 @@ entre versions alpha.
   ajoutaient, soit 352px imposés — l'état débordait horizontalement dans un conteneur
   étroit (cadre mobile, modale confinée), or il sert surtout là. Comportement inchangé dès
   qu'il y a la place.
+- **`List` — `isBordered`** : la liste est désormais en `box-sizing: border-box`. Avec
+  `width: 100%` en content-box, la bordure la faisait dépasser de 2 px de son parent, qui
+  affichait alors un défilement horizontal (ex. liste d'agents de la recette « Filtres »
+  mobile).
+- **`Drawer` (modal)** : plus de bande blanche à droite, non voilée, à l'ouverture. React Aria
+  verrouille la page avec `overflow: hidden` **et** `scrollbar-gutter: stable` ; le voile
+  s'arrêtait avant ce couloir réservé. Le Drawer libère le couloir (`scrollbar-gutter: auto`)
+  tant qu'il est ouvert et restitue l'état initial à la fermeture.
+- **`Checkbox`** : la racine est `position: relative`. L'`<input>` natif masqué par React Aria
+  (`position: absolute`) se calait sur un ancêtre lointain (ex. un popover) ; au clic, le
+  focus faisait défiler ce parent — même en `overflow: hidden` — et son contenu disparaissait
+  (popup « Filtres » blanche après sélection d'une option).
 
 ### Modifié
 
@@ -137,6 +149,10 @@ entre versions alpha.
 
 ### Changements cassants (BREAKING)
 
+- **`FilterChip` / `FilterChipRow`** : composants **supprimés** (organisme de filtres
+  rapides), avec leurs types et leur story `Components/FilterChip`. Retirer les imports
+  correspondants ; le panneau de filtres de la recette « Filtres » (`Popup` / `Drawer`)
+  reste la référence.
 - **`Table.SelectionBar`** : la prop **`onClear`** et le bouton « Tout
   désélectionner » sont **supprimés** (doublon avec la case à cocher d'en-tête du
   tableau). Retirer `onClear` des usages.
