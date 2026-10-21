@@ -54,10 +54,10 @@ button.link:hover {
   text-decoration: underline;
 }
 
-/* Page courante : non cliquable, couleur primary (poids regular conservé) */
+/* Page courante : non cliquable, couleur --text-default (poids regular conservé) */
 .current {
   cursor: default;
-  color: var(--text-primary);
+  color: var(--text-default);
 }
 
 /* Icônes avant / après -------------------------------------------------- */
