@@ -77,11 +77,13 @@
   line-height: var(--line-height-ui-s);
 }
 
-/* Touch : cible tactile mobile — 48 px, radius 8 px, padding 8/12, icône 24 px */
+/* Touch : cible tactile mobile — 48 px, radius 8 px, padding 8/16, icône 24 px.
+   Padding X ≥ 2 × padding Y (garde dans Button.test.tsx) : 16 px et non
+   --control-padding-x-touch (12 px), qui reste celui des champs. */
 .densityTouch {
   --button-icon-size: var(--control-icon-touch, var(--size300));
   min-height: var(--control-height-touch, var(--size600));
-  padding: var(--space100) var(--control-padding-x-touch, var(--space150));
+  padding: var(--space100) var(--space200);
   border-radius: var(--control-radius-touch, var(--radius100));
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-s);

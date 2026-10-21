@@ -15,6 +15,15 @@ consommateur. La liste est elle-même vérifiée (pas d'entrée obsolète).
 sans fallback rend la déclaration invalide en silence. Le test a révélé `--text-primary`
 et `--radius125`, inexistants.
 
+## 2026-10-21 — Button touch : padding X ≥ 2 × padding Y
+
+**Décision** : règle testée dans `Button.test.tsx`. Le padding horizontal du Button touch
+passe à `--space200` (16 px) au lieu de `--control-padding-x-touch` (12 px). Les champs
+gardent `--control-padding-x-touch`.
+
+**Contexte / raison** : demande explicite. Option préférée à un changement du token
+(qui aurait aussi élargi `InputContainer` touch) et à une réduction du padding Y.
+
 ## 2026-10-21 — `--text-primary` → `--text-default`
 
 **Décision** : SectionMessage (titre, contenu) et Breadcrumbs (page courante) utilisent
