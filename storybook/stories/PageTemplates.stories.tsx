@@ -1347,7 +1347,7 @@ type HomeContext = keyof typeof HOME_CONTEXTS;
 /**
  * **Home** — Vue d'ensemble avec KPIs, activité et résumés.
  *
- * - Ligne de bienvenue (deux lignes de texte) + actions rapides, **sans Card**
+ * - Ligne de bienvenue (deux lignes de texte), **sans Card**, directement suivie des KPI
  * - KPI tiles avec trends
  * - Activité + Couverture — 2 colonnes dès tablet
  * - Sites en cards responsives
@@ -1376,9 +1376,9 @@ type HomeContext = keyof typeof HOME_CONTEXTS;
  * - **Prénom en chargement** : la ligne accepte un nœud à la place du prénom — un `Skeleton`
  *   inline, de la hauteur de la ligne de texte (`1lh`), donc sans saut de mise en page (voir
  *   le contrôle « Prénom en chargement »).
- * - Les **actions rapides** (Planifier, Ajouter un agent, Exporter) restent dans le `Body`, en
- *   `Cluster` posé sur le fond juste sous ces lignes. Le `Page.Toolbar` est réservé aux pages
- *   de liste : l'accueil n'en a pas.
+ * - **Pas d'actions rapides** dans le `Body` : l'accueil n'en porte pas (le prototype n'en
+ *   montre aucune). Les « Actions page » vivent dans le `Page.Toolbar` des pages de liste ;
+ *   l'accueil n'a pas de `Page.Toolbar`.
  *
  * ### Côté Link
  *
@@ -1424,8 +1424,8 @@ export const Home: StoryObj<{ isNameLoading: boolean; rattachement: HomeContext 
         />
         <Page.Body>
           <Stack gap="400">
-            {/* Bienvenue : du CONTENU, pas un heading ni une Card — deux lignes de texte + actions. */}
-            <Stack gap="150">
+            {/* Bienvenue : du CONTENU, pas un heading ni une Card — deux lignes de texte, puis les KPI. */}
+            <Stack gap="200">
               <Stack gap="025">
                 <Text size="medium" color="subtle" as="p">
                   Bonjour{" "}
@@ -1443,20 +1443,15 @@ export const Home: StoryObj<{ isNameLoading: boolean; rattachement: HomeContext 
                   <Text size="small" color="subtlest" as="p">{contexte}</Text>
                 )}
               </Stack>
-              <Cluster gap="100">
-                <Button color="comete" iconBefore="CalendarMonth">Planifier</Button>
-                <Button appearance="outlined" iconBefore="PersonAdd">Ajouter un agent</Button>
-                <Button appearance="outlined" iconBefore="Download">Exporter</Button>
-              </Cluster>
-            </Stack>
 
-            {/* KPIs */}
-            <Grid columns={{ mobile: 2, tablet: 4 }} gap="200">
-              <Grid.Col><KpiTile icon="CalendarMonth" iconColor="success" value="42" label="Vacations affectées" trend="+12%" trendUp /></Grid.Col>
-              <Grid.Col><KpiTile icon="LocationOn" iconColor="warning" value="3" label="Alertes" trend="+2" trendUp={false} /></Grid.Col>
-              <Grid.Col><KpiTile icon="Schedule" iconColor="information" value="1" label="Retards" trend="−1" trendUp /></Grid.Col>
-              <Grid.Col><KpiTile icon="Warning" iconColor="critical" value="0" label="PDS manquées" trend="0" /></Grid.Col>
-            </Grid>
+              {/* KPIs */}
+              <Grid columns={{ mobile: 2, tablet: 4 }} gap="200">
+                <Grid.Col><KpiTile icon="CalendarMonth" iconColor="success" value="42" label="Vacations affectées" trend="+12%" trendUp /></Grid.Col>
+                <Grid.Col><KpiTile icon="LocationOn" iconColor="warning" value="3" label="Alertes" trend="+2" trendUp={false} /></Grid.Col>
+                <Grid.Col><KpiTile icon="Schedule" iconColor="information" value="1" label="Retards" trend="−1" trendUp /></Grid.Col>
+                <Grid.Col><KpiTile icon="Warning" iconColor="critical" value="0" label="PDS manquées" trend="0" /></Grid.Col>
+              </Grid>
+            </Stack>
 
             {/* Activity + Coverage */}
             <Grid gap="300">
