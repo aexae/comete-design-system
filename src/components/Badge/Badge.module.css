@@ -18,6 +18,9 @@
   font-weight: var(--font-weight-regular);
   line-height: 1;
   white-space: nowrap;
+  /* Un badge n'est jamais comprimé : posé dans une ligne flex (à côté d'un libellé long), il garde
+     sa taille et c'est le voisin qui cède. */
+  flex-shrink: 0;
 }
 
 /* ==========================================================================
@@ -29,8 +32,8 @@
 .medium {
   min-height: var(--size150);  /* 12px — Figma min-height */
   height: var(--size200);      /* 16px */
-  /* Largeur mini = hauteur : un badge d'un caractère ne devient jamais plus étroit que haut,
-     et un parent flex ne peut pas l'écraser sous un cercle de 16px. */
+  /* Largeur mini = hauteur : un badge d'un caractère ne devient jamais plus étroit que haut
+     (un cercle de 16px au minimum). */
   min-width: var(--size200);   /* 16px */
   padding: 0 var(--space075);  /* 0 6px */
   box-sizing: border-box;

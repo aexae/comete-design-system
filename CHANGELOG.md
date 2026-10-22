@@ -236,6 +236,9 @@ entre versions alpha.
   badge qui a plus de contenu reste celle de son texte (6px de marge de chaque côté) : un « 1 »
   reste un peu plus étroit qu'un « 4 ».
 
+- **`Badge` — ne se comprime plus** : `flex-shrink: 0` sur la règle de base (tous les niveaux
+  d'importance, point `low` compris). Posé dans une ligne flex à côté d'un libellé long, un
+  badge était écrasé (jusqu'à 13,5px de large) : c'est désormais le voisin qui cède.
 ### Modifié
 
 - **`Button`** (`density="touch"`) : padding horizontal porté de 12 px à 16 px (`--space200`)
