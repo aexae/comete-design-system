@@ -232,7 +232,12 @@
   min-height: 0;
   overflow-y: auto;
   overflow-x: clip;
-  padding-block: var(--space100);
+  /* Retrait HAUT seulement : il détache le contenu de la toolbar qui le
+     surmonte. En bas il n'y a rien dont se détacher — la page s'arrête
+     là — et sur un contenu qui ne défile pas il ne produisait qu'une
+     bande morte au ras de la fenêtre. L'espacement de fin de contenu,
+     quand il en faut un, appartient au contenu lui-même. */
+  padding-block-start: var(--space100);
   padding-inline: var(--page-gutter);
 }
 
