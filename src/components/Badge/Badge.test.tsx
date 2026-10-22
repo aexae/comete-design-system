@@ -123,3 +123,12 @@ describe("Badge — largeur minimale", () => {
     expect(block).toMatch(/min-width:\s*var\(--size200\)/);
   });
 });
+
+describe("Badge — jamais comprimé", () => {
+  it("should not shrink inside a flex row (flex-shrink: 0 on the base rule)", () => {
+    // Dans une ligne flex, à côté d'un libellé long, un badge se faisait écraser (jusqu'à 13,5px).
+    const css = readFileSync("src/components/Badge/Badge.module.css", "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+    const base = /\.badge\s*\{([^}]*)\}/.exec(css)?.[1] ?? "";
+    expect(base).toMatch(/flex-shrink:\s*0/);
+  });
+});
