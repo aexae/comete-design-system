@@ -29,7 +29,9 @@
 .medium {
   min-height: var(--size150);  /* 12px — Figma min-height */
   height: var(--size200);      /* 16px */
-  min-width: var(--size150);   /* 12px */
+  /* Largeur mini = hauteur : un badge d'un caractère ne devient jamais plus étroit que haut,
+     et un parent flex ne peut pas l'écraser sous un cercle de 16px. */
+  min-width: var(--size200);   /* 16px */
   padding: 0 var(--space075);  /* 0 6px */
   box-sizing: border-box;
 }

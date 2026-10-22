@@ -230,6 +230,11 @@ entre versions alpha.
   (`position: absolute`) se calait sur un ancêtre lointain (ex. un popover) ; au clic, le
   focus faisait défiler ce parent — même en `overflow: hidden` — et son contenu disparaissait
   (popup « Filtres » blanche après sélection d'une option).
+- **`Badge` — largeur minimale de 16px** : le `min-width` passe de 12px (`--size150`) à
+  16px (`--size200`), la hauteur du badge. Un badge d'un seul caractère ne peut plus être plus
+  étroit que haut, ni être écrasé sous cette largeur par un parent flex. La largeur d'un
+  badge qui a plus de contenu reste celle de son texte (6px de marge de chaque côté) : un « 1 »
+  reste un peu plus étroit qu'un « 4 ».
 
 ### Modifié
 
