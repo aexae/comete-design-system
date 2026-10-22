@@ -48,6 +48,118 @@
   background-color: var(--background-neutral-subtler-pressed);
 }
 
+/* ==========================================================================
+   Couleurs — catégorielles, jamais un statut (ADR 0002)
+
+   Un avatar IDENTIFIE : sa couleur distingue une personne, un fil, une
+   équipe. Fond `subtlest` et contenu `--text-*`, exactement comme le `Tag`
+   subtle et l'`IconTile` — et le jeton de texte est celui que `Text` emploie
+   pour la même couleur, de sorte qu'un nom d'auteur tombe pile sur la teinte
+   de son avatar.
+
+   `neutral` reste la valeur par défaut et répète les valeurs de `.avatar` :
+   la classe est toujours posée, elle doit donc être explicite plutôt que de
+   compter sur une absence.
+   ========================================================================== */
+
+.neutral {
+  background-color: var(--background-neutral-subtler-default);
+  color: var(--text-default);
+}
+
+.neutral[data-hovered]:not([data-disabled]) {
+  background-color: var(--background-neutral-subtler-hovered);
+}
+
+.neutral[data-pressed]:not([data-disabled]) {
+  background-color: var(--background-neutral-subtler-pressed);
+}
+
+.comete {
+  background-color: var(--background-comete-subtlest-default);
+  color: var(--text-comete);
+}
+
+.comete[data-hovered]:not([data-disabled]) {
+  background-color: var(--background-comete-subtlest-hovered);
+}
+
+.comete[data-pressed]:not([data-disabled]) {
+  background-color: var(--background-comete-subtlest-pressed);
+}
+
+.accentPurple {
+  background-color: var(--background-accent-purple-subtlest-default);
+  color: var(--text-accent-purple);
+}
+
+.accentPurple[data-hovered]:not([data-disabled]) {
+  background-color: var(--background-accent-purple-subtlest-hovered);
+}
+
+.accentPurple[data-pressed]:not([data-disabled]) {
+  background-color: var(--background-accent-purple-subtlest-pressed);
+}
+
+.accentTeal {
+  background-color: var(--background-accent-teal-subtlest-default);
+  color: var(--text-accent-teal);
+}
+
+.accentTeal[data-hovered]:not([data-disabled]) {
+  background-color: var(--background-accent-teal-subtlest-hovered);
+}
+
+.accentTeal[data-pressed]:not([data-disabled]) {
+  background-color: var(--background-accent-teal-subtlest-pressed);
+}
+
+.accentTurquoise {
+  background-color: var(--background-accent-turquoise-subtlest-default);
+  color: var(--text-accent-turquoise);
+}
+
+.accentTurquoise[data-hovered]:not([data-disabled]) {
+  background-color: var(--background-accent-turquoise-subtlest-hovered);
+}
+
+.accentTurquoise[data-pressed]:not([data-disabled]) {
+  background-color: var(--background-accent-turquoise-subtlest-pressed);
+}
+
+.accentMagenta {
+  background-color: var(--background-accent-magenta-subtlest-default);
+  color: var(--text-accent-magenta);
+}
+
+.accentMagenta[data-hovered]:not([data-disabled]) {
+  background-color: var(--background-accent-magenta-subtlest-hovered);
+}
+
+.accentMagenta[data-pressed]:not([data-disabled]) {
+  background-color: var(--background-accent-magenta-subtlest-pressed);
+}
+
+.accentBlueGrey {
+  background-color: var(--background-accent-blue-grey-subtlest-default);
+  color: var(--text-accent-blue-grey);
+}
+
+.accentBlueGrey[data-hovered]:not([data-disabled]) {
+  background-color: var(--background-accent-blue-grey-subtlest-hovered);
+}
+
+.accentBlueGrey[data-pressed]:not([data-disabled]) {
+  background-color: var(--background-accent-blue-grey-subtlest-pressed);
+}
+
+/* `isSelected` l'emporte sur la couleur : un avatar sélectionné reste
+   sélectionné. Déclaré APRÈS les couleurs, à spécificité supérieure. */
+.avatar[data-selected][data-selected] {
+  background-color: var(--background-selected-subtlest-default);
+  color: var(--text-selected);
+}
+
 /* Disabled ----------------------------------------------------------------- */
 
 .avatar[data-disabled] {
