@@ -60,6 +60,7 @@ import {
   MenuItem,
   MenuSection,
   Snackbar,
+  Skeleton,
 } from "@aexae/comete-design-system/components";
 import { useTableSelection } from "@aexae/comete-design-system/hooks";
 import css from "./PageTemplates.module.css";
@@ -1328,18 +1329,87 @@ export const Entity: Story = {
 // -----------------------------------------------------------------------
 // 3. Home
 
+// Données de démonstration de la ligne de bienvenue. Le prénom arrive brut de l'API (souvent en
+// capitales) : la casse est une affaire d'AFFICHAGE, on ne montre jamais la donnée telle quelle.
+const HOME_USER_FIRST_NAME_RAW = "AXEL";
+const toDisplayName = (raw: string): string =>
+  raw.toLowerCase().replace(/(^|[\s-])(\p{L})/gu, (_m, sep: string, c: string) => sep + c.toUpperCase());
+
+// Rattachement affiché en 2e ligne : manager / partenaire = société seule ; client / agent = site
+// + société ; aucun rattachement = pas de ligne du tout.
+const HOME_CONTEXTS = {
+  societe: "Pro Sécurité",
+  site: "Site Bercy Village · Pro Sécurité",
+  aucun: null,
+} as const;
+type HomeContext = keyof typeof HOME_CONTEXTS;
+
 /**
  * **Home** — Vue d'ensemble avec KPIs, activité et résumés.
  *
- * - Greeting card avec actions rapides
+ * - Ligne de bienvenue (deux lignes de texte) + actions rapides, **sans Card**
  * - KPI tiles avec trends
  * - Activité + Couverture — 2 colonnes dès tablet
  * - Sites en cards responsives
+ *
+ * ### La bienvenue : trois règles
+ *
+ * 1. **Le titre nomme la destination.** Le `Page.Bar` affiche toujours le nom de l'écran, en
+ *    miroir de l'entrée `SideNav` (« Accueil »), jamais une salutation. Pas de slot
+ *    sous-titre : l'API du `Page.Bar` ne change pas.
+ * 2. **Un seul heading en tête de page** : le h1 du `Page.Bar`. La bienvenue n'est jamais un
+ *    `Heading`, ni dans une `Card`.
+ * 3. **La bienvenue est du contenu du `Body`**, portée par l'écran : première ligne du
+ *    `Page.Body`, en texte courant discret (`Text`). Le DS ne fournit ni slot ni composant
+ *    pour ça.
+ *
+ * ### Le contenu de la ligne
+ *
+ * - **Ligne 1** : « Bonjour Axel » seul (`Text` medium `subtle`, prénom en `weight="medium"`).
+ *   Pas de point d'exclamation, pas de nom de famille, pas de résumé chiffré : les KPI juste
+ *   dessous le disent déjà. La casse du prénom est une affaire d'affichage, jamais la donnée
+ *   brute en capitales.
+ * - **Ligne 2** : le contexte (`Text` small `subtlest`), p. ex. « Pro Sécurité » (manager /
+ *   partenaire : société seule ; client / agent : « Site Bercy Village · Pro Sécurité »).
+ *   **Sans rattachement, la ligne ne s'affiche pas du tout**, sans espace résiduel (voir le
+ *   contrôle « Rattachement »).
+ * - **Prénom en chargement** : la ligne accepte un nœud à la place du prénom — un `Skeleton`
+ *   inline, de la hauteur de la ligne de texte (`1lh`), donc sans saut de mise en page (voir
+ *   le contrôle « Prénom en chargement »).
+ * - Les **actions rapides** (Planifier, Ajouter un agent, Exporter) restent dans le `Body`, en
+ *   `Cluster` posé sur le fond juste sous ces lignes. Le `Page.Toolbar` est réservé aux pages
+ *   de liste : l'accueil n'en a pas.
+ *
+ * ### Côté Link
+ *
+ * - Le composant `dashboards/Welcome` (h6 gras) sera **supprimé à la migration**, remplacé par
+ *   cette ligne.
+ * - Le `siteSelected` actuel de Link est un **état de navigation** (dernière fiche site
+ *   visitée), pas un périmètre choisi : il ne doit pas alimenter cette ligne côté manager.
+ * - Les textes passeront par des clés i18n (standard MCE).
  */
-export const Home: Story = {
+export const Home: StoryObj<{ isNameLoading: boolean; rattachement: HomeContext }> = {
   name: "Home (Accueil)",
   parameters: { design: { type: "figma", url: figmaUrl("4587:24160") } },
-  render: () => (
+  args: { isNameLoading: false, rattachement: "societe" },
+  argTypes: {
+    isNameLoading: {
+      name: "Prénom en chargement",
+      control: "boolean",
+      description: "Remplace le prénom par un Skeleton inline, sans saut de mise en page.",
+    },
+    rattachement: {
+      name: "Rattachement",
+      control: "radio",
+      options: ["societe", "site", "aucun"],
+      description:
+        "Ligne de contexte : société seule (manager / partenaire), site + société (client / agent), ou aucun rattachement — la ligne disparaît.",
+    },
+  },
+  render: (args) => {
+    const { isNameLoading, rattachement } = args;
+    const contexte = HOME_CONTEXTS[rattachement];
+    return (
       <Page globalActions={null}>
         <Page.Bar
           title="Accueil"
@@ -1354,22 +1424,31 @@ export const Home: Story = {
         />
         <Page.Body>
           <Stack gap="400">
-            {/* Greeting */}
-            <Card appearance="subtle">
-              <CC padding="var(--space300)">
-                <Stack gap="200">
-                  <Stack gap="050">
-                    <Heading size="xlarge" as="span">Bonjour Axel</Heading>
-                    <Text as="span" color="subtle">{"Vous avez 3 alertes et 30 vacations non affectées ce mois-ci."}</Text>
-                  </Stack>
-                  <Cluster gap="100">
-                    <Button color="comete" iconBefore="CalendarMonth">Planifier</Button>
-                    <Button appearance="outlined" iconBefore="PersonAdd">Ajouter un agent</Button>
-                    <Button appearance="outlined" iconBefore="Download">Exporter</Button>
-                  </Cluster>
-                </Stack>
-              </CC>
-            </Card>
+            {/* Bienvenue : du CONTENU, pas un heading ni une Card — deux lignes de texte + actions. */}
+            <Stack gap="150">
+              <Stack gap="025">
+                <Text size="medium" color="subtle" as="p">
+                  Bonjour{" "}
+                  {isNameLoading ? (
+                    <span className={css["welcomeNameSkeleton"]}>
+                      <Skeleton height="1lh" />
+                    </span>
+                  ) : (
+                    <Text size="medium" weight="medium" color="subtle" as="span">
+                      {toDisplayName(HOME_USER_FIRST_NAME_RAW)}
+                    </Text>
+                  )}
+                </Text>
+                {contexte != null && (
+                  <Text size="small" color="subtlest" as="p">{contexte}</Text>
+                )}
+              </Stack>
+              <Cluster gap="100">
+                <Button color="comete" iconBefore="CalendarMonth">Planifier</Button>
+                <Button appearance="outlined" iconBefore="PersonAdd">Ajouter un agent</Button>
+                <Button appearance="outlined" iconBefore="Download">Exporter</Button>
+              </Cluster>
+            </Stack>
 
             {/* KPIs */}
             <Grid columns={{ mobile: 2, tablet: 4 }} gap="200">
@@ -1466,7 +1545,8 @@ export const Home: Story = {
           </Stack>
         </Page.Body>
       </Page>
-  ),
+    );
+  },
 };
 
 // -----------------------------------------------------------------------

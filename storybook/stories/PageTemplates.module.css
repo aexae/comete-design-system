@@ -275,3 +275,11 @@
   grid-template-columns: 1fr 1fr 1fr;
   gap: var(--space100);
 }
+
+/* Home — prénom en chargement : Skeleton inline, de la largeur d'un prénom court et de la hauteur
+   de la ligne de texte (1lh dans le composant) → la ligne ne change pas de hauteur. */
+.welcomeNameSkeleton {
+  display: inline-block;
+  width: var(--size500);
+  vertical-align: top;
+}
