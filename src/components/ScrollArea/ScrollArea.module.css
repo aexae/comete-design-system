@@ -1,0 +1,190 @@
+/* ScrollArea — Comète Design System
+   Ascenseur RENDU : le pouce est un élément du DOM posé au-dessus du
+   contenu, pas le pseudo-élément du navigateur. Voir useScrollbar.ts pour
+   la mécanique.
+   100 % design tokens — zéro valeur hardcodée. */
+
+/* ==========================================================================
+   Racine — le repère de positionnement des ascenseurs
+   ========================================================================== */
+
+.root {
+  position: relative;
+  /* Les ascenseurs sont posés sur les bords : rien ne doit en sortir. */
+  overflow: hidden;
+  /* En colonne flex, sans ça la racine refuse de se comprimer sous la
+     hauteur de son contenu et déborde au lieu de laisser défiler. */
+  min-height: 0;
+  display: flex;
+}
+
+/* ==========================================================================
+   Zone de défilement — natif, ascenseur système masqué
+   ========================================================================== */
+
+.viewport {
+  width: 100%;
+  /* `flex-basis: auto` et non `0` : avec `flex: 1`, Safari effondre cette
+     zone à zéro en colonne flex à hauteur `vh`. */
+  flex: 1 1 auto;
+  min-height: 0;
+  /* AUCUN `scrollbar-gutter` ici, à la différence de la couche CSS : le
+     pouce flotte au-dessus du contenu et ne prend aucune place. C'est tout
+     l'intérêt d'un ascenseur rendu. */
+}
+
+.vertical {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.horizontal {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.both {
+  overflow: auto;
+}
+
+/* Le défilement au clavier suppose de pouvoir viser la zone : quand elle est
+   focalisable, elle montre l'anneau de focus comme n'importe quelle cible.
+   Même rendu que `Button`. */
+.viewport:focus-visible {
+  outline: 2px solid var(--border-focused);
+  outline-offset: calc(-1 * var(--size025));
+}
+
+/* ==========================================================================
+   Ascenseur — la piste
+   ========================================================================== */
+
+.scrollbar {
+  position: absolute;
+  display: flex;
+  /* `border-box` : la largeur du jeton est la largeur RÉELLE de la barre,
+     padding compris. Barre --size125 (10px) moins 2 x --size025 de retrait =
+     pouce de 6px. Mêmes proportions que le gabarit de référence. */
+  box-sizing: border-box;
+  /* Le glisser ne doit ni sélectionner le texte sous le pouce, ni déclencher
+     le défilement tactile du navigateur. */
+  user-select: none;
+  touch-action: none;
+  padding: var(--size025);
+  background: transparent;
+  border-radius: var(--radius-round);
+  /* Collé au bord, au-dessus du contenu. */
+  z-index: var(--z-index-raised);
+  opacity: 0;
+  transition:
+    opacity var(--duration-normal) var(--easing-default),
+    background-color var(--duration-normal) var(--easing-default);
+}
+
+.scrollbar[data-state="visible"] {
+  opacity: 1;
+}
+
+/* La piste ne se teinte que lorsqu'on la survole directement : au repos elle
+   reste invisible et seul le pouce se lit. */
+.scrollbar:hover {
+  background: var(--background-neutral-subtlest-default);
+}
+
+.scrollbarVertical {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--size125);
+}
+
+.scrollbarHorizontal {
+  right: 0;
+  bottom: 0;
+  left: 0;
+  flex-direction: column;
+  height: var(--size125);
+}
+
+/* ==========================================================================
+   Pouce
+   ========================================================================== */
+
+.thumb {
+  position: relative;
+  flex: 1;
+  border-radius: var(--radius-round);
+  /* Contraste mesuré contre `--background-surface-default` :
+
+       clair    repos  --grey-solid-500  #8c8f97  3,24:1
+                survol --icon-subtlest   #6f8488  3,94:1
+       sombre   repos  --icon-subtle     #8d9fa3  3,85:1   (voir plus bas)
+                survol --text-subtle     #b5c1c4  5,76:1
+
+     `--grey-solid-500` est un jeton PRIMITIF, contre la règle maison qui
+     veut qu'on prenne un sémantique. C'est assumé et c'est le seul écart :
+     aucun sémantique neutre ne se situe entre #6f8488 (3,94:1) et
+     #b5c1c4 (1,84:1, sous le seuil). Le trou est exactement celui que
+     l'ADR sur la rampe de remplissage doit combler — ce jeton disparaîtra
+     avec elle.
+
+     En thème sombre il n'y a AUCUNE marge : #8d9fa3 est déjà le gris le
+     plus clair qui tienne 3:1 sur #374043. */
+  background: var(--grey-solid-500);
+  transition: background-color var(--duration-normal) var(--easing-default);
+}
+
+.thumb:hover,
+.thumb:active {
+  background: var(--icon-subtlest);
+}
+
+/* Cible de préhension portée à `--control-height-touch` (WCAG 2.5.5) sans épaissir le trait :
+   un pseudo-élément invisible, centré sur le pouce. Au doigt, on défile en
+   balayant le contenu — mais quand on vise le pouce, il doit être visable. */
+.thumb::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  min-width: var(--control-height-touch);
+  min-height: var(--control-height-touch);
+}
+
+/* ==========================================================================
+   Thème sombre — un cran plus haut pour garder 3:1 sur #374043
+   ========================================================================== */
+
+[data-theme="dark"] .thumb {
+  background: var(--icon-subtle);
+}
+
+[data-theme="dark"] .thumb:hover,
+[data-theme="dark"] .thumb:active {
+  background: var(--text-subtle);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .thumb {
+    background: var(--icon-subtle);
+  }
+
+  :root:not([data-theme="light"]) .thumb:hover,
+  :root:not([data-theme="light"]) .thumb:active {
+    background: var(--text-subtle);
+  }
+}
+
+/* ==========================================================================
+   Mouvement réduit — on ne fait pas apparaître en fondu
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .scrollbar,
+  .thumb {
+    transition: none;
+  }
+}

@@ -11,6 +11,40 @@ entre versions alpha.
 
 ### Ajouté
 
+- **`ScrollArea`** (nouveau composant) : zone défilante dont l'ascenseur est **rendu par
+  le composant** plutôt que laissé au navigateur. Le défilement reste natif — molette,
+  doigt, clavier — et le contenu n'est jamais déplacé par transformation : on masque
+  l'ascenseur du système et on dessine le nôtre par-dessus, en lisant `scrollTop` /
+  `scrollHeight`. Trois choses que l'ascenseur natif ne sait pas faire :
+
+  1. **Flotter au-dessus du contenu** sans lui prendre de place — les navigateurs ont
+     retiré `overflow: overlay`.
+  2. **Paraître pendant le défilement** puis s'estomper — CSS n'a pas de pseudo-classe
+     « en train de défiler ».
+  3. **Réagir au survol de façon fiable** sur toutes les configurations.
+
+  API : `axis` (`vertical` par défaut, `horizontal`, `both`), **`visibility`** (`hover`
+  par défaut, `scroll`, `auto`, `always`), **`hideDelay`** (600 ms), `maxHeight`,
+  `maxWidth`, `hasOverflowShadows`, `isFocusable`, `role`, `aria-label`. Barre de 10px
+  (`--size125`) et pouce de 6px, collés au bord. Couleurs du pouce, mesurées contre
+  `--background-surface-default` : en clair `--grey-solid-500` #8c8f97 (3,24:1) au repos
+  et `--icon-subtlest` #6f8488 (3,94:1) au survol ; en sombre `--icon-subtle` #8d9fa3
+  (3,85:1) et `--text-subtle` #b5c1c4 (5,76:1). `--grey-solid-500` est un jeton
+  **primitif**, seul écart assumé à la règle maison : aucun sémantique neutre ne se situe
+  entre #6f8488 (3,94:1) et #b5c1c4 (1,84:1, sous le seuil). Le pouce se
+  glisse à la souris et au doigt (capture de pointeur), sa taille a un plancher pour
+  rester visable sur un contenu très long, et sa **cible de préhension atteint
+  `--control-height-touch` (48px)** par un pseudo-élément invisible — WCAG 2.5.5 tenu
+  sans épaissir le trait. Les ascenseurs sont `aria-hidden` : ce sont des doublures
+  visuelles du défilement natif, déjà piloté par la zone. `visibility="scroll"` est le
+  seul mode visible **au doigt**, où il n'y a pas de survol.
+- **Couche utilitaire `styles/scrollbar.module.css`** : définition **unique** des zones
+  défilantes, en quatre rôles cumulables — `scrollable` (la mécanique), `themed`
+  (l'ascenseur), `hidden` (ascenseur masqué, défilement conservé) et `shadows`
+  (l'indication de débordement). Sur le modèle de `styles/typography.module.css`.
+  `Drawer`, `ModalDialog`, `Popover`, `Select`, `TimeCalendar` et `TimeDrumPicker` la
+  consomment au lieu de recopier les mêmes déclarations. Interne au paquet, rien à
+  changer côté consommateur.
 - **Icônes `WorkRange`, `Security` et `Today`** disponibles via `<Icon icon="…" />`, et
   `CalendarToday` réalignée sur Material `calendar_today` (bump `@aexae/comete-icons` → `0.9.1`).
   La peer dependency s'élargit en `^0.8.0 || ^0.9.0` (non cassant). Icons 0.9.1 exporte aussi
@@ -107,6 +141,62 @@ entre versions alpha.
   `3` | `5` | `7` restent disponibles (relayé par `TablePagination`). `TablePagination` le compose ; `Table.Pagination` est aussi exposé.
 
 ### Corrigé
+
+- **Contraste du pouce d'ascenseur.** Un pouce restylé est un composant d'interface au
+  sens du **WCAG 1.4.11**, qui demande 3:1 contre le fond : l'exemption « rendu par
+  défaut du navigateur » tombe dès qu'on le style. **Le jeton change selon le thème**,
+  parce qu'aucun jeton neutre ne donne à la fois un gris assez clair sur blanc et assez
+  contrasté sur #374043 :
+
+  | | thème clair | thème sombre |
+  |---|---|---|
+  | repos | `--icon-subtlest` #6f8488 **3,94:1** | `--icon-subtle` #8d9fa3 **3,85:1** |
+  | survol | `--icon-subtle` #596b70 **5,58:1** | `--text-subtle` #b5c1c4 **5,76:1** |
+
+  Les quatre crans passent le seuil, et le survol va dans le bon sens des deux côtés :
+  il assombrit sur fond clair, il éclaircit sur fond sombre. Le survol porte sur le
+  **conteneur**, pas sur le pouce : viser une barre de 8px pour la voir réagir n'aurait
+  pas de sens. Bascule par `data-theme` avec repli `prefers-color-scheme`, comme
+  `Skeleton`. Aucun couple de la famille `--border-*` ne pouvait tenir ce rôle —
+  `--border-default` et `--border-bold` y valent tous deux #49585b en thème sombre.
+  **`SideNav` adopte les mêmes jetons** : un seul pouce dans tout le DS. Son
+  révélé-au-survol lui reste propre, seul le déclenchement diffère.
+- **`SideNav` — valeurs en dur.** La largeur de l'ascenseur passe de `8px` à
+  `var(--size100)` et le rayon du pouce de `4px` à `var(--radius-round)`. Même rendu,
+  mais plus de valeur hardcodée dans ce bloc.
+- **`ModalDialog` — corps défilant.** Le corps avait `flex: 1`, donc `flex-basis: 0` :
+  Safari effondre un tel élément à zéro en colonne flex à hauteur `vh` (modale
+  visuellement vide, pied remonté en haut). Il passe à `flex: 1 1 auto` avec
+  `min-height: 0`, comme le corps du `Drawer` — même garde, désormais au même endroit.
+- **Ascenseurs révélés au survol.** Au repos, piste ET pouce sont transparents : plus
+  aucune colonne permanente le long du contenu. Ils apparaissent au survol de la zone
+  (piste `--background-neutral-subtlest-default`, pouce aux couleurs conformes ci-dessus),
+  avec une transition sur `--duration-normal`. Le couloir reste réservé : l'ascenseur
+  paraît et disparaît sans jamais décaler le contenu. Même parti pris que `SideNav`,
+  généralisé à toutes les surfaces défilantes.
+
+  **Conséquence assumée** : au doigt, où il n'y a pas de survol, l'ascenseur ne paraît
+  jamais. C'est `.shadows` (prop `hasOverflowShadows` de `ScrollArea`) qui dit alors
+  qu'il reste du contenu. L'afficher pendant le **défilement** puis l'estomper n'est pas
+  faisable en CSS — il n'existe pas de pseudo-classe « en train de défiler ».
+- **Apparence des ascenseurs — plus discrète.** La piste passe de
+  `--background-surface-elevation-sunken-default` à **transparent** : une rainure grise
+  dessinait une colonne permanente le long du contenu, visible même quand il n'y avait
+  presque rien à faire défiler. Seul le pouce porte l'information utile. La largeur ne
+  change pas. S'applique partout d'un coup, via la couche `styles/scrollbar.module.css`.
+
+  Les jetons retenus restent un **pis-aller** : `--icon-*` désigne des marques
+  d'interface, `--text-*` de la prose, ni l'une ni l'autre une pièce de mécanique. Il
+  manque une rampe de remplissage neutre pour ça, définie par thème. Sujet ouvert (ADR).
+- **Ascenseurs thémés — `Drawer`, `ModalDialog`, `Popover`, `Select`, `TimeCalendar`** : la
+  largeur de 8px (`--size100`) voulue par le DS ne s'appliquait **nulle part sur Chrome**.
+  Ces composants posaient `scrollbar-color` (pour Firefox) **et** des règles
+  `::-webkit-scrollbar` ; or Chrome ignore les pseudo-éléments webkit dès qu'une propriété
+  standard est posée sur le même élément. On obtenait la barre du système (15px), seulement
+  recoloriée. Les propriétés standard sont désormais confinées à
+  `@supports not selector(::-webkit-scrollbar)`, comme le faisait déjà `SideNav`. Mesuré sur
+  Chrome 152 : 15px avant, **8px après**. La règle vit maintenant à un seul endroit, dans la
+  couche `styles/scrollbar.module.css`.
 
 - **`SectionMessage`** (titre, contenu) et **`Breadcrumbs`** (page courante) : `--text-primary`,
   token inexistant, remplacé par `--text-default`. La couleur était héritée du parent.

@@ -5,6 +5,7 @@ import {
   Popover as AriaPopover,
   type PopoverProps as AriaPopoverProps,
 } from "react-aria-components";
+import scrollbarStyles from "../../styles/scrollbar.module.css";
 import styles from "./Popover.module.css";
 
 // -----------------------------------------------------------------------
@@ -56,7 +57,7 @@ export function Popover({
   return (
     <AriaPopover
       {...ariaProps}
-      className={[styles.popover, matchTriggerWidth && styles.matchTriggerWidth, className].filter(Boolean).join(" ")}
+      className={[styles.popover, scrollbarStyles.themed, matchTriggerWidth && styles.matchTriggerWidth, className].filter(Boolean).join(" ")}
       style={style}
       offset={offset}
       shouldFlip={shouldFlip}

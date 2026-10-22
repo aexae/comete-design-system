@@ -11,6 +11,7 @@ import {
 import { Button } from "../Button/Button.js";
 import { useDrawerStack } from "./DrawerContext.js";
 import type { DrawerPlacement, DrawerStacking } from "./DrawerContext.js";
+import scrollbarStyles from "../../styles/scrollbar.module.css";
 import styles from "./Drawer.module.css";
 
 // `process` n'est pas typé ici (le DS build avec `types: []`, sans @types/node).
@@ -433,7 +434,7 @@ export interface DrawerBodyProps {
  */
 export function DrawerBody({ children, className }: DrawerBodyProps): ReactElement {
   return (
-    <div className={[styles.body, className].filter(Boolean).join(" ")}>
+    <div className={[styles.body, scrollbarStyles.scrollable, scrollbarStyles.themed, className].filter(Boolean).join(" ")}>
       {children}
     </div>
   );

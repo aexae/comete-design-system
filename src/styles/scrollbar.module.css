@@ -1,0 +1,234 @@
+/* scrollbar.module.css — Zones défilantes Comète Design System
+ * Couche utilitaire consommée par les composants qui exposent une zone
+ * défilante (Drawer, ModalDialog, Popover, Select, TimeCalendar) et par le
+ * composant public `ScrollArea`.
+ * 100 % design tokens — zéro valeur hardcodée.
+ *
+ * DÉFINITION UNIQUE. Quatre rôles, cumulables :
+ *
+ *   .scrollable  la mécanique du conteneur défilant (les pièges en flex)
+ *   .themed      l'apparence de l'ascenseur
+ *   .hidden      l'ascenseur masqué, défilement conservé
+ *   .shadows     l'indication de débordement en haut et en bas
+ *
+ * Avant cette couche, chaque composant recopiait les mêmes déclarations — et
+ * la même erreur avec : `scrollbar-color` posé sans garde ANNULE les règles
+ * `::-webkit-scrollbar` dans Chrome, qui retombe alors sur l'ascenseur du
+ * système (15px) au lieu des 8px voulus. Voir les blocs `@supports`. Toute
+ * évolution de l'ascenseur se fait ICI.
+ */
+
+/* =======================================================================
+ * .scrollable — la mécanique, pas l'apparence
+ *
+ * Les trois pièges d'un conteneur défilant, réunis une fois pour toutes.
+ * ===================================================================== */
+
+.scrollable {
+  overflow-y: auto;
+
+  /* `flex-basis: auto` et non `0` : avec `flex: 1`, Safari EFFONDRE un tel
+     conteneur à 0 en colonne flex à hauteur `vh`. Base `auto` : la base est
+     la taille du contenu. */
+  flex: 1 1 auto;
+
+  /* En colonne flex, `min-height: auto` (le défaut) empêche un élément de se
+     comprimer sous la hauteur de son contenu : le conteneur déborde et pousse
+     ce qui le suit hors de la surface, au lieu de défiler. */
+  min-height: 0;
+
+  /* Le couloir de l'ascenseur est réservé en permanence : le contenu ne se
+     décale pas au moment où l'ascenseur apparaît. Sans ça, taper une lettre
+     dans une recherche fait sauter toute la liste de 8px.
+
+     La marge négative loge ce couloir DANS la gouttière du parent au lieu
+     de s'y ajouter : sans elle, le contenu s'arrête 8px plus tôt à droite
+     qu'à gauche. Le parent doit donc avoir au moins --size100 de retrait
+     horizontal — c'est le cas des surfaces du DS (--space300). Même
+     procédé que `SideNav`. */
+  scrollbar-gutter: stable;
+  margin-inline-end: calc(-1 * var(--size100));
+}
+
+/* =======================================================================
+ * .themed — l'ascenseur standard du DS
+ * ===================================================================== */
+
+.themed {
+  /* Chrome / Edge / Safari : tout est porté par `::-webkit-scrollbar` plus
+     bas. AUCUNE propriété standard (`scrollbar-width`, `scrollbar-color`) ne
+     doit être posée hors des blocs `@supports` : Chrome les fait gagner sur
+     les pseudo-éléments et la barre repasserait à la largeur du système. */
+  scroll-behavior: auto;
+}
+
+.themed::-webkit-scrollbar {
+  width: var(--size100);
+  height: var(--size100);
+}
+
+/* L'ascenseur ne paraît QU'AU SURVOL de la zone. Au repos, piste et pouce
+   sont transparents : rien ne dessine de colonne permanente le long du
+   contenu. Même parti pris que `SideNav`, généralisé.
+
+   Le couloir reste RÉSERVÉ (voir `.scrollable`) : l'ascenseur apparaît et
+   disparaît sans jamais décaler le contenu.
+
+   CE QUI N'EST PAS FAISABLE ICI : l'afficher pendant le DÉFILEMENT puis
+   l'estomper. CSS n'a pas de pseudo-classe « en train de défiler ». Il faut
+   un écouteur et un délai, donc du JavaScript côté composant. Conséquence
+   assumée : au doigt, où il n'y a pas de survol, l'ascenseur ne paraît
+   jamais. C'est `.shadows` qui dit alors qu'il reste du contenu. */
+.themed::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.themed:hover::-webkit-scrollbar-track {
+  background: var(--background-neutral-subtlest-default);
+}
+
+/* Le pouce est un COMPOSANT D'INTERFACE au sens du WCAG 1.4.11, qui demande
+   3:1 contre le fond : l'exemption « rendu par défaut du navigateur » tombe
+   dès qu'on le restyle, ce que fait précisément cette couche.
+
+   LE JETON CHANGE SELON LE THÈME, et ce n'est pas un confort : aucun jeton
+   neutre ne donne à la fois un gris assez clair sur blanc et assez contrasté
+   sur #374043. On prend donc le plus clair qui tienne 3:1 dans CHAQUE thème.
+   Mesuré contre `--background-surface-default` :
+
+                    THEME CLAIR (#ffffff)        THEME SOMBRE (#374043)
+     révélé   --icon-subtlest #6f8488 3,94:1   --icon-subtle #8d9fa3 3,85:1
+     pouce    --icon-subtle   #596b70 5,58:1   --text-subtle #b5c1c4 5,76:1
+     survolé
+
+   Même procédé de bascule que `Skeleton` : attribut `data-theme`, plus un
+   repli sur `prefers-color-scheme` quand aucun thème n'est posé.
+
+   Reste une imperfection assumée : `--icon-*` désigne des marques d'interface,
+   `--text-*` de la prose. Ni l'une ni l'autre n'est une pièce de mécanique.
+   Sujet d'ADR, pas de correctif d'ascenseur. */
+.themed::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: var(--radius-round);
+  transition: background-color var(--duration-normal) var(--easing-default);
+}
+
+.themed:hover::-webkit-scrollbar-thumb {
+  background-color: var(--icon-subtlest);
+}
+
+/* Survol du pouce lui-même : un cran plus marqué. */
+.themed:hover::-webkit-scrollbar-thumb:hover {
+  background-color: var(--icon-subtle);
+}
+
+[data-theme="dark"] .themed:hover::-webkit-scrollbar-thumb {
+  background-color: var(--icon-subtle);
+}
+
+[data-theme="dark"] .themed:hover::-webkit-scrollbar-thumb:hover {
+  background-color: var(--text-subtle);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .themed:hover::-webkit-scrollbar-thumb {
+    background-color: var(--icon-subtle);
+  }
+
+  :root:not([data-theme="light"]) .themed:hover::-webkit-scrollbar-thumb:hover {
+    background-color: var(--text-subtle);
+  }
+}
+
+/* Coin bas-droit quand les deux axes défilent : transparent comme les
+   pistes, sinon il apparaît comme un carré gris isolé. */
+.themed::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox (et tout moteur sans `::-webkit-scrollbar`) : mêmes couleurs, via
+   les propriétés standard, confinées ici pour la raison dite plus haut. */
+@supports not selector(::-webkit-scrollbar) {
+  .themed {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color var(--duration-normal) var(--easing-default);
+  }
+
+  .themed:hover {
+    scrollbar-color: var(--icon-subtlest)
+      var(--background-neutral-subtlest-default);
+  }
+
+  [data-theme="dark"] .themed:hover {
+    scrollbar-color: var(--icon-subtle)
+      var(--background-neutral-subtlest-default);
+  }
+}
+
+/* =======================================================================
+ * .hidden — zone défilante sans ascenseur visible
+ *
+ * Pour les surfaces où l'ascenseur ferait du bruit et où le défilement se
+ * comprend autrement : un tambour d'heures qu'on fait tourner au doigt, une
+ * navigation en rail. Le défilement reste entier, au doigt, à la molette et
+ * au clavier — seul l'affichage disparaît.
+ *
+ * Ici `scrollbar-width: none` est posé SANS garde, et c'est volontaire :
+ * Chrome l'applique aussi, et masquer est précisément l'effet recherché. Le
+ * `::-webkit-scrollbar` qui suit ne sert que les moteurs webkit plus anciens.
+ * ===================================================================== */
+
+.hidden {
+  scrollbar-width: none;
+  -ms-overflow-style: none; /* IE / ancien Edge */
+}
+
+.hidden::-webkit-scrollbar {
+  display: none;
+}
+
+/* =======================================================================
+ * .shadows — indication de débordement
+ *
+ * Un fondu discret en bas tant qu'il reste du contenu, et en haut une fois
+ * qu'on a défilé. C'est ce qui dit qu'il y a quelque chose au-delà du bord,
+ * là où l'ascenseur seul ne suffit pas — notamment au doigt, où il est
+ * transitoire.
+ *
+ * Technique des scroll-shadows, en CSS pur : les calques `local` (masques à
+ * la couleur de la surface) suivent le contenu et couvrent l'ombre aux
+ * extrémités ; les calques `scroll` (ombres fixes) se révèlent dès qu'on
+ * s'éloigne d'un bord. Sans support de `background-attachment`, aucun effet —
+ * comportement inchangé.
+ *
+ * `--scroll-shadow-surface` : couleur du masque. À redéfinir quand la zone
+ * n'est pas posée sur la surface par défaut (une modale, un tiroir), sinon
+ * les masques jurent avec le fond.
+ * ===================================================================== */
+
+.shadows {
+  background:
+    linear-gradient(
+        var(--scroll-shadow-surface, var(--background-surface-default)) 30%,
+        transparent
+      )
+      center top,
+    linear-gradient(
+        transparent,
+        var(--scroll-shadow-surface, var(--background-surface-default)) 70%
+      )
+      center bottom,
+    radial-gradient(farthest-side at 50% 0, var(--border-subtle), transparent)
+      center top,
+    radial-gradient(
+        farthest-side at 50% 100%,
+        var(--border-subtle),
+        transparent
+      )
+      center bottom;
+  background-repeat: no-repeat;
+  background-size: 100% var(--space300), 100% var(--space300), 100% var(--space125),
+    100% var(--space125);
+  background-attachment: local, local, scroll, scroll;
+}

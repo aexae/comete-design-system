@@ -56,13 +56,8 @@
     transparent 100%
   );
 
-  /* Masquer la scrollbar */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
-}
-
-.drumScroll::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+  /* Ascenseur masqué : classe `hidden` de la couche partagée
+     `src/styles/scrollbar.module.css`, appliquée dans le TSX. */
 }
 
 /* ==========================================================================

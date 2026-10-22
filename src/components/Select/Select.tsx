@@ -19,6 +19,7 @@ import type { InputContainerAppearance } from "../InputContainer/InputContainer.
 import type { Density } from "../../contexts/DensityContext.js";
 import { Field, type FieldMessageType } from "../Field/Field.js";
 import { Popover } from "../Popover/Popover.js";
+import scrollbarStyles from "../../styles/scrollbar.module.css";
 import styles from "./Select.module.css";
 
 // -----------------------------------------------------------------------
@@ -273,7 +274,7 @@ export function Select({
               </InputContainer>
             </div>
             <Popover placement="bottom start" triggerRef={containerRef} matchTriggerWidth>
-              <AriaListBox className={styles.listBox}>
+              <AriaListBox className={[styles.listBox, scrollbarStyles.scrollable, scrollbarStyles.themed].join(" ")}>
                 {allOptions.length === 0 && !isLoading ? (
                   <AriaListBoxItem id="__empty__" isDisabled textValue={emptyMessage} className={styles.stateItem}>
                     <span className={styles.emptyState}>{emptyMessage}</span>

@@ -43,6 +43,7 @@ export * from "./QuickActions";
 export * from "./Radio";
 export * from "./SearchField";
 export * from "./SectionMessage";
+export * from "./ScrollArea";
 export * from "./Select";
 export * from "./Skeleton";
 export * from "./Snackbar";
