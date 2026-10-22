@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { Avatar, Button } from "@aexae/comete-design-system";
+import { Avatar, Button, Text } from "@aexae/comete-design-system";
 import type { AvatarProps } from "@aexae/comete-design-system";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, userEvent, within } from "storybook/test";
@@ -49,6 +49,20 @@ const meta: Meta<AvatarProps> = {
         },
       },
       options: ["xsmall", "small", "medium", "large", "xlarge", "xxlarge", "xxxlarge"],
+    },
+    color: {
+      control: "select",
+      options: [
+        "neutral",
+        "comete",
+        "accentPurple",
+        "accentTeal",
+        "accentTurquoise",
+        "accentMagenta",
+        "accentBlueGrey",
+      ],
+      description:
+        "Couleur catégorielle — identifie, ne juge pas. Sans effet sur une photo.",
     },
     isDisabled: { control: "boolean" },
     isSelected: { control: "boolean" },
@@ -280,6 +294,85 @@ const SIZE_PX: Record<string, number> = {
   xlarge: 64,
   xxlarge: 96,
   xxxlarge: 128,
+};
+
+// ----------------------------------------------------------------------
+// Couleurs catégorielles
+
+const COULEURS = [
+  { color: "neutral", initials: "NE" },
+  { color: "comete", initials: "CO" },
+  { color: "accentPurple", initials: "PU" },
+  { color: "accentTeal", initials: "TE" },
+  { color: "accentTurquoise", initials: "TU" },
+  { color: "accentMagenta", initials: "MA" },
+  { color: "accentBlueGrey", initials: "BG" },
+] as const;
+
+/**
+ * Les sept couleurs. Elles sont **catégorielles** : un avatar identifie, il
+ * ne juge pas. La couleur y distingue une personne, un fil, une équipe — elle
+ * ne dit jamais « tout va bien » ni « attention », ce qui relève de
+ * `presence`, de `notification` ou d'un `Tag` à côté (ADR 0002).
+ *
+ * Sur une photo la couleur ne se voit pas : l'image couvre le fond.
+ */
+export const Couleurs: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+      {COULEURS.map(({ color, initials }) => (
+        <div
+          key={color}
+          style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}
+        >
+          <Avatar size="large" color={color} initials={initials} />
+          <Text size="xsmall" color="subtlest">
+            {color}
+          </Text>
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+/**
+ * **Fil de discussion** — le cas qui motive ces couleurs.
+ *
+ * Chaque interlocuteur reçoit une teinte, et le **nom de l'auteur reprend la
+ * même** : `Avatar color="accentPurple"` et `Text color="accentPurple"`
+ * pointent sur le même jeton `--text-accent-purple`. L'œil relie le message à
+ * son auteur sans relire le nom.
+ *
+ * La teinte n'est qu'un **repère visuel** : elle ne doit jamais être le seul
+ * moyen de savoir qui parle — le nom reste écrit, et les initiales le
+ * redisent.
+ */
+export const FilDeDiscussion: Story = {
+  name: "Fil de discussion",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <div style={{ display: "flex", flexDirection: "column", gap: 20, maxWidth: 440 }}>
+      {([
+        { color: "accentPurple", initials: "MB", nom: "MARTIN Bob",
+          message: "Ronde du secteur nord terminée, rien à signaler." },
+        { color: "accentTeal", initials: "CA", nom: "CHEN Alice",
+          message: "Reçu. Tu peux enchaîner sur l'entrepôt 2 ?" },
+        { color: "accentPurple", initials: "MB", nom: "MARTIN Bob",
+          message: "J'y suis dans dix minutes." },
+      ] as const).map(({ color, initials, nom, message }, i) => (
+        <div key={i} style={{ display: "flex", gap: 12 }}>
+          <Avatar size="medium" color={color} initials={initials} />
+          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <Text size="small" weight="bold" color={color}>
+              {nom}
+            </Text>
+            <Text size="small">{message}</Text>
+          </div>
+        </div>
+      ))}
+    </div>
+  ),
 };
 
 export const AllSizes: Story = {

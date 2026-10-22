@@ -11,6 +11,17 @@ entre versions alpha.
 
 ### Ajouté
 
+- **`Avatar` — `color`** (`neutral` par défaut, `comete`, `accentPurple`, `accentTeal`,
+  `accentTurquoise`, `accentMagenta`, `accentBlueGrey`) : couleur de fond et de contenu
+  quand l'avatar montre des initiales ou une icône. **Catégorielle, jamais un statut**
+  (ADR 0002) : un avatar identifie — une personne, un fil de discussion, une équipe — il
+  ne dit pas « tout va bien », ce qui relève de `presence`, `notification` ou d'un `Tag`.
+  Fond `subtlest` et contenu `--text-*`, comme le `Tag` subtle et l'`IconTile`, avec les
+  états survol et appui pour un avatar interactif. Le jeton de texte est **celui que
+  `Text` emploie déjà** pour la même couleur : `Avatar color="accentPurple"` et
+  `Text color="accentPurple"` tombent sur `--text-accent-purple`, de sorte qu'un nom
+  d'auteur prenne exactement la teinte de son avatar. Sans effet sur une photo, qui
+  couvre le fond ; `isSelected` l'emporte sur la couleur. Story « Fil de discussion ».
 - **`ScrollArea`** (nouveau composant) : zone défilante dont l'ascenseur est **rendu par
   le composant** plutôt que laissé au navigateur. Le défilement reste natif — molette,
   doigt, clavier — et le contenu n'est jamais déplacé par transformation : on masque

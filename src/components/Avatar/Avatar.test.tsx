@@ -222,6 +222,46 @@ describe("Avatar", () => {
     });
   });
 
+  describe("prop color", () => {
+    it("should default to the neutral colour", () => {
+      const { container } = render(<Avatar initials="AC" />);
+      expect(container.firstElementChild).toHaveClass("neutral");
+    });
+
+    it.each([
+      "neutral",
+      "comete",
+      "accentPurple",
+      "accentTeal",
+      "accentTurquoise",
+      "accentMagenta",
+      "accentBlueGrey",
+    ] as const)("should apply the %s colour", (color) => {
+      const { container } = render(<Avatar initials="AC" color={color} />);
+      expect(container.firstElementChild).toHaveClass(color);
+    });
+
+    it("should keep the colour class on a photo avatar", () => {
+      // La photo couvre le fond, mais la classe reste : elle porte aussi la
+      // couleur du contenu de repli si l'image ne charge pas.
+      const { container } = render(
+        <Avatar src="/photo.jpg" alt="Alice" color="accentTeal" />,
+      );
+      expect(container.firstElementChild).toHaveClass("accentTeal");
+    });
+
+    it("should keep the selected state alongside a colour", () => {
+      // `isSelected` l'emporte visuellement (règle CSS de spécificité
+      // supérieure) ; les deux marqueurs cohabitent dans le DOM.
+      render(
+        <Avatar onPress={() => undefined} color="accentMagenta" isSelected />,
+      );
+      const bouton = screen.getByRole("button");
+      expect(bouton).toHaveClass("accentMagenta");
+      expect(bouton).toHaveAttribute("data-selected");
+    });
+  });
+
   describe("prop className", () => {
     it("should append custom className", () => {
       const { container } = render(<Avatar className="custom" />);

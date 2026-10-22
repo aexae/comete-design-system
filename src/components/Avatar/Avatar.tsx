@@ -21,9 +21,39 @@ export type AvatarSize =
   | "xxlarge"
   | "xxxlarge";
 
+/**
+ * Couleurs de l'avatar — **catégorielles**, jamais un statut.
+ *
+ * Un avatar IDENTIFIE, il ne juge pas : la couleur y distingue une
+ * personne, un fil de discussion, une équipe. Elle ne doit jamais dire
+ * « tout va bien » ou « attention » — c'est le rôle du `presence`, du
+ * `notification` ou d'un `Tag` à côté. Même famille que
+ * `TagCategoryColor`, et mêmes jetons de texte que `TextColor` : un nom
+ * d'auteur en `accentPurple` tombe exactement sur la couleur de son
+ * avatar en `accentPurple`.
+ *
+ * Voir `docs/adr/0002-semantique-couleurs-statut.md`.
+ */
+export type AvatarColor =
+  | "neutral"
+  | "comete"
+  | "accentPurple"
+  | "accentTeal"
+  | "accentTurquoise"
+  | "accentMagenta"
+  | "accentBlueGrey";
+
 export interface AvatarProps {
   /** Size. @default "medium" */
   size?: AvatarSize;
+  /**
+   * Couleur de fond et du contenu, quand l'avatar montre des initiales ou
+   * une icône. Sans effet sur une photo, qui couvre le fond.
+   *
+   * `isSelected` l'emporte : un avatar sélectionné reste sélectionné,
+   * quelle que soit sa couleur. @default "neutral"
+   */
+  color?: AvatarColor;
   /** Photo URL — renders an <img>. Takes priority over initials and icon. */
   src?: string;
   /** Alt text for the photo / accessible label on the container. */
@@ -92,6 +122,7 @@ const SIZE_ICON_MAP: Record<AvatarSize, number> = {
  */
 export function Avatar({
   size = "medium",
+  color = "neutral",
   src,
   alt,
   initials,
@@ -111,7 +142,13 @@ export function Avatar({
     setImageLoaded(false);
   }, [src]);
 
-  const classNames = [styles.avatar, styles.rounded, styles[size], className]
+  const classNames = [
+    styles.avatar,
+    styles.rounded,
+    styles[size],
+    styles[color],
+    className,
+  ]
     .filter(Boolean)
     .join(" ");
 
