@@ -153,12 +153,12 @@ const ACCUEIL_ITEMS: Array<{ el: string; note: string; tech: ReactNode }> = [
   },
   {
     el: "La ligne de bienvenue",
-    note: "La première ligne du Page.Body : « Bonjour Axel », en texte courant, sans Card ni titre. Le prénom est en graisse medium, sans point d'exclamation ni nom de famille. Une seule ligne : pas de résumé chiffré (les KPI juste dessous le disent déjà) ni de contexte (l'en-tête du SideNav affiche déjà la société). Le DS ne fournit ni slot ni composant pour ça : c'est du contenu de l'écran.",
-    tech: "Text à 20 px (--font-size-ui-m), couleur par défaut, prénom weight=\"medium\" ; Skeleton inline (1lh) pendant le chargement du prénom. Côté Link : dashboards/Welcome (h6 gras) supprimé à la migration.",
+    note: "La première ligne du Page.Body : « Bonjour, Axel ! », en texte courant, sans Card ni titre. Toute la ligne est en graisse medium, sans nom de famille. Une seule ligne : pas de résumé chiffré (les KPI juste dessous le disent déjà) ni de contexte (l'en-tête du SideNav affiche déjà la société). Le DS ne fournit ni slot ni composant pour ça : c'est du contenu de l'écran.",
+    tech: "Text à 20 px (--font-size-ui-m), couleur par défaut, toute la ligne weight=\"medium\" ; Skeleton inline (1lh) pendant le chargement du prénom. Côté Link : dashboards/Welcome (h6 gras) supprimé à la migration.",
   },
 ];
-const ACCUEIL_OK = "Une ligne « Bonjour Axel » en texte courant, puis les KPI.";
-const ACCUEIL_KO = "Une Card grise avec un gros titre « Bonjour Axel », un sous-titre et des boutons.";
+const ACCUEIL_OK = "Une ligne « Bonjour, Axel ! » en texte courant, puis les KPI.";
+const ACCUEIL_KO = "Une Card grise avec un gros titre « Bonjour, Axel ! », un sous-titre et des boutons.";
 
 interface Rule {
   n: string;
@@ -459,9 +459,8 @@ function AccueilSchema(): ReactElement {
           <Button appearance="subtle" density="compact" iconBefore="Settings" aria-label="Réglages" />
         </Cluster>
         <Divider />
-        <Text size="large" style={ACCUEIL_LINE_STYLE} as="p">
-          Bonjour{" "}
-          <Text size="large" weight="medium" style={ACCUEIL_LINE_STYLE} as="span">Axel</Text>
+        <Text size="large" weight="medium" style={ACCUEIL_LINE_STYLE} as="p">
+          {"Bonjour, Axel\u00a0!"}
         </Text>
         <Grid columns={{ mobile: 2, tablet: 4 }} gap="150">
           {["KPI", "KPI", "KPI", "KPI"].map((k, i) => (

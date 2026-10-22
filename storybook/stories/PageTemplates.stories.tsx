@@ -1363,10 +1363,10 @@ const toDisplayName = (raw: string): string =>
  *
  * ### Le contenu de la ligne
  *
- * - **Une seule ligne** : « Bonjour Axel » (`Text` à 20 px, couleur par défaut, prénom en
- *   `weight="medium"`). `Text` s'arrête à `large` (16 px) : le palier 20 px vient des tokens
- *   de typographie (`--font-size-ui-m`), jamais d'une valeur en dur. Pas de point d'exclamation, pas de nom de famille, pas de résumé
- *   chiffré : les KPI juste dessous le disent déjà. La casse du prénom est une affaire
+ * - **Une seule ligne** : « Bonjour, Axel ! » (`Text` à 20 px, couleur par défaut, toute la
+ *   ligne en `weight="medium"`). `Text` s'arrête à `large` (16 px) : le palier 20 px vient des
+ *   tokens de typographie (`--font-size-ui-m`), jamais d'une valeur en dur. Pas de nom de
+ *   famille, pas de résumé chiffré : les KPI juste dessous le disent déjà. La casse du prénom est une affaire
  *   d'affichage, jamais la donnée brute en capitales. Elle respire (`--space300` jusqu'aux KPI)
  *   sans grossir : ce n'est pas un titre.
  * - **Pas de ligne de contexte** (société, site) : l'en-tête du `SideNav` affiche déjà la
@@ -1414,17 +1414,16 @@ export const Home: StoryObj<{ isNameLoading: boolean }> = {
           <Stack gap="400">
             {/* Bienvenue : du CONTENU, pas un heading ni une Card — une ligne de texte, puis les KPI. */}
             <Stack gap="300">
-              <Text size="large" style={HOME_WELCOME_TEXT} as="p">
-                Bonjour{" "}
+              <Text size="large" weight="medium" style={HOME_WELCOME_TEXT} as="p">
+                Bonjour,{" "}
                 {isNameLoading ? (
                   <span className={css["welcomeNameSkeleton"]}>
                     <Skeleton height="1lh" />
                   </span>
                 ) : (
-                  <Text size="large" weight="medium" style={HOME_WELCOME_TEXT} as="span">
-                    {toDisplayName(HOME_USER_FIRST_NAME_RAW)}
-                  </Text>
+                  toDisplayName(HOME_USER_FIRST_NAME_RAW)
                 )}
+                {"\u00a0!"}
               </Text>
 
               {/* KPIs */}
