@@ -21,6 +21,7 @@ import {
 } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { PageTrailingActions } from "./_pageChrome";
 
 // -----------------------------------------------------------------------
 // Meta
@@ -289,8 +290,7 @@ export const BleedDesktop: Story = {
           title="Accueil"
           trailing={
             <Stack direction="row" gap="100" align="center">
-              <Button appearance="subtle" density="compact" iconBefore="Notifications" aria-label="Notifications" />
-              <Avatar size="medium" initials="AC" />
+              <PageTrailingActions density="compact" />
             </Stack>
           }
         />

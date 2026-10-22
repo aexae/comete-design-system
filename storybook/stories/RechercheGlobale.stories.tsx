@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import { fn } from "storybook/test";
 import {
   Page,
-  Avatar,
   Button,
   ButtonGroup,
   Card,
@@ -14,7 +13,7 @@ import {
 } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
-import { GlobalSearchButton } from "./_pageChrome";
+import { PageGlobalActions } from "./_pageChrome";
 import {
   GlobalSearchDialog,
   GlobalSearchSheet,
@@ -106,11 +105,7 @@ function SearchableAgentsPage({
   // loupe remplace l'ancien bouton « Réglages » — les préférences sont une
   // destination, et la recherche globale sait y mener.
   const globalActions = (
-    <>
-      <GlobalSearchButton onPress={search.open} isExpanded={search.isSearching} />
-      <Button appearance="subtle" iconBefore="Notifications" aria-label="Notifications" />
-      <Avatar size="medium" initials="AC" />
-    </>
+    <PageGlobalActions onSearch={search.open} isSearching={search.isSearching} />
   );
 
   return (

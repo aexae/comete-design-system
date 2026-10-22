@@ -73,7 +73,7 @@ import {
   type Filters,
 } from "./_filtresOptionB";
 import filtresCss from "./FiltresOptionB.stories.module.css";
-import { GlobalSearchButton } from "./_pageChrome";
+import { PageGlobalActions } from "./_pageChrome";
 import { GlobalSearchDialog, useGlobalSearch } from "./_rechercheGlobale";
 
 // -----------------------------------------------------------------------
@@ -327,15 +327,11 @@ export const Base: Story = {
           <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
             <Page
               globalActions={
-                <>
-                  <GlobalSearchButton
-                    density="compact"
-                    onPress={search.open}
-                    isExpanded={search.isSearching}
-                  />
-                  <Button appearance="subtle" density="compact" iconBefore="Notifications" aria-label="Notifications" />
-                  <Avatar size="medium" initials="AC" />
-                </>
+                <PageGlobalActions
+                  density="compact"
+                  onSearch={search.open}
+                  isSearching={search.isSearching}
+                />
               }
               style={{ flex: 1, minHeight: 0 }}
             >
@@ -998,14 +994,11 @@ export const ListeDeSection: Story = {
     return (
       <Page
         globalActions={
-          <>
-            <GlobalSearchButton
-              density="compact"
-              onPress={search.open}
-              isExpanded={search.isSearching}
-            />
-            <Avatar size="medium" initials="A" />
-          </>
+          <PageGlobalActions
+            density="compact"
+            onSearch={search.open}
+            isSearching={search.isSearching}
+          />
         }
       >
         <GlobalSearchDialog
