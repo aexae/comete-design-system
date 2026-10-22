@@ -11,6 +11,7 @@ import {
 import type { IconName } from "@aexae/comete-icons";
 import { Button } from "../Button/Button.js";
 import { Icon } from "../Icon/Icon.js";
+import scrollbarStyles from "../../styles/scrollbar.module.css";
 import styles from "./ModalDialog.module.css";
 
 // -----------------------------------------------------------------------
@@ -198,7 +199,7 @@ export function ModalDialog({
           {pinned && <div className={styles.pinned}>{pinned}</div>}
 
           {/* Body */}
-          <div className={styles.body}>{children}</div>
+          <div className={[styles.body, scrollbarStyles.scrollable, scrollbarStyles.themed].join(" ")}>{children}</div>
 
           {/* Footer */}
           {footer && <div className={styles.footer}>{footer}</div>}

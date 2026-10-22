@@ -3,6 +3,9 @@
    Liste scrollable de créneaux horaires.
    ========================================================================== */
 
+/* L'ascenseur de cette zone vient de la couche partagée
+   `src/styles/scrollbar.module.css` (classe `themed`), appliquée dans le
+   TSX à côté de `timeCalendar`. Ne pas redéfinir d'ascenseur ici. */
 .timeCalendar {
   display: flex;
   flex-direction: column;
@@ -11,22 +14,6 @@
   overflow-y: auto;
   padding: var(--space050);
 
-  /* Themed scrollbar — Firefox */
-  scrollbar-color: var(--background-neutral-bold-default) var(--background-surface-elevation-sunken-default);
-}
-
-/* Themed scrollbar — Chrome / Edge / Safari */
-.timeCalendar::-webkit-scrollbar {
-  width: var(--size100);
-}
-
-.timeCalendar::-webkit-scrollbar-track {
-  background: var(--background-surface-elevation-sunken-default);
-}
-
-.timeCalendar::-webkit-scrollbar-thumb {
-  background-color: var(--background-neutral-bold-default);
-  border-radius: var(--radius-round);
 }
 
 /* Option individuelle */

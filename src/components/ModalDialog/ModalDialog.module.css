@@ -181,31 +181,18 @@
    Body
    ========================================================================== */
 
+/* L'ascenseur de cette zone vient de la couche partagée
+   `src/styles/scrollbar.module.css` (classe `themed`), appliquée dans le
+   TSX à côté de `body`. Ne pas redéfinir d'ascenseur ici. */
 .body {
-  flex: 1;
-  overflow-y: auto;
+  /* Mécanique du conteneur défilant (flex-basis, min-height, overflow,
+     couloir d'ascenseur) : classe `scrollable` de la couche partagée
+     `src/styles/scrollbar.module.css`, appliquée dans le TSX. */
   padding: 0 var(--space300);
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-s);
   color: var(--text-default);
-
-  /* Themed scrollbar — Firefox */
-  scrollbar-color: var(--background-neutral-bold-default) var(--background-surface-elevation-sunken-default);
-}
-
-/* Themed scrollbar — Chrome / Edge / Safari */
-.body::-webkit-scrollbar {
-  width: var(--size100);
-}
-
-.body::-webkit-scrollbar-track {
-  background: var(--background-surface-elevation-sunken-default);
-}
-
-.body::-webkit-scrollbar-thumb {
-  background-color: var(--background-neutral-bold-default);
-  border-radius: var(--radius-round);
 }
 
 /* ==========================================================================

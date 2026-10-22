@@ -247,41 +247,18 @@
   margin-left: auto;
 }
 
+/* L'ascenseur de cette zone vient de la couche partagée
+   `src/styles/scrollbar.module.css` (classe `themed`), appliquée dans le
+   TSX à côté de `body`. Ne pas redéfinir d'ascenseur ici. */
 .body {
-  /* `flex-basis: auto` (et non `0`) : la base = la taille du contenu. Avec un
-     `flex-basis: 0` (`flex: 1`), Safari EFFONDRE ce body à 0 en colonne flex à
-     hauteur `vh` (drawer visuellement vide, footer remonté en haut). Base
-     `auto` + `min-height: 0` : le body défile quand le drawer a une hauteur
-     définie, sans s'effondrer. */
-  flex: 1 1 auto;
-  /* En colonne flex, `min-height: auto` (défaut) empêche cet item de se
-     comprimer sous la hauteur de son contenu : le body déborde et pousse le
-     footer hors du drawer. `min-height: 0` autorise la compression → le body
-     défile en interne et le footer reste visible. */
-  min-height: 0;
-  overflow-y: auto;
+  /* Mécanique du conteneur défilant (flex-basis, min-height, overflow,
+     couloir d'ascenseur) : classe `scrollable` de la couche partagée
+     `src/styles/scrollbar.module.css`, appliquée dans le TSX. */
   padding: 0 var(--space300) var(--space300);
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-s);
   color: var(--text-default);
-
-  /* Themed scrollbar — Firefox */
-  scrollbar-color: var(--background-neutral-bold-default) var(--background-surface-elevation-sunken-default);
-}
-
-/* Themed scrollbar — Chrome / Edge / Safari */
-.body::-webkit-scrollbar {
-  width: var(--size100);
-}
-
-.body::-webkit-scrollbar-track {
-  background: var(--background-surface-elevation-sunken-default);
-}
-
-.body::-webkit-scrollbar-thumb {
-  background-color: var(--background-neutral-bold-default);
-  border-radius: var(--radius-round);
 }
 
 .footer {

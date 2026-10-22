@@ -3,6 +3,7 @@
 import { useEffect, useRef, type ReactElement, type CSSProperties } from "react";
 import type { TimeValue } from "react-aria-components";
 import { Time } from "@internationalized/date";
+import scrollbarStyles from "../../styles/scrollbar.module.css";
 import styles from "./TimeCalendar.module.css";
 
 // -----------------------------------------------------------------------
@@ -92,7 +93,7 @@ export function TimeCalendar({
     <div
       role="listbox"
       aria-label="Sélecteur d'heure"
-      className={[styles.timeCalendar, className].filter(Boolean).join(" ")}
+      className={[styles.timeCalendar, scrollbarStyles.themed, className].filter(Boolean).join(" ")}
       data-disabled={isDisabled || undefined}
       ref={listRef}
     >

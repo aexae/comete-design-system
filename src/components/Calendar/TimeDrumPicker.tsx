@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type ReactElement, type CSSProperties } from "react";
 import type { TimeValue } from "react-aria-components";
 import { Time } from "@internationalized/date";
+import scrollbarStyles from "../../styles/scrollbar.module.css";
 import styles from "./TimeDrumPicker.module.css";
 
 // -----------------------------------------------------------------------
@@ -190,7 +191,7 @@ function DrumColumn({
       aria-disabled={isDisabled || undefined}
     >
       <div
-        className={styles.drumScroll}
+        className={[styles.drumScroll, scrollbarStyles.hidden].join(" ")}
         ref={listRef}
         onScroll={handleScroll}
         style={{
@@ -286,7 +287,7 @@ function PeriodColumn({
       aria-disabled={isDisabled || undefined}
     >
       <div
-        className={styles.drumScroll}
+        className={[styles.drumScroll, scrollbarStyles.hidden].join(" ")}
         ref={listRef}
         style={{
           height: VISIBLE_ITEMS * ITEM_HEIGHT,
