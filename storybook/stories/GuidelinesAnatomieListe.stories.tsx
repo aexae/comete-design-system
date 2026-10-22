@@ -339,31 +339,32 @@ function Schema(): ReactElement {
       </Cluster>
 
       <Cluster gap="200" align="stretch" style={{ flexWrap: "nowrap" }}>
-        {/* 2 — Navigation latérale : le vrai SideNav du DS */}
-        <Stack gap="100" style={{ flex: "0 0 auto" }}>
-          <div>
-            <Num n="2" />
-          </div>
-          <div style={{ display: "flex", position: "relative", minHeight: 440 }}>
-            <SideNav>
-              <SideNav.Header
-                logo={<Logo product="link" format="icon" />}
-                companyName="Comète Link"
-                description="Main Courante"
-              />
-              <SideNav.Section title="Manager">
-                <SideNav.Item label="Accueil" iconBefore="Home" href="#" />
-                <SideNav.Item label="Agents" iconBefore="Agent" isSelected href="#" />
-                <SideNav.Item label="Sites" iconBefore="LocationOn" href="#" />
-              </SideNav.Section>
-              <SideNav.Divider />
-              <SideNav.Section title="Administration" shortTitle="Admin">
-                <SideNav.Item label="Utilisateurs" iconBefore="Group" href="#" />
-                <SideNav.Item label="Droits" iconBefore="ManageAccounts" href="#" />
-              </SideNav.Section>
-            </SideNav>
-          </div>
-        </Stack>
+        {/* 2 — SideNav : le vrai composant du DS. Comme dans le template « Base », il occupe toute la
+            hauteur de la zone sous le Banner : il démarre en face du Page.Bar et finit avec le contenu (la
+            colonne s'étire, plus de hauteur fixe). Le repère « 2 » est dans son pied, pour ne pas
+            décaler son départ. */}
+        <div style={{ display: "flex", position: "relative", flex: "0 0 auto" }}>
+          <SideNav>
+            <SideNav.Header
+              logo={<Logo product="link" format="icon" />}
+              companyName="Comète Link"
+              description="Main Courante"
+            />
+            <SideNav.Section title="Manager">
+              <SideNav.Item label="Accueil" iconBefore="Home" href="#" />
+              <SideNav.Item label="Agents" iconBefore="Agent" isSelected href="#" />
+              <SideNav.Item label="Sites" iconBefore="LocationOn" href="#" />
+            </SideNav.Section>
+            <SideNav.Divider />
+            <SideNav.Section title="Administration" shortTitle="Admin">
+              <SideNav.Item label="Utilisateurs" iconBefore="Group" href="#" />
+              <SideNav.Item label="Droits" iconBefore="ManageAccounts" href="#" />
+            </SideNav.Section>
+            <SideNav.Footer>
+              <Num n="2" />
+            </SideNav.Footer>
+          </SideNav>
+        </div>
 
         <div style={{ flex: 1, minWidth: 0 }}>
           <Stack gap="150">
