@@ -360,6 +360,10 @@ export const Base: Story = {
                   </Button>
                 }
               />
+              {/* Le conteneur descend jusqu'au bord bas, sans retrait : c'est ce
+                  qui dit que la zone CONTINUE sous la ligne de flottaison. Un
+                  liseré blanc en dessous donnerait l'impression d'une page qui
+                  s'arrête là. Le retrait bas a donc été retiré de `Page.Body`. */}
               <Page.Body>
                 <div
                   style={{
@@ -368,7 +372,10 @@ export const Base: Story = {
                     justifyContent: "center",
                     height: "100%",
                     background: "var(--background-neutral-subtlest-default)",
-                    borderRadius: "var(--radius200)",
+                    // Coins du BAS carrés : un angle arrondi posé pile sur le bord
+                    // se lit comme une boîte qui finit là. Carrés, la coupure est
+                    // franche et dit que la zone continue sous la ligne de flottaison.
+                    borderRadius: "var(--radius200) var(--radius200) 0 0",
                   }}
                 >
                   <Text as="span" color="subtle">

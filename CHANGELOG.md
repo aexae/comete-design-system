@@ -238,6 +238,16 @@ entre versions alpha.
 
 ### Modifié
 
+- **`Page.Body` — plus de retrait bas.** Le corps de page avait
+  `padding-block: var(--space100)`, soit 8px en haut **et** en bas. Seul celui du haut
+  a une raison d'être : il détache le contenu de la toolbar qui le surmonte. En bas il
+  n'y a rien dont se détacher, et sur un contenu qui ne défile pas il ne produisait
+  qu'une bande morte au ras de la fenêtre — là où un contenu qui touche le bord dit
+  au contraire que la page continue. Devient `padding-block-start`.
+
+  **À savoir** : sur une page dont le corps DÉFILE, la dernière ligne s'arrête
+  désormais au ras du bord. L'espacement de fin de contenu, quand il en faut un,
+  appartient au contenu (un `Stack`, une section), pas au conteneur.
 - **`Button`** (`density="touch"`) : padding horizontal porté de 12 px à 16 px (`--space200`)
   pour respecter la règle padding X ≥ 2 × padding Y (8 px), vérifiée par un test. Le bouton
   touch s'élargit de 8 px. `--control-padding-x-touch` (12 px) reste celui des champs.
