@@ -4,7 +4,7 @@
 //   • Banner       → global alert, ABOVE the page layout (outside Page.Body)
 //   • SectionMessage → contextual message INSIDE the page content
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { parseDate } from "@internationalized/date";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, userEvent, expect } from "storybook/test";
@@ -60,6 +60,7 @@ import {
   MenuItem,
   MenuSection,
   Snackbar,
+  Skeleton,
 } from "@aexae/comete-design-system/components";
 import { useTableSelection } from "@aexae/comete-design-system/hooks";
 import css from "./PageTemplates.module.css";
@@ -1328,18 +1329,75 @@ export const Entity: Story = {
 // -----------------------------------------------------------------------
 // 3. Home
 
+// Données de démonstration de la ligne de bienvenue. Le prénom arrive brut de l'API (souvent en
+// capitales) : la casse est une affaire d'AFFICHAGE, on ne montre jamais la donnée telle quelle.
+const HOME_USER_FIRST_NAME_RAW = "AXEL";
+// `Text` s'arrête à `large` (16 px) : la ligne de bienvenue passe au palier du dessus de l'échelle
+// typographique du DS (20 px) par ses TOKENS, jamais une valeur en dur.
+const HOME_WELCOME_TEXT: CSSProperties = {
+  fontSize: "var(--font-size-ui-m)",
+  lineHeight: "var(--line-height-ui-m)",
+};
+const toDisplayName = (raw: string): string =>
+  raw.toLowerCase().replace(/(^|[\s-])(\p{L})/gu, (_m, sep: string, c: string) => sep + c.toUpperCase());
+
+
 /**
  * **Home** — Vue d'ensemble avec KPIs, activité et résumés.
  *
- * - Greeting card avec actions rapides
+ * - Ligne de bienvenue (une seule ligne de texte), **sans Card**, directement suivie des KPI
  * - KPI tiles avec trends
  * - Activité + Couverture — 2 colonnes dès tablet
  * - Sites en cards responsives
+ *
+ * ### La bienvenue : trois règles
+ *
+ * 1. **Le titre nomme la destination.** Le `Page.Bar` affiche toujours le nom de l'écran, en
+ *    miroir de l'entrée `SideNav` (« Accueil »), jamais une salutation. Pas de slot
+ *    sous-titre : l'API du `Page.Bar` ne change pas.
+ * 2. **Un seul heading en tête de page** : le h1 du `Page.Bar`. La bienvenue n'est jamais un
+ *    `Heading`, ni dans une `Card`.
+ * 3. **La bienvenue est du contenu du `Body`**, portée par l'écran : première ligne du
+ *    `Page.Body`, en texte courant discret (`Text`). Le DS ne fournit ni slot ni composant
+ *    pour ça.
+ *
+ * ### Le contenu de la ligne
+ *
+ * - **Une seule ligne** : « Bonjour, Axel ! » (`Text` à 20 px, couleur par défaut, toute la
+ *   ligne en `weight="medium"`). `Text` s'arrête à `large` (16 px) : le palier 20 px vient des
+ *   tokens de typographie (`--font-size-ui-m`), jamais d'une valeur en dur. Pas de nom de
+ *   famille, pas de résumé chiffré : les KPI juste dessous le disent déjà. La casse du prénom est une affaire
+ *   d'affichage, jamais la donnée brute en capitales. Elle respire (`--space300` jusqu'aux KPI)
+ *   sans grossir : ce n'est pas un titre.
+ * - **Pas de ligne de contexte** (société, site) : l'en-tête du `SideNav` affiche déjà la
+ *   société en permanence, ce serait un doublon.
+ * - **Prénom en chargement** : la ligne accepte un nœud à la place du prénom — un `Skeleton`
+ *   inline, de la hauteur de la ligne de texte (`1lh`), donc sans saut de mise en page (voir
+ *   le contrôle « Prénom en chargement »).
+ * - **Pas d'actions rapides** dans le `Body` : l'accueil n'en porte pas (le prototype n'en
+ *   montre aucune). Les « Actions page » vivent dans le `Page.Toolbar` des pages de liste ;
+ *   l'accueil n'a pas de `Page.Toolbar`.
+ *
+ * ### Côté Link
+ *
+ * - Le composant `dashboards/Welcome` (h6 gras) sera **supprimé à la migration**, remplacé par
+ *   cette ligne.
+ * - Les textes passeront par des clés i18n (standard MCE).
  */
-export const Home: Story = {
+export const Home: StoryObj<{ isNameLoading: boolean }> = {
   name: "Home (Accueil)",
   parameters: { design: { type: "figma", url: figmaUrl("4587:24160") } },
-  render: () => (
+  args: { isNameLoading: false },
+  argTypes: {
+    isNameLoading: {
+      name: "Prénom en chargement",
+      control: "boolean",
+      description: "Remplace le prénom par un Skeleton inline, sans saut de mise en page.",
+    },
+  },
+  render: (args) => {
+    const { isNameLoading } = args;
+    return (
       <Page globalActions={null}>
         <Page.Bar
           title="Accueil"
@@ -1354,30 +1412,28 @@ export const Home: Story = {
         />
         <Page.Body>
           <Stack gap="400">
-            {/* Greeting */}
-            <Card appearance="subtle">
-              <CC padding="var(--space300)">
-                <Stack gap="200">
-                  <Stack gap="050">
-                    <Heading size="xlarge" as="span">Bonjour Axel</Heading>
-                    <Text as="span" color="subtle">{"Vous avez 3 alertes et 30 vacations non affectées ce mois-ci."}</Text>
-                  </Stack>
-                  <Cluster gap="100">
-                    <Button color="comete" iconBefore="CalendarMonth">Planifier</Button>
-                    <Button appearance="outlined" iconBefore="PersonAdd">Ajouter un agent</Button>
-                    <Button appearance="outlined" iconBefore="Download">Exporter</Button>
-                  </Cluster>
-                </Stack>
-              </CC>
-            </Card>
+            {/* Bienvenue : du CONTENU, pas un heading ni une Card — une ligne de texte, puis les KPI. */}
+            <Stack gap="300">
+              <Text size="large" weight="medium" style={HOME_WELCOME_TEXT} as="p">
+                Bonjour,{" "}
+                {isNameLoading ? (
+                  <span className={css["welcomeNameSkeleton"]}>
+                    <Skeleton height="1lh" />
+                  </span>
+                ) : (
+                  toDisplayName(HOME_USER_FIRST_NAME_RAW)
+                )}
+                {"\u00a0!"}
+              </Text>
 
-            {/* KPIs */}
-            <Grid columns={{ mobile: 2, tablet: 4 }} gap="200">
-              <Grid.Col><KpiTile icon="CalendarMonth" iconColor="success" value="42" label="Vacations affectées" trend="+12%" trendUp /></Grid.Col>
-              <Grid.Col><KpiTile icon="LocationOn" iconColor="warning" value="3" label="Alertes" trend="+2" trendUp={false} /></Grid.Col>
-              <Grid.Col><KpiTile icon="Schedule" iconColor="information" value="1" label="Retards" trend="−1" trendUp /></Grid.Col>
-              <Grid.Col><KpiTile icon="Warning" iconColor="critical" value="0" label="PDS manquées" trend="0" /></Grid.Col>
-            </Grid>
+              {/* KPIs */}
+              <Grid columns={{ mobile: 2, tablet: 4 }} gap="200">
+                <Grid.Col><KpiTile icon="CalendarMonth" iconColor="success" value="42" label="Vacations affectées" trend="+12%" trendUp /></Grid.Col>
+                <Grid.Col><KpiTile icon="LocationOn" iconColor="warning" value="3" label="Alertes" trend="+2" trendUp={false} /></Grid.Col>
+                <Grid.Col><KpiTile icon="Schedule" iconColor="information" value="1" label="Retards" trend="−1" trendUp /></Grid.Col>
+                <Grid.Col><KpiTile icon="Warning" iconColor="critical" value="0" label="PDS manquées" trend="0" /></Grid.Col>
+              </Grid>
+            </Stack>
 
             {/* Activity + Coverage */}
             <Grid gap="300">
@@ -1466,7 +1522,8 @@ export const Home: Story = {
           </Stack>
         </Page.Body>
       </Page>
-  ),
+    );
+  },
 };
 
 // -----------------------------------------------------------------------
