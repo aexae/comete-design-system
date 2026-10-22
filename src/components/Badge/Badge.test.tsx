@@ -1,4 +1,5 @@
 // Tests unitaires pour le composant Badge
+import { readFileSync } from "node:fs";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { Badge } from "./Badge";
@@ -109,5 +110,16 @@ describe("Badge", () => {
     const el = screen.getByText("OK");
     expect(el.className).toContain("disabled");
     expect(el.className).toContain("success");
+  });
+});
+
+describe("Badge — largeur minimale", () => {
+  it("should have a 16px min-width (= its height) for high and medium importance", () => {
+    // Le `min-width` de 12px laissait un badge d'un caractère plus étroit que haut, et un parent
+    // flex pouvait l'écraser : la largeur mini est celle de la hauteur (`--size200`, 16px).
+    const css = readFileSync("src/components/Badge/Badge.module.css", "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+    const block = /\.high,\s*\.medium\s*\{([^}]*)\}/.exec(css)?.[1] ?? "";
+    expect(block).toMatch(/height:\s*var\(--size200\)/);
+    expect(block).toMatch(/min-width:\s*var\(--size200\)/);
   });
 });
