@@ -1335,19 +1335,11 @@ const HOME_USER_FIRST_NAME_RAW = "AXEL";
 const toDisplayName = (raw: string): string =>
   raw.toLowerCase().replace(/(^|[\s-])(\p{L})/gu, (_m, sep: string, c: string) => sep + c.toUpperCase());
 
-// Rattachement affiché en 2e ligne : manager / partenaire = société seule ; client / agent = site
-// + société ; aucun rattachement = pas de ligne du tout.
-const HOME_CONTEXTS = {
-  societe: "Pro Sécurité",
-  site: "Site Bercy Village · Pro Sécurité",
-  aucun: null,
-} as const;
-type HomeContext = keyof typeof HOME_CONTEXTS;
 
 /**
  * **Home** — Vue d'ensemble avec KPIs, activité et résumés.
  *
- * - Ligne de bienvenue (deux lignes de texte), **sans Card**, directement suivie des KPI
+ * - Ligne de bienvenue (une seule ligne de texte), **sans Card**, directement suivie des KPI
  * - KPI tiles avec trends
  * - Activité + Couverture — 2 colonnes dès tablet
  * - Sites en cards responsives
@@ -1365,14 +1357,13 @@ type HomeContext = keyof typeof HOME_CONTEXTS;
  *
  * ### Le contenu de la ligne
  *
- * - **Ligne 1** : « Bonjour Axel » seul (`Text` medium `subtle`, prénom en `weight="medium"`).
- *   Pas de point d'exclamation, pas de nom de famille, pas de résumé chiffré : les KPI juste
- *   dessous le disent déjà. La casse du prénom est une affaire d'affichage, jamais la donnée
- *   brute en capitales.
- * - **Ligne 2** : le contexte (`Text` small `subtlest`), p. ex. « Pro Sécurité » (manager /
- *   partenaire : société seule ; client / agent : « Site Bercy Village · Pro Sécurité »).
- *   **Sans rattachement, la ligne ne s'affiche pas du tout**, sans espace résiduel (voir le
- *   contrôle « Rattachement »).
+ * - **Une seule ligne** : « Bonjour Axel » (`Text` large, couleur par défaut, prénom en
+ *   `weight="medium"`). Pas de point d'exclamation, pas de nom de famille, pas de résumé
+ *   chiffré : les KPI juste dessous le disent déjà. La casse du prénom est une affaire
+ *   d'affichage, jamais la donnée brute en capitales. Elle respire (`--space300` jusqu'aux KPI)
+ *   sans grossir : ce n'est pas un titre.
+ * - **Pas de ligne de contexte** (société, site) : l'en-tête du `SideNav` affiche déjà la
+ *   société en permanence, ce serait un doublon.
  * - **Prénom en chargement** : la ligne accepte un nœud à la place du prénom — un `Skeleton`
  *   inline, de la hauteur de la ligne de texte (`1lh`), donc sans saut de mise en page (voir
  *   le contrôle « Prénom en chargement »).
@@ -1384,31 +1375,21 @@ type HomeContext = keyof typeof HOME_CONTEXTS;
  *
  * - Le composant `dashboards/Welcome` (h6 gras) sera **supprimé à la migration**, remplacé par
  *   cette ligne.
- * - Le `siteSelected` actuel de Link est un **état de navigation** (dernière fiche site
- *   visitée), pas un périmètre choisi : il ne doit pas alimenter cette ligne côté manager.
  * - Les textes passeront par des clés i18n (standard MCE).
  */
-export const Home: StoryObj<{ isNameLoading: boolean; rattachement: HomeContext }> = {
+export const Home: StoryObj<{ isNameLoading: boolean }> = {
   name: "Home (Accueil)",
   parameters: { design: { type: "figma", url: figmaUrl("4587:24160") } },
-  args: { isNameLoading: false, rattachement: "societe" },
+  args: { isNameLoading: false },
   argTypes: {
     isNameLoading: {
       name: "Prénom en chargement",
       control: "boolean",
       description: "Remplace le prénom par un Skeleton inline, sans saut de mise en page.",
     },
-    rattachement: {
-      name: "Rattachement",
-      control: "radio",
-      options: ["societe", "site", "aucun"],
-      description:
-        "Ligne de contexte : société seule (manager / partenaire), site + société (client / agent), ou aucun rattachement — la ligne disparaît.",
-    },
   },
   render: (args) => {
-    const { isNameLoading, rattachement } = args;
-    const contexte = HOME_CONTEXTS[rattachement];
+    const { isNameLoading } = args;
     return (
       <Page globalActions={null}>
         <Page.Bar
@@ -1424,25 +1405,20 @@ export const Home: StoryObj<{ isNameLoading: boolean; rattachement: HomeContext 
         />
         <Page.Body>
           <Stack gap="400">
-            {/* Bienvenue : du CONTENU, pas un heading ni une Card — deux lignes de texte, puis les KPI. */}
-            <Stack gap="200">
-              <Stack gap="025">
-                <Text size="medium" color="subtle" as="p">
-                  Bonjour{" "}
-                  {isNameLoading ? (
-                    <span className={css["welcomeNameSkeleton"]}>
-                      <Skeleton height="1lh" />
-                    </span>
-                  ) : (
-                    <Text size="medium" weight="medium" color="subtle" as="span">
-                      {toDisplayName(HOME_USER_FIRST_NAME_RAW)}
-                    </Text>
-                  )}
-                </Text>
-                {contexte != null && (
-                  <Text size="small" color="subtlest" as="p">{contexte}</Text>
+            {/* Bienvenue : du CONTENU, pas un heading ni une Card — une ligne de texte, puis les KPI. */}
+            <Stack gap="300">
+              <Text size="large" as="p">
+                Bonjour{" "}
+                {isNameLoading ? (
+                  <span className={css["welcomeNameSkeleton"]}>
+                    <Skeleton height="1lh" />
+                  </span>
+                ) : (
+                  <Text size="large" weight="medium" as="span">
+                    {toDisplayName(HOME_USER_FIRST_NAME_RAW)}
+                  </Text>
                 )}
-              </Stack>
+              </Text>
 
               {/* KPIs */}
               <Grid columns={{ mobile: 2, tablet: 4 }} gap="200">
