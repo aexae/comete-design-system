@@ -4,7 +4,7 @@
 //   • Banner       → global alert, ABOVE the page layout (outside Page.Body)
 //   • SectionMessage → contextual message INSIDE the page content
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { parseDate } from "@internationalized/date";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, userEvent, expect } from "storybook/test";
@@ -1332,6 +1332,12 @@ export const Entity: Story = {
 // Données de démonstration de la ligne de bienvenue. Le prénom arrive brut de l'API (souvent en
 // capitales) : la casse est une affaire d'AFFICHAGE, on ne montre jamais la donnée telle quelle.
 const HOME_USER_FIRST_NAME_RAW = "AXEL";
+// `Text` s'arrête à `large` (16 px) : la ligne de bienvenue passe au palier du dessus de l'échelle
+// typographique du DS (20 px) par ses TOKENS, jamais une valeur en dur.
+const HOME_WELCOME_TEXT: CSSProperties = {
+  fontSize: "var(--font-size-ui-m)",
+  lineHeight: "var(--line-height-ui-m)",
+};
 const toDisplayName = (raw: string): string =>
   raw.toLowerCase().replace(/(^|[\s-])(\p{L})/gu, (_m, sep: string, c: string) => sep + c.toUpperCase());
 
@@ -1357,8 +1363,9 @@ const toDisplayName = (raw: string): string =>
  *
  * ### Le contenu de la ligne
  *
- * - **Une seule ligne** : « Bonjour Axel » (`Text` large, couleur par défaut, prénom en
- *   `weight="medium"`). Pas de point d'exclamation, pas de nom de famille, pas de résumé
+ * - **Une seule ligne** : « Bonjour Axel » (`Text` à 20 px, couleur par défaut, prénom en
+ *   `weight="medium"`). `Text` s'arrête à `large` (16 px) : le palier 20 px vient des tokens
+ *   de typographie (`--font-size-ui-m`), jamais d'une valeur en dur. Pas de point d'exclamation, pas de nom de famille, pas de résumé
  *   chiffré : les KPI juste dessous le disent déjà. La casse du prénom est une affaire
  *   d'affichage, jamais la donnée brute en capitales. Elle respire (`--space300` jusqu'aux KPI)
  *   sans grossir : ce n'est pas un titre.
@@ -1407,14 +1414,14 @@ export const Home: StoryObj<{ isNameLoading: boolean }> = {
           <Stack gap="400">
             {/* Bienvenue : du CONTENU, pas un heading ni une Card — une ligne de texte, puis les KPI. */}
             <Stack gap="300">
-              <Text size="large" as="p">
+              <Text size="large" style={HOME_WELCOME_TEXT} as="p">
                 Bonjour{" "}
                 {isNameLoading ? (
                   <span className={css["welcomeNameSkeleton"]}>
                     <Skeleton height="1lh" />
                   </span>
                 ) : (
-                  <Text size="large" weight="medium" as="span">
+                  <Text size="large" weight="medium" style={HOME_WELCOME_TEXT} as="span">
                     {toDisplayName(HOME_USER_FIRST_NAME_RAW)}
                   </Text>
                 )}

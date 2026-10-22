@@ -131,6 +131,35 @@ const ZONES: Zone[] = [
   },
 ];
 
+// -----------------------------------------------------------------------
+// Variante : l'écran d'accueil (pas un écran de liste, mais même base)
+
+const ACCUEIL_TITLE = "L'écran d'accueil";
+const ACCUEIL_INTRO =
+  "L'accueil n'est pas un écran de liste : ni Page.Toolbar ni Table. Il garde la même base (Banner, SideNav, Page.Bar) et commence par une ligne de bienvenue.";
+const ACCUEIL_CAPTION = "Le titre nomme la destination ; la bienvenue est une ligne de contenu, juste avant les KPI.";
+
+/** La ligne de bienvenue passe au palier 20 px de l'échelle du DS par ses tokens (Text s'arrête à 16 px). */
+const ACCUEIL_LINE_STYLE: React.CSSProperties = {
+  fontSize: "var(--font-size-ui-m)",
+  lineHeight: "var(--line-height-ui-m)",
+};
+
+const ACCUEIL_ITEMS: Array<{ el: string; note: string; tech: ReactNode }> = [
+  {
+    el: "Page.Bar",
+    note: "Le titre nomme la destination : « Accueil », en miroir de l'entrée du SideNav. Jamais une salutation. Un seul heading en tête de page : le h1 du Page.Bar.",
+    tech: 'Page.Bar title="Accueil". Aucune prop ajoutée : pas de slot sous-titre.',
+  },
+  {
+    el: "La ligne de bienvenue",
+    note: "La première ligne du Page.Body : « Bonjour Axel », en texte courant, sans Card ni titre. Le prénom est en graisse medium, sans point d'exclamation ni nom de famille. Une seule ligne : pas de résumé chiffré (les KPI juste dessous le disent déjà) ni de contexte (l'en-tête du SideNav affiche déjà la société). Le DS ne fournit ni slot ni composant pour ça : c'est du contenu de l'écran.",
+    tech: "Text à 20 px (--font-size-ui-m), couleur par défaut, prénom weight=\"medium\" ; Skeleton inline (1lh) pendant le chargement du prénom. Côté Link : dashboards/Welcome (h6 gras) supprimé à la migration.",
+  },
+];
+const ACCUEIL_OK = "Une ligne « Bonjour Axel » en texte courant, puis les KPI.";
+const ACCUEIL_KO = "Une Card grise avec un gros titre « Bonjour Axel », un sous-titre et des boutons.";
+
 interface Rule {
   n: string;
   /** Règle destinée aux développeurs : n'apparaît que si le public « Développeur » est sélectionné. */
@@ -420,6 +449,34 @@ function Schema(): ReactElement {
 // -----------------------------------------------------------------------
 // Page
 
+/** Schéma de l'accueil : Page.Bar « Accueil », une ligne de bienvenue, des KPI. Composants du DS. */
+function AccueilSchema(): ReactElement {
+  return (
+    <div style={frame()}>
+      <Stack gap="200">
+        <Cluster gap="150" align="center" justify="between" style={{ flexWrap: "nowrap" }}>
+          <Heading size="small" as="div">Accueil</Heading>
+          <Button appearance="subtle" density="compact" iconBefore="Settings" aria-label="Réglages" />
+        </Cluster>
+        <Divider />
+        <Text size="large" style={ACCUEIL_LINE_STYLE} as="p">
+          Bonjour{" "}
+          <Text size="large" weight="medium" style={ACCUEIL_LINE_STYLE} as="span">Axel</Text>
+        </Text>
+        <Grid columns={{ mobile: 2, tablet: 4 }} gap="150">
+          {["KPI", "KPI", "KPI", "KPI"].map((k, i) => (
+            <Grid.Col key={i}>
+              <div style={frame()}>
+                <Text size="small" color="subtlest" as="span">{k}</Text>
+              </div>
+            </Grid.Col>
+          ))}
+        </Grid>
+      </Stack>
+    </div>
+  );
+}
+
 const COUNT_WORDS = ["zéro", "une", "deux", "trois", "quatre", "cinq", "six"];
 
 function GuidelinesAnatomie(): ReactElement {
@@ -486,6 +543,35 @@ function GuidelinesAnatomie(): ReactElement {
                     </Cluster>
                   </Grid.Col>
                 ))}
+              </Grid>
+            </Stack>
+
+            <Divider />
+
+            {/* L'écran d'accueil */}
+            <Stack gap="200">
+              <Heading size="medium" as="h2">{ACCUEIL_TITLE}</Heading>
+              <Text size="medium" as="p" color="subtle">{ACCUEIL_INTRO}</Text>
+              <AccueilSchema />
+              <Text size="medium" as="p" color="subtlest">{ACCUEIL_CAPTION}</Text>
+              <Grid gap="300">
+                {ACCUEIL_ITEMS.map((it) => (
+                  <Grid.Col key={it.el} span={{ mobile: 12, desktop: 6 }}>
+                    <Stack gap="050">
+                      <Text size="medium" weight="bold" as="span">{it.el}</Text>
+                      <Text size="medium" color="subtle" as="p">{it.note}</Text>
+                      <TechNote audience={audience}>{it.tech}</TechNote>
+                    </Stack>
+                  </Grid.Col>
+                ))}
+              </Grid>
+              <Grid gap="200">
+                <Grid.Col span={{ mobile: 12, tablet: 6 }}>
+                  <Verdict kind="ok" text={ACCUEIL_OK} />
+                </Grid.Col>
+                <Grid.Col span={{ mobile: 12, tablet: 6 }}>
+                  <Verdict kind="ko" text={ACCUEIL_KO} />
+                </Grid.Col>
               </Grid>
             </Stack>
 
@@ -591,8 +677,8 @@ export default meta;
 type Story = StoryObj;
 
 /**
- * **Anatomie d'un écran de liste** — page de guidelines (six zones, règles, clic de
- * ligne, vocabulaire), recomposée uniquement avec des composants du DS. Le sélecteur
+ * **Anatomie d'un écran de liste** — page de guidelines (six zones, variante accueil,
+ * règles, clic de ligne, vocabulaire), recomposée uniquement avec des composants du DS. Le sélecteur
  * de public révèle les notes techniques et la règle réservée aux développeurs
  * (« Développeur »).
  */
