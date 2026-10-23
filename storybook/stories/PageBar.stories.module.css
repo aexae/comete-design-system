@@ -1,0 +1,9 @@
+/* Stories Page.Bar — styles ne pouvant pas passer par l'API du composant. 100 % tokens. */
+
+/* Filet sous la barre : celui de la variante compacte (`border-bottom: 1px solid
+   var(--border-subtle)`), posé sur la barre LARGE de la story pour comparer les deux. */
+/* `.bar.large` du composant pose `border-bottom: 0` (0,2,0). Sélecteur d'élément + classe doublée
+   (0,2,1) : l'emporte quel que soit l'ordre de chargement des feuilles, sans `!important`. */
+header.barBordered.barBordered {
+  border-bottom: 1px solid var(--border-subtle);
+}

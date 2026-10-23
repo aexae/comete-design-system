@@ -10,13 +10,13 @@ import type { ReactNode } from "react";
 import { within, expect } from "storybook/test";
 import {
   Page,
-  Avatar,
   Button,
   SearchField,
 } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 import { PageGlobalActions } from "./_pageChrome";
+import css from "./PageBar.stories.module.css";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -108,12 +108,16 @@ const barFiller = Array.from({ length: 24 }, (_, i) => (
 /**
  * **Bar — large** : titre 32px + actions globales (notifications, réglages,
  * avatar). Variante desktop/tablette.
+ *
+ * La barre large n'a pas de filet par défaut ; la compacte (épinglée) a un `border-bottom`.
+ * Ici la story ajoute le même filet sous la large (`--border-subtle`, via `className`) pour
+ * comparer les deux variantes côte à côte avec la story « Compact ».
  */
 export const Large: Story = {
   render: () => (
     <Gutters>
       <Page globalActions={<PageGlobalActions />}>
-        <Page.Bar size="large" title="Accueil" />
+        <Page.Bar size="large" title="Accueil" className={css["barBordered"]} />
         <Page.Body>
           <p>Contenu de la page…</p>
         </Page.Body>
@@ -127,47 +131,6 @@ export const Large: Story = {
     await expect(h1s).toHaveLength(1);
     await expect(h1s[0]).toHaveTextContent("Accueil");
   },
-};
-
-/**
- * **Bar — page racine, responsive** : une **seule** affordance de navigation
- * dans `leading` — ici le menu hamburger (mobile web : il ouvre la SideNav dans un
- * `Drawer`). Aucune `size` forcée : le titre suit la **largeur de la Page** via
- * `@container`.
- *
- * 👉 Redimensionne le cadre (poignée en bas à droite) : sous 768px la barre
- * passe compacte (épinglée, titre tronqué), au-dessus elle repasse large.
- *
- * NB : en contexte réel, l'app n'affiche le hamburger que lorsque la SideNav
- * est repliée (desktop persistante ⇒ pas de hamburger). Ici il est toujours
- * montré pour la démo.
- */
-export const RootResponsive: Story = {
-  name: "Root page",
-  render: () => (
-    <div
-      style={{
-        resize: "horizontal",
-        overflow: "hidden",
-        width: 1000,
-        maxWidth: "100%",
-        minWidth: 320,
-        height: 420,
-        border: "1px solid var(--border-subtle)",
-        borderRadius: "var(--radius200)",
-      }}
-    >
-      <Page globalActions={<PageGlobalActions />} style={{ height: "100%" }}>
-        <Page.Bar
-          title="Accueil"
-          leading={
-            <Button appearance="subtle" iconBefore="Menu" aria-label="Ouvrir le menu" />
-          }
-        />
-        <Page.Body>{barFiller}</Page.Body>
-      </Page>
-    </div>
-  ),
 };
 
 /**
@@ -261,26 +224,6 @@ export const WithToolbar: Story = {
         />
         <Page.Body>
           <p>Liste des agents…</p>
-        </Page.Body>
-      </Page>
-    </Gutters>
-  ),
-};
-
-/**
- * **Bar — sans Toolbar** : page de détail ou de réglages, barre seule.
- */
-export const WithoutToolbar: Story = {
-  name: "Without toolbar",
-  render: () => (
-    <Gutters>
-      <Page globalActions={<Avatar size="medium" initials="AC" />}>
-        <Page.Bar
-          size="large"
-          title="Paramètres du compte"
-        />
-        <Page.Body>
-          <p>Contenu de la page…</p>
         </Page.Body>
       </Page>
     </Gutters>
