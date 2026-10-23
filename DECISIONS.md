@@ -40,3 +40,13 @@ MUI). `--text-default` est la couleur de texte principale du thème.
 **Contexte / raison** : `Avatar` référençait `--radius125`, inexistant, donc coin carré. Le
 token prolonge l'échelle d'Avatar (8 px en xlarge, 12 px en xxxlarge). Création approuvée
 explicitement.
+
+## 2026-10-23 — Rechargement auto de Storybook sur chunk introuvable
+
+**Décision** : `preview-head.html` écoute `vite:preloadError` et recharge la fenêtre
+principale une fois (garde `sessionStorage` de 30 s contre les boucles).
+
+**Contexte / raison** : chaque déploiement GitHub Pages supprime les assets hashés du
+déploiement précédent. Les onglets ouverts ou le HTML en cache pointaient vers des chunks
+absents, ce qui obligeait à recharger à la main (Cmd+R). C'est le mécanisme documenté par
+Vite pour ce cas.

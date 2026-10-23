@@ -48,8 +48,8 @@ const meta = {
             <GuidelinesFlat
               when={[
                 "Navigation principale sur mobile : 3 à 5 destinations de premier niveau accessibles au pouce.",
-                "Quand l'app est consultée majoritairement sur petit écran.",
-                "Applications web progressives (PWA) ou apps hybrides ciblant principalement le mobile.",
+                "Quand l'application est installée sur un mobile ou une tablette",
+                "Applications web progressives (PWA) ou apps hybrides multi-plateformes.",
               ]}
               avoid={[
                 "Un desktop avec navigation riche → SideNav.",
