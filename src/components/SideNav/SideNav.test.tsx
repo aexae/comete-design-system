@@ -155,17 +155,6 @@ describe("SideNav", () => {
     expect(button.querySelector("svg")).toBeInTheDocument();
   });
 
-  // SideNav.Item — description -------------------------------------------
-
-  it("should render description when provided", () => {
-    render(
-      <SideNav>
-        <SideNav.Item label="Home" description="View statistics" />
-      </SideNav>
-    );
-    expect(screen.getByText("View statistics")).toBeInTheDocument();
-  });
-
   // SideNav.Item — onClick -----------------------------------------------
 
   it("should call onClick when item is clicked", async () => {
@@ -293,16 +282,10 @@ describe("SideNav", () => {
     expect(
       container.querySelector("[class*='skeletonItem']"),
     ).toBeInTheDocument();
-    // 1 pastille + 1 barre de label (pas de description par défaut). Les
+    // 1 pastille + 1 barre de label. Les
     // skeletons sont décoratifs (aria-hidden) — annoncés une seule fois par le
     // conteneur SideNav.Skeleton parent, pas individuellement.
     expect(container.querySelectorAll('[aria-hidden="true"]')).toHaveLength(2);
-  });
-
-  it("should render a second line when hasDescription is set", () => {
-    const { container } = render(<SideNav.ItemSkeleton hasDescription />);
-    // icône + label + description
-    expect(container.querySelectorAll('[aria-hidden="true"]')).toHaveLength(3);
   });
 
   // SideNav.Skeleton ----------------------------------------------------

@@ -286,6 +286,13 @@ entre versions alpha.
 
 ### Changements cassants (BREAKING)
 
+- **`SideNav.Item` — prop `description` supprimée**, avec le `.itemDescription` qui la
+  rendait. Un item de navigation porte un libellé, pas un résumé : la seconde ligne
+  allongeait la rangée, brisait le rythme vertical de la liste et disparaissait de
+  toute façon en mode rail. Retirer la prop des appels suffit à migrer.
+- **`SideNav.ItemSkeleton` — prop `hasDescription` supprimée.** Conséquence directe :
+  c'était le placeholder d'une 2ᵉ ligne qui n'existe plus. Un squelette à deux lignes
+  pour un item qui n'en a qu'une annoncerait un chargement trompeur.
 - **`FilterChip` / `FilterChipRow`** : composants **supprimés** (organisme de filtres
   rapides), avec leurs types et leur story `Components/FilterChip`. Retirer les imports
   correspondants ; le panneau de filtres de la recette « Filtres » (`Popup` / `Drawer`)

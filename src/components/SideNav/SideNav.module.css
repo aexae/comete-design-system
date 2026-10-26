@@ -306,21 +306,6 @@
   color: var(--text-disabled);
 }
 
-.itemDescription {
-  font-family: var(--font-family-primary);
-  font-size: var(--font-size-ui-xs);
-  font-weight: var(--font-weight-regular);
-  line-height: var(--line-height-ui-xs);
-  color: var(--text-subtlest);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.itemDisabled .itemDescription {
-  color: var(--text-disabled);
-}
-
 /* ------------------------------------------------------------------ */
 /* Item icons                                                          */
 
@@ -564,7 +549,6 @@
 }
 
 /* Description et icône secondaire : absentes du rail. */
-.sideNav[data-mode="rail"] .itemDescription,
 .sideNav[data-mode="rail"] .iconAfter {
   display: none;
 }

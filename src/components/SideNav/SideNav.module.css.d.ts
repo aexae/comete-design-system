@@ -20,7 +20,6 @@ declare const styles: {
   readonly "iconBefore": string;
   readonly "item": string;
   readonly "itemContent": string;
-  readonly "itemDescription": string;
   readonly "itemDisabled": string;
   readonly "itemSelected": string;
   readonly "itemTitle": string;

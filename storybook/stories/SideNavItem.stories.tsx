@@ -5,19 +5,17 @@ import { SideNav, SideNavItem } from "@aexae/comete-design-system/components";
 import type { SideNavItemProps } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
-import { MainCouranteShell } from "./_appShell";
+import { SideNavOnly } from "./_appShell";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
-/** Le composant est montré DANS le template applicatif (Page.Bar + SideNav + contenu). */
+/** La nav entière, sans la page : un item se juge dans sa nav. */
 function NavContext({ children }: { children: ReactNode }) {
   return (
-    <MainCouranteShell
-      nav={<SideNav.Section title="Manager">{children}</SideNav.Section>}
-    />
+    <SideNavOnly nav={<SideNav.Section title="Manager">{children}</SideNav.Section>} />
   );
 }
 
@@ -65,7 +63,6 @@ const meta = {
   ],
   argTypes: {
     label: { control: "text" },
-    description: { control: "text" },
     iconBefore: { control: "text" },
     iconAfter: { control: "text" },
     isSelected: { control: "boolean" },
@@ -99,18 +96,6 @@ export const Disabled: Story = {
   parameters: { docs: { source: { code: `<SideNav.Item label="Expérimental" iconBefore="Extension" isDisabled />` } } },
 };
 
-/** Avec description et icône après. */
-export const WithDescription: Story = {
-  name: "With description",
-  args: {
-    label: "Accueil",
-    description: "Vue d'ensemble du système",
-    iconBefore: "Home",
-    iconAfter: "ChevronRight",
-  },
-  parameters: { docs: { source: { code: `<SideNav.Item\n  label="Accueil"\n  description="Vue d'ensemble"\n  iconBefore="Home"\n  iconAfter="ChevronRight"\n  href="/"\n/>` } } },
-};
-
 /** Sans icône. */
 export const WithoutIcon: Story = {
   name: "Without icon",
@@ -133,8 +118,7 @@ export const AllStates: Story = {
       <SideNavItem label="Default" iconBefore="Home" />
       <SideNavItem label="Selected" iconBefore="Home" isSelected />
       <SideNavItem label="Disabled" iconBefore="Extension" isDisabled />
-      <SideNavItem label="With description" iconBefore="Docs" description="Fichiers et dossiers" iconAfter="ChevronRight" />
-      <SideNavItem label="Selected + description" iconBefore="Settings" description="Paramètres avancés" isSelected iconAfter="ChevronRight" />
+      <SideNavItem label="Avec chevron" iconBefore="Docs" iconAfter="ChevronRight" />
     </>
   ),
 };

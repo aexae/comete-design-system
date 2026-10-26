@@ -82,6 +82,63 @@ export function DemoPageContent({ isLoading = false }: { isLoading?: boolean }) 
   );
 }
 
+/**
+ * La SideNav SEULE, pour les stories d'un de ses sous-composants.
+ *
+ * La navigation est montrée entière — marque, corps, pied — parce qu'une
+ * pièce de nav se juge dans la nav : l'alignement des icônes, la largeur
+ * utile, le rythme vertical ne se voient qu'en contexte.
+ *
+ * Ce qui disparaît est la PAGE : `Page.Bar` et contenu de démonstration
+ * n'apprennent rien sur un `SideNav.Item` et occupent les trois quarts de la
+ * vignette. Le gabarit applicatif complet (`MainCouranteShell`) reste pour
+ * les stories de la SideNav elle-même.
+ */
+export function SideNavOnly({
+  nav,
+  mode = "expanded",
+  logo = <Logo product="cafe" format="icon" />,
+  header,
+  footer,
+  height = "100vh",
+}: {
+  /** Corps de la navigation. */
+  nav: ReactNode;
+  mode?: SideNavMode;
+  logo?: ReactNode;
+  /** En-tête personnalisé (remplace `SideNav.Header`). */
+  header?: ReactNode;
+  /** Pied personnalisé (remplace le `SideNav.Footer` par défaut). */
+  footer?: ReactNode;
+  /** Hauteur du cadre. @default "100vh" */
+  height?: string | number;
+}) {
+  const [current, setCurrent] = useState<SideNavMode>(mode);
+  return (
+    <SideNav.Provider mode={current} onModeChange={setCurrent}>
+      <div style={{ display: "flex", height }}>
+        <SideNav>
+          {header ?? (
+            <SideNav.Header
+              logo={logo}
+              companyName="Pro Sécurité"
+              description="Main Courante"
+            />
+          )}
+          {nav}
+          {footer ?? (
+            <SideNav.Footer>
+              <SideNav.FooterBrand>
+                <FooterLogo />
+              </SideNav.FooterBrand>
+            </SideNav.Footer>
+          )}
+        </SideNav>
+      </div>
+    </SideNav.Provider>
+  );
+}
+
 export interface MainCouranteShellProps {
   /** Corps de la navigation (sections réelles, skeleton ou état vide). */
   nav: ReactNode;
@@ -99,6 +156,14 @@ export interface MainCouranteShellProps {
   footer?: ReactNode;
   /** Titre de la `Page.Bar`. @default "Accueil" */
   title?: string;
+  /**
+   * Hauteur du gabarit. @default "100vh"
+   *
+   * À borner pour une story qui doit montrer le défilement interne de la
+   * nav : à pleine hauteur de fenêtre, un grand écran affiche tout le
+   * contenu et l'ascenseur ne paraît jamais.
+   */
+  height?: string | number;
 }
 
 /**
@@ -115,13 +180,14 @@ export function MainCouranteShell({
   header,
   footer,
   title = "Accueil",
+  height = "100vh",
 }: MainCouranteShellProps) {
   const [current, setCurrent] = useState<SideNavMode>(mode);
   return (
     <SideNav.Provider mode={current} onModeChange={setCurrent}>
       {/* La SideNav occupe toute la hauteur de la page ; la Page (Bar + contenu)
           prend le reste et défile seule. */}
-      <div style={{ display: "flex", height: "100vh" }}>
+      <div style={{ display: "flex", height }}>
         <SideNav>
           {header ?? (
             <SideNav.Header

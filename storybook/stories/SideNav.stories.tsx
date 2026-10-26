@@ -5,7 +5,7 @@ import { within, userEvent, expect, waitFor } from "storybook/test";
 import { SideNav, Logo, Page, Button, Drawer } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
-import { MainCouranteShell, MainCouranteNav, DemoPageContent } from "./_appShell";
+import { MainCouranteShell, MainCouranteNav, DemoPageContent, SideNavOnly } from "./_appShell";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -30,7 +30,7 @@ const meta: Meta = {
           guidelines={
             <GuidelinesFlat
               when={[
-                "Navigation principale persistante d'une application, sur le côté (sections, rubriques).",
+                "Navigation principale d'une application WEB, sur le côté (sections, rubriques). Persistante en DESKTOP seulement : sous 1200 px, tablette comprise, elle devient un Drawer qu'on ouvre.",
                 "Quand la hiérarchie de navigation est riche et bénéficie d'un rail réduit (80 px) — desktop uniquement (≥ 1200 px).",
               ]}
               avoid={[
@@ -262,15 +262,17 @@ export const MobileWebInteractions: Story = {
 };
 
 /**
- * **Chargement** — même template, mais les rubriques de navigation chargent :
- * la marque (SideNav.Header) et le footer restent, seul le corps est en
- * skeleton (3 groupes calqués sur Manager / MCE / Administration).
+ * **Chargement** — les rubriques de navigation chargent : la marque
+ * (`SideNav.Header`) et le pied restent, seul le corps est en skeleton
+ * (3 groupes calqués sur Manager / MCE / Administration).
+ *
+ * Sans la page : le sujet est l'état de chargement de la NAV, et un contenu
+ * de démonstration à côté ne ferait que détourner le regard.
  */
 export const Loading: Story = {
   parameters: { controls: { disable: true } },
   render: () => (
-    <MainCouranteShell
-      isPageLoading
+    <SideNavOnly
       nav={
         <>
           <SideNav.Skeleton count={4} />
@@ -285,13 +287,15 @@ export const Loading: Story = {
 };
 
 /**
- * **Vide** — même template, mais aucune rubrique n'est accessible : la marque
- * et le footer restent, le corps affiche l'état vide (`SideNav.Empty`).
+ * **Vide** — aucune rubrique n'est accessible : la marque et le pied restent,
+ * le corps affiche l'état vide (`SideNav.Empty`).
+ *
+ * Sans la page, pour la même raison que la story de chargement.
  */
 export const Empty: Story = {
   parameters: { controls: { disable: true } },
   render: () => (
-    <MainCouranteShell
+    <SideNavOnly
       nav={
         <SideNav.Empty
           icon="Search"
@@ -304,42 +308,6 @@ export const Empty: Story = {
 };
 
 /**
- * **Logo surdimensionné** — vérifie la contrainte de `SideNav.Header` : un logo
- * de 160px fourni au slot est mis à l'échelle (hauteur bornée à ~40px), sans
- * casser la hauteur de l'en-tête.
- */
-export const OversizedLogo: Story = {
-  name: "Logo surdimensionné (contrainte)",
-  parameters: { controls: { disable: true } },
-  render: () => (
-    <MainCouranteShell
-      nav={<MainCouranteNav />}
-      logo={
-        <img
-          alt="Logo 160×160"
-          width={160}
-          height={160}
-          src={`data:image/svg+xml,${encodeURIComponent(
-            '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><rect width="160" height="160" rx="24" fill="#334155"/></svg>',
-          )}`}
-        />
-      }
-    />
-  ),
-};
-
-/**
- * **Pied de marque** — `SideNav.FooterBrand` (dans `SideNav.Footer`) affiche un
- * logo discret (opacité réduite), centré en bas ; l'opacité remonte au survol.
- * Visible ici au bas de la navigation déployée.
- */
-export const BrandFooter: Story = {
-  name: "Pied de marque",
-  parameters: { controls: { disable: true } },
-  render: () => <MainCouranteShell nav={<MainCouranteNav />} />,
-};
-
-/**
  * **Défilement interne** — beaucoup d'entrées : seul le corps (sections +
  * items) défile, tandis que le header (marque) et le footer (comète link)
  * restent épinglés. Réduis la hauteur du canvas pour voir le scroll apparaître.
@@ -348,34 +316,62 @@ export const Scrollable: Story = {
   name: "Scroll (contenu long)",
   parameters: { controls: { disable: true } },
   render: () => (
+    // Deux leviers, parce qu'un seul ne suffit pas. La hauteur est bornée :
+    // à 100vh, un grand écran affiche tout et l'ascenseur ne paraît jamais.
+    // 720px reste une hauteur d'écran plausible — la nav garde ses
+    // proportions au lieu d'être réduite à un moignon. Et les entrées sont
+    // nombreuses : avec dix de plus que l'écran, le pouce est court et le
+    // défilement porte sur une vraie distance, ce qui est le propos.
+    //
+    // Bornée sur le GABARIT et non par un décorateur : sinon la nav garde sa
+    // hauteur et se fait rogner, pied compris.
     <MainCouranteShell
+      height={720}
       nav={
         <>
-          <SideNav.Section title="Manager">
-            <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="/" />
-            <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
-            <SideNav.Item label="Sites" iconBefore="Site" href="/sites" />
-            <SideNav.Item label="Pointages" iconBefore="Clockings" href="/pointages" />
-            <SideNav.Item label="Plannings" iconBefore="CalendarMonth" href="/plannings" />
-            <SideNav.Item label="Vacations" iconBefore="EventAvailable" href="/vacations" />
-          </SideNav.Section>
-          <SideNav.Divider />
-          <SideNav.Section title="MCE">
-            <SideNav.Item label="MCE" iconBefore="MenuBook" href="/mce" />
-            <SideNav.Item label="Formulaires" iconBefore="FormEdit" href="/forms" />
-            <SideNav.Item label="Rapports" iconBefore="Assignment" href="/reports" />
-            <SideNav.Item label="Anomalies" iconBefore="Warning" href="/issues" />
-          </SideNav.Section>
-          <SideNav.Divider />
-          <SideNav.Section title="Administration" shortTitle="Admin">
-            <SideNav.Item label="Utilisateurs" iconBefore="Group" href="/users" />
-            <SideNav.Item label="Droits" iconBefore="ManageAccounts" href="/permissions" />
-            <SideNav.Item label="Licences" iconBefore="Key" href="/licences" />
-            <SideNav.Item label="Facturation" iconBefore="Payments" href="/billing" />
-            <SideNav.Item label="Intégrations" iconBefore="Extension" href="/integrations" />
-            <SideNav.Item label="Journaux" iconBefore="Description" href="/logs" />
-            <SideNav.Item label="Paramètres" iconBefore="Settings" href="/settings" />
-          </SideNav.Section>
+            <SideNav.Section title="Manager">
+              <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="/" />
+              <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
+              <SideNav.Item label="Sites" iconBefore="Site" href="/sites" />
+              <SideNav.Item label="Pointages" iconBefore="Clockings" href="/pointages" />
+              <SideNav.Item label="Plannings" iconBefore="CalendarMonth" href="/plannings" />
+              <SideNav.Item label="Vacations" iconBefore="EventAvailable" href="/vacations" />
+              <SideNav.Item label="Équipes" iconBefore="Group" href="/equipes" />
+              <SideNav.Item label="Secteurs" iconBefore="LocationOn" href="/secteurs" />
+              <SideNav.Item label="Contrats" iconBefore="Description" href="/contrats" />
+              <SideNav.Item label="Absences" iconBefore="EventBusy" href="/absences" />
+              <SideNav.Item label="Remplacements" iconBefore="SwapVert" href="/remplacements" />
+              <SideNav.Item label="Astreintes" iconBefore="Alarm" href="/astreintes" />
+            </SideNav.Section>
+            <SideNav.Divider />
+            <SideNav.Section title="MCE">
+              <SideNav.Item label="MCE" iconBefore="MenuBook" href="/mce" />
+              <SideNav.Item label="Formulaires" iconBefore="FormEdit" href="/forms" />
+              <SideNav.Item label="Rapports" iconBefore="Assignment" href="/reports" />
+              <SideNav.Item label="Anomalies" iconBefore="Warning" href="/issues" />
+              <SideNav.Item label="Mains courantes" iconBefore="EditNote" href="/mains-courantes" />
+              <SideNav.Item label="Rondes" iconBefore="Autorenew" href="/rondes" />
+              <SideNav.Item label="Incidents" iconBefore="EmergencyHome" href="/incidents" />
+              <SideNav.Item label="Consignes" iconBefore="Shield" href="/consignes" />
+              <SideNav.Item label="Clés" iconBefore="Key" href="/cles" />
+              <SideNav.Item label="Véhicules" iconBefore="DirectionsCar" href="/vehicules" />
+            </SideNav.Section>
+            <SideNav.Divider />
+            <SideNav.Section title="Administration" shortTitle="Admin">
+              <SideNav.Item label="Utilisateurs" iconBefore="Group" href="/users" />
+              <SideNav.Item label="Droits" iconBefore="ManageAccounts" href="/permissions" />
+              <SideNav.Item label="Licences" iconBefore="Key" href="/licences" />
+              <SideNav.Item label="Facturation" iconBefore="Payments" href="/billing" />
+              <SideNav.Item label="Intégrations" iconBefore="Extension" href="/integrations" />
+              <SideNav.Item label="Journaux" iconBefore="Description" href="/logs" />
+              <SideNav.Item label="Paramètres" iconBefore="Settings" href="/settings" />
+              <SideNav.Item label="Import" iconBefore="UploadFile" href="/import" />
+              <SideNav.Item label="Export" iconBefore="Download" href="/export" />
+              <SideNav.Item label="Archives" iconBefore="Archive" href="/archives" />
+              <SideNav.Item label="Audit" iconBefore="FolderManaged" href="/audit" />
+              <SideNav.Item label="Notifications" iconBefore="Notifications" href="/notifications" />
+              <SideNav.Item label="Modèles" iconBefore="Category" href="/modeles" />
+            </SideNav.Section>
         </>
       }
     />
@@ -392,7 +388,7 @@ export const Scrollable: Story = {
     await expect(first).toHaveTextContent("Accueil");
     last.focus();
     await expect(last).toHaveFocus();
-    await expect(last).toHaveTextContent("Paramètres");
+    await expect(last).toHaveTextContent("Modèles");
     // Nettoyage : rendre le focus et remettre le défilement en haut pour ne
     // pas altérer le snapshot visuel (baseline = liste non défilée).
     (document.activeElement as HTMLElement | null)?.blur();
