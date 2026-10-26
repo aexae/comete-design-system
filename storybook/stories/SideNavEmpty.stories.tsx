@@ -4,7 +4,7 @@ import { SideNavEmpty, Button } from "@aexae/comete-design-system/components";
 import type { SideNavEmptyProps } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
-import { MainCouranteShell } from "./_appShell";
+import { SideNavOnly } from "./_appShell";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -46,7 +46,7 @@ const meta = {
     design: { type: "figma", url: figmaUrl("4319:15156") },
   },
   decorators: [
-    (Story) => <MainCouranteShell nav={<Story />} />,
+    (Story) => <SideNavOnly nav={<Story />} />,
   ],
   argTypes: {
     title: { control: "text" },

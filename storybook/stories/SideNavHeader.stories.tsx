@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { SideNav, Logo } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
-import { MainCouranteShell, MainCouranteNav } from "./_appShell";
+import { SideNavOnly, MainCouranteNav } from "./_appShell";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -13,7 +13,7 @@ const figmaUrl = (nodeId: string) =>
 
 /** Le composant est montré DANS le template applicatif (Page.Bar + SideNav + contenu). */
 function NavContext({ children }: { children: ReactNode }) {
-  return <MainCouranteShell header={children} nav={<MainCouranteNav />} />;
+  return <SideNavOnly header={children} nav={<MainCouranteNav />} />;
 }
 
 function SideNavHeaderStory(props: {

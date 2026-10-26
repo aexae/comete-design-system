@@ -109,8 +109,6 @@ export interface SideNavHeaderProps {
 export interface SideNavItemProps {
   /** Libellé principal de l'item. */
   label: string;
-  /** Texte secondaire sous le label. */
-  description?: string;
   /** Icône avant le label. */
   iconBefore?: IconName;
   /** Icône après le label. */
@@ -167,8 +165,6 @@ export interface SideNavFooterBrandProps {
 }
 
 export interface SideNavItemSkeletonProps {
-  /** Ajoute une 2ᵉ ligne (placeholder de description). @default false */
-  hasDescription?: boolean;
   className?: string;
 }
 
@@ -250,7 +246,6 @@ SideNavHeader.displayName = "SideNav.Header";
 
 export function SideNavItem({
   label,
-  description,
   iconBefore,
   iconAfter,
   isSelected = false,
@@ -299,9 +294,6 @@ export function SideNavItem({
       )}
       <span className={styles.itemContent}>
         <span className={styles.itemTitle}>{label}</span>
-        {description && (
-          <span className={styles.itemDescription}>{description}</span>
-        )}
       </span>
       {iconAfter && (
         <Icon
@@ -448,7 +440,6 @@ SideNavFooterBrand.displayName = "SideNav.FooterBrand";
  * un état de chargement sur mesure, ou via `SideNav.Skeleton`.
  */
 export function SideNavItemSkeleton({
-  hasDescription = false,
   className,
 }: SideNavItemSkeletonProps): ReactElement {
   return (
@@ -456,9 +447,6 @@ export function SideNavItemSkeleton({
       <Skeleton shape="circle" height={24} decorative />
       <span className={styles.skeletonItemContent}>
         <Skeleton height={12} width="70%" radius={4} decorative />
-        {hasDescription && (
-          <Skeleton height={10} width="45%" radius={4} decorative />
-        )}
       </span>
     </div>
   );

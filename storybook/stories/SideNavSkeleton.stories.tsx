@@ -4,7 +4,7 @@ import { SideNav, SideNavSkeleton } from "@aexae/comete-design-system/components
 import type { SideNavSkeletonProps } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
-import { MainCouranteShell } from "./_appShell";
+import { SideNavOnly } from "./_appShell";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -46,7 +46,7 @@ const meta = {
     design: { type: "figma", url: figmaUrl("4319:15156") },
   },
   decorators: [
-    (Story) => <MainCouranteShell nav={<Story />} />,
+    (Story) => <SideNavOnly nav={<Story />} />,
   ],
   argTypes: {
     count: { control: { type: "number", min: 1, max: 12 } },
@@ -89,7 +89,7 @@ export const MultipleSections: Story = {
 
 /**
  * Brique unitaire — `SideNav.ItemSkeleton` : la silhouette d'un seul item
- * (pastille d'icône + barre de label, `hasDescription` pour une 2ᵉ ligne).
+ * (pastille d'icône + barre de label).
  * À composer manuellement pour un état de chargement sur mesure, ou via
  * `SideNav.Skeleton` qui en empile plusieurs.
  */
@@ -100,7 +100,6 @@ export const ItemSkeletons: Story = {
     <>
       <SideNav.ItemSkeleton />
       <SideNav.ItemSkeleton />
-      <SideNav.ItemSkeleton hasDescription />
     </>
   ),
 };
