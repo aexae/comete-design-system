@@ -104,6 +104,15 @@ describe("QuickActions — comportement", () => {
     expect(row.children).toHaveLength(2);
     expect(row.textContent).toBe("Scanner un équipement");
   });
+
+  it("should put the icon tile before the label (icon on the left, label on the right)", () => {
+    render(<QuickActions actions={ACTIONS} isOpen onOpenChange={() => undefined} />);
+    const row = screen.getByRole("button", { name: "Scanner un équipement" });
+    const [first, second] = Array.from(row.children);
+    // La pastille (décorative) précède le libellé : l'ordre du DOM suit l'ordre visuel.
+    expect(first?.getAttribute("aria-hidden")).toBe("true");
+    expect(second?.textContent).toBe("Scanner un équipement");
+  });
 });
 
 describe("QuickActions — règle de couleur (ADR 0002)", () => {

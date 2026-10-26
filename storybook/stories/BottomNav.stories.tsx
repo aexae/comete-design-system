@@ -389,8 +389,8 @@ export const PlusPageInteractions: Story = {
 
 /**
  * **Recette FAB** — le bouton d'action central (`BottomNav.Action`) ouvre `QuickActions` : des
- * **pastilles flottantes** au-dessus d'un voile, une par action rapide (libellé à gauche,
- * pastille d'icône à droite).
+ * **pastilles flottantes** au-dessus d'un voile, une par action rapide (pastille d'icône à
+ * gauche, libellé à droite).
  *
  * - **Vocabulaire réel** : les deux actions du FAB de l'agent en MCE (Link) — « Déclarer un
  *   évènement » et « Démarrer une ronde ». Aucune n'est `critical` : MCE n'a aucune notion de

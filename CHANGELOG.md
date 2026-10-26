@@ -86,8 +86,8 @@ entre versions alpha.
 - **`Table` — `rowSeparation="hovered"`** : la ligne survolée reçoit son fond de survol **et** un
   filet ; les autres lignes restent nues.
 - **`QuickActions`** (nouveau composant) : menu d'actions rapides du FAB (`BottomNav.Action`) —
-  pattern « speed dial », des **pastilles flottantes** au-dessus d'un voile (libellé à
-  gauche, pastille d'icône circulaire à droite). Rend **uniquement la couche flottante** (le
+  pattern « speed dial », des **pastilles flottantes** au-dessus d'un voile (pastille
+  d'icône circulaire à gauche, libellé à droite). Rend **uniquement la couche flottante** (le
   déclencheur reste le FAB, inchangé). Construit sur `ModalOverlay` / `Modal` / `Dialog`
   (react-aria-components) : voile, piège de focus, Échap, retour du focus sur le déclencheur,
   apparition décalée. API : `actions` (2 à 5 : `id`, `icon`, `label`, `tone`, `onPress`),

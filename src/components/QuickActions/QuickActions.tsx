@@ -73,8 +73,8 @@ export interface QuickActionsProps {
 
 /**
  * QuickActions — menu d'actions rapides du FAB (`BottomNav.Action`) : des **pastilles
- * flottantes** au-dessus d'un voile, une par action (libellé à gauche, pastille d'icône
- * circulaire à droite).
+ * flottantes** au-dessus d'un voile, une par action (pastille d'icône circulaire à
+ * gauche, libellé à droite).
  *
  * Le composant rend **uniquement la couche flottante** : le déclencheur reste à
  * l'appelant (`BottomNav.Action`, qui garde sa rotation en croix et son `aria-expanded`).
@@ -195,10 +195,10 @@ export function QuickActions({
                     onOpenChange(false);
                   }}
                 >
-                  <span className={styles.label}>{action.label}</span>
                   <span className={styles.tile} data-tone={action.tone ?? "comete"} aria-hidden="true">
                     <Icon icon={action.icon} size={24} className={styles.glyph} />
                   </span>
+                  <span className={styles.label}>{action.label}</span>
                 </AriaButton>
               </li>
             ))}
