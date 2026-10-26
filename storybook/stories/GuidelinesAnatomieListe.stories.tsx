@@ -669,7 +669,7 @@ function GuidelinesAnatomie(): ReactElement {
 // Meta
 
 const meta: Meta = {
-  title: "Templates/Anatomie d'un écran de liste",
+  title: "Templates/Anatomy of a list screen",
   parameters: { layout: "fullscreen" },
 };
 export default meta;
@@ -682,7 +682,7 @@ type Story = StoryObj;
  * de public révèle les notes techniques et la règle réservée aux développeurs
  * (« Développeur »).
  */
-export const Anatomie: Story = {
+export const Anatomy: Story = {
   name: "Guidelines (page)",
   render: () => <GuidelinesAnatomie />,
 };
