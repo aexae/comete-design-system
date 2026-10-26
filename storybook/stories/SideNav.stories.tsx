@@ -388,7 +388,7 @@ export const Scrollable: Story = {
     await expect(first).toHaveTextContent("Accueil");
     last.focus();
     await expect(last).toHaveFocus();
-    await expect(last).toHaveTextContent("Paramètres");
+    await expect(last).toHaveTextContent("Modèles");
     // Nettoyage : rendre le focus et remettre le défilement en haut pour ne
     // pas altérer le snapshot visuel (baseline = liste non défilée).
     (document.activeElement as HTMLElement | null)?.blur();
