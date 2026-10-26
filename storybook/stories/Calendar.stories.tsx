@@ -383,7 +383,7 @@ export const Default: Story = {
 };
 
 export const Controlled: Story = {
-  name: "Date — contrôlé",
+  name: "Date — controlled",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: (args: Args) => <ControlledCalendar {...args} />,
 };
@@ -399,7 +399,7 @@ export const WithMinMax: Story = {
 };
 
 export const Disabled: Story = {
-  name: "Date — désactivé",
+  name: "Date — disabled",
   args: { isDisabled: true },
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: (args: Args) => renderCalendar(args),
@@ -409,21 +409,20 @@ export const Disabled: Story = {
 // appearance="week"
 
 export const Week: Story = {
-  name: "Semaine",
   args: { appearance: "week" },
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: (args: Args) => renderCalendar(args),
 };
 
 export const WeekControlled: Story = {
-  name: "Semaine — contrôlée",
+  name: "Week — controlled",
   args: { appearance: "week" },
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: (args: Args) => <ControlledCalendar {...args} />,
 };
 
 export const WeekDisabled: Story = {
-  name: "Semaine — désactivé",
+  name: "Week — disabled",
   args: { appearance: "week", isDisabled: true },
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: (args: Args) => renderCalendar(args),
@@ -433,21 +432,20 @@ export const WeekDisabled: Story = {
 // appearance="month"
 
 export const Month: Story = {
-  name: "Mois",
   args: { appearance: "month" },
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: (args: Args) => renderCalendar(args),
 };
 
 export const MonthControlled: Story = {
-  name: "Mois — contrôlé",
+  name: "Month — controlled",
   args: { appearance: "month" },
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: (args: Args) => <ControlledCalendar {...args} />,
 };
 
 export const MonthDisabled: Story = {
-  name: "Mois — désactivé",
+  name: "Month — disabled",
   args: { appearance: "month", isDisabled: true },
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: (args: Args) => renderCalendar(args),
@@ -457,21 +455,20 @@ export const MonthDisabled: Story = {
 // appearance="year"
 
 export const Year: Story = {
-  name: "Année",
   args: { appearance: "year" },
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: (args: Args) => renderCalendar(args),
 };
 
 export const YearControlled: Story = {
-  name: "Année — contrôlée",
+  name: "Year — controlled",
   args: { appearance: "year" },
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: (args: Args) => <ControlledCalendar {...args} />,
 };
 
 export const YearDisabled: Story = {
-  name: "Année — désactivée",
+  name: "Year — disabled",
   args: { appearance: "year", isDisabled: true },
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: (args: Args) => renderCalendar(args),

@@ -350,7 +350,6 @@ export const Interactive: Story = {
  * Les séparateurs subtle (`hasDividers`) aident à suivre une liste dense.
  */
 export const Unread: Story = {
-  name: "Unread (non lu)",
   args: { hasDividers: true },
   render: function UnreadStory(args) {
     const [unread, setUnread] = useState<Set<string>>(new Set(["1", "3"]));
@@ -828,7 +827,6 @@ export const ErrorState: Story = {
  * Les stories sans surtitre (Default, With secondary text…) sont le contre-point.
  */
 export const Overline: Story = {
-  name: "Overline (surtitre)",
   parameters: { controls: { disable: true } },
   render: () => (
     <List isBordered aria-label="Main courante">
@@ -905,7 +903,7 @@ const agentInitials = (name: string) =>
  * C'est le cas qui prouve que `ListItemTrailing` n'est pas typé « statut ».
  */
 export const AgentsList: Story = {
-  name: "Agents (slot libre, une métrique)",
+  name: "Agents (free slot, one metric)",
   parameters: { controls: { disable: true } },
   render: () => (
     <List isBordered aria-label="Agents">
@@ -938,12 +936,12 @@ export const AgentsList: Story = {
 };
 
 /**
- * **Ligne d'état réservée.** Une ligne avec état, une sans. Grâce au
+ * **Reserved state line.** Une ligne avec état, une sans. Grâce au
  * `min-height` réservé dans `ListItemTrailing` (§2), les deux gardent la MÊME
  * hauteur — le rythme tient sans filet.
  */
 export const ReservedTrailingLine: Story = {
-  name: "Ligne d'état réservée",
+  name: "Reserved state line",
   parameters: { controls: { disable: true } },
   render: () => (
     <List isBordered aria-label="Rythme réservé">
@@ -981,7 +979,7 @@ export const ReservedTrailingLine: Story = {
  * donnée va où appartient au produit (cf. guidelines « Placement du contenu »).
  */
 export const ListAnatomy: Story = {
-  name: "Anatomie",
+  name: "Anatomy",
   parameters: { controls: { disable: true } },
   render: () => (
     <List isBordered aria-label="Anatomie d'un item">

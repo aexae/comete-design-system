@@ -169,7 +169,7 @@ export const Default: Story = {
  * fait partie de l'information.
  */
 export const Visibilite: Story = {
-  name: "Visibilité",
+  name: "Visibility",
   parameters: { controls: { disable: true } },
   render: () => (
     <div style={{ display: "flex", gap: "var(--space300)", flexWrap: "wrap" }}>
@@ -220,7 +220,7 @@ export const Axes: Story = {
 };
 
 /**
- * **Ombres de débordement** — un fondu en haut et en bas tant qu'il reste du
+ * **Overflow shadows** — un fondu en haut et en bas tant qu'il reste du
  * contenu au-delà du bord.
  *
  * Complément utile en mode `hover`, où rien n'indique au doigt qu'on peut
@@ -228,7 +228,7 @@ export const Axes: Story = {
  * via `--scroll-shadow-surface`.
  */
 export const OmbresDeDebordement: Story = {
-  name: "Ombres de débordement",
+  name: "Overflow shadows",
   args: { hasOverflowShadows: true },
   render: (args) => (
     <Cadre>

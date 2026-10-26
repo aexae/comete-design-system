@@ -337,7 +337,7 @@ export const Couleurs: Story = {
 };
 
 /**
- * **Fil de discussion** — le cas qui motive ces couleurs.
+ * **Conversation thread** — le cas qui motive ces couleurs.
  *
  * Chaque interlocuteur reçoit une teinte, et le **nom de l'auteur reprend la
  * même** : `Avatar color="accentPurple"` et `Text color="accentPurple"`
@@ -349,7 +349,7 @@ export const Couleurs: Story = {
  * redisent.
  */
 export const FilDeDiscussion: Story = {
-  name: "Fil de discussion",
+  name: "Conversation thread",
   parameters: { controls: { disable: true } },
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 20, maxWidth: 440 }}>

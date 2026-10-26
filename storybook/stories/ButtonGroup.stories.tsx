@@ -79,7 +79,7 @@ type Story = StoryObj<typeof ButtonGroup>;
 // Stories
 
 export const OneButton: Story = {
-  name: "1 bouton",
+  name: "1 button",
   parameters: { design: { type: "figma", url: figmaUrl("4608:17255") } },
   render: () => (
     <ButtonGroup>
@@ -89,7 +89,7 @@ export const OneButton: Story = {
 };
 
 export const TwoButtons: Story = {
-  name: "2 boutons",
+  name: "2 buttons",
   parameters: { design: { type: "figma", url: figmaUrl("4608:17267") } },
   render: () => (
     <ButtonGroup aria-label="Actions">
@@ -100,7 +100,7 @@ export const TwoButtons: Story = {
 };
 
 export const ThreeButtons: Story = {
-  name: "3 boutons",
+  name: "3 buttons",
   parameters: { design: { type: "figma", url: figmaUrl("4608:17280") } },
   render: () => (
     <ButtonGroup aria-label="Actions du formulaire">
@@ -112,7 +112,7 @@ export const ThreeButtons: Story = {
 };
 
 export const MixedVariants: Story = {
-  name: "Variantes mixtes",
+  name: "Mixed variants",
   parameters: { design: { type: "figma", url: figmaUrl("4608:17266") } },
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
@@ -135,7 +135,7 @@ export const MixedVariants: Story = {
 
 /** Toutes les densités de bouton supportées dans un groupe. */
 export const AllSpacings: Story = {
-  name: "Toutes les densités",
+  name: "All densities",
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "flex-start" }}>
       <ButtonGroup aria-label="Actions default">
@@ -152,7 +152,7 @@ export const AllSpacings: Story = {
 
 /** Groupe avec icônes avant/après le label. */
 export const WithIcons: Story = {
-  name: "Avec icônes",
+  name: "With icons",
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "flex-start" }}>
       <ButtonGroup aria-label="Navigation">

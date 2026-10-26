@@ -163,7 +163,7 @@ export default meta;
 // Story unique — tous les états côte à côte
 
 export const AllStates: StoryObj = {
-  name: "Tous les états",
+  name: "All states",
   render: () => (
     <div
       style={{

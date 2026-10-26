@@ -94,7 +94,7 @@ export const MultipleSections: Story = {
  * `SideNav.Skeleton` qui en empile plusieurs.
  */
 export const ItemSkeletons: Story = {
-  name: "Item skeleton (unitaire)",
+  name: "Item skeleton (single)",
   parameters: { controls: { disable: true } },
   render: () => (
     <>
