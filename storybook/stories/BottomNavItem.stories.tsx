@@ -3,13 +3,10 @@
 // Sous-page de « Navigation/BottomNav » (comme SideNav / SideNav.Item) : la page de la barre
 // montre la BottomNav complète et ses variantes, celle-ci les états d'un item isolé.
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import {
   BottomNav,
   BottomNavItem,
-  Menu,
-  MenuItem,
-  MenuSection,
 } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
@@ -19,8 +16,6 @@ const FIGMA_FILE =
 const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 const SMALL_WIDTH = 80;
-/** Place réservée au-dessus de l'item pour le popup de la story « Open » (ouvert par défaut). */
-const OPEN_POPUP_ROOM = 176;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -119,71 +114,6 @@ export const Selected: Story = {
       </BottomNav>
     </div>
   ),
-};
-
-/** Démo : item « Plus » dont le popup est OUVERT au montage. */
-function OpenItemDemo(): ReactNode {
-  const [isOpen, setIsOpen] = useState(true);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleClickOutside = (e: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isOpen]);
-
-  return (
-    <div ref={wrapperRef} style={{ position: "relative", width: SMALL_WIDTH, paddingTop: OPEN_POPUP_ROOM }}>
-      {isOpen && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: "calc(100% + var(--space200))",
-            left: "50%",
-            transform: "translateX(-50%)",
-            minWidth: 240,
-            background: "var(--background-default-default)",
-            borderRadius: "var(--radius100)",
-            boxShadow: "var(--elevation-medium)",
-            zIndex: 10,
-            overflow: "hidden",
-          }}
-        >
-          <Menu aria-label="Actions" onAction={() => { setIsOpen(false); }}>
-            <MenuSection title="Main courante">
-              <MenuItem id="events" iconBefore="MenuBook">Main courante</MenuItem>
-              <MenuItem id="patrols" iconBefore="Patrol">Rondes</MenuItem>
-            </MenuSection>
-          </Menu>
-        </div>
-      )}
-      <BottomNav>
-        <BottomNavItem
-          label="Plus"
-          icon="MoreHoriz"
-          isOpen={isOpen}
-          onClick={() => { setIsOpen((o) => !o); }}
-        />
-      </BottomNav>
-    </div>
-  );
-}
-
-/**
- * Item interactif qui ouvre un popup.
- * **Démarre ouvert** : popup affiché + icône en croix (Close). Re-cliquer l'item, cliquer
- * ailleurs ou choisir une entrée → ferme le popup ; cliquer l'item le rouvre.
- */
-export const Open: Story = {
-  parameters: { controls: { disable: true } },
-  render: () => <OpenItemDemo />,
 };
 
 /** Item désactivé — non interactif */

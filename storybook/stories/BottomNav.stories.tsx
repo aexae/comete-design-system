@@ -1,7 +1,7 @@
 // BottomNav — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { type ReactNode, type Ref, useEffect, useRef, useState } from "react";
-import { within, screen, userEvent, expect, waitFor } from "storybook/test";
+import { type ReactNode, type Ref, useEffect, useState } from "react";
+import { within, userEvent, expect } from "storybook/test";
 import {
   BottomNav,
   BottomNavItem,
@@ -13,12 +13,7 @@ import {
   ListItemIcon,
   ListItemText,
   ListItemTrailing,
-  Menu,
-  MenuItem,
-  MenuSection,
-  MenuTrigger,
   Page,
-  Popover,
 } from "@aexae/comete-design-system/components";
 import type { IconName } from "@aexae/comete-icons";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
@@ -200,8 +195,6 @@ const AGENT_ITEMS: NavItemDef[] = [
   { label: "Missions", icon: "Star" },
 ];
 
-const PLUS_ITEM: NavItemDef = { label: "Plus", icon: "MoreHoriz" };
-
 /** Entrées derrière le « Plus » (popup ou page) — libellés de Link. */
 const PLUS_SECTIONS: { title: string; entries: { label: string; icon: IconName }[] }[] = [
   {
@@ -284,161 +277,6 @@ export const LongLabel: NavStory = {
       <InteractiveBottomNav items={LONG_LABEL_ITEMS} active={args.active} />
     </PhoneScreen>
   ),
-};
-
-// -----------------------------------------------------------------------
-// Popup example — item "Plus" à droite qui ouvre un menu d'actions secondaires
-
-function BottomNavWithPopupRight({
-  boundary,
-  defaultOpen,
-}: {
-  /** Écran du téléphone : le popover ne peut pas en sortir (null le temps du 1er rendu). */
-  boundary: HTMLElement | null;
-  /** Popup ouvert au montage. */
-  defaultOpen: boolean;
-}) {
-  const [selected, setSelected] = useState("Tableau de bord");
-  const [popupOpen, setPopupOpen] = useState(false);
-
-  // Ouvert par défaut : on ouvre dès que l'écran du téléphone est connu comme LIMITE du popover
-  // (au 1er rendu il ne l'est pas encore : un popup ouvert d'emblée serait placé sur le
-  // viewport, puis dépasserait de l'écran). Une seule fois ; ensuite l'utilisateur pilote.
-  const autoOpened = useRef(false);
-  useEffect(() => {
-    if (defaultOpen && boundary && !autoOpened.current) {
-      autoOpened.current = true;
-      setPopupOpen(true);
-    }
-  }, [defaultOpen, boundary]);
-
-  // Un seul item actif : menu ouvert → aucun item de page n'est sélectionné.
-  const activeItem = popupOpen ? null : selected;
-
-  return (
-    <BottomNav>
-      {MANAGER_ITEMS.map((item) => (
-        <BottomNavItem
-          key={item.label}
-          label={item.label}
-          icon={item.icon}
-          badge={item.badge}
-          isSelected={activeItem === item.label}
-          onClick={() => { setSelected(item.label); }}
-        />
-      ))}
-      {/* « Plus » ouvre le `Popover` du DS via un `MenuTrigger` : ouverture,
-          fermeture (clic extérieur, Échap, choix d'une entrée) et placement sont
-          gérés par le composant — plus de div positionnée à la main. */}
-      <MenuTrigger isOpen={popupOpen} onOpenChange={setPopupOpen}>
-        <BottomNavItem label={PLUS_ITEM.label} icon={PLUS_ITEM.icon} isOpen={popupOpen} />
-        <Popover
-          // Au-dessus de l'item, aligné sur son bord droit ; si la place manque,
-          // il se retourne. `boundaryElement` = l'écran : le popover reste
-          // entièrement dans l'écran (décalé si besoin, hauteur bornée).
-          placement="top end"
-          offset={8}
-          boundaryElement={boundary ?? undefined}
-          style={{ minWidth: 240 }}
-        >
-          <Menu aria-label="Plus" onAction={() => { setPopupOpen(false); }}>
-            {PLUS_SECTIONS.map((section) => (
-              <MenuSection key={section.title} title={section.title}>
-                {section.entries.map((entry) => (
-                  <MenuItem key={entry.label} id={entry.label} iconBefore={entry.icon}>
-                    {entry.label}
-                  </MenuItem>
-                ))}
-              </MenuSection>
-            ))}
-          </Menu>
-        </Popover>
-      </MenuTrigger>
-    </BottomNav>
-  );
-}
-
-function WithPopupRightDemo({ defaultOpen = true }: { defaultOpen?: boolean }): ReactNode {
-  // Ref callback + état : le popover, ouvert dès le montage, reçoit l'écran comme limite au
-  // rendu suivant (un `useRef` serait encore vide au premier rendu).
-  const [screen, setScreen] = useState<HTMLDivElement | null>(null);
-  return (
-    <PhoneScreen screenRef={setScreen}>
-      <BottomNavWithPopupRight boundary={screen} defaultOpen={defaultOpen} />
-    </PhoneScreen>
-  );
-}
-
-/**
- * La barre **Manager** (Tableau de bord, Agents, Sites, Pointages) + un item « Plus » à droite qui ouvre un menu de destinations secondaires dans un
- * **`Popover`** du DS (via `MenuTrigger`).
- *
- * - placement `top end` : au-dessus de l'item, aligné sur son bord droit ;
- * - `boundaryElement` = l'écran du téléphone : le popover **ne sort pas de
- *   l'écran** (retournement si la place manque, décalage, hauteur bornée) ;
- * - fermeture par clic extérieur, Échap ou choix d'une action.
- *
- * **Le popup est ouvert par défaut** (pour le voir sans manipuler) ; le fermer puis cliquer
- * « Plus » le rouvre.
- */
-export const WithPopupRight: Story = {
-  name: "With popup (right item)",
-  parameters: { layout: "centered", design: { type: "figma", url: figmaUrl("2524:18591") } },
-  render: () => <WithPopupRightDemo />,
-};
-
-// Test (masqué du sidebar) : le `play` ne se rejoue donc PAS à l'ouverture de la
-// story visible ci-dessus. Vérifie le Popover du DS : ouverture au-dessus de
-// « Plus », inclusion dans l'écran du téléphone, fermeture (Échap, action).
-export const WithPopupRightInteractions: Story = {
-  tags: ["!dev"],
-  // Fermé au montage : le test vérifie l'ouverture (la story visible, elle, démarre ouverte).
-  render: () => <WithPopupRightDemo defaultOpen={false} />,
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    // Référence prise AVANT l'ouverture : menu ouvert, React Aria masque le reste de
-    // la page aux technologies d'assistance (le bouton sort de l'arbre d'accessibilité).
-    const trigger = canvas.getByRole("button", { name: "Plus" });
-    const plus = () => trigger;
-    const menu = () => screen.queryByRole("menu");
-
-    await step("fermé au départ", async () => {
-      await expect(plus()).toHaveAttribute("aria-haspopup", "true");
-      await expect(menu()).toBeNull();
-    });
-
-    await step("s'ouvre dans un Popover, au-dessus de « Plus », sans sortir de l'écran", async () => {
-      await userEvent.click(plus());
-      const m = await screen.findByRole("menu");
-      await expect(plus()).toHaveAttribute("aria-expanded", "true");
-      // Le libellé reste visible à l'état ouvert : nom accessible conservé.
-      await expect(canvas.getByRole("button", { name: "Plus", hidden: true })).toBe(trigger);
-      const popover = m.closest("[data-trigger]") ?? m.parentElement;
-      const rect = (popover as HTMLElement).getBoundingClientRect();
-      const phone = canvasElement.querySelector<HTMLElement>('[class*="screen"]');
-      await expect(phone).not.toBeNull();
-      const bounds = (phone as HTMLElement).getBoundingClientRect();
-      // Entièrement dans l'écran du téléphone…
-      await expect(rect.left).toBeGreaterThanOrEqual(bounds.left);
-      await expect(rect.right).toBeLessThanOrEqual(bounds.right);
-      await expect(rect.top).toBeGreaterThanOrEqual(bounds.top);
-      await expect(rect.bottom).toBeLessThanOrEqual(bounds.bottom);
-      // …et au-dessus de la barre (placement « top »).
-      await expect(rect.bottom).toBeLessThanOrEqual(plus().getBoundingClientRect().top);
-    });
-
-    await step("se referme avec Échap", async () => {
-      await userEvent.keyboard("{Escape}");
-      await waitFor(() => expect(menu()).toBeNull());
-      await expect(plus()).toHaveAttribute("aria-expanded", "false");
-    });
-
-    await step("se referme au choix d'une action", async () => {
-      await userEvent.click(plus());
-      await userEvent.click(await screen.findByRole("menuitem", { name: "Main courante" }));
-      await waitFor(() => expect(menu()).toBeNull());
-    });
-  },
 };
 
 // -----------------------------------------------------------------------
