@@ -6,7 +6,9 @@
 import { Fragment } from "react";
 import type { ReactElement, ReactNode } from "react";
 import {
+  Card,
   Icon,
+  SectionMessage,
   Tab,
   TabList,
   TabPanel,
@@ -387,15 +389,25 @@ function BulletList({ items }: { items: string[] }): ReactElement {
 
 /** Ligne « Plutôt utiliser » : raison → pastille(s) du composant alternatif. */
 function AltRow({ item }: { item: string }): ReactElement {
+  // Chrome de carte confié au DS : une guideline qui enseigne le système doit
+  // elle-même en être faite. Ne reste ici que la disposition interne.
+  //
+  // `flexWrap` + `minWidth: 0` : la colonne de droite porte une phrase entière,
+  // qui dépassait du cadre faute de pouvoir se replier (elle était en
+  // `flex: none`). Elle passe maintenant à la ligne, et sous une certaine
+  // largeur c'est la rangée entière qui se casse en deux.
+  //
+  // `flexDirection: "row"` est indispensable : `Card` est en colonne dans son
+  // CSS, et sans cette ligne le `flex-basis` de la colonne de droite partait
+  // sur la hauteur (carte de 296px au lieu d'une rangée).
   const rowStyle = {
     display: "flex",
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: "var(--space200)",
+    flexWrap: "wrap",
+    gap: "var(--space100) var(--space200)",
     padding: "var(--space150) var(--space200)",
-    background: "var(--background-neutral-subtlest-default)",
-    border: "1px solid var(--border-subtle)",
-    borderRadius: "var(--radius200)",
   } as const;
   const textStyle = {
     fontFamily: "var(--font-family-primary)",
@@ -407,28 +419,31 @@ function AltRow({ item }: { item: string }): ReactElement {
   const idx = item.indexOf("→");
   if (idx === -1) {
     return (
-      <div style={rowStyle}>
+      <Card appearance="subtle" style={rowStyle}>
         <span style={textStyle}>{renderInline(item)}</span>
-      </div>
+      </Card>
     );
   }
   const reason = item.slice(0, idx).trimEnd();
   const target = item.slice(idx + 1).trim().replace(/\.$/, "");
   return (
-    <div style={rowStyle}>
-      <span style={textStyle}>{renderInline(reason)}</span>
+    <Card appearance="subtle" style={rowStyle}>
+      <span style={{ ...textStyle, flex: "0 1 auto", minWidth: 0 }}>
+        {renderInline(reason)}
+      </span>
       <span
         style={{
           display: "flex",
-          alignItems: "center",
+          alignItems: "baseline",
           gap: "var(--space100)",
-          flex: "none",
+          flex: "1 1 240px",
+          minWidth: 0,
         }}
       >
-        <span style={{ color: "var(--text-subtlest)" }}>→</span>
+        <span style={{ color: "var(--text-subtlest)", flex: "none" }}>→</span>
         <span style={textStyle}>{linkify(target, true)}</span>
       </span>
-    </div>
+    </Card>
   );
 }
 
@@ -443,21 +458,14 @@ function DoDontCard({
   caption: string;
 }): ReactElement {
   const isDo = kind === "do";
-  const accent = isDo ? "var(--text-success)" : "var(--text-critical)";
   const titleColor = isDo ? "var(--text-success)" : "var(--text-critical)";
   return (
-    <div
-      style={{
-        flex: "1 1 240px",
-        minWidth: 0,
-        display: "flex",
-        flexDirection: "column",
-        background: "var(--background-surface-default)",
-        border: "1px solid var(--border-subtle)",
-        borderTop: `2px solid ${accent}`,
-        borderRadius: "var(--radius200)",
-        overflow: "hidden",
-      }}
+    // `Card` du DS plutôt qu'un cadre redessiné : la couleur sémantique porte
+    // la bordure entière, au lieu d'un filet haut rapporté à la main.
+    <Card
+      appearance="outlined"
+      color={isDo ? "success" : "critical"}
+      style={{ flex: "1 1 240px", minWidth: 0, overflow: "hidden" }}
     >
       <div
         style={{
@@ -508,46 +516,18 @@ function DoDontCard({
       >
         {renderInline(caption)}
       </div>
-    </div>
+    </Card>
   );
 }
 
 /** Encart Accessibilité (bleu info). */
 function AccessibilityCallout({ items }: { items: string[] }): ReactElement {
+  // `SectionMessage` plutôt qu'une carte : c'est le composant d'alerte en ligne
+  // du DS, et il porte déjà le titre, l'icône et le ton `information`.
   return (
-    <div
-      style={{
-        background: "var(--background-neutral-subtlest-default)",
-        border: "1px solid var(--border-subtle)",
-        borderLeft: "3px solid var(--text-information)",
-        borderRadius: "var(--radius200)",
-        padding: "var(--space200) var(--space300)",
-        display: "flex",
-        flexDirection: "column",
-        gap: "var(--space100)",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "var(--space100)",
-          color: "var(--text-information)",
-        }}
-      >
-        <Icon icon="Info" size={16} color="information" appearance="filled" />
-        <span
-          style={{
-            fontFamily: "var(--font-family-primary)",
-            fontSize: "var(--font-size-ui-s)",
-            fontWeight: "var(--font-weight-semibold)",
-          }}
-        >
-          Accessibilité
-        </span>
-      </div>
+    <SectionMessage appearance="information" title="Accessibilité">
       <BulletList items={items} />
-    </div>
+    </SectionMessage>
   );
 }
 

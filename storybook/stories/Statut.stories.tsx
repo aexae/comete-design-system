@@ -9,6 +9,7 @@ import { expect, within } from "storybook/test";
 import {
   Badge,
   Banner,
+  Card,
   Cluster,
   Heading,
   Icon,
@@ -188,36 +189,32 @@ function Exemple({
   legende: string;
   children: ReactNode;
 }) {
-  const accent = ton === "ok" ? "var(--text-success)" : "var(--text-critical)";
+  // `Card` du DS plutôt qu'un cadre redessiné : la couleur sémantique porte la
+  // bordure entière, au lieu d'un filet haut rapporté à la main.
   return (
-    <Stack
-      gap="150"
-      style={{
-        flex: "1 1 260px",
-        minWidth: 0,
-        padding: "var(--space200)",
-        borderRadius: "var(--radius200)",
-        border: "1px solid var(--border-subtle)",
-        borderTop: `2px solid ${accent}`,
-        background: "var(--background-neutral-subtlest-default)",
-      }}
+    <Card
+      appearance="outlined"
+      color={ton === "ok" ? "success" : "critical"}
+      style={{ flex: "1 1 260px", minWidth: 0, overflow: "hidden" }}
     >
-      <Stack direction="row" gap="100" align="center">
-        <Icon
-          icon={ton === "ok" ? "CheckCircle" : "Close"}
-          size={16}
-          color={ton === "ok" ? "success" : "critical"}
-          appearance="filled"
-        />
-        <Text size="small" weight="bold" as="span">
-          {titre}
+      <Stack gap="150" style={{ padding: "var(--space200)" }}>
+        <Stack direction="row" gap="100" align="center">
+          <Icon
+            icon={ton === "ok" ? "CheckCircle" : "Close"}
+            size={16}
+            color={ton === "ok" ? "success" : "critical"}
+            appearance="filled"
+          />
+          <Text size="small" weight="bold" as="span">
+            {titre}
+          </Text>
+        </Stack>
+        {children}
+        <Text size="xsmall" as="span" color="subtle">
+          {legende}
         </Text>
       </Stack>
-      {children}
-      <Text size="xsmall" as="span" color="subtle">
-        {legende}
-      </Text>
-    </Stack>
+    </Card>
   );
 }
 
