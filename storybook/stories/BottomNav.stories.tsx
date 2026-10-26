@@ -1,7 +1,7 @@
 // BottomNav — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { type ReactNode, type Ref, type RefObject, useEffect, useRef, useState } from "react";
-import { within, screen, userEvent, expect, waitFor } from "storybook/test";
+import { type ReactNode, type Ref, useEffect, useState } from "react";
+import { within, userEvent, expect } from "storybook/test";
 import {
   BottomNav,
   BottomNavItem,
@@ -13,12 +13,7 @@ import {
   ListItemIcon,
   ListItemText,
   ListItemTrailing,
-  Menu,
-  MenuItem,
-  MenuSection,
-  MenuTrigger,
   Page,
-  Popover,
 } from "@aexae/comete-design-system/components";
 import type { IconName } from "@aexae/comete-icons";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
@@ -30,14 +25,14 @@ const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
-const SMALL_WIDTH = 80;
 
 // -----------------------------------------------------------------------
-// Meta — on documente l'item individuel pour le contrôle interactif
+// Meta — la barre complète. Les stories de l'item vivent dans la sous-page
+// « Navigation/BottomNav/Item » (BottomNavItem.stories.tsx), comme SideNav / SideNav.Item.
 
 const meta = {
   title: "Navigation/BottomNav",
-  component: BottomNavItem,
+  component: BottomNav,
   tags: ["autodocs"],
   parameters: {
     docs: {
@@ -102,7 +97,7 @@ const meta = {
     design: { type: "figma", url: figmaUrl("2524:18591") },
   },
   decorators: [
-    // Cadre de 402px pour les stories « item » ; les stories plein viewport (`noFrame`, ex.
+    // Cadre de 402px pour les barres complètes ; les stories plein viewport (`noFrame`, ex.
     // recette QuickActions) s'en passent : un cadre fixe les ferait rétrécir / déborder.
     (Story: () => ReactNode, context: { parameters: { noFrame?: boolean } }) =>
       context.parameters.noFrame ? (
@@ -113,141 +108,10 @@ const meta = {
         </div>
       ),
   ],
-  argTypes: {
-    icon: {
-      control: "select",
-      options: ["Dashboard", "Assignment", "CalendarMonth", "Comment", "Star", "MoreHoriz"],
-    },
-    isSelected: { control: "boolean" },
-    isOpen: { control: "boolean" },
-    isDisabled: { control: "boolean" },
-    badge: { control: "text" },
-    onClick: { action: "clicked" },
-  },
-  args: {
-    label: "Planning",
-    icon: "CalendarMonth",
-    isSelected: false,
-    isOpen: false,
-    isDisabled: false,
-  },
-} satisfies Meta<typeof BottomNavItem>;
+} satisfies Meta<typeof BottomNav>;
 
 export default meta;
-type Story = StoryObj<typeof BottomNavItem>;
-
-// -----------------------------------------------------------------------
-// Stories
-
-export const Default: Story = {
-  parameters: { design: { type: "figma", url: figmaUrl("14:1031") } },
-  render: (args) => (
-    <div style={{ width: SMALL_WIDTH }}>
-      <BottomNav>
-        <BottomNavItem {...args} />
-      </BottomNav>
-    </div>
-  ),
-};
-
-export const Selected: Story = {
-  parameters: { design: { type: "figma", url: figmaUrl("14:1031") } },
-  args: { isSelected: true },
-  render: (args) => (
-    <div style={{ width: SMALL_WIDTH }}>
-      <BottomNav>
-        <BottomNavItem {...args} />
-      </BottomNav>
-    </div>
-  ),
-};
-
-/**
- * Item interactif qui ouvre un popup.
- * Démarre en état default. Cliquer → isOpen + popup affiché + icône → croix (Close).
- * Re-cliquer ou cliquer ailleurs → ferme le popup.
- */
-export const Open: Story = {
-  parameters: { controls: { disable: true } },
-  render: () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const wrapperRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-      if (!isOpen) return;
-      const handleClickOutside = (e: MouseEvent) => {
-        if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-          setIsOpen(false);
-        }
-      };
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, [isOpen]);
-
-    return (
-      <div ref={wrapperRef} style={{ position: "relative", width: SMALL_WIDTH }}>
-        {isOpen && (
-          <div
-            style={{
-              position: "absolute",
-              bottom: "calc(100% + var(--space200))",
-              left: "50%",
-              transform: "translateX(-50%)",
-              minWidth: 240,
-              background: "var(--background-default-default)",
-              borderRadius: "var(--radius100)",
-              boxShadow: "var(--elevation-medium)",
-              zIndex: 10,
-              overflow: "hidden",
-            }}
-          >
-            <Menu aria-label="Actions" onAction={() => { setIsOpen(false); }}>
-              <MenuSection title="Main courante">
-                <MenuItem id="events" iconBefore="MenuBook">Main courante</MenuItem>
-                <MenuItem id="patrols" iconBefore="Patrol">Rondes</MenuItem>
-              </MenuSection>
-            </Menu>
-          </div>
-        )}
-        <BottomNav>
-          <BottomNavItem
-            label="Plus"
-            icon="MoreHoriz"
-            isOpen={isOpen}
-            onClick={() => { setIsOpen((o) => !o); }}
-          />
-        </BottomNav>
-      </div>
-    );
-  },
-};
-
-/** Item désactivé — non interactif */
-export const Disabled: Story = {
-  args: { isDisabled: true },
-  render: (args) => (
-    <div style={{ width: SMALL_WIDTH }}>
-      <BottomNav>
-        <BottomNavItem {...args} />
-      </BottomNav>
-    </div>
-  ),
-};
-
-export const WithBadge: Story = {
-  name: "With badge",
-  parameters: { design: { type: "figma", url: figmaUrl("14:1031") } },
-  args: { label: "Notifications", icon: "Notifications", badge: "3" },
-  render: (args) => (
-    <div style={{ width: SMALL_WIDTH }}>
-      <BottomNav>
-        <BottomNavItem {...args} />
-      </BottomNav>
-    </div>
-  ),
-};
+type Story = StoryObj<typeof BottomNav>;
 
 // -----------------------------------------------------------------------
 // Barres complètes interactives — un contrôle « Item actif » pilote l'item
@@ -331,8 +195,6 @@ const AGENT_ITEMS: NavItemDef[] = [
   { label: "Missions", icon: "Star" },
 ];
 
-const PLUS_ITEM: NavItemDef = { label: "Plus", icon: "MoreHoriz" };
-
 /** Entrées derrière le « Plus » (popup ou page) — libellés de Link. */
 const PLUS_SECTIONS: { title: string; entries: { label: string; icon: IconName }[] }[] = [
   {
@@ -415,141 +277,6 @@ export const LongLabel: NavStory = {
       <InteractiveBottomNav items={LONG_LABEL_ITEMS} active={args.active} />
     </PhoneScreen>
   ),
-};
-
-// -----------------------------------------------------------------------
-// Popup example — item "Plus" à droite qui ouvre un menu d'actions secondaires
-
-function BottomNavWithPopupRight({
-  boundaryRef,
-}: {
-  /** Écran du téléphone : le popover ne peut pas en sortir. */
-  boundaryRef: RefObject<HTMLElement | null>;
-}) {
-  const [selected, setSelected] = useState("Tableau de bord");
-  const [popupOpen, setPopupOpen] = useState(false);
-
-  // Un seul item actif : menu ouvert → aucun item de page n'est sélectionné.
-  const activeItem = popupOpen ? null : selected;
-
-  return (
-    <BottomNav>
-      {MANAGER_ITEMS.map((item) => (
-        <BottomNavItem
-          key={item.label}
-          label={item.label}
-          icon={item.icon}
-          badge={item.badge}
-          isSelected={activeItem === item.label}
-          onClick={() => { setSelected(item.label); }}
-        />
-      ))}
-      {/* « Plus » ouvre le `Popover` du DS via un `MenuTrigger` : ouverture,
-          fermeture (clic extérieur, Échap, choix d'une entrée) et placement sont
-          gérés par le composant — plus de div positionnée à la main. */}
-      <MenuTrigger isOpen={popupOpen} onOpenChange={setPopupOpen}>
-        <BottomNavItem label={PLUS_ITEM.label} icon={PLUS_ITEM.icon} isOpen={popupOpen} />
-        <Popover
-          // Au-dessus de l'item, aligné sur son bord droit ; si la place manque,
-          // il se retourne. `boundaryElement` = l'écran : le popover reste
-          // entièrement dans l'écran (décalé si besoin, hauteur bornée).
-          placement="top end"
-          offset={8}
-          boundaryElement={boundaryRef.current ?? undefined}
-          style={{ minWidth: 240 }}
-        >
-          <Menu aria-label="Plus" onAction={() => { setPopupOpen(false); }}>
-            {PLUS_SECTIONS.map((section) => (
-              <MenuSection key={section.title} title={section.title}>
-                {section.entries.map((entry) => (
-                  <MenuItem key={entry.label} id={entry.label} iconBefore={entry.icon}>
-                    {entry.label}
-                  </MenuItem>
-                ))}
-              </MenuSection>
-            ))}
-          </Menu>
-        </Popover>
-      </MenuTrigger>
-    </BottomNav>
-  );
-}
-
-function WithPopupRightDemo(): ReactNode {
-  const screenRef = useRef<HTMLDivElement>(null);
-  return (
-    <PhoneScreen screenRef={screenRef}>
-      <BottomNavWithPopupRight boundaryRef={screenRef} />
-    </PhoneScreen>
-  );
-}
-
-/**
- * La barre **Manager** (Tableau de bord, Agents, Sites, Pointages) + un item « Plus » à droite qui ouvre un menu de destinations secondaires dans un
- * **`Popover`** du DS (via `MenuTrigger`).
- *
- * - placement `top end` : au-dessus de l'item, aligné sur son bord droit ;
- * - `boundaryElement` = l'écran du téléphone : le popover **ne sort pas de
- *   l'écran** (retournement si la place manque, décalage, hauteur bornée) ;
- * - fermeture par clic extérieur, Échap ou choix d'une action.
- */
-export const WithPopupRight: Story = {
-  name: "With popup (right item)",
-  parameters: { layout: "centered", design: { type: "figma", url: figmaUrl("2524:18591") } },
-  render: () => <WithPopupRightDemo />,
-};
-
-// Test (masqué du sidebar) : le `play` ne se rejoue donc PAS à l'ouverture de la
-// story visible ci-dessus. Vérifie le Popover du DS : ouverture au-dessus de
-// « Plus », inclusion dans l'écran du téléphone, fermeture (Échap, action).
-export const WithPopupRightInteractions: Story = {
-  tags: ["!dev"],
-  render: () => <WithPopupRightDemo />,
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    // Référence prise AVANT l'ouverture : menu ouvert, React Aria masque le reste de
-    // la page aux technologies d'assistance (le bouton sort de l'arbre d'accessibilité).
-    const trigger = canvas.getByRole("button", { name: "Plus" });
-    const plus = () => trigger;
-    const menu = () => screen.queryByRole("menu");
-
-    await step("fermé au départ", async () => {
-      await expect(plus()).toHaveAttribute("aria-haspopup", "true");
-      await expect(menu()).toBeNull();
-    });
-
-    await step("s'ouvre dans un Popover, au-dessus de « Plus », sans sortir de l'écran", async () => {
-      await userEvent.click(plus());
-      const m = await screen.findByRole("menu");
-      await expect(plus()).toHaveAttribute("aria-expanded", "true");
-      // Le libellé reste visible à l'état ouvert : nom accessible conservé.
-      await expect(canvas.getByRole("button", { name: "Plus", hidden: true })).toBe(trigger);
-      const popover = m.closest("[data-trigger]") ?? m.parentElement;
-      const rect = (popover as HTMLElement).getBoundingClientRect();
-      const phone = canvasElement.querySelector<HTMLElement>('[class*="screen"]');
-      await expect(phone).not.toBeNull();
-      const bounds = (phone as HTMLElement).getBoundingClientRect();
-      // Entièrement dans l'écran du téléphone…
-      await expect(rect.left).toBeGreaterThanOrEqual(bounds.left);
-      await expect(rect.right).toBeLessThanOrEqual(bounds.right);
-      await expect(rect.top).toBeGreaterThanOrEqual(bounds.top);
-      await expect(rect.bottom).toBeLessThanOrEqual(bounds.bottom);
-      // …et au-dessus de la barre (placement « top »).
-      await expect(rect.bottom).toBeLessThanOrEqual(plus().getBoundingClientRect().top);
-    });
-
-    await step("se referme avec Échap", async () => {
-      await userEvent.keyboard("{Escape}");
-      await waitFor(() => expect(menu()).toBeNull());
-      await expect(plus()).toHaveAttribute("aria-expanded", "false");
-    });
-
-    await step("se referme au choix d'une action", async () => {
-      await userEvent.click(plus());
-      await userEvent.click(await screen.findByRole("menuitem", { name: "Main courante" }));
-      await waitFor(() => expect(menu()).toBeNull());
-    });
-  },
 };
 
 // -----------------------------------------------------------------------

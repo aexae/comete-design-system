@@ -12,7 +12,7 @@ import { QuickActionsDemo } from "./_quickActionsDemo";
 // Meta
 
 const meta = {
-  title: "Navigation/QuickActions",
+  title: "Navigation/BottomNav/QuickActions",
   component: QuickActions,
   tags: ["autodocs"],
   parameters: {
