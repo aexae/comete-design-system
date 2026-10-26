@@ -2,7 +2,7 @@
 //
 // Barre de page unifiée (remplace TopNav + Page.Header). En usage réel, le
 // consommateur ne passe QUE `title` — la variante (large/compact) est choisie
-// par le gabarit selon le breakpoint. Les stories forcent `size` uniquement
+// par la largeur de la Page (container query). Les stories forcent `size` uniquement
 // pour afficher chaque variante de façon déterministe (indépendante de la
 // largeur du canvas Storybook).
 import type { Meta, StoryObj } from "@storybook/react-vite";
@@ -10,13 +10,13 @@ import type { ReactNode } from "react";
 import { within, expect } from "storybook/test";
 import {
   Page,
-  Avatar,
   Button,
   SearchField,
 } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 import { PageGlobalActions } from "./_pageChrome";
+import css from "./PageBar.stories.module.css";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -29,7 +29,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "La barre de page unifie le titre, la navigation et les actions globales dans un seul bandeau en haut de la page. Elle bascule automatiquement entre une variante large et une variante compacte épinglée selon la largeur d'écran, et remplace l'ancien duo TopNav + Page.Header." },
+      description: { component: "La barre de page unifie le titre, la navigation et les actions globales dans un seul bandeau en haut de la page. Elle bascule automatiquement entre une variante large et une variante compacte épinglée selon la largeur de la Page qui la contient (container query, seuil 768 px), et non celle de l'écran ni de la fenêtre. Elle remplace l'ancien duo TopNav + Page.Header." },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -41,13 +41,18 @@ const meta = {
               avoid={[
                 "Un en-tête de titre seul → `Page.Bar` sans `leading` (pas de composant séparé).",
                 "La navigation latérale → SideNav.",
+                "Un fil d'Ariane dans la barre : `Page.Bar` n'en porte pas, le `leading` est la seule affordance de navigation.",
+                "Prendre le trio d'actions globales des stories (et celui que le layout injecte par défaut) pour une spécification : c'est un placeholder, chaque app branche les siennes via `Page globalActions`.",
               ]}
               best={[
-                "Ne passer que `title` en usage réel ; laisser le gabarit choisir la variante selon le breakpoint.",
+                "Ne passer que `title` en usage réel ; laisser le gabarit choisir la variante selon la largeur de la Page (container query), pas celle du viewport.",
                 "Une seule affordance de navigation dans `leading` (hamburger ou retour).",
+                "Ne pas confondre largeur et pointeur : la barre bascule sur la largeur de la Page, alors que la mise en page tactile (cibles, densité) se décide sur le type de pointeur, jamais sur la largeur.",
               ]}
               accessibility={[
-                "Le titre porte le `h1` ; le titre tronqué garde un nom accessible complet.",
+                "Le titre porte le `h1`.",
+                "Un titre tronqué garde un nom accessible complet par construction : le `<h1>` contient le texte entier et seul `text-overflow: ellipsis` le coupe visuellement. Rien de spécifique n'est implémenté pour ça.",
+                "Manque connu : aucun attribut `title` ni infobulle sur le titre. Un utilisateur voyant ne peut pas lire un titre tronqué, sans recours : garder les titres courts.",
                 "Les actions `trailing` icône seule ont un `aria-label`.",
               ]}
             />
@@ -108,12 +113,16 @@ const barFiller = Array.from({ length: 24 }, (_, i) => (
 /**
  * **Bar — large** : titre 32px + actions globales (notifications, réglages,
  * avatar). Variante desktop/tablette.
+ *
+ * La barre large n'a pas de filet par défaut ; la compacte (épinglée) a un `border-bottom`.
+ * Ici la story ajoute le même filet sous la large (`--border-subtle`, via `className`) pour
+ * comparer les deux variantes côte à côte avec la story « Compact ».
  */
 export const Large: Story = {
   render: () => (
     <Gutters>
       <Page globalActions={<PageGlobalActions />}>
-        <Page.Bar size="large" title="Accueil" />
+        <Page.Bar size="large" title="Accueil" className={css["barBordered"]} />
         <Page.Body>
           <p>Contenu de la page…</p>
         </Page.Body>
@@ -127,47 +136,6 @@ export const Large: Story = {
     await expect(h1s).toHaveLength(1);
     await expect(h1s[0]).toHaveTextContent("Accueil");
   },
-};
-
-/**
- * **Bar — page racine, responsive** : une **seule** affordance de navigation
- * dans `leading` — ici le menu hamburger (mobile web : il ouvre la SideNav dans un
- * `Drawer`). Aucune `size` forcée : le titre suit la **largeur de la Page** via
- * `@container`.
- *
- * 👉 Redimensionne le cadre (poignée en bas à droite) : sous 768px la barre
- * passe compacte (épinglée, titre tronqué), au-dessus elle repasse large.
- *
- * NB : en contexte réel, l'app n'affiche le hamburger que lorsque la SideNav
- * est repliée (desktop persistante ⇒ pas de hamburger). Ici il est toujours
- * montré pour la démo.
- */
-export const RootResponsive: Story = {
-  name: "Root page",
-  render: () => (
-    <div
-      style={{
-        resize: "horizontal",
-        overflow: "hidden",
-        width: 1000,
-        maxWidth: "100%",
-        minWidth: 320,
-        height: 420,
-        border: "1px solid var(--border-subtle)",
-        borderRadius: "var(--radius200)",
-      }}
-    >
-      <Page globalActions={<PageGlobalActions />} style={{ height: "100%" }}>
-        <Page.Bar
-          title="Accueil"
-          leading={
-            <Button appearance="subtle" iconBefore="Menu" aria-label="Ouvrir le menu" />
-          }
-        />
-        <Page.Body>{barFiller}</Page.Body>
-      </Page>
-    </div>
-  ),
 };
 
 /**
@@ -210,6 +178,9 @@ export const Compact: Story = {
 /**
  * **Bar — titre long tronqué** (compacte) : le titre s'ellipse sur une ligne
  * sans pousser les actions trailing.
+ *
+ * Le nom accessible reste complet par construction (le `<h1>` contient tout le texte), mais
+ * aucun attribut `title` n'est posé : un utilisateur voyant ne peut pas lire la fin du titre.
  */
 export const LongTitle: Story = {
   name: "Long title",
@@ -261,26 +232,6 @@ export const WithToolbar: Story = {
         />
         <Page.Body>
           <p>Liste des agents…</p>
-        </Page.Body>
-      </Page>
-    </Gutters>
-  ),
-};
-
-/**
- * **Bar — sans Toolbar** : page de détail ou de réglages, barre seule.
- */
-export const WithoutToolbar: Story = {
-  name: "Without toolbar",
-  render: () => (
-    <Gutters>
-      <Page globalActions={<Avatar size="medium" initials="AC" />}>
-        <Page.Bar
-          size="large"
-          title="Paramètres du compte"
-        />
-        <Page.Body>
-          <p>Contenu de la page…</p>
         </Page.Body>
       </Page>
     </Gutters>
