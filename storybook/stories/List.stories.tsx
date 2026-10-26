@@ -350,7 +350,6 @@ export const Interactive: Story = {
  * Les séparateurs subtle (`hasDividers`) aident à suivre une liste dense.
  */
 export const Unread: Story = {
-  name: "Unread",
   args: { hasDividers: true },
   render: function UnreadStory(args) {
     const [unread, setUnread] = useState<Set<string>>(new Set(["1", "3"]));
@@ -828,7 +827,6 @@ export const ErrorState: Story = {
  * Les stories sans surtitre (Default, With secondary text…) sont le contre-point.
  */
 export const Overline: Story = {
-  name: "Overline",
   parameters: { controls: { disable: true } },
   render: () => (
     <List isBordered aria-label="Main courante">

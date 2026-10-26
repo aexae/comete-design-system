@@ -409,7 +409,6 @@ export const Disabled: Story = {
 // appearance="week"
 
 export const Week: Story = {
-  name: "Week",
   args: { appearance: "week" },
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: (args: Args) => renderCalendar(args),
@@ -433,7 +432,6 @@ export const WeekDisabled: Story = {
 // appearance="month"
 
 export const Month: Story = {
-  name: "Month",
   args: { appearance: "month" },
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: (args: Args) => renderCalendar(args),
@@ -457,7 +455,6 @@ export const MonthDisabled: Story = {
 // appearance="year"
 
 export const Year: Story = {
-  name: "Year",
   args: { appearance: "year" },
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: (args: Args) => renderCalendar(args),

@@ -1385,7 +1385,6 @@ const toDisplayName = (raw: string): string =>
  * - Les textes passeront par des clés i18n (standard MCE).
  */
 export const Home: StoryObj<{ isNameLoading: boolean }> = {
-  name: "Home",
   parameters: { design: { type: "figma", url: figmaUrl("4587:24160") } },
   args: { isNameLoading: false },
   argTypes: {
@@ -1537,7 +1536,6 @@ export const Home: StoryObj<{ isNameLoading: boolean }> = {
  * - Grille de cards pour les rôles, Tag pour les étiquettes
  */
 export const Settings: Story = {
-  name: "Settings",
   parameters: { design: { type: "figma", url: figmaUrl("4577:13694") } },
   render: () => (
       <Page globalActions={null}>
