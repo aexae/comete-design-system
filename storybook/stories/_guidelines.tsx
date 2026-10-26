@@ -88,6 +88,8 @@ const COMPONENT_DOC_IDS: Record<string, string> = {
   TablePagination: "components-table",
   "Table.View": "components-table",
   MenuSection: "components-menu",
+  BottomNavItem: "navigation-bottomnav-item",
+  QuickActions: "navigation-bottomnav-quickactions",
   SideNavItem: "navigation-sidenav-item",
   SideNavSection: "navigation-sidenav-section",
   DrawerHeader: "components-drawer",

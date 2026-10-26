@@ -1,6 +1,6 @@
 // BottomNav — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { type ReactNode, type Ref, type RefObject, useEffect, useRef, useState } from "react";
+import { type ReactNode, type Ref, useEffect, useRef, useState } from "react";
 import { within, screen, userEvent, expect, waitFor } from "storybook/test";
 import {
   BottomNav,
@@ -30,14 +30,14 @@ const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
-const SMALL_WIDTH = 80;
 
 // -----------------------------------------------------------------------
-// Meta — on documente l'item individuel pour le contrôle interactif
+// Meta — la barre complète. Les stories de l'item vivent dans la sous-page
+// « Navigation/BottomNav/Item » (BottomNavItem.stories.tsx), comme SideNav / SideNav.Item.
 
 const meta = {
   title: "Navigation/BottomNav",
-  component: BottomNavItem,
+  component: BottomNav,
   tags: ["autodocs"],
   parameters: {
     docs: {
@@ -102,7 +102,7 @@ const meta = {
     design: { type: "figma", url: figmaUrl("2524:18591") },
   },
   decorators: [
-    // Cadre de 402px pour les stories « item » ; les stories plein viewport (`noFrame`, ex.
+    // Cadre de 402px pour les barres complètes ; les stories plein viewport (`noFrame`, ex.
     // recette QuickActions) s'en passent : un cadre fixe les ferait rétrécir / déborder.
     (Story: () => ReactNode, context: { parameters: { noFrame?: boolean } }) =>
       context.parameters.noFrame ? (
@@ -113,141 +113,10 @@ const meta = {
         </div>
       ),
   ],
-  argTypes: {
-    icon: {
-      control: "select",
-      options: ["Dashboard", "Assignment", "CalendarMonth", "Comment", "Star", "MoreHoriz"],
-    },
-    isSelected: { control: "boolean" },
-    isOpen: { control: "boolean" },
-    isDisabled: { control: "boolean" },
-    badge: { control: "text" },
-    onClick: { action: "clicked" },
-  },
-  args: {
-    label: "Planning",
-    icon: "CalendarMonth",
-    isSelected: false,
-    isOpen: false,
-    isDisabled: false,
-  },
-} satisfies Meta<typeof BottomNavItem>;
+} satisfies Meta<typeof BottomNav>;
 
 export default meta;
-type Story = StoryObj<typeof BottomNavItem>;
-
-// -----------------------------------------------------------------------
-// Stories
-
-export const Default: Story = {
-  parameters: { design: { type: "figma", url: figmaUrl("14:1031") } },
-  render: (args) => (
-    <div style={{ width: SMALL_WIDTH }}>
-      <BottomNav>
-        <BottomNavItem {...args} />
-      </BottomNav>
-    </div>
-  ),
-};
-
-export const Selected: Story = {
-  parameters: { design: { type: "figma", url: figmaUrl("14:1031") } },
-  args: { isSelected: true },
-  render: (args) => (
-    <div style={{ width: SMALL_WIDTH }}>
-      <BottomNav>
-        <BottomNavItem {...args} />
-      </BottomNav>
-    </div>
-  ),
-};
-
-/**
- * Item interactif qui ouvre un popup.
- * Démarre en état default. Cliquer → isOpen + popup affiché + icône → croix (Close).
- * Re-cliquer ou cliquer ailleurs → ferme le popup.
- */
-export const Open: Story = {
-  parameters: { controls: { disable: true } },
-  render: () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const wrapperRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-      if (!isOpen) return;
-      const handleClickOutside = (e: MouseEvent) => {
-        if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-          setIsOpen(false);
-        }
-      };
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, [isOpen]);
-
-    return (
-      <div ref={wrapperRef} style={{ position: "relative", width: SMALL_WIDTH }}>
-        {isOpen && (
-          <div
-            style={{
-              position: "absolute",
-              bottom: "calc(100% + var(--space200))",
-              left: "50%",
-              transform: "translateX(-50%)",
-              minWidth: 240,
-              background: "var(--background-default-default)",
-              borderRadius: "var(--radius100)",
-              boxShadow: "var(--elevation-medium)",
-              zIndex: 10,
-              overflow: "hidden",
-            }}
-          >
-            <Menu aria-label="Actions" onAction={() => { setIsOpen(false); }}>
-              <MenuSection title="Main courante">
-                <MenuItem id="events" iconBefore="MenuBook">Main courante</MenuItem>
-                <MenuItem id="patrols" iconBefore="Patrol">Rondes</MenuItem>
-              </MenuSection>
-            </Menu>
-          </div>
-        )}
-        <BottomNav>
-          <BottomNavItem
-            label="Plus"
-            icon="MoreHoriz"
-            isOpen={isOpen}
-            onClick={() => { setIsOpen((o) => !o); }}
-          />
-        </BottomNav>
-      </div>
-    );
-  },
-};
-
-/** Item désactivé — non interactif */
-export const Disabled: Story = {
-  args: { isDisabled: true },
-  render: (args) => (
-    <div style={{ width: SMALL_WIDTH }}>
-      <BottomNav>
-        <BottomNavItem {...args} />
-      </BottomNav>
-    </div>
-  ),
-};
-
-export const WithBadge: Story = {
-  name: "With badge",
-  parameters: { design: { type: "figma", url: figmaUrl("14:1031") } },
-  args: { label: "Notifications", icon: "Notifications", badge: "3" },
-  render: (args) => (
-    <div style={{ width: SMALL_WIDTH }}>
-      <BottomNav>
-        <BottomNavItem {...args} />
-      </BottomNav>
-    </div>
-  ),
-};
+type Story = StoryObj<typeof BottomNav>;
 
 // -----------------------------------------------------------------------
 // Barres complètes interactives — un contrôle « Item actif » pilote l'item
@@ -421,13 +290,27 @@ export const LongLabel: NavStory = {
 // Popup example — item "Plus" à droite qui ouvre un menu d'actions secondaires
 
 function BottomNavWithPopupRight({
-  boundaryRef,
+  boundary,
+  defaultOpen,
 }: {
-  /** Écran du téléphone : le popover ne peut pas en sortir. */
-  boundaryRef: RefObject<HTMLElement | null>;
+  /** Écran du téléphone : le popover ne peut pas en sortir (null le temps du 1er rendu). */
+  boundary: HTMLElement | null;
+  /** Popup ouvert au montage. */
+  defaultOpen: boolean;
 }) {
   const [selected, setSelected] = useState("Tableau de bord");
   const [popupOpen, setPopupOpen] = useState(false);
+
+  // Ouvert par défaut : on ouvre dès que l'écran du téléphone est connu comme LIMITE du popover
+  // (au 1er rendu il ne l'est pas encore : un popup ouvert d'emblée serait placé sur le
+  // viewport, puis dépasserait de l'écran). Une seule fois ; ensuite l'utilisateur pilote.
+  const autoOpened = useRef(false);
+  useEffect(() => {
+    if (defaultOpen && boundary && !autoOpened.current) {
+      autoOpened.current = true;
+      setPopupOpen(true);
+    }
+  }, [defaultOpen, boundary]);
 
   // Un seul item actif : menu ouvert → aucun item de page n'est sélectionné.
   const activeItem = popupOpen ? null : selected;
@@ -455,7 +338,7 @@ function BottomNavWithPopupRight({
           // entièrement dans l'écran (décalé si besoin, hauteur bornée).
           placement="top end"
           offset={8}
-          boundaryElement={boundaryRef.current ?? undefined}
+          boundaryElement={boundary ?? undefined}
           style={{ minWidth: 240 }}
         >
           <Menu aria-label="Plus" onAction={() => { setPopupOpen(false); }}>
@@ -475,11 +358,13 @@ function BottomNavWithPopupRight({
   );
 }
 
-function WithPopupRightDemo(): ReactNode {
-  const screenRef = useRef<HTMLDivElement>(null);
+function WithPopupRightDemo({ defaultOpen = true }: { defaultOpen?: boolean }): ReactNode {
+  // Ref callback + état : le popover, ouvert dès le montage, reçoit l'écran comme limite au
+  // rendu suivant (un `useRef` serait encore vide au premier rendu).
+  const [screen, setScreen] = useState<HTMLDivElement | null>(null);
   return (
-    <PhoneScreen screenRef={screenRef}>
-      <BottomNavWithPopupRight boundaryRef={screenRef} />
+    <PhoneScreen screenRef={setScreen}>
+      <BottomNavWithPopupRight boundary={screen} defaultOpen={defaultOpen} />
     </PhoneScreen>
   );
 }
@@ -492,6 +377,9 @@ function WithPopupRightDemo(): ReactNode {
  * - `boundaryElement` = l'écran du téléphone : le popover **ne sort pas de
  *   l'écran** (retournement si la place manque, décalage, hauteur bornée) ;
  * - fermeture par clic extérieur, Échap ou choix d'une action.
+ *
+ * **Le popup est ouvert par défaut** (pour le voir sans manipuler) ; le fermer puis cliquer
+ * « Plus » le rouvre.
  */
 export const WithPopupRight: Story = {
   name: "With popup (right item)",
@@ -504,7 +392,8 @@ export const WithPopupRight: Story = {
 // « Plus », inclusion dans l'écran du téléphone, fermeture (Échap, action).
 export const WithPopupRightInteractions: Story = {
   tags: ["!dev"],
-  render: () => <WithPopupRightDemo />,
+  // Fermé au montage : le test vérifie l'ouverture (la story visible, elle, démarre ouverte).
+  render: () => <WithPopupRightDemo defaultOpen={false} />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     // Référence prise AVANT l'ouverture : menu ouvert, React Aria masque le reste de
