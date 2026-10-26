@@ -64,17 +64,17 @@
   animation-delay: calc(var(--qa-index, 0) * var(--duration-fast) / 2);
 }
 
-/* Rangée : libellé à gauche, pastille d'icône à droite. Fond de SURFACE neutre — jamais
+/* Rangée : pastille d'icône à gauche, libellé à droite. Fond de SURFACE neutre — jamais
    coloré, quel que soit le ton. */
 .row {
   pointer-events: auto;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: var(--space200);
   width: 100%;
   min-height: calc(var(--size500) + var(--space200));
-  padding: var(--space100) var(--space100) var(--space100) var(--space300);
+  padding: var(--space100) var(--space300) var(--space100) var(--space100);
   border: 0;
   border-radius: var(--radius-round);
   background-color: var(--background-surface-default);
