@@ -241,6 +241,15 @@ entre versions alpha.
   badge était écrasé (jusqu'à 13,5px de large) : c'est désormais le voisin qui cède.
 ### Modifié
 
+- **Ascenseur du DS — affichage permanent dès que le contenu déborde.** Le pouce de la
+  couche partagée `styles/scrollbar.module.css` (Drawer, ModalDialog, Popover, Select,
+  TimeCalendar) et celui de la `SideNav` n'étaient révélés qu'au survol : rien ne disait
+  qu'il restait du contenu, et au doigt l'ascenseur ne paraissait jamais. Il est désormais
+  visible au repos (mêmes jetons, contraste ≥ 3:1 dans chaque thème), un cran plus marqué
+  au survol du pouce ; la piste ne se teinte toujours qu'au survol. Sans débordement, rien
+  n'est dessiné. Le couloir reste réservé : aucun décalage du contenu. `ScrollArea`
+  (`visibility`) est inchangé.
+
 - **`Page.Body` — plus de retrait bas.** Le corps de page avait
   `padding-block: var(--space100)`, soit 8px en haut **et** en bas. Seul celui du haut
   a une raison d'être : il détache le contenu de la toolbar qui le surmonte. En bas il

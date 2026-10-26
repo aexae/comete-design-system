@@ -67,18 +67,18 @@
   height: var(--size100);
 }
 
-/* L'ascenseur ne paraît QU'AU SURVOL de la zone. Au repos, piste et pouce
-   sont transparents : rien ne dessine de colonne permanente le long du
-   contenu. Même parti pris que `SideNav`, généralisé.
+/* L'ascenseur est PERMANENT dès que le contenu déborde : le pouce est
+   visible au repos, sans survol. Un navigateur webkit ne dessine d'ailleurs
+   aucun ascenseur quand rien ne déborde — il n'y a donc rien à conditionner.
+   Un ascenseur qui n'apparaît qu'au survol cache à l'utilisateur qu'il reste
+   du contenu, et ne paraît jamais au doigt.
 
-   Le couloir reste RÉSERVÉ (voir `.scrollable`) : l'ascenseur apparaît et
-   disparaît sans jamais décaler le contenu.
+   La piste, elle, reste transparente au repos et ne se teinte qu'au survol :
+   le pouce suffit à signaler le débordement sans dessiner de colonne grise le
+   long du contenu.
 
-   CE QUI N'EST PAS FAISABLE ICI : l'afficher pendant le DÉFILEMENT puis
-   l'estomper. CSS n'a pas de pseudo-classe « en train de défiler ». Il faut
-   un écouteur et un délai, donc du JavaScript côté composant. Conséquence
-   assumée : au doigt, où il n'y a pas de survol, l'ascenseur ne paraît
-   jamais. C'est `.shadows` qui dit alors qu'il reste du contenu. */
+   Le couloir est RÉSERVÉ (voir `.scrollable`) : rien ne se décale quand le
+   contenu se met à déborder ou à cesser de le faire. */
 .themed::-webkit-scrollbar-track {
   background: transparent;
 }
@@ -97,7 +97,7 @@
    Mesuré contre `--background-surface-default` :
 
                     THEME CLAIR (#ffffff)        THEME SOMBRE (#374043)
-     révélé   --icon-subtlest #6f8488 3,94:1   --icon-subtle #8d9fa3 3,85:1
+     au repos --icon-subtlest #6f8488 3,94:1   --icon-subtle #8d9fa3 3,85:1
      pouce    --icon-subtle   #596b70 5,58:1   --text-subtle #b5c1c4 5,76:1
      survolé
 
@@ -108,34 +108,30 @@
    `--text-*` de la prose. Ni l'une ni l'autre n'est une pièce de mécanique.
    Sujet d'ADR, pas de correctif d'ascenseur. */
 .themed::-webkit-scrollbar-thumb {
-  background-color: transparent;
+  background-color: var(--icon-subtlest);
   border-radius: var(--radius-round);
   transition: background-color var(--duration-normal) var(--easing-default);
 }
 
-.themed:hover::-webkit-scrollbar-thumb {
-  background-color: var(--icon-subtlest);
-}
-
-/* Survol du pouce lui-même : un cran plus marqué. */
-.themed:hover::-webkit-scrollbar-thumb:hover {
+/* Survol de la zone ou du pouce : un cran plus marqué. */
+.themed::-webkit-scrollbar-thumb:hover {
   background-color: var(--icon-subtle);
 }
 
-[data-theme="dark"] .themed:hover::-webkit-scrollbar-thumb {
+[data-theme="dark"] .themed::-webkit-scrollbar-thumb {
   background-color: var(--icon-subtle);
 }
 
-[data-theme="dark"] .themed:hover::-webkit-scrollbar-thumb:hover {
+[data-theme="dark"] .themed::-webkit-scrollbar-thumb:hover {
   background-color: var(--text-subtle);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .themed:hover::-webkit-scrollbar-thumb {
+  :root:not([data-theme="light"]) .themed::-webkit-scrollbar-thumb {
     background-color: var(--icon-subtle);
   }
 
-  :root:not([data-theme="light"]) .themed:hover::-webkit-scrollbar-thumb:hover {
+  :root:not([data-theme="light"]) .themed::-webkit-scrollbar-thumb:hover {
     background-color: var(--text-subtle);
   }
 }
@@ -151,13 +147,17 @@
 @supports not selector(::-webkit-scrollbar) {
   .themed {
     scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
+    scrollbar-color: var(--icon-subtlest) transparent;
     transition: scrollbar-color var(--duration-normal) var(--easing-default);
   }
 
   .themed:hover {
     scrollbar-color: var(--icon-subtlest)
       var(--background-neutral-subtlest-default);
+  }
+
+  [data-theme="dark"] .themed {
+    scrollbar-color: var(--icon-subtle) transparent;
   }
 
   [data-theme="dark"] .themed:hover {

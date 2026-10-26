@@ -58,7 +58,7 @@
   overflow-x: hidden;
 
   /* Gouttière réservée en permanence : les items ne se décalent pas quand le
-     thumb apparaît au survol, et leur fond hover/selected s'arrête avant elle
+     thumb apparaît, et leur fond hover/selected s'arrête avant elle
      (ne passe jamais sous la scrollbar). Elle est logée DANS la gouttière droite de
      la nav (marge négative égale à sa largeur) : l'espace avant et après un item
      est identique (8px de chaque côté) — avant, la gouttière s'ajoutait au retrait
@@ -89,34 +89,36 @@
   background-attachment: local, local, scroll, scroll;
 }
 
-/* Firefox : scrollbar fine, thumb transparent au repos (transition douce de la
-   couleur), révélé au survol de la nav ENTIÈRE.
+/* Firefox : scrollbar fine, pouce permanent dès que la liste déborde.
 
-   La SideNav garde ce révélé-au-survol, qui lui est propre, mais emprunte les
-   COULEURS de la couche partagée `src/styles/scrollbar.module.css` :
-   `--icon-subtlest` révélé et `--icon-subtle` au survol du pouce en thème
-   clair, un cran plus haut en sombre. Un seul pouce dans tout le DS, et les
-   quatre crans tiennent le 3:1 du WCAG 1.4.11. Seul le déclenchement
-   diffère. */
+   La SideNav emprunte les COULEURS de la couche partagée
+   `src/styles/scrollbar.module.css` : `--icon-subtlest` au repos et
+   `--icon-subtle` au survol du pouce en thème clair, un cran plus haut en
+   sombre. Un seul pouce dans tout le DS, et les quatre crans tiennent le 3:1
+   du WCAG 1.4.11. */
 @supports not selector(::-webkit-scrollbar) {
   .body {
     scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
+    scrollbar-color: var(--icon-subtlest) transparent;
     transition: scrollbar-color var(--duration-normal) var(--easing-default);
   }
 
   .sideNav:hover .body {
-    scrollbar-color: var(--icon-subtlest) transparent;
+    scrollbar-color: var(--icon-subtle) transparent;
+  }
+
+  [data-theme="dark"] .body {
+    scrollbar-color: var(--icon-subtle) transparent;
   }
 
   [data-theme="dark"] .sideNav:hover .body {
-    scrollbar-color: var(--icon-subtle) transparent;
+    scrollbar-color: var(--text-subtle) transparent;
   }
 }
 
-/* Chrome / Safari — au survol de la nav ENTIÈRE (header/corps/footer), le thumb
-   devient visible. Le scroll reste fonctionnel en permanence ; seul l'affichage du
-   thumb est conditionné. Track toujours transparent. */
+/* Chrome / Safari — le pouce est visible en permanence dès que le corps
+   déborde (webkit ne dessine rien sinon). Le scroll reste fonctionnel ;
+   la piste est toujours transparente. */
 
 .body::-webkit-scrollbar {
   width: var(--sidenav-scrollbar-width);
@@ -127,27 +129,23 @@
 }
 
 .body::-webkit-scrollbar-thumb {
-  background: transparent;
+  background: var(--icon-subtlest);
   border-radius: var(--radius-round);
   transition: background-color var(--duration-normal) var(--easing-default);
 }
 
-.sideNav:hover .body::-webkit-scrollbar-thumb {
-  background: var(--icon-subtlest);
-}
-
 /* Survol du thumb lui-même : un cran plus marqué. */
-.sideNav:hover .body::-webkit-scrollbar-thumb:hover {
+.body::-webkit-scrollbar-thumb:hover {
   background: var(--icon-subtle);
 }
 
 /* Même bascule par thème que la couche partagée : sur fond sombre il faut
    remonter d'un cran pour garder 3:1. */
-[data-theme="dark"] .sideNav:hover .body::-webkit-scrollbar-thumb {
+[data-theme="dark"] .body::-webkit-scrollbar-thumb {
   background: var(--icon-subtle);
 }
 
-[data-theme="dark"] .sideNav:hover .body::-webkit-scrollbar-thumb:hover {
+[data-theme="dark"] .body::-webkit-scrollbar-thumb:hover {
   background: var(--text-subtle);
 }
 
