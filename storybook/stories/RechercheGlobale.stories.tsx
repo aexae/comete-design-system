@@ -191,7 +191,7 @@ export const Desktop: Story = {
  * raccourcis clavier au pied, pas de `esc` — une croix à la place.
  */
 export const TactileMobile: Story = {
-  name: "Tactile (mobile)",
+  name: "Touch (mobile)",
   // Viewport mobile RÉEL, pas un cadre CSS : le `Drawer` se portalise en
   // `position: fixed` et ignorerait un faux téléphone en div. Même parti pris
   // que la story « Mobile et tablette » de la SideNav.
@@ -217,7 +217,7 @@ export const TactileMobile: Story = {
  * story, rien ne distinguerait la règle d'un simple seuil de mise en page.
  */
 export const TactileTablette: Story = {
-  name: "Tactile (tablette)",
+  name: "Touch (tablet)",
   globals: { viewport: { value: "cometeTabletManager", isRotated: false } },
   parameters: { layout: "fullscreen", controls: { disable: true } },
   render: () => (

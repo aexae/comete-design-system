@@ -322,7 +322,7 @@ export const Axe: Story = {
  * dans lequel on veut que l&apos;objet demeure → régime nominal, `success`.
  */
 export const ProgressionVsCycleDeVie: Story = {
-  name: "Progression vs cycle de vie",
+  name: "Progress vs lifecycle",
   render: () => (
     <Stack gap="300" style={{ maxWidth: 860 }}>
       <Stack direction="row" gap="300" wrap align="start">
@@ -407,7 +407,7 @@ export const ProgressionVsCycleDeVie: Story = {
  * propre sémantique. Voir la section « Points laissés ouverts » de l&apos;ADR.
  */
 export const UnAxePlusieursComposants: Story = {
-  name: "Un axe, plusieurs composants",
+  name: "One axis, several components",
   render: () => (
     <Stack gap="300" style={{ maxWidth: 860 }}>
       <Text color="subtle">
@@ -469,7 +469,7 @@ export const UnAxePlusieursComposants: Story = {
  * `--*-accent-<couleur>-*` de namespace catégoriel décoratif.
  */
 export const CategorieVsStatut: Story = {
-  name: "Catégorie vs statut",
+  name: "Category vs status",
   render: () => (
     <Stack gap="300" style={{ maxWidth: 860 }}>
       <Stack direction="row" gap="300" wrap align="start">
@@ -557,7 +557,7 @@ export const CategorieVsStatut: Story = {
  * **produit** des deux dimensions au lieu de leur somme.
  */
 export const DeuxDimensions: Story = {
-  name: "Deux dimensions",
+  name: "Two dimensions",
   render: () => (
     <Stack gap="200" style={{ maxWidth: 860 }}>
       <Text color="subtle">
@@ -617,7 +617,7 @@ export const DeuxDimensions: Story = {
  * remarquer.
  */
 export const Emphase: Story = {
-  name: "Emphase (par composant)",
+  name: "Emphasis (per component)",
   render: () => (
     <Stack gap="300" style={{ maxWidth: 860 }}>
       <Section title="Le levier, composant par composant">

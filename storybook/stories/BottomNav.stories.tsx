@@ -329,7 +329,7 @@ function PlusPageDemo(): ReactNode {
 }
 
 /**
- * **Plus en page** — l'alternative au popup : « Plus » n'ouvre pas de calque,
+ * **Plus page** — l'alternative au popup : « Plus » n'ouvre pas de calque,
  * c'est une **destination** qui mène à un écran (barre de page avec retour,
  * liste en deux sections). Le « Plus » reste **sélectionné** (bleu, comme ses
  * voisines), sans état ouvert ni icône de fermeture.
@@ -339,7 +339,7 @@ function PlusPageDemo(): ReactNode {
  * « Plus » sélectionné.
  */
 export const PlusPage: Story = {
-  name: "Plus en page",
+  name: "Plus page",
   parameters: { layout: "centered", controls: { disable: true } },
   render: () => <PlusPageDemo />,
 };

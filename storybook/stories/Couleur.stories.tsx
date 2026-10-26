@@ -184,7 +184,7 @@ export const Philosophie: Story = {
  * bouton `comète` reste fixe (École A).
  */
 export const MarqueClient: StoryObj<{ seed: string }> = {
-  name: "Marque client (BrandProvider)",
+  name: "Client brand (BrandProvider)",
   parameters: { layout: "padded" },
   argTypes: {
     seed: { control: "color", name: "Couleur client (HEX)" },

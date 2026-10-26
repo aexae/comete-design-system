@@ -668,7 +668,7 @@ function AgentTableCore({
  * (compteur + tag + « Réinitialiser ») ; les autres restent démonstratives.
  */
 export const Collection: Story = {
-  name: "Collection (liste + filtres)",
+  name: "Collection (list + filters)",
   parameters: { design: { type: "figma", url: figmaUrl("4577:13694") } },
   argTypes: {
     // Client non proposé : la page Agents n'existe pas dans sa navigation.
@@ -975,7 +975,7 @@ function VacationsSection(): React.ReactElement {
 }
 
 /**
- * **Liste de section (fiche site)** — la liste posée DANS une fiche, **à plat
+ * **Section list (site page)** — la liste posée DANS une fiche, **à plat
  * (aucune Card)**, en deux colonnes.
  *
  * La fiche garde sa `Page.Bar` (« Sites / Fiche site », `Breadcrumbs`). À
@@ -987,7 +987,7 @@ function VacationsSection(): React.ReactElement {
  * dé-encartée — jamais une seconde `Page.Toolbar`.
  */
 export const ListeDeSection: Story = {
-  name: "Liste de section (fiche site)",
+  name: "Section list (site page)",
   parameters: { design: { type: "figma", url: figmaUrl("4577:13694") } },
   render: function FicheSiteStory() {
     const search = useGlobalSearch();
@@ -1151,7 +1151,7 @@ export const ListeDeSection: Story = {
  * - `SectionMessage` pour les messages contextuels (pas Banner)
  */
 export const Entity: Story = {
-  name: "Entity (fiche détail)",
+  name: "Entity (detail page)",
   parameters: { design: { type: "figma", url: figmaUrl("4577:13694") } },
   render: () => (
       <Page globalActions={null}>
@@ -1385,7 +1385,7 @@ const toDisplayName = (raw: string): string =>
  * - Les textes passeront par des clés i18n (standard MCE).
  */
 export const Home: StoryObj<{ isNameLoading: boolean }> = {
-  name: "Home (Accueil)",
+  name: "Home",
   parameters: { design: { type: "figma", url: figmaUrl("4587:24160") } },
   args: { isNameLoading: false },
   argTypes: {
@@ -1537,7 +1537,7 @@ export const Home: StoryObj<{ isNameLoading: boolean }> = {
  * - Grille de cards pour les rôles, Tag pour les étiquettes
  */
 export const Settings: Story = {
-  name: "Settings (paramètres)",
+  name: "Settings",
   parameters: { design: { type: "figma", url: figmaUrl("4577:13694") } },
   render: () => (
       <Page globalActions={null}>

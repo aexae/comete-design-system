@@ -214,7 +214,7 @@ function MobileWebDemo() {
 }
 
 export const MobileWeb: Story = {
-  name: "Mobile et tablette (Drawer left)",
+  name: "Mobile and tablet (Drawer left)",
   // Viewport mobile réel : le Drawer (portal + position: fixed) prend la taille d'un téléphone.
   globals: { viewport: { value: "cometeMobileAgent", isRotated: false } },
   parameters: { layout: "fullscreen", controls: { disable: true } },
@@ -313,7 +313,7 @@ export const Empty: Story = {
  * restent épinglés. Réduis la hauteur du canvas pour voir le scroll apparaître.
  */
 export const Scrollable: Story = {
-  name: "Scroll (contenu long)",
+  name: "Scroll (long content)",
   parameters: { controls: { disable: true } },
   render: () => (
     // Deux leviers, parce qu'un seul ne suffit pas. La hauteur est bornée :
