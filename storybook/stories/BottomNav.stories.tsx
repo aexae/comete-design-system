@@ -68,7 +68,7 @@ const meta = {
                 example: (
                   <div style={{ width: "100%" }}>
                     <BottomNav>
-                      <BottomNavItem label="Tableau de bord" icon="Dashboard" isSelected />
+                      <BottomNavItem label="Accueil" icon="Home" isSelected />
                       <BottomNavItem label="Ma fiche" icon="Assignment" />
                       <BottomNavItem label="Planning" icon="CalendarMonth" />
                     </BottomNav>
@@ -80,7 +80,7 @@ const meta = {
                 example: (
                   <div style={{ width: "100%" }}>
                     <BottomNav>
-                      <BottomNavItem label="Tableau de bord" icon="Dashboard" isSelected />
+                      <BottomNavItem label="Accueil" icon="Home" isSelected />
                       <BottomNavItem label="Rapports et analyses détaillés" icon="Assignment" />
                       <BottomNavItem label="Planning" icon="CalendarMonth" />
                     </BottomNav>
@@ -181,14 +181,14 @@ function PhoneScreen({
 // troncature à 10 px, et la barre de Link porte jusqu'à SIX emplacements
 // (5 destinations + « Plus »).
 const MANAGER_ITEMS: NavItemDef[] = [
-  { label: "Tableau de bord", icon: "Dashboard" },
+  { label: "Accueil", icon: "Home" },
   { label: "Agents", icon: "Group" },
   { label: "Sites", icon: "Site" },
   { label: "Pointages", icon: "Clockings" },
 ];
 
 const AGENT_ITEMS: NavItemDef[] = [
-  { label: "Tableau de bord", icon: "Dashboard" },
+  { label: "Accueil", icon: "Home" },
   { label: "Ma fiche", icon: "Assignment" },
   { label: "Planning", icon: "CalendarMonth" },
   { label: "Demandes", icon: "Comment", badge: "3" },
@@ -215,7 +215,7 @@ const PLUS_SECTIONS: { title: string; entries: { label: string; icon: IconName }
   },
 ];
 
-/** Quatre items — **Manager** (Tableau de bord, Agents, Sites, Pointages). Contrôle « Item actif ». */
+/** Quatre items — **Manager** (Accueil, Agents, Sites, Pointages). Contrôle « Item actif ». */
 export const FourItems: NavStory = {
   name: "Four items",
   parameters: {
@@ -225,7 +225,7 @@ export const FourItems: NavStory = {
   argTypes: {
     active: { name: "Item actif", control: "radio", options: (MANAGER_ITEMS).map((i) => i.label) },
   },
-  args: { active: "Tableau de bord" },
+  args: { active: "Accueil" },
   render: (args) => (
     <PhoneScreen>
       <InteractiveBottomNav items={MANAGER_ITEMS} active={args.active} />
@@ -243,7 +243,7 @@ export const FiveItems: NavStory = {
   argTypes: {
     active: { name: "Item actif", control: "radio", options: (AGENT_ITEMS).map((i) => i.label) },
   },
-  args: { active: "Tableau de bord" },
+  args: { active: "Accueil" },
   render: (args) => (
     <PhoneScreen>
       <InteractiveBottomNav items={AGENT_ITEMS} active={args.active} />
@@ -252,7 +252,7 @@ export const FiveItems: NavStory = {
 };
 
 const LONG_LABEL_ITEMS: NavItemDef[] = [
-  { label: "Tableau de bord", icon: "Dashboard" },
+  { label: "Accueil", icon: "Home" },
   { label: "Rapports et analyses détaillés", icon: "Assignment" },
   { label: "Planning des interventions", icon: "CalendarMonth" },
   { label: "Missions", icon: "Star" },
@@ -271,7 +271,7 @@ export const LongLabel: NavStory = {
   argTypes: {
     active: { name: "Item actif", control: "radio", options: LONG_LABEL_ITEMS.map((i) => i.label) },
   },
-  args: { active: "Tableau de bord" },
+  args: { active: "Accueil" },
   render: (args) => (
     <PhoneScreen>
       <InteractiveBottomNav items={LONG_LABEL_ITEMS} active={args.active} />
