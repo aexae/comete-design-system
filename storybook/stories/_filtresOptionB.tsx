@@ -1267,7 +1267,7 @@ export function FiltresSheet({
           <div style={{ display: "flex", flexDirection: "column" }}>
             {canSaveViews ? (
               <>
-            {/* Collection : accéder aux filtres enregistrés. L'action « donner un nom »
+            {/* List and filters : accéder aux filtres enregistrés. L'action « donner un nom »
                 n'est PAS ici (elle se mélangeait aux critères) : elle vit dans le pied,
                 à côté de « Voir N agents ». */}
             <Bleed inline="300">

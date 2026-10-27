@@ -232,7 +232,7 @@ function MiniTableRow({ cells, isHeader }: { cells: React.ReactNode[]; isHeader?
 }
 
 // -----------------------------------------------------------------------
-// 1. COLLECTION
+// 1. LIST AND FILTERS
 
 const EXTRA_LASTNAMES = ["LEROY", "ROUX", "DAVID", "BERTRAND", "MOREL", "FOURNIER", "GIRARD", "BONNET", "DUPUIS", "LAMBERT", "FONTAINE", "ROUSSEAU", "VINCENT", "MULLER", "LEFEVRE", "FAURE", "ANDRE", "MERCIER", "BLANC", "GUERIN"];
 const EXTRA_FIRSTNAMES = ["Paul", "Julie", "Marc", "Emma", "Hugo", "Léa", "Théo", "Sarah", "Nicolas", "Inès", "Antoine", "Chloé", "Maxime", "Camille", "Louis"];
@@ -389,7 +389,7 @@ export const Base: Story = {
 };
 
 // -----------------------------------------------------------------------
-// 1. COLLECTION
+// 1. LIST AND FILTERS
 // Recette « Liste » standard (D10) réintégrée sur la barre de filtres option B.
 // Visibilité par rôle DÉCLARATIVE : chaque colonne / action porte son `roles`
 // (une source par élément) ; aucun `if (isPartner)` dans l'affichage.
@@ -654,7 +654,7 @@ function AgentTableCore({
 }
 
 /**
- * **Collection** — recette « Liste » standard (D10), barre de filtres **option B**.
+ * **List and filters** — recette « Liste » standard (D10), barre de filtres **option B**.
  *
  * `Table` du DS **dé-encartée**, **une seule** toolbar (recherche + bouton
  * **« Filtres »** option B dans le slot `filters` : popover deux volets / feuille
@@ -667,8 +667,8 @@ function AgentTableCore({
  * câblée** au tableau — « Types de contrats » réduit réellement la liste
  * (compteur + tag + « Réinitialiser ») ; les autres restent démonstratives.
  */
-export const Collection: Story = {
-  name: "Collection (list + filters)",
+export const ListAndFilters: Story = {
+  name: "List and filters",
   parameters: { design: { type: "figma", url: figmaUrl("4577:13694") } },
   argTypes: {
     // Client non proposé : la page Agents n'existe pas dans sa navigation.
@@ -680,7 +680,7 @@ export const Collection: Story = {
     showContextToolbar: { name: "Toolbar contextuelle (showContextToolbar)", control: "boolean" },
   },
   args: { role: "manager", state: "data", showContextToolbar: true },
-  render: function CollectionStory(args) {
+  render: function ListAndFiltersStory(args) {
     const role = (args as { role?: Role }).role ?? "manager";
     const stateArg = (args as { state?: string }).state ?? "data";
     const showContextToolbar = (args as { showContextToolbar?: boolean }).showContextToolbar ?? true;
