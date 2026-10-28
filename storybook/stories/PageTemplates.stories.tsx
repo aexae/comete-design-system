@@ -128,7 +128,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Exemples de compositions de page complètes (listes, détails, tableaux de bord) assemblées à partir des composants du DS. Utilisez ces gabarits comme point de départ à copier/adapter, en composant Page avec SideNav/Page.Bar, Grid, Card, etc. Rappel : Banner au-dessus du layout (alerte globale), SectionMessage à l'intérieur du contenu.",
+          "Exemples de compositions de page complètes (listes, détails, tableaux de bord) assemblées à partir des composants du DS. Utilisez ces gabarits comme point de départ à copier/adapter, en composant Page avec SideNav/Page.Bar, Grid, Card, etc. Rappel : Banner au-dessus du layout (alerte globale), SectionMessage à l'intérieur du contenu.\n\n**Tablette : trois axes indépendants.** « Tablette = tactile » ne veut pas dire « tablette = interface de téléphone ». (1) La densité et la taille des cibles suivent le type de pointeur (`pointer: coarse`), jamais une largeur. (2) Le composant de navigation suit l'usage : Link sur tablette est du back-office assis, donc `SideNav` en rail ; la MCE sur tablette est du terrain debout, donc `BottomNav` (même ligne de partage que le FAB, réservé à la MCE). (3) La variante de `Page.Bar` suit la largeur de la Page, par container query : personne n'a à la décider, elle se déduit. Voir les stories « Manager tablet ».",
       },
     },
   },
@@ -274,7 +274,15 @@ const AGENTS = [
 export const Base: Story = {
   name: "Base (Banner + SideNav + Page.Bar)",
   parameters: { design: { type: "figma", url: figmaUrl("4319:15827") } },
-  render: function BaseStory() {
+  render: () => <BaseLayout />,
+};
+
+/**
+ * Composition de la story Base, partagée avec les stories tablette : Banner + SideNav +
+ * Page (Page.Bar). `sideNavMode` ne fait que choisir le mode INITIAL de la SideNav ; le
+ * bouton de bascule de son en-tête reste actif.
+ */
+function BaseLayout({ sideNavMode = "expanded" }: { sideNavMode?: "expanded" | "rail" }): React.ReactElement {
     const search = useGlobalSearch();
 
     function FooterLogo() {
@@ -283,7 +291,7 @@ export const Base: Story = {
     }
 
     return (
-      <SideNav.Provider>
+      <SideNav.Provider defaultMode={sideNavMode}>
       <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
         {/* Banner globale — pleine largeur, au-dessus de tout */}
         <Banner appearance="warning">
@@ -385,7 +393,57 @@ export const Base: Story = {
       </div>
       </SideNav.Provider>
     );
-  },
+}
+
+/* -----------------------------------------------------------------------
+ * Tablette : trois axes INDÉPENDANTS.
+ *
+ *   « tablette = tactile » ne veut PAS dire « tablette = interface de téléphone ».
+ *
+ * - DENSITÉ et taille des cibles : suivent le TYPE DE POINTEUR (`pointer: coarse`),
+ *   jamais une largeur.
+ * - COMPOSANT DE NAVIGATION : suit l'USAGE. Link sur tablette = back-office assis, donc
+ *   SideNav en rail ; la MCE sur tablette = terrain debout, donc BottomNav. Même ligne
+ *   de partage que le FAB, réservé à la MCE.
+ * - VARIANTE DE BARRE : suit la largeur de la PAGE, par container query. Personne n'a à
+ *   la décider, elle se déduit.
+ *
+ * POURQUOI LA SIDENAV EST OBLIGATOIRE DANS CES DEUX STORIES. Le seuil de bascule de
+ * `Page.Bar` est `@container page (max-width: 767px)` : il porte sur la largeur de la
+ * Page, pas du viewport. Sans navigation, la Page occupe 768 px en portrait, pile sur la
+ * frontière : la story montrerait tantôt la barre large, tantôt la compacte, selon
+ * qu'une barre de défilement apparaît. Elle ne prouverait rien. Avec la SideNav, la
+ * géométrie est franche (mesurée, voir plus bas). NE RETIRE PAS la SideNav pour
+ * « simplifier » : la démonstration tombe sans que rien ne le signale.
+ *
+ *   portrait (768)   rail 80  -> Page 688 -> barre compacte
+ *                    déployée 240 -> Page 528 -> barre compacte
+ *   paysage (1024)   rail 80  -> Page 944 -> barre large
+ *                    déployée 240 -> Page 784 -> barre large
+ * -------------------------------------------------------------------- */
+
+/**
+ * **Manager tablet, portrait** (768 × 1024) — Link sur tablette, back-office assis :
+ * `SideNav` en rail, tactile. La Page fait ~688 px, sous le seuil de 768 px : `Page.Bar`
+ * passe en variante **compacte** toute seule. Les cibles tactiles ne dépendent pas de
+ * cette largeur mais du pointeur.
+ */
+export const TabletPortrait: Story = {
+  name: "Manager tablet, portrait",
+  globals: { viewport: { value: "cometeTabletManager", isRotated: false } },
+  render: () => <BaseLayout sideNavMode="rail" />,
+};
+
+/**
+ * **Manager tablet, landscape** (1024 × 768) — même composition, tablette tournée : la
+ * Page fait ~944 px, au-dessus du seuil, `Page.Bar` repasse en variante **large**. Le
+ * pointeur est le même, donc les cibles tactiles aussi : la densité n'a pas bougé quand
+ * la largeur a changé.
+ */
+export const TabletLandscape: Story = {
+  name: "Manager tablet, landscape",
+  globals: { viewport: { value: "cometeTabletManager", isRotated: true } },
+  render: () => <BaseLayout sideNavMode="rail" />,
 };
 
 // -----------------------------------------------------------------------
