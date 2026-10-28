@@ -101,7 +101,7 @@
   }
 }
 
-/* ---- Collection: tags des critères actifs masqués sous le breakpoint compact.
+/* ---- List and filters: tags des critères actifs masqués sous le breakpoint compact.
    Réagit au conteneur `page` (comme le repli du bouton « Filtres »), pas au
    viewport : en compact/mobile, les critères sont portés par le badge et la
    feuille (drill-down). ---- */
@@ -126,7 +126,7 @@
   }
 }
 
-/* ---- Collection: mobile card list vs desktop table ---- */
+/* ---- List and filters: mobile card list vs desktop table ---- */
 
 .tableDesktopOnly {
   display: block;
