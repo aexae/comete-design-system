@@ -11,6 +11,10 @@ entre versions alpha.
 
 ### Ajouté
 
+- **Dépendance `@aexae/comete-icons` 0.10.0** (root et storybook). Rend disponible
+  l'icône `Service` (ex-`WorkRange`, Gantt « période de travail »). Version amont
+  cassante (les exports `WorkRange` et `ViewTimeline` y sont retirés), mais le DS ne les
+  référençait pas, donc aucun impact sur ses composants.
 - **`Avatar` — `color`** (`neutral` par défaut, `comete`, `accentPurple`, `accentTeal`,
   `accentTurquoise`, `accentMagenta`, `accentBlueGrey`) : couleur de fond et de contenu
   quand l'avatar montre des initiales ou une icône. **Catégorielle, jamais un statut**
