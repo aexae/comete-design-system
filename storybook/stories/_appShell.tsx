@@ -3,7 +3,7 @@
 // Pro Sécurité + slot de navigation + footer comète link) à gauche, et la Page
 // (Page.Bar "Accueil" + contenu de Layout/Page) à droite. Fichier NON indexé par Storybook (pas
 // de suffixe .stories).
-import { useState, type ReactNode } from "react";
+import { cloneElement, isValidElement, useState, type ReactNode } from "react";
 import {
   SideNav,
   Page,
@@ -77,6 +77,9 @@ export function DemoPageContent({ isLoading = false }: { isLoading?: boolean }) 
   );
 }
 
+/** Classe posée sur l'en-tête ou le pied masqués par `SideNavOnly focus`. */
+const FOCUS_HIDDEN = "sb-sidenav-focus-hidden";
+
 /**
  * La SideNav SEULE, pour les stories d'un de ses sous-composants.
  *
@@ -106,35 +109,52 @@ export function SideNavOnly({
   header?: ReactNode;
   /** Pied personnalisé (remplace le `SideNav.Footer` par défaut). */
   footer?: ReactNode;
-  /** Hauteur du cadre. @default "100vh" (ou la hauteur du contenu quand `focus` est posé) */
+  /** Hauteur du cadre. @default "100vh" */
   height?: string | number;
   /**
-   * Ne montre QUE cette partie de la nav, les deux autres sont masquées : les stories d'un
-   * sous-composant se jugent sur lui, pas sur ses voisins. Le cadre prend alors la hauteur
-   * de la partie montrée.
+   * Ne rend visible QUE cette partie de la nav : les deux autres sont masquées
+   * (`visibility: hidden`) mais gardent leur place. La nav conserve donc toute sa hauteur
+   * et la partie montrée reste à son emplacement réel (en-tête en haut, pied en bas, corps
+   * entre les deux) : on identifie où elle se trouve.
    */
   focus?: "header" | "body" | "footer";
 }) {
   const [current, setCurrent] = useState<SideNavMode>(mode);
+  // `SideNav` range ses enfants par TYPE (Header, Footer, le reste) : on ne peut donc pas les
+  // envelopper. Header et Footer reçoivent une classe qui les masque ; le corps, un conteneur
+  // `display: contents` (qui n'ajoute aucune boîte) en `visibility: hidden`.
+  const maskUnless = (part: "header" | "footer", el: ReactNode) =>
+    focus && focus !== part && isValidElement<{ className?: string }>(el)
+      ? cloneElement(el, { className: [el.props.className, FOCUS_HIDDEN].filter(Boolean).join(" ") })
+      : el;
   return (
     <SideNav.Provider mode={current} onModeChange={setCurrent}>
-      <div style={{ display: "flex", height: height ?? (focus ? "auto" : "100vh") }}>
+      <div style={{ display: "flex", height: height ?? "100vh" }}>
+        {focus && <style>{`.${FOCUS_HIDDEN} { visibility: hidden; }`}</style>}
         <SideNav>
-          {(!focus || focus === "header") &&
-            (header ?? (
+          {maskUnless(
+            "header",
+            header ?? (
               <SideNav.Header
                 logo={logo}
                 companyName="Pro Sécurité"
                 description="Main Courante"
               />
-            ))}
-          {(!focus || focus === "body") && nav}
-          {(!focus || focus === "footer") &&
-            (footer ?? (
+            ),
+          )}
+          {focus && focus !== "body" ? (
+            <div style={{ display: "contents", visibility: "hidden" }}>{nav}</div>
+          ) : (
+            nav
+          )}
+          {maskUnless(
+            "footer",
+            footer ?? (
               <SideNav.Footer>
                 <AppFooterBrand />
               </SideNav.Footer>
-            ))}
+            ),
+          )}
         </SideNav>
       </div>
     </SideNav.Provider>
