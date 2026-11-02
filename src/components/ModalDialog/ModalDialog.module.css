@@ -181,13 +181,29 @@
    Body
    ========================================================================== */
 
-/* L'ascenseur de cette zone vient de la couche partagée
-   `src/styles/scrollbar.module.css` (classe `themed`), appliquée dans le
-   TSX à côté de `body`. Ne pas redéfinir d'ascenseur ici. */
+/* La zone défilante n'est pas dessinée ici : `ModalDialog` rend un `ScrollArea`,
+   qui porte le défilement, l'ascenseur et les ombres de débordement. Ne pas
+   redéfinir d'ascenseur ici, et ne pas réintroduire la couche partagée
+   `src/styles/scrollbar.module.css` : sa marge négative de --size100 logeait
+   l'ascenseur natif dans le débord que l'`overflow: hidden` de `.dialog`
+   rogne, où il ne se voyait jamais. */
 .body {
-  /* Mécanique du conteneur défilant (flex-basis, min-height, overflow,
-     couloir d'ascenseur) : classe `scrollable` de la couche partagée
-     `src/styles/scrollbar.module.css`, appliquée dans le TSX. */
+  /* `ScrollArea` pose `min-height: 0` sur sa racine, mais pas la part qu'elle
+     prend dans la colonne : sans elle, le corps garde la hauteur de son
+     contenu et pousse le pied hors de la surface au lieu de défiler. */
+  flex: 1 1 auto;
+
+  /* Les masques des ombres de débordement reprennent la couleur de la surface
+     qui les porte. Sans ce jeton ils tireraient vers
+     `--background-surface-default`, qui n'est pas la couleur du dialog. */
+  --scroll-shadow-surface: var(--background-surface-elevation-overlay-default);
+}
+
+/* Le retrait et la typographie vivent sur le CONTENU, pas sur la zone : posés
+   sur la racine du `ScrollArea`, ils seraient hors du défileur — le dernier
+   élément se collerait au bord bas dès qu'on défile. Le pouce, lui, flotte
+   au-dessus du retrait de droite au lieu de lui prendre un couloir. */
+.bodyContent {
   padding: 0 var(--space300);
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
@@ -207,14 +223,14 @@
    commande doit rester sous la main pendant qu'on parcourt le contenu
    (le champ d'une palette de recherche, par exemple). Sans lui, la
    commande partirait avec le contenu, ou il faudrait un second
-   ascenseur imbriqué — qui n'hériterait pas de l'ascenseur thémé du
-   corps, les pseudo-éléments ::-webkit-scrollbar ne se transmettant pas. */
+   ascenseur imbriqué dans le premier — deux pouces côte à côte pour une
+   seule surface. */
 .pinned {
   flex-shrink: 0;
   padding: 0 var(--space300) var(--space200);
 }
 
-.noHeader .body {
+.noHeader .bodyContent {
   padding-top: var(--space300);
 }
 
@@ -224,7 +240,7 @@
   padding-top: var(--space300);
 }
 
-.noHeader:has(.pinned) .body {
+.noHeader:has(.pinned) .bodyContent {
   padding-top: 0;
 }
 

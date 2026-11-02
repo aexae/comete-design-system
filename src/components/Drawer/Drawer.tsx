@@ -9,9 +9,9 @@ import {
   Heading as AriaHeading,
 } from "react-aria-components";
 import { Button } from "../Button/Button.js";
+import { ScrollArea } from "../ScrollArea/ScrollArea.js";
 import { useDrawerStack } from "./DrawerContext.js";
 import type { DrawerPlacement, DrawerStacking } from "./DrawerContext.js";
-import scrollbarStyles from "../../styles/scrollbar.module.css";
 import styles from "./Drawer.module.css";
 
 // `process` n'est pas typé ici (le DS build avec `types: []`, sans @types/node).
@@ -426,17 +426,34 @@ DrawerHeader.displayName = "DrawerHeader";
 
 export interface DrawerBodyProps {
   children: ReactNode;
+  /** Classe CSS additionnelle, posée sur la zone défilante — pas sur le contenu. */
   className?: string;
 }
 
 /**
- * DrawerBody — Contenu scrollable du drawer.
+ * DrawerBody — Contenu défilant du drawer.
+ *
+ * La zone défilante est un `ScrollArea` : c'est le composant du DS pour « du
+ * contenu qui déborde », on ne le redessine pas ici. Son ascenseur FLOTTE
+ * au-dessus du contenu, là où l'ascenseur natif de la couche partagée se
+ * logeait dans une marge négative de 8px que l'`overflow: hidden` du panneau
+ * rognait : il ne se voyait jamais.
+ *
+ * `visibility="auto"` : le pouce paraît au survol ET pendant le défilement,
+ * puis s'estompe. Au repos ce sont les ombres de débordement qui disent qu'il
+ * reste du contenu — y compris au doigt, où il n'y a pas de survol.
  */
 export function DrawerBody({ children, className }: DrawerBodyProps): ReactElement {
   return (
-    <div className={[styles.body, scrollbarStyles.scrollable, scrollbarStyles.themed, className].filter(Boolean).join(" ")}>
-      {children}
-    </div>
+    <ScrollArea
+      visibility="auto"
+      hasOverflowShadows
+      className={[styles.body, className].filter(Boolean).join(" ")}
+    >
+      {/* Le retrait vit sur le CONTENU : posé sur la racine du `ScrollArea`,
+          il serait hors du défileur. */}
+      <div className={styles.bodyContent}>{children}</div>
+    </ScrollArea>
   );
 }
 

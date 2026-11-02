@@ -600,9 +600,13 @@ export const ScrollableBody: Story = {
       '[role="dialog"][aria-label="Drawer défilant"]',
     );
     await expect(dialog).not.toBeNull();
+    // Le corps est un `ScrollArea` : sa racine tient la place dans la colonne,
+    // et c'est le viewport qu'elle contient qui défile.
     const body = dialog!.querySelector<HTMLElement>('[class*="body"]');
+    const viewport = body?.querySelector<HTMLElement>('[class*="viewport"]');
     const footer = dialog!.querySelector<HTMLElement>('[class*="footer"]');
     await expect(body).not.toBeNull();
+    await expect(viewport).not.toBeNull();
     await expect(footer).not.toBeNull();
 
     // Le fix : le body flex peut se comprimer sous son contenu.
@@ -611,7 +615,9 @@ export const ScrollableBody: Story = {
     // de la hauteur du drawer.
     await expect(body!.clientHeight).toBeGreaterThan(150);
     // → il défile en interne (contenu plus haut que la zone visible)…
-    await expect(body!.scrollHeight).toBeGreaterThan(body!.clientHeight);
+    await expect(viewport!.scrollHeight).toBeGreaterThan(viewport!.clientHeight);
+    // …sans voler de couloir au contenu : l'ascenseur est rendu, il flotte.
+    await expect(viewport!.offsetWidth - viewport!.clientWidth).toBe(0);
     // …et le footer reste dans les limites du drawer (pas poussé dehors).
     const dRect = dialog!.getBoundingClientRect();
     const fRect = footer!.getBoundingClientRect();

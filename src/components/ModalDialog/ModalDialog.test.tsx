@@ -1,4 +1,5 @@
 // Tests unitaires pour ModalDialog
+import { readFileSync } from "node:fs";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
@@ -184,9 +185,11 @@ describe("ModalDialog", () => {
       </ModalDialog>,
     );
     const pinned = screen.getByLabelText("Chercher").parentElement;
-    const body = screen.getByText("Résultats").parentElement;
+    // Le corps est un `ScrollArea` : son contenu vit DANS la zone défilante,
+    // deux niveaux sous la racine qui porte `body`.
+    const body = screen.getByText("Résultats").closest(".body");
     expect(pinned).toHaveClass("pinned");
-    expect(body).toHaveClass("body");
+    expect(body).not.toBeNull();
     // le bloc épinglé n'est PAS dans le corps qui défile
     expect(body).not.toContainElement(screen.getByLabelText("Chercher"));
   });
@@ -198,5 +201,63 @@ describe("ModalDialog", () => {
       </ModalDialog>,
     );
     expect(document.querySelector(".pinned")).toBeNull();
+  });
+});
+
+describe("ModalDialog — zone défilante", () => {
+  // Le corps est un `ScrollArea`, pas la couche CSS partagée. Les noms de
+  // classe sont bruts en test (`classNameStrategy: "non-scoped"`).
+  const css = readFileSync("src/components/ModalDialog/ModalDialog.module.css", "utf8")
+    // Les commentaires citent volontairement l'ancienne couche : on les ignore.
+    .replace(/\/\*[\s\S]*?\*\//g, "");
+
+  function renderCorps() {
+    render(
+      <ModalDialog title="Long" isOpen>
+        <p>Corps défilant</p>
+      </ModalDialog>,
+    );
+    return screen.getByText("Corps défilant").closest(".body");
+  }
+
+  it("should hand the scrolling to a ScrollArea, not to the shared layer", () => {
+    const racine = renderCorps();
+    expect(racine).not.toBeNull();
+    expect(racine).toHaveClass("root");
+    expect(racine).not.toHaveClass("scrollable");
+    expect(racine).not.toHaveClass("themed");
+  });
+
+  it("should show overflow shadows, the only cue left once the thumb fades", () => {
+    // `visibility="auto"` efface le pouce au repos : ce sont les ombres qui
+    // disent qu'il reste du contenu, y compris au doigt où il n'y a pas de survol.
+    expect(renderCorps()?.querySelector(".viewport")).toHaveClass("shadows");
+  });
+
+  it("should keep the padding inside the scroller, on the content", () => {
+    renderCorps();
+    const contenu = screen.getByText("Corps défilant").parentElement;
+    expect(contenu).toHaveClass("bodyContent");
+    expect(contenu?.parentElement).toHaveClass("viewport");
+  });
+
+  it("should move the headerless top padding onto the content too", () => {
+    // Le retrait que le header fournissait vit maintenant avec les autres,
+    // dans le défileur — sinon il serait posé hors de la zone qui défile.
+    expect(css).toMatch(/\.noHeader\s+\.bodyContent\s*\{[^}]*padding-top/);
+    expect(css).not.toMatch(/\.noHeader\s+\.body\s*\{/);
+  });
+
+  it("should repaint the overflow masks in the dialog colour", () => {
+    // Sans ce jeton les masques tirent vers `--background-surface-default`,
+    // qui n'est pas la couleur du dialog — ils jureraient sur la modale.
+    expect(css).toMatch(
+      /\.body\s*\{[^}]*--scroll-shadow-surface:\s*var\(--background-surface-elevation-overlay-default\)/,
+    );
+  });
+
+  it("should draw no scrollbar of its own", () => {
+    expect(css).not.toMatch(/scrollbar/);
+    expect(css).not.toMatch(/overflow-y/);
   });
 });
