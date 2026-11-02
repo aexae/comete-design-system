@@ -546,18 +546,9 @@
   display: none;
 }
 
-/* Indicateur de sélection : barre de 4 × 20px calée à gauche (maquette). */
-.sideNav[data-mode="rail"] .itemSelected::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: var(--size050);
-  height: var(--size250);
-  transform: translateY(-50%);
-  border-radius: 0 var(--radius050) var(--radius050) 0;
-  background: var(--border-selected);
-}
+/* Item sélectionné : AUCUN indicateur propre au rail. Il reprend le visuel de
+   l'item déployé (fond sélectionné + texte sélectionné, voir `.itemSelected`),
+   sans barre à gauche : un seul état « sélectionné » dans tout le composant. */
 
 /* Titre de section en rail : retrait réduit, et typo descendue d'un cran à
    `xxxs` (10px). Le rail ne laisse qu'une soixantaine de pixels utiles — à

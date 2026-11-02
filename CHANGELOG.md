@@ -245,6 +245,10 @@ entre versions alpha.
   badge était écrasé (jusqu'à 13,5px de large) : c'est désormais le voisin qui cède.
 ### Modifié
 
+- **`SideNav.Item` en rail — plus de barre à gauche.** L'item sélectionné du rail portait
+  une barre de 4 × 20 px que l'item déployé n'a pas. Il reprend maintenant le visuel de
+  l'item déployé (fond et texte sélectionnés), sans indicateur propre au rail.
+
 - **`SideNav.FooterBrand` — prop `rail`.** Variante affichée en mode rail à la place des
   enfants (typiquement le logo au format `icon`). Avant, chaque écran recodait le
   basculement logo / icône, ou ne le faisait pas : le pied différait d'un endroit à

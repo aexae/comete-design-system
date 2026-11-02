@@ -418,6 +418,12 @@ describe("SideNav", () => {
     expect(getByText("Logo complet")).toBeInTheDocument();
   });
 
+  it("should give the selected item no indicator of its own in rail mode", () => {
+    const css = readFileSync("src/components/SideNav/SideNav.module.css", "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+    expect(css).toMatch(/\.itemSelected\s*\{/);
+    expect(css).not.toMatch(/\.itemSelected::before/);
+  });
+
   // Défilement interne --------------------------------------------------
 
   it("should render sections/items in a scrollable body, header and footer pinned outside", () => {
