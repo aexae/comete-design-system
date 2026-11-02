@@ -219,6 +219,43 @@ function MobileWebDemo() {
   );
 }
 
+/**
+ * **Application tablet, landscape** (1024 × 768) — dans l'application, la SideNav prend le
+ * relais de la BottomNav dès 769 px. Ici en rail (80 px), tablette tournée : c'est un outil
+ * de back-office, assis, qui garde la largeur pour le contenu. Navigation seule, sans page
+ * autour : la variante de `Page.Bar` selon la largeur de la Page se montre dans la doc de
+ * `Page.Bar`.
+ */
+export const ApplicationTabletLandscape: Story = {
+  name: "Application tablet, landscape",
+  globals: { viewport: { value: "cometeTabletManager", isRotated: true } },
+  parameters: { layout: "fullscreen", controls: { disable: true } },
+  render: () => <SideNavOnly nav={<MainCouranteNav />} mode="rail" />,
+};
+
+/**
+ * **Web tablet, landscape** (1024 × 768) — même rail de 80 px, tablette tournée, mais en
+ * navigateur.
+ */
+export const WebTabletLandscape: Story = {
+  name: "Web tablet, landscape",
+  globals: { viewport: { value: "cometeTabletManager", isRotated: true } },
+  parameters: { layout: "fullscreen", controls: { disable: true } },
+  render: () => <SideNavOnly nav={<MainCouranteNav />} mode="rail" />,
+};
+
+/**
+ * **Web tablet, portrait** (768 × 1024) — en navigateur, la tablette portrait n'a pas la
+ * largeur d'un rail ET d'un contenu confortable : hamburger + `Drawer` à gauche, comme sur
+ * mobile web.
+ */
+export const WebTabletPortrait: Story = {
+  name: "Web tablet, portrait",
+  globals: { viewport: { value: "cometeTabletManager", isRotated: false } },
+  parameters: { layout: "fullscreen", controls: { disable: true } },
+  render: () => <MobileWebDemo />,
+};
+
 export const MobileWeb: Story = {
   name: "Mobile and tablet (Drawer left)",
   // Viewport mobile réel : le Drawer (portal + position: fixed) prend la taille d'un téléphone.
