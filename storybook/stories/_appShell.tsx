@@ -95,7 +95,8 @@ export function SideNavOnly({
   logo = <Logo product="cafe" format="icon" />,
   header,
   footer,
-  height = "100vh",
+  height,
+  focus,
 }: {
   /** Corps de la navigation. */
   nav: ReactNode;
@@ -105,27 +106,35 @@ export function SideNavOnly({
   header?: ReactNode;
   /** Pied personnalisé (remplace le `SideNav.Footer` par défaut). */
   footer?: ReactNode;
-  /** Hauteur du cadre. @default "100vh" */
+  /** Hauteur du cadre. @default "100vh" (ou la hauteur du contenu quand `focus` est posé) */
   height?: string | number;
+  /**
+   * Ne montre QUE cette partie de la nav, les deux autres sont masquées : les stories d'un
+   * sous-composant se jugent sur lui, pas sur ses voisins. Le cadre prend alors la hauteur
+   * de la partie montrée.
+   */
+  focus?: "header" | "body" | "footer";
 }) {
   const [current, setCurrent] = useState<SideNavMode>(mode);
   return (
     <SideNav.Provider mode={current} onModeChange={setCurrent}>
-      <div style={{ display: "flex", height }}>
+      <div style={{ display: "flex", height: height ?? (focus ? "auto" : "100vh") }}>
         <SideNav>
-          {header ?? (
-            <SideNav.Header
-              logo={logo}
-              companyName="Pro Sécurité"
-              description="Main Courante"
-            />
-          )}
-          {nav}
-          {footer ?? (
-            <SideNav.Footer>
-              <AppFooterBrand />
-            </SideNav.Footer>
-          )}
+          {(!focus || focus === "header") &&
+            (header ?? (
+              <SideNav.Header
+                logo={logo}
+                companyName="Pro Sécurité"
+                description="Main Courante"
+              />
+            ))}
+          {(!focus || focus === "body") && nav}
+          {(!focus || focus === "footer") &&
+            (footer ?? (
+              <SideNav.Footer>
+                <AppFooterBrand />
+              </SideNav.Footer>
+            ))}
         </SideNav>
       </div>
     </SideNav.Provider>

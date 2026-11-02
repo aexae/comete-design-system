@@ -12,10 +12,10 @@ const FIGMA_FILE =
 const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
-/** La nav entière, sans la page : un item se juge dans sa nav. */
+/** Seule la section qui porte l'item est montrée : ni l'en-tête ni le pied de la nav. */
 function NavContext({ children }: { children: ReactNode }) {
   return (
-    <SideNavOnly nav={<SideNav.Section title="Manager">{children}</SideNav.Section>} />
+    <SideNavOnly focus="body" nav={<SideNav.Section title="Manager">{children}</SideNav.Section>} />
   );
 }
 
