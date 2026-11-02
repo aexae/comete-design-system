@@ -1,7 +1,7 @@
 // SideNav.Footer — stories isolées du sous-composant
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
-import { SideNav, Logo, Text } from "@aexae/comete-design-system/components";
+import { SideNav, Logo } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 import { SideNavOnly, MainCouranteNav } from "./_appShell";
@@ -12,8 +12,8 @@ const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 /** Seul le pied est montré : ni l'en-tête ni le corps de la nav. */
-function NavContext({ children, mode }: { children: ReactNode; mode?: "expanded" | "rail" }) {
-  return <SideNavOnly focus="footer" footer={children} nav={<MainCouranteNav />} mode={mode} />;
+function NavContext({ children }: { children: ReactNode }) {
+  return <SideNavOnly focus="footer" footer={children} nav={<MainCouranteNav />} />;
 }
 
 function SideNavFooterStory(props: { children?: ReactNode }) {
@@ -64,81 +64,25 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof SideNavFooterStory>;
 
-/** Footer avec le logo Comète. */
+/**
+ * Footer avec le logo Comète. Pour une marque discrète (opacité réduite, non interactive),
+ * l'envelopper dans `SideNav.FooterBrand` ; sa prop `rail` donne la variante affichée en
+ * mode rail (le logo complet déborderait de 80 px).
+ */
 export const Default: Story = {
   parameters: {
     docs: {
       source: {
         code: `<SideNav.Footer>
   <Logo size={14} />
-</SideNav.Footer>`,
-      },
-    },
-  },
-};
+</SideNav.Footer>
 
-/** Footer avec texte. */
-export const WithText: Story = {
-  name: "With text",
-  args: { children: <Text size="small" as="span" color="subtlest">© 2026 Comète</Text> },
-  parameters: {
-    docs: {
-      source: {
-        code: `<SideNav.Footer>
-  <Text size="small" as="span" color="subtlest">© 2026 Comète</Text>
-</SideNav.Footer>`,
-      },
-    },
-  },
-};
-
-/**
- * Pied de marque — `SideNav.FooterBrand` (placé dans `SideNav.Footer`) affiche un
- * logo discret (opacité réduite, sans état de survol : il n'est pas cliquable), centré en bas de la nav.
- */
-export const BrandLogo: Story = {
-  name: "Brand logo (FooterBrand)",
-  args: {
-    children: (
-      <SideNav.FooterBrand rail={<Logo size={24} format="icon" />}>
-        <Logo size={14} />
-      </SideNav.FooterBrand>
-    ),
-  },
-  parameters: {
-    docs: {
-      source: {
-        code: `<SideNav.Footer>
+// Marque discrète, avec sa variante rail
+<SideNav.Footer>
   <SideNav.FooterBrand rail={<Logo size={24} format="icon" />}>
     <Logo size={14} />
   </SideNav.FooterBrand>
 </SideNav.Footer>`,
-      },
-    },
-  },
-};
-
-/**
- * Pied de marque en **rail** (80 px) — `rail` remplace les enfants : le logo complet, qui
- * déborderait, laisse place à l'icône. C'est le composant qui bascule, pas chaque écran.
- */
-export const BrandLogoRail: Story = {
-  name: "Brand logo, rail",
-  render: () => (
-    <NavContext mode="rail">
-      <SideNav.Footer>
-        <SideNav.FooterBrand rail={<Logo size={24} format="icon" />}>
-          <Logo size={14} />
-        </SideNav.FooterBrand>
-      </SideNav.Footer>
-    </NavContext>
-  ),
-  parameters: {
-    docs: {
-      source: {
-        code: `<SideNav.FooterBrand rail={<Logo size={24} format="icon" />}>
-  <Logo size={14} />
-</SideNav.FooterBrand>`,
       },
     },
   },
