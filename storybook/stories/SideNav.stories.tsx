@@ -20,22 +20,28 @@ const meta: Meta = {
       description: {
         component:
           "La navigation latérale affiche la structure hiérarchique de l'application dans un panneau vertical permanent (déployé ou en rail). Elle permet de naviguer entre les sections et sous-sections tout en visualisant la position courante.\n\n" +
-          "**Règles par plateforme** — le DS ne pose aucune media query, l'app choisit le mode :\n\n" +
-          "- **App mobile** : pas de SideNav ; la **BottomNav** porte seule la navigation.\n" +
-          "- **Mobile navigateur web et tablette** (< 1200 px) : la SideNav s'affiche dans un **`Drawer` à gauche**, par-dessus le viewport ; elle ne pousse jamais le contenu. La tablette suit **exactement** la règle du mobile web — elle n'a pas la largeur d'un rail de 80 px ET d'un contenu confortable.\n" +
-          "- **Desktop seulement** (≥ 1200 px, breakpoint `lg`) : elle est **permanente** : déployée (240 px) ou réduite en **rail de 80 px** (`mode=\"rail\"`), elle ne disparaît **jamais** ; elle ne s'agrandit **jamais au survol** — on le déploie par le bouton de bascule ou `Ctrl/Cmd+Shift+E`.",
+          "**Règles par contexte et largeur** — le DS ne pose aucune media query, l'app choisit le mode. Trois axes **indépendants** (voir plus bas) : ici, le composant de navigation.\n\n" +
+          "| Largeur | Web | Application |\n| --- | --- | --- |\n" +
+          "| ≤ 768 px | hamburger + `Drawer` à gauche | **BottomNav** |\n" +
+          "| 769 à 1199 px | hamburger + `Drawer` à gauche | **SideNav** |\n" +
+          "| ≥ 1200 px | **SideNav** persistante, déployée (240 px) ou rail (80 px) | **SideNav** |\n\n" +
+          "Le web bascule à **1200 px**, l'application à **768 px** : deux seuils différents, assumés. Sur le web, la SideNav n'est persistante qu'en desktop ; en dessous elle s'affiche dans un **`Drawer` à gauche**, par-dessus le viewport, et ne pousse jamais le contenu. Elle ne s'agrandit **jamais au survol** : on la déploie par le bouton de bascule ou `Ctrl/Cmd+Shift+E`.\n\n" +
+          "**Conséquence acceptée** : à 1024 px (un iPad en paysage), l'application affiche une **SideNav** et Safari un **hamburger + `Drawer`**. Même appareil, même orientation, deux navigations : c'est la conséquence mécanique de deux seuils, pas un défaut. Si l'écart gêne en usage réel, ce cas concret servira à rouvrir la règle.\n\n" +
+          "**Les deux autres axes, indépendants de la navigation.** La variante de `Page.Bar` suit la largeur de la **Page** (container query, seuil 768 px), pas celle du viewport. La densité et la taille des cibles suivent le **pointeur** (`pointer: coarse`), jamais une largeur : « tablette = tactile » ne veut pas dire « tablette = interface de téléphone ».\n\n" +
+          "**Écarté** : un rail de 80 px sur mobile web (310 px de contenu à 390 px, 240 px au minimum exigé par WCAG 1.4.10 Reflow) ; décider sur la plateforme seule, ou sur le pointeur seul ; une barre basse sur le web mobile (sur iOS, la barre d'adresse de Safari est déjà en bas).",
       },
       page: () => (
         <DocsTabsPage
           guidelines={
             <GuidelinesFlat
               when={[
-                "Navigation principale d'une application WEB, sur le côté (sections, rubriques). Persistante en DESKTOP seulement : sous 1200 px, tablette comprise, elle devient un Drawer qu'on ouvre.",
-                "Quand la hiérarchie de navigation est riche et bénéficie d'un rail réduit (80 px) — desktop uniquement (≥ 1200 px).",
+                "Navigation principale, sur le côté (sections, rubriques). Sur le WEB, persistante en desktop seulement (≥ 1200 px) : en dessous, elle devient un Drawer qu'on ouvre. Dans l'APPLICATION, dès 769 px.",
+                "Quand la hiérarchie de navigation est riche et bénéficie d'un rail réduit (80 px) — web ≥ 1200 px, application ≥ 769 px.",
               ]}
               avoid={[
-                "Une navigation d'app mobile → BottomNav (pas de SideNav en app mobile).",
-                "Faire disparaître la navigation sur desktop : elle se réduit en rail de 80 px, jamais complètement. Sous 1200 px en revanche (tablette comprise), il n'y a pas de nav permanente du tout.",
+                "Une navigation d'application à 768 px et moins → BottomNav (pas de SideNav sous 769 px dans l'application).",
+                "Faire disparaître la navigation sur desktop : elle se réduit en rail de 80 px, jamais complètement. Sur le web sous 1200 px en revanche, il n'y a pas de nav permanente : hamburger + Drawer.",
+                "Un rail de 80 px sur mobile web, ou une barre basse sur le web mobile.",
                 "Une barre supérieure globale (marque, compte, actions) → Page.Bar.",
                 "Naviguer entre vues d'une même page → Tabs.",
               ]}
@@ -151,12 +157,12 @@ export const RailInteractions: Story = {
 };
 
 /**
- * **Mobile navigateur web et tablette (< 1200 px)** — la SideNav s'affiche dans un **`Drawer` à
+ * **Web sous 1200 px (mobile et tablette en navigateur)** — la SideNav s'affiche dans un **`Drawer` à
  * gauche** : elle passe **par-dessus** le contenu (voile cliquable) et ne le pousse
  * jamais. Le hamburger de la `Page.Bar` l'ouvre ; elle se referme au voile, à Échap ou
  * au choix d'une rubrique. Pas de rail sur mobile : `showToggle={false}` retire le
- * bouton de bascule de l'en-tête. (En **app mobile**, pas de SideNav : la BottomNav
- * porte seule la navigation.)
+ * bouton de bascule de l'en-tête. (Dans l'**application** à 768 px et moins, pas de
+ * SideNav : la BottomNav porte seule la navigation ; dès 769 px, c'est la SideNav.)
  */
 function MobileWebDemo() {
   const [isOpen, setIsOpen] = useState(false);

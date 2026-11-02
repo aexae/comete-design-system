@@ -128,7 +128,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Exemples de compositions de page complètes (listes, détails, tableaux de bord) assemblées à partir des composants du DS. Utilisez ces gabarits comme point de départ à copier/adapter, en composant Page avec SideNav/Page.Bar, Grid, Card, etc. Rappel : Banner au-dessus du layout (alerte globale), SectionMessage à l'intérieur du contenu.\n\n**Tablette : trois axes indépendants.** « Tablette = tactile » ne veut pas dire « tablette = interface de téléphone ». (1) La densité et la taille des cibles suivent le type de pointeur (`pointer: coarse`), jamais une largeur. (2) Le composant de navigation suit l'usage : Link sur tablette est du back-office assis, donc `SideNav` en rail ; la MCE sur tablette est du terrain debout, donc `BottomNav` (même ligne de partage que le FAB, réservé à la MCE). (3) La variante de `Page.Bar` suit la largeur de la Page, par container query : personne n'a à la décider, elle se déduit. Voir les stories « Manager tablet ».",
+          "Exemples de compositions de page complètes (listes, détails, tableaux de bord) assemblées à partir des composants du DS. Utilisez ces gabarits comme point de départ à copier/adapter, en composant Page avec SideNav/Page.Bar, Grid, Card, etc. Rappel : Banner au-dessus du layout (alerte globale), SectionMessage à l'intérieur du contenu.\n\n**Tablette : trois axes indépendants.** « Tablette = tactile » ne veut pas dire « tablette = interface de téléphone ». (1) La densité et la taille des cibles suivent le type de pointeur (`pointer: coarse`), jamais une largeur. (2) Le composant de navigation suit le contexte et la largeur du viewport, pas le pointeur : dans l'application, `BottomNav` à 768 px et moins, `SideNav` dès 769 px ; sur le web, hamburger + `Drawer` sous 1200 px, `SideNav` au-delà (voir la doc de `SideNav`). (3) La variante de `Page.Bar` suit la largeur de la Page, par container query : personne n'a à la décider, elle se déduit. Voir les stories « Manager tablet ».",
       },
     },
   },
@@ -402,9 +402,10 @@ function BaseLayout({ sideNavMode = "expanded" }: { sideNavMode?: "expanded" | "
  *
  * - DENSITÉ et taille des cibles : suivent le TYPE DE POINTEUR (`pointer: coarse`),
  *   jamais une largeur.
- * - COMPOSANT DE NAVIGATION : suit l'USAGE. Link sur tablette = back-office assis, donc
- *   SideNav en rail ; la MCE sur tablette = terrain debout, donc BottomNav. Même ligne
- *   de partage que le FAB, réservé à la MCE.
+ * - COMPOSANT DE NAVIGATION : suit le CONTEXTE et la largeur du viewport (doc de
+ *   `SideNav`). Application : BottomNav à 768 px et moins, SideNav dès 769 px. Web :
+ *   hamburger + Drawer sous 1200 px, SideNav au-delà. Ces stories posent la SideNav
+ *   pour démontrer la variante de barre, pas pour trancher la navigation d'un 768 px.
  * - VARIANTE DE BARRE : suit la largeur de la PAGE, par container query. Personne n'a à
  *   la décider, elle se déduit.
  *
