@@ -353,23 +353,20 @@ export const Empty: Story = {
 /**
  * **Défilement interne** — beaucoup d'entrées : seul le corps (sections +
  * items) défile, tandis que le header (marque) et le footer (comète link)
- * restent épinglés. Réduis la hauteur du canvas pour voir le scroll apparaître.
+ * restent épinglés. La nav prend toute la hauteur de l'écran.
  */
 export const Scrollable: Story = {
   name: "Scroll (long content)",
   parameters: { controls: { disable: true } },
   render: () => (
-    // Deux leviers, parce qu'un seul ne suffit pas. La hauteur est bornée :
-    // à 100vh, un grand écran affiche tout et l'ascenseur ne paraît jamais.
-    // 720px reste une hauteur d'écran plausible — la nav garde ses
-    // proportions au lieu d'être réduite à un moignon. Et les entrées sont
-    // nombreuses : avec dix de plus que l'écran, le pouce est court et le
-    // défilement porte sur une vraie distance, ce qui est le propos.
+    // Pleine hauteur de l'écran, comme la nav réelle. Pour que l'ascenseur paraisse
+    // même sur un grand écran, les entrées sont nombreuses (35, soit bien plus qu'un
+    // écran de 1080 px) : le pouce est court et le défilement porte sur une vraie
+    // distance, ce qui est le propos.
     //
-    // Bornée sur le GABARIT et non par un décorateur : sinon la nav garde sa
+    // Hauteur portée par le GABARIT et non par un décorateur : sinon la nav garde sa
     // hauteur et se fait rogner, pied compris.
     <MainCouranteShell
-      height={720}
       nav={
         <>
             <SideNav.Section title="Manager">
