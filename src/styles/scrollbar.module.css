@@ -1,28 +1,43 @@
 /* scrollbar.module.css — Zones défilantes Comète Design System
- * Couche utilitaire consommée par les composants qui exposent une zone
- * défilante (Popover, Select, TimeCalendar, TimeDrumPicker) et par le
- * composant public `ScrollArea`.
- *
- * `Drawer` et `ModalDialog` n'en sont PLUS : leur corps est un `ScrollArea`,
- * dont l'ascenseur flotte. La marge négative de `.scrollable` suppose que le
- * PARENT porte le retrait horizontal ; sur ces deux surfaces c'est le corps
- * lui-même qui le porte, et le couloir se logeait donc dans un débord que
- * leur `overflow: hidden` rognait — l'ascenseur ne se voyait jamais. Vérifier
- * ce point avant d'appliquer `.scrollable` à une nouvelle surface.
  * 100 % design tokens — zéro valeur hardcodée.
  *
- * DÉFINITION UNIQUE. Quatre rôles, cumulables :
+ * Quatre rôles, cumulables :
  *
  *   .scrollable  la mécanique du conteneur défilant (les pièges en flex)
- *   .themed      l'apparence de l'ascenseur
+ *   .themed      l'apparence de l'ascenseur NATIF
  *   .hidden      l'ascenseur masqué, défilement conservé
  *   .shadows     l'indication de débordement en haut et en bas
  *
- * Avant cette couche, chaque composant recopiait les mêmes déclarations — et
- * la même erreur avec : `scrollbar-color` posé sans garde ANNULE les règles
- * `::-webkit-scrollbar` dans Chrome, qui retombe alors sur l'ascenseur du
- * système (15px) au lieu des 8px voulus. Voir les blocs `@supports`. Toute
- * évolution de l'ascenseur se fait ICI.
+ * NE PAS S'EN SERVIR POUR UNE NOUVELLE ZONE DÉFILANTE. Drawer, ModalDialog,
+ * Popover et TimeCalendar sont passés au `ScrollArea` ; `SideNav` suit.
+ * `.hidden` et `.shadows` servent `ScrollArea` lui-même ; `.scrollable` et
+ * `.themed` n'ont plus que deux consommateurs, chacun pour une raison
+ * précise.
+ *
+ * 1. `Select` — `.scrollable` + `.themed`. Une collection React Aria DOIT
+ *    rester son propre défileur. Après avoir amené l'élément focalisé dans
+ *    la vue, `scrollIntoViewport` recentre la collection dans ses parents
+ *    défilants ; quand la collection est elle-même le défileur, la
+ *    correction sort aussitôt (`scrollView === element`), sinon elle
+ *    s'exécute et replace le défilement au MILIEU de la collection —
+ *    l'option focalisée quitte l'écran à la flèche bas. Mesuré. Tant que
+ *    `ScrollArea` ne saura pas adopter un élément existant comme viewport,
+ *    la listbox garde l'ascenseur natif.
+ *
+ * 2. `TimeDrumPicker` — `.hidden` seul, son ascenseur est masqué à dessein.
+ *
+ * DEUX PIÈGES, hérités de l'époque où chaque composant recopiait ces
+ * déclarations :
+ *
+ * a. `scrollbar-color` posé sans garde ANNULE les règles
+ *    `::-webkit-scrollbar` dans Chrome, qui retombe alors sur l'ascenseur du
+ *    système (15px) au lieu des 8px voulus. Voir les blocs `@supports`.
+ * b. La marge négative de `.scrollable` loge le couloir dans la gouttière du
+ *    PARENT : elle suppose donc que c'est le parent qui porte le retrait
+ *    horizontal. Quand c'est l'élément défilant lui-même qui le porte, le
+ *    couloir tombe au-delà du bord et disparaît sous le premier
+ *    `overflow: hidden` rencontré. C'est ce qui rendait l'ascenseur du
+ *    `Drawer` et de la `ModalDialog` littéralement invisible.
  */
 
 /* =======================================================================

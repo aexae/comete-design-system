@@ -5,7 +5,7 @@ import {
   Popover as AriaPopover,
   type PopoverProps as AriaPopoverProps,
 } from "react-aria-components";
-import scrollbarStyles from "../../styles/scrollbar.module.css";
+import { ScrollArea } from "../ScrollArea/ScrollArea.js";
 import styles from "./Popover.module.css";
 
 // -----------------------------------------------------------------------
@@ -21,6 +21,19 @@ export interface PopoverProps
   style?: CSSProperties;
   /** Aligne la largeur du popover sur celle du trigger. @default false */
   matchTriggerWidth?: boolean;
+  /**
+   * Pose le contenu dans une zone défilante (`ScrollArea`). @default true
+   *
+   * À passer à `false` quand le contenu DOIT rester son propre défileur.
+   * C'est le cas des collections React Aria (`ListBox`, `Menu`) : après
+   * avoir amené l'élément focalisé dans la vue, `scrollIntoViewport`
+   * RECENTRE la collection dans ses parents défilants. Quand la collection
+   * est elle-même le défileur, cette correction sort aussitôt
+   * (`scrollView === element`) ; dès que le défileur est un ancêtre, elle
+   * s'exécute et repositionne le défilement au milieu de la collection —
+   * l'élément focalisé disparaît de l'écran à la flèche bas.
+   */
+  isScrollable?: boolean;
 }
 
 // -----------------------------------------------------------------------
@@ -43,6 +56,12 @@ export interface PopoverProps
  *   </Popover>
  * </DialogTrigger>
  * ```
+ *
+ * Le contenu est posé dans un `ScrollArea` : le plafond de hauteur du popover
+ * est une sécurité (un overlay ne dépasse jamais du viewport), et c'est la
+ * zone défilante qui l'absorbe. En deçà du plafond elle ne défile pas et son
+ * ascenseur n'existe pas. Les contenus qui défilent déjà d'eux-mêmes passent
+ * `isScrollable={false}` — voir cette prop.
  */
 export function Popover({
   children,
@@ -50,6 +69,7 @@ export function Popover({
   style,
   offset = 4,
   matchTriggerWidth = false,
+  isScrollable = true,
   shouldFlip = true,
   containerPadding = 8,
   ...ariaProps
@@ -57,7 +77,7 @@ export function Popover({
   return (
     <AriaPopover
       {...ariaProps}
-      className={[styles.popover, scrollbarStyles.themed, matchTriggerWidth && styles.matchTriggerWidth, className].filter(Boolean).join(" ")}
+      className={[styles.popover, isScrollable && styles.hasScroll, matchTriggerWidth && styles.matchTriggerWidth, className].filter(Boolean).join(" ")}
       style={style}
       offset={offset}
       shouldFlip={shouldFlip}
@@ -69,7 +89,17 @@ export function Popover({
       // un context Aria parent (SubmenuTrigger).
       containerPadding={containerPadding}
     >
-      {children}
+      {/* Le popover ne défile plus lui-même : la zone défilante est un
+          `ScrollArea`, comme partout ailleurs dans le DS. Son pouce flotte
+          au-dessus du contenu au lieu de lui prendre un couloir de 8px, et
+          les ombres de débordement portent le signal quand il s'est estompé. */}
+      {isScrollable ? (
+        <ScrollArea visibility="auto" hasOverflowShadows className={styles.scroll}>
+          {children}
+        </ScrollArea>
+      ) : (
+        children
+      )}
     </AriaPopover>
   );
 }

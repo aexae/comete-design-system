@@ -3,7 +3,7 @@
 import { useEffect, useRef, type ReactElement, type CSSProperties } from "react";
 import type { TimeValue } from "react-aria-components";
 import { Time } from "@internationalized/date";
-import scrollbarStyles from "../../styles/scrollbar.module.css";
+import { ScrollArea } from "../ScrollArea/ScrollArea.js";
 import styles from "./TimeCalendar.module.css";
 
 // -----------------------------------------------------------------------
@@ -90,13 +90,21 @@ export function TimeCalendar({
   };
 
   return (
-    <div
-      role="listbox"
-      aria-label="Sélecteur d'heure"
-      className={[styles.timeCalendar, scrollbarStyles.themed, className].filter(Boolean).join(" ")}
-      data-disabled={isDisabled || undefined}
-      ref={listRef}
-    >
+    /* La zone défilante est un `ScrollArea`. Elle enveloppe la listbox plutôt
+       que de se confondre avec elle : le rôle ARIA et le nom accessible
+       restent sur la liste des créneaux, l'ascenseur sur la zone.
+
+       Pas de `--scroll-shadow-surface` ici : posé dans un `Popover`, ce
+       composant hérite déjà de celui du popover ; hors popover, le défaut est
+       la bonne surface. Le fixer casserait le premier cas. */
+    <ScrollArea visibility="auto" hasOverflowShadows className={styles.scroll}>
+      <div
+        role="listbox"
+        aria-label="Sélecteur d'heure"
+        className={[styles.timeCalendar, className].filter(Boolean).join(" ")}
+        data-disabled={isDisabled || undefined}
+        ref={listRef}
+      >
       {slots.map((time) => {
         const selected = isSameTime(value, time);
         const label = formatTimeSlot(time);
@@ -114,8 +122,9 @@ export function TimeCalendar({
           >
             {label}
           </button>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+    </ScrollArea>
   );
 }

@@ -3,17 +3,21 @@
    Liste scrollable de créneaux horaires.
    ========================================================================== */
 
-/* L'ascenseur de cette zone vient de la couche partagée
-   `src/styles/scrollbar.module.css` (classe `themed`), appliquée dans le
-   TSX à côté de `timeCalendar`. Ne pas redéfinir d'ascenseur ici. */
+/* Zone défilante — c'est un `ScrollArea` que le TSX rend autour de la
+   listbox. Le plafond vit ICI, sur la zone, et non sur la liste : posé sur la
+   liste, il la ferait déborder de la zone au lieu de la faire défiler. */
+.scroll {
+  max-height: 240px;
+}
+
+/* La liste des créneaux. Ni `overflow` ni plafond : c'est la zone qui défile.
+   Le retrait vit sur la liste, donc DANS le défileur — posé sur la zone, le
+   dernier créneau se collerait au bord bas dès qu'on défile. */
 .timeCalendar {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  max-height: 240px;
-  overflow-y: auto;
   padding: var(--space050);
-
 }
 
 /* Option individuelle */

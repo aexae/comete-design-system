@@ -1,12 +1,13 @@
 // Calendar — stories Storybook (composant unifié)
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { CalendarDate } from "@internationalized/date";
+import { CalendarDate, Time } from "@internationalized/date";
 import type { DateValue, RangeValue } from "react-aria-components";
 import {
   Calendar,
   type CalendarAppearance,
 } from "@aexae/comete-design-system/components";
+import { expect } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
@@ -472,4 +473,43 @@ export const YearDisabled: Story = {
   args: { appearance: "year", isDisabled: true },
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: (args: Args) => renderCalendar(args),
+};
+
+/**
+ * `appearance="time"` — liste de créneaux horaires.
+ *
+ * Seule apparence du Calendar à défiler : la zone est un `ScrollArea`
+ * (`visibility="auto"`, ombres de débordement), plafonnée à 240px. Au
+ * montage, le créneau sélectionné est centré dans la vue.
+ */
+export const TimeSlots: Story = {
+  name: "Time — créneaux",
+  args: { appearance: "time" },
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <Calendar appearance="time" value={new Time(14, 30)} step={15} />
+  ),
+  play: async () => {
+    const liste = document.body.querySelector<HTMLElement>(
+      "[role=\"listbox\"][aria-label=\"Sélecteur d'heure\"]",
+    );
+    await expect(liste).not.toBeNull();
+
+    // La zone défilante est le `ScrollArea` AUTOUR de la liste : le rôle et
+    // le nom accessible restent sur la liste, l'ascenseur sur la zone.
+    const viewport = liste!.closest<HTMLElement>('[class*="viewport"]');
+    await expect(viewport).not.toBeNull();
+    await expect(getComputedStyle(liste!).overflowY).toBe("visible");
+    await expect(viewport!.scrollHeight).toBeGreaterThan(viewport!.clientHeight);
+    // L'ascenseur est rendu : il ne vole aucun couloir au contenu.
+    await expect(viewport!.offsetWidth - viewport!.clientWidth).toBe(0);
+
+    // Le créneau sélectionné est amené dans la vue au montage.
+    const selection = liste!.querySelector<HTMLElement>('[aria-selected="true"]');
+    await expect(selection).not.toBeNull();
+    const sr = selection!.getBoundingClientRect();
+    const vr = viewport!.getBoundingClientRect();
+    await expect(sr.top).toBeGreaterThanOrEqual(vr.top - 1);
+    await expect(sr.bottom).toBeLessThanOrEqual(vr.bottom + 1);
+  },
 };

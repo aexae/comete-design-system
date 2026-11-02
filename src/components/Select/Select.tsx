@@ -273,7 +273,18 @@ export function Select({
                 />
               </InputContainer>
             </div>
-            <Popover placement="bottom start" triggerRef={containerRef} matchTriggerWidth>
+            {/* `isScrollable={false}` : la listbox DOIT rester son propre
+                défileur. Si le défilement passait au popover, la correction
+                « recentrer la collection » de `scrollIntoViewport` (React
+                Aria) s'exécuterait au lieu de sortir aussitôt, et l'option
+                focalisée sortirait de l'écran à la flèche bas. Mesuré : le
+                défilement retombe au milieu de la listbox. Voir la prop. */}
+            <Popover
+              placement="bottom start"
+              triggerRef={containerRef}
+              matchTriggerWidth
+              isScrollable={false}
+            >
               <AriaListBox className={[styles.listBox, scrollbarStyles.scrollable, scrollbarStyles.themed].join(" ")}>
                 {allOptions.length === 0 && !isLoading ? (
                   <AriaListBoxItem id="__empty__" isDisabled textValue={emptyMessage} className={styles.stateItem}>

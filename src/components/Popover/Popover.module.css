@@ -4,9 +4,10 @@
    Toutes les valeurs proviennent de @aexae/comete-design-tokens.
    ========================================================================== */
 
-/* L'ascenseur de cette zone vient de la couche partagée
-   `src/styles/scrollbar.module.css` (classe `themed`), appliquée dans le
-   TSX à côté de `popover`. Ne pas redéfinir d'ascenseur ici. */
+/* La zone défilante n'est pas dessinée ici : `Popover` rend un `ScrollArea`,
+   qui porte le défilement, l'ascenseur et les ombres de débordement. Ne pas
+   redéfinir d'ascenseur ni d'`overflow` ici — un `overflow` posé sur cette
+   boîte créerait un second défileur imbriqué dans le premier. */
 .popover {
   --badge-cutout-color: var(--background-surface-elevation-raise-default);
   background-color: var(--background-surface-elevation-raise-default);
@@ -14,11 +15,19 @@
   box-shadow: var(--elevation-large);
   min-width: 240px;
 
-  /* Viewport containment — max dimensions prevent content overflow */
+  /* Plafond de sécurité : un overlay ne dépasse jamais du viewport. Ce n'est
+     pas lui qui défile — c'est la zone défilante qu'il contient, et qui s'y
+     ajuste.
+
+     ATTENTION : React Aria pose SON PROPRE `max-height` en style inline, par
+     confinement au viewport, et un style inline bat toujours la feuille de
+     style. Cette règle n'est donc qu'un repli, pour le cas où React Aria ne
+     calcule rien — et un plafond consommateur posé ici serait écrasé sans
+     bruit. */
   max-height: min(80vh, calc(100vh - var(--space200)));
   max-width: calc(100vw - var(--space200));
-  overflow-x: hidden;
-  overflow-y: auto;
+
+  overflow: hidden;
   outline: none;
 
 
@@ -30,6 +39,22 @@
   &[data-exiting] {
     animation: popover-fade-out 100ms ease-in;
   }
+}
+
+/* Colonne flex, UNIQUEMENT quand le popover porte une zone défilante : elle
+   prend alors la hauteur disponible sous le plafond, et se contente de celle
+   du contenu en deçà. Sans zone défilante (`isScrollable={false}`), le
+   contenu se dispose normalement. */
+.hasScroll {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Zone défilante — part de colonne, et couleur des masques d'ombre : le
+   popover est posé sur la surface « raise », pas sur la surface par défaut. */
+.scroll {
+  flex: 1 1 auto;
+  --scroll-shadow-surface: var(--background-surface-elevation-raise-default);
 }
 
 /* Match trigger width — le popover prend la largeur de son trigger */
