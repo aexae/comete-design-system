@@ -19,7 +19,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Le menu d'actions rapides du FAB (`BottomNav.Action`) — pattern « speed dial » : des **pastilles flottantes** au-dessus d'un voile, une par action (pastille d'icône circulaire à gauche, libellé à droite). Le composant rend **uniquement la couche flottante** ; le déclencheur reste le FAB, qui garde sa rotation en croix et son `aria-expanded`.\n\n" +
+          "Le menu d'actions rapides du FAB (`BottomNav.Action`) — pattern « speed dial » : des **pastilles flottantes** au-dessus d'un voile, une par action (pastille d'icône à gauche — un `IconTile` `medium` / `circle` —, libellé à droite). Le composant rend **uniquement la couche flottante** ; le déclencheur reste le FAB, qui garde sa rotation en croix et son `aria-expanded`.\n\n" +
           "**Règle de couleur (ADR 0002 — « une couleur, un sens »).** La couleur porte la **nature** de l'action, jamais son identité. `tone` reprend la palette sémantique des autres composants (`Button` `color`, `Badge` `appearance`) : `comete` (défaut), `critical`, `warning`, `success`, `information` — sans restriction de type. Le **garde-fou est sur la composition** : en développement, un avertissement est émis au-delà de **deux tons distincts** dans un même menu ou de **plus d'une** action `critical` ; le composant rend quand même. La couleur ne va que sur la **pastille d'icône**, jamais sur la rangée : des rangées pleines saturées s'aplatissent sur un voile sombre en forte luminosité, et en deutéranopie un rouge et un vert pleins se confondent ; avec une pastille teintée, le libellé continue de porter l'information.\n\n" +
           "**Pourquoi un composant :** voile, piège de focus, fermeture à Échap, retour du focus sur le déclencheur et apparition décalée sont du comportement — pas une recette à réassembler avec `Button` et un `div` absolu.",
       },
@@ -219,10 +219,13 @@ export const Interactions: Story = {
       await waitFor(() => expect(d.contains(document.activeElement)).toBe(true));
     });
 
-    await step("les deux rangées sont du ton par défaut, porté par la pastille d'icône", async () => {
+    await step("les deux rangées sont du ton par défaut, porté par la pastille (IconTile)", async () => {
       for (const name of ["Déclarer un évènement", "Démarrer une ronde"]) {
-        const row = screen.getByRole("button", { name });
-        await expect(row.querySelector("[data-tone]")).toHaveAttribute("data-tone", "comete");
+        // La pastille est un `IconTile` décoratif : premier enfant de la rangée, qui garde
+        // le nom accessible. Son ton se lit sur la classe d'apparence.
+        const tile = screen.getByRole("button", { name }).firstElementChild;
+        await expect(tile).toHaveAttribute("aria-hidden", "true");
+        await expect(tile?.className).toMatch(/comete/);
       }
     });
 

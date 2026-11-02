@@ -11,7 +11,7 @@ import {
   ModalOverlay as AriaModalOverlay,
 } from "react-aria-components";
 import type { IconName } from "@aexae/comete-icons";
-import { Icon } from "../Icon/index.js";
+import { IconTile, type IconTileAppearance } from "../IconTile/index.js";
 import styles from "./QuickActions.module.css";
 
 // `process` n'est pas typé ici (le DS build avec `types: []`, sans @types/node).
@@ -38,7 +38,12 @@ const TONE_RATIONALE =
  * Aucune restriction au niveau du type : le garde-fou est sur la **composition** (avertissement
  * en développement).
  */
-export type QuickActionTone = "comete" | "critical" | "warning" | "success" | "information";
+// Dérivé d'`IconTileAppearance` plutôt que recopié : la pastille EST un `IconTile`, et
+// `Extract` garantit que la liste reste un sous-ensemble de ce que la tuile sait rendre.
+export type QuickActionTone = Extract<
+  IconTileAppearance,
+  "comete" | "critical" | "warning" | "success" | "information"
+>;
 
 export interface QuickAction {
   /** Identifiant stable (clé de rendu). */
@@ -73,8 +78,9 @@ export interface QuickActionsProps {
 
 /**
  * QuickActions — menu d'actions rapides du FAB (`BottomNav.Action`) : des **pastilles
- * flottantes** au-dessus d'un voile, une par action (pastille d'icône circulaire à
- * gauche, libellé à droite).
+ * flottantes** au-dessus d'un voile, une par action (pastille d'icône à gauche, libellé
+ * à droite). La pastille est un `IconTile` (`medium`, `circle`) : c'est le composant du
+ * DS pour « une icône sur un fond teinté », on ne le redessine pas ici.
  *
  * Le composant rend **uniquement la couche flottante** : le déclencheur reste à
  * l'appelant (`BottomNav.Action`, qui garde sa rotation en croix et son `aria-expanded`).
@@ -195,9 +201,13 @@ export function QuickActions({
                     onOpenChange(false);
                   }}
                 >
-                  <span className={styles.tile} data-tone={action.tone ?? "comete"} aria-hidden="true">
-                    <Icon icon={action.icon} size={24} className={styles.glyph} />
-                  </span>
+                  {/* Sans `label`, `IconTile` est `aria-hidden` : c'est la rangée qui porte le nom. */}
+                  <IconTile
+                    icon={action.icon}
+                    appearance={action.tone ?? "comete"}
+                    size="medium"
+                    shape="circle"
+                  />
                   <span className={styles.label}>{action.label}</span>
                 </AriaButton>
               </li>

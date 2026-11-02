@@ -1,6 +1,5 @@
 declare const styles: {
   readonly "dialog": string;
-  readonly "glyph": string;
   readonly "item": string;
   readonly "label": string;
   readonly "list": string;
@@ -10,7 +9,6 @@ declare const styles: {
   readonly "overlay-out": string;
   readonly "row": string;
   readonly "row-in": string;
-  readonly "tile": string;
 };
 export = styles;
 

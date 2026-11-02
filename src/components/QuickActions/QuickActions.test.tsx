@@ -116,8 +116,9 @@ describe("QuickActions — comportement", () => {
 });
 
 describe("QuickActions — règle de couleur (ADR 0002)", () => {
-  // Les CSS Modules sont inertes en jsdom : on garde la règle sur le source CSS, et le
-  // ton dans le DOM.
+  // La pastille est un `IconTile` : son ton se lit sur les classes du DOM rendu
+  // (`classNameStrategy: "non-scoped"` en test). La neutralité de la rangée, elle, reste
+  // une règle de feuille de style : on la vérifie sur le source CSS.
   const css = readFileSync("src/components/QuickActions/QuickActions.module.css", "utf8")
     // Les commentaires citent volontairement les tokens : on les ignore.
     .replace(/\/\*[\s\S]*?\*\//g, "");
@@ -126,19 +127,31 @@ describe("QuickActions — règle de couleur (ADR 0002)", () => {
     body: body ?? "",
   }));
 
-  it("should expose the tone on the icon tile (data-tone), « comete » when omitted", () => {
+  /** La pastille : premier enfant de la rangée (décoratif), avant le libellé. */
+  const tileOf = (label: string): HTMLElement =>
+    screen.getByRole("button", { name: label }).firstElementChild as HTMLElement;
+
+  it("should carry the tone as an IconTile appearance, « comete » when omitted", () => {
     render(<QuickActions actions={ACTIONS} isOpen onOpenChange={() => undefined} />);
-    const critical = screen.getByRole("button", { name: "Signaler une anomalie" });
-    const normal = screen.getByRole("button", { name: "Scanner un équipement" });
-    expect(critical.querySelector("[data-tone]")).toHaveAttribute("data-tone", "critical");
-    expect(normal.querySelector("[data-tone]")).toHaveAttribute("data-tone", "comete");
+    expect(tileOf("Signaler une anomalie").className).toContain("critical");
+    expect(tileOf("Scanner un équipement").className).toContain("comete");
   });
 
-  it("should give a critical tone --text-critical on its icon", () => {
-    const glyph = rules.find((r) => /\[data-tone="critical"\]\s+\.glyph/.test(r.sel));
-    expect(glyph?.body).toMatch(/color:\s*var\(--text-critical\)/);
-    const tile = rules.find((r) => /^\.tile\[data-tone="critical"\]$/.test(r.sel));
-    expect(tile?.body).toMatch(/background-color:\s*var\(--background-critical-/);
+  it("should render a critical action as an IconTile critical, circle, medium", () => {
+    render(<QuickActions actions={ACTIONS} isOpen onOpenChange={() => undefined} />);
+    const tile = tileOf("Signaler une anomalie");
+    expect(tile.className).toContain("iconTile");
+    expect(tile.className).toContain("critical");
+    expect(tile.className).toContain("circle");
+    expect(tile.className).toContain("medium");
+    // Décorative : c'est la rangée qui porte le nom accessible.
+    expect(tile.getAttribute("aria-hidden")).toBe("true");
+  });
+
+  it("should draw no tile of its own (the DS component is the only one)", () => {
+    expect(css).not.toMatch(/\.tile\b/);
+    expect(css).not.toMatch(/\.glyph\b/);
+    expect(css).not.toMatch(/data-tone/);
   });
 
   it("should NEVER colour the row: neutral surface, no critical/brand token on .row", () => {
@@ -151,9 +164,25 @@ describe("QuickActions — règle de couleur (ADR 0002)", () => {
     expect(base?.body).toMatch(/background-color:\s*var\(--background-surface-default\)/);
   });
 
-  it("should define the five semantic tones, and only those (no tone per action)", () => {
-    const tones = new Set([...css.matchAll(/\[data-tone="([^"]+)"\]/g)].map((m) => m[1]));
-    expect([...tones].sort()).toEqual(["comete", "critical", "information", "success", "warning"]);
+  it("should map each of the five semantic tones onto its IconTile appearance", () => {
+    vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    const tones = ["comete", "critical", "warning", "success", "information"] as const;
+    render(
+      <QuickActions
+        actions={tones.map((tone) => ({
+          id: tone,
+          icon: "Star" as const,
+          label: tone,
+          tone,
+          onPress: () => undefined,
+        }))}
+        isOpen
+        onOpenChange={() => undefined}
+      />,
+    );
+    for (const tone of tones) {
+      expect(tileOf(tone).className).toContain(tone);
+    }
   });
 
   it("should accept the whole palette at the type level (no restriction)", () => {
