@@ -234,14 +234,16 @@ export const ApplicationTabletLandscape: Story = {
 };
 
 /**
- * **Web tablet, landscape** (1024 × 768) — même rail de 80 px, tablette tournée, mais en
- * navigateur.
+ * **Web tablet, landscape** (1024 × 768) — en navigateur, le seuil de la SideNav
+ * persistante est 1200 px : à 1024 px, hamburger + `Drawer`. C'est l'écart assumé avec
+ * l'application, où le même iPad en paysage reçoit la SideNav en rail (story
+ * « Application tablet, landscape »).
  */
 export const WebTabletLandscape: Story = {
   name: "Web tablet, landscape",
   globals: { viewport: { value: "cometeTabletManager", isRotated: true } },
   parameters: { layout: "fullscreen", controls: { disable: true } },
-  render: () => <SideNavOnly nav={<MainCouranteNav />} mode="rail" />,
+  render: () => <MobileWebDemo />,
 };
 
 /**
