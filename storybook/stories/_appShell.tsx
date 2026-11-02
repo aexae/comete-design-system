@@ -11,20 +11,15 @@ import {
   SectionMessage,
   Grid,
   Card,
-  useSideNav,
   type SideNavMode,
 } from "@aexae/comete-design-system/components";
 
-function FooterLogo() {
-  const { mode } = useSideNav();
-  const isRail = mode === "rail";
+/** Pied de marque Link de la coquille : le composant bascule logo / icône selon le mode. */
+export function AppFooterBrand() {
   return (
-    <Logo
-      size={isRail ? 24 : 14}
-      product="link"
-      appearance="neutral"
-      format={isRail ? "icon" : "logo"}
-    />
+    <SideNav.FooterBrand rail={<Logo size={24} product="link" appearance="neutral" format="icon" />}>
+      <Logo size={14} product="link" appearance="neutral" format="logo" />
+    </SideNav.FooterBrand>
   );
 }
 
@@ -128,9 +123,7 @@ export function SideNavOnly({
           {nav}
           {footer ?? (
             <SideNav.Footer>
-              <SideNav.FooterBrand>
-                <FooterLogo />
-              </SideNav.FooterBrand>
+              <AppFooterBrand />
             </SideNav.Footer>
           )}
         </SideNav>
@@ -199,9 +192,7 @@ export function MainCouranteShell({
           {nav}
           {footer ?? (
             <SideNav.Footer>
-              <SideNav.FooterBrand>
-                <FooterLogo />
-              </SideNav.FooterBrand>
+              <AppFooterBrand />
             </SideNav.Footer>
           )}
         </SideNav>

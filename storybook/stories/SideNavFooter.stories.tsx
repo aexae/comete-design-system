@@ -12,8 +12,8 @@ const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 /** Le composant est montré DANS le template applicatif (Page.Bar + SideNav + contenu). */
-function NavContext({ children }: { children: ReactNode }) {
-  return <SideNavOnly footer={children} nav={<MainCouranteNav />} />;
+function NavContext({ children, mode }: { children: ReactNode; mode?: "expanded" | "rail" }) {
+  return <SideNavOnly footer={children} nav={<MainCouranteNav />} mode={mode} />;
 }
 
 function SideNavFooterStory(props: { children?: ReactNode }) {
@@ -100,7 +100,7 @@ export const BrandLogo: Story = {
   name: "Brand logo (FooterBrand)",
   args: {
     children: (
-      <SideNav.FooterBrand>
+      <SideNav.FooterBrand rail={<Logo size={24} format="icon" />}>
         <Logo size={14} />
       </SideNav.FooterBrand>
     ),
@@ -109,10 +109,36 @@ export const BrandLogo: Story = {
     docs: {
       source: {
         code: `<SideNav.Footer>
-  <SideNav.FooterBrand>
+  <SideNav.FooterBrand rail={<Logo size={24} format="icon" />}>
     <Logo size={14} />
   </SideNav.FooterBrand>
 </SideNav.Footer>`,
+      },
+    },
+  },
+};
+
+/**
+ * Pied de marque en **rail** (80 px) — `rail` remplace les enfants : le logo complet, qui
+ * déborderait, laisse place à l'icône. C'est le composant qui bascule, pas chaque écran.
+ */
+export const BrandLogoRail: Story = {
+  name: "Brand logo, rail",
+  render: () => (
+    <NavContext mode="rail">
+      <SideNav.Footer>
+        <SideNav.FooterBrand rail={<Logo size={24} format="icon" />}>
+          <Logo size={14} />
+        </SideNav.FooterBrand>
+      </SideNav.Footer>
+    </NavContext>
+  ),
+  parameters: {
+    docs: {
+      source: {
+        code: `<SideNav.FooterBrand rail={<Logo size={24} format="icon" />}>
+  <Logo size={14} />
+</SideNav.FooterBrand>`,
       },
     },
   },

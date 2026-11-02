@@ -39,7 +39,6 @@ import {
   Banner,
   SideNav,
   Logo,
-  useSideNav,
   Table,
   TableHead,
   TableBody,
@@ -74,6 +73,7 @@ import {
 } from "./_filtresOptionB";
 import filtresCss from "./FiltresOptionB.stories.module.css";
 import { PageGlobalActions } from "./_pageChrome";
+import { AppFooterBrand } from "./_appShell";
 import { GlobalSearchDialog, useGlobalSearch } from "./_rechercheGlobale";
 
 // -----------------------------------------------------------------------
@@ -277,11 +277,6 @@ export const Base: Story = {
   render: function BaseStory() {
     const search = useGlobalSearch();
 
-    function FooterLogo() {
-      const { mode } = useSideNav();
-      return <Logo size={14} product="link" appearance="neutral" format={mode === "rail" ? "icon" : "logo"} />;
-    }
-
     return (
       <SideNav.Provider>
       <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
@@ -318,7 +313,7 @@ export const Base: Story = {
               <SideNav.Item label="Licences" iconBefore="Key" href="#" />
             </SideNav.Section>
             <SideNav.Footer>
-              <FooterLogo />
+              <AppFooterBrand />
             </SideNav.Footer>
           </SideNav>
 

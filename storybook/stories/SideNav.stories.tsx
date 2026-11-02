@@ -5,7 +5,7 @@ import { within, userEvent, expect, waitFor } from "storybook/test";
 import { SideNav, Logo, Page, Button, Drawer } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
-import { MainCouranteShell, MainCouranteNav, DemoPageContent, SideNavOnly } from "./_appShell";
+import { MainCouranteShell, MainCouranteNav, DemoPageContent, SideNavOnly, AppFooterBrand } from "./_appShell";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -207,9 +207,7 @@ function MobileWebDemo() {
               />
               <MainCouranteNav />
               <SideNav.Footer>
-                <SideNav.FooterBrand>
-                  <Logo size={14} product="link" appearance="neutral" format="logo" />
-                </SideNav.FooterBrand>
+                <AppFooterBrand />
               </SideNav.Footer>
             </SideNav>
           </div>

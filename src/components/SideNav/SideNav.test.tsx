@@ -386,6 +386,38 @@ describe("SideNav", () => {
     expect(css).not.toMatch(/\.footerBrand[^{]*:hover/);
   });
 
+  it("should show the rail variant of the brand mark in rail mode and the children when expanded", () => {
+    const brand = (
+      <SideNav.Footer>
+        <SideNav.FooterBrand rail={<span>Icône</span>}>
+          <span>Logo complet</span>
+        </SideNav.FooterBrand>
+      </SideNav.Footer>
+    );
+    const rail = render(<SideNav.Provider defaultMode="rail"><SideNav>{brand}</SideNav></SideNav.Provider>);
+    expect(rail.getByText("Icône")).toBeInTheDocument();
+    expect(rail.queryByText("Logo complet")).toBeNull();
+    rail.unmount();
+    const expanded = render(<SideNav.Provider defaultMode="expanded"><SideNav>{brand}</SideNav></SideNav.Provider>);
+    expect(expanded.getByText("Logo complet")).toBeInTheDocument();
+    expect(expanded.queryByText("Icône")).toBeNull();
+  });
+
+  it("should keep the children in rail mode when no rail variant is given", () => {
+    const { getByText } = render(
+      <SideNav.Provider defaultMode="rail">
+        <SideNav>
+          <SideNav.Footer>
+            <SideNav.FooterBrand>
+              <span>Logo complet</span>
+            </SideNav.FooterBrand>
+          </SideNav.Footer>
+        </SideNav>
+      </SideNav.Provider>,
+    );
+    expect(getByText("Logo complet")).toBeInTheDocument();
+  });
+
   // Défilement interne --------------------------------------------------
 
   it("should render sections/items in a scrollable body, header and footer pinned outside", () => {
