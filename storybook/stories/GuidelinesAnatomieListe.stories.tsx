@@ -94,8 +94,8 @@ const ZONES: Zone[] = [
   {
     n: "2",
     el: "SideNav",
-    note: "Le menu de gauche, permanent sur desktop uniquement (≥ 1200 px) : le SideNav est déployé (240 px, mode expanded) ou réduit en rail (80 px, mode rail), jamais masqué, jamais agrandi au survol. Le bouton de bascule est dans son en-tête. Sous 1200 px, tablette comprise, il disparaît de l'écran : on l'ouvre dans un Drawer depuis le hamburger du Page.Bar. En app mobile, il n'y en a pas.",
-    tech: "SideNav + SideNav.Provider (mode expanded / rail, desktop ≥ 1200 px) ; sous 1200 px (mobile web ET tablette) : Drawer placement=\"left\".",
+    note: "Le menu de gauche : déployé (240 px, mode expanded) ou réduit en rail (80 px, mode rail), jamais agrandi au survol ; le bouton de bascule est dans son en-tête. Il est permanent dans l'application dès 769 px et sur le web dès 1200 px. Sur le web en dessous de 1200 px, il disparaît de l'écran : on l'ouvre dans un Drawer depuis le hamburger du Page.Bar. Dans l'application à 768 px et moins, il n'y en a pas : la BottomNav le remplace.",
+    tech: "SideNav + SideNav.Provider (mode expanded / rail) : application ≥ 769 px, web ≥ 1200 px ; web sous 1200 px : Drawer placement=\"left\" ; application ≤ 768 px : BottomNav.",
   },
   {
     n: "3",
@@ -270,7 +270,7 @@ const GLOSSAIRE: Array<{ term: string; def: string }> = [
   { term: "Actions app", def: "Les actions générales à l'application (recherche, notifications, réglages), à droite de la barre de page. Les mêmes sur tous les écrans." },
   { term: "Page.Toolbar", def: "La barre d'outils, la bande juste en dessous : recherche, filtres, Actions page. Une seule par écran." },
   { term: "Actions page", def: "Les actions contextuelles à la page (exporter, créer…), à droite de la barre d'outils. Elles changent d'un écran à l'autre." },
-  { term: "SideNav", def: "La navigation latérale : déployée (expanded) ou en rail sur desktop, dans un Drawer sous 1200 px." },
+  { term: "SideNav", def: "La navigation latérale : déployée (expanded) ou en rail ; permanente dans l'application dès 769 px et sur le web dès 1200 px, dans un Drawer sur le web en dessous." },
   { term: "Liste de section", def: "Une liste qui vit à l'intérieur d'une fiche, et non comme sujet de l'écran." },
   { term: "Dé-encarter", def: "Retirer les Card qui servaient de conteneur, et poser les sections sur le fond." },
 ];

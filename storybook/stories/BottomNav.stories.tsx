@@ -251,6 +251,26 @@ export const FiveItems: NavStory = {
   ),
 };
 
+/**
+ * **Application tablet, portrait** (768 × 1024) — dans l'application, la BottomNav porte la
+ * navigation jusqu'à 768 px inclus, tablette portrait comprise ; la SideNav ne prend le
+ * relais qu'à partir de 769 px. Navigation seule, pleine largeur, en bas de l'écran.
+ */
+export const ApplicationTabletPortrait: NavStory = {
+  name: "Application tablet, portrait",
+  globals: { viewport: { value: "cometeTabletManager", isRotated: false } },
+  parameters: { layout: "fullscreen", noFrame: true, controls: { include: ["active"] } },
+  argTypes: {
+    active: { name: "Item actif", control: "radio", options: MANAGER_ITEMS.map((i) => i.label) },
+  },
+  args: { active: "Accueil" },
+  render: (args) => (
+    <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", height: "100vh" }}>
+      <InteractiveBottomNav items={MANAGER_ITEMS} active={args.active} />
+    </div>
+  ),
+};
+
 const LONG_LABEL_ITEMS: NavItemDef[] = [
   { label: "Accueil", icon: "Home" },
   { label: "Rapports et analyses détaillés", icon: "Assignment" },
