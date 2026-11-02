@@ -96,13 +96,6 @@ export const Disabled: Story = {
   parameters: { docs: { source: { code: `<SideNav.Item label="Expérimental" iconBefore="Extension" isDisabled />` } } },
 };
 
-/** Sans icône. */
-export const WithoutIcon: Story = {
-  name: "Without icon",
-  args: { iconBefore: undefined, label: "Profil" },
-  parameters: { docs: { source: { code: `<SideNav.Item label="Profil" href="/profile" />` } } },
-};
-
 /** Tous les états côte à côte. */
 export const AllStates: Story = {
   name: "All states",

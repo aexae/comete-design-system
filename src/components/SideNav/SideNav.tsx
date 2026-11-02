@@ -406,8 +406,8 @@ SideNavFooter.displayName = "SideNav.Footer";
 
 /**
  * SideNav.FooterBrand — enveloppe un logo de marque dans le `SideNav.Footer`
- * avec un traitement discret (opacité réduite qui remonte au survol, taille
- * bornée, centré). À réserver au logo de marque : le reste du footer (liens,
+ * avec un traitement discret (opacité réduite, taille bornée, centré). Non
+ * interactif : aucun état de survol. À réserver au logo de marque : le reste du footer (liens,
  * version, compte…) doit rester neutre et pleinement contrasté.
  *
  * ```tsx

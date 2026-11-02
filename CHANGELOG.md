@@ -245,6 +245,10 @@ entre versions alpha.
   badge était écrasé (jusqu'à 13,5px de large) : c'est désormais le voisin qui cède.
 ### Modifié
 
+- **`SideNav.FooterBrand` — plus d'état de survol.** La marque de pied remontait à pleine
+  opacité au survol alors qu'elle n'est pas cliquable : un survol promet un clic qui
+  n'existe pas. Elle reste à opacité réduite, sans transition.
+
 - **Ascenseur du DS — affichage permanent dès que le contenu déborde.** Le pouce de la
   couche partagée `styles/scrollbar.module.css` (Drawer, ModalDialog, Popover, Select,
   TimeCalendar) et celui de la `SideNav` n'étaient révélés qu'au survol : rien ne disait

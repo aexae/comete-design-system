@@ -1,4 +1,5 @@
 // Tests unitaires pour le composant SideNav
+import { readFileSync } from "node:fs";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
@@ -377,6 +378,12 @@ describe("SideNav", () => {
     const brand = container.querySelector("[class*='footerBrand']");
     expect(brand).toBeInTheDocument();
     expect(getByText("Marque")).toBeInTheDocument();
+  });
+
+  it("should give the brand mark no hover state, since it is not interactive", () => {
+    const css = readFileSync("src/components/SideNav/SideNav.module.css", "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+    expect(css).toMatch(/\.footerBrand\s*\{/);
+    expect(css).not.toMatch(/\.footerBrand[^{]*:hover/);
   });
 
   // Défilement interne --------------------------------------------------
