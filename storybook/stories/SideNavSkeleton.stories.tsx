@@ -70,8 +70,8 @@ type Story = StoryObj<SideNavSkeletonProps>;
 export const Default: Story = {};
 
 /**
- * Chargement fidèle à la structure réelle : trois groupes skeleton calqués sur
- * Manager (4) / MCE (2) / Administration (3), séparés par des dividers.
+ * Chargement avec plusieurs groupes : deux groupes skeleton (4 puis 2 entrées),
+ * séparés par un divider.
  */
 export const MultipleSections: Story = {
   name: "Multiple sections",
@@ -81,8 +81,6 @@ export const MultipleSections: Story = {
       <SideNavSkeleton count={4} />
       <SideNav.Divider />
       <SideNavSkeleton count={2} />
-      <SideNav.Divider />
-      <SideNavSkeleton count={3} />
     </>
   ),
 };

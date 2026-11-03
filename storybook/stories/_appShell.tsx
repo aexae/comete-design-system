@@ -1,80 +1,53 @@
-// Coquille applicative "Main Courante" partagée par les stories SideNav.
+// Coquille applicative partagée par les stories SideNav.
 // Reproduit le template réel de l'app : SideNav permanente pleine hauteur (marque
 // Pro Sécurité + slot de navigation + footer comète link) à gauche, et la Page
-// (Page.Bar "Accueil" + contenu de Layout/Page) à droite. Fichier NON indexé par Storybook (pas
+// (Page.Bar "Tableau de bord" + contenu de Layout/Page) à droite. Fichier NON indexé par Storybook (pas
 // de suffixe .stories).
 import { cloneElement, isValidElement, useState, type ReactNode } from "react";
 import {
   SideNav,
   Page,
   Logo,
-  SectionMessage,
-  Grid,
-  Card,
   type SideNavMode,
 } from "@aexae/comete-design-system/components";
 
 /** Pied de marque Link de la coquille : le composant bascule logo / icône selon le mode. */
 export function AppFooterBrand() {
   return (
-    <SideNav.FooterBrand rail={<Logo size={24} product="link" appearance="neutral" format="icon" />}>
-      <Logo size={14} product="link" appearance="neutral" format="logo" />
+    <SideNav.FooterBrand rail={<Logo size={16} product="link" appearance="neutral" format="icon" />}>
+      <Logo size={10} product="link" appearance="neutral" format="logo" />
     </SideNav.FooterBrand>
   );
 }
 
-/** Sections de navigation réelles (Manager / MCE / Administration). */
-export function MainCouranteNav() {
+/** Sous-titre de l'en-tête : l'espace de l'app (ici manager), jamais un titre de section. */
+export const APP_SPACE_LABEL = "Espace manager";
+
+/**
+ * Navigation réelle de l'espace manager (cf. `navConfig` de la webapp) : tableau de bord,
+ * agents, sites, pointages. Le nom de l'espace se lit dans l'en-tête (`APP_SPACE_LABEL`). La MCE n'y figure pas : c'est un autre produit.
+ */
+export function AppNav() {
   return (
-    <>
-      <SideNav.Section title="Manager">
-        <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="/" />
-        <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
-        <SideNav.Item label="Sites" iconBefore="Site" href="/sites" />
-        <SideNav.Item label="Pointages" iconBefore="Clockings" href="/pointages" isDisabled />
-      </SideNav.Section>
-      <SideNav.Divider />
-      <SideNav.Section title="MCE">
-        <SideNav.Item label="MCE" iconBefore="MenuBook" href="/mce" />
-        <SideNav.Item label="Formulaires" iconBefore="FormEdit" href="/forms" />
-      </SideNav.Section>
-      <SideNav.Divider />
-      <SideNav.Section title="Administration" shortTitle="Admin">
-        <SideNav.Item label="Utilisateurs" iconBefore="Group" href="/users" />
-        <SideNav.Item label="Droits" iconBefore="ManageAccounts" href="/permissions" />
-        <SideNav.Item label="Licences" iconBefore="Key" href="/licences" />
-      </SideNav.Section>
-    </>
+    <SideNav.Section>
+      <SideNav.Item label="Tableau de bord" iconBefore="Dashboard" isSelected href="/" />
+      <SideNav.Item label="Agents" iconBefore="Group" href="/agents" />
+      <SideNav.Item label="Sites" iconBefore="Site" href="/sites" />
+      <SideNav.Item label="Pointages" iconBefore="Clockings" href="/pointages" />
+    </SideNav.Section>
   );
 }
 
 /**
- * Contenu de page de démonstration — repris de `Layout/Page › Default` (message
- * d'accueil + grille de cartes) : de quoi VOIR que la nav pousse le contenu
- * (desktop ≥ 1200 px) ou passe par-dessus (Drawer — mobile web ET tablette).
- * À placer dans
- * un `Page`, sous une `Page.Bar`.
+ * Contenu de page NEUTRE, pour les stories de la SideNav elle-même : une page
+ * vide, sur fond neutre. Un contenu réaliste (cartes, messages) attire l'œil et
+ * rend la nav illisible comme sujet ; ici la seule chose qui se voit, c'est
+ * la navigation et la place qu'elle prend (elle pousse le contenu ≥ 1200 px,
+ * passe par-dessus en Drawer en dessous). À placer dans un `Page`, sous une
+ * `Page.Bar`.
  */
 export function DemoPageContent({ isLoading = false }: { isLoading?: boolean }) {
-  return (
-    <Page.Body isLoading={isLoading}>
-      <SectionMessage appearance="information" style={{ marginBottom: 16 }}>
-        Message d&apos;accueil (texte par défaut)
-      </SectionMessage>
-      <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
-        {Array.from({ length: 9 }, (_, i) => (
-          <Grid.Col key={i}>
-            <Card appearance="outlined">
-              <div style={{ padding: "var(--space200)" }}>
-                <strong>Agent {i + 1}</strong>
-                <p style={{ margin: "var(--space100) 0 0" }}>Description courte</p>
-              </div>
-            </Card>
-          </Grid.Col>
-        ))}
-      </Grid>
-    </Page.Body>
-  );
+  return <Page.Body isLoading={isLoading} />;
 }
 
 /** Classe posée sur l'en-tête ou le pied masqués par `SideNavOnly focus`. */
@@ -89,7 +62,7 @@ const FOCUS_HIDDEN = "sb-sidenav-focus-hidden";
  *
  * Ce qui disparaît est la PAGE : `Page.Bar` et contenu de démonstration
  * n'apprennent rien sur un `SideNav.Item` et occupent les trois quarts de la
- * vignette. Le gabarit applicatif complet (`MainCouranteShell`) reste pour
+ * vignette. Le gabarit applicatif complet (`AppShell`) reste pour
  * les stories de la SideNav elle-même.
  */
 export function SideNavOnly({
@@ -138,7 +111,7 @@ export function SideNavOnly({
               <SideNav.Header
                 logo={logo}
                 companyName="Pro Sécurité"
-                description="Main Courante"
+                description={APP_SPACE_LABEL}
               />
             ),
           )}
@@ -161,7 +134,7 @@ export function SideNavOnly({
   );
 }
 
-export interface MainCouranteShellProps {
+export interface AppShellProps {
   /** Corps de la navigation (sections réelles, skeleton ou état vide). */
   nav: ReactNode;
   /** Contenu principal de la page. @default <DemoPageContent /> */
@@ -176,7 +149,7 @@ export interface MainCouranteShellProps {
   header?: ReactNode;
   /** Pied de nav personnalisé (remplace le `SideNav.Footer` par défaut). */
   footer?: ReactNode;
-  /** Titre de la `Page.Bar`. @default "Accueil" */
+  /** Titre de la `Page.Bar`. @default "Tableau de bord" */
   title?: string;
   /**
    * Hauteur du gabarit. @default "100vh"
@@ -189,11 +162,11 @@ export interface MainCouranteShellProps {
 }
 
 /**
- * Template applicatif "Main Courante" : `Page.Bar` pleine largeur + SideNav
+ * Template applicatif : `Page.Bar` pleine largeur + SideNav
  * permanente (marque + `nav` + footer) + contenu. `nav` remplit le corps de la
  * navigation — on y branche les sections réelles, un skeleton ou un état vide.
  */
-export function MainCouranteShell({
+export function AppShell({
   nav,
   isPageLoading = false,
   body = <DemoPageContent isLoading={isPageLoading} />,
@@ -201,9 +174,9 @@ export function MainCouranteShell({
   logo = <Logo product="cafe" format="icon" />,
   header,
   footer,
-  title = "Accueil",
+  title = "Tableau de bord",
   height = "100vh",
-}: MainCouranteShellProps) {
+}: AppShellProps) {
   const [current, setCurrent] = useState<SideNavMode>(mode);
   return (
     <SideNav.Provider mode={current} onModeChange={setCurrent}>
@@ -215,7 +188,7 @@ export function MainCouranteShell({
             <SideNav.Header
               logo={logo}
               companyName="Pro Sécurité"
-              description="Main Courante"
+              description={APP_SPACE_LABEL}
             />
           )}
           {nav}

@@ -5,7 +5,7 @@ import { within, userEvent, expect, waitFor } from "storybook/test";
 import { SideNav, Logo, Page, Button, Drawer } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
-import { MainCouranteShell, MainCouranteNav, DemoPageContent, SideNavOnly, AppFooterBrand } from "./_appShell";
+import { AppShell, AppNav, DemoPageContent, SideNavOnly, AppFooterBrand } from "./_appShell";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -44,9 +44,11 @@ const meta: Meta = {
                 "Un rail de 80 px sur mobile web, ou une barre basse sur le web mobile.",
                 "Une barre supérieure globale (marque, compte, actions) → Page.Bar.",
                 "Naviguer entre vues d'une même page → Tabs.",
+                "Utiliser le titre d'une `SideNav.Section` pour nommer l'espace (manager, agent, client…) : ce titre sert à hiérarchiser les pages par sections, pas à définir un espace.",
               ]}
               best={[
                 "Structurer avec SideNavSection/Item ; un seul item actif reflétant la route courante.",
+                "Hiérarchiser les pages par sections avec le titre de `SideNav.Section` (ex. « Administration »). L'espace de l'app (« Espace manager ») se lit dans le sous-titre de `SideNav.Header`, jamais dans un titre de section.",
                 "Prévoir le rail (80 px : icône + libellé court) ; garder l'ordre stable entre les pages.",
               ]}
               accessibility={[
@@ -73,7 +75,7 @@ type Story = StoryObj<typeof meta>;
  * rail (`Ctrl/Cmd+Shift+E`).
  */
 export const Default: Story = {
-  render: () => <MainCouranteShell nav={<MainCouranteNav />} />,
+  render: () => <AppShell nav={<AppNav />} />,
   // Navigation clavier : Tab passe d'un item à l'autre, Enter active l'item
   // focalisé. La navigation réelle (href) est interceptée pour ne pas quitter
   // la story.
@@ -94,7 +96,7 @@ export const Default: Story = {
       await expect(canvas.getByRole("button", { name: "Réduire la navigation" })).toHaveFocus();
       // …puis le premier item.
       await userEvent.tab();
-      const accueil = canvas.getByRole("link", { name: "Accueil" });
+      const accueil = canvas.getByRole("link", { name: "Tableau de bord" });
       await expect(accueil).toHaveFocus();
       // Tab suivant → item suivant (déplacement clavier entre items).
       await userEvent.tab();
@@ -121,7 +123,7 @@ export const Default: Story = {
 export const Rail: Story = {
   name: "Rail (80 px, desktop)",
   parameters: { design: { type: "figma", url: figmaUrl("17480:10191") } },
-  render: () => <MainCouranteShell nav={<MainCouranteNav />} mode="rail" />,
+  render: () => <AppShell nav={<AppNav />} mode="rail" />,
 };
 
 // Test (masqué du sidebar) : le `play` ne se rejoue pas à l'ouverture de la story.
@@ -170,7 +172,7 @@ function MobileWebDemo() {
     <>
       <Page globalActions={null} style={{ height: "100vh", overflowY: "auto" }}>
         <Page.Bar
-          title="Accueil"
+          title="Tableau de bord"
           leading={
             <Button
               appearance="subtle"
@@ -202,10 +204,10 @@ function MobileWebDemo() {
               <SideNav.Header
                 logo={<Logo product="cafe" format="icon" />}
                 companyName="Pro Sécurité"
-                description="Main Courante"
+                description="Espace manager"
                 showToggle={false}
               />
-              <MainCouranteNav />
+              <AppNav />
               <SideNav.Footer>
                 <AppFooterBrand />
               </SideNav.Footer>
@@ -228,7 +230,7 @@ export const ApplicationTabletLandscape: Story = {
   name: "Application tablet, landscape",
   globals: { viewport: { value: "cometeTabletManager", isRotated: true } },
   parameters: { layout: "fullscreen", controls: { disable: true } },
-  render: () => <SideNavOnly nav={<MainCouranteNav />} mode="rail" />,
+  render: () => <SideNavOnly nav={<AppNav />} mode="rail" />,
 };
 
 /**
@@ -307,7 +309,7 @@ export const MobileWebInteractions: Story = {
 /**
  * **Chargement** — les rubriques de navigation chargent : la marque
  * (`SideNav.Header`) et le pied restent, seul le corps est en skeleton
- * (3 groupes calqués sur Manager / MCE / Administration).
+ * (un seul groupe, comme la nav de l'espace manager).
  *
  * Sans la page : le sujet est l'état de chargement de la NAV, et un contenu
  * de démonstration à côté ne ferait que détourner le regard.
@@ -319,10 +321,6 @@ export const Loading: Story = {
       nav={
         <>
           <SideNav.Skeleton count={4} />
-          <SideNav.Divider />
-          <SideNav.Skeleton count={2} />
-          <SideNav.Divider />
-          <SideNav.Skeleton count={3} />
         </>
       }
     />
@@ -366,11 +364,11 @@ export const Scrollable: Story = {
     //
     // Hauteur portée par le GABARIT et non par un décorateur : sinon la nav garde sa
     // hauteur et se fait rogner, pied compris.
-    <MainCouranteShell
+    <AppShell
       nav={
         <>
-            <SideNav.Section title="Manager">
-              <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="/" />
+            <SideNav.Section>
+              <SideNav.Item label="Tableau de bord" iconBefore="Dashboard" isSelected href="/" />
               <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
               <SideNav.Item label="Sites" iconBefore="Site" href="/sites" />
               <SideNav.Item label="Pointages" iconBefore="Clockings" href="/pointages" />
@@ -382,22 +380,6 @@ export const Scrollable: Story = {
               <SideNav.Item label="Absences" iconBefore="EventBusy" href="/absences" />
               <SideNav.Item label="Remplacements" iconBefore="SwapVert" href="/remplacements" />
               <SideNav.Item label="Astreintes" iconBefore="Alarm" href="/astreintes" />
-            </SideNav.Section>
-            <SideNav.Divider />
-            <SideNav.Section title="MCE">
-              <SideNav.Item label="MCE" iconBefore="MenuBook" href="/mce" />
-              <SideNav.Item label="Formulaires" iconBefore="FormEdit" href="/forms" />
-              <SideNav.Item label="Rapports" iconBefore="Assignment" href="/reports" />
-              <SideNav.Item label="Anomalies" iconBefore="Warning" href="/issues" />
-              <SideNav.Item label="Mains courantes" iconBefore="EditNote" href="/mains-courantes" />
-              <SideNav.Item label="Rondes" iconBefore="Autorenew" href="/rondes" />
-              <SideNav.Item label="Incidents" iconBefore="EmergencyHome" href="/incidents" />
-              <SideNav.Item label="Consignes" iconBefore="Shield" href="/consignes" />
-              <SideNav.Item label="Clés" iconBefore="Key" href="/cles" />
-              <SideNav.Item label="Véhicules" iconBefore="DirectionsCar" href="/vehicules" />
-            </SideNav.Section>
-            <SideNav.Divider />
-            <SideNav.Section title="Administration" shortTitle="Admin">
               <SideNav.Item label="Utilisateurs" iconBefore="Group" href="/users" />
               <SideNav.Item label="Droits" iconBefore="ManageAccounts" href="/permissions" />
               <SideNav.Item label="Licences" iconBefore="Key" href="/licences" />
@@ -425,7 +407,7 @@ export const Scrollable: Story = {
     const last = links[links.length - 1];
     first.focus();
     await expect(first).toHaveFocus();
-    await expect(first).toHaveTextContent("Accueil");
+    await expect(first).toHaveTextContent("Tableau de bord");
     last.focus();
     await expect(last).toHaveFocus();
     await expect(last).toHaveTextContent("Modèles");

@@ -22,9 +22,9 @@ function SideNavSectionStory(props: { title?: string; children?: ReactNode }) {
       <SideNav.Section title={props.title}>
         {props.children ?? (
           <>
-            <SideNav.Item label="Accueil" iconBefore="Home" isSelected />
-            <SideNav.Item label="Agents" iconBefore="Agent" />
-            <SideNav.Item label="Sites" iconBefore="LocationOn" />
+            <SideNav.Item label="Tableau de bord" iconBefore="Dashboard" isSelected />
+            <SideNav.Item label="Agents" iconBefore="Group" />
+            <SideNav.Item label="Sites" iconBefore="Site" />
           </>
         )}
       </SideNav.Section>
@@ -84,9 +84,9 @@ export const Default: Story = {
     docs: {
       source: {
         code: `<SideNav.Section title="Manager">
-  <SideNav.Item label="Accueil" iconBefore="Home" isSelected />
-  <SideNav.Item label="Agents" iconBefore="Agent" />
-  <SideNav.Item label="Sites" iconBefore="LocationOn" />
+  <SideNav.Item label="Tableau de bord" iconBefore="Dashboard" isSelected />
+  <SideNav.Item label="Agents" iconBefore="Group" />
+  <SideNav.Item label="Sites" iconBefore="Site" />
 </SideNav.Section>`,
       },
     },

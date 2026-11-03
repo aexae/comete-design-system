@@ -73,7 +73,7 @@ import {
 } from "./_filtresOptionB";
 import filtresCss from "./FiltresOptionB.stories.module.css";
 import { PageGlobalActions } from "./_pageChrome";
-import { AppFooterBrand } from "./_appShell";
+import { AppFooterBrand, AppNav } from "./_appShell";
 import { GlobalSearchDialog, useGlobalSearch } from "./_rechercheGlobale";
 
 // -----------------------------------------------------------------------
@@ -293,25 +293,9 @@ export const Base: Story = {
             <SideNav.Header
               logo={<Logo product="link" format="icon" />}
               companyName="Comète Link"
-              description="Main Courante"
+              description="Espace manager"
             />
-            <SideNav.Section title="Manager">
-              <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="#" />
-              <SideNav.Item label="Agents" iconBefore="Agent" href="#" />
-              <SideNav.Item label="Sites" iconBefore="LocationOn" href="#" />
-              <SideNav.Item label="Pointages" iconBefore="Schedule" href="#" isDisabled />
-            </SideNav.Section>
-            <SideNav.Divider />
-            <SideNav.Section title="MCE">
-              <SideNav.Item label="Main courante" iconBefore="EditNote" href="#" />
-              <SideNav.Item label="Formulaires" iconBefore="FormEdit" href="#" />
-            </SideNav.Section>
-            <SideNav.Divider />
-            <SideNav.Section title="Administration">
-              <SideNav.Item label="Utilisateurs" iconBefore="Group" href="#" />
-              <SideNav.Item label="Droits" iconBefore="ManageAccounts" href="#" />
-              <SideNav.Item label="Licences" iconBefore="Key" href="#" />
-            </SideNav.Section>
+            <AppNav />
             <SideNav.Footer>
               <AppFooterBrand />
             </SideNav.Footer>
@@ -336,7 +320,7 @@ export const Base: Story = {
                 onQueryChange={search.setQuery}
                 onClose={search.close}
               />
-              <Page.Bar title="Accueil" />
+              <Page.Bar title="Tableau de bord" />
               <Page.Toolbar
                 search={
                   <SearchField

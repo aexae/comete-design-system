@@ -22,6 +22,7 @@ import {
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 import { PageTrailingActions } from "./_pageChrome";
+import { AppNav, AppFooterBrand, APP_SPACE_LABEL } from "./_appShell";
 
 // -----------------------------------------------------------------------
 // Meta
@@ -268,26 +269,17 @@ export const BleedDesktop: Story = {
         <SideNav.Header
           logo={<Logo format="icon" />}
           companyName="Pro Sécurité"
-          description="Main Courante"
+          description={APP_SPACE_LABEL}
         />
-        <SideNav.Section title="Manager">
-          <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="/" />
-          <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
-          <SideNav.Item label="Sites" iconBefore="LocationOn" href="/sites" />
-        </SideNav.Section>
-        <SideNav.Divider />
-        <SideNav.Section title="Administration">
-          <SideNav.Item label="Utilisateurs" iconBefore="Group" href="/users" />
-          <SideNav.Item label="Permissions" iconBefore="ManageAccounts" href="/permissions" />
-        </SideNav.Section>
+        <AppNav />
         <SideNav.Footer>
-          <Logo />
+          <AppFooterBrand />
         </SideNav.Footer>
       </SideNav>
 
       <Page globalActions={null} style={{ flex: 1, minHeight: 0 }}>
         <Page.Bar
-          title="Accueil"
+          title="Tableau de bord"
           trailing={
             <Stack direction="row" gap="100" align="center">
               <PageTrailingActions density="compact" />

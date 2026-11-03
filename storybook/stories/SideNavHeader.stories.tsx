@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { SideNav, Logo } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
-import { SideNavOnly, MainCouranteNav } from "./_appShell";
+import { SideNavOnly, AppNav } from "./_appShell";
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -13,7 +13,7 @@ const figmaUrl = (nodeId: string) =>
 
 /** Seul l'en-tête est montré : ni le corps ni le pied de la nav. */
 function NavContext({ children }: { children: ReactNode }) {
-  return <SideNavOnly focus="header" header={children} nav={<MainCouranteNav />} />;
+  return <SideNavOnly focus="header" header={children} nav={<AppNav />} />;
 }
 
 function SideNavHeaderStory(props: {
@@ -70,7 +70,7 @@ const meta = {
   args: {
     logo: <Logo format="icon" />,
     companyName: "Pro Sécurité",
-    description: "Main Courante",
+    description: "Espace manager",
   },
 } satisfies Meta<typeof SideNavHeaderStory>;
 
@@ -85,7 +85,7 @@ export const Default: Story = {
         code: `<SideNav.Header
   logo={<Logo format="icon" />}
   companyName="Pro Sécurité"
-  description="Main Courante"
+  description="Espace manager"
 />`,
       },
     },

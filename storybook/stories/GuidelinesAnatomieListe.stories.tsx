@@ -39,6 +39,7 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "@aexae/comete-design-system/components";
+import { AppFooterBrand } from "./_appShell";
 
 // -----------------------------------------------------------------------
 // Types & données (prose gardée hors JSX : règle react/no-unescaped-entities)
@@ -348,20 +349,24 @@ function Schema(): ReactElement {
             <SideNav.Header
               logo={<Logo product="link" format="icon" />}
               companyName="Comète Link"
-              description="Main Courante"
+              description="Espace manager"
             />
-            <SideNav.Section title="Manager">
-              <SideNav.Item label="Accueil" iconBefore="Home" href="#" />
-              <SideNav.Item label="Agents" iconBefore="Agent" isSelected href="#" />
-              <SideNav.Item label="Sites" iconBefore="LocationOn" href="#" />
+            <SideNav.Section>
+              <SideNav.Item label="Tableau de bord" iconBefore="Dashboard" href="#" />
+              <SideNav.Item label="Agents" iconBefore="Group" isSelected href="#" />
+              <SideNav.Item label="Sites" iconBefore="Site" href="#" />
+              <SideNav.Item label="Pointages" iconBefore="Clockings" href="#" />
             </SideNav.Section>
             <SideNav.Divider />
             <SideNav.Section title="Administration" shortTitle="Admin">
               <SideNav.Item label="Utilisateurs" iconBefore="Group" href="#" />
-              <SideNav.Item label="Droits" iconBefore="ManageAccounts" href="#" />
+              <SideNav.Item label="Droits d'accès" iconBefore="VisibilityLock" href="#" />
             </SideNav.Section>
             <SideNav.Footer>
-              <Num n="2" />
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "var(--space100)" }}>
+                <Num n="2" />
+                <AppFooterBrand />
+              </div>
             </SideNav.Footer>
           </SideNav>
         </div>
