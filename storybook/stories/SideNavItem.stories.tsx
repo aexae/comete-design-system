@@ -12,10 +12,10 @@ const FIGMA_FILE =
 const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
-/** La nav entière, sans la page : un item se juge dans sa nav. */
+/** Seule la section qui porte l'item est montrée : ni l'en-tête ni le pied de la nav. */
 function NavContext({ children }: { children: ReactNode }) {
   return (
-    <SideNavOnly nav={<SideNav.Section title="Manager">{children}</SideNav.Section>} />
+    <SideNavOnly focus="body" nav={<SideNav.Section title="Manager">{children}</SideNav.Section>} />
   );
 }
 
@@ -94,13 +94,6 @@ export const Selected: Story = {
 export const Disabled: Story = {
   args: { isDisabled: true },
   parameters: { docs: { source: { code: `<SideNav.Item label="Expérimental" iconBefore="Extension" isDisabled />` } } },
-};
-
-/** Sans icône. */
-export const WithoutIcon: Story = {
-  name: "Without icon",
-  args: { iconBefore: undefined, label: "Profil" },
-  parameters: { docs: { source: { code: `<SideNav.Item label="Profil" href="/profile" />` } } },
 };
 
 /** Tous les états côte à côte. */

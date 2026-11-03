@@ -46,7 +46,7 @@ const meta = {
     design: { type: "figma", url: figmaUrl("4319:15156") },
   },
   decorators: [
-    (Story) => <SideNavOnly nav={<Story />} />,
+    (Story) => <SideNavOnly focus="body" nav={<Story />} />,
   ],
   argTypes: {
     count: { control: { type: "number", min: 1, max: 12 } },

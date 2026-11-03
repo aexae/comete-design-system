@@ -1,4 +1,5 @@
 // Tests unitaires pour le composant SideNav
+import { readFileSync } from "node:fs";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
@@ -377,6 +378,50 @@ describe("SideNav", () => {
     const brand = container.querySelector("[class*='footerBrand']");
     expect(brand).toBeInTheDocument();
     expect(getByText("Marque")).toBeInTheDocument();
+  });
+
+  it("should give the brand mark no hover state, since it is not interactive", () => {
+    const css = readFileSync("src/components/SideNav/SideNav.module.css", "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+    expect(css).toMatch(/\.footerBrand\s*\{/);
+    expect(css).not.toMatch(/\.footerBrand[^{]*:hover/);
+  });
+
+  it("should show the rail variant of the brand mark in rail mode and the children when expanded", () => {
+    const brand = (
+      <SideNav.Footer>
+        <SideNav.FooterBrand rail={<span>Icône</span>}>
+          <span>Logo complet</span>
+        </SideNav.FooterBrand>
+      </SideNav.Footer>
+    );
+    const rail = render(<SideNav.Provider defaultMode="rail"><SideNav>{brand}</SideNav></SideNav.Provider>);
+    expect(rail.getByText("Icône")).toBeInTheDocument();
+    expect(rail.queryByText("Logo complet")).toBeNull();
+    rail.unmount();
+    const expanded = render(<SideNav.Provider defaultMode="expanded"><SideNav>{brand}</SideNav></SideNav.Provider>);
+    expect(expanded.getByText("Logo complet")).toBeInTheDocument();
+    expect(expanded.queryByText("Icône")).toBeNull();
+  });
+
+  it("should keep the children in rail mode when no rail variant is given", () => {
+    const { getByText } = render(
+      <SideNav.Provider defaultMode="rail">
+        <SideNav>
+          <SideNav.Footer>
+            <SideNav.FooterBrand>
+              <span>Logo complet</span>
+            </SideNav.FooterBrand>
+          </SideNav.Footer>
+        </SideNav>
+      </SideNav.Provider>,
+    );
+    expect(getByText("Logo complet")).toBeInTheDocument();
+  });
+
+  it("should give the selected item no indicator of its own in rail mode", () => {
+    const css = readFileSync("src/components/SideNav/SideNav.module.css", "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+    expect(css).toMatch(/\.itemSelected\s*\{/);
+    expect(css).not.toMatch(/\.itemSelected::before/);
   });
 
   // Défilement interne --------------------------------------------------

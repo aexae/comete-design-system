@@ -245,6 +245,20 @@ entre versions alpha.
   badge était écrasé (jusqu'à 13,5px de large) : c'est désormais le voisin qui cède.
 ### Modifié
 
+- **`SideNav.Item` en rail — plus de barre à gauche.** L'item sélectionné du rail portait
+  une barre de 4 × 20 px que l'item déployé n'a pas. Il reprend maintenant le visuel de
+  l'item déployé (fond et texte sélectionnés), sans indicateur propre au rail.
+
+- **`SideNav.FooterBrand` — prop `rail`.** Variante affichée en mode rail à la place des
+  enfants (typiquement le logo au format `icon`). Avant, chaque écran recodait le
+  basculement logo / icône, ou ne le faisait pas : le pied différait d'un endroit à
+  l'autre. Sans `rail`, les enfants restent affichés dans les deux modes. Les stories
+  passent toutes par un seul pied de marque.
+
+- **`SideNav.FooterBrand` — plus d'état de survol.** La marque de pied remontait à pleine
+  opacité au survol alors qu'elle n'est pas cliquable : un survol promet un clic qui
+  n'existe pas. Elle reste à opacité réduite, sans transition.
+
 - **Ascenseur du DS — affichage permanent dès que le contenu déborde.** Le pouce de la
   couche partagée `styles/scrollbar.module.css` (Drawer, ModalDialog, Popover, Select,
   TimeCalendar) et celui de la `SideNav` n'étaient révélés qu'au survol : rien ne disait

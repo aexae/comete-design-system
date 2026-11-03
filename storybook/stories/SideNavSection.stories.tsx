@@ -11,9 +11,9 @@ const FIGMA_FILE =
 const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
-/** Le composant est montré DANS le template applicatif (Page.Bar + SideNav + contenu). */
+/** Seule la section est montrée : ni l'en-tête ni le pied de la nav. */
 function NavContext({ children }: { children: ReactNode }) {
-  return <SideNavOnly nav={children} />;
+  return <SideNavOnly focus="body" nav={children} />;
 }
 
 function SideNavSectionStory(props: { title?: string; children?: ReactNode }) {

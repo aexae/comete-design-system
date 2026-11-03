@@ -25,8 +25,8 @@ declare const process: { env: { NODE_ENV?: string } };
 // Context partagé (couvre SideNav + SideNavHeader)
 
 /**
- * Mode d'affichage de la navigation latérale — **desktop uniquement**
- * (≥ 1200px, le breakpoint `lg` de `BREAKPOINTS`).
+ * Mode d'affichage de la navigation latérale — permanente dans l'**application**
+ * dès 769px et sur le **web** dès 1200px (le breakpoint `lg` de `BREAKPOINTS`).
  * - `expanded` — panneau complet 240px (logo + libellés + sections nommées).
  * - `rail` — rail 80px : icône + libellé court dessous.
  *
@@ -34,12 +34,10 @@ declare const process: { env: { NODE_ENV?: string } };
  * au survol** : on passe de l'un à l'autre par le bouton de bascule de l'en-tête
  * ou par `Ctrl/Cmd+Shift+E`.
  *
- * **Sous 1200px (tablette comprise), il n'y a pas de nav permanente.** La
- * tablette suit la règle du mobile web : l'app affiche la nav dans un `Drawer`
- * (`placement="left"`), par-dessus le contenu, derrière un hamburger. Une
- * tablette n'a pas la largeur d'un rail de 80px ET d'un contenu confortable.
- * En **app mobile**, il n'y a pas de SideNav du tout (la `BottomNav` porte
- * seule la navigation).
+ * **Sur le web sous 1200px (tablette comprise), il n'y a pas de nav
+ * permanente** : la nav s'affiche dans un `Drawer` (`placement="left"`), par-dessus
+ * le contenu, derrière un hamburger. Dans l'**application** à 768px et moins, il
+ * n'y a pas de SideNav : la `BottomNav` porte seule la navigation.
  */
 export type SideNavMode = "expanded" | "rail";
 
@@ -159,8 +157,14 @@ export interface SideNavFooterProps {
 }
 
 export interface SideNavFooterBrandProps {
-  /** Logo / marque à afficher discrètement. */
+  /** Logo / marque à afficher discrètement (nav déployée). */
   children: ReactNode;
+  /**
+   * Variante affichée en mode `rail` (80 px) à la place de `children` — typiquement le
+   * logo au format `icon`. Sans elle, `children` reste affiché dans les deux modes : un
+   * logo complet déborde d'un rail, donc la fournir.
+   */
+  rail?: ReactNode;
   className?: string;
 }
 
@@ -406,13 +410,14 @@ SideNavFooter.displayName = "SideNav.Footer";
 
 /**
  * SideNav.FooterBrand — enveloppe un logo de marque dans le `SideNav.Footer`
- * avec un traitement discret (opacité réduite qui remonte au survol, taille
- * bornée, centré). À réserver au logo de marque : le reste du footer (liens,
+ * avec un traitement discret (opacité réduite, taille bornée, centré). Non
+ * interactif : aucun état de survol. En mode `rail`, affiche `rail` à la place de
+ * `children` : c'est le composant qui bascule, pas chaque écran. À réserver au logo de marque : le reste du footer (liens,
  * version, compte…) doit rester neutre et pleinement contrasté.
  *
  * ```tsx
  * <SideNav.Footer>
- *   <SideNav.FooterBrand>
+ *   <SideNav.FooterBrand rail={<Logo product="link" format="icon" />}>
  *     <Logo product="link" format="logo" />
  *   </SideNav.FooterBrand>
  * </SideNav.Footer>
@@ -420,11 +425,13 @@ SideNavFooter.displayName = "SideNav.Footer";
  */
 export function SideNavFooterBrand({
   children,
+  rail,
   className,
 }: SideNavFooterBrandProps): ReactElement {
+  const { mode } = useContext(SideNavContext);
   return (
     <div className={[styles.footerBrand, className].filter(Boolean).join(" ")}>
-      {children}
+      {mode === "rail" && rail !== undefined ? rail : children}
     </div>
   );
 }
