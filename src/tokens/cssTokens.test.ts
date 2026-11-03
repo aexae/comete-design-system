@@ -25,7 +25,6 @@ const RUNTIME_PROPERTIES: Record<string, string> = {
   "--sidenav-section-heading-line": "surcharge consommateur (SideNav)",
   "--popup-padding": "surcharge consommateur (Popup, SideNav)",
   "--checkbox-surface": "surcharge consommateur (Checkbox)",
-  "--scroll-shadow-surface": "surcharge consommateur (ScrollArea)",
 };
 
 const isPrivate = (name: string) => name.startsWith("--_");

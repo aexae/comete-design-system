@@ -11,7 +11,7 @@ import {
 import type { IconName } from "@aexae/comete-icons";
 import { Button } from "../Button/Button.js";
 import { Icon } from "../Icon/Icon.js";
-import scrollbarStyles from "../../styles/scrollbar.module.css";
+import { ScrollArea } from "../ScrollArea/ScrollArea.js";
 import styles from "./ModalDialog.module.css";
 
 // -----------------------------------------------------------------------
@@ -198,8 +198,14 @@ export function ModalDialog({
           {/* Bloc épinglé : hors de la zone qui défile */}
           {pinned && <div className={styles.pinned}>{pinned}</div>}
 
-          {/* Body */}
-          <div className={[styles.body, scrollbarStyles.scrollable, scrollbarStyles.themed].join(" ")}>{children}</div>
+          {/* Body — la zone défilante est un `ScrollArea` : son ascenseur
+              flotte au-dessus du contenu, là où l'ascenseur natif de la couche
+              partagée se logeait dans une marge négative que l'`overflow:
+              hidden` du dialog rognait. Le retrait vit sur le contenu : posé
+              sur la racine, il serait hors du défileur. */}
+          <ScrollArea visibility="auto" hasOverflowShadows className={styles.body}>
+            <div className={styles.bodyContent}>{children}</div>
+          </ScrollArea>
 
           {/* Footer */}
           {footer && <div className={styles.footer}>{footer}</div>}

@@ -1,21 +1,43 @@
 /* scrollbar.module.css — Zones défilantes Comète Design System
- * Couche utilitaire consommée par les composants qui exposent une zone
- * défilante (Drawer, ModalDialog, Popover, Select, TimeCalendar) et par le
- * composant public `ScrollArea`.
  * 100 % design tokens — zéro valeur hardcodée.
  *
- * DÉFINITION UNIQUE. Quatre rôles, cumulables :
+ * Quatre rôles, cumulables :
  *
  *   .scrollable  la mécanique du conteneur défilant (les pièges en flex)
- *   .themed      l'apparence de l'ascenseur
+ *   .themed      l'apparence de l'ascenseur NATIF
  *   .hidden      l'ascenseur masqué, défilement conservé
  *   .shadows     l'indication de débordement en haut et en bas
  *
- * Avant cette couche, chaque composant recopiait les mêmes déclarations — et
- * la même erreur avec : `scrollbar-color` posé sans garde ANNULE les règles
- * `::-webkit-scrollbar` dans Chrome, qui retombe alors sur l'ascenseur du
- * système (15px) au lieu des 8px voulus. Voir les blocs `@supports`. Toute
- * évolution de l'ascenseur se fait ICI.
+ * NE PAS S'EN SERVIR POUR UNE NOUVELLE ZONE DÉFILANTE. Drawer, ModalDialog,
+ * Popover, TimeCalendar et SideNav sont passés au `ScrollArea`.
+ * `.hidden` et `.shadows` servent `ScrollArea` lui-même ; `.scrollable` et
+ * `.themed` n'ont plus que deux consommateurs, chacun pour une raison
+ * précise.
+ *
+ * 1. `Select` — `.scrollable` + `.themed`. Une collection React Aria DOIT
+ *    rester son propre défileur. Après avoir amené l'élément focalisé dans
+ *    la vue, `scrollIntoViewport` recentre la collection dans ses parents
+ *    défilants ; quand la collection est elle-même le défileur, la
+ *    correction sort aussitôt (`scrollView === element`), sinon elle
+ *    s'exécute et replace le défilement au MILIEU de la collection —
+ *    l'option focalisée quitte l'écran à la flèche bas. Mesuré. Tant que
+ *    `ScrollArea` ne saura pas adopter un élément existant comme viewport,
+ *    la listbox garde l'ascenseur natif.
+ *
+ * 2. `TimeDrumPicker` — `.hidden` seul, son ascenseur est masqué à dessein.
+ *
+ * DEUX PIÈGES, hérités de l'époque où chaque composant recopiait ces
+ * déclarations :
+ *
+ * a. `scrollbar-color` posé sans garde ANNULE les règles
+ *    `::-webkit-scrollbar` dans Chrome, qui retombe alors sur l'ascenseur du
+ *    système (15px) au lieu des 8px voulus. Voir les blocs `@supports`.
+ * b. La marge négative de `.scrollable` loge le couloir dans la gouttière du
+ *    PARENT : elle suppose donc que c'est le parent qui porte le retrait
+ *    horizontal. Quand c'est l'élément défilant lui-même qui le porte, le
+ *    couloir tombe au-delà du bord et disparaît sous le premier
+ *    `overflow: hidden` rencontré. C'est ce qui rendait l'ascenseur du
+ *    `Drawer` et de la `ModalDialog` littéralement invisible.
  */
 
 /* =======================================================================
@@ -205,9 +227,52 @@
  * `--scroll-shadow-surface` : couleur du masque. À redéfinir quand la zone
  * n'est pas posée sur la surface par défaut (une modale, un tiroir), sinon
  * les masques jurent avec le fond.
+ *
+ * COULEUR DE L'OMBRE (`--_scroll-shadow-ink`) : pas le même jeton dans les
+ * deux thèmes. Mesuré contre la surface qui la porte, au point LE PLUS FORT
+ * du dégradé — qui s'éteint ensuite vers transparent. En écart de niveaux
+ * RVB au bord, plus parlant que le ratio de contraste dans les basses
+ * lumières :
+ *
+ *              CLAIR (#ffffff)               SOMBRE (#3f4a4d)
+ *   subtle     #eaedee  1,18:1  −21          #3f4a4d  1,00:1   0  (= surface)
+ *   default    #d8dedf  1,36:1  −39          #49585b  1,23:1  +10
+ *   bold       #b5c1c4  1,84:1  −74          #49585b  1,23:1  +10  (= default)
+ *   sunken     #f7f8f8  1,04:1   −8          #252a2c  1,59:1  −30
+ *
+ * En sombre la rampe de filets s'effondre : `subtle` EST la surface et
+ * `default` vaut `bold`. Rien à en tirer. On prend donc, dans chaque thème,
+ * le jeton qui reste plus SOMBRE que la surface — une ombre, pas un trait :
+ * `--border-default` en clair, la surface creusée en sombre. Même procédé de
+ * bascule que le pouce plus haut, et pour la même raison.
+ *
+ * `--border-subtle` (−21) ne se voit pas ; `--border-bold` (−74) tombe d'un
+ * coup et se lit comme une barre grise sous l'en-tête ; `--border-default`
+ * (−39) reste plus marqué qu'une ombre ne devrait l'être. La rampe n'offre
+ * rien entre les deux — d'où le `color-mix` : 65 % de `--border-default`
+ * posent l'encre à −25 en clair et −20 en sombre, à peu près au milieu du
+ * trou, sans inventer de couleur hors jetons. Le pourcentage est le SEUL
+ * réglage continu dont on dispose ici ; c'est lui qu'on bouge si l'ombre
+ * doit encore changer de force, pas le jeton.
+ *
+ * (`color-mix` n'est pas un pari : le DS pose déjà `oklch()`, `:has()` et
+ * `@container`, de support égal ou plus étroit.)
+ *
+ * LONGUEUR DU FONDU : --space250, et non --space125. Ce n'est pas la
+ * profondeur du gris qui faisait « barre », c'est sa pente : la même encre
+ * étalée sur 20px au lieu de 10 se lit comme une ombre. Le masque reste plus
+ * long (--space300) que l'ombre, sinon il ne la couvrirait plus en bout de
+ * course et elle resterait imprimée au repos. Il reste 4px de marge : le
+ * résidu calculé au pire point est de 3 niveaux RVB, hors de portée de
+ * l'œil. Allonger encore le fondu suppose d'allonger le masque d'autant.
+ *
+ * Pas de plancher WCAG 1.4.11 ici : l'ombre ne porte aucune information à
+ * elle seule, elle redouble le pouce, qui tient 3:1.
  * ===================================================================== */
 
 .shadows {
+  --_scroll-shadow-ink: color-mix(in srgb, var(--border-default) 65%, transparent);
+
   background:
     linear-gradient(
         var(--scroll-shadow-surface, var(--background-surface-default)) 30%,
@@ -219,16 +284,38 @@
         var(--scroll-shadow-surface, var(--background-surface-default)) 70%
       )
       center bottom,
-    radial-gradient(farthest-side at 50% 0, var(--border-subtle), transparent)
+    radial-gradient(
+        farthest-side at 50% 0,
+        var(--_scroll-shadow-ink),
+        transparent
+      )
       center top,
     radial-gradient(
         farthest-side at 50% 100%,
-        var(--border-subtle),
+        var(--_scroll-shadow-ink),
         transparent
       )
       center bottom;
   background-repeat: no-repeat;
-  background-size: 100% var(--space300), 100% var(--space300), 100% var(--space125),
-    100% var(--space125);
+  background-size: 100% var(--space300), 100% var(--space300), 100% var(--space250),
+    100% var(--space250);
   background-attachment: local, local, scroll, scroll;
+}
+
+[data-theme="dark"] .shadows {
+  --_scroll-shadow-ink: color-mix(
+    in srgb,
+    var(--background-surface-elevation-sunken-default) 65%,
+    transparent
+  );
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .shadows {
+    --_scroll-shadow-ink: color-mix(
+      in srgb,
+      var(--background-surface-elevation-sunken-default) 65%,
+      transparent
+    );
+  }
 }

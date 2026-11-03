@@ -36,11 +36,15 @@
      gauche (20px depuis le bord de la nav) — avant : 16 / 20 / 24px. */
   --sidenav-inset: var(--space150);
 
+  /* La gouttière de la nav elle-même, nommée parce que la zone défilante doit
+     la reprendre à droite pour y loger son pouce — voir `.body`. */
+  --sidenav-gutter: var(--space100);
+
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 0 var(--space100);
+  padding: 0 var(--sidenav-gutter);
   background: var(--background-surface-default);
   border-right: 1px solid var(--border-subtle);
   overflow: hidden;
@@ -51,104 +55,36 @@
 /* Body — zone scrollable entre header et footer épinglés.
    Seules les sections + items défilent ; header et footer restent fixes.   */
 
+/* La zone défilante n'est plus dessinée ici. Ce bloc portait une recopie
+   COMPLÈTE de la couche partagée — mécanique du conteneur, `::-webkit-
+   scrollbar`, repli Firefox en `@supports`, bascule par thème et recette
+   d'ombres de débordement : une centaine de lignes à maintenir en parallèle
+   de `src/styles/scrollbar.module.css`, avec la même erreur d'ombre
+   invisible (`--border-subtle`, 1,18:1 en clair, la couleur EXACTE de la
+   surface en sombre). Le corps rend un `ScrollArea`, comme toutes les autres
+   zones défilantes du DS. Ne rien redessiner ici — en particulier aucun
+   `overflow` ni `scrollbar-gutter` : posés sur la racine du `ScrollArea`,
+   ils lui réservent 8px et repoussent le pouce vers l'intérieur.
+
+   Pas de `--scroll-shadow-surface` : la nav est posée sur
+   `--background-surface-default`, qui est déjà le défaut de la recette. */
 .body {
   flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
 
-  /* Gouttière réservée en permanence : les items ne se décalent pas quand le
-     thumb apparaît, et leur fond hover/selected s'arrête avant elle
-     (ne passe jamais sous la scrollbar). Elle est logée DANS la gouttière droite de
-     la nav (marge négative égale à sa largeur) : l'espace avant et après un item
-     est identique (8px de chaque côté) — avant, la gouttière s'ajoutait au retrait
-     de droite (~19px à droite pour 8px à gauche). */
-  --sidenav-scrollbar-width: var(--size100);
-  scrollbar-gutter: stable;
-  margin-inline-end: calc(-1 * var(--sidenav-scrollbar-width));
-
-  /* Chrome / Safari : scrollbar de 8px stylée par `::-webkit-scrollbar` (plus bas).
-     Les propriétés standard (`scrollbar-width` / `scrollbar-color`) y PRENDRAIENT le
-     pas (Chrome ≥ 121 : barre « thin » d'~10px) et fausseraient la gouttière : elles
-     sont donc réservées aux navigateurs sans `::-webkit-scrollbar` (Firefox), voir le
-     bloc `@supports` juste après `.body`. */
-
-  /* Indicateur de débordement — CSS pur (technique des scroll-shadows) :
-     un fondu discret apparaît en bas tant qu'il reste du contenu, et en haut
-     une fois défilé. Les calques `local` (masques couleur surface) suivent le
-     contenu et couvrent l'ombre aux extrémités ; les calques `scroll` (ombres
-     fixes) se révèlent quand on s'éloigne d'un bord. Sans support de
-     background-attachment, aucun effet — comportement inchangé. */
-  background:
-    linear-gradient(var(--background-surface-default) 30%, transparent) center top,
-    linear-gradient(transparent, var(--background-surface-default) 70%) center bottom,
-    radial-gradient(farthest-side at 50% 0, var(--border-subtle), transparent) center top,
-    radial-gradient(farthest-side at 50% 100%, var(--border-subtle), transparent) center bottom;
-  background-repeat: no-repeat;
-  background-size: 100% 24px, 100% 24px, 100% 10px, 100% 10px;
-  background-attachment: local, local, scroll, scroll;
+  /* La zone déborde dans la gouttière droite de la nav. Son pouce flotte à
+     SON bord : sans ce débord il flotterait 8px en dedans, visiblement
+     détaché du bord du panneau. */
+  margin-inline-end: calc(-1 * var(--sidenav-gutter));
 }
 
-/* Firefox : scrollbar fine, pouce permanent dès que la liste déborde.
-
-   La SideNav emprunte les COULEURS de la couche partagée
-   `src/styles/scrollbar.module.css` : `--icon-subtlest` au repos et
-   `--icon-subtle` au survol du pouce en thème clair, un cran plus haut en
-   sombre. Un seul pouce dans tout le DS, et les quatre crans tiennent le 3:1
-   du WCAG 1.4.11. */
-@supports not selector(::-webkit-scrollbar) {
-  .body {
-    scrollbar-width: thin;
-    scrollbar-color: var(--icon-subtlest) transparent;
-    transition: scrollbar-color var(--duration-normal) var(--easing-default);
-  }
-
-  .sideNav:hover .body {
-    scrollbar-color: var(--icon-subtle) transparent;
-  }
-
-  [data-theme="dark"] .body {
-    scrollbar-color: var(--icon-subtle) transparent;
-  }
-
-  [data-theme="dark"] .sideNav:hover .body {
-    scrollbar-color: var(--text-subtle) transparent;
-  }
+/* ...et le contenu rend ces 8px, pour que les items gardent EXACTEMENT leur
+   largeur : le pouce passe au-dessus de la bande rendue, jamais au-dessus du
+   fond de survol d'un item. C'est l'intention de l'ancienne gouttière
+   réservée — le fond s'arrête avant l'ascenseur — obtenue cette fois sans
+   voler de place au contenu. */
+.bodyContent {
+  padding-inline-end: var(--sidenav-gutter);
 }
-
-/* Chrome / Safari — le pouce est visible en permanence dès que le corps
-   déborde (webkit ne dessine rien sinon). Le scroll reste fonctionnel ;
-   la piste est toujours transparente. */
-
-.body::-webkit-scrollbar {
-  width: var(--sidenav-scrollbar-width);
-}
-
-.body::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.body::-webkit-scrollbar-thumb {
-  background: var(--icon-subtlest);
-  border-radius: var(--radius-round);
-  transition: background-color var(--duration-normal) var(--easing-default);
-}
-
-/* Survol du thumb lui-même : un cran plus marqué. */
-.body::-webkit-scrollbar-thumb:hover {
-  background: var(--icon-subtle);
-}
-
-/* Même bascule par thème que la couche partagée : sur fond sombre il faut
-   remonter d'un cran pour garder 3:1. */
-[data-theme="dark"] .body::-webkit-scrollbar-thumb {
-  background: var(--icon-subtle);
-}
-
-[data-theme="dark"] .body::-webkit-scrollbar-thumb:hover {
-  background: var(--text-subtle);
-}
-
 /* ------------------------------------------------------------------ */
 /* Header                                                              */
 
@@ -505,17 +441,11 @@
   margin: 0 auto;
 }
 
-/* Corps : pas de gouttière de défilement réservée en rail (elle rognait ~11px des
-   64px d'un item) et pas de scrollbar visible — le défilement reste fonctionnel. */
-.sideNav[data-mode="rail"] .body {
-  scrollbar-gutter: auto;
-  scrollbar-width: none;
-  margin-inline-end: 0;
-}
-
-.sideNav[data-mode="rail"] .body::-webkit-scrollbar {
-  display: none;
-}
+/* Corps en rail : plus rien à neutraliser. Ce bloc masquait l'ascenseur natif
+   et annulait sa gouttière réservée, qui rognait ~11px des 64px d'un item. La
+   zone défilante est maintenant un `ScrollArea` : son pouce FLOTTE et ne
+   prend aucune place, donc le motif qui justifiait de le cacher a disparu. Le
+   rail montre désormais le même pouce que la nav déployée. */
 
 /* Item : colonne icône + libellé, centrée. */
 .sideNav[data-mode="rail"] .item {

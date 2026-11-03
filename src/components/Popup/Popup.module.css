@@ -4,10 +4,11 @@
    ========================================================================== */
 
 .popup {
-  /* Le Popover fournit déjà bg, shadow, radius, animations.
-     Override overflow-y auto du Popover : le Popup affiche son contenu
-     tel quel (pas de scroll interne). */
-  overflow-y: visible;
+  /* Le Popover fournit déjà bg, shadow, radius, animations, et désormais la
+     zone défilante. Il portait ici un `overflow-y: visible` censé annuler le
+     défilement interne — il ne l'annulait pas : contre l'`overflow-x: hidden`
+     du Popover, `visible` se calcule en `auto`. Le Popup défilait donc comme
+     les autres, et continue de le faire, à son plafond de 80vh. */
   min-width: auto;
 }
 

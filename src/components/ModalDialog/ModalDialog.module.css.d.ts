@@ -1,5 +1,6 @@
 declare const styles: {
   readonly "body": string;
+  readonly "bodyContent": string;
   readonly "closeButton": string;
   readonly "contained": string;
   readonly "dialog": string;

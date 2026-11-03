@@ -11,6 +11,7 @@ import { Children,
   type ReactNode, type CSSProperties } from "react";
 import type { IconName } from "@aexae/comete-icons";
 import { Icon } from "../Icon/index.js";
+import { ScrollArea } from "../ScrollArea/ScrollArea.js";
 import { Button } from "../Button/index.js";
 import { Divider } from "../Divider/index.js";
 import { Skeleton } from "../Skeleton/index.js";
@@ -698,7 +699,14 @@ export function SideNav({
         data-mode={mode}
       >
         {header}
-        <div className={styles.body}>{body}</div>
+        {/* La zone défilante est un `ScrollArea` : la nav ne redessine plus
+            son propre ascenseur. `visibility="auto"` et les ombres de
+            débordement, comme les autres surfaces du DS. */}
+        <ScrollArea visibility="auto" hasOverflowShadows className={styles.body}>
+          {/* Rend à droite la gouttière que la zone a reprise : les items
+              gardent leur largeur, le pouce longe le bord du panneau. */}
+          <div className={styles.bodyContent}>{body}</div>
+        </ScrollArea>
         {footer}
       </nav>
     </div>

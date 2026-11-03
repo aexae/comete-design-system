@@ -8,6 +8,7 @@ import {
   type ModalDialogAppearance,
   type ModalDialogWidth,
 } from "@aexae/comete-design-system/components";
+import { expect } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
@@ -202,5 +203,58 @@ export const AllAppearances: Story = {
         ))}
       </div>
     );
+  },
+};
+
+/**
+ * Corps long : le contenu défile, le header et le footer restent en place.
+ *
+ * Le corps est un `ScrollArea` (`visibility="auto"`, ombres de débordement) :
+ * l'ascenseur flotte au-dessus du contenu et s'estompe au repos, où ce sont
+ * les fondus haut et bas qui disent qu'il reste du contenu.
+ */
+export const ScrollableBody: Story = {
+  name: "Scrollable body",
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <ModalDialog
+      isOpen
+      onOpenChange={() => undefined}
+      title="Contenu long"
+      footer={
+        <ButtonGroup>
+          <Button appearance="subtle">Annuler</Button>
+          <Button color="comete">Confirmer</Button>
+        </ButtonGroup>
+      }
+    >
+      {Array.from({ length: 40 }, (_, i) => (
+        <p key={i}>
+          Ligne {i + 1} — contenu qui déborde largement la hauteur de la modale.
+        </p>
+      ))}
+    </ModalDialog>
+  ),
+  play: async () => {
+    // La modale est portalisée dans document.body.
+    const dialog = document.body.querySelector<HTMLElement>('[role="dialog"]');
+    await expect(dialog).not.toBeNull();
+
+    // Le corps est un `ScrollArea` : sa racine tient la place dans la colonne,
+    // et c'est le viewport qu'elle contient qui défile.
+    const body = dialog!.querySelector<HTMLElement>('[class*="body"]');
+    const viewport = body?.querySelector<HTMLElement>('[class*="viewport"]');
+    const footer = dialog!.querySelector<HTMLElement>('[class*="footer"]');
+    await expect(viewport).not.toBeNull();
+    await expect(footer).not.toBeNull();
+
+    await expect(getComputedStyle(body!).minHeight).toBe("0px");
+    await expect(viewport!.scrollHeight).toBeGreaterThan(viewport!.clientHeight);
+    // L'ascenseur est rendu : il ne vole aucun couloir au contenu.
+    await expect(viewport!.offsetWidth - viewport!.clientWidth).toBe(0);
+    // Le footer reste dans les limites du dialog (pas poussé dehors).
+    const dRect = dialog!.getBoundingClientRect();
+    const fRect = footer!.getBoundingClientRect();
+    await expect(Math.round(fRect.bottom)).toBeLessThanOrEqual(Math.round(dRect.bottom) + 1);
   },
 };

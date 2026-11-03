@@ -57,7 +57,13 @@
   );
 
   /* Ascenseur masqué : classe `hidden` de la couche partagée
-     `src/styles/scrollbar.module.css`, appliquée dans le TSX. */
+     `src/styles/scrollbar.module.css`, appliquée dans le TSX.
+
+     SEUL composant du DS à ne pas rendre un `ScrollArea`, et c'est voulu : on
+     fait tourner un tambour au doigt, l'ascenseur y serait du bruit. Or
+     `ScrollArea` n'a aucun mode qui cache le pouce (`hover`, `scroll`,
+     `auto`, `always`) — l'y faire passer AJOUTERAIT une barre. Le jour où un
+     cinquième mode existe, ce bloc peut suivre les autres. */
 }
 
 /* ==========================================================================

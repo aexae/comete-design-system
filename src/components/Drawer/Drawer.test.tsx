@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -459,3 +460,59 @@ describe("Drawer — couloir de scrollbar de la page", () => {
   });
 });
 
+describe("Drawer — zone défilante", () => {
+  // Le corps est un `ScrollArea`, pas la couche CSS partagée. Les noms de
+  // classe sont bruts en test (`classNameStrategy: "non-scoped"`).
+  const css = readFileSync("src/components/Drawer/Drawer.module.css", "utf8")
+    // Les commentaires citent volontairement l'ancienne couche : on les ignore.
+    .replace(/\/\*[\s\S]*?\*\//g, "");
+
+  // `renderDrawer` pose les enfants directement dans le panneau : la zone
+  // défilante n'existe que si on monte un `DrawerBody`.
+  function renderCorps() {
+    render(
+      <DrawerProvider>
+        <Drawer isOpen onOpenChange={vi.fn()} aria-label="Test drawer">
+          <DrawerBody>
+            <p>Corps défilant</p>
+          </DrawerBody>
+        </Drawer>
+      </DrawerProvider>,
+    );
+    return screen.getByText("Corps défilant").closest(".body");
+  }
+
+  it("should hand the scrolling to a ScrollArea, not to the shared layer", () => {
+    const racine = renderCorps();
+    expect(racine).not.toBeNull();
+    expect(racine).toHaveClass("root");
+    expect(racine).not.toHaveClass("scrollable");
+    expect(racine).not.toHaveClass("themed");
+  });
+
+  it("should show overflow shadows, the only cue left once the thumb fades", () => {
+    // `visibility="auto"` efface le pouce au repos : ce sont les ombres qui
+    // disent qu'il reste du contenu, y compris au doigt où il n'y a pas de survol.
+    expect(renderCorps()?.querySelector(".viewport")).toHaveClass("shadows");
+  });
+
+  it("should keep the padding inside the scroller, on the content", () => {
+    renderCorps();
+    const contenu = screen.getByText("Corps défilant").parentElement;
+    expect(contenu).toHaveClass("bodyContent");
+    expect(contenu?.parentElement).toHaveClass("viewport");
+  });
+
+  it("should repaint the overflow masks in the panel colour", () => {
+    // Sans ce jeton les masques tirent vers `--background-surface-default`,
+    // qui n'est pas la couleur du panneau — ils jureraient sur le tiroir.
+    expect(css).toMatch(
+      /\.body\s*\{[^}]*--scroll-shadow-surface:\s*var\(--background-surface-elevation-overlay-default\)/,
+    );
+  });
+
+  it("should draw no scrollbar of its own", () => {
+    expect(css).not.toMatch(/scrollbar/);
+    expect(css).not.toMatch(/overflow-y/);
+  });
+});

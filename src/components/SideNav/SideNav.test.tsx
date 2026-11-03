@@ -602,3 +602,35 @@ describe("SideNav", () => {
     });
   });
 });
+
+
+describe("SideNav — zone défilante", () => {
+  const css = readFileSync("src/components/SideNav/SideNav.module.css", "utf8")
+    // Les commentaires racontent volontairement l'ancienne recopie.
+    .replace(/\/\*[\s\S]*?\*\//g, "");
+
+  it("should hand the scrolling to a ScrollArea", () => {
+    // Le corps n'est pas un sous-composant : c'est tout ce qui n'est ni
+    // `SideNav.Header` ni `SideNav.Footer`.
+    render(
+      <SideNav>
+        <p>Sections</p>
+      </SideNav>,
+    );
+    const body = screen.getByText("Sections").closest(".body");
+    expect(body).not.toBeNull();
+    expect(body).toHaveClass("root");
+    expect(body?.querySelector(".viewport")).toHaveClass("shadows");
+  });
+
+  it("should no longer carry its own copy of the shared layer", () => {
+    // Ce fichier recopiait `::-webkit-scrollbar`, le repli Firefox en
+    // `@supports`, la bascule par thème ET la recette d'ombres — une
+    // centaine de lignes en parallèle de `src/styles/scrollbar.module.css`,
+    // avec la même erreur d'ombre invisible.
+    expect(css).not.toMatch(/::-webkit-scrollbar/);
+    expect(css).not.toMatch(/scrollbar-color/);
+    expect(css).not.toMatch(/scrollbar-gutter/);
+    expect(css).not.toMatch(/background-attachment/);
+  });
+});
