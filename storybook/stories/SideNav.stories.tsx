@@ -278,7 +278,7 @@ export const MobileWebInteractions: Story = {
 
     await step("fermé au départ, contenu visible", async () => {
       await expect(drawer()).toBeNull();
-      await expect(canvas.getByText("Agent 1")).toBeVisible();
+      await expect(canvas.getByRole("heading", { name: "Tableau de bord" })).toBeVisible();
     });
 
     await step("le hamburger ouvre la nav dans un Drawer, par-dessus le contenu", async () => {
