@@ -9,7 +9,7 @@
  *   .shadows     l'indication de débordement en haut et en bas
  *
  * NE PAS S'EN SERVIR POUR UNE NOUVELLE ZONE DÉFILANTE. Drawer, ModalDialog,
- * Popover et TimeCalendar sont passés au `ScrollArea` ; `SideNav` suit.
+ * Popover, TimeCalendar et SideNav sont passés au `ScrollArea`.
  * `.hidden` et `.shadows` servent `ScrollArea` lui-même ; `.scrollable` et
  * `.themed` n'ont plus que deux consommateurs, chacun pour une raison
  * précise.
