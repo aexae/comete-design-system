@@ -9,6 +9,17 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Modifié (icônes)
+
+- **`@aexae/comete-icons` 0.11.0** (dépendance de dev, Storybook épinglé ;
+  peer élargie à `^0.11.0`) : icônes `SignatureExpired` (signature électronique
+  expirée, ID Omnis 180010), `Reference` et `Sunny`. **Cassant côté icônes** :
+  `WbSunny` devient `Sunny`, `AlternateEmail` est retirée (supprimée de Figma).
+  La story des gabarits de page utilise désormais `Sunny`.
+- **Icon Explorer** : la recherche porte sur le nom, les **tags d'usage** et les
+  **ID Omnis** (`searchIcons` du paquet d'icônes), sans tenir compte des accents
+  ni de la casse. L'infobulle de chaque carte affiche les usages et les ID Omnis.
+
 ### Modifié
 
 - **`Logo` — vocabulaire aligné sur Figma et `@aexae/comete-logos` 0.14.0** :
