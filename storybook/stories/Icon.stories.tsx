@@ -2,7 +2,7 @@ import { Icon } from "@aexae/comete-design-system";
 import type { IconComponentProps } from "@aexae/comete-design-system";
 import * as Icons from "@aexae/comete-icons";
 import type { IconColor, IconName, IconProps, IconVariant } from "@aexae/comete-icons";
-import { iconRegistry } from "@aexae/comete-icons";
+import { getIconOmnisIds, getIconTags, iconRegistry, searchIcons } from "@aexae/comete-icons";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { CSSProperties, ComponentType, ReactElement } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -370,6 +370,22 @@ const ICON_ENTRIES: Array<[string, IconComponent]> = (
     typeof entry[1] === "function" && /^[A-Z]/.test(entry[0])
 );
 
+const ICON_COMPONENTS = new Map<string, IconComponent>(ICON_ENTRIES);
+
+/** Infobulle d'une carte : usages Comète et ID Omnis, en plus du nom technique. */
+function iconCardTitle(name: string): string {
+  const tags = getIconTags(name as IconName);
+  const ids = getIconOmnisIds(name as IconName);
+  return [
+    name,
+    tags.length > 0 ? `Usages : ${tags.join(", ")}` : undefined,
+    ids.length > 0 ? `ID Omnis : ${ids.join(", ")}` : undefined,
+    "Cliquer pour copier le SVG",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
 type IconSpacing = "default" | "none";
 
 interface IconCardProps {
@@ -414,7 +430,7 @@ function IconCard({
         onClick={() => {
           if (containerRef.current) onCopy(name, containerRef.current);
         }}
-        title={`Copier le SVG de "${name}"`}
+        title={iconCardTitle(name)}
         style={{
           display: "flex",
           flexDirection: "column",
@@ -497,9 +513,12 @@ function IconExplorer(): ReactElement {
     []
   );
 
-  const filtered = ICON_ENTRIES.filter(([name]) =>
-    name.toLowerCase().includes(search.toLowerCase())
-  );
+  // REASON: searchIcons cherche aussi dans les tags d'usage et les ID Omnis, et
+  // classe les correspondances sur le nom en premier.
+  const filtered = searchIcons(search).flatMap((name): Array<[string, IconComponent]> => {
+    const Component = ICON_COMPONENTS.get(name);
+    return Component ? [[name, Component]] : [];
+  });
 
   function handleCopy(name: string, container: HTMLElement): void {
     const svgString = buildSvgString(container);
@@ -556,7 +575,7 @@ function IconExplorer(): ReactElement {
           <div style={label}>Recherche</div>
           <input
             type="search"
-            placeholder="Filtrer par nom…"
+            placeholder="Nom, usage ou ID Omnis…"
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);

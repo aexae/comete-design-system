@@ -925,7 +925,7 @@ function VacationsSection(): React.ReactElement {
                 <Stack gap="0">
                   <Cluster gap="075" align="center">
                     <Text as="span" weight="medium">{v.start}</Text>
-                    <Icon icon={v.moment === "jour" ? "WbSunny" : "DarkMode"} size={16} color={v.moment === "jour" ? "warning" : "subtlest"} />
+                    <Icon icon={v.moment === "jour" ? "Sunny" : "DarkMode"} size={16} color={v.moment === "jour" ? "warning" : "subtlest"} />
                     <Text as="span" weight="medium">{v.end}</Text>
                   </Cluster>
                   {v.pause ? <Text size="small" as="span" color="subtlest">{v.pause}</Text> : null}
