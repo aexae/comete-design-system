@@ -14,7 +14,9 @@ import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
 /** All entities (company, software, product lines) from the registry — always up to date. */
-const ALL_ENTITIES = Object.keys(logoRegistry).sort() as LogoEntity[];
+const ALL_ENTITIES = (Object.keys(logoRegistry) as LogoEntity[]).sort((a, b) =>
+  a.localeCompare(b, "fr"),
+);
 
 const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
@@ -336,7 +338,7 @@ const SVG_NS = "http://www.w3.org/2000/svg";
  * Retourne la liste des SVGs visibles (display !== none) à l'intérieur du
  * conteneur. Les logos peuvent contenir plusieurs SVGs :
  *   - Light/Dark bodies (dont un seul est affiché à un instant donné)
- *   - Composition ProductRootName + ProductIcon (+ ProductSuffix ou tagline)
+ *   - Composition EntityRootName + EntityIcon (+ EntitySuffix ou tagline)
  */
 function findVisibleSvgs(container: HTMLElement): SVGSVGElement[] {
   const svgs = Array.from(container.querySelectorAll<SVGSVGElement>("svg"));
@@ -385,7 +387,7 @@ function cloneAndResolveVars(original: SVGSVGElement): SVGSVGElement {
  *
  * Cette approche fonctionne pour les logos refactorés qui composent
  * plusieurs SVGs via inline-flex + position:absolute, et reste correcte
- * pour les cas single-SVG (MyComete, icon-only).
+ * pour les cas single-SVG (icon-only).
  */
 function buildExportSvg(container: HTMLElement): SVGSVGElement | null {
   const svgs = findVisibleSvgs(container);

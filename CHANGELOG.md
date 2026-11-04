@@ -33,6 +33,10 @@ entre versions alpha.
   sans pictogramme). **Cassant** : remplacer `product` par `entity`,
   `product="comete"` par `entity="comete-software"` et `appearance="inverse"`
   par `inverted`.
+  Avec `@aexae/comete-logos` 0.15.0 : les pièces s'appellent `EntityIcon`,
+  `EntityRootName`, `EntitySuffix` (ex-`Product…`) ; **`mycomete` est retiré** du
+  registre ; `comete-software` **n'affiche jamais la signature**, quel que soit
+  `taglineAlign` ; la liste des entités est alphabétique dans Storybook.
 
 ### Ajouté
 

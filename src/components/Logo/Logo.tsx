@@ -17,8 +17,9 @@ export type LogoSuffix = LogoTaglineAlign;
 
 export interface LogoProps {
   /**
-   * Entité représentée par le logo : l'entreprise (`comete-company`), le logiciel
-   * (`comete-software`) ou une gamme (`ontime`, `link`…). @default "comete-software"
+   * Entité représentée par le logo : l'entreprise (`comete-company`, signature
+   * possible), le logiciel (`comete-software`, jamais de signature) ou une gamme
+   * (`ontime`, `link`…). @default "comete-software"
    */
   entity?: LogoEntity;
   /** Apparence visuelle. @default "brand" */
