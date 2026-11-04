@@ -202,7 +202,7 @@ function MobileWebDemo() {
           >
             <SideNav>
               <SideNav.Header
-                logo={<Logo product="cafe" format="icon" />}
+                logo={<Logo entity="cafe" format="icon" />}
                 companyName="Pro Sécurité"
                 description="Espace manager"
                 showToggle={false}

@@ -14,8 +14,8 @@ import {
 /** Pied de marque Link de la coquille : le composant bascule logo / icône selon le mode. */
 export function AppFooterBrand() {
   return (
-    <SideNav.FooterBrand rail={<Logo size={16} product="link" appearance="neutral" format="icon" />}>
-      <Logo size={10} product="link" appearance="neutral" format="logo" />
+    <SideNav.FooterBrand rail={<Logo size={16} entity="link" appearance="neutral" format="icon" />}>
+      <Logo size={10} entity="link" appearance="neutral" format="logo" />
     </SideNav.FooterBrand>
   );
 }
@@ -68,7 +68,7 @@ const FOCUS_HIDDEN = "sb-sidenav-focus-hidden";
 export function SideNavOnly({
   nav,
   mode = "expanded",
-  logo = <Logo product="cafe" format="icon" />,
+  logo = <Logo entity="cafe" format="icon" />,
   header,
   footer,
   height,
@@ -171,7 +171,7 @@ export function AppShell({
   isPageLoading = false,
   body = <DemoPageContent isLoading={isPageLoading} />,
   mode = "expanded",
-  logo = <Logo product="cafe" format="icon" />,
+  logo = <Logo entity="cafe" format="icon" />,
   header,
   footer,
   title = "Tableau de bord",

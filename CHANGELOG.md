@@ -9,6 +9,20 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Modifié
+
+- **`Logo` — vocabulaire aligné sur Figma et `@aexae/comete-logos` 0.14.0** :
+  la prop `product` devient **`entity`** (type `LogoEntity`, alias déprécié
+  `LogoProduct`) car l'entreprise Comète n'est pas un produit mais a un logo ;
+  `entity="comete-software"` = logo du logiciel (ERP, sans signature, défaut) et
+  `entity="comete-company"` = logo de l'entreprise (signature « logiciels de la
+  sécurité privée » en colonne par défaut) ; `appearance="inverse"` devient
+  **`inverted`** (même mot que les jetons `--logo-comete-inverted`) ; `format`
+  accepte **`wordmark`** (le dessin Figma du wordmark, lettres et « o » en anneau,
+  sans pictogramme). **Cassant** : remplacer `product` par `entity`,
+  `product="comete"` par `entity="comete-software"` et `appearance="inverse"`
+  par `inverted`.
+
 ### Ajouté
 
 - **Dépendance `@aexae/comete-icons` 0.10.0** (root et storybook). Rend disponible

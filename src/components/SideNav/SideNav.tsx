@@ -418,8 +418,8 @@ SideNavFooter.displayName = "SideNav.Footer";
  *
  * ```tsx
  * <SideNav.Footer>
- *   <SideNav.FooterBrand rail={<Logo product="link" format="icon" />}>
- *     <Logo product="link" format="logo" />
+ *   <SideNav.FooterBrand rail={<Logo entity="link" format="icon" />}>
+ *     <Logo entity="link" format="logo" />
  *   </SideNav.FooterBrand>
  * </SideNav.Footer>
  * ```

@@ -52,13 +52,32 @@ describe("Logo", () => {
     expect(svg?.getAttribute("height")).toBe("48");
   });
 
-  it("should render cafe product", () => {
-    const { container } = render(<Logo product="cafe" />);
+  it("should render cafe entity", () => {
+    const { container } = render(<Logo entity="cafe" />);
     expect(container.querySelector("svg")).toBeInTheDocument();
   });
 
   it("should support taglineAlign=column", () => {
-    const { container } = render(<Logo product="ontime" taglineAlign="column" />);
+    const { container } = render(<Logo entity="ontime" taglineAlign="column" />);
     expect(container.querySelector("svg")).toBeInTheDocument();
+  });
+
+  it("should render wordmark format without the comet icon", () => {
+    const { container } = render(<Logo format="wordmark" />);
+    const svgs = container.querySelectorAll("svg");
+    // wordmark = un seul SVG (dessin Figma 132.125 × 28), pas de pictogramme superposé
+    expect(svgs).toHaveLength(1);
+    expect(svgs[0]?.getAttribute("viewBox")).toBe("0 0 132.125 28");
+  });
+
+  it("should render comete-company with the tagline by default", () => {
+    const { container } = render(<Logo entity="comete-company" />);
+    // wordmark + pictogramme + signature = trois SVG
+    expect(container.querySelectorAll("svg")).toHaveLength(3);
+  });
+
+  it("should accept appearance=inverted", () => {
+    const { container } = render(<Logo appearance="inverted" />);
+    expect(container.querySelector(".comete-logo--inverted")).toBeInTheDocument();
   });
 });

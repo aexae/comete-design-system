@@ -75,9 +75,9 @@ export const Default: Story = {
       source: {
         code: `<SideNav.Footer>
   <SideNav.FooterBrand
-    rail={<Logo size={16} product="link" appearance="neutral" format="icon" />}
+    rail={<Logo size={16} entity="link" appearance="neutral" format="icon" />}
   >
-    <Logo size={10} product="link" appearance="neutral" format="logo" />
+    <Logo size={10} entity="link" appearance="neutral" format="logo" />
   </SideNav.FooterBrand>
 </SideNav.Footer>`,
       },

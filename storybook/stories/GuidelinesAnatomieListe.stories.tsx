@@ -347,7 +347,7 @@ function Schema(): ReactElement {
         <div style={{ display: "flex", position: "relative", flex: "0 0 auto" }}>
           <SideNav>
             <SideNav.Header
-              logo={<Logo product="link" format="icon" />}
+              logo={<Logo entity="link" format="icon" />}
               companyName="Comète Link"
               description="Espace manager"
             />
