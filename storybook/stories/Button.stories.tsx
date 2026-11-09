@@ -202,7 +202,7 @@ export const Outlined: Story = {
 };
 
 export const Subtle: Story = {
-  args: { appearance: "subtle", color: "comete", children: "Voir plus" },
+  args: { appearance: "subtle", color: "default", children: "Voir plus" },
   parameters: {
     design: {
       type: "figma",
@@ -212,7 +212,7 @@ export const Subtle: Story = {
 };
 
 export const Link: Story = {
-  args: { appearance: "link", color: "comete", children: "En savoir plus" },
+  args: { appearance: "link", color: "default", children: "En savoir plus" },
   parameters: {
     design: {
       type: "figma",
@@ -231,7 +231,7 @@ export const InlineLink: Story = {
   args: {
     isInline: true,
     appearance: "link",
-    color: "information",
+    color: "default",
     children: "politique de confidentialité",
   },
   render: (args) => (
@@ -316,8 +316,27 @@ export const WithIconAfter: Story = {
   },
 };
 
-/** Icône + label sur toutes les couleurs contained */
-export const IconAllColors: Story = {
+// ----------------------------------------------------------------------
+
+/** Bouton icon-only (sans label) */
+export const IconOnly: Story = {
+  name: "Icon only",
+  args: { iconBefore: "Image", color: "comete", children: "", shape: "round" },
+  // `shape` n'a d'effet que sur un bouton icon-only : on réactive le control ici.
+  argTypes: {
+    shape: {
+      control: "inline-radio",
+      options: ["round", "square"],
+      description:
+        "`round` = cercle ; `square` = coins arrondis de la densité (alignement toolbar).",
+    },
+  },
+  render: (args) => <Button {...args} />,
+};
+
+/** Bouton icon-only (sans label) sur toutes les couleurs */
+export const IconOnlyAllColors: Story = {
+  name: "Icon only — All colors",
   render: (args) => (
     <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
       {(
@@ -336,31 +355,26 @@ export const IconAllColors: Story = {
           key={color}
           color={color}
           appearance={args.appearance}
-          iconBefore="Image"
-        >
-          {color}
-        </Button>
+          iconBefore="Add"
+          aria-label={color}
+        />
       ))}
     </div>
   ),
 };
 
-// ----------------------------------------------------------------------
-
-/** Bouton icon-only (sans label) */
-export const IconOnly: Story = {
-  name: "Icon only",
-  args: { iconBefore: "Image", color: "comete", children: "", shape: "round" },
-  // `shape` n'a d'effet que sur un bouton icon-only : on réactive le control ici.
-  argTypes: {
-    shape: {
-      control: "inline-radio",
-      options: ["round", "square"],
-      description:
-        "`round` = cercle ; `square` = coins arrondis de la densité (alignement toolbar).",
-    },
-  },
-  render: (args) => <Button {...args} />,
+/** Les 5 apparences en bouton icon-only (sans label), couleur default. */
+export const IconOnlyAllVariants: Story = {
+  name: "Icon only — All variants",
+  render: () => (
+    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+      <Button appearance="contained" color="default" iconBefore="Add" aria-label="Contained" />
+      <Button appearance="outlined" color="default" iconBefore="Add" aria-label="Outlined" />
+      <Button appearance="link" color="default" iconBefore="Add" aria-label="Link" />
+      <Button appearance="subtle" color="default" iconBefore="Add" aria-label="Subtle" />
+      <Button appearance="link-subtle" color="default" iconBefore="Add" aria-label="Link Subtle" />
+    </div>
+  ),
 };
 
 /** Bouton icon-only à chaque densité : toujours circulaire et parfaitement carré
@@ -411,7 +425,7 @@ export const AllVariants: Story = {
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
       <Button appearance="contained" color="default">Contained</Button>
       <Button appearance="outlined" color="default">Outlined</Button>
-      <Button appearance="link" color="information">Link</Button>
+      <Button appearance="link" color="default">Link</Button>
       <Button appearance="subtle" color="default">Subtle</Button>
       <Button appearance="link-subtle" color="default">Link Subtle</Button>
     </div>
