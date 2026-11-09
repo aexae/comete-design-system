@@ -20,8 +20,36 @@ entre versions alpha.
   **ID Omnis** (`searchIcons` du paquet d'icônes), sans tenir compte des accents
   ni de la casse. L'infobulle de chaque carte affiche les usages et les ID Omnis.
 
+### Modifié (outillage)
+
+- **Prettier systématique** : tout le dépôt (racine + `storybook/`) est formaté,
+  `prettier` en devDependency, scripts `pnpm format` / `pnpm format:check`, la CI
+  bloque sur `format:check`.
+
+### Modifié (Storybook)
+
+- **Légendes homogènes** : toutes les légendes de variantes (Icon, Logo,
+  Illustration, IconTile, AvatarGroup, Badge, MenuItem, DropIndicator, FocusRing,
+  CalendarCell, Skeleton, Switch, TextField, TimePicker, Tag) utilisent le helper
+  `Labeled` / `Legend` : 12 px, `--text-subtle`, libellé sous l'instance, plus de
+  monospace ni de `--text-subtlest`.
+
+- **Libellé sous chaque variante** dans les stories qui rendent plusieurs
+  instances d'un composant (pattern de Button « Icon only — All variants »),
+  via le helper partagé `stories/_labeled.tsx` (`Labeled`, `LabeledRow`) :
+  Avatar, Badge, Banner, Button, ButtonGroup, Couleur, IconTile, ModalDialog,
+  ProgressIndicator, ScrollArea, SectionMessage, Skeleton, Snackbar, Switch,
+  Tag. Le libellé reprend la valeur brute de la prop (`small`, `outlined`,
+  `outlined · disabled`). La légende d'`Avatar` « All sizes » abandonne une
+  couleur hardcodée au profit de `--text-subtle`.
+
 ### Modifié
 
+- **`BottomNav.Item` — pastille pour les états sélectionné et ouvert** : la zone
+  icône + libellé prend un fond `background-selected-subtlest-default` (rayon
+  rond) quand l'item est sélectionné ou ouvert (`isOpen`), et le libellé passe
+  en `text-selected` dans les deux cas (il restait gris à l'état ouvert). La
+  découpe du badge prend la couleur de la pastille. Aligné sur Figma.
 - **`Button` — `link` / `link-subtle` en texte pur et couleur link rétablie** :
   les apparences `link` et `link-subtle` n'ont plus de couleur de fond au survol
   ni à la pression (feedback uniquement sur le texte, via l'épaississement du
@@ -97,6 +125,7 @@ entre versions alpha.
   sans épaissir le trait. Les ascenseurs sont `aria-hidden` : ce sont des doublures
   visuelles du défilement natif, déjà piloté par la zone. `visibility="scroll"` est le
   seul mode visible **au doigt**, où il n'y a pas de survol.
+
 - **Couche utilitaire `styles/scrollbar.module.css`** : définition **unique** des zones
   défilantes, en quatre rôles cumulables — `scrollable` (la mécanique), `themed`
   (l'ascenseur), `hidden` (ascenseur masqué, défilement conservé) et `shadows`
@@ -207,10 +236,10 @@ entre versions alpha.
   parce qu'aucun jeton neutre ne donne à la fois un gris assez clair sur blanc et assez
   contrasté sur #374043 :
 
-  | | thème clair | thème sombre |
-  |---|---|---|
-  | repos | `--icon-subtlest` #6f8488 **3,94:1** | `--icon-subtle` #8d9fa3 **3,85:1** |
-  | survol | `--icon-subtle` #596b70 **5,58:1** | `--text-subtle` #b5c1c4 **5,76:1** |
+  |        | thème clair                          | thème sombre                       |
+  | ------ | ------------------------------------ | ---------------------------------- |
+  | repos  | `--icon-subtlest` #6f8488 **3,94:1** | `--icon-subtle` #8d9fa3 **3,85:1** |
+  | survol | `--icon-subtle` #596b70 **5,58:1**   | `--text-subtle` #b5c1c4 **5,76:1** |
 
   Les quatre crans passent le seuil, et le survol va dans le bon sens des deux côtés :
   il assombrit sur fond clair, il éclaircit sur fond sombre. Le survol porte sur le
@@ -220,6 +249,7 @@ entre versions alpha.
   `--border-default` et `--border-bold` y valent tous deux #49585b en thème sombre.
   **`SideNav` adopte les mêmes jetons** : un seul pouce dans tout le DS. Son
   révélé-au-survol lui reste propre, seul le déclenchement diffère.
+
 - **`SideNav` — valeurs en dur.** La largeur de l'ascenseur passe de `8px` à
   `var(--size100)` et le rayon du pouce de `4px` à `var(--radius-round)`. Même rendu,
   mais plus de valeur hardcodée dans ce bloc.
@@ -238,6 +268,7 @@ entre versions alpha.
   jamais. C'est `.shadows` (prop `hasOverflowShadows` de `ScrollArea`) qui dit alors
   qu'il reste du contenu. L'afficher pendant le **défilement** puis l'estomper n'est pas
   faisable en CSS — il n'existe pas de pseudo-classe « en train de défiler ».
+
 - **Apparence des ascenseurs — plus discrète.** La piste passe de
   `--background-surface-elevation-sunken-default` à **transparent** : une rainure grise
   dessinait une colonne permanente le long du contenu, visible même quand il n'y avait
@@ -247,6 +278,7 @@ entre versions alpha.
   Les jetons retenus restent un **pis-aller** : `--icon-*` désigne des marques
   d'interface, `--text-*` de la prose, ni l'une ni l'autre une pièce de mécanique. Il
   manque une rampe de remplissage neutre pour ça, définie par thème. Sujet ouvert (ADR).
+
 - **Ascenseurs thémés — `Drawer`, `ModalDialog`, `Popover`, `Select`, `TimeCalendar`** : la
   largeur de 8px (`--size100`) voulue par le DS ne s'appliquait **nulle part sur Chrome**.
   Ces composants posaient `scrollbar-color` (pour Firefox) **et** des règles
@@ -287,6 +319,7 @@ entre versions alpha.
 - **`Badge` — ne se comprime plus** : `flex-shrink: 0` sur la règle de base (tous les niveaux
   d'importance, point `low` compris). Posé dans une ligne flex à côté d'un libellé long, un
   badge était écrasé (jusqu'à 13,5px de large) : c'est désormais le voisin qui cède.
+
 ### Modifié
 
 - **`SideNav.Item` en rail — plus de barre à gauche.** L'item sélectionné du rail portait
@@ -322,6 +355,7 @@ entre versions alpha.
   **À savoir** : sur une page dont le corps DÉFILE, la dernière ligne s'arrête
   désormais au ras du bord. L'espacement de fin de contenu, quand il en faut un,
   appartient au contenu (un `Stack`, une section), pas au conteneur.
+
 - **`Button`** (`density="touch"`) : padding horizontal porté de 12 px à 16 px (`--space200`)
   pour respecter la règle padding X ≥ 2 × padding Y (8 px), vérifiée par un test. Le bouton
   touch s'élargit de 8 px. `--control-padding-x-touch` (12 px) reste celui des champs.
@@ -596,6 +630,7 @@ entre versions alpha.
   rendu dans le flux** — sans voile ni piège à focus, sans fermeture au clic
   extérieur / Échap, et sans voler le focus à l'ouverture. Réservé aux
   placements `left` / `right`.
+
 ## [1.0.0-alpha.154] - 2026-09-07
 
 ### Corrigé
@@ -603,7 +638,7 @@ entre versions alpha.
 - **Typographie** : le token `--font-family-code` passe de `SF Mono` (exclusif
   Apple, sans fallback → texte non-monospace hors macOS) à une **pile monospace
   système** cross-platform : `ui-monospace, SFMono-Regular, "SF Mono", Menlo,
-  Consolas, "Liberation Mono", monospace` (via `@aexae/comete-design-tokens@0.13.1`).
+Consolas, "Liberation Mono", monospace` (via `@aexae/comete-design-tokens@0.13.1`).
   Le rôle « code » rend désormais en monospace sur toutes les plateformes.
 
 ## [1.0.0-alpha.153] - 2026-09-03
@@ -769,8 +804,8 @@ entre versions alpha.
   sens — `neutral` (pas commencé, archivé), `information` (étape en cours),
   `warning` (action ou décision attendue), `success` (**l'état souhaité est
   atteint**), `critical` (échec ou refus). Distingue les **deux lectures** de
-  cet axe : *progression* (l'état souhaité est l'arrivée → l'étape courante est
-  `information`) et *cycle de vie* (l'état souhaité est le régime nominal →
+  cet axe : _progression_ (l'état souhaité est l'arrivée → l'étape courante est
+  `information`) et _cycle de vie_ (l'état souhaité est le régime nominal →
   `Actif` est `success`). Pose le critère `critical` / `warning` : `critical` =
   ça a raté ou ça a été refusé ; `warning` = quelqu'un doit décider, ce qui
   inclut les interruptions réversibles. Acte l'exclusion des couleurs
@@ -832,7 +867,7 @@ entre versions alpha.
   sous-ensemble strict de `Page.Bar` (titre + `leading` + `trailing`), sans les
   variantes responsive ni l'intégration des actions globales du layout. Migration :
   remplacer `<Page.Header title leading trailing />` par `<Page.Bar title leading
-  trailing />` ; pour un en-tête sans le trio d'actions globales, poser
+trailing />` ; pour un en-tête sans le trio d'actions globales, poser
   `globalActions={null}` sur la `Page`.
 
 ### Ajouté
@@ -912,7 +947,7 @@ entre versions alpha.
   l'addon Viewport (au lieu de cadres device en iframes) ; toolbar alignée sur
   la maquette Figma (recherche « Rechercher », Filtres/⋯ en icône seule
   `square`, primaire `comete` réductible en « + », Exporter masqué sous compact).
-- **SideNav** : le *peek* (survol du Trigger en mode replié) s'affiche désormais
+- **SideNav** : le _peek_ (survol du Trigger en mode replié) s'affiche désormais
   en **overlay glissant** par-dessus le contenu (translateX + ombre légère) au
   lieu de pousser la mise en page — le contenu principal ne bouge plus. Il reste
   ouvert tant que le pointeur/focus sont sur le Trigger ou la nav.
@@ -958,9 +993,9 @@ entre versions alpha.
 - **BrandProvider** (multi-tenant) : nouveau provider qui applique la **charte
   couleur d'un client** au runtime à partir d'une seule couleur HEX. Il génère toute
   la famille de tokens `brand-*` (rampe OKLCH à luminosité normalisée par rôle, clair
-  + sombre) et l'injecte, scopée à `[data-brand="<name>"]` ou à `:root`. Les éléments
-  interactifs (`comete-*`) ne sont pas affectés (École A). Exporté depuis
-  `@aexae/comete-design-system/providers`.
+  - sombre) et l'injecte, scopée à `[data-brand="<name>"]` ou à `:root`. Les éléments
+    interactifs (`comete-*`) ne sont pas affectés (École A). Exporté depuis
+    `@aexae/comete-design-system/providers`.
 - Utilitaires de theming exportés : `generateBrandTheme(seed)` et
   `brandThemeToCss(seed, { scope })` (fonctions pures, sans dépendance externe).
 - Documentation : ADR `docs/adr/0001-theming-couleur-multi-tenant.md` et page
@@ -1013,7 +1048,7 @@ entre versions alpha.
 
 ### Corrigé
 
-- **Switch** : conformité Figma des états *unchecked* (off). Le rail est désormais
+- **Switch** : conformité Figma des états _unchecked_ (off). Le rail est désormais
   neutre (gris) pour **toutes** les apparences en off (fin des teintes
   `success/warning/critical-subtlest`) ; la couleur d'apparence n'apparaît qu'en
   checked / indéterminé. Pour `warning` / `critical` en off, le pouce devient un

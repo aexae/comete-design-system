@@ -4,10 +4,8 @@ import { Divider } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -18,7 +16,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le séparateur est une ligne horizontale ou verticale qui délimite visuellement des groupes de contenu ou des sections. Il apporte de la structure sans ajouter de poids visuel." },
+      description: {
+        component:
+          "Le séparateur est une ligne horizontale ou verticale qui délimite visuellement des groupes de contenu ou des sections. Il apporte de la structure sans ajouter de poids visuel.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -27,16 +28,14 @@ const meta = {
                 "Séparer visuellement deux groupes de contenu (sections d'une liste, blocs d'un formulaire).",
                 "orientation horizontal (entre blocs empilés) ou vertical (entre éléments d'une ligne).",
               ]}
-              avoid={[
-                "Encadrer un bloc → une bordure (Card).",
-              ]}
+              avoid={["Encadrer un bloc → une bordure (Card)."]}
               best={[
                 "Utiliser avec parcimonie ; préférer l'espacement quand une séparation implicite suffit.",
                 "orientation cohérente avec la direction du contenu voisin.",
                 "Créer de l'espace : utiliser le `gap` d'un Stack/Cluster plutôt qu'un Divider.",
               ]}
               accessibility={[
-                "Décoratif par défaut (aria-hidden) ; un séparateur porteur de sens prend role=\"separator\".",
+                'Décoratif par défaut (aria-hidden) ; un séparateur porteur de sens prend role="separator".',
                 "Ne pas remplacer une structure de titres par des dividers.",
               ]}
             />

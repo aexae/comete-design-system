@@ -1,19 +1,14 @@
 // ToggleButtonGroup — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  ToggleButtonGroup,
-  ToggleButton,
-} from "@aexae/comete-design-system/components";
+import { ToggleButtonGroup, ToggleButton } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Figma
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -24,7 +19,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le groupe de boutons bascule permet de sélectionner une ou plusieurs options dans un ensemble compact de boutons. Il convient aux filtres, aux changements de vue et aux options mutuellement exclusives ou cumulatives." },
+      description: {
+        component:
+          "Le groupe de boutons bascule permet de sélectionner une ou plusieurs options dans un ensemble compact de boutons. Il convient aux filtres, aux changements de vue et aux options mutuellement exclusives ou cumulatives.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -133,11 +131,7 @@ export const Default: Story = {
 export const Small: Story = {
   args: { size: "small" },
   render: (args) => (
-    <ToggleButtonGroup
-      {...args}
-      aria-label="Options"
-      defaultSelectedKeys={["a"]}
-    >
+    <ToggleButtonGroup {...args} aria-label="Options" defaultSelectedKeys={["a"]}>
       <ToggleButton id="a">Option A</ToggleButton>
       <ToggleButton id="b">Option B</ToggleButton>
       <ToggleButton id="c">Option C</ToggleButton>
@@ -149,11 +143,7 @@ export const Small: Story = {
 export const Large: Story = {
   args: { size: "large" },
   render: (args) => (
-    <ToggleButtonGroup
-      {...args}
-      aria-label="Options"
-      defaultSelectedKeys={["a"]}
-    >
+    <ToggleButtonGroup {...args} aria-label="Options" defaultSelectedKeys={["a"]}>
       <ToggleButton id="a">Option A</ToggleButton>
       <ToggleButton id="b">Option B</ToggleButton>
       <ToggleButton id="c">Option C</ToggleButton>
@@ -306,4 +296,3 @@ export const WithBadge: Story = {
     </ToggleButtonGroup>
   ),
 };
-

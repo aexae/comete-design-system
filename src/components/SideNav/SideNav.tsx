@@ -1,5 +1,6 @@
 // SideNav — Comete Design System
-import { Children,
+import {
+  Children,
   createContext,
   isValidElement,
   useCallback,
@@ -8,7 +9,9 @@ import { Children,
   useMemo,
   useState,
   type ReactElement,
-  type ReactNode, type CSSProperties } from "react";
+  type ReactNode,
+  type CSSProperties,
+} from "react";
 import type { IconName } from "@aexae/comete-icons";
 import { Icon } from "../Icon/index.js";
 import { ScrollArea } from "../ScrollArea/ScrollArea.js";
@@ -212,9 +215,7 @@ export function SideNavHeader({
   const showToggle = showToggleProp && Boolean(setMode);
   const willExpand = mode === "rail";
   const toggleIcon = willExpand ? "LeftPanelOpen" : "LeftPanelClose";
-  const toggleLabel = willExpand
-    ? "Déployer la navigation"
-    : "Réduire la navigation";
+  const toggleLabel = willExpand ? "Déployer la navigation" : "Réduire la navigation";
 
   return (
     <div className={[styles.header, className].filter(Boolean).join(" ")}>
@@ -222,9 +223,7 @@ export function SideNavHeader({
       {(companyName || description) && (
         <div className={styles.headerContent}>
           {companyName && <span className={styles.headerAppName}>{companyName}</span>}
-          {description && (
-            <span className={styles.headerSubtitle}>{description}</span>
-          )}
+          {description && <span className={styles.headerSubtitle}>{description}</span>}
         </div>
       )}
       {showToggle && (
@@ -269,7 +268,7 @@ export function SideNavItem({
       // eslint-disable-next-line no-console
       console.warn(
         `SideNav.Item « ${label} » : une icône (\`iconBefore\`) est requise en ` +
-          `mode rail — sans elle, l'item est mal aligné.`,
+          `mode rail — sans elle, l'item est mal aligné.`
       );
     }
   }, [isRail, iconBefore, label]);
@@ -365,10 +364,7 @@ export function SideNavSection({
   return (
     <div className={[styles.section, className].filter(Boolean).join(" ")}>
       {heading && (
-        <div
-          className={styles.sectionHeading}
-          {...(fullTitle ? { title: fullTitle } : {})}
-        >
+        <div className={styles.sectionHeading} {...(fullTitle ? { title: fullTitle } : {})}>
           {heading}
         </div>
       )}
@@ -383,9 +379,7 @@ SideNavSection.displayName = "SideNav.Section";
 // SideNavDivider
 
 export function SideNavDivider({ className }: SideNavDividerProps): ReactElement {
-  return (
-    <Divider className={[styles.divider, className].filter(Boolean).join(" ")} />
-  );
+  return <Divider className={[styles.divider, className].filter(Boolean).join(" ")} />;
 }
 
 SideNavDivider.displayName = "SideNav.Divider";
@@ -393,15 +387,8 @@ SideNavDivider.displayName = "SideNav.Divider";
 // -----------------------------------------------------------------------
 // SideNavFooter
 
-export function SideNavFooter({
-  children,
-  className,
-}: SideNavFooterProps): ReactElement {
-  return (
-    <div className={[styles.footer, className].filter(Boolean).join(" ")}>
-      {children}
-    </div>
-  );
+export function SideNavFooter({ children, className }: SideNavFooterProps): ReactElement {
+  return <div className={[styles.footer, className].filter(Boolean).join(" ")}>{children}</div>;
 }
 
 SideNavFooter.displayName = "SideNav.Footer";
@@ -447,9 +434,7 @@ SideNavFooterBrand.displayName = "SideNav.FooterBrand";
  * chargement (pastille d'icône + barre de label). Composable pour bâtir
  * un état de chargement sur mesure, ou via `SideNav.Skeleton`.
  */
-export function SideNavItemSkeleton({
-  className,
-}: SideNavItemSkeletonProps): ReactElement {
+export function SideNavItemSkeleton({ className }: SideNavItemSkeletonProps): ReactElement {
   return (
     <div className={[styles.skeletonItem, className].filter(Boolean).join(" ")}>
       <Skeleton shape="circle" height={24} decorative />
@@ -549,9 +534,7 @@ export function SideNavEmpty({
       )}
       <span className={styles.emptyText}>
         <span className={styles.emptyTitle}>{title}</span>
-        {description && (
-          <span className={styles.emptyDescription}>{description}</span>
-        )}
+        {description && <span className={styles.emptyDescription}>{description}</span>}
       </span>
       {action && <div className={styles.emptyAction}>{action}</div>}
     </div>
@@ -616,7 +599,7 @@ export function SideNavProvider({
       setInternalMode(next);
       onModeChange?.(next);
     },
-    [onModeChange],
+    [onModeChange]
   );
 
   // Raccourci clavier global : Ctrl/Cmd+Shift+E bascule expanded ⇄ rail.
@@ -636,9 +619,7 @@ export function SideNavProvider({
   // (`SideNav`, `SideNav.Header`, `useSideNav`) à chaque rendu du Provider.
   const value = useMemo(() => ({ mode, setMode }), [mode, setMode]);
 
-  return (
-    <SideNavContext.Provider value={value}>{children}</SideNavContext.Provider>
-  );
+  return <SideNavContext.Provider value={value}>{children}</SideNavContext.Provider>;
 }
 
 SideNavProvider.displayName = "SideNav.Provider";
@@ -685,9 +666,7 @@ export function SideNav({
     return {
       header: items.filter((c) => isType(c, SideNavHeader)),
       footer: items.filter((c) => isType(c, SideNavFooter)),
-      body: items.filter(
-        (c) => !isType(c, SideNavHeader) && !isType(c, SideNavFooter),
-      ),
+      body: items.filter((c) => !isType(c, SideNavHeader) && !isType(c, SideNavFooter)),
     };
   }, [children]);
 

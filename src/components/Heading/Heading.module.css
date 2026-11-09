@@ -8,23 +8,37 @@
  * Color
  * --------------------------------------------------------------------- */
 
-.color-default { color: var(--text-default); }
-.color-inverted { color: var(--text-inverted); }
+.color-default {
+  color: var(--text-default);
+}
+.color-inverted {
+  color: var(--text-inverted);
+}
 
 /* -----------------------------------------------------------------------
  * Align
  * --------------------------------------------------------------------- */
 
-.align-start { text-align: start; }
-.align-center { text-align: center; }
-.align-end { text-align: end; }
+.align-start {
+  text-align: start;
+}
+.align-center {
+  text-align: center;
+}
+.align-end {
+  text-align: end;
+}
 
 /* -----------------------------------------------------------------------
  * Decoration
  * --------------------------------------------------------------------- */
 
-.italic { font-style: italic; }
-.noWrap { white-space: nowrap; }
+.italic {
+  font-style: italic;
+}
+.noWrap {
+  white-space: nowrap;
+}
 
 /* -----------------------------------------------------------------------
  * Truncation (maxLines)

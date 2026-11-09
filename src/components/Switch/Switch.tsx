@@ -2,10 +2,7 @@
 // Interrupteur on/off accessible avec 4 apparences sémantiques
 // (default, success, warning, critical) + état intermédiaire.
 import type { CSSProperties, ReactElement, ReactNode } from "react";
-import {
-  Switch as AriaSwitch,
-  type SwitchProps as AriaSwitchProps,
-} from "react-aria-components";
+import { Switch as AriaSwitch, type SwitchProps as AriaSwitchProps } from "react-aria-components";
 import { FocusRing } from "../FocusRing/index.js";
 import styles from "./Switch.module.css";
 
@@ -17,17 +14,12 @@ import styles from "./Switch.module.css";
  * pour `success` / `warning` / `critical`, ajoute une icône dans le pouce
  * pour renforcer visuellement l'intention.
  */
-export type SwitchAppearance =
-  | "default"
-  | "success"
-  | "warning"
-  | "critical";
+export type SwitchAppearance = "default" | "success" | "warning" | "critical";
 
-export interface SwitchProps
-  extends Omit<
-    AriaSwitchProps,
-    "className" | "style" | "children" | "isSelected" | "defaultSelected"
-  > {
+export interface SwitchProps extends Omit<
+  AriaSwitchProps,
+  "className" | "style" | "children" | "isSelected" | "defaultSelected"
+> {
   /** État coché (contrôlé). */
   isChecked?: boolean;
   /** État coché initial (non contrôlé). */
@@ -91,7 +83,7 @@ function GlyphExclamation(): ReactElement {
 function renderGlyph(
   appearance: SwitchAppearance,
   isSelected: boolean,
-  isIndeterminate: boolean,
+  isIndeterminate: boolean
 ): ReactElement | null {
   if (isIndeterminate || appearance === "default") return null;
   if (appearance === "success") return isSelected ? <GlyphCheck /> : null;

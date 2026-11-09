@@ -15,10 +15,8 @@ import {
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Interactive helper — cliquer sur un item le rend courant et cache les suivants
@@ -60,7 +58,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le fil d'Ariane affiche le chemin de navigation hiérarchique menant à la page courante. Il permet à l'utilisateur de remonter facilement dans l'arborescence du site." },
+      description: {
+        component:
+          "Le fil d'Ariane affiche le chemin de navigation hiérarchique menant à la page courante. Il permet à l'utilisateur de remonter facilement dans l'arborescence du site.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -82,8 +83,7 @@ const meta = {
                     <BreadcrumbItem label="Profil" isCurrent />
                   </Breadcrumbs>
                 ),
-                caption:
-                  "Ne pas l'utiliser pour une hiérarchie plate (1-2 niveaux).",
+                caption: "Ne pas l'utiliser pour une hiérarchie plate (1-2 niveaux).",
               }}
               when={[
                 "Indiquer la localisation dans une hiérarchie profonde et permettre de remonter (fichiers, catégories).",
@@ -122,11 +122,7 @@ export const Default: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("3132:44041") } },
   render: () => (
     <InteractiveBreadcrumbs
-      pages={[
-        { label: "Accueil" },
-        { label: "Clients" },
-        { label: "Fiche client" },
-      ]}
+      pages={[{ label: "Accueil" }, { label: "Clients" }, { label: "Fiche client" }]}
     />
   ),
 };
@@ -194,9 +190,15 @@ export const WithMenu: Story = {
           </AriaButton>
           <MenuPopover width={220}>
             <Menu aria-label="Sections">
-              <MenuItem id="gestion" iconBefore="Folder">Gestion</MenuItem>
-              <MenuItem id="comptabilite" iconBefore="Work">Comptabilité</MenuItem>
-              <MenuItem id="rh" iconBefore="Group">Ressources humaines</MenuItem>
+              <MenuItem id="gestion" iconBefore="Folder">
+                Gestion
+              </MenuItem>
+              <MenuItem id="comptabilite" iconBefore="Work">
+                Comptabilité
+              </MenuItem>
+              <MenuItem id="rh" iconBefore="Group">
+                Ressources humaines
+              </MenuItem>
             </Menu>
           </MenuPopover>
         </MenuTrigger>
@@ -221,4 +223,3 @@ export const DeepHierarchy: Story = {
     />
   ),
 };
-

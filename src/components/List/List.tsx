@@ -4,7 +4,13 @@
 // (`ListItem`, `ListItemButton`, `ListHead`, `ListItemIcon`,
 // `ListItemText`, `ListItemAvatar`, `ListItemSecondaryAction`). Seul
 // `ListItemButton` introduit une affordance cliquable (React Aria Button).
-import { Children, isValidElement, type CSSProperties, type ReactElement, type ReactNode } from "react";
+import {
+  Children,
+  isValidElement,
+  type CSSProperties,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 import {
   Button as AriaButton,
   VisuallyHidden,
@@ -140,8 +146,10 @@ export interface ListItemProps {
   children: ReactNode;
 }
 
-export interface ListItemButtonProps
-  extends Omit<AriaButtonProps, "className" | "style" | "children"> {
+export interface ListItemButtonProps extends Omit<
+  AriaButtonProps,
+  "className" | "style" | "children"
+> {
   /** Marque l'item comme sélectionné (état visuel + `aria-current`). */
   isSelected?: boolean;
   /**
@@ -335,11 +343,7 @@ export function List({
     content = (
       <li role="presentation" className={styles.stateItem}>
         {emptyState ?? (
-          <DataStateMessage
-            kind="empty"
-            title={emptyTitle}
-            description={emptyDescription}
-          />
+          <DataStateMessage kind="empty" title={emptyTitle} description={emptyDescription} />
         )}
       </li>
     );
@@ -520,11 +524,7 @@ ListItemButton.displayName = "ListItemButton";
  * sur plusieurs items, qu'ils aient ou non une icône de tailles
  * différentes.
  */
-export function ListItemIcon({
-  children,
-  className,
-  style,
-}: ListItemIconProps): ReactElement {
+export function ListItemIcon({ children, className, style }: ListItemIconProps): ReactElement {
   return (
     <span
       className={[styles.itemIcon, className].filter(Boolean).join(" ")}
@@ -563,25 +563,17 @@ export function ListItemText({
       style={style}
       data-wrap={wrap || undefined}
     >
-      {overline !== undefined && (
-        <span className={styles.itemTextOverline}>{overline}</span>
-      )}
+      {overline !== undefined && <span className={styles.itemTextOverline}>{overline}</span>}
       {primary !== undefined && (
         <span
           className={styles.itemTextPrimary}
           data-clamp={lineClamp !== undefined ? "true" : undefined}
-          style={
-            lineClamp !== undefined
-              ? { WebkitLineClamp: lineClamp }
-              : undefined
-          }
+          style={lineClamp !== undefined ? { WebkitLineClamp: lineClamp } : undefined}
         >
           {primary}
         </span>
       )}
-      {secondary !== undefined && (
-        <span className={styles.itemTextSecondary}>{secondary}</span>
-      )}
+      {secondary !== undefined && <span className={styles.itemTextSecondary}>{secondary}</span>}
       {children}
     </span>
   );
@@ -604,11 +596,7 @@ ListItemText.displayName = "ListItemText";
  * Un avatar d'attribution va à **droite** (dans un `ListItemTrailing`), pas
  * ici : le leading porte l'identité de la ligne (cf. guidelines « Où va quoi »).
  */
-export function ListItemAvatar({
-  children,
-  className,
-  style,
-}: ListItemAvatarProps): ReactElement {
+export function ListItemAvatar({ children, className, style }: ListItemAvatarProps): ReactElement {
   // La taille de l'`<Avatar>` enfant (défaut « medium ») est exposée en `data-size` : le CSS
   // en déduit le retrait des séparateurs (`hasDividers`), qui ne passent pas sous l'avatar.
   const avatarSize =

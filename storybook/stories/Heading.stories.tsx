@@ -4,17 +4,13 @@ import { Heading, Stack } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
 
-const SIZES = [
-  "xxlarge", "xlarge", "large", "medium", "small", "xsmall", "xxsmall",
-] as const;
+const SIZES = ["xxlarge", "xlarge", "large", "medium", "small", "xsmall", "xxsmall"] as const;
 
 type HeadingSize = (typeof SIZES)[number];
 
@@ -34,7 +30,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le heading affiche un titre hiérarchique (h1 à h6) avec les styles typographiques du design system. Il structure le contenu et facilite la navigation par les technologies d'assistance." },
+      description: {
+        component:
+          "Le heading affiche un titre hiérarchique (h1 à h6) avec les styles typographiques du design system. Il structure le contenu et facilite la navigation par les technologies d'assistance.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -149,7 +148,9 @@ export const Inverted: Story = {
     children: "Titre inversé sur fond sombre",
   },
   render: (args) => (
-    <div style={{ background: "var(--background-neutral-bold-default)", padding: 24, borderRadius: 8 }}>
+    <div
+      style={{ background: "var(--background-neutral-bold-default)", padding: 24, borderRadius: 8 }}
+    >
       <Heading {...args} />
     </div>
   ),
@@ -158,9 +159,15 @@ export const Inverted: Story = {
 export const Align: Story = {
   render: () => (
     <Stack gap="300" style={{ width: 400 }}>
-      <Heading size="medium" align="start" style={{ border: "1px solid var(--border-default)" }}>Aligné à gauche</Heading>
-      <Heading size="medium" align="center" style={{ border: "1px solid var(--border-default)" }}>Centré</Heading>
-      <Heading size="medium" align="end" style={{ border: "1px solid var(--border-default)" }}>Aligné à droite</Heading>
+      <Heading size="medium" align="start" style={{ border: "1px solid var(--border-default)" }}>
+        Aligné à gauche
+      </Heading>
+      <Heading size="medium" align="center" style={{ border: "1px solid var(--border-default)" }}>
+        Centré
+      </Heading>
+      <Heading size="medium" align="end" style={{ border: "1px solid var(--border-default)" }}>
+        Aligné à droite
+      </Heading>
     </Stack>
   ),
 };

@@ -47,10 +47,7 @@ const reducer = (state: State, action: Action): State => {
  * </ThemeProvider>
  * ```
  */
-export const ThemeProvider = ({
-  children,
-  mode: initialMode = "light",
-}: ThemeProviderProps) => {
+export const ThemeProvider = ({ children, mode: initialMode = "light" }: ThemeProviderProps) => {
   const [state, dispatch] = useReducer(reducer, { mode: initialMode });
 
   const toggleTheme = useCallback(() => {
@@ -76,10 +73,8 @@ export const ThemeProvider = ({
 
   const value = useMemo(
     () => ({ mode: state.mode, toggleTheme, setMode }),
-    [state.mode, toggleTheme, setMode],
+    [state.mode, toggleTheme, setMode]
   );
 
-  return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };

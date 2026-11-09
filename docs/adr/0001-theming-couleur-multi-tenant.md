@@ -23,18 +23,18 @@ affordances pose deux problèmes :
 
 Séparer deux concepts, portés par deux familles de tokens distinctes.
 
-| Famille | Rôle | Surchargée par le client ? |
-|---|---|---|
+| Famille    | Rôle                                                                                    | Surchargée par le client ? |
+| ---------- | --------------------------------------------------------------------------------------- | -------------------------- |
 | `comete-*` | Couleur **fixe** de l'éditeur : affordances interactives **et** identité Comète (navy). | **Non** — propriété du DS. |
-| `brand-*` | **Charte couleur du client**. Défaut = navy Comète. | **Oui** — au runtime. |
+| `brand-*`  | **Charte couleur du client**. Défaut = navy Comète.                                     | **Oui** — au runtime.      |
 
-**Principe directeur (École A)** : *les éléments interactifs ne suivent jamais la
-charte client.* Ils consomment `comete-*` (fixe). La couleur client (`brand-*`)
+**Principe directeur (École A)** : _les éléments interactifs ne suivent jamais la
+charte client._ Ils consomment `comete-*` (fixe). La couleur client (`brand-*`)
 n'apparaît que sur des **surfaces d'identité ambiantes** (Card, Bleed, IconTile,
 Text) — grandes, passives, non porteuses d'affordance ni de statut.
 
-Litmus : *plus un élément est petit et interactif, moins la marque y a sa place ;
-plus une surface est grande et ambiante, plus elle y est bienvenue.*
+Litmus : _plus un élément est petit et interactif, moins la marque y a sa place ;
+plus une surface est grande et ambiante, plus elle y est bienvenue._
 
 `--*-accent-<couleur>-*` (teal, purple, magenta…) reste un namespace **catégoriel
 décoratif** indépendant, non concerné.
@@ -97,4 +97,4 @@ client, l'ensemble de la famille `brand-*` et l'injecte au runtime.
 - **École B (la marque EST l'accent interactif)** : plus puissant mais rouvre le
   télescopage sens/identité et multiplie les cas d'échec de contraste.
 - **Générateur de palette type Tailwind (rampe HSL)** : perceptuellement inégal et
-  non *contrast-aware* ; OKLCH + L normalisée par rôle est retenu.
+  non _contrast-aware_ ; OKLCH + L normalisée par rôle est retenu.

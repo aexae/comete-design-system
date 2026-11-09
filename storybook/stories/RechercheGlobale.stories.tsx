@@ -14,16 +14,10 @@ import {
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 import { PageGlobalActions } from "./_pageChrome";
-import {
-  GlobalSearchDialog,
-  GlobalSearchSheet,
-  useGlobalSearch,
-} from "./_rechercheGlobale";
+import { GlobalSearchDialog, GlobalSearchSheet, useGlobalSearch } from "./_rechercheGlobale";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 function Gutters({ children }: { children: ReactNode }) {
   return <div style={{ paddingInline: "var(--space300)" }}>{children}</div>;
@@ -59,7 +53,7 @@ const meta = {
                 "Nommer les deux recherches différemment : « Rechercher dans toute l'application » contre « Rechercher un agent ».",
               ]}
               accessibility={[
-                "Le champ est dans un `<form role=\"search\">` : la validation au clavier est native.",
+                'Le champ est dans un `<form role="search">` : la validation au clavier est native.',
                 "Le champ n'est jamais rendu dans le slot `title` de la `Page.Bar`, qui est un `<h1>`.",
                 "Chaque section de résultats est une `List` nommée (`aria-label`), annoncée avec son nombre de résultats.",
               ]}
@@ -132,12 +126,7 @@ function SearchableAgentsPage({
       )}
       <Page.Bar title="Agents" leading={leading} />
       <Page.Toolbar
-        search={
-          <SearchField
-            aria-label="Rechercher un agent"
-            placeholder="Rechercher un agent"
-          />
-        }
+        search={<SearchField aria-label="Rechercher un agent" placeholder="Rechercher un agent" />}
         end={
           <Cluster gap="100">
             <ButtonGroup>
@@ -200,9 +189,7 @@ export const TactileMobile: Story = {
   render: () => (
     <SearchableAgentsPage
       isTouch
-      leading={
-        <Button appearance="subtle" iconBefore="Menu" aria-label="Ouvrir le menu" />
-      }
+      leading={<Button appearance="subtle" iconBefore="Menu" aria-label="Ouvrir le menu" />}
     />
   ),
 };
@@ -223,9 +210,7 @@ export const TactileTablette: Story = {
   render: () => (
     <SearchableAgentsPage
       isTouch
-      leading={
-        <Button appearance="subtle" iconBefore="Menu" aria-label="Ouvrir le menu" />
-      }
+      leading={<Button appearance="subtle" iconBefore="Menu" aria-label="Ouvrir le menu" />}
     />
   ),
 };

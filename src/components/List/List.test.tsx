@@ -24,7 +24,7 @@ describe("List", () => {
     render(
       <List aria-label="Items">
         <ListItem>A</ListItem>
-      </List>,
+      </List>
     );
     expect(screen.getByRole("list")).toBeInTheDocument();
   });
@@ -33,7 +33,7 @@ describe("List", () => {
     render(
       <List aria-label="My list">
         <ListItem>A</ListItem>
-      </List>,
+      </List>
     );
     expect(screen.getByRole("list")).toHaveAttribute("aria-label", "My list");
   });
@@ -42,7 +42,7 @@ describe("List", () => {
     render(
       <List aria-label="dense" isDense>
         <ListItem>A</ListItem>
-      </List>,
+      </List>
     );
     expect(screen.getByRole("list")).toHaveAttribute("data-dense", "true");
   });
@@ -51,7 +51,7 @@ describe("List", () => {
     render(
       <List aria-label="default">
         <ListItem>A</ListItem>
-      </List>,
+      </List>
     );
     expect(screen.getByRole("list")).not.toHaveAttribute("data-dense");
   });
@@ -61,7 +61,7 @@ describe("List", () => {
       <List aria-label="divided" hasDividers>
         <ListItem>A</ListItem>
         <ListItem>B</ListItem>
-      </List>,
+      </List>
     );
     expect(screen.getByRole("list")).toHaveAttribute("data-dividers", "true");
   });
@@ -70,7 +70,7 @@ describe("List", () => {
     render(
       <List aria-label="plain">
         <ListItem>A</ListItem>
-      </List>,
+      </List>
     );
     expect(screen.getByRole("list")).not.toHaveAttribute("data-dividers");
   });
@@ -80,7 +80,7 @@ describe("List", () => {
       <List aria-label="messages">
         <ListItem isUnread>Message</ListItem>
         <ListItem>Lu</ListItem>
-      </List>,
+      </List>
     );
     const [unread, read] = screen.getAllByRole("listitem");
     expect(unread).toHaveAttribute("data-unread", "true");
@@ -93,7 +93,7 @@ describe("List", () => {
     render(
       <List aria-label="messages">
         <ListItemButton isUnread>Message</ListItemButton>
-      </List>,
+      </List>
     );
     const button = screen.getByRole("button");
     expect(button).toHaveAttribute("data-unread", "true");
@@ -104,14 +104,18 @@ describe("List", () => {
     render(
       <List aria-label="contacts" hasDividers>
         <ListItem>
-          <ListItemAvatar><Avatar size="large" initials="AB" /></ListItemAvatar>
+          <ListItemAvatar>
+            <Avatar size="large" initials="AB" />
+          </ListItemAvatar>
           <ListItemText primary="Large" />
         </ListItem>
         <ListItem>
-          <ListItemAvatar><Avatar initials="CD" /></ListItemAvatar>
+          <ListItemAvatar>
+            <Avatar initials="CD" />
+          </ListItemAvatar>
           <ListItemText primary="Défaut" />
         </ListItem>
-      </List>,
+      </List>
     );
     const slots = document.querySelectorAll("[data-size]");
     expect([...slots].map((s) => s.getAttribute("data-size"))).toEqual(["large", "medium"]);
@@ -122,7 +126,7 @@ describe("List", () => {
       <List aria-label="spaced" gap="150">
         <ListItem>A</ListItem>
         <ListItem>B</ListItem>
-      </List>,
+      </List>
     );
     expect(screen.getByRole("list")).toHaveAttribute("data-gap", "150");
   });
@@ -131,7 +135,7 @@ describe("List", () => {
     render(
       <List aria-label="joined">
         <ListItem>A</ListItem>
-      </List>,
+      </List>
     );
     expect(screen.getByRole("list")).not.toHaveAttribute("data-gap");
   });
@@ -140,7 +144,7 @@ describe("List", () => {
     render(
       <List aria-label="x" className="custom">
         <ListItem>A</ListItem>
-      </List>,
+      </List>
     );
     expect(screen.getByRole("list").className).toContain("custom");
   });
@@ -154,7 +158,7 @@ describe("List", () => {
       <List aria-label="x">
         <ListHead>Section title</ListHead>
         <ListItem>A</ListItem>
-      </List>,
+      </List>
     );
     expect(screen.getByText("Section title")).toBeInTheDocument();
   });
@@ -163,7 +167,7 @@ describe("List", () => {
     render(
       <List aria-label="x">
         <ListHead>Section</ListHead>
-      </List>,
+      </List>
     );
     // role="presentation" élève le head hors de l'arbre accessible — il n'est
     // pas exposé comme `listitem`. Pour vérifier, on s'assure que la liste
@@ -175,7 +179,7 @@ describe("List", () => {
     const { container } = render(
       <List aria-label="x">
         <ListHead isSticky>Aujourd&apos;hui</ListHead>
-      </List>,
+      </List>
     );
     expect(container.querySelector('[data-sticky="true"]')).not.toBeNull();
   });
@@ -184,7 +188,7 @@ describe("List", () => {
     const { container } = render(
       <List aria-label="x">
         <ListHead>Aujourd&apos;hui</ListHead>
-      </List>,
+      </List>
     );
     expect(container.querySelector("[data-sticky]")).toBeNull();
   });
@@ -193,7 +197,7 @@ describe("List", () => {
     render(
       <List aria-label="x">
         <ListHead>Section</ListHead>
-      </List>,
+      </List>
     );
     expect(screen.getByText("Section").className).not.toContain("headFlush");
   });
@@ -202,7 +206,7 @@ describe("List", () => {
     render(
       <List aria-label="x">
         <ListHead isFlush>Section</ListHead>
-      </List>,
+      </List>
     );
     expect(screen.getByText("Section").className).toContain("headFlush");
   });
@@ -215,7 +219,7 @@ describe("List", () => {
     render(
       <List aria-label="x">
         <ListItem>A</ListItem>
-      </List>,
+      </List>
     );
     expect(screen.getByRole("listitem")).toBeInTheDocument();
   });
@@ -224,7 +228,7 @@ describe("List", () => {
     render(
       <List aria-label="x">
         <ListItem isSelected>Selected</ListItem>
-      </List>,
+      </List>
     );
     const item = screen.getByRole("listitem");
     expect(item).toHaveAttribute("data-selected", "true");
@@ -235,14 +239,11 @@ describe("List", () => {
     render(
       <List aria-label="x">
         <ListItem isDisabled>Disabled</ListItem>
-      </List>,
+      </List>
     );
     // aria-disabled n'est pas autorisé sur role=listitem ; on signale
     // l'état uniquement via le data-attribute (utilisé par le CSS).
-    expect(screen.getByRole("listitem")).toHaveAttribute(
-      "data-disabled",
-      "true",
-    );
+    expect(screen.getByRole("listitem")).toHaveAttribute("data-disabled", "true");
   });
 
   // -------------------------------------------------------------------
@@ -253,18 +254,16 @@ describe("List", () => {
     render(
       <List aria-label="x">
         <ListItemButton>Click me</ListItemButton>
-      </List>,
+      </List>
     );
-    expect(
-      screen.getByRole("button", { name: "Click me" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Click me" })).toBeInTheDocument();
   });
 
   it("should not apply the flush class by default", () => {
     render(
       <List aria-label="x">
         <ListItemButton>Click me</ListItemButton>
-      </List>,
+      </List>
     );
     expect(screen.getByRole("button", { name: "Click me" }).className).not.toContain("itemFlush");
   });
@@ -273,7 +272,7 @@ describe("List", () => {
     render(
       <List aria-label="x">
         <ListItemButton isFlush>Click me</ListItemButton>
-      </List>,
+      </List>
     );
     expect(screen.getByRole("button", { name: "Click me" }).className).toContain("itemFlush");
   });
@@ -283,7 +282,7 @@ describe("List", () => {
     render(
       <List aria-label="x">
         <ListItemButton onPress={handlePress}>Tap</ListItemButton>
-      </List>,
+      </List>
     );
     fireEvent.click(screen.getByRole("button", { name: "Tap" }));
     expect(handlePress).toHaveBeenCalledTimes(1);
@@ -296,7 +295,7 @@ describe("List", () => {
         <ListItemButton isDisabled onPress={handlePress}>
           Tap
         </ListItemButton>
-      </List>,
+      </List>
     );
     fireEvent.click(screen.getByRole("button", { name: "Tap" }));
     expect(handlePress).not.toHaveBeenCalled();
@@ -306,11 +305,12 @@ describe("List", () => {
     render(
       <List aria-label="x">
         <ListItemButton isSelected>Selected</ListItemButton>
-      </List>,
+      </List>
     );
-    expect(
-      screen.getByRole("button", { name: "Selected" }),
-    ).toHaveAttribute("aria-current", "true");
+    expect(screen.getByRole("button", { name: "Selected" })).toHaveAttribute(
+      "aria-current",
+      "true"
+    );
   });
 
   // -------------------------------------------------------------------
@@ -323,7 +323,7 @@ describe("List", () => {
         <ListItem>
           <ListItemText primary="Primary" secondary="Secondary" />
         </ListItem>
-      </List>,
+      </List>
     );
     expect(screen.getByText("Primary")).toBeInTheDocument();
     expect(screen.getByText("Secondary")).toBeInTheDocument();
@@ -335,7 +335,7 @@ describe("List", () => {
         <ListItem>
           <ListItemText overline="Ronde" primary="Toiture terrasse" />
         </ListItem>
-      </List>,
+      </List>
     );
     expect(screen.getByText("Ronde")).toBeInTheDocument();
     expect(screen.getByText("Toiture terrasse")).toBeInTheDocument();
@@ -352,7 +352,7 @@ describe("List", () => {
         <ListItem>
           <ListItemText primary="Un titre d'incident très long" lineClamp={2} />
         </ListItem>
-      </List>,
+      </List>
     );
     const primary = container.querySelector<HTMLElement>('[data-clamp="true"]');
     expect(primary).not.toBeNull();
@@ -365,9 +365,9 @@ describe("List", () => {
         <ListItem>
           <ListItemText primary="Titre court" />
         </ListItem>
-      </List>,
+      </List>
     );
-    expect(container.querySelector('[data-clamp]')).toBeNull();
+    expect(container.querySelector("[data-clamp]")).toBeNull();
   });
 
   it("should render only primary when secondary is omitted", () => {
@@ -376,7 +376,7 @@ describe("List", () => {
         <ListItem>
           <ListItemText primary="Primary only" />
         </ListItem>
-      </List>,
+      </List>
     );
     expect(screen.getByText("Primary only")).toBeInTheDocument();
   });
@@ -389,7 +389,7 @@ describe("List", () => {
             <span>Free content</span>
           </ListItemText>
         </ListItem>
-      </List>,
+      </List>
     );
     expect(screen.getByText("Free content")).toBeInTheDocument();
   });
@@ -406,7 +406,7 @@ describe("List", () => {
             <span data-testid="icon">★</span>
           </ListItemIcon>
         </ListItem>
-      </List>,
+      </List>
     );
     const iconWrapper = container.querySelector("[aria-hidden='true']");
     expect(iconWrapper).not.toBeNull();
@@ -421,7 +421,7 @@ describe("List", () => {
             <span data-testid="avatar">AB</span>
           </ListItemAvatar>
         </ListItem>
-      </List>,
+      </List>
     );
     expect(screen.getByTestId("avatar")).toBeInTheDocument();
   });
@@ -439,11 +439,9 @@ describe("List", () => {
             <button type="button">Action</button>
           </ListItemSecondaryAction>
         </ListItem>
-      </List>,
+      </List>
     );
-    expect(
-      screen.getByRole("button", { name: "Action" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Action" })).toBeInTheDocument();
   });
 
   it("should extract ListItemSecondaryAction out of the ListItemButton's <button>", () => {
@@ -457,13 +455,11 @@ describe("List", () => {
             </button>
           </ListItemSecondaryAction>
         </ListItemButton>
-      </List>,
+      </List>
     );
     // Le bouton d'action doit être en dehors du `<button>` principal
     // (imbrication interactive interdite).
-    const mainButton = container.querySelector<HTMLButtonElement>(
-      'button[class*="itemButton"]',
-    );
+    const mainButton = container.querySelector<HTMLButtonElement>('button[class*="itemButton"]');
     const action = screen.getByTestId("action");
     expect(mainButton).not.toBeNull();
     expect(mainButton?.contains(action)).toBe(false);
@@ -479,7 +475,7 @@ describe("List", () => {
             <button type="button">Toggle</button>
           </ListItemSecondaryAction>
         </ListItemButton>
-      </List>,
+      </List>
     );
     fireEvent.click(screen.getByRole("button", { name: "Toggle" }));
     expect(handlePress).not.toHaveBeenCalled();
@@ -488,9 +484,7 @@ describe("List", () => {
 
 describe("List — états natifs", () => {
   it("should render skeleton items when isLoading", () => {
-    const { container } = render(
-      <List aria-label="l" isLoading skeletonItems={3} />,
-    );
+    const { container } = render(<List aria-label="l" isLoading skeletonItems={3} />);
     expect(container.querySelectorAll("ul > li")).toHaveLength(3);
   });
 
@@ -511,7 +505,7 @@ describe("List — états natifs", () => {
     render(
       <List aria-label="l">
         <ListItem>Item</ListItem>
-      </List>,
+      </List>
     );
     expect(screen.getByText("Item")).toBeInTheDocument();
   });
@@ -527,7 +521,7 @@ describe("ListItemTrailing", () => {
             <span>14:05</span>
           </ListItemTrailing>
         </ListItem>
-      </List>,
+      </List>
     );
     expect(screen.getByText("14:05")).toBeInTheDocument();
   });
@@ -541,7 +535,7 @@ describe("ListItemTrailing", () => {
             <span>14:05</span>
           </ListItemTrailing>
         </ListItemButton>
-      </List>,
+      </List>
     );
     // Un seul bouton, et le trailing est contenu DEDANS (non extrait) → la
     // ligne reste un seul arrêt de tabulation.
@@ -555,7 +549,7 @@ describe("ListItemTrailing", () => {
         <ListItem>
           <ListItemTrailing>x</ListItemTrailing>
         </ListItem>
-      </List>,
+      </List>
     );
     expect(container.querySelector('[data-align="end"]')).not.toBeNull();
   });
@@ -566,7 +560,7 @@ describe("ListItemTrailing", () => {
         <ListItem>
           <ListItemTrailing align="start">x</ListItemTrailing>
         </ListItem>
-      </List>,
+      </List>
     );
     expect(container.querySelector('[data-align="start"]')).not.toBeNull();
   });
@@ -578,7 +572,7 @@ describe("ListItemTrailing", () => {
           <ListItemText primary="Contact sans trailing" />
           <ListItemTrailing />
         </ListItem>
-      </List>,
+      </List>
     );
     expect(container.querySelector('[data-align="end"]')).not.toBeNull();
     expect(screen.getByText("Contact sans trailing")).toBeInTheDocument();
@@ -589,7 +583,10 @@ describe("List — boîte (isBordered)", () => {
   it("should size the root in border-box so a bordered list never overflows its parent", () => {
     // `width: 100%` + bordure en content-box dépasse de 2 × la bordure : un parent en
     // `overflow: auto` affiche alors un défilement horizontal.
-    const css = readFileSync("src/components/List/List.module.css", "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+    const css = readFileSync("src/components/List/List.module.css", "utf8").replace(
+      /\/\*[\s\S]*?\*\//g,
+      ""
+    );
     const root = /\.list\s*\{([^}]*)\}/.exec(css)?.[1] ?? "";
     expect(root).toMatch(/width:\s*100%/);
     expect(root).toMatch(/box-sizing:\s*border-box/);

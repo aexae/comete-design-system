@@ -19,9 +19,7 @@ describe("Snackbar", () => {
   });
 
   it("should apply the appearance class", () => {
-    const { container } = render(
-      <Snackbar appearance="critical">msg</Snackbar>,
-    );
+    const { container } = render(<Snackbar appearance="critical">msg</Snackbar>);
     expect(container.firstChild).toHaveClass("critical");
   });
 
@@ -55,9 +53,7 @@ describe("Snackbar", () => {
 
   it("should render the action button and call onPress when clicked", () => {
     const onPress = vi.fn();
-    render(
-      <Snackbar action={{ label: "Réessayer", onPress }}>msg</Snackbar>,
-    );
+    render(<Snackbar action={{ label: "Réessayer", onPress }}>msg</Snackbar>);
     const btn = screen.getByRole("button", { name: "Réessayer" });
     fireEvent.click(btn);
     expect(onPress).toHaveBeenCalledTimes(1);
@@ -84,7 +80,7 @@ describe("Snackbar", () => {
     render(
       <Snackbar onClose={() => undefined} closeLabel="Dismiss">
         msg
-      </Snackbar>,
+      </Snackbar>
     );
     expect(screen.getByRole("button", { name: "Dismiss" })).toBeInTheDocument();
   });
@@ -95,12 +91,9 @@ describe("Snackbar", () => {
 
   it("should render both action and close buttons together", () => {
     render(
-      <Snackbar
-        action={{ label: "Annuler", onPress: () => undefined }}
-        onClose={() => undefined}
-      >
+      <Snackbar action={{ label: "Annuler", onPress: () => undefined }} onClose={() => undefined}>
         msg
-      </Snackbar>,
+      </Snackbar>
     );
     expect(screen.getByRole("button", { name: "Annuler" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Fermer" })).toBeInTheDocument();

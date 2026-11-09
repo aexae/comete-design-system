@@ -47,12 +47,20 @@ describe("Heading", () => {
   // -------------------------------------------------------------------
 
   it("should override element with as", () => {
-    render(<Heading size="xxlarge" as="h2">Title</Heading>);
+    render(
+      <Heading size="xxlarge" as="h2">
+        Title
+      </Heading>
+    );
     expect(screen.getByText("Title").tagName).toBe("H2");
   });
 
   it("should accept div as override", () => {
-    render(<Heading size="medium" as="div">Title</Heading>);
+    render(
+      <Heading size="medium" as="div">
+        Title
+      </Heading>
+    );
     expect(screen.getByText("Title").tagName).toBe("DIV");
   });
 
@@ -80,7 +88,11 @@ describe("Heading", () => {
   });
 
   it("should apply color-inverted", () => {
-    render(<Heading size="medium" color="inverted">Title</Heading>);
+    render(
+      <Heading size="medium" color="inverted">
+        Title
+      </Heading>
+    );
     expect(screen.getByText("Title").className).toContain("color-inverted");
   });
 
@@ -94,7 +106,11 @@ describe("Heading", () => {
   });
 
   it("should apply align-center", () => {
-    render(<Heading size="medium" align="center">Title</Heading>);
+    render(
+      <Heading size="medium" align="center">
+        Title
+      </Heading>
+    );
     expect(screen.getByText("Title").className).toContain("align-center");
   });
 
@@ -103,7 +119,11 @@ describe("Heading", () => {
   // -------------------------------------------------------------------
 
   it("should apply italic class when italic", () => {
-    render(<Heading size="medium" italic>Title</Heading>);
+    render(
+      <Heading size="medium" italic>
+        Title
+      </Heading>
+    );
     expect(screen.getByText("Title").className).toContain("italic");
   });
 
@@ -112,7 +132,11 @@ describe("Heading", () => {
   // -------------------------------------------------------------------
 
   it("should apply truncate class and WebkitLineClamp when maxLines is set", () => {
-    render(<Heading size="medium" maxLines={2}>Title</Heading>);
+    render(
+      <Heading size="medium" maxLines={2}>
+        Title
+      </Heading>
+    );
     const el = screen.getByText("Title");
     expect(el.className).toContain("truncate");
     expect(el.style.webkitLineClamp).toBe("2");
@@ -123,14 +147,22 @@ describe("Heading", () => {
   // -------------------------------------------------------------------
 
   it("should merge custom className", () => {
-    render(<Heading size="large" className="custom">Title</Heading>);
+    render(
+      <Heading size="large" className="custom">
+        Title
+      </Heading>
+    );
     const el = screen.getByText("Title");
     expect(el.className).toContain("custom");
     expect(el.className).toContain("heading-large");
   });
 
   it("should forward id attribute", () => {
-    render(<Heading size="medium" id="heading">Title</Heading>);
+    render(
+      <Heading size="medium" id="heading">
+        Title
+      </Heading>
+    );
     expect(screen.getByText("Title").id).toBe("heading");
   });
 });

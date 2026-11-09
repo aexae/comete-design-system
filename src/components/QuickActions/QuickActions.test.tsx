@@ -9,7 +9,13 @@ import { BottomNavItem } from "../BottomNav/BottomNavItem";
 import { QuickActions, type QuickAction } from "./QuickActions";
 
 const ACTIONS: QuickAction[] = [
-  { id: "report", icon: "Report", label: "Signaler une anomalie", tone: "critical", onPress: vi.fn() },
+  {
+    id: "report",
+    icon: "Report",
+    label: "Signaler une anomalie",
+    tone: "critical",
+    onPress: vi.fn(),
+  },
   { id: "scan", icon: "Scanner", label: "Scanner un équipement", onPress: vi.fn() },
 ];
 
@@ -178,7 +184,7 @@ describe("QuickActions — règle de couleur (ADR 0002)", () => {
         }))}
         isOpen
         onOpenChange={() => undefined}
-      />,
+      />
     );
     for (const tone of tones) {
       expect(tileOf(tone).className).toContain(tone);
@@ -186,13 +192,19 @@ describe("QuickActions — règle de couleur (ADR 0002)", () => {
   });
 
   it("should accept the whole palette at the type level (no restriction)", () => {
-    const palette: QuickAction["tone"][] = ["comete", "critical", "warning", "success", "information"];
+    const palette: QuickAction["tone"][] = [
+      "comete",
+      "critical",
+      "warning",
+      "success",
+      "information",
+    ];
     expect(palette).toHaveLength(5);
   });
 });
 
 describe("QuickActions — garde-fou de composition (avertissement, jamais de blocage)", () => {
-  const make = (tones: (QuickAction["tone"])[]): QuickAction[] =>
+  const make = (tones: QuickAction["tone"][]): QuickAction[] =>
     tones.map((tone, i) => ({
       id: String(i),
       icon: "Star",
@@ -208,7 +220,7 @@ describe("QuickActions — garde-fou de composition (avertissement, jamais de bl
         actions={make(["comete", "warning", "success"])}
         isOpen
         onOpenChange={() => undefined}
-      />,
+      />
     );
     expect(warn).toHaveBeenCalledOnce();
     const message = String(warn.mock.calls[0]?.[0]);
@@ -224,7 +236,7 @@ describe("QuickActions — garde-fou de composition (avertissement, jamais de bl
         actions={make(["comete", "warning", "success", "information"])}
         isOpen
         onOpenChange={() => undefined}
-      />,
+      />
     );
     // Seules les rangées comptent (la couche ajoute aussi un bouton de fermeture masqué).
     expect(screen.getAllByRole("button", { name: /^Action \d$/ })).toHaveLength(4);
@@ -237,7 +249,7 @@ describe("QuickActions — garde-fou de composition (avertissement, jamais de bl
         actions={make(["comete", "comete", "critical"])}
         isOpen
         onOpenChange={() => undefined}
-      />,
+      />
     );
     expect(warn).not.toHaveBeenCalled();
   });
@@ -245,7 +257,11 @@ describe("QuickActions — garde-fou de composition (avertissement, jamais de bl
   it("should warn when more than one action is critical", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     render(
-      <QuickActions actions={make(["critical", "critical"])} isOpen onOpenChange={() => undefined} />,
+      <QuickActions
+        actions={make(["critical", "critical"])}
+        isOpen
+        onOpenChange={() => undefined}
+      />
     );
     expect(warn).toHaveBeenCalledOnce();
     const message = String(warn.mock.calls[0]?.[0]);
@@ -255,7 +271,9 @@ describe("QuickActions — garde-fou de composition (avertissement, jamais de bl
 
   it("should not warn with a single critical action", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
-    render(<QuickActions actions={make(["critical", undefined])} isOpen onOpenChange={() => undefined} />);
+    render(
+      <QuickActions actions={make(["critical", undefined])} isOpen onOpenChange={() => undefined} />
+    );
     expect(warn).not.toHaveBeenCalled();
   });
 });

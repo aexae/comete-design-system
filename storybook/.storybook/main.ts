@@ -3,7 +3,6 @@ import type { StorybookConfig } from "@storybook/react-vite";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 
-
 const config: StorybookConfig = {
   stories: ["../stories/**/*.stories.@(ts|tsx)"],
   addons: [
@@ -12,7 +11,7 @@ const config: StorybookConfig = {
     "@storybook/addon-vitest",
     "@chromatic-com/storybook",
     "@storybook/addon-a11y",
-    "@storybook/addon-mcp"
+    "@storybook/addon-mcp",
   ],
   framework: {
     name: "@storybook/react-vite",

@@ -22,9 +22,7 @@ describe("YearPicker", () => {
   it("should render input and calendar icon in editable mode (default)", () => {
     render(<YearPicker year={2025} />);
     expect(screen.getByLabelText("Année : 2025")).toBeInTheDocument();
-    expect(
-      screen.getByLabelText("Ouvrir le sélecteur d'années")
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText("Ouvrir le sélecteur d'années")).toBeInTheDocument();
     // No chevrons in editable mode
     expect(screen.queryByLabelText("Année précédente")).not.toBeInTheDocument();
   });
@@ -35,13 +33,8 @@ describe("YearPicker", () => {
   });
 
   it("should use a custom aria-label on the root", () => {
-    const { container } = render(
-      <YearPicker aria-label="Exercice comptable" />
-    );
-    expect(container.firstChild).toHaveAttribute(
-      "aria-label",
-      "Exercice comptable"
-    );
+    const { container } = render(<YearPicker aria-label="Exercice comptable" />);
+    expect(container.firstChild).toHaveAttribute("aria-label", "Exercice comptable");
   });
 
   it("should set data-invalid when isInvalid", () => {
@@ -123,23 +116,17 @@ describe("YearPicker", () => {
   // -- Range mode : contraintes logiques --
 
   it("should set data-invalid when range is inverted (start > end)", () => {
-    const { container } = render(
-      <YearPicker isRange startYear={2026} endYear={2024} />,
-    );
+    const { container } = render(<YearPicker isRange startYear={2026} endYear={2024} />);
     expect(container.firstChild).toHaveAttribute("data-invalid", "true");
   });
 
   it("should not set data-invalid when range is valid (start <= end)", () => {
-    const { container } = render(
-      <YearPicker isRange startYear={2024} endYear={2026} />,
-    );
+    const { container } = render(<YearPicker isRange startYear={2024} endYear={2026} />);
     expect(container.firstChild).not.toHaveAttribute("data-invalid");
   });
 
   it("should not set data-invalid when range bounds are equal", () => {
-    const { container } = render(
-      <YearPicker isRange startYear={2025} endYear={2025} />,
-    );
+    const { container } = render(<YearPicker isRange startYear={2025} endYear={2025} />);
     expect(container.firstChild).not.toHaveAttribute("data-invalid");
   });
 });

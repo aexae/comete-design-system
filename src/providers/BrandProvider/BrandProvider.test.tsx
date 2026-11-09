@@ -7,7 +7,7 @@ describe("BrandProvider", () => {
     const { getByText } = render(
       <BrandProvider seed="#1e3661">
         <span>contenu</span>
-      </BrandProvider>,
+      </BrandProvider>
     );
     expect(getByText("contenu")).toBeInTheDocument();
   });
@@ -16,7 +16,7 @@ describe("BrandProvider", () => {
     const { container } = render(
       <BrandProvider seed="#ff6a00">
         <span />
-      </BrandProvider>,
+      </BrandProvider>
     );
     const style = container.querySelector("style");
     expect(style?.textContent).toContain(":root {");
@@ -27,7 +27,7 @@ describe("BrandProvider", () => {
     const { container } = render(
       <BrandProvider seed="#ff6a00" name="acme">
         <span />
-      </BrandProvider>,
+      </BrandProvider>
     );
     const wrapper = container.querySelector('[data-brand="acme"]');
     expect(wrapper).not.toBeNull();
@@ -39,7 +39,7 @@ describe("BrandProvider", () => {
     const { container } = render(
       <BrandProvider seed="not-a-color">
         <span>contenu</span>
-      </BrandProvider>,
+      </BrandProvider>
     );
     expect(container.querySelector("style")).toBeNull();
     expect(container.textContent).toContain("contenu");

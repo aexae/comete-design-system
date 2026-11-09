@@ -280,9 +280,7 @@ describe("SideNav", () => {
 
   it("should render skeleton placeholders in an item skeleton", () => {
     const { container } = render(<SideNav.ItemSkeleton />);
-    expect(
-      container.querySelector("[class*='skeletonItem']"),
-    ).toBeInTheDocument();
+    expect(container.querySelector("[class*='skeletonItem']")).toBeInTheDocument();
     // 1 pastille + 1 barre de label. Les
     // skeletons sont décoratifs (aria-hidden) — annoncés une seule fois par le
     // conteneur SideNav.Skeleton parent, pas individuellement.
@@ -295,33 +293,27 @@ describe("SideNav", () => {
     const { container } = render(
       <SideNav>
         <SideNav.Skeleton count={4} withSectionTitle={false} />
-      </SideNav>,
+      </SideNav>
     );
-    expect(
-      container.querySelectorAll("[class*='skeletonItemContent']"),
-    ).toHaveLength(4);
+    expect(container.querySelectorAll("[class*='skeletonItemContent']")).toHaveLength(4);
   });
 
   it("should render a section title placeholder by default", () => {
     const { container } = render(
       <SideNav>
         <SideNav.Skeleton count={2} />
-      </SideNav>,
+      </SideNav>
     );
-    expect(
-      container.querySelector("[class*='skeletonSectionTitle']"),
-    ).toBeInTheDocument();
+    expect(container.querySelector("[class*='skeletonSectionTitle']")).toBeInTheDocument();
   });
 
   it("should render a header placeholder when withHeader is set", () => {
     const { container } = render(
       <SideNav>
         <SideNav.Skeleton count={2} withHeader />
-      </SideNav>,
+      </SideNav>
     );
-    expect(
-      container.querySelector("[class*='skeletonHeader']"),
-    ).toBeInTheDocument();
+    expect(container.querySelector("[class*='skeletonHeader']")).toBeInTheDocument();
   });
 
   // SideNav.Empty -------------------------------------------------------
@@ -330,7 +322,7 @@ describe("SideNav", () => {
     render(
       <SideNav>
         <SideNav.Empty />
-      </SideNav>,
+      </SideNav>
     );
     expect(screen.getByText("Aucun élément")).toBeInTheDocument();
   });
@@ -343,24 +335,20 @@ describe("SideNav", () => {
           description="Rien ne correspond."
           action={<button>Réinitialiser</button>}
         />
-      </SideNav>,
+      </SideNav>
     );
     expect(screen.getByText("Aucun résultat")).toBeInTheDocument();
     expect(screen.getByText("Rien ne correspond.")).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Réinitialiser" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Réinitialiser" })).toBeInTheDocument();
   });
 
   it("should render an icon when provided", () => {
     const { container } = render(
       <SideNav>
         <SideNav.Empty icon="Search" title="Aucun résultat" />
-      </SideNav>,
+      </SideNav>
     );
-    expect(
-      container.querySelector("[class*='emptyIcon']"),
-    ).toBeInTheDocument();
+    expect(container.querySelector("[class*='emptyIcon']")).toBeInTheDocument();
   });
 
   // SideNav.FooterBrand -------------------------------------------------
@@ -373,7 +361,7 @@ describe("SideNav", () => {
             <span>Marque</span>
           </SideNav.FooterBrand>
         </SideNav.Footer>
-      </SideNav>,
+      </SideNav>
     );
     const brand = container.querySelector("[class*='footerBrand']");
     expect(brand).toBeInTheDocument();
@@ -381,7 +369,10 @@ describe("SideNav", () => {
   });
 
   it("should give the brand mark no hover state, since it is not interactive", () => {
-    const css = readFileSync("src/components/SideNav/SideNav.module.css", "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+    const css = readFileSync("src/components/SideNav/SideNav.module.css", "utf8").replace(
+      /\/\*[\s\S]*?\*\//g,
+      ""
+    );
     expect(css).toMatch(/\.footerBrand\s*\{/);
     expect(css).not.toMatch(/\.footerBrand[^{]*:hover/);
   });
@@ -394,11 +385,19 @@ describe("SideNav", () => {
         </SideNav.FooterBrand>
       </SideNav.Footer>
     );
-    const rail = render(<SideNav.Provider defaultMode="rail"><SideNav>{brand}</SideNav></SideNav.Provider>);
+    const rail = render(
+      <SideNav.Provider defaultMode="rail">
+        <SideNav>{brand}</SideNav>
+      </SideNav.Provider>
+    );
     expect(rail.getByText("Icône")).toBeInTheDocument();
     expect(rail.queryByText("Logo complet")).toBeNull();
     rail.unmount();
-    const expanded = render(<SideNav.Provider defaultMode="expanded"><SideNav>{brand}</SideNav></SideNav.Provider>);
+    const expanded = render(
+      <SideNav.Provider defaultMode="expanded">
+        <SideNav>{brand}</SideNav>
+      </SideNav.Provider>
+    );
     expect(expanded.getByText("Logo complet")).toBeInTheDocument();
     expect(expanded.queryByText("Icône")).toBeNull();
   });
@@ -413,13 +412,16 @@ describe("SideNav", () => {
             </SideNav.FooterBrand>
           </SideNav.Footer>
         </SideNav>
-      </SideNav.Provider>,
+      </SideNav.Provider>
     );
     expect(getByText("Logo complet")).toBeInTheDocument();
   });
 
   it("should give the selected item no indicator of its own in rail mode", () => {
-    const css = readFileSync("src/components/SideNav/SideNav.module.css", "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+    const css = readFileSync("src/components/SideNav/SideNav.module.css", "utf8").replace(
+      /\/\*[\s\S]*?\*\//g,
+      ""
+    );
     expect(css).toMatch(/\.itemSelected\s*\{/);
     expect(css).not.toMatch(/\.itemSelected::before/);
   });
@@ -434,7 +436,7 @@ describe("SideNav", () => {
           <SideNav.Item label="Accueil" iconBefore="Home" />
         </SideNav.Section>
         <SideNav.Footer>Pied de page</SideNav.Footer>
-      </SideNav>,
+      </SideNav>
     );
     const body = container.querySelector("[class*='body']");
     expect(body).toBeInTheDocument();
@@ -456,7 +458,7 @@ describe("SideNav", () => {
               <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
             </SideNav.Section>
           </SideNav>
-        </SideNav.Provider>,
+        </SideNav.Provider>
       );
 
     it("should expose the rail mode on the container and the nav", () => {
@@ -474,7 +476,7 @@ describe("SideNav", () => {
               <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
             </SideNav.Section>
           </SideNav>
-        </SideNav.Provider>,
+        </SideNav.Provider>
       );
 
     it("should use shortTitle instead of title when the nav is in rail", () => {
@@ -502,7 +504,7 @@ describe("SideNav", () => {
               <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
             </SideNav.Section>
           </SideNav>
-        </SideNav.Provider>,
+        </SideNav.Provider>
       );
       const heading = screen.getByText("Administration");
       expect(heading).toBeInTheDocument();
@@ -552,7 +554,7 @@ describe("SideNav", () => {
           <SideNav>
             <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
           </SideNav>
-        </SideNav.Provider>,
+        </SideNav.Provider>
       );
       const nav = screen.getByRole("navigation");
       expect(nav).not.toHaveAttribute("data-collapsed");
@@ -571,7 +573,7 @@ describe("SideNav", () => {
           <SideNav>
             <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
           </SideNav>
-        </SideNav.Provider>,
+        </SideNav.Provider>
       );
       await userEvent.keyboard("{Control>}{Shift>}E{/Shift}{/Control}");
       expect(onModeChange).toHaveBeenLastCalledWith("rail");
@@ -585,7 +587,7 @@ describe("SideNav", () => {
           <SideNav>
             <SideNav.Header companyName="App" showToggle={false} />
           </SideNav>
-        </SideNav.Provider>,
+        </SideNav.Provider>
       );
       expect(screen.queryByRole("button", { name: /navigation/i })).toBeNull();
     });
@@ -596,13 +598,12 @@ describe("SideNav", () => {
           <SideNav>
             <SideNav.Header companyName="App" />
           </SideNav>
-        </SideNav.Provider>,
+        </SideNav.Provider>
       );
       expect(screen.getByRole("button", { name: "Réduire la navigation" })).toBeInTheDocument();
     });
   });
 });
-
 
 describe("SideNav — zone défilante", () => {
   const css = readFileSync("src/components/SideNav/SideNav.module.css", "utf8")
@@ -615,7 +616,7 @@ describe("SideNav — zone défilante", () => {
     render(
       <SideNav>
         <p>Sections</p>
-      </SideNav>,
+      </SideNav>
     );
     const body = screen.getByText("Sections").closest(".body");
     expect(body).not.toBeNull();

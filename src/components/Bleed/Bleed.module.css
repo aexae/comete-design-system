@@ -45,23 +45,53 @@
    ========================================================================== */
 
 /* Raccourcis neutral (intensités) */
-.subtlest    { background-color: var(--background-neutral-subtlest-default); }
-.subtler     { background-color: var(--background-neutral-subtler-default); }
-.bold        { background-color: var(--background-neutral-bold-default); }
+.subtlest {
+  background-color: var(--background-neutral-subtlest-default);
+}
+.subtler {
+  background-color: var(--background-neutral-subtler-default);
+}
+.bold {
+  background-color: var(--background-neutral-bold-default);
+}
 
 /* Couleurs sémantiques (subtlest par défaut) */
-.neutral     { background-color: var(--background-neutral-subtlest-default); }
-.comete       { background-color: var(--background-comete-subtlest-default); }
-.brand        { background-color: var(--background-brand-subtlest-default); }
-.success     { background-color: var(--background-success-subtlest-default); }
-.warning     { background-color: var(--background-warning-subtlest-default); }
-.critical    { background-color: var(--background-critical-subtlest-default); }
-.information { background-color: var(--background-information-subtlest-default); }
-.accentPurple    { background-color: var(--background-accent-purple-subtlest-default); }
-.accentTeal      { background-color: var(--background-accent-teal-subtlest-default); }
-.accentTurquoise { background-color: var(--background-accent-turquoise-subtlest-default); }
-.accentMagenta   { background-color: var(--background-accent-magenta-subtlest-default); }
-.accentBlueGrey  { background-color: var(--background-accent-blue-grey-subtlest-default); }
+.neutral {
+  background-color: var(--background-neutral-subtlest-default);
+}
+.comete {
+  background-color: var(--background-comete-subtlest-default);
+}
+.brand {
+  background-color: var(--background-brand-subtlest-default);
+}
+.success {
+  background-color: var(--background-success-subtlest-default);
+}
+.warning {
+  background-color: var(--background-warning-subtlest-default);
+}
+.critical {
+  background-color: var(--background-critical-subtlest-default);
+}
+.information {
+  background-color: var(--background-information-subtlest-default);
+}
+.accentPurple {
+  background-color: var(--background-accent-purple-subtlest-default);
+}
+.accentTeal {
+  background-color: var(--background-accent-teal-subtlest-default);
+}
+.accentTurquoise {
+  background-color: var(--background-accent-turquoise-subtlest-default);
+}
+.accentMagenta {
+  background-color: var(--background-accent-magenta-subtlest-default);
+}
+.accentBlueGrey {
+  background-color: var(--background-accent-blue-grey-subtlest-default);
+}
 
 /* ==========================================================================
    Bordered — bordure top + bottom avec le token de couleur associé
@@ -72,18 +102,48 @@
   border-bottom: 1px solid var(--border-default);
 }
 
-.bordered.subtlest    { border-color: var(--border-neutral); }
-.bordered.subtler     { border-color: var(--border-neutral); }
-.bordered.bold        { border-color: var(--border-neutral); }
-.bordered.neutral     { border-color: var(--border-neutral); }
-.bordered.comete       { border-color: var(--border-comete-bold); }
-.bordered.brand        { border-color: var(--border-brand-bold); }
-.bordered.success     { border-color: var(--border-success-bold); }
-.bordered.warning     { border-color: var(--border-warning-bold); }
-.bordered.critical    { border-color: var(--border-critical-bold); }
-.bordered.information { border-color: var(--border-information-bold); }
-.bordered.accentPurple    { border-color: var(--border-accent-purple-bold); }
-.bordered.accentTeal      { border-color: var(--border-accent-teal-bold); }
-.bordered.accentTurquoise { border-color: var(--border-accent-turquoise-bold); }
-.bordered.accentMagenta   { border-color: var(--border-accent-magenta-bold); }
-.bordered.accentBlueGrey  { border-color: var(--border-accent-blue-grey-bold); }
+.bordered.subtlest {
+  border-color: var(--border-neutral);
+}
+.bordered.subtler {
+  border-color: var(--border-neutral);
+}
+.bordered.bold {
+  border-color: var(--border-neutral);
+}
+.bordered.neutral {
+  border-color: var(--border-neutral);
+}
+.bordered.comete {
+  border-color: var(--border-comete-bold);
+}
+.bordered.brand {
+  border-color: var(--border-brand-bold);
+}
+.bordered.success {
+  border-color: var(--border-success-bold);
+}
+.bordered.warning {
+  border-color: var(--border-warning-bold);
+}
+.bordered.critical {
+  border-color: var(--border-critical-bold);
+}
+.bordered.information {
+  border-color: var(--border-information-bold);
+}
+.bordered.accentPurple {
+  border-color: var(--border-accent-purple-bold);
+}
+.bordered.accentTeal {
+  border-color: var(--border-accent-teal-bold);
+}
+.bordered.accentTurquoise {
+  border-color: var(--border-accent-turquoise-bold);
+}
+.bordered.accentMagenta {
+  border-color: var(--border-accent-magenta-bold);
+}
+.bordered.accentBlueGrey {
+  border-color: var(--border-accent-blue-grey-bold);
+}

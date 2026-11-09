@@ -36,7 +36,11 @@ describe("Bleed", () => {
   });
 
   it("should support both inline and block", () => {
-    const { container } = render(<Bleed inline="200" block="100">x</Bleed>);
+    const { container } = render(
+      <Bleed inline="200" block="100">
+        x
+      </Bleed>
+    );
     const el = container.firstElementChild as HTMLElement;
     expect(el.classList.contains("inline")).toBe(true);
     expect(el.classList.contains("block")).toBe(true);
@@ -49,14 +53,22 @@ describe("Bleed", () => {
   });
 
   it("should not apply inline class when isFull is true", () => {
-    const { container } = render(<Bleed isFull inline="200">x</Bleed>);
+    const { container } = render(
+      <Bleed isFull inline="200">
+        x
+      </Bleed>
+    );
     const el = container.firstElementChild as HTMLElement;
     expect(el.classList.contains("full")).toBe(true);
     expect(el.classList.contains("inline")).toBe(false);
   });
 
   it("should not set --_bleed-inline when isFull is true", () => {
-    const { container } = render(<Bleed isFull inline="200">x</Bleed>);
+    const { container } = render(
+      <Bleed isFull inline="200">
+        x
+      </Bleed>
+    );
     const el = container.firstElementChild as HTMLElement;
     expect(el.style.getPropertyValue("--_bleed-inline")).toBe("");
   });
@@ -77,14 +89,34 @@ describe("Bleed", () => {
   });
 
   it("should apply both color and bordered", () => {
-    const { container } = render(<Bleed color="critical" isBordered>x</Bleed>);
+    const { container } = render(
+      <Bleed color="critical" isBordered>
+        x
+      </Bleed>
+    );
     const el = container.firstElementChild!;
     expect(el.classList.contains("critical")).toBe(true);
     expect(el.classList.contains("bordered")).toBe(true);
   });
 
   it("should support all colors", () => {
-    const colors = ["neutral", "comete", "brand", "success", "warning", "critical", "information", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey", "subtlest", "subtler", "bold"] as const;
+    const colors = [
+      "neutral",
+      "comete",
+      "brand",
+      "success",
+      "warning",
+      "critical",
+      "information",
+      "accentPurple",
+      "accentTeal",
+      "accentTurquoise",
+      "accentMagenta",
+      "accentBlueGrey",
+      "subtlest",
+      "subtler",
+      "bold",
+    ] as const;
     for (const c of colors) {
       const { container, unmount } = render(<Bleed color={c}>x</Bleed>);
       expect(container.firstElementChild?.classList.contains(c)).toBe(true);

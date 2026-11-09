@@ -7,7 +7,7 @@ describe("Page", () => {
     const { getByText } = render(
       <Page>
         <p>Hello</p>
-      </Page>,
+      </Page>
     );
     expect(getByText("Hello")).toBeInTheDocument();
   });
@@ -16,7 +16,7 @@ describe("Page", () => {
     const { container } = render(
       <Page>
         <p>x</p>
-      </Page>,
+      </Page>
     );
     expect((container.firstChild as HTMLElement).className).toContain("page");
   });
@@ -25,7 +25,7 @@ describe("Page", () => {
     const { container } = render(
       <Page className="custom">
         <p>x</p>
-      </Page>,
+      </Page>
     );
     expect((container.firstChild as HTMLElement).className).toContain("custom");
   });
@@ -41,15 +41,13 @@ describe("Page.Bar", () => {
 
   it("should render a ReactNode title", () => {
     const { getByText } = render(
-      <Page.Bar title={<span data-testid="custom-title">Custom</span>} />,
+      <Page.Bar title={<span data-testid="custom-title">Custom</span>} />
     );
     expect(getByText("Custom")).toBeInTheDocument();
   });
 
   it("should render leading when provided", () => {
-    const { getByText } = render(
-      <Page.Bar title="T" leading={<button>Menu</button>} />,
-    );
+    const { getByText } = render(<Page.Bar title="T" leading={<button>Menu</button>} />);
     expect(getByText("Menu")).toBeInTheDocument();
   });
 
@@ -59,9 +57,7 @@ describe("Page.Bar", () => {
   });
 
   it("should render trailing when provided", () => {
-    const { getByText } = render(
-      <Page.Bar title="T" trailing={<button>Avatar</button>} />,
-    );
+    const { getByText } = render(<Page.Bar title="T" trailing={<button>Avatar</button>} />);
     expect(getByText("Avatar")).toBeInTheDocument();
   });
 
@@ -108,7 +104,7 @@ describe("Page — actions globales portées par le layout", () => {
     const { getByRole } = render(
       <Page>
         <Page.Bar title="Accueil" />
-      </Page>,
+      </Page>
     );
     expect(getByRole("button", { name: "Notifications" })).toBeInTheDocument();
     expect(getByRole("button", { name: "Réglages" })).toBeInTheDocument();
@@ -118,7 +114,7 @@ describe("Page — actions globales portées par le layout", () => {
     const { container } = render(
       <Page>
         <Page.Bar title="Accueil" />
-      </Page>,
+      </Page>
     );
     expect(container.querySelector("[class*='trailing']")).not.toBeNull();
   });
@@ -127,7 +123,7 @@ describe("Page — actions globales portées par le layout", () => {
     const { getByText, queryByRole } = render(
       <Page globalActions={<button>Custom</button>}>
         <Page.Bar title="Accueil" />
-      </Page>,
+      </Page>
     );
     expect(getByText("Custom")).toBeInTheDocument();
     expect(queryByRole("button", { name: "Notifications" })).toBeNull();
@@ -137,7 +133,7 @@ describe("Page — actions globales portées par le layout", () => {
     const { container, queryByRole } = render(
       <Page globalActions={null}>
         <Page.Bar title="Accueil" />
-      </Page>,
+      </Page>
     );
     expect(queryByRole("button", { name: "Notifications" })).toBeNull();
     expect(container.querySelector("[class*='trailing']")).toBeNull();
@@ -147,7 +143,7 @@ describe("Page — actions globales portées par le layout", () => {
     const { getByText, getByRole } = render(
       <Page>
         <Page.Bar title="Accueil" trailing={<button>Extra</button>} />
-      </Page>,
+      </Page>
     );
     expect(getByText("Extra")).toBeInTheDocument();
     expect(getByRole("button", { name: "Notifications" })).toBeInTheDocument();
@@ -191,10 +187,10 @@ describe("Page.Toolbar", () => {
         search={<span>Q</span>}
         filters={<span>Filtres</span>}
         start={<span>Vues</span>}
-      />,
+      />
     );
     const slots = Array.from(container.firstChild!.childNodes).map(
-      (n) => (n as HTMLElement).className,
+      (n) => (n as HTMLElement).className
     );
     const iSearch = slots.findIndex((c) => c.includes("toolbarSearch"));
     const iFilters = slots.findIndex((c) => c.includes("toolbarFilters"));
@@ -205,15 +201,11 @@ describe("Page.Toolbar", () => {
 
   it("should include the base toolbar class", () => {
     const { container } = render(<Page.Toolbar start={<span>x</span>} />);
-    expect((container.firstChild as HTMLElement).className).toContain(
-      "toolbar",
-    );
+    expect((container.firstChild as HTMLElement).className).toContain("toolbar");
   });
 
   it("should include custom className", () => {
-    const { container } = render(
-      <Page.Toolbar start={<span>x</span>} className="custom" />,
-    );
+    const { container } = render(<Page.Toolbar start={<span>x</span>} className="custom" />);
     expect((container.firstChild as HTMLElement).className).toContain("custom");
   });
 });
@@ -223,7 +215,7 @@ describe("Page.Body", () => {
     const { getByText } = render(
       <Page.Body>
         <p>Content</p>
-      </Page.Body>,
+      </Page.Body>
     );
     expect(getByText("Content")).toBeInTheDocument();
   });
@@ -232,7 +224,7 @@ describe("Page.Body", () => {
     const { container } = render(
       <Page.Body>
         <p>x</p>
-      </Page.Body>,
+      </Page.Body>
     );
     expect((container.firstChild as HTMLElement).tagName).toBe("MAIN");
   });
@@ -241,7 +233,7 @@ describe("Page.Body", () => {
     const { container } = render(
       <Page.Body>
         <p>x</p>
-      </Page.Body>,
+      </Page.Body>
     );
     expect((container.firstChild as HTMLElement).className).toContain("body");
   });
@@ -250,7 +242,7 @@ describe("Page.Body", () => {
     const { container } = render(
       <Page.Body className="custom">
         <p>x</p>
-      </Page.Body>,
+      </Page.Body>
     );
     expect((container.firstChild as HTMLElement).className).toContain("custom");
   });
@@ -265,7 +257,7 @@ describe("Page composition", () => {
         <Page.Body>
           <p>List of agents</p>
         </Page.Body>
-      </Page>,
+      </Page>
     );
     expect(getByRole("heading", { level: 1 }).textContent).toBe("Agents");
     expect(getByText("Search")).toBeInTheDocument();
@@ -279,18 +271,16 @@ describe("Page.Body — états natifs", () => {
     const { container } = render(
       <Page>
         <Page.Body isLoading />
-      </Page>,
+      </Page>
     );
-    expect(
-      container.querySelector("[class*='bodySkeleton']"),
-    ).toBeInTheDocument();
+    expect(container.querySelector("[class*='bodySkeleton']")).toBeInTheDocument();
   });
 
   it("should render the empty state when isEmpty", () => {
     const { getByText } = render(
       <Page>
         <Page.Body isEmpty emptyTitle="Vide" />
-      </Page>,
+      </Page>
     );
     expect(getByText("Vide")).toBeInTheDocument();
   });
@@ -300,7 +290,7 @@ describe("Page.Body — états natifs", () => {
     const { getByText, getByRole } = render(
       <Page>
         <Page.Body error="Erreur X" onRetry={onRetry} />
-      </Page>,
+      </Page>
     );
     expect(getByText("Erreur X")).toBeInTheDocument();
     fireEvent.click(getByRole("button", { name: "Réessayer" }));
@@ -313,7 +303,7 @@ describe("Page.Body — états natifs", () => {
         <Page.Body>
           <p>Contenu</p>
         </Page.Body>
-      </Page>,
+      </Page>
     );
     expect(getByText("Contenu")).toBeInTheDocument();
   });

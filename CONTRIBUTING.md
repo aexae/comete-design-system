@@ -16,6 +16,7 @@ Test : « si trois écrans consommateurs veulent cette feature, copieront-ils du
 JSX de story ? » Si oui, c'est un trou d'API.
 
 Signaux d'alarme en review :
+
 - `useEffect` / `addEventListener` dans une story
 - inline styles structurels
 - helper privé dupliqué entre fichiers de stories

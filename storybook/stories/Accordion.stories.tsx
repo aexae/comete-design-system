@@ -22,7 +22,10 @@ const meta = {
   parameters: {
     layout: "centered",
     docs: {
-      description: { component: "Les accordéons sont des listes d'en-têtes qui se déploient et se replient pour révéler des blocs de contenu cachés. Ils permettent de réduire le défilement et de raccourcir les pages." },
+      description: {
+        component:
+          "Les accordéons sont des listes d'en-têtes qui se déploient et se replient pour révéler des blocs de contenu cachés. Ils permettent de réduire le défilement et de raccourcir les pages.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -33,15 +36,11 @@ const meta = {
                     <Accordion defaultValue={["a"]}>
                       <AccordionItem value="a">
                         <AccordionTrigger>Est-ce accessible ?</AccordionTrigger>
-                        <AccordionContent>
-                          Oui, conforme au pattern WAI-ARIA.
-                        </AccordionContent>
+                        <AccordionContent>Oui, conforme au pattern WAI-ARIA.</AccordionContent>
                       </AccordionItem>
                       <AccordionItem value="b">
                         <AccordionTrigger>Est-ce personnalisable ?</AccordionTrigger>
-                        <AccordionContent>
-                          Oui, via les design tokens.
-                        </AccordionContent>
+                        <AccordionContent>Oui, via les design tokens.</AccordionContent>
                       </AccordionItem>
                     </Accordion>
                   </div>
@@ -54,9 +53,7 @@ const meta = {
                     <Accordion defaultValue={["a"]}>
                       <AccordionItem value="a">
                         <AccordionTrigger>Section unique</AccordionTrigger>
-                        <AccordionContent>
-                          Un contenu court, toujours pertinent.
-                        </AccordionContent>
+                        <AccordionContent>Un contenu court, toujours pertinent.</AccordionContent>
                       </AccordionItem>
                     </Accordion>
                   </div>
@@ -109,8 +106,7 @@ const FAQ = [
   {
     value: "styled",
     question: "Is it styled?",
-    answer:
-      "Yes. It ships with Comète design tokens — typography, spacing and colours.",
+    answer: "Yes. It ships with Comète design tokens — typography, spacing and colours.",
   },
   {
     value: "animated",
@@ -163,9 +159,7 @@ export const Disabled: Story = {
       <Accordion defaultValue={["accessible"]}>
         <AccordionItem value="accessible">
           <AccordionTrigger>Is it accessible?</AccordionTrigger>
-          <AccordionContent>
-            Yes. It adheres to the WAI-ARIA design pattern.
-          </AccordionContent>
+          <AccordionContent>Yes. It adheres to the WAI-ARIA design pattern.</AccordionContent>
         </AccordionItem>
         <AccordionItem value="styled" disabled>
           <AccordionTrigger>Is it styled? (disabled)</AccordionTrigger>
@@ -173,9 +167,7 @@ export const Disabled: Story = {
         </AccordionItem>
         <AccordionItem value="animated">
           <AccordionTrigger>Is it animated?</AccordionTrigger>
-          <AccordionContent>
-            The chevron rotates on toggle.
-          </AccordionContent>
+          <AccordionContent>The chevron rotates on toggle.</AccordionContent>
         </AccordionItem>
       </Accordion>
     </div>
@@ -238,19 +230,13 @@ export const WithStartIcon: Story = {
     <div style={WRAP}>
       <Accordion defaultValue={["accessible"]}>
         <AccordionItem value="accessible">
-          <AccordionTrigger
-            startIcon={<Icon icon="Person" spacing="none" size={16} />}
-          >
+          <AccordionTrigger startIcon={<Icon icon="Person" spacing="none" size={16} />}>
             Compte
           </AccordionTrigger>
-          <AccordionContent>
-            Informations personnelles et préférences.
-          </AccordionContent>
+          <AccordionContent>Informations personnelles et préférences.</AccordionContent>
         </AccordionItem>
         <AccordionItem value="styled">
-          <AccordionTrigger
-            startIcon={<Icon icon="Settings" spacing="none" size={16} />}
-          >
+          <AccordionTrigger startIcon={<Icon icon="Settings" spacing="none" size={16} />}>
             Paramètres
           </AccordionTrigger>
           <AccordionContent>Réglages de l&apos;application.</AccordionContent>

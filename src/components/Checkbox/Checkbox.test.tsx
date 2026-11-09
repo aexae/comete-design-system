@@ -82,9 +82,7 @@ describe("Checkbox", () => {
   describe("prop isIndeterminate", () => {
     it("should set data-indeterminate attribute", () => {
       const { container } = render(<Checkbox label="Test" isIndeterminate />);
-      expect(
-        container.querySelector("[data-indeterminate]"),
-      ).toBeInTheDocument();
+      expect(container.querySelector("[data-indeterminate]")).toBeInTheDocument();
     });
   });
 
@@ -105,16 +103,12 @@ describe("Checkbox", () => {
     });
 
     it("should set data-selected when defaultChecked", () => {
-      const { container } = render(
-        <Checkbox label="Test" defaultChecked />,
-      );
+      const { container } = render(<Checkbox label="Test" defaultChecked />);
       expect(container.querySelector("[data-selected]")).toBeInTheDocument();
     });
 
     it("should set data-selected when isChecked", () => {
-      const { container } = render(
-        <Checkbox label="Test" isChecked onChange={() => {}} />,
-      );
+      const { container } = render(<Checkbox label="Test" isChecked onChange={() => {}} />);
       expect(container.querySelector("[data-selected]")).toBeInTheDocument();
     });
   });
@@ -131,7 +125,10 @@ describe("Checkbox — contexte de positionnement", () => {
   it("should be a positioned ancestor so the visually hidden native input stays inside it", () => {
     // `<input>` masqué par React Aria (`position: absolute`) : sans ancêtre positionné proche, il
     // se cale sur un ancêtre lointain et son focus fait défiler ce parent (popup blanche).
-    const css = readFileSync("src/components/Checkbox/Checkbox.module.css", "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+    const css = readFileSync("src/components/Checkbox/Checkbox.module.css", "utf8").replace(
+      /\/\*[\s\S]*?\*\//g,
+      ""
+    );
     const root = /\.checkbox\s*\{([^}]*)\}/.exec(css)?.[1] ?? "";
     expect(root).toMatch(/position:\s*relative/);
   });

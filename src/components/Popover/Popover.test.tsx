@@ -15,7 +15,7 @@ function renderPopover() {
           <p>Content</p>
         </Dialog>
       </Popover>
-    </DialogTrigger>,
+    </DialogTrigger>
   );
 }
 
@@ -57,7 +57,7 @@ describe("Popover", () => {
               <p>Content</p>
             </Dialog>
           </Popover>
-        </DialogTrigger>,
+        </DialogTrigger>
       );
       await userEvent.click(screen.getByRole("button", { name: "Open" }));
       const dialog = screen.getByRole("dialog");
@@ -65,7 +65,6 @@ describe("Popover", () => {
     });
   });
 });
-
 
 describe("Popover — zone défilante", () => {
   async function ouvrir(props: { isScrollable?: boolean } = {}) {
@@ -77,7 +76,7 @@ describe("Popover — zone défilante", () => {
             <p>Content</p>
           </Dialog>
         </Popover>
-      </DialogTrigger>,
+      </DialogTrigger>
     );
     await userEvent.click(screen.getByRole("button", { name: "Open" }));
     return screen.getByRole("dialog").closest("[class*='popover']");

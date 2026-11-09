@@ -139,14 +139,10 @@ export function DualYearSingleCalendar({
   const todayDate = today(getLocalTimeZone());
   const initialYear = (value ?? defaultValue)?.year ?? todayDate.year;
 
-  const [leftRangeStart, setLeftRangeStart] = useState(() =>
-    decadeStart(initialYear)
-  );
+  const [leftRangeStart, setLeftRangeStart] = useState(() => decadeStart(initialYear));
   const rightRangeStart = leftRangeStart + GRID_SIZE;
 
-  const [internalValue, setInternalValue] = useState<CalendarDate | undefined>(
-    defaultValue
-  );
+  const [internalValue, setInternalValue] = useState<CalendarDate | undefined>(defaultValue);
 
   const controlled = value !== undefined;
   const resolvedValue = controlled ? value : internalValue;
@@ -247,9 +243,9 @@ export function YearRangeCalendar({
 
   const [rangeStart, setRangeStart] = useState(() => decadeStart(initialYear));
 
-  const [internalValue, setInternalValue] = useState<
-    RangeValue<CalendarDate> | undefined
-  >(defaultValue);
+  const [internalValue, setInternalValue] = useState<RangeValue<CalendarDate> | undefined>(
+    defaultValue
+  );
   const [pending, setPending] = useState<number | undefined>(undefined);
   const [hovered, setHovered] = useState<number | undefined>(undefined);
 
@@ -302,9 +298,7 @@ export function YearRangeCalendar({
     <div
       role="group"
       aria-label={`Choisir une période — ${rangeStart}–${rangeEnd}`}
-      className={[calStyles.calendar, styles.yearCalendar, className]
-        .filter(Boolean)
-        .join(" ")}
+      className={[calStyles.calendar, styles.yearCalendar, className].filter(Boolean).join(" ")}
       data-disabled={isDisabled || undefined}
       data-selecting={pending !== undefined ? true : undefined}
     >
@@ -356,14 +350,12 @@ export function DualYearCalendar({
 
   // Panel gauche commence à la plage de 20 ans de l'année initiale.
   // Panel droit = plage suivante (+ GRID_SIZE).
-  const [leftRangeStart, setLeftRangeStart] = useState(() =>
-    decadeStart(initialYear)
-  );
+  const [leftRangeStart, setLeftRangeStart] = useState(() => decadeStart(initialYear));
   const rightRangeStart = leftRangeStart + GRID_SIZE;
 
-  const [internalValue, setInternalValue] = useState<
-    RangeValue<CalendarDate> | undefined
-  >(defaultValue);
+  const [internalValue, setInternalValue] = useState<RangeValue<CalendarDate> | undefined>(
+    defaultValue
+  );
   // Première année cliquée en attente du deuxième clic.
   const [pending, setPending] = useState<number | undefined>(undefined);
   // Année survolée pendant la sélection.

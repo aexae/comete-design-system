@@ -49,7 +49,7 @@ describe("Spotlight", () => {
     render(
       <Spotlight targetRef={targetRef} isOpen={false}>
         Content
-      </Spotlight>,
+      </Spotlight>
     );
     expect(screen.queryByText("Content")).not.toBeInTheDocument();
   });
@@ -58,7 +58,7 @@ describe("Spotlight", () => {
     render(
       <Spotlight targetRef={targetRef} isOpen>
         Content
-      </Spotlight>,
+      </Spotlight>
     );
     expect(screen.getByText("Content")).toBeInTheDocument();
   });
@@ -67,7 +67,7 @@ describe("Spotlight", () => {
     render(
       <Spotlight targetRef={targetRef} title="Welcome" isOpen>
         Body text
-      </Spotlight>,
+      </Spotlight>
     );
     expect(screen.getByText("Welcome")).toBeInTheDocument();
   });
@@ -76,7 +76,7 @@ describe("Spotlight", () => {
     render(
       <Spotlight targetRef={targetRef} isOpen>
         Body
-      </Spotlight>,
+      </Spotlight>
     );
     expect(screen.getByRole("button", { name: "OK" })).toBeInTheDocument();
   });
@@ -86,7 +86,7 @@ describe("Spotlight", () => {
     render(
       <Spotlight targetRef={targetRef} isOpen onOpenChange={onChange}>
         Body
-      </Spotlight>,
+      </Spotlight>
     );
     await userEvent.click(screen.getByRole("button", { name: "OK" }));
     expect(onChange).toHaveBeenCalledWith(false);
@@ -97,7 +97,7 @@ describe("Spotlight", () => {
     render(
       <Spotlight targetRef={targetRef} isOpen onOpenChange={onChange}>
         Body
-      </Spotlight>,
+      </Spotlight>
     );
     await userEvent.keyboard("{Escape}");
     expect(onChange).toHaveBeenCalledWith(false);
@@ -114,7 +114,7 @@ describe("Spotlight", () => {
         ]}
       >
         Body
-      </Spotlight>,
+      </Spotlight>
     );
     expect(screen.getByRole("button", { name: "Got it" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Learn more" })).toBeInTheDocument();
@@ -129,7 +129,7 @@ describe("Spotlight", () => {
         actions={[{ label: "Ignored", onPress: vi.fn() }]}
       >
         Body
-      </Spotlight>,
+      </Spotlight>
     );
     expect(screen.getByText("Custom footer")).toBeInTheDocument();
     expect(screen.queryByText("Ignored")).not.toBeInTheDocument();
@@ -139,7 +139,7 @@ describe("Spotlight", () => {
     render(
       <Spotlight targetRef={targetRef} isOpen className="custom-spotlight">
         Body
-      </Spotlight>,
+      </Spotlight>
     );
     const dialog = screen.getByRole("dialog");
     expect(dialog.className).toContain("custom-spotlight");
@@ -157,7 +157,7 @@ describe("Spotlight", () => {
           onDone={vi.fn()}
         >
           Step 1
-        </Spotlight>,
+        </Spotlight>
       );
       expect(screen.getByRole("button", { name: "Suivant" })).toBeInTheDocument();
       expect(screen.queryByRole("button", { name: "Précédent" })).not.toBeInTheDocument();
@@ -175,7 +175,7 @@ describe("Spotlight", () => {
           onDone={vi.fn()}
         >
           Step 2
-        </Spotlight>,
+        </Spotlight>
       );
       expect(screen.getByRole("button", { name: "Précédent" })).toBeInTheDocument();
       expect(screen.getByRole("button", { name: "Suivant" })).toBeInTheDocument();
@@ -183,15 +183,9 @@ describe("Spotlight", () => {
 
     it("should render Terminer on last step", () => {
       render(
-        <Spotlight
-          targetRef={targetRef}
-          isOpen
-          activeStep={2}
-          totalSteps={3}
-          onDone={vi.fn()}
-        >
+        <Spotlight targetRef={targetRef} isOpen activeStep={2} totalSteps={3} onDone={vi.fn()}>
           Step 3
-        </Spotlight>,
+        </Spotlight>
       );
       expect(screen.getByRole("button", { name: "Terminer" })).toBeInTheDocument();
       expect(screen.queryByRole("button", { name: "Suivant" })).not.toBeInTheDocument();
@@ -209,7 +203,7 @@ describe("Spotlight", () => {
           onDone={vi.fn()}
         >
           Step 1
-        </Spotlight>,
+        </Spotlight>
       );
       await userEvent.click(screen.getByRole("button", { name: "Suivant" }));
       expect(onNext).toHaveBeenCalledOnce();
@@ -218,15 +212,9 @@ describe("Spotlight", () => {
     it("should call onDone when Terminer is pressed", async () => {
       const onDone = vi.fn();
       render(
-        <Spotlight
-          targetRef={targetRef}
-          isOpen
-          activeStep={2}
-          totalSteps={3}
-          onDone={onDone}
-        >
+        <Spotlight targetRef={targetRef} isOpen activeStep={2} totalSteps={3} onDone={onDone}>
           Step 3
-        </Spotlight>,
+        </Spotlight>
       );
       await userEvent.click(screen.getByRole("button", { name: "Terminer" }));
       expect(onDone).toHaveBeenCalledOnce();
@@ -244,7 +232,7 @@ describe("Spotlight", () => {
           onSkip={vi.fn()}
         >
           Step 1
-        </Spotlight>,
+        </Spotlight>
       );
       expect(screen.getByRole("button", { name: "Ignorer" })).toBeInTheDocument();
     });
@@ -262,7 +250,7 @@ describe("Spotlight", () => {
           onSkip={onSkip}
         >
           Step 1
-        </Spotlight>,
+        </Spotlight>
       );
       await userEvent.click(screen.getByRole("button", { name: "Ignorer" }));
       expect(onSkip).toHaveBeenCalledOnce();
@@ -279,7 +267,7 @@ describe("Spotlight", () => {
           onDone={vi.fn()}
         >
           Step 2
-        </Spotlight>,
+        </Spotlight>
       );
       const dots = screen.getAllByRole("tab");
       expect(dots).toHaveLength(4);
@@ -291,7 +279,7 @@ describe("Spotlight", () => {
       const { container } = render(
         <Spotlight targetRef={targetRef} isOpen>
           Body
-        </Spotlight>,
+        </Spotlight>
       );
       expect(container.ownerDocument.querySelector("svg")).toBeInTheDocument();
     });
@@ -300,7 +288,7 @@ describe("Spotlight", () => {
       const { container } = render(
         <Spotlight targetRef={targetRef} isOpen pulse>
           Body
-        </Spotlight>,
+        </Spotlight>
       );
       const pulseRect = container.ownerDocument.querySelector("[class*='pulse']");
       expect(pulseRect).toBeInTheDocument();
@@ -310,7 +298,7 @@ describe("Spotlight", () => {
       const { container } = render(
         <Spotlight targetRef={targetRef} isOpen>
           Body
-        </Spotlight>,
+        </Spotlight>
       );
       const pulseRect = container.ownerDocument.querySelector("[class*='pulse']");
       expect(pulseRect).not.toBeInTheDocument();

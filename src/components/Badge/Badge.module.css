@@ -30,19 +30,19 @@
 /* high et medium : pill avec texte */
 .high,
 .medium {
-  min-height: var(--size150);  /* 12px — Figma min-height */
-  height: var(--size200);      /* 16px */
+  min-height: var(--size150); /* 12px — Figma min-height */
+  height: var(--size200); /* 16px */
   /* Largeur mini = hauteur : un badge d'un caractère ne devient jamais plus étroit que haut
      (un cercle de 16px au minimum). */
-  min-width: var(--size200);   /* 16px */
-  padding: 0 var(--space075);  /* 0 6px */
+  min-width: var(--size200); /* 16px */
+  padding: 0 var(--space075); /* 0 6px */
   box-sizing: border-box;
 }
 
 /* low : point coloré sans texte */
 .low {
-  width: var(--size100);   /* 8px */
-  height: var(--size100);  /* 8px */
+  width: var(--size100); /* 8px */
+  height: var(--size100); /* 8px */
 }
 
 /* ==========================================================================
@@ -63,60 +63,148 @@
    ========================================================================== */
 
 /* — neutral — */
-.neutral.high   { background-color: var(--background-neutral-bold-default);     color: var(--text-inverted); }
-.neutral.medium { background-color: var(--background-neutral-subtler-default);   color: var(--text-default); }
-.neutral.low    { background-color: var(--background-neutral-bold-default); }
+.neutral.high {
+  background-color: var(--background-neutral-bold-default);
+  color: var(--text-inverted);
+}
+.neutral.medium {
+  background-color: var(--background-neutral-subtler-default);
+  color: var(--text-default);
+}
+.neutral.low {
+  background-color: var(--background-neutral-bold-default);
+}
 
 /* — information — */
-.information.high   { background-color: var(--background-information-bold-default);     color: var(--text-inverted); }
-.information.medium { background-color: var(--background-information-subtlest-default); color: var(--text-information); }
-.information.low    { background-color: var(--background-information-bold-default); }
+.information.high {
+  background-color: var(--background-information-bold-default);
+  color: var(--text-inverted);
+}
+.information.medium {
+  background-color: var(--background-information-subtlest-default);
+  color: var(--text-information);
+}
+.information.low {
+  background-color: var(--background-information-bold-default);
+}
 
 /* — information-inverted (fond blanc, texte information) — */
 /* NOTE: CSS Modules expose le nom de classe tel quel via styles["information-inverted"] */
-.information-inverted.high   { background-color: var(--background-default-default); color: var(--text-information); }
-.information-inverted.medium { background-color: var(--background-default-default); color: var(--text-selected); }
-.information-inverted.low    { background-color: var(--background-default-default); }
+.information-inverted.high {
+  background-color: var(--background-default-default);
+  color: var(--text-information);
+}
+.information-inverted.medium {
+  background-color: var(--background-default-default);
+  color: var(--text-selected);
+}
+.information-inverted.low {
+  background-color: var(--background-default-default);
+}
 
 /* — critical — */
-.critical.high   { background-color: var(--background-critical-bold-default);     color: var(--text-inverted); }
-.critical.medium { background-color: var(--background-critical-subtlest-default); color: var(--text-critical); }
-.critical.low    { background-color: var(--background-critical-bold-default); }
+.critical.high {
+  background-color: var(--background-critical-bold-default);
+  color: var(--text-inverted);
+}
+.critical.medium {
+  background-color: var(--background-critical-subtlest-default);
+  color: var(--text-critical);
+}
+.critical.low {
+  background-color: var(--background-critical-bold-default);
+}
 
 /* — success — */
-.success.high   { background-color: var(--background-success-bold-default);     color: var(--text-inverted); }
-.success.medium { background-color: var(--background-success-subtlest-default); color: var(--text-success); }
-.success.low    { background-color: var(--background-success-bold-default); }
+.success.high {
+  background-color: var(--background-success-bold-default);
+  color: var(--text-inverted);
+}
+.success.medium {
+  background-color: var(--background-success-subtlest-default);
+  color: var(--text-success);
+}
+.success.low {
+  background-color: var(--background-success-bold-default);
+}
 
 /* — warning (fond clair/jaune : texte toujours sombre pour le contraste) — */
-.warning.high   { background-color: var(--background-warning-bold-default);     color: var(--text-on-warning); }
-.warning.medium { background-color: var(--background-warning-subtlest-default); color: var(--text-on-warning); }
-.warning.low    { background-color: var(--background-warning-bold-default); }
+.warning.high {
+  background-color: var(--background-warning-bold-default);
+  color: var(--text-on-warning);
+}
+.warning.medium {
+  background-color: var(--background-warning-subtlest-default);
+  color: var(--text-on-warning);
+}
+.warning.low {
+  background-color: var(--background-warning-bold-default);
+}
 
 /* — accentPurple — */
-.accentPurple.high   { background-color: var(--background-accent-purple-bold-default);     color: var(--text-inverted); }
-.accentPurple.medium { background-color: var(--background-accent-purple-subtlest-default); color: var(--text-accent-purple); }
-.accentPurple.low    { background-color: var(--background-accent-purple-bold-default); }
+.accentPurple.high {
+  background-color: var(--background-accent-purple-bold-default);
+  color: var(--text-inverted);
+}
+.accentPurple.medium {
+  background-color: var(--background-accent-purple-subtlest-default);
+  color: var(--text-accent-purple);
+}
+.accentPurple.low {
+  background-color: var(--background-accent-purple-bold-default);
+}
 
 /* — accentTeal — */
-.accentTeal.high   { background-color: var(--background-accent-teal-bold-default);     color: var(--text-inverted); }
-.accentTeal.medium { background-color: var(--background-accent-teal-subtlest-default); color: var(--text-accent-teal); }
-.accentTeal.low    { background-color: var(--background-accent-teal-bold-default); }
+.accentTeal.high {
+  background-color: var(--background-accent-teal-bold-default);
+  color: var(--text-inverted);
+}
+.accentTeal.medium {
+  background-color: var(--background-accent-teal-subtlest-default);
+  color: var(--text-accent-teal);
+}
+.accentTeal.low {
+  background-color: var(--background-accent-teal-bold-default);
+}
 
 /* — accentTurquoise — */
-.accentTurquoise.high   { background-color: var(--background-accent-turquoise-bold-default);     color: var(--text-inverted); }
-.accentTurquoise.medium { background-color: var(--background-accent-turquoise-subtlest-default); color: var(--text-accent-turquoise); }
-.accentTurquoise.low    { background-color: var(--background-accent-turquoise-bold-default); }
+.accentTurquoise.high {
+  background-color: var(--background-accent-turquoise-bold-default);
+  color: var(--text-inverted);
+}
+.accentTurquoise.medium {
+  background-color: var(--background-accent-turquoise-subtlest-default);
+  color: var(--text-accent-turquoise);
+}
+.accentTurquoise.low {
+  background-color: var(--background-accent-turquoise-bold-default);
+}
 
 /* — accentMagenta — */
-.accentMagenta.high   { background-color: var(--background-accent-magenta-bold-default);     color: var(--text-inverted); }
-.accentMagenta.medium { background-color: var(--background-accent-magenta-subtlest-default); color: var(--text-accent-magenta); }
-.accentMagenta.low    { background-color: var(--background-accent-magenta-bold-default); }
+.accentMagenta.high {
+  background-color: var(--background-accent-magenta-bold-default);
+  color: var(--text-inverted);
+}
+.accentMagenta.medium {
+  background-color: var(--background-accent-magenta-subtlest-default);
+  color: var(--text-accent-magenta);
+}
+.accentMagenta.low {
+  background-color: var(--background-accent-magenta-bold-default);
+}
 
 /* — accentBlueGrey — */
-.accentBlueGrey.high   { background-color: var(--background-accent-blue-grey-bold-default);     color: var(--text-inverted); }
-.accentBlueGrey.medium { background-color: var(--background-accent-blue-grey-subtlest-default); color: var(--text-accent-blue-grey); }
-.accentBlueGrey.low    { background-color: var(--background-accent-blue-grey-bold-default); }
+.accentBlueGrey.high {
+  background-color: var(--background-accent-blue-grey-bold-default);
+  color: var(--text-inverted);
+}
+.accentBlueGrey.medium {
+  background-color: var(--background-accent-blue-grey-subtlest-default);
+  color: var(--text-accent-blue-grey);
+}
+.accentBlueGrey.low {
+  background-color: var(--background-accent-blue-grey-bold-default);
+}
 
 /* ==========================================================================
    Disabled — placé en dernier pour surcharger tous les sélecteurs composés

@@ -54,11 +54,7 @@ export function DrawerProvider({ children }: { children: ReactNode }): ReactElem
 
   const value = useMemo(() => ({ stack, register, unregister }), [stack, register, unregister]);
 
-  return (
-    <DrawerContext.Provider value={value}>
-      {children}
-    </DrawerContext.Provider>
-  );
+  return <DrawerContext.Provider value={value}>{children}</DrawerContext.Provider>;
 }
 
 DrawerProvider.displayName = "DrawerProvider";

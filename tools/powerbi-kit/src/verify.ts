@@ -22,20 +22,33 @@ function decode(uri: string): string {
 /** Parseur CSV minimal (RFC 4180, séparateur virgule, BOM toléré). */
 function parseCsv(text: string): string[][] {
   const rows: string[][] = [];
-  let row: string[] = [], cell = "", quoted = false;
+  let row: string[] = [],
+    cell = "",
+    quoted = false;
   const s = text.replace(/^﻿/, "");
   for (let i = 0; i < s.length; i += 1) {
     const c = s[i];
     if (quoted) {
-      if (c === '"' && s[i + 1] === '"') { cell += '"'; i += 1; }
-      else if (c === '"') quoted = false;
+      if (c === '"' && s[i + 1] === '"') {
+        cell += '"';
+        i += 1;
+      } else if (c === '"') quoted = false;
       else cell += c;
     } else if (c === '"') quoted = true;
-    else if (c === ",") { row.push(cell); cell = ""; }
-    else if (c === "\n") { row.push(cell); rows.push(row); row = []; cell = ""; }
-    else if (c !== "\r") cell += c;
+    else if (c === ",") {
+      row.push(cell);
+      cell = "";
+    } else if (c === "\n") {
+      row.push(cell);
+      rows.push(row);
+      row = [];
+      cell = "";
+    } else if (c !== "\r") cell += c;
   }
-  if (cell !== "" || row.length > 0) { row.push(cell); rows.push(row); }
+  if (cell !== "" || row.length > 0) {
+    row.push(cell);
+    rows.push(row);
+  }
   return rows;
 }
 
@@ -60,7 +73,9 @@ function checkCsv(file: string, options: { placeholder: boolean }): number {
     }
   }
   if (failures.length > 0) {
-    throw new Error(`${file} : ${failures.length} échec(s)\n  ${failures.slice(0, 10).join("\n  ")}`);
+    throw new Error(
+      `${file} : ${failures.length} échec(s)\n  ${failures.slice(0, 10).join("\n  ")}`
+    );
   }
   return rows.length - 1;
 }

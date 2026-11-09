@@ -81,11 +81,7 @@ export function Skeleton({
     style.borderRadius = typeof radius === "number" ? `${radius}px` : radius;
   }
 
-  const classNames = [
-    styles.skeleton,
-    isCircle ? styles.circle : styles.rectangle,
-    className,
-  ]
+  const classNames = [styles.skeleton, isCircle ? styles.circle : styles.rectangle, className]
     .filter(Boolean)
     .join(" ");
 

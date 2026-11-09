@@ -24,7 +24,9 @@ const failures = [];
 // dans le JS → composant non stylé. Les feuilles doivent être en `.css` plein.
 const moduleSheets = globSync("dist/**/*.module.css");
 for (const sheet of moduleSheets) {
-  failures.push(`${sheet} : feuille livrée en *.module.css (sera re-scopée par le bundler consommateur — doit être *.css)`);
+  failures.push(
+    `${sheet} : feuille livrée en *.module.css (sera re-scopée par le bundler consommateur — doit être *.css)`
+  );
 }
 
 for (const jsPath of files) {
@@ -53,7 +55,9 @@ for (const jsPath of files) {
   if (cssHasClassSelectors) {
     const someLocalInCss = localValues.some((v) => css.includes(`.${v}`));
     if (localValues.length === 0 || !someLocalInCss) {
-      failures.push(`${jsPath} : la CSS a des classes mais le module n'expose aucun local scopé (objet vide ?)`);
+      failures.push(
+        `${jsPath} : la CSS a des classes mais le module n'expose aucun local scopé (objet vide ?)`
+      );
     }
   }
 }

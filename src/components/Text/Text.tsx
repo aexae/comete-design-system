@@ -10,8 +10,23 @@ import styles from "./Text.module.css";
 export type TextSize = "large" | "medium" | "small" | "xsmall";
 export type TextWeight = "regular" | "medium" | "bold";
 export type TextColor =
-  | "default" | "subtle" | "subtlest" | "disabled" | "inverted"
-  | "comete" | "brand" | "accentPurple" | "accentTeal" | "accentTurquoise" | "accentMagenta" | "accentBlueGrey" | "success" | "information" | "warning" | "critical" | "link";
+  | "default"
+  | "subtle"
+  | "subtlest"
+  | "disabled"
+  | "inverted"
+  | "comete"
+  | "brand"
+  | "accentPurple"
+  | "accentTeal"
+  | "accentTurquoise"
+  | "accentMagenta"
+  | "accentBlueGrey"
+  | "success"
+  | "information"
+  | "warning"
+  | "critical"
+  | "link";
 export type TextAlign = "start" | "center" | "end";
 export type TextAs = "p" | "span" | "strong" | "em" | "label" | "div";
 

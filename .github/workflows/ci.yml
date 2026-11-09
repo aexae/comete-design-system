@@ -39,6 +39,10 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      # Formatage Prettier (racine + storybook/, config unique à la racine).
+      - name: Format check (Prettier)
+        run: pnpm format:check
+
       - name: Test
         run: pnpm test
 

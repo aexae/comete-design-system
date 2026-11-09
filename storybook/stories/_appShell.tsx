@@ -4,12 +4,7 @@
 // (Page.Bar "Tableau de bord" + contenu de Layout/Page) à droite. Fichier NON indexé par Storybook (pas
 // de suffixe .stories).
 import { cloneElement, isValidElement, useState, type ReactNode } from "react";
-import {
-  SideNav,
-  Page,
-  Logo,
-  type SideNavMode,
-} from "@aexae/comete-design-system/components";
+import { SideNav, Page, Logo, type SideNavMode } from "@aexae/comete-design-system/components";
 
 /** Pied de marque Link de la coquille : le composant bascule logo / icône selon le mode. */
 export function AppFooterBrand() {
@@ -98,7 +93,9 @@ export function SideNavOnly({
   // `display: contents` (qui n'ajoute aucune boîte) en `visibility: hidden`.
   const maskUnless = (part: "header" | "footer", el: ReactNode) =>
     focus && focus !== part && isValidElement<{ className?: string }>(el)
-      ? cloneElement(el, { className: [el.props.className, FOCUS_HIDDEN].filter(Boolean).join(" ") })
+      ? cloneElement(el, {
+          className: [el.props.className, FOCUS_HIDDEN].filter(Boolean).join(" "),
+        })
       : el;
   return (
     <SideNav.Provider mode={current} onModeChange={setCurrent}>
@@ -113,7 +110,7 @@ export function SideNavOnly({
                 companyName="Pro Sécurité"
                 description={APP_SPACE_LABEL}
               />
-            ),
+            )
           )}
           {focus && focus !== "body" ? (
             <div style={{ display: "contents", visibility: "hidden" }}>{nav}</div>
@@ -126,7 +123,7 @@ export function SideNavOnly({
               <SideNav.Footer>
                 <AppFooterBrand />
               </SideNav.Footer>
-            ),
+            )
           )}
         </SideNav>
       </div>
@@ -185,11 +182,7 @@ export function AppShell({
       <div style={{ display: "flex", height }}>
         <SideNav>
           {header ?? (
-            <SideNav.Header
-              logo={logo}
-              companyName="Pro Sécurité"
-              description={APP_SPACE_LABEL}
-            />
+            <SideNav.Header logo={logo} companyName="Pro Sécurité" description={APP_SPACE_LABEL} />
           )}
           {nav}
           {footer ?? (

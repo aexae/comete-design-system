@@ -65,11 +65,7 @@ export const onOpenAccountAction = fn();
  * portent une description, parce qu'une notification sans son contexte
  * n'apprend rien.
  */
-export function NotificationsButton({
-  density,
-}: {
-  density?: ChromeDensity;
-}): ReactElement {
+export function NotificationsButton({ density }: { density?: ChromeDensity }): ReactElement {
   return (
     <MenuTrigger>
       <Button
@@ -81,11 +77,7 @@ export function NotificationsButton({
       <MenuPopover width={320}>
         <Menu aria-label="Notifications" onAction={onOpenNotification}>
           <MenuSection title="Aujourd'hui">
-            <MenuItem
-              id="notif-ronde"
-              iconBefore="EditNote"
-              description="Tour Alto · 03:40"
-            >
+            <MenuItem id="notif-ronde" iconBefore="EditNote" description="Tour Alto · 03:40">
               Ronde de nuit incomplète
             </MenuItem>
             <MenuItem
@@ -118,19 +110,10 @@ export function NotificationsButton({
  * `<div>`, inatteignable au clavier et sans état de survol. Le `onPress` est
  * donc indispensable ici, même si c'est `MenuTrigger` qui porte l'ouverture.
  */
-export function AccountMenu({
-  initials = "AC",
-}: {
-  initials?: string;
-}): ReactElement {
+export function AccountMenu({ initials = "AC" }: { initials?: string }): ReactElement {
   return (
     <MenuTrigger>
-      <Avatar
-        size="medium"
-        initials={initials}
-        alt="Compte"
-        onPress={onOpenAccountAction}
-      />
+      <Avatar size="medium" initials={initials} alt="Compte" onPress={onOpenAccountAction} />
       <MenuPopover width={240}>
         <Menu aria-label="Compte" onAction={onOpenAccountAction}>
           <MenuItem id="compte-profil" iconBefore="Person">

@@ -256,5 +256,5 @@
 .bodySkeleton {
   display: flex;
   flex-direction: column;
-  gap: var(--space300)
+  gap: var(--space300);
 }

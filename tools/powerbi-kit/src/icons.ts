@@ -57,7 +57,7 @@ export function renderIcon(name: IconName, options: RenderIconOptions): string {
       variant: options.variant,
       spacing: options.spacing,
       size: options.size,
-    }),
+    })
   );
 
   const cleaned = stripDomAttributes(markup);

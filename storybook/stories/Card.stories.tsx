@@ -1,11 +1,7 @@
 // Card — stories Storybook
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type {
-  CardDrag,
-  CardAppearance,
-  CardColor,
-} from "@aexae/comete-design-system/components";
+import type { CardDrag, CardAppearance, CardColor } from "@aexae/comete-design-system/components";
 import {
   Card,
   Stack,
@@ -20,15 +16,26 @@ import { expect, fn, userEvent, within } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Constants
 
-const ALL_COLORS: CardColor[] = ["neutral", "comete", "success", "warning", "critical", "information", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey", "brand"];
+const ALL_COLORS: CardColor[] = [
+  "neutral",
+  "comete",
+  "success",
+  "warning",
+  "critical",
+  "information",
+  "accentPurple",
+  "accentTeal",
+  "accentTurquoise",
+  "accentMagenta",
+  "accentBlueGrey",
+  "brand",
+];
 const ALL_APPEARANCES: CardAppearance[] = ["outlined", "subtle", "bold"];
 
 // -----------------------------------------------------------------------
@@ -47,7 +54,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Les cartes regroupent des informations et des actions liées dans un conteneur délimité. Elles servent de points d'entrée vers un contenu plus détaillé et s'organisent facilement en grilles ou en listes." },
+      description: {
+        component:
+          "Les cartes regroupent des informations et des actions liées dans un conteneur délimité. Elles servent de points d'entrée vers un contenu plus détaillé et s'organisent facilement en grilles ou en listes.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -137,8 +147,12 @@ const meta = {
     children: (
       <CC>
         <Stack gap="075">
-          <Heading size="xsmall" as="span">Titre de la carte</Heading>
-          <Text size="small" as="span" color="subtlest">Description secondaire</Text>
+          <Heading size="xsmall" as="span">
+            Titre de la carte
+          </Heading>
+          <Text size="small" as="span" color="subtlest">
+            Description secondaire
+          </Text>
         </Stack>
       </CC>
     ),
@@ -214,14 +228,20 @@ export const RichContent: Story = {
         <CC>
           <Stack gap="150">
             <Cluster justify="between" align="center">
-              <Heading size="xsmall" as="span">Carrefour Market</Heading>
+              <Heading size="xsmall" as="span">
+                Carrefour Market
+              </Heading>
               <Tag label="Actif" color="success" />
             </Cluster>
-            <Text size="small" as="span" color="subtlest">Vindémia Distribution</Text>
+            <Text size="small" as="span" color="subtlest">
+              Vindémia Distribution
+            </Text>
             <Divider />
             <Stack direction="row" gap="075" align="center">
               <Icon icon="LocationOn" size={16} color="subtlest" />
-              <Text size="small" as="span" color="subtlest">Ile de France</Text>
+              <Text size="small" as="span" color="subtlest">
+                Ile de France
+              </Text>
             </Stack>
           </Stack>
         </CC>
@@ -231,8 +251,12 @@ export const RichContent: Story = {
         <CC>
           <Stack gap="100" align="center">
             <Icon icon="Star" size={24} />
-            <Heading size="small" as="span">Upgrade</Heading>
-            <Text size="small" as="span">Passez au plan Pro</Text>
+            <Heading size="small" as="span">
+              Upgrade
+            </Heading>
+            <Text size="small" as="span">
+              Passez au plan Pro
+            </Text>
           </Stack>
         </CC>
       </Card>
@@ -252,8 +276,12 @@ export const Loading: Story = {
     <Card {...args}>
       <CC>
         <Stack gap="075">
-          <Heading size="xsmall" as="span">Carrefour Market</Heading>
-          <Text size="small" as="span" color="subtlest">Vindémia Distribution</Text>
+          <Heading size="xsmall" as="span">
+            Carrefour Market
+          </Heading>
+          <Text size="small" as="span" color="subtlest">
+            Vindémia Distribution
+          </Text>
         </Stack>
       </CC>
     </Card>
@@ -300,8 +328,12 @@ export const AllColors: Story = {
               <Card key={`${a}-${c}`} appearance={a} color={c}>
                 <CC>
                   <Stack gap="050">
-                    <Heading size="xsmall" as="span">{c}</Heading>
-                    <Text size="small" as="span" color="subtlest">{a}</Text>
+                    <Heading size="xsmall" as="span">
+                      {c}
+                    </Heading>
+                    <Text size="small" as="span" color="subtlest">
+                      {a}
+                    </Text>
                   </Stack>
                 </CC>
               </Card>
@@ -339,12 +371,18 @@ export const AllStates: Story = {
                   <Card appearance={a} color="neutral" {...s.props}>
                     <CC>
                       <Stack gap="050">
-                        <Heading size="xsmall" as="span">{s.label}</Heading>
-                        <Text size="small" as="span" color="subtlest">{a}</Text>
+                        <Heading size="xsmall" as="span">
+                          {s.label}
+                        </Heading>
+                        <Text size="small" as="span" color="subtlest">
+                          {a}
+                        </Text>
                       </Stack>
                     </CC>
                   </Card>
-                  <Text size="xsmall" as="span" color="subtlest">{s.label}</Text>
+                  <Text size="xsmall" as="span" color="subtlest">
+                    {s.label}
+                  </Text>
                 </Stack>
               ))}
             </Cluster>

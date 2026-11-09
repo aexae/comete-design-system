@@ -21,11 +21,11 @@ décodage de la data URI, rasterisation. À lancer après chaque build.
 Power BI n'exécute ni CSS ni script : un SVG doit être autonome. Trois
 mécanismes du design system reposent sur le CSS et sont donc rejoués ici.
 
-| Mécanisme | Où | Traitement |
-|---|---|---|
-| `fill="currentColor"` sur les icônes | `icons.ts` | remplacé par le placeholder `__COLOR__`, substituable en DAX |
-| `var(--token)` (duotone, logos) | `tokens.ts` | résolu en hex depuis `comete-tokens.css` |
-| Deux corps SVG `__light` / `__dark` par icône produit | `logos.ts` | le corps masqué par `logos.css` est supprimé |
+| Mécanisme                                             | Où          | Traitement                                                   |
+| ----------------------------------------------------- | ----------- | ------------------------------------------------------------ |
+| `fill="currentColor"` sur les icônes                  | `icons.ts`  | remplacé par le placeholder `__COLOR__`, substituable en DAX |
+| `var(--token)` (duotone, logos)                       | `tokens.ts` | résolu en hex depuis `comete-tokens.css`                     |
+| Deux corps SVG `__light` / `__dark` par icône produit | `logos.ts`  | le corps masqué par `logos.css` est supprimé                 |
 
 À quoi s'ajoute la composition : un logo complet n'est pas un SVG mais
 plusieurs `<svg>` assemblés en HTML par `LogoFrame`. `compose.ts` rejoue ce
@@ -35,20 +35,20 @@ génère identiques d'un sous-SVG à l'autre.
 
 ## Fichiers
 
-| Fichier | Rôle |
-|---|---|
-| `src/main.ts` | point d'entrée, pose le stub CSS puis lance la génération |
-| `src/build.ts` | orchestration et écriture de `dist/` |
-| `src/icons.ts` | rendu SSR des icônes → SVG plats |
-| `src/logos.ts` | rendu SSR des logos, choix du corps visible, résolution des couleurs |
-| `src/compose.ts` | aplatissement du markup multi-SVG en SVG unique |
-| `src/tokens.ts` | lecture de `comete-tokens.css`, résolution des `var()` |
-| `src/datauri.ts` | encodage data URI compatible Power BI |
-| `src/png.ts` | rasterisation (resvg), utilisée par la vérification |
-| `src/verify.ts` | contrôle du kit généré (décodage et rendu des data URI) |
-| `src/theme.ts` | thème de rapport depuis les tokens |
-| `src/readme.ts` | README livré au consultant |
-| `src/css-stub.ts` | neutralise les imports CSS des packages sous Node |
+| Fichier           | Rôle                                                                 |
+| ----------------- | -------------------------------------------------------------------- |
+| `src/main.ts`     | point d'entrée, pose le stub CSS puis lance la génération            |
+| `src/build.ts`    | orchestration et écriture de `dist/`                                 |
+| `src/icons.ts`    | rendu SSR des icônes → SVG plats                                     |
+| `src/logos.ts`    | rendu SSR des logos, choix du corps visible, résolution des couleurs |
+| `src/compose.ts`  | aplatissement du markup multi-SVG en SVG unique                      |
+| `src/tokens.ts`   | lecture de `comete-tokens.css`, résolution des `var()`               |
+| `src/datauri.ts`  | encodage data URI compatible Power BI                                |
+| `src/png.ts`      | rasterisation (resvg), utilisée par la vérification                  |
+| `src/verify.ts`   | contrôle du kit généré (décodage et rendu des data URI)              |
+| `src/theme.ts`    | thème de rapport depuis les tokens                                   |
+| `src/readme.ts`   | README livré au consultant                                           |
+| `src/css-stub.ts` | neutralise les imports CSS des packages sous Node                    |
 
 ## Configuration
 

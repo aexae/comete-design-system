@@ -12,8 +12,7 @@ import styles from "./Radio.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
-export interface RadioProps
-  extends Omit<AriaRadioProps, "className" | "style" | "children"> {
+export interface RadioProps extends Omit<AriaRadioProps, "className" | "style" | "children"> {
   /** Texte du label. */
   label?: string;
   /** Texte d'aide affiché sous le label. */
@@ -24,8 +23,10 @@ export interface RadioProps
   style?: React.CSSProperties;
 }
 
-export interface RadioGroupProps
-  extends Omit<AriaRadioGroupProps, "className" | "style" | "children"> {
+export interface RadioGroupProps extends Omit<
+  AriaRadioGroupProps,
+  "className" | "style" | "children"
+> {
   /** Radio items. */
   children: React.ReactNode;
   /** Classe CSS additionnelle. */
@@ -109,35 +110,19 @@ export function Radio({
             {/* Anneau : r=6 + strokeWidth=2 → stroke de radius 5 à 7,
                 soit un anneau visible de 14px de diamètre dont le bord
                 extérieur touche la viewBox. */}
-            <circle
-              cx="7"
-              cy="7"
-              r="6"
-              stroke="currentColor"
-              strokeWidth="2"
-            />
+            <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="2" />
             {/* Dot intérieur : r=3 → diamètre 6px, 2px de gap entre
                 le bord du dot (r=3) et le bord intérieur de l'anneau
                 (r=5). Scale(0/1) animé via CSS, transform-origin
                 center pour scaler depuis le centre. */}
-            <circle
-              className={styles.dot}
-              cx="7"
-              cy="7"
-              r="3"
-              fill="currentColor"
-            />
+            <circle className={styles.dot} cx="7" cy="7" r="3" fill="currentColor" />
           </svg>
         </span>
       </span>
       {(label !== undefined || description !== undefined) && (
         <span className={styles.labelGroup}>
-          {label !== undefined && (
-            <span className={styles.label}>{label}</span>
-          )}
-          {description !== undefined && (
-            <span className={styles.description}>{description}</span>
-          )}
+          {label !== undefined && <span className={styles.label}>{label}</span>}
+          {description !== undefined && <span className={styles.description}>{description}</span>}
         </span>
       )}
     </AriaRadio>

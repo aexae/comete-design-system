@@ -51,13 +51,8 @@ function getWeeksForMonth(month: CalendarDate, locale: string): WeekData[] {
   return Array.from({ length: numWeeks }, (_, i) => {
     const weekStart = firstWeekStart.add({ weeks: i });
     const weekEnd = endOfWeek(weekStart, locale);
-    const days = Array.from(
-      { length: 7 },
-      (_, d) => weekStart.add({ days: d })
-    );
-    const isOutsideMonth = days.map(
-      (d) => d.month !== month.month || d.year !== month.year
-    );
+    const days = Array.from({ length: 7 }, (_, d) => weekStart.add({ days: d }));
+    const isOutsideMonth = days.map((d) => d.month !== month.month || d.year !== month.year);
     // NOTE: On utilise le jeudi (index 3) pour déterminer le numéro ISO correct.
     const weekNumber = getISOWeekNumber(days[3] ?? weekStart);
     return { weekNumber, days, weekStart, weekEnd, isOutsideMonth };
@@ -71,9 +66,7 @@ function getDayLabels(locale: string): string[] {
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(monday);
     d.setDate(monday.getDate() + i);
-    return new Intl.DateTimeFormat(locale, { weekday: "narrow" })
-      .format(d)
-      .toUpperCase();
+    return new Intl.DateTimeFormat(locale, { weekday: "narrow" }).format(d).toUpperCase();
   });
 }
 
@@ -86,11 +79,7 @@ function formatMonthYear(month: CalendarDate, locale: string): string {
   }).format(d);
 }
 
-type WeekRowState =
-  | "selected"
-  | "range-start"
-  | "range-part"
-  | "range-end";
+type WeekRowState = "selected" | "range-start" | "range-part" | "range-end";
 
 function getRowState(
   weekStart: CalendarDate,
@@ -101,13 +90,9 @@ function getRowState(
   const { start, end } = value;
 
   const matchesStart =
-    weekStart.year === start.year &&
-    weekStart.month === start.month &&
-    weekStart.day === start.day;
+    weekStart.year === start.year && weekStart.month === start.month && weekStart.day === start.day;
   const matchesEnd =
-    weekEnd.year === end.year &&
-    weekEnd.month === end.month &&
-    weekEnd.day === end.day;
+    weekEnd.year === end.year && weekEnd.month === end.month && weekEnd.day === end.day;
 
   if (matchesStart && matchesEnd) return "selected";
   if (matchesStart) return "range-start";
@@ -177,27 +162,21 @@ export function WeekGrid({
   const todayDate = today(getLocalTimeZone());
   const initialMonth = value?.start ?? defaultValue?.start ?? todayDate;
 
-  const [displayedMonth, setDisplayedMonth] = useState<CalendarDate>(
-    startOfMonth(initialMonth)
-  );
+  const [displayedMonth, setDisplayedMonth] = useState<CalendarDate>(startOfMonth(initialMonth));
 
   // Niveau d'affichage : "week" = grille de semaines, "month" = MonthCalendar drill-up.
   const [drillLevel, setDrillLevel] = useState<"week" | "month">("week");
 
   // État interne pour le mode non contrôlé
-  const [internalValue, setInternalValue] = useState<
-    RangeValue<CalendarDate> | undefined
-  >(defaultValue);
+  const [internalValue, setInternalValue] = useState<RangeValue<CalendarDate> | undefined>(
+    defaultValue
+  );
 
   // État de sélection en cours pour mode="period"
   // Première semaine cliquée en attente du deuxième clic.
-  const [pending, setPending] = useState<RangeValue<CalendarDate> | undefined>(
-    undefined
-  );
+  const [pending, setPending] = useState<RangeValue<CalendarDate> | undefined>(undefined);
   // Semaine survolée pendant la sélection d'une période.
-  const [hovered, setHovered] = useState<RangeValue<CalendarDate> | undefined>(
-    undefined
-  );
+  const [hovered, setHovered] = useState<RangeValue<CalendarDate> | undefined>(undefined);
 
   const controlled = value !== undefined;
   const resolvedValue = controlled ? value : internalValue;
@@ -208,10 +187,8 @@ export function WeekGrid({
     if (mode !== "period" || !pending) return resolvedValue;
     if (!hovered) return pending;
     // Prévisualisation : de la semaine la plus tôt à la semaine la plus tard.
-    const start =
-      pending.start.compare(hovered.start) <= 0 ? pending.start : hovered.start;
-    const end =
-      pending.end.compare(hovered.end) >= 0 ? pending.end : hovered.end;
+    const start = pending.start.compare(hovered.start) <= 0 ? pending.start : hovered.start;
+    const end = pending.end.compare(hovered.end) >= 0 ? pending.end : hovered.end;
     return { start, end };
   })();
 
@@ -226,10 +203,8 @@ export function WeekGrid({
         onIntermediateStart?.(weekStart);
       } else {
         // Deuxième clic — confirmer la plage finale.
-        const start =
-          pending.start.compare(weekStart) <= 0 ? pending.start : weekStart;
-        const end =
-          pending.end.compare(weekEnd) >= 0 ? pending.end : weekEnd;
+        const start = pending.start.compare(weekStart) <= 0 ? pending.start : weekStart;
+        const end = pending.end.compare(weekEnd) >= 0 ? pending.end : weekEnd;
         const range: RangeValue<CalendarDate> = { start, end };
         setPending(undefined);
         setHovered(undefined);
@@ -257,10 +232,8 @@ export function WeekGrid({
     }
   };
 
-  const handlePrev = () =>
-    setDisplayedMonth((m) => m.subtract({ months: 1 }));
-  const handleNext = () =>
-    setDisplayedMonth((m) => m.add({ months: 1 }));
+  const handlePrev = () => setDisplayedMonth((m) => m.subtract({ months: 1 }));
+  const handleNext = () => setDisplayedMonth((m) => m.add({ months: 1 }));
 
   // Drill-up vers le sélecteur de mois.
   const handleDrillUp = () => setDrillLevel("month");
@@ -291,9 +264,7 @@ export function WeekGrid({
     <div
       role="group"
       aria-label={ariaLabel ?? "Choisir une semaine"}
-      className={[calStyles.calendar, styles.weekCalendar, className]
-        .filter(Boolean)
-        .join(" ")}
+      className={[calStyles.calendar, styles.weekCalendar, className].filter(Boolean).join(" ")}
       data-disabled={isDisabled || undefined}
       // NOTE: data-selecting indique qu'un premier clic a été fait en mode période.
       // Permet d'afficher un curseur "crosshair" ou autre feedback visuel CSS.
@@ -400,8 +371,7 @@ function WeekRow({
 
   const rowState = getRowState(week.weekStart, week.weekEnd, value);
   const isCurrentWeek =
-    todayDate.compare(week.weekStart) >= 0 &&
-    todayDate.compare(week.weekEnd) <= 0;
+    todayDate.compare(week.weekStart) >= 0 && todayDate.compare(week.weekEnd) <= 0;
   // NOTE: Une ligne dont tous les jours sont hors du mois visible est désactivée
   // pour éviter une sélection de semaine entièrement dans un autre mois.
   const allOutside = week.isOutsideMonth.every(Boolean);
@@ -456,9 +426,7 @@ function WeekRow({
       {week.days.map((day, i) => {
         const isOutside = week.isOutsideMonth[i] ?? false;
         const isToday =
-          day.year === todayDate.year &&
-          day.month === todayDate.month &&
-          day.day === todayDate.day;
+          day.year === todayDate.year && day.month === todayDate.month && day.day === todayDate.day;
         return (
           <span
             key={i}
@@ -469,9 +437,7 @@ function WeekRow({
             aria-label={`${day.day} ${day.month} ${day.year}`}
           >
             <span className={styles.weekDayText}>{day.day}</span>
-            {isToday && (
-              <span className={styles.todayIndicator} aria-hidden="true" />
-            )}
+            {isToday && <span className={styles.todayIndicator} aria-hidden="true" />}
           </span>
         );
       })}
@@ -508,9 +474,7 @@ export function DualWeekGrid({
   const todayDate = today(getLocalTimeZone());
   const initialMonth = value?.start ?? defaultValue?.start ?? todayDate;
 
-  const [leftMonth, setLeftMonth] = useState<CalendarDate>(
-    startOfMonth(initialMonth)
-  );
+  const [leftMonth, setLeftMonth] = useState<CalendarDate>(startOfMonth(initialMonth));
   // Le panel droit affiche toujours le mois suivant le panel gauche.
   const rightMonth = leftMonth.add({ months: 1 });
 
@@ -519,15 +483,11 @@ export function DualWeekGrid({
   // Panel ayant déclenché le drill-up : détermine quel panel est mis à jour au retour.
   const [drilledPanel, setDrilledPanel] = useState<"left" | "right">("left");
 
-  const [internalValue, setInternalValue] = useState<
-    RangeValue<CalendarDate> | undefined
-  >(defaultValue);
-  const [pending, setPending] = useState<RangeValue<CalendarDate> | undefined>(
-    undefined
+  const [internalValue, setInternalValue] = useState<RangeValue<CalendarDate> | undefined>(
+    defaultValue
   );
-  const [hovered, setHovered] = useState<RangeValue<CalendarDate> | undefined>(
-    undefined
-  );
+  const [pending, setPending] = useState<RangeValue<CalendarDate> | undefined>(undefined);
+  const [hovered, setHovered] = useState<RangeValue<CalendarDate> | undefined>(undefined);
 
   const controlled = value !== undefined;
   const resolvedValue = controlled ? value : internalValue;
@@ -535,10 +495,8 @@ export function DualWeekGrid({
   const displayValue = ((): RangeValue<CalendarDate> | undefined => {
     if (!pending) return resolvedValue;
     if (!hovered) return pending;
-    const start =
-      pending.start.compare(hovered.start) <= 0 ? pending.start : hovered.start;
-    const end =
-      pending.end.compare(hovered.end) >= 0 ? pending.end : hovered.end;
+    const start = pending.start.compare(hovered.start) <= 0 ? pending.start : hovered.start;
+    const end = pending.end.compare(hovered.end) >= 0 ? pending.end : hovered.end;
     return { start, end };
   })();
 
@@ -549,10 +507,8 @@ export function DualWeekGrid({
       setHovered(undefined);
       onIntermediateStart?.(weekStart);
     } else {
-      const start =
-        pending.start.compare(weekStart) <= 0 ? pending.start : weekStart;
-      const end =
-        pending.end.compare(weekEnd) >= 0 ? pending.end : weekEnd;
+      const start = pending.start.compare(weekStart) <= 0 ? pending.start : weekStart;
+      const end = pending.end.compare(weekEnd) >= 0 ? pending.end : weekEnd;
       const range: RangeValue<CalendarDate> = { start, end };
       setPending(undefined);
       setHovered(undefined);
@@ -580,9 +536,8 @@ export function DualWeekGrid({
   // - panel gauche → leftMonth = sélection, rightMonth = sélection + 1 (automatique)
   // - panel droit  → rightMonth = sélection, leftMonth = sélection - 1
   const handleMonthSelect = (month: CalendarDate) => {
-    const newLeft = drilledPanel === "right"
-      ? startOfMonth(month.subtract({ months: 1 }))
-      : startOfMonth(month);
+    const newLeft =
+      drilledPanel === "right" ? startOfMonth(month.subtract({ months: 1 })) : startOfMonth(month);
     setLeftMonth(newLeft);
     setDrillLevel("week");
   };

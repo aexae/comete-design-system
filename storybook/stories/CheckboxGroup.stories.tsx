@@ -6,10 +6,8 @@ import { fn } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 
@@ -31,8 +29,7 @@ const meta = {
                     <Checkbox value="push" label="Push" />
                   </CheckboxGroup>
                 ),
-                caption:
-                  "Plusieurs options non exclusives, validées avec le formulaire.",
+                caption: "Plusieurs options non exclusives, validées avec le formulaire.",
               }}
               dontExample={{
                 example: (

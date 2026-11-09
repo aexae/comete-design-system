@@ -5,10 +5,10 @@
 Comète Design System est actuellement en phase `1.0.0-alpha`. Seule la dernière
 version alpha publiée reçoit des correctifs de sécurité.
 
-| Version            | Supportée |
-| ------------------ | --------- |
-| `1.0.0-alpha.*` (dernière) | ✅ |
-| Versions antérieures        | ❌ |
+| Version                    | Supportée |
+| -------------------------- | --------- |
+| `1.0.0-alpha.*` (dernière) | ✅        |
+| Versions antérieures       | ❌        |
 
 ## Signaler une vulnérabilité
 

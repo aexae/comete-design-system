@@ -93,26 +93,18 @@ export function SectionMessage({
 }: SectionMessageProps): ReactElement {
   const resolvedIcon =
     icon === undefined ? (
-      <Icon
-        icon={DEFAULT_ICONS[appearance]}
-        color={ICON_COLORS[appearance]}
-        appearance="filled"
-      />
+      <Icon icon={DEFAULT_ICONS[appearance]} color={ICON_COLORS[appearance]} appearance="filled" />
     ) : (
       icon
     );
 
   return (
     <div
-      className={[styles.sectionMessage, styles[appearance], className]
-        .filter(Boolean)
-        .join(" ")}
+      className={[styles.sectionMessage, styles[appearance], className].filter(Boolean).join(" ")}
       style={style}
       role="group"
     >
-      {resolvedIcon && (
-        <div className={styles.icon}>{resolvedIcon}</div>
-      )}
+      {resolvedIcon && <div className={styles.icon}>{resolvedIcon}</div>}
       <div className={styles.container}>
         {title && <div className={styles.title}>{title}</div>}
         {children && <div className={styles.content}>{children}</div>}

@@ -30,12 +30,7 @@ import styles from "./Tag.module.css";
  *
  * Voir `docs/adr/0002-semantique-couleurs-statut.md`.
  */
-export type TagStatusColor =
-  | "neutral"
-  | "information"
-  | "warning"
-  | "success"
-  | "critical";
+export type TagStatusColor = "neutral" | "information" | "warning" | "success" | "critical";
 
 /**
  * Couleurs **catégorielles** — classent sans porter de jugement (rôle, secteur,
@@ -45,12 +40,7 @@ export type TagStatusColor =
  * Voir `docs/adr/0002-semantique-couleurs-statut.md`.
  */
 export type TagCategoryColor =
-  | "comete"
-  | "accentPurple"
-  | "accentTeal"
-  | "accentTurquoise"
-  | "accentMagenta"
-  | "accentBlueGrey";
+  "comete" | "accentPurple" | "accentTeal" | "accentTurquoise" | "accentMagenta" | "accentBlueGrey";
 
 /** Union complète des couleurs acceptées par le `Tag`. */
 export type TagColor = TagStatusColor | TagCategoryColor;
@@ -164,13 +154,9 @@ export function Tag({
       aria-disabled={isDisabled || undefined}
       style={style}
     >
-      {elemBefore !== undefined && (
-        <span className={styles["elemBefore"]}>{elemBefore}</span>
-      )}
+      {elemBefore !== undefined && <span className={styles["elemBefore"]}>{elemBefore}</span>}
       <span className={styles["label"]}>{label}</span>
-      {elemAfter !== undefined && (
-        <span className={styles["elemAfter"]}>{elemAfter}</span>
-      )}
+      {elemAfter !== undefined && <span className={styles["elemAfter"]}>{elemAfter}</span>}
       {onRemove && !isDisabled && (
         <button
           type="button"

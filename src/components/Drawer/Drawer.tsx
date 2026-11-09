@@ -157,21 +157,21 @@ export function Drawer({
       // eslint-disable-next-line no-console
       console.warn(
         `Drawer : \`isModal={false}\` n'a de sens qu'en placement "left"/"right" ` +
-          `(reçu "${placement}") — repli en mode modal.`,
+          `(reçu "${placement}") — repli en mode modal.`
       );
     }
     if (nonModal && swipeable) {
       // eslint-disable-next-line no-console
       console.warn(
         "Drawer : `swipeable` est sans effet en mode non modal (le panneau " +
-          "persistant se replie via son bouton, pas au glissé).",
+          "persistant se replie via son bouton, pas au glissé)."
       );
     }
     if (nonModal && stacking !== "overlay") {
       // eslint-disable-next-line no-console
       console.warn(
         "Drawer : `stacking` est sans effet en mode non modal (le panneau vit " +
-          "dans le flux, il ne s'empile pas au-dessus d'autres drawers).",
+          "dans le flux, il ne s'empile pas au-dessus d'autres drawers)."
       );
     }
   }
@@ -215,25 +215,23 @@ export function Drawer({
 
   // Push mode: every push-stacked drawer above me contributes its size to my offset.
   // We sum them so a chain of pushes stacks side-by-side correctly.
-  const pushersAboveMe = myIndex >= 0
-    ? stack.slice(myIndex + 1).filter((e) => e.stacking === "push")
-    : [];
+  const pushersAboveMe =
+    myIndex >= 0 ? stack.slice(myIndex + 1).filter((e) => e.stacking === "push") : [];
   const hasPusher = pushersAboveMe.length > 0;
 
   const pushStyle: CSSProperties | undefined = hasPusher
-    ? buildPushStyle(placement, pushersAboveMe.map((p) => p.size))
+    ? buildPushStyle(
+        placement,
+        pushersAboveMe.map((p) => p.size)
+      )
     : undefined;
 
   // Overlay mode: card-stack effect — drawers behind the topmost are shorter
   // (inset on perpendicular edges) and extend past it on the free axis so a
   // strip peeks out from behind.
   const drawersAboveMe = myIndex >= 0 ? stack.length - 1 - myIndex : 0;
-  const depthInset = !hasPusher && drawersAboveMe > 0
-    ? drawersAboveMe * STACK_INSET
-    : 0;
-  const depthShade = !hasPusher && drawersAboveMe > 0
-    ? drawersAboveMe * STACK_SHADE
-    : 0;
+  const depthInset = !hasPusher && drawersAboveMe > 0 ? drawersAboveMe * STACK_INSET : 0;
+  const depthShade = !hasPusher && drawersAboveMe > 0 ? drawersAboveMe * STACK_SHADE : 0;
 
   // Push chain: drawer is either being pushed or is itself pushing others.
   // We remove the border-radius so adjacent push drawers look like a single
@@ -254,46 +252,59 @@ export function Drawer({
     sizeClass,
     isInPushChain ? styles.inPushChain : undefined,
     className,
-  ].filter(Boolean).join(" ");
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   // Drag du handle pour fermer (pointer events → souris + tactile).
   const dragRef = useRef<{ x: number; y: number; dragging: boolean }>({
-    x: 0, y: 0, dragging: false,
+    x: 0,
+    y: 0,
+    dragging: false,
   });
   const drawerRef = useRef<HTMLDivElement>(null);
 
-  const handleDragStart = useCallback((e: React.PointerEvent) => {
-    if (!swipeable) return;
-    dragRef.current = { x: e.clientX, y: e.clientY, dragging: true };
-    e.currentTarget.setPointerCapture(e.pointerId);
-  }, [swipeable]);
+  const handleDragStart = useCallback(
+    (e: React.PointerEvent) => {
+      if (!swipeable) return;
+      dragRef.current = { x: e.clientX, y: e.clientY, dragging: true };
+      e.currentTarget.setPointerCapture(e.pointerId);
+    },
+    [swipeable]
+  );
 
-  const handleDragMove = useCallback((e: React.PointerEvent) => {
-    if (!dragRef.current.dragging || !drawerRef.current) return;
-    const dist = closeDistance(
-      placement,
-      e.clientX - dragRef.current.x,
-      e.clientY - dragRef.current.y,
-    );
-    drawerRef.current.style.transition = "none";
-    // ne suit que dans le sens de fermeture
-    drawerRef.current.style.transform = dist > 0 ? closeTransform(placement, dist) : "";
-  }, [placement]);
+  const handleDragMove = useCallback(
+    (e: React.PointerEvent) => {
+      if (!dragRef.current.dragging || !drawerRef.current) return;
+      const dist = closeDistance(
+        placement,
+        e.clientX - dragRef.current.x,
+        e.clientY - dragRef.current.y
+      );
+      drawerRef.current.style.transition = "none";
+      // ne suit que dans le sens de fermeture
+      drawerRef.current.style.transform = dist > 0 ? closeTransform(placement, dist) : "";
+    },
+    [placement]
+  );
 
-  const handleDragEnd = useCallback((e: React.PointerEvent) => {
-    if (!dragRef.current.dragging || !drawerRef.current) return;
-    dragRef.current.dragging = false;
-    const dist = closeDistance(
-      placement,
-      e.clientX - dragRef.current.x,
-      e.clientY - dragRef.current.y,
-    );
-    drawerRef.current.style.transition = "";
-    drawerRef.current.style.transform = "";
-    if (dist >= SWIPE_CLOSE_THRESHOLD) {
-      onOpenChange(false);
-    }
-  }, [placement, onOpenChange]);
+  const handleDragEnd = useCallback(
+    (e: React.PointerEvent) => {
+      if (!dragRef.current.dragging || !drawerRef.current) return;
+      dragRef.current.dragging = false;
+      const dist = closeDistance(
+        placement,
+        e.clientX - dragRef.current.x,
+        e.clientY - dragRef.current.y
+      );
+      drawerRef.current.style.transition = "";
+      drawerRef.current.style.transform = "";
+      if (dist >= SWIPE_CLOSE_THRESHOLD) {
+        onOpenChange(false);
+      }
+    },
+    [placement, onOpenChange]
+  );
 
   // z-index increases per stack position so newer drawers appear on top
   const stackZIndex = myIndex >= 0 ? myIndex : 0;
@@ -331,40 +342,45 @@ export function Drawer({
 
   return (
     <DrawerModeContext.Provider value={true}>
-    <AriaModalOverlay
-      isOpen={isOpen}
-      onOpenChange={onOpenChange}
-      isDismissable
-      className={showBlanket ? styles.overlay : styles.overlayTransparent}
-      style={{ zIndex: `calc(var(--z-index-overlay) + ${stackZIndex * 2})` }}
-    >
-      <AriaModal className={styles.modal} style={{ zIndex: `calc(var(--z-index-modal) + ${stackZIndex * 2})` }}>
-        <AriaDialog
-          ref={drawerRef}
-          id={id}
-          className={drawerClasses}
-          style={{
-            ...customSizeStyle,
-            ...pushStyle,
-            "--_depth-inset": depthInset > 0 ? `${depthInset}px` : undefined,
-            "--_depth-shade": depthShade > 0 ? depthShade : undefined,
-            ...style,
-          } as CSSProperties}
-          aria-label={ariaLabel}
+      <AriaModalOverlay
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        isDismissable
+        className={showBlanket ? styles.overlay : styles.overlayTransparent}
+        style={{ zIndex: `calc(var(--z-index-overlay) + ${stackZIndex * 2})` }}
+      >
+        <AriaModal
+          className={styles.modal}
+          style={{ zIndex: `calc(var(--z-index-modal) + ${stackZIndex * 2})` }}
         >
-          {swipeable && (
-            <div
-              className={styles.swipeHandle}
-              onPointerDown={handleDragStart}
-              onPointerMove={handleDragMove}
-              onPointerUp={handleDragEnd}
-              onPointerCancel={handleDragEnd}
-            />
-          )}
-          {children}
-        </AriaDialog>
-      </AriaModal>
-    </AriaModalOverlay>
+          <AriaDialog
+            ref={drawerRef}
+            id={id}
+            className={drawerClasses}
+            style={
+              {
+                ...customSizeStyle,
+                ...pushStyle,
+                "--_depth-inset": depthInset > 0 ? `${depthInset}px` : undefined,
+                "--_depth-shade": depthShade > 0 ? depthShade : undefined,
+                ...style,
+              } as CSSProperties
+            }
+            aria-label={ariaLabel}
+          >
+            {swipeable && (
+              <div
+                className={styles.swipeHandle}
+                onPointerDown={handleDragStart}
+                onPointerMove={handleDragMove}
+                onPointerUp={handleDragEnd}
+                onPointerCancel={handleDragEnd}
+              />
+            )}
+            {children}
+          </AriaDialog>
+        </AriaModal>
+      </AriaModalOverlay>
     </DrawerModeContext.Provider>
   );
 }
@@ -402,7 +418,9 @@ export function DrawerHeader({
     <div className={[styles.header, className].filter(Boolean).join(" ")} style={style}>
       {typeof children === "string" ? (
         isModal ? (
-          <AriaHeading slot="title" className={styles.title}>{children}</AriaHeading>
+          <AriaHeading slot="title" className={styles.title}>
+            {children}
+          </AriaHeading>
         ) : (
           <h2 className={styles.title}>{children}</h2>
         )
@@ -468,11 +486,7 @@ export interface DrawerFooterProps {
  * DrawerFooter — Pied du drawer (boutons d'action).
  */
 export function DrawerFooter({ children, className }: DrawerFooterProps): ReactElement {
-  return (
-    <div className={[styles.footer, className].filter(Boolean).join(" ")}>
-      {children}
-    </div>
-  );
+  return <div className={[styles.footer, className].filter(Boolean).join(" ")}>{children}</div>;
 }
 
 DrawerFooter.displayName = "DrawerFooter";
@@ -480,10 +494,7 @@ DrawerFooter.displayName = "DrawerFooter";
 // -----------------------------------------------------------------------
 // Helpers
 
-function buildCustomSizeStyle(
-  placement: DrawerPlacement,
-  size: string,
-): CSSProperties {
+function buildCustomSizeStyle(placement: DrawerPlacement, size: string): CSSProperties {
   const isHorizontal = placement === "left" || placement === "right";
   // "auto" : hauteur/largeur ajustée au contenu — pas de calc (calc(auto + …) invalide).
   const value = size === "auto" ? "auto" : `calc(${size} + var(--_depth-inset))`;
@@ -510,13 +521,9 @@ function resolveSizeValue(size: string): string {
  * position (not transform) because translateX(%) is relative to the element's
  * own size, whereas position % is relative to the viewport (what we want).
  */
-function buildPushStyle(
-  placement: DrawerPlacement,
-  pusherSizes: string[],
-): CSSProperties {
+function buildPushStyle(placement: DrawerPlacement, pusherSizes: string[]): CSSProperties {
   const values = pusherSizes.map(resolveSizeValue);
   const offset = values.length === 1 ? values[0] : `calc(${values.join(" + ")})`;
   // Shift the anchored edge inward by the cumulative pusher size(s)
   return { [placement]: offset };
 }
-

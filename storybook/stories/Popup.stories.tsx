@@ -5,10 +5,8 @@ import type { PopupPlacement } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -49,7 +47,10 @@ const meta = {
   },
   parameters: {
     docs: {
-      description: { component: "Le popup affiche un contenu court dans une bulle attachée à un élément déclencheur, comme un tooltip enrichi. Il se ferme automatiquement lorsque l'utilisateur clique ailleurs ou déplace le focus." },
+      description: {
+        component:
+          "Le popup affiche un contenu court dans une bulle attachée à un élément déclencheur, comme un tooltip enrichi. Il se ferme automatiquement lorsque l'utilisateur clique ailleurs ou déplace le focus.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -86,8 +87,7 @@ const meta = {
                     </p>
                   </Popup>
                 ),
-                caption:
-                  "Ne pas y mettre une liste d'actions ou un dialogue interactif.",
+                caption: "Ne pas y mettre une liste d'actions ou un dialogue interactif.",
               }}
               when={[
                 "Positionner un contenu flottant par rapport à un déclencheur (placement + offset), sans la sémantique dialog.",
@@ -197,17 +197,23 @@ export const AllPlacements: Story = {
 
         {/* Row 2 : left-top / right-top */}
         {cell("left-top")}
-        {e}{e}{e}
+        {e}
+        {e}
+        {e}
         {cell("right-top")}
 
         {/* Row 3 : left / right */}
         {cell("left")}
-        {e}{e}{e}
+        {e}
+        {e}
+        {e}
         {cell("right")}
 
         {/* Row 4 : left-bottom / right-bottom */}
         {cell("left-bottom")}
-        {e}{e}{e}
+        {e}
+        {e}
+        {e}
         {cell("right-bottom")}
 
         {/* Row 5 : bottom */}

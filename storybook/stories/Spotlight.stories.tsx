@@ -24,7 +24,10 @@ const meta: Meta<typeof Spotlight> = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le spotlight met en lumière un élément de l'interface en assombrissant le reste de la page, accompagné d'une bulle explicative. Il est utilisé dans les parcours guidés et les tutoriels d'onboarding." },
+      description: {
+        component:
+          "Le spotlight met en lumière un élément de l'interface en assombrissant le reste de la page, accompagné d'une bulle explicative. Il est utilisé dans les parcours guidés et les tutoriels d'onboarding.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -117,8 +120,8 @@ function DefaultRender(args: {
         width={args.width}
       >
         <Text size="small">
-          Cette fonctionnalité vous permet de gérer vos projets plus
-          efficacement. Cliquez pour en savoir plus.
+          Cette fonctionnalité vous permet de gérer vos projets plus efficacement. Cliquez pour en
+          savoir plus.
         </Text>
       </Spotlight>
     </div>
@@ -151,8 +154,8 @@ function PulseRender() {
         pulse
       >
         <Text size="small">
-          L&apos;animation pulse attire l&apos;attention de l&apos;utilisateur
-          sur l&apos;élément cible.
+          L&apos;animation pulse attire l&apos;attention de l&apos;utilisateur sur l&apos;élément
+          cible.
         </Text>
       </Spotlight>
     </div>
@@ -187,8 +190,7 @@ function CustomActionsRender() {
         ]}
       >
         <Text size="small">
-          Vous pouvez fournir vos propres boutons d&apos;action via la prop{" "}
-          <code>actions</code>.
+          Vous pouvez fournir vos propres boutons d&apos;action via la prop <code>actions</code>.
         </Text>
       </Spotlight>
     </div>
@@ -210,11 +212,7 @@ function TourRender() {
 
   const [step, setStep] = useState<number | null>(null);
 
-  const titles = [
-    "Étape 1 : Navigation",
-    "Étape 2 : Recherche",
-    "Étape 3 : Paramètres",
-  ];
+  const titles = ["Étape 1 : Navigation", "Étape 2 : Recherche", "Étape 3 : Paramètres"];
   const descriptions = [
     "Utilisez ce menu pour naviguer entre les sections de l'application.",
     "La barre de recherche vous permet de trouver rapidement ce que vous cherchez.",
@@ -339,8 +337,7 @@ function PlacementsRender() {
         width={280}
       >
         <Text size="small">
-          Le dialog est positionné en <strong>{placement}</strong> par rapport à
-          la cible.
+          Le dialog est positionné en <strong>{placement}</strong> par rapport à la cible.
         </Text>
       </Spotlight>
     </div>

@@ -31,13 +31,21 @@
 }
 
 @keyframes overlay-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes overlay-fade-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 /* ==========================================================================
@@ -66,7 +74,11 @@
   flex-direction: column;
   overflow: hidden;
   isolation: isolate;
-  transition: top 200ms ease-out, bottom 200ms ease-out, left 200ms ease-out, right 200ms ease-out;
+  transition:
+    top 200ms ease-out,
+    bottom 200ms ease-out,
+    left 200ms ease-out,
+    right 200ms ease-out;
 }
 
 /* Depth shade overlay — darkens drawers that sit behind the topmost */
@@ -126,18 +138,50 @@
    ========================================================================== */
 
 /* Horizontal (left/right) */
-.left.narrow, .right.narrow     { width: calc(30% + var(--_depth-inset)); }
-.left.medium, .right.medium     { width: calc(50% + var(--_depth-inset)); }
-.left.wide, .right.wide         { width: calc(75% + var(--_depth-inset)); }
-.left.extended, .right.extended { width: calc(90% + var(--_depth-inset)); }
-.left.full, .right.full         { width: 100%; border-radius: 0; }
+.left.narrow,
+.right.narrow {
+  width: calc(30% + var(--_depth-inset));
+}
+.left.medium,
+.right.medium {
+  width: calc(50% + var(--_depth-inset));
+}
+.left.wide,
+.right.wide {
+  width: calc(75% + var(--_depth-inset));
+}
+.left.extended,
+.right.extended {
+  width: calc(90% + var(--_depth-inset));
+}
+.left.full,
+.right.full {
+  width: 100%;
+  border-radius: 0;
+}
 
 /* Vertical (top/bottom) */
-.top.narrow, .bottom.narrow     { height: calc(30% + var(--_depth-inset)); }
-.top.medium, .bottom.medium     { height: calc(50% + var(--_depth-inset)); }
-.top.wide, .bottom.wide         { height: calc(75% + var(--_depth-inset)); }
-.top.extended, .bottom.extended { height: calc(90% + var(--_depth-inset)); }
-.top.full, .bottom.full         { height: 100%; border-radius: 0; }
+.top.narrow,
+.bottom.narrow {
+  height: calc(30% + var(--_depth-inset));
+}
+.top.medium,
+.bottom.medium {
+  height: calc(50% + var(--_depth-inset));
+}
+.top.wide,
+.bottom.wide {
+  height: calc(75% + var(--_depth-inset));
+}
+.top.extended,
+.bottom.extended {
+  height: calc(90% + var(--_depth-inset));
+}
+.top.full,
+.bottom.full {
+  height: 100%;
+  border-radius: 0;
+}
 
 /* ==========================================================================
    Mode non modal — panneau persistant DANS LE FLUX (pas d'overlay).
@@ -167,56 +211,104 @@
    Slide animations — per placement
    ========================================================================== */
 
-.drawer[data-entering].left { animation: slide-in-left 200ms ease-out; }
-.drawer[data-exiting].left { animation: slide-out-left 150ms ease-in; }
+.drawer[data-entering].left {
+  animation: slide-in-left 200ms ease-out;
+}
+.drawer[data-exiting].left {
+  animation: slide-out-left 150ms ease-in;
+}
 
-.drawer[data-entering].right { animation: slide-in-right 200ms ease-out; }
-.drawer[data-exiting].right { animation: slide-out-right 150ms ease-in; }
+.drawer[data-entering].right {
+  animation: slide-in-right 200ms ease-out;
+}
+.drawer[data-exiting].right {
+  animation: slide-out-right 150ms ease-in;
+}
 
-.drawer[data-entering].top { animation: slide-in-top 200ms ease-out; }
-.drawer[data-exiting].top { animation: slide-out-top 150ms ease-in; }
+.drawer[data-entering].top {
+  animation: slide-in-top 200ms ease-out;
+}
+.drawer[data-exiting].top {
+  animation: slide-out-top 150ms ease-in;
+}
 
-.drawer[data-entering].bottom { animation: slide-in-bottom 200ms ease-out; }
-.drawer[data-exiting].bottom { animation: slide-out-bottom 150ms ease-in; }
+.drawer[data-entering].bottom {
+  animation: slide-in-bottom 200ms ease-out;
+}
+.drawer[data-exiting].bottom {
+  animation: slide-out-bottom 150ms ease-in;
+}
 
 @keyframes slide-in-left {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(0); }
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 @keyframes slide-out-left {
-  from { transform: translateX(0); }
-  to { transform: translateX(-100%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 @keyframes slide-in-right {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 @keyframes slide-out-right {
-  from { transform: translateX(0); }
-  to { transform: translateX(100%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
 }
 
 @keyframes slide-in-top {
-  from { transform: translateY(-100%); }
-  to { transform: translateY(0); }
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 @keyframes slide-out-top {
-  from { transform: translateY(0); }
-  to { transform: translateY(-100%); }
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
 }
 
 @keyframes slide-in-bottom {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 @keyframes slide-out-bottom {
-  from { transform: translateY(0); }
-  to { transform: translateY(100%); }
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
 }
 
 /* ==========================================================================

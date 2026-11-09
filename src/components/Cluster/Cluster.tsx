@@ -9,13 +9,7 @@ import styles from "./Cluster.module.css";
 // Types publics
 
 export type ClusterAlign = "start" | "center" | "end" | "stretch" | "baseline";
-export type ClusterJustify =
-  | "start"
-  | "center"
-  | "end"
-  | "between"
-  | "around"
-  | "evenly";
+export type ClusterJustify = "start" | "center" | "end" | "between" | "around" | "evenly";
 
 export interface ClusterProps {
   /** Espacement global entre enfants (row et column). @default "100" */

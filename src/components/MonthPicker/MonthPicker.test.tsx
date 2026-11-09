@@ -22,9 +22,7 @@ describe("MonthPicker", () => {
       name: /Mois : /,
     });
     expect(monthInput).toHaveValue("06");
-    expect(
-      screen.getByRole("textbox", { name: "Année : 2025" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: "Année : 2025" })).toBeInTheDocument();
   });
 
   it("should render the separator in editable mode", () => {
@@ -34,9 +32,7 @@ describe("MonthPicker", () => {
 
   it("should render the calendar button", () => {
     render(<MonthPicker />);
-    expect(
-      screen.getByLabelText("Ouvrir le sélecteur de mois"),
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText("Ouvrir le sélecteur de mois")).toBeInTheDocument();
   });
 
   it("should apply a custom className", () => {
@@ -45,13 +41,8 @@ describe("MonthPicker", () => {
   });
 
   it("should use a custom aria-label", () => {
-    const { container } = render(
-      <MonthPicker aria-label="Période comptable" />,
-    );
-    expect(container.firstChild).toHaveAttribute(
-      "aria-label",
-      "Période comptable",
-    );
+    const { container } = render(<MonthPicker aria-label="Période comptable" />);
+    expect(container.firstChild).toHaveAttribute("aria-label", "Période comptable");
   });
 
   it("should set data-invalid when isInvalid", () => {
@@ -73,9 +64,7 @@ describe("MonthPicker", () => {
     const yearInput = screen.getByRole("textbox", { name: "Année : 2025" });
     expect(monthInput).toBeInTheDocument();
     expect(yearInput).toBeInTheDocument();
-    expect(
-      screen.getByLabelText("Ouvrir le sélecteur de mois"),
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText("Ouvrir le sélecteur de mois")).toBeInTheDocument();
     expect(monthInput.tagName).toBe("INPUT");
     expect(yearInput.tagName).toBe("INPUT");
   });
@@ -113,14 +102,7 @@ describe("MonthPicker", () => {
   it("should call onChange with month - 1 when chevron left is clicked", async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
-    render(
-      <MonthPicker
-        month={6}
-        year={2025}
-        isEditable={false}
-        onChange={onChange}
-      />,
-    );
+    render(<MonthPicker month={6} year={2025} isEditable={false} onChange={onChange} />);
     await user.click(screen.getByLabelText("Mois précédent"));
     expect(onChange).toHaveBeenCalledWith(5, 2025);
   });
@@ -128,14 +110,7 @@ describe("MonthPicker", () => {
   it("should call onChange with month + 1 when chevron right is clicked", async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
-    render(
-      <MonthPicker
-        month={6}
-        year={2025}
-        isEditable={false}
-        onChange={onChange}
-      />,
-    );
+    render(<MonthPicker month={6} year={2025} isEditable={false} onChange={onChange} />);
     await user.click(screen.getByLabelText("Mois suivant"));
     expect(onChange).toHaveBeenCalledWith(7, 2025);
   });
@@ -143,14 +118,7 @@ describe("MonthPicker", () => {
   it("should wrap to December of previous year when going before January", async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
-    render(
-      <MonthPicker
-        month={1}
-        year={2025}
-        isEditable={false}
-        onChange={onChange}
-      />,
-    );
+    render(<MonthPicker month={1} year={2025} isEditable={false} onChange={onChange} />);
     await user.click(screen.getByLabelText("Mois précédent"));
     expect(onChange).toHaveBeenCalledWith(12, 2024);
   });
@@ -158,14 +126,7 @@ describe("MonthPicker", () => {
   it("should wrap to January of next year when going after December", async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
-    render(
-      <MonthPicker
-        month={12}
-        year={2025}
-        isEditable={false}
-        onChange={onChange}
-      />,
-    );
+    render(<MonthPicker month={12} year={2025} isEditable={false} onChange={onChange} />);
     await user.click(screen.getByLabelText("Mois suivant"));
     expect(onChange).toHaveBeenCalledWith(1, 2026);
   });
@@ -180,14 +141,7 @@ describe("MonthPicker", () => {
   it("should call onChange when a month is selected in the calendar (navigation)", async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
-    render(
-      <MonthPicker
-        month={6}
-        year={2025}
-        isEditable={false}
-        onChange={onChange}
-      />,
-    );
+    render(<MonthPicker month={6} year={2025} isEditable={false} onChange={onChange} />);
     await user.click(screen.getByRole("button", { name: /Mois : / }));
     // Click on a month cell in the calendar grid
     const cells = screen.getAllByRole("gridcell");
@@ -202,52 +156,28 @@ describe("MonthPicker", () => {
 
   it("should set data-invalid when range is inverted (start > end)", () => {
     const { container } = render(
-      <MonthPicker
-        isRange
-        startMonth={8}
-        startYear={2025}
-        endMonth={5}
-        endYear={2025}
-      />,
+      <MonthPicker isRange startMonth={8} startYear={2025} endMonth={5} endYear={2025} />
     );
     expect(container.firstChild).toHaveAttribute("data-invalid", "true");
   });
 
   it("should set data-invalid when range is inverted across years", () => {
     const { container } = render(
-      <MonthPicker
-        isRange
-        startMonth={1}
-        startYear={2026}
-        endMonth={12}
-        endYear={2025}
-      />,
+      <MonthPicker isRange startMonth={1} startYear={2026} endMonth={12} endYear={2025} />
     );
     expect(container.firstChild).toHaveAttribute("data-invalid", "true");
   });
 
   it("should not set data-invalid when range is valid (start <= end)", () => {
     const { container } = render(
-      <MonthPicker
-        isRange
-        startMonth={5}
-        startYear={2025}
-        endMonth={8}
-        endYear={2025}
-      />,
+      <MonthPicker isRange startMonth={5} startYear={2025} endMonth={8} endYear={2025} />
     );
     expect(container.firstChild).not.toHaveAttribute("data-invalid");
   });
 
   it("should not set data-invalid when range bounds are equal", () => {
     const { container } = render(
-      <MonthPicker
-        isRange
-        startMonth={6}
-        startYear={2025}
-        endMonth={6}
-        endYear={2025}
-      />,
+      <MonthPicker isRange startMonth={6} startYear={2025} endMonth={6} endYear={2025} />
     );
     expect(container.firstChild).not.toHaveAttribute("data-invalid");
   });

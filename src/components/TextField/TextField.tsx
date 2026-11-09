@@ -19,8 +19,10 @@ import styles from "./TextField.module.css";
 
 export type TextFieldAppearance = InputContainerAppearance;
 
-export interface TextFieldProps
-  extends Omit<AriaTextFieldProps, "className" | "style" | "children"> {
+export interface TextFieldProps extends Omit<
+  AriaTextFieldProps,
+  "className" | "style" | "children"
+> {
   /** Apparence visuelle. @default "default" */
   appearance?: TextFieldAppearance;
   /**
@@ -50,27 +52,9 @@ export interface TextFieldProps
 function Spinner() {
   return (
     <span className={styles.spinner} role="status" aria-label="Chargement">
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
-        fill="none"
-        aria-hidden="true"
-      >
-        <circle
-          cx="8"
-          cy="8"
-          r="6"
-          stroke="currentColor"
-          strokeOpacity="0.25"
-          strokeWidth="2"
-        />
-        <path
-          d="M14 8a6 6 0 00-6-6"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <circle cx="8" cy="8" r="6" stroke="currentColor" strokeOpacity="0.25" strokeWidth="2" />
+        <path d="M14 8a6 6 0 00-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
       </svg>
     </span>
   );
@@ -155,11 +139,7 @@ export function TextField({
           onContainerClick={handleContainerClick}
         >
           {elemBefore && <span className={styles.elemBefore}>{elemBefore}</span>}
-          <AriaInput
-            ref={inputRef}
-            className={styles.input}
-            placeholder={placeholder}
-          />
+          <AriaInput ref={inputRef} className={styles.input} placeholder={placeholder} />
           {isLoading && <Spinner />}
           {isClearable && hasValue && !isDisabled && (
             <AriaButton

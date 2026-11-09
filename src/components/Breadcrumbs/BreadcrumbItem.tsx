@@ -68,7 +68,13 @@ function InteractiveItem({
     );
   }
   return (
-    <button type="button" className={styles.link} onClick={onClick} onFocus={onFocus} onBlur={onBlur}>
+    <button
+      type="button"
+      className={styles.link}
+      onClick={onClick}
+      onFocus={onFocus}
+      onBlur={onBlur}
+    >
       {children}
       {focusRing}
     </button>
@@ -130,7 +136,9 @@ export function BreadcrumbItem({
 
   return (
     <li className={styles.item}>
-      <span className={styles.separator} aria-hidden="true">/</span>
+      <span className={styles.separator} aria-hidden="true">
+        /
+      </span>
       {isInteractive ? (
         <InteractiveItem href={href} onClick={onClick}>
           {content}

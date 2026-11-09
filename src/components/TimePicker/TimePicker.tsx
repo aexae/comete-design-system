@@ -1,7 +1,14 @@
 // TimePicker — Comète Design System
 // Sélecteur d'heure : deux modes (saisie / non-editable) selon isEditable.
 // Dans les deux modes, cliquer sur le champ OU l'icône ouvre le drum picker.
-import { useCallback, useEffect, useRef, useState, type ReactElement, type CSSProperties } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactElement,
+  type CSSProperties,
+} from "react";
 import {
   TimeField as AriaTimeField,
   DateInput as AriaDateInput,
@@ -25,8 +32,10 @@ import styles from "./TimePicker.module.css";
 
 export type TimePickerAppearance = InputContainerAppearance;
 
-export interface TimePickerProps<T extends TimeValue = TimeValue>
-  extends Omit<AriaTimeFieldProps<T>, "className" | "style" | "children" | "granularity"> {
+export interface TimePickerProps<T extends TimeValue = TimeValue> extends Omit<
+  AriaTimeFieldProps<T>,
+  "className" | "style" | "children" | "granularity"
+> {
   /** Apparence visuelle. @default "default" */
   appearance?: TimePickerAppearance;
   /**
@@ -66,11 +75,7 @@ export interface TimePickerProps<T extends TimeValue = TimeValue>
  * Formate un TimeValue en HH:MM[:SS] avec suffixe AM/PM si hourCycle=12.
  * Reproduit le format affiché par les segments react-aria en mode éditable.
  */
-function formatTime(
-  time: TimeValue,
-  showSeconds: boolean,
-  hourCycle?: 12 | 24,
-): string {
+function formatTime(time: TimeValue, showSeconds: boolean, hourCycle?: 12 | 24): string {
   let hour = time.hour;
   let suffix = "";
 
@@ -142,7 +147,7 @@ export function TimePicker<T extends TimeValue = TimeValue>({
         className={className}
         style={style}
         ariaProps={ariaProps}
-      />,
+      />
     );
   }
 
@@ -169,7 +174,7 @@ export function TimePicker<T extends TimeValue = TimeValue>({
       isInvalid={isInvalid}
       hourCycle={hourCycle}
       aria-label={ariaLabelProp}
-    />,
+    />
   );
 }
 
@@ -201,7 +206,7 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
 
   // Traque la valeur courante pour la synchroniser avec le drum picker
   const [currentValue, setCurrentValue] = useState<TimeValue | null>(
-    () => ariaProps.value ?? ariaProps.defaultValue ?? null,
+    () => ariaProps.value ?? ariaProps.defaultValue ?? null
   );
 
   // Sync si la valeur contrôlée change depuis l'extérieur
@@ -219,14 +224,12 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
   // premier segment pour que l'utilisateur puisse continuer à saisir.
   const handleClear = useCallback(() => {
     setCurrentValue(null);
-    const onChangeProp = ariaProps.onChange as
-      | ((value: TimeValue | null) => void)
-      | undefined;
+    const onChangeProp = ariaProps.onChange as ((value: TimeValue | null) => void) | undefined;
     onChangeProp?.(null);
     onClear?.();
     requestAnimationFrame(() => {
       const segment = containerRef.current?.querySelector<HTMLElement>(
-        "[data-type]:not([data-type='literal'])",
+        "[data-type]:not([data-type='literal'])"
       );
       segment?.focus();
     });
@@ -236,7 +239,9 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
   const handleContainerClick = useCallback(() => {
     if (ariaProps.isDisabled) return;
     setIsOpen(true);
-    const segment = containerRef.current?.querySelector<HTMLElement>("[data-type]:not([data-type='literal'])");
+    const segment = containerRef.current?.querySelector<HTMLElement>(
+      "[data-type]:not([data-type='literal'])"
+    );
     segment?.focus();
   }, [ariaProps.isDisabled]);
 
@@ -261,24 +266,20 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
     (newValue: TimeValue | null) => {
       if (!newValue) return;
       setCurrentValue(newValue);
-      const onChangeProp = ariaProps.onChange as
-        | ((value: TimeValue) => void)
-        | undefined;
+      const onChangeProp = ariaProps.onChange as ((value: TimeValue) => void) | undefined;
       onChangeProp?.(newValue);
     },
-    [ariaProps.onChange],
+    [ariaProps.onChange]
   );
 
   // Quand le drum picker change, met à jour la valeur locale + appelle onChange
   const handleDrumChange = useCallback(
     (newTime: Time) => {
       setCurrentValue(newTime);
-      const onChangeProp = ariaProps.onChange as
-        | ((value: TimeValue) => void)
-        | undefined;
+      const onChangeProp = ariaProps.onChange as ((value: TimeValue) => void) | undefined;
       onChangeProp?.(newTime);
     },
-    [ariaProps.onChange],
+    [ariaProps.onChange]
   );
 
   // Fermer le popover + blur du segment focus en cliquant à l'extérieur.
@@ -288,10 +289,7 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
   useEffect(() => {
     const handleMouseDown = (e: MouseEvent) => {
       const target = e.target as Node;
-      if (
-        containerRef.current?.contains(target) ||
-        popoverRef.current?.contains(target)
-      ) {
+      if (containerRef.current?.contains(target) || popoverRef.current?.contains(target)) {
         return;
       }
       setIsOpen(false);
@@ -319,7 +317,7 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
       className={[styles.timePicker, className].filter(Boolean).join(" ")}
       style={style}
       granularity={showSeconds ? "second" : "minute"}
-      {...(ariaProps)}
+      {...ariaProps}
       shouldForceLeadingZeros
       value={currentValue as T | null}
       defaultValue={undefined}
@@ -329,80 +327,78 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
         const hasValue = currentValue !== null;
         const showClear = isClearable && hasValue && !isReadOnly;
         return (
-        <div ref={containerRef}>
-          <InputContainer
-            appearance={appearance}
-            isDisabled={isDisabled}
-            isInvalid={isInvalid}
-            onContainerClick={handleContainerClick}
-          >
-            <div
-              className={styles.editableContent}
+          <div ref={containerRef}>
+            <InputContainer
+              appearance={appearance}
+              isDisabled={isDisabled}
+              isInvalid={isInvalid}
+              onContainerClick={handleContainerClick}
             >
-              <AriaDateInput className={styles.timeInput}>
-                {(segment) => (
-                  <AriaDateSegment className={styles.segment} segment={segment}>
-                    {/* REASON: custom placeholder par type ("HH"/"MM"/"SS")
+              <div className={styles.editableContent}>
+                <AriaDateInput className={styles.timeInput}>
+                  {(segment) => (
+                    <AriaDateSegment className={styles.segment} segment={segment}>
+                      {/* REASON: custom placeholder par type ("HH"/"MM"/"SS")
                         au lieu du défaut RAC "––". Le segment.text est utilisé
                         normalement quand une valeur est saisie. */}
-                    {({ isPlaceholder, text }) =>
-                      isPlaceholder
-                        ? segment.type === "hour"
-                          ? "HH"
-                          : segment.type === "minute"
-                            ? "MM"
-                            : segment.type === "second"
-                              ? "SS"
-                              : text
-                        : text
-                    }
-                  </AriaDateSegment>
-                )}
-              </AriaDateInput>
+                      {({ isPlaceholder, text }) =>
+                        isPlaceholder
+                          ? segment.type === "hour"
+                            ? "HH"
+                            : segment.type === "minute"
+                              ? "MM"
+                              : segment.type === "second"
+                                ? "SS"
+                                : text
+                          : text
+                      }
+                    </AriaDateSegment>
+                  )}
+                </AriaDateInput>
 
-              <div className={styles.trailingButtons}>
-                {showClear && (
+                <div className={styles.trailingButtons}>
+                  {showClear && (
+                    <Button
+                      appearance="subtle"
+                      isInline
+                      iconBefore="CloseSmall"
+                      className={[styles.clockButton, styles.clearButton].join(" ")}
+                      isDisabled={isDisabled}
+                      aria-label="Effacer"
+                      onPress={handleClear}
+                      // REASON: empêcher le blur du segment pendant le click. Sans
+                      // ça, le mousedown sur le bouton transfert le focus → segment
+                      // blur, ce qui peut surprendre l'UX d'édition.
+                      onPointerDown={(e) => e.preventDefault()}
+                    />
+                  )}
                   <Button
                     appearance="subtle"
                     isInline
-                    iconBefore="CloseSmall"
-                    className={[styles.clockButton, styles.clearButton].join(" ")}
+                    iconBefore="Schedule"
+                    className={styles.clockButton}
                     isDisabled={isDisabled}
-                    aria-label="Effacer"
-                    onPress={handleClear}
-                    // REASON: empêcher le blur du segment pendant le click. Sans
-                    // ça, le mousedown sur le bouton transfert le focus → segment
-                    // blur, ce qui peut surprendre l'UX d'édition.
-                    onPointerDown={(e) => e.preventDefault()}
+                    aria-label="Ouvrir le sélecteur d'heure"
+                    onPress={isDisabled ? undefined : openPopover}
                   />
-                )}
-                <Button
-                  appearance="subtle"
-                  isInline
-                  iconBefore="Schedule"
-                  className={styles.clockButton}
+                </div>
+              </div>
+            </InputContainer>
+
+            {isOpen && (
+              <div ref={popoverRef} className={styles.drumPopover}>
+                <TimeDrumPicker
+                  value={currentValue}
+                  onChange={handleDrumChange}
+                  // Heure complète choisie (clic sur la dernière colonne) → ferme.
+                  onComplete={() => setIsOpen(false)}
                   isDisabled={isDisabled}
-                  aria-label="Ouvrir le sélecteur d'heure"
-                  onPress={isDisabled ? undefined : openPopover}
+                  hourCycle={ariaProps.hourCycle}
+                  showSeconds={showSeconds}
                 />
               </div>
-            </div>
-          </InputContainer>
-
-          {isOpen && (
-            <div ref={popoverRef} className={styles.drumPopover}>
-              <TimeDrumPicker
-                value={currentValue}
-                onChange={handleDrumChange}
-                // Heure complète choisie (clic sur la dernière colonne) → ferme.
-                onComplete={() => setIsOpen(false)}
-                isDisabled={isDisabled}
-                hourCycle={ariaProps.hourCycle}
-                showSeconds={showSeconds}
-              />
-            </div>
-          )}
-        </div>
+            )}
+          </div>
         );
       }}
     </AriaTimeField>
@@ -442,7 +438,7 @@ function NonEditableTimePicker({
   // État interne pour le mode non contrôlé
   const isControlled = value !== undefined;
   const [internalValue, setInternalValue] = useState<TimeValue>(
-    () => value ?? defaultValue ?? new Time(0, 0),
+    () => value ?? defaultValue ?? new Time(0, 0)
   );
   const resolvedValue = (isControlled ? value : internalValue) as TimeValue;
 
@@ -456,9 +452,7 @@ function NonEditableTimePicker({
     onChange?.(newTime);
   };
 
-  const rootClassNames = [styles.timePicker, className]
-    .filter(Boolean)
-    .join(" ");
+  const rootClassNames = [styles.timePicker, className].filter(Boolean).join(" ");
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
@@ -473,11 +467,7 @@ function NonEditableTimePicker({
         if (!isDisabled) setIsOpen(true);
       }}
     >
-      <InputContainer
-        appearance={appearance}
-        isDisabled={isDisabled}
-        isInvalid={isInvalid}
-      >
+      <InputContainer appearance={appearance} isDisabled={isDisabled} isInvalid={isInvalid}>
         <div className={styles.content}>
           <span className={styles.timeDisplay}>{formattedTime}</span>
 
@@ -489,11 +479,7 @@ function NonEditableTimePicker({
               isDisabled={isDisabled}
               aria-label="Ouvrir le sélecteur d'heure"
             />
-            <Popover
-              triggerRef={containerRef}
-              placement="bottom start"
-              shouldFlip={false}
-            >
+            <Popover triggerRef={containerRef} placement="bottom start" shouldFlip={false}>
               <AriaDialog className={styles.dialog}>
                 <TimeDrumPicker
                   value={resolvedValue}

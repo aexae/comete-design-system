@@ -182,7 +182,7 @@ describe("ModalDialog", () => {
     render(
       <ModalDialog title="Palette" isOpen pinned={<input aria-label="Chercher" />}>
         <p>Résultats</p>
-      </ModalDialog>,
+      </ModalDialog>
     );
     const pinned = screen.getByLabelText("Chercher").parentElement;
     // Le corps est un `ScrollArea` : son contenu vit DANS la zone défilante,
@@ -198,7 +198,7 @@ describe("ModalDialog", () => {
     render(
       <ModalDialog title="Simple" isOpen>
         <p>Corps</p>
-      </ModalDialog>,
+      </ModalDialog>
     );
     expect(document.querySelector(".pinned")).toBeNull();
   });
@@ -215,7 +215,7 @@ describe("ModalDialog — zone défilante", () => {
     render(
       <ModalDialog title="Long" isOpen>
         <p>Corps défilant</p>
-      </ModalDialog>,
+      </ModalDialog>
     );
     return screen.getByText("Corps défilant").closest(".body");
   }
@@ -252,7 +252,7 @@ describe("ModalDialog — zone défilante", () => {
     // Sans ce jeton les masques tirent vers `--background-surface-default`,
     // qui n'est pas la couleur du dialog — ils jureraient sur la modale.
     expect(css).toMatch(
-      /\.body\s*\{[^}]*--scroll-shadow-surface:\s*var\(--background-surface-elevation-overlay-default\)/,
+      /\.body\s*\{[^}]*--scroll-shadow-surface:\s*var\(--background-surface-elevation-overlay-default\)/
     );
   });
 

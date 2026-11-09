@@ -173,7 +173,7 @@ export function Stepper({
       count,
       onStepChange,
     }),
-    [activeStep, isLinear, isClickable, orientation, count, onStepChange],
+    [activeStep, isLinear, isClickable, orientation, count, onStepChange]
   );
 
   return (
@@ -191,7 +191,7 @@ export function Stepper({
           cloneElement(child as ReactElement<StepInternalProps>, {
             __index: index,
             key: index,
-          }),
+          })
         )}
       </ol>
     </StepperContext.Provider>
@@ -228,14 +228,8 @@ export function Step({
   style,
   __index,
 }: StepInternalProps): ReactElement {
-  const {
-    activeStep,
-    isLinear,
-    isClickable,
-    orientation,
-    count,
-    onStepChange,
-  } = useStepperContext();
+  const { activeStep, isLinear, isClickable, orientation, count, onStepChange } =
+    useStepperContext();
 
   const index = __index ?? 0;
   const isLast = index === count - 1;
@@ -264,8 +258,7 @@ export function Step({
 
   // Couleur du connecteur APRÈS cette étape — coloré (brand) uniquement si la
   // step est `completed`. Les autres statuts (incl. erreur) laissent gris.
-  const connectorStatus: "completed" | "default" =
-    status === "completed" ? "completed" : "default";
+  const connectorStatus: "completed" | "default" = status === "completed" ? "completed" : "default";
 
   // Indicator content selon le status :
   // - completed : check `outlined` blanc sur cercle brand (le cercle vient

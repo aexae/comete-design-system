@@ -1,16 +1,11 @@
 // ProgressBar — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  ProgressBar,
-  type ProgressBarAppearance,
-} from "@aexae/comete-design-system/components";
+import { ProgressBar, type ProgressBarAppearance } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -25,14 +20,9 @@ const meta = {
     },
     appearance: {
       control: "select",
-      options: [
-        "auto",
-        "critical",
-        "warning",
-        "information",
-        "comete",
-        "success",
-      ] satisfies (ProgressBarAppearance | "auto")[],
+      options: ["auto", "critical", "warning", "information", "comete", "success"] satisfies (
+        ProgressBarAppearance | "auto"
+      )[],
     },
     showLabel: {
       control: "boolean",
@@ -45,7 +35,10 @@ const meta = {
   },
   parameters: {
     docs: {
-      description: { component: "La barre de progression indique l'avancement d'une opération de manière linéaire et proportionnelle. Elle informe l'utilisateur du pourcentage accompli ou signale un traitement en cours lorsque la durée est indéterminée." },
+      description: {
+        component:
+          "La barre de progression indique l'avancement d'une opération de manière linéaire et proportionnelle. Elle informe l'utilisateur du pourcentage accompli ou signale un traitement en cours lorsque la durée est indéterminée.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={

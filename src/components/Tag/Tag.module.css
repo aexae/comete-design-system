@@ -19,7 +19,9 @@
   white-space: nowrap;
   border: 1px solid transparent;
   box-sizing: border-box;
-  transition: background 100ms ease, border-color 100ms ease;
+  transition:
+    background 100ms ease,
+    border-color 100ms ease;
 }
 
 /* ==========================================================================
@@ -64,78 +66,122 @@
   background: var(--background-neutral-bold-default);
   color: var(--text-inverted);
 }
-.bold.neutral.interactive:hover { background: var(--background-neutral-bold-hovered); }
-.bold.neutral.interactive:active { background: var(--background-neutral-bold-pressed); }
+.bold.neutral.interactive:hover {
+  background: var(--background-neutral-bold-hovered);
+}
+.bold.neutral.interactive:active {
+  background: var(--background-neutral-bold-pressed);
+}
 
 .bold.comete {
   background: var(--background-comete-bold-default);
   color: var(--text-inverted);
 }
-.bold.comete.interactive:hover { background: var(--background-comete-bold-hovered); }
-.bold.comete.interactive:active { background: var(--background-comete-bold-pressed); }
+.bold.comete.interactive:hover {
+  background: var(--background-comete-bold-hovered);
+}
+.bold.comete.interactive:active {
+  background: var(--background-comete-bold-pressed);
+}
 
 .bold.success {
   background: var(--background-success-bold-default);
   color: var(--text-inverted);
 }
-.bold.success.interactive:hover { background: var(--background-success-bold-hovered); }
-.bold.success.interactive:active { background: var(--background-success-bold-pressed); }
+.bold.success.interactive:hover {
+  background: var(--background-success-bold-hovered);
+}
+.bold.success.interactive:active {
+  background: var(--background-success-bold-pressed);
+}
 
 .bold.warning {
   background: var(--background-warning-bold-default);
   color: var(--text-on-warning);
 }
-.bold.warning.interactive:hover { background: var(--background-warning-bold-hovered); }
-.bold.warning.interactive:active { background: var(--background-warning-bold-pressed); }
+.bold.warning.interactive:hover {
+  background: var(--background-warning-bold-hovered);
+}
+.bold.warning.interactive:active {
+  background: var(--background-warning-bold-pressed);
+}
 
 .bold.critical {
   background: var(--background-critical-bold-default);
   color: var(--text-inverted);
 }
-.bold.critical.interactive:hover { background: var(--background-critical-bold-hovered); }
-.bold.critical.interactive:active { background: var(--background-critical-bold-pressed); }
+.bold.critical.interactive:hover {
+  background: var(--background-critical-bold-hovered);
+}
+.bold.critical.interactive:active {
+  background: var(--background-critical-bold-pressed);
+}
 
 .bold.information {
   background: var(--background-information-bold-default);
   color: var(--text-inverted);
 }
-.bold.information.interactive:hover { background: var(--background-information-bold-hovered); }
-.bold.information.interactive:active { background: var(--background-information-bold-pressed); }
+.bold.information.interactive:hover {
+  background: var(--background-information-bold-hovered);
+}
+.bold.information.interactive:active {
+  background: var(--background-information-bold-pressed);
+}
 
 .bold.accentPurple {
   background: var(--background-accent-purple-bold-default);
   color: var(--text-inverted);
 }
-.bold.accentPurple.interactive:hover { background: var(--background-accent-purple-bold-hovered); }
-.bold.accentPurple.interactive:active { background: var(--background-accent-purple-bold-pressed); }
+.bold.accentPurple.interactive:hover {
+  background: var(--background-accent-purple-bold-hovered);
+}
+.bold.accentPurple.interactive:active {
+  background: var(--background-accent-purple-bold-pressed);
+}
 
 .bold.accentTeal {
   background: var(--background-accent-teal-bold-default);
   color: var(--text-inverted);
 }
-.bold.accentTeal.interactive:hover { background: var(--background-accent-teal-bold-hovered); }
-.bold.accentTeal.interactive:active { background: var(--background-accent-teal-bold-pressed); }
+.bold.accentTeal.interactive:hover {
+  background: var(--background-accent-teal-bold-hovered);
+}
+.bold.accentTeal.interactive:active {
+  background: var(--background-accent-teal-bold-pressed);
+}
 
 .bold.accentTurquoise {
   background: var(--background-accent-turquoise-bold-default);
   color: var(--text-inverted);
 }
-.bold.accentTurquoise.interactive:hover { background: var(--background-accent-turquoise-bold-hovered); }
-.bold.accentTurquoise.interactive:active { background: var(--background-accent-turquoise-bold-pressed); }
+.bold.accentTurquoise.interactive:hover {
+  background: var(--background-accent-turquoise-bold-hovered);
+}
+.bold.accentTurquoise.interactive:active {
+  background: var(--background-accent-turquoise-bold-pressed);
+}
 
 .bold.accentMagenta {
   background: var(--background-accent-magenta-bold-default);
   color: var(--text-inverted);
 }
-.bold.accentMagenta.interactive:hover { background: var(--background-accent-magenta-bold-hovered); }
-.bold.accentMagenta.interactive:active { background: var(--background-accent-magenta-bold-pressed); }
+.bold.accentMagenta.interactive:hover {
+  background: var(--background-accent-magenta-bold-hovered);
+}
+.bold.accentMagenta.interactive:active {
+  background: var(--background-accent-magenta-bold-pressed);
+}
 
 .bold.accentBlueGrey {
   background: var(--background-accent-blue-grey-bold-default);
   color: var(--text-inverted);
 }
-.bold.accentBlueGrey.interactive:hover { background: var(--background-accent-blue-grey-bold-hovered); }
-.bold.accentBlueGrey.interactive:active { background: var(--background-accent-blue-grey-bold-pressed); }
+.bold.accentBlueGrey.interactive:hover {
+  background: var(--background-accent-blue-grey-bold-hovered);
+}
+.bold.accentBlueGrey.interactive:active {
+  background: var(--background-accent-blue-grey-bold-pressed);
+}
 
 /* ==========================================================================
    Style: subtle — fond léger, texte coloré
@@ -145,78 +191,122 @@
   background: var(--background-neutral-subtler-default);
   color: var(--text-default);
 }
-.subtle.neutral.interactive:hover { background: var(--background-neutral-subtler-hovered); }
-.subtle.neutral.interactive:active { background: var(--background-neutral-subtler-pressed); }
+.subtle.neutral.interactive:hover {
+  background: var(--background-neutral-subtler-hovered);
+}
+.subtle.neutral.interactive:active {
+  background: var(--background-neutral-subtler-pressed);
+}
 
 .subtle.comete {
   background: var(--background-comete-subtlest-default);
   color: var(--text-comete);
 }
-.subtle.comete.interactive:hover { background: var(--background-comete-subtlest-hovered); }
-.subtle.comete.interactive:active { background: var(--background-comete-subtlest-pressed); }
+.subtle.comete.interactive:hover {
+  background: var(--background-comete-subtlest-hovered);
+}
+.subtle.comete.interactive:active {
+  background: var(--background-comete-subtlest-pressed);
+}
 
 .subtle.success {
   background: var(--background-success-subtlest-default);
   color: var(--text-success);
 }
-.subtle.success.interactive:hover { background: var(--background-success-subtlest-hovered); }
-.subtle.success.interactive:active { background: var(--background-success-subtlest-pressed); }
+.subtle.success.interactive:hover {
+  background: var(--background-success-subtlest-hovered);
+}
+.subtle.success.interactive:active {
+  background: var(--background-success-subtlest-pressed);
+}
 
 .subtle.warning {
   background: var(--background-warning-subtlest-default);
   color: var(--text-warning);
 }
-.subtle.warning.interactive:hover { background: var(--background-warning-subtlest-hovered); }
-.subtle.warning.interactive:active { background: var(--background-warning-subtlest-pressed); }
+.subtle.warning.interactive:hover {
+  background: var(--background-warning-subtlest-hovered);
+}
+.subtle.warning.interactive:active {
+  background: var(--background-warning-subtlest-pressed);
+}
 
 .subtle.critical {
   background: var(--background-critical-subtlest-default);
   color: var(--text-critical);
 }
-.subtle.critical.interactive:hover { background: var(--background-critical-subtlest-hovered); }
-.subtle.critical.interactive:active { background: var(--background-critical-subtlest-pressed); }
+.subtle.critical.interactive:hover {
+  background: var(--background-critical-subtlest-hovered);
+}
+.subtle.critical.interactive:active {
+  background: var(--background-critical-subtlest-pressed);
+}
 
 .subtle.information {
   background: var(--background-information-subtlest-default);
   color: var(--text-information);
 }
-.subtle.information.interactive:hover { background: var(--background-information-subtlest-hovered); }
-.subtle.information.interactive:active { background: var(--background-information-subtlest-pressed); }
+.subtle.information.interactive:hover {
+  background: var(--background-information-subtlest-hovered);
+}
+.subtle.information.interactive:active {
+  background: var(--background-information-subtlest-pressed);
+}
 
 .subtle.accentPurple {
   background: var(--background-accent-purple-subtlest-default);
   color: var(--text-accent-purple);
 }
-.subtle.accentPurple.interactive:hover { background: var(--background-accent-purple-subtlest-hovered); }
-.subtle.accentPurple.interactive:active { background: var(--background-accent-purple-subtlest-pressed); }
+.subtle.accentPurple.interactive:hover {
+  background: var(--background-accent-purple-subtlest-hovered);
+}
+.subtle.accentPurple.interactive:active {
+  background: var(--background-accent-purple-subtlest-pressed);
+}
 
 .subtle.accentTeal {
   background: var(--background-accent-teal-subtlest-default);
   color: var(--text-accent-teal);
 }
-.subtle.accentTeal.interactive:hover { background: var(--background-accent-teal-subtlest-hovered); }
-.subtle.accentTeal.interactive:active { background: var(--background-accent-teal-subtlest-pressed); }
+.subtle.accentTeal.interactive:hover {
+  background: var(--background-accent-teal-subtlest-hovered);
+}
+.subtle.accentTeal.interactive:active {
+  background: var(--background-accent-teal-subtlest-pressed);
+}
 
 .subtle.accentTurquoise {
   background: var(--background-accent-turquoise-subtlest-default);
   color: var(--text-accent-turquoise);
 }
-.subtle.accentTurquoise.interactive:hover { background: var(--background-accent-turquoise-subtlest-hovered); }
-.subtle.accentTurquoise.interactive:active { background: var(--background-accent-turquoise-subtlest-pressed); }
+.subtle.accentTurquoise.interactive:hover {
+  background: var(--background-accent-turquoise-subtlest-hovered);
+}
+.subtle.accentTurquoise.interactive:active {
+  background: var(--background-accent-turquoise-subtlest-pressed);
+}
 
 .subtle.accentMagenta {
   background: var(--background-accent-magenta-subtlest-default);
   color: var(--text-accent-magenta);
 }
-.subtle.accentMagenta.interactive:hover { background: var(--background-accent-magenta-subtlest-hovered); }
-.subtle.accentMagenta.interactive:active { background: var(--background-accent-magenta-subtlest-pressed); }
+.subtle.accentMagenta.interactive:hover {
+  background: var(--background-accent-magenta-subtlest-hovered);
+}
+.subtle.accentMagenta.interactive:active {
+  background: var(--background-accent-magenta-subtlest-pressed);
+}
 
 .subtle.accentBlueGrey {
   background: var(--background-accent-blue-grey-subtlest-default);
   color: var(--text-accent-blue-grey);
 }
-.subtle.accentBlueGrey.interactive:hover { background: var(--background-accent-blue-grey-subtlest-hovered); }
-.subtle.accentBlueGrey.interactive:active { background: var(--background-accent-blue-grey-subtlest-pressed); }
+.subtle.accentBlueGrey.interactive:hover {
+  background: var(--background-accent-blue-grey-subtlest-hovered);
+}
+.subtle.accentBlueGrey.interactive:active {
+  background: var(--background-accent-blue-grey-subtlest-pressed);
+}
 
 /* ==========================================================================
    Style: outlined — fond transparent, bordure colorée
@@ -227,88 +317,132 @@
   border-color: var(--border-default);
   color: var(--text-default);
 }
-.outlined.neutral.interactive:hover { background: var(--background-neutral-subtlest-hovered); }
-.outlined.neutral.interactive:active { background: var(--background-neutral-subtlest-pressed); }
+.outlined.neutral.interactive:hover {
+  background: var(--background-neutral-subtlest-hovered);
+}
+.outlined.neutral.interactive:active {
+  background: var(--background-neutral-subtlest-pressed);
+}
 
 .outlined.comete {
   background: transparent;
   border-color: var(--border-comete-bold);
   color: var(--text-comete);
 }
-.outlined.comete.interactive:hover { background: var(--background-comete-subtlest-hovered); }
-.outlined.comete.interactive:active { background: var(--background-comete-subtlest-pressed); }
+.outlined.comete.interactive:hover {
+  background: var(--background-comete-subtlest-hovered);
+}
+.outlined.comete.interactive:active {
+  background: var(--background-comete-subtlest-pressed);
+}
 
 .outlined.success {
   background: transparent;
   border-color: var(--border-success-bold);
   color: var(--text-success);
 }
-.outlined.success.interactive:hover { background: var(--background-success-subtlest-hovered); }
-.outlined.success.interactive:active { background: var(--background-success-subtlest-pressed); }
+.outlined.success.interactive:hover {
+  background: var(--background-success-subtlest-hovered);
+}
+.outlined.success.interactive:active {
+  background: var(--background-success-subtlest-pressed);
+}
 
 .outlined.warning {
   background: transparent;
   border-color: var(--border-warning-bold);
   color: var(--text-warning);
 }
-.outlined.warning.interactive:hover { background: var(--background-warning-subtlest-hovered); }
-.outlined.warning.interactive:active { background: var(--background-warning-subtlest-pressed); }
+.outlined.warning.interactive:hover {
+  background: var(--background-warning-subtlest-hovered);
+}
+.outlined.warning.interactive:active {
+  background: var(--background-warning-subtlest-pressed);
+}
 
 .outlined.critical {
   background: transparent;
   border-color: var(--border-critical-bold);
   color: var(--text-critical);
 }
-.outlined.critical.interactive:hover { background: var(--background-critical-subtlest-hovered); }
-.outlined.critical.interactive:active { background: var(--background-critical-subtlest-pressed); }
+.outlined.critical.interactive:hover {
+  background: var(--background-critical-subtlest-hovered);
+}
+.outlined.critical.interactive:active {
+  background: var(--background-critical-subtlest-pressed);
+}
 
 .outlined.information {
   background: transparent;
   border-color: var(--border-information-bold);
   color: var(--text-information);
 }
-.outlined.information.interactive:hover { background: var(--background-information-subtlest-hovered); }
-.outlined.information.interactive:active { background: var(--background-information-subtlest-pressed); }
+.outlined.information.interactive:hover {
+  background: var(--background-information-subtlest-hovered);
+}
+.outlined.information.interactive:active {
+  background: var(--background-information-subtlest-pressed);
+}
 
 .outlined.accentPurple {
   background: transparent;
   border-color: var(--border-accent-purple-bold);
   color: var(--text-accent-purple);
 }
-.outlined.accentPurple.interactive:hover { background: var(--background-accent-purple-subtlest-hovered); }
-.outlined.accentPurple.interactive:active { background: var(--background-accent-purple-subtlest-pressed); }
+.outlined.accentPurple.interactive:hover {
+  background: var(--background-accent-purple-subtlest-hovered);
+}
+.outlined.accentPurple.interactive:active {
+  background: var(--background-accent-purple-subtlest-pressed);
+}
 
 .outlined.accentTeal {
   background: transparent;
   border-color: var(--border-accent-teal-bold);
   color: var(--text-accent-teal);
 }
-.outlined.accentTeal.interactive:hover { background: var(--background-accent-teal-subtlest-hovered); }
-.outlined.accentTeal.interactive:active { background: var(--background-accent-teal-subtlest-pressed); }
+.outlined.accentTeal.interactive:hover {
+  background: var(--background-accent-teal-subtlest-hovered);
+}
+.outlined.accentTeal.interactive:active {
+  background: var(--background-accent-teal-subtlest-pressed);
+}
 
 .outlined.accentTurquoise {
   background: transparent;
   border-color: var(--border-accent-turquoise-bold);
   color: var(--text-accent-turquoise);
 }
-.outlined.accentTurquoise.interactive:hover { background: var(--background-accent-turquoise-subtlest-hovered); }
-.outlined.accentTurquoise.interactive:active { background: var(--background-accent-turquoise-subtlest-pressed); }
+.outlined.accentTurquoise.interactive:hover {
+  background: var(--background-accent-turquoise-subtlest-hovered);
+}
+.outlined.accentTurquoise.interactive:active {
+  background: var(--background-accent-turquoise-subtlest-pressed);
+}
 
 .outlined.accentMagenta {
   background: transparent;
   border-color: var(--border-accent-magenta-bold);
   color: var(--text-accent-magenta);
 }
-.outlined.accentMagenta.interactive:hover { background: var(--background-accent-magenta-subtlest-hovered); }
-.outlined.accentMagenta.interactive:active { background: var(--background-accent-magenta-subtlest-pressed); }
+.outlined.accentMagenta.interactive:hover {
+  background: var(--background-accent-magenta-subtlest-hovered);
+}
+.outlined.accentMagenta.interactive:active {
+  background: var(--background-accent-magenta-subtlest-pressed);
+}
 
 .outlined.accentBlueGrey {
   background: transparent;
   border-color: var(--border-accent-blue-grey-bold);
   color: var(--text-accent-blue-grey);
 }
-.outlined.accentBlueGrey.interactive:hover { background: var(--background-accent-blue-grey-subtlest-hovered); }
-.outlined.accentBlueGrey.interactive:active { background: var(--background-accent-blue-grey-subtlest-pressed); }
+.outlined.accentBlueGrey.interactive:hover {
+  background: var(--background-accent-blue-grey-subtlest-hovered);
+}
+.outlined.accentBlueGrey.interactive:active {
+  background: var(--background-accent-blue-grey-subtlest-pressed);
+}
 
 /* ==========================================================================
    Slots: elemBefore, elemAfter, label, removeButton

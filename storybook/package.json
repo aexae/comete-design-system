@@ -8,6 +8,8 @@
     "build-storybook": "storybook build",
     "preview": "serve storybook-static -s -p 6006",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
+    "format": "prettier --write . --ignore-path ../.prettierignore --ignore-path .gitignore",
+    "format:check": "prettier --check . --ignore-path ../.prettierignore --ignore-path .gitignore",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",

@@ -2,11 +2,70 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-09 — Prettier systématique, légendes homogènes, clip-path
+
+**Contexte** : suite de la généralisation des libellés de variantes dans Storybook.
+
+**Décisions** :
+
+- **Prettier s'applique à tout le code, systématiquement** (demande d'Axel). Passage
+  global `prettier --write` sur la racine et `storybook/` (313 fichiers), `prettier`
+  en devDependency racine, scripts `pnpm format` / `pnpm format:check`, étape
+  `Format check (Prettier)` dans `ci.yml` après le lint. Config unique `.prettierrc`
+  à la racine (`jsxBracketSameLine` déprécié remplacé par `bracketSameLine`).
+  Ignorés : `pnpm-lock.yaml`, `*.module.css.d.ts` (générés par tcm),
+  `storybook-static`, `dist`, `coverage`. Annule la décision précédente de ne pas
+  formater les stories.
+- **Légendes homogènes** : toute légende nommant une variante, une taille, un état
+  ou une prop passe par `Labeled` / `LabeledRow` / `Legend` (12 px, `--text-subtle`,
+  pas de monospace, libellé **sous** l'instance). Les en-têtes de ligne / colonne de
+  grilles utilisent `Legend`. Sur fond sombre (`inverted`), le fond devient une tuile
+  dans le `Labeled` et le libellé reste dehors en `--text-subtle`.
+- **`clip-path` → `clipPath`** : ajout de la conversion dans
+  `scripts/generate-components.ts` de `comete-icons` et `comete-illustrations`, et
+  application directe sur les composants générés déjà commités (20 icônes,
+  2 illustrations), sans relancer `pnpm generate` côté icônes (le `svg/` local est
+  brut, non optimisé). Non commité : livraison des deux paquets à la demande.
+
+## 2026-11-09 — Storybook : libellé sous chaque instance dans les stories multi-variantes
+
+**Contexte** : demande d'Axel de généraliser le pattern de la story Button
+« Icon only — All variants » (libellé discret sous chaque instance) à toutes les
+stories qui rendent plusieurs instances d'un composant.
+
+**Décisions** :
+
+- **Helper partagé `storybook/stories/_labeled.tsx`** (`Labeled`, `LabeledRow`)
+  plutôt qu'un pattern inline dupliqué. Même rendu que Button : colonne flex,
+  gap 8, libellé `fontSize 12` en `var(--text-subtle)`. Button migre dessus.
+- **Périmètre** : on labellise quand ≥ 2 instances ne diffèrent que par des props
+  et que rien dans le rendu ne dit laquelle on regarde. On ne touche pas aux
+  instances auto-descriptives (texte visible = nom de la variante), aux stories
+  déjà labellisées (en-têtes de grille, `Field label`, `<Text>` légende), aux
+  compositions/démos/templates (items = contenu, pas variantes), ni aux
+  playgrounds et stories `play`.
+- **Libellé = valeur brute de l'API** (`small`, `outlined`, `comete`),
+  combinaison avec « · » (`outlined · disabled`). Pas de nom marketing.
+- **Pas de Prettier sur les stories** : les fichiers ne sont pas Prettier-clean
+  au départ, un `--write` reformate tout. Code ajouté formaté à la main,
+  validation = eslint + tsc + tests Storybook.
+- **Badge « With cutout border »** : fond sombre par tuile au lieu d'un bandeau
+  unique, pour garder le libellé lisible hors du fond.
+- 16 stories modifiées dans 15 fichiers : Avatar (AllSizes, remplace un `#666`
+  hardcodé), Badge (LowImportance, WithCutoutBorder, Disabled), Banner, Button
+  (3 Icon only), ButtonGroup (MixedVariants, All densities), Couleur
+  (Philosophie), IconTile (AllCombinations), ModalDialog (AllAppearances),
+  ProgressIndicator (AllAppearances, AllSizes), ScrollArea (Axes),
+  SectionMessage (AllAppearances ×2), Skeleton (Avatars, Squares,
+  AllAppearances), Snackbar (Appearances), Switch (Indeterminate), Tag
+  (AllAppearances, Shapes).
+
 ## 2026-11-09 — Button : couleurs subtle/subtlest sans fond au repos, stories link/subtle en default
 
 **Contexte** : revue visuelle en Storybook après l'alignement du Button.
 
 **Décisions** :
+
 - **Couleurs `subtle` / `subtlest` sans fond au repos** (apparence `contained`) :
   elles portaient le même fond gris que `default`, ce qui les faisait passer pour
   des boutons pleins alors que leur rôle est le motif bouton-icône fantôme
@@ -24,6 +83,7 @@
 de tokens de composants. Quatre points soulevés par Axel.
 
 **Décisions** :
+
 - **Fonds retirés** au survol et à la pression sur `link` et `link-subtle` (feedback
   uniquement sur le texte, via épaississement du soulignement). Conforme à Figma.
 - **Couleur link rétablie** : `link` utilise `--text-link-default/-hovered/-pressed`

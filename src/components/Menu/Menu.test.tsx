@@ -84,7 +84,9 @@ describe("Menu", () => {
 
   it("should render iconBefore as an svg", async () => {
     await renderOpenMenu(
-      <MenuItem id="edit" iconBefore="Edit">Modifier</MenuItem>
+      <MenuItem id="edit" iconBefore="Edit">
+        Modifier
+      </MenuItem>
     );
     const item = screen.getByRole("menuitem");
     expect(item.querySelector("svg")).toBeInTheDocument();
@@ -92,7 +94,9 @@ describe("Menu", () => {
 
   it("should render iconAfter as an svg", async () => {
     await renderOpenMenu(
-      <MenuItem id="submenu" iconAfter="ChevronRight">Sous-menu</MenuItem>
+      <MenuItem id="submenu" iconAfter="ChevronRight">
+        Sous-menu
+      </MenuItem>
     );
     const item = screen.getByRole("menuitem");
     expect(item.querySelector("svg")).toBeInTheDocument();
@@ -102,7 +106,9 @@ describe("Menu", () => {
 
   it("should render elemAfter content", async () => {
     await renderOpenMenu(
-      <MenuItem id="save" elemAfter={<kbd>⌘S</kbd>}>Enregistrer</MenuItem>
+      <MenuItem id="save" elemAfter={<kbd>⌘S</kbd>}>
+        Enregistrer
+      </MenuItem>
     );
     expect(screen.getByText("⌘S")).toBeInTheDocument();
   });
@@ -111,7 +117,9 @@ describe("Menu", () => {
 
   it("should render disabled items with data-disabled", async () => {
     await renderOpenMenu(
-      <MenuItem id="locked" isDisabled>Verrouillé</MenuItem>
+      <MenuItem id="locked" isDisabled>
+        Verrouillé
+      </MenuItem>
     );
     const item = screen.getByRole("menuitem");
     expect(item).toHaveAttribute("data-disabled", "true");
@@ -123,8 +131,22 @@ describe("Menu", () => {
     const onAction = vi.fn();
     const user = await renderOpenMenu(
       <>
-        <MenuItem id="edit" onAction={() => { onAction("edit"); }}>Modifier</MenuItem>
-        <MenuItem id="delete" onAction={() => { onAction("delete"); }}>Supprimer</MenuItem>
+        <MenuItem
+          id="edit"
+          onAction={() => {
+            onAction("edit");
+          }}
+        >
+          Modifier
+        </MenuItem>
+        <MenuItem
+          id="delete"
+          onAction={() => {
+            onAction("delete");
+          }}
+        >
+          Supprimer
+        </MenuItem>
       </>
     );
     await user.click(screen.getByText("Modifier"));
@@ -196,9 +218,7 @@ describe("Menu", () => {
   // Menu closes on item selection ----------------------------------------
 
   it("should close menu after selecting an item", async () => {
-    const user = await renderOpenMenu(
-      <MenuItem id="edit">Modifier</MenuItem>
-    );
+    const user = await renderOpenMenu(<MenuItem id="edit">Modifier</MenuItem>);
     await user.click(screen.getByText("Modifier"));
     // Menu should be closed (no menu role in the DOM)
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();

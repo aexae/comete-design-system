@@ -7,8 +7,7 @@ import styles from "./Hero.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
-export type HeroSize =
-  | "xxlarge" | "xlarge" | "large" | "medium" | "small" | "xsmall" | "xxsmall";
+export type HeroSize = "xxlarge" | "xlarge" | "large" | "medium" | "small" | "xsmall" | "xxsmall";
 
 export type HeroColor = "default" | "inverted";
 

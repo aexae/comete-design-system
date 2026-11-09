@@ -10,7 +10,8 @@ import styles from "./Button.module.css";
 // ----------------------------------------------------------------------
 
 export type ButtonAppearance = "contained" | "outlined" | "subtle" | "link" | "link-subtle";
-export type ButtonColor = "default" | "subtle" | "subtlest" | "comete" | "success" | "critical" | "warning" | "information";
+export type ButtonColor =
+  "default" | "subtle" | "subtlest" | "comete" | "success" | "critical" | "warning" | "information";
 export type ButtonShape = "round" | "square";
 /**
  * Densité — dimension + padding + radius, échelle partagée avec les champs.
@@ -151,8 +152,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     // Hériter isDisabled du InputContext si pas passé explicitement
     const inputCtx = useInputContext();
-    const effectiveDisabled =
-      ariaProps.isDisabled ?? inputCtx?.isDisabled ?? false;
+    const effectiveDisabled = ariaProps.isDisabled ?? inputCtx?.isDisabled ?? false;
 
     // Map appearance to CSS class (handles kebab-case "link-subtle")
     const appearanceClassMap: Record<ButtonAppearance, string> = {
@@ -186,9 +186,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       default: styles.densityDefault,
       touch: styles.densityTouch,
     };
-    const spacingClass = isInline
-      ? styles.inline
-      : densityClassMap[resolvedDensity];
+    const spacingClass = isInline ? styles.inline : densityClassMap[resolvedDensity];
 
     // NOTE: icon-only when icon is present but children is empty/null/undefined
     const isIconOnly =
@@ -223,13 +221,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {isLoading ? (
           <span className={styles.spinner} aria-label="Chargement">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              aria-hidden="true"
-            >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <circle
                 cx="12"
                 cy="12"
@@ -248,20 +240,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           </span>
         ) : (
           <>
-            {iconBefore && (
-              <Icon icon={iconBefore} color={iconColor} className={styles.icon} />
-            )}
-            {collapseLabel &&
-            children !== null &&
-            children !== undefined &&
-            children !== "" ? (
+            {iconBefore && <Icon icon={iconBefore} color={iconColor} className={styles.icon} />}
+            {collapseLabel && children !== null && children !== undefined && children !== "" ? (
               <span className={styles.collapsibleLabel}>{children}</span>
             ) : (
               children
             )}
-            {iconAfter && (
-              <Icon icon={iconAfter} color={iconColor} className={styles.icon} />
-            )}
+            {iconAfter && <Icon icon={iconAfter} color={iconColor} className={styles.icon} />}
           </>
         )}
       </AriaButton>

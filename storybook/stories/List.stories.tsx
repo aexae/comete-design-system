@@ -37,23 +37,20 @@ function LeadingTrailingDoc() {
         gap: "var(--space150)",
       }}
     >
-      <SectionHeading dot="var(--text-information)">
-        Placement du contenu
-      </SectionHeading>
+      <SectionHeading dot="var(--text-information)">Placement du contenu</SectionHeading>
       <SectionMessage
         appearance="information"
         title="Le leading porte l'identité de la ligne. Le trailing porte l'attribution et l'état."
       >
         <Stack gap="100">
           <Text size="small" color="subtle" as="p">
-            Un avatar <em>à gauche</em> répond à « qui est cette ligne ? » — la
-            ligne <em>est</em> l&apos;agent. Un avatar <em>à droite</em> répond à
-            « qui a fait ça ? » — la ligne est un évènement, l&apos;agent
-            n&apos;en est qu&apos;un attribut.
+            Un avatar <em>à gauche</em> répond à « qui est cette ligne ? » — la ligne <em>est</em>{" "}
+            l&apos;agent. Un avatar <em>à droite</em> répond à « qui a fait ça ? » — la ligne est un
+            évènement, l&apos;agent n&apos;en est qu&apos;un attribut.
           </Text>
           <Text size="small" color="subtle" as="p">
-            <strong>Test</strong> : retire l&apos;avatar. Si tu ne sais plus de
-            quel objet parle la ligne, il va à gauche.
+            <strong>Test</strong> : retire l&apos;avatar. Si tu ne sais plus de quel objet parle la
+            ligne, il va à gauche.
           </Text>
         </Stack>
       </SectionMessage>
@@ -68,22 +65,21 @@ function LeadingTrailingDoc() {
       >
         <li>
           <Text size="small" color="subtle" as="span">
-            Le trailing est <strong>facultatif</strong> — une liste Contacts
-            n&apos;en a pas.
+            Le trailing est <strong>facultatif</strong> — une liste Contacts n&apos;en a pas.
           </Text>
         </li>
         <li>
           <Text size="small" color="subtle" as="span">
-            <strong>Une seule information à droite</strong> : une ligne compacte
-            qui porte trois chiffres n&apos;est plus compacte.
+            <strong>Une seule information à droite</strong> : une ligne compacte qui porte trois
+            chiffres n&apos;est plus compacte.
           </Text>
         </li>
         <li>
           <Text size="small" color="subtle" as="span">
             L&apos;affectation « quelle donnée à quel emplacement » appartient au{" "}
-            <strong>produit</strong>, pas au DS : le DS fournit les emplacements
-            (leading / titre / sous-titre / trailing), une <em>fiche
-            d&apos;anatomie</em> par liste décide du remplissage.
+            <strong>produit</strong>, pas au DS : le DS fournit les emplacements (leading / titre /
+            sous-titre / trailing), une <em>fiche d&apos;anatomie</em> par liste décide du
+            remplissage.
           </Text>
         </li>
       </ul>
@@ -100,99 +96,102 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Les listes affichent un ensemble d'éléments verticaux liés, chacun pouvant contenir du texte, des icônes ou des avatars. Elles structurent le contenu en groupes ordonnés ou non ordonnés, avec la possibilité de rendre chaque élément interactif." },
+      description: {
+        component:
+          "Les listes affichent un ensemble d'éléments verticaux liés, chacun pouvant contenir du texte, des icônes ou des avatars. Elles structurent le contenu en groupes ordonnés ou non ordonnés, avec la possibilité de rendre chaque élément interactif.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
             <>
-            <GuidelinesFlat
-              doExample={{
-                example: (
-                  <div style={{ maxWidth: 280 }}>
-                    <List isBordered aria-label="Notifications">
-                      <ListItem>
-                        <ListItemIcon>
-                          <Icon icon="Notifications" />
-                        </ListItemIcon>
-                        <ListItemText primary="Nouveau message" />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemIcon>
-                          <Icon icon="CheckCircle" />
-                        </ListItemIcon>
-                        <ListItemText primary="Sauvegarde terminée" />
-                      </ListItem>
-                    </List>
-                  </div>
-                ),
-                caption: "Éléments homogènes d'une seule dimension.",
-              }}
-              dontExample={{
-                example: (
-                  <div style={{ maxWidth: 280 }}>
-                    <List isBordered aria-label="Agents">
-                      <ListItem>
-                        <ListItemAvatar>
-                          <Avatar size="medium" initials="DM" />
-                        </ListItemAvatar>
-                        <ListItemText primary="DUPONT Marie" secondary="MAT-0142" />
-                        <ListItemTrailing>
-                          <Text size="xsmall" color="subtle" as="span">
-                            Payables 35h
-                          </Text>
-                          <Text size="xsmall" color="subtle" as="span">
-                            Indispo ±2
-                          </Text>
-                          <Text size="small" weight="medium" as="span">
-                            +2h30
-                          </Text>
-                        </ListItemTrailing>
-                      </ListItem>
-                      <ListItem>
-                        <ListItemAvatar>
-                          <Avatar size="medium" initials="MB" />
-                        </ListItemAvatar>
-                        <ListItemText primary="MARTIN Bob" secondary="MAT-0198" />
-                        <ListItemTrailing>
-                          <Text size="xsmall" color="subtle" as="span">
-                            Payables 28h
-                          </Text>
-                          <Text size="xsmall" color="subtle" as="span">
-                            Indispo ±1
-                          </Text>
-                          <Text size="small" weight="medium" as="span">
-                            -1h00
-                          </Text>
-                        </ListItemTrailing>
-                      </ListItem>
-                    </List>
-                  </div>
-                ),
-                caption:
-                  "Une seule information dans le trailing ; les métriques secondaires vont au desktop ou à la fiche.",
-              }}
-              when={[
-                "Empiler des éléments homogènes d'une seule dimension (navigation, menus, réglages, fichiers).",
-                "Quand chaque ligne est une entité avec une action principale (ListItemButton).",
-                "À insérer dans une Card, un Menu ou une SideNav.",
-              ]}
-              avoid={[
-                "Comparer plusieurs colonnes de données → préférer Table.",
-                "Un groupe d'options sélectionnables dans un formulaire → Checkbox/Radio groupés.",
-              ]}
-              best={[
-                "`isBordered=false` par défaut (inséré dans un conteneur) ; l'activer pour un rendu autonome.",
-                "ListItemIcon / ListItemAvatar à largeur fixe pour aligner le texte.",
-                "ListItemSecondaryAction pour une action à droite (interactif : Switch, Checkbox) — extraite du bouton. ListItemTrailing pour de l'attribution/état non-interactif (heure, Tag) — dans le bouton, la ligne reste un seul arrêt de tabulation.",
-                "Leading = identité de la ligne, trailing = attribution + état — voir « Placement du contenu » ci-dessous.",
-                "`overline` (surtitre) : réservé à un type COURT et énumérable (« Ronde », « Contrôle d'accès ») ; jamais une phrase libre, qu'il tronquerait de façon illisible. Question ouverte côté donnée : si un champ mélange type court et intitulé libre, il manque un champ — arbitrage produit, pas DS.",
-              ]}
-              accessibility={[
-                "`List` porte un `aria-label` ; chaque item est une entité cohérente.",
-                "Action principale via ListItemButton ; ne pas imbriquer d'interactifs.",
-              ]}
-            />
-            <LeadingTrailingDoc />
+              <GuidelinesFlat
+                doExample={{
+                  example: (
+                    <div style={{ maxWidth: 280 }}>
+                      <List isBordered aria-label="Notifications">
+                        <ListItem>
+                          <ListItemIcon>
+                            <Icon icon="Notifications" />
+                          </ListItemIcon>
+                          <ListItemText primary="Nouveau message" />
+                        </ListItem>
+                        <ListItem>
+                          <ListItemIcon>
+                            <Icon icon="CheckCircle" />
+                          </ListItemIcon>
+                          <ListItemText primary="Sauvegarde terminée" />
+                        </ListItem>
+                      </List>
+                    </div>
+                  ),
+                  caption: "Éléments homogènes d'une seule dimension.",
+                }}
+                dontExample={{
+                  example: (
+                    <div style={{ maxWidth: 280 }}>
+                      <List isBordered aria-label="Agents">
+                        <ListItem>
+                          <ListItemAvatar>
+                            <Avatar size="medium" initials="DM" />
+                          </ListItemAvatar>
+                          <ListItemText primary="DUPONT Marie" secondary="MAT-0142" />
+                          <ListItemTrailing>
+                            <Text size="xsmall" color="subtle" as="span">
+                              Payables 35h
+                            </Text>
+                            <Text size="xsmall" color="subtle" as="span">
+                              Indispo ±2
+                            </Text>
+                            <Text size="small" weight="medium" as="span">
+                              +2h30
+                            </Text>
+                          </ListItemTrailing>
+                        </ListItem>
+                        <ListItem>
+                          <ListItemAvatar>
+                            <Avatar size="medium" initials="MB" />
+                          </ListItemAvatar>
+                          <ListItemText primary="MARTIN Bob" secondary="MAT-0198" />
+                          <ListItemTrailing>
+                            <Text size="xsmall" color="subtle" as="span">
+                              Payables 28h
+                            </Text>
+                            <Text size="xsmall" color="subtle" as="span">
+                              Indispo ±1
+                            </Text>
+                            <Text size="small" weight="medium" as="span">
+                              -1h00
+                            </Text>
+                          </ListItemTrailing>
+                        </ListItem>
+                      </List>
+                    </div>
+                  ),
+                  caption:
+                    "Une seule information dans le trailing ; les métriques secondaires vont au desktop ou à la fiche.",
+                }}
+                when={[
+                  "Empiler des éléments homogènes d'une seule dimension (navigation, menus, réglages, fichiers).",
+                  "Quand chaque ligne est une entité avec une action principale (ListItemButton).",
+                  "À insérer dans une Card, un Menu ou une SideNav.",
+                ]}
+                avoid={[
+                  "Comparer plusieurs colonnes de données → préférer Table.",
+                  "Un groupe d'options sélectionnables dans un formulaire → Checkbox/Radio groupés.",
+                ]}
+                best={[
+                  "`isBordered=false` par défaut (inséré dans un conteneur) ; l'activer pour un rendu autonome.",
+                  "ListItemIcon / ListItemAvatar à largeur fixe pour aligner le texte.",
+                  "ListItemSecondaryAction pour une action à droite (interactif : Switch, Checkbox) — extraite du bouton. ListItemTrailing pour de l'attribution/état non-interactif (heure, Tag) — dans le bouton, la ligne reste un seul arrêt de tabulation.",
+                  "Leading = identité de la ligne, trailing = attribution + état — voir « Placement du contenu » ci-dessous.",
+                  "`overline` (surtitre) : réservé à un type COURT et énumérable (« Ronde », « Contrôle d'accès ») ; jamais une phrase libre, qu'il tronquerait de façon illisible. Question ouverte côté donnée : si un champ mélange type court et intitulé libre, il manque un champ — arbitrage produit, pas DS.",
+                ]}
+                accessibility={[
+                  "`List` porte un `aria-label` ; chaque item est une entité cohérente.",
+                  "Action principale via ListItemButton ; ne pas imbriquer d'interactifs.",
+                ]}
+              />
+              <LeadingTrailingDoc />
             </>
           }
         />
@@ -214,9 +213,7 @@ const meta = {
   },
   // Contrainte de largeur uniquement — la bordure est maintenant portée par
   // la prop `isBordered` sur List, plus par le décorateur.
-  decorators: [
-    (Story) => <div style={{ width: 360 }}>{Story()}</div>,
-  ],
+  decorators: [(Story) => <div style={{ width: 360 }}>{Story()}</div>],
 } satisfies Meta<typeof List>;
 
 export default meta;
@@ -260,10 +257,7 @@ export const WithSecondaryText: Story = {
         <ListItemIcon>
           <Icon icon="Notifications" />
         </ListItemIcon>
-        <ListItemText
-          primary="Nouveau message"
-          secondary="Il y a 5 minutes"
-        />
+        <ListItemText primary="Nouveau message" secondary="Il y a 5 minutes" />
       </ListItem>
       <ListItem>
         <ListItemIcon>
@@ -354,9 +348,24 @@ export const Unread: Story = {
   render: function UnreadStory(args) {
     const [unread, setUnread] = useState<Set<string>>(new Set(["1", "3"]));
     const messages = [
-      { id: "1", title: "Nouvelle demande de congé", detail: "Marie Dupont · 10:32", icon: "Notifications" as const },
-      { id: "2", title: "Planning publié", detail: "Semaine 42 · hier", icon: "CalendarMonth" as const },
-      { id: "3", title: "Anomalie de pointage", detail: "Site Alpha · hier", icon: "Warning" as const },
+      {
+        id: "1",
+        title: "Nouvelle demande de congé",
+        detail: "Marie Dupont · 10:32",
+        icon: "Notifications" as const,
+      },
+      {
+        id: "2",
+        title: "Planning publié",
+        detail: "Semaine 42 · hier",
+        icon: "CalendarMonth" as const,
+      },
+      {
+        id: "3",
+        title: "Anomalie de pointage",
+        detail: "Site Alpha · hier",
+        icon: "Warning" as const,
+      },
       { id: "4", title: "Rappel : ronde de nuit", detail: "Lundi", icon: "Patrol" as const },
     ];
     return (
@@ -482,19 +491,13 @@ export const States: Story = {
         <ListItemIcon>
           <Icon icon="Star" />
         </ListItemIcon>
-        <ListItemText
-          primary="Item sélectionné"
-          secondary="data-selected + aria-current"
-        />
+        <ListItemText primary="Item sélectionné" secondary="data-selected + aria-current" />
       </ListItem>
       <ListItem isDisabled>
         <ListItemIcon>
           <Icon icon="Block" />
         </ListItemIcon>
-        <ListItemText
-          primary="Item désactivé"
-          secondary="texte sourd"
-        />
+        <ListItemText primary="Item désactivé" secondary="texte sourd" />
       </ListItem>
       <ListItemButton onPress={() => {}}>
         <ListItemIcon>
@@ -528,10 +531,7 @@ export const FolderList: Story = {
         <ListItemAvatar>
           <Avatar initials="PDF" size="medium" />
         </ListItemAvatar>
-        <ListItemText
-          primary="Rapport Q4 2025"
-          secondary="rapport-q4.pdf — 2.3 Mo"
-        />
+        <ListItemText primary="Rapport Q4 2025" secondary="rapport-q4.pdf — 2.3 Mo" />
         <Text size="xsmall" color="subtle">
           12:30
         </Text>
@@ -540,10 +540,7 @@ export const FolderList: Story = {
         <ListItemAvatar>
           <Avatar initials="XLS" size="medium" />
         </ListItemAvatar>
-        <ListItemText
-          primary="Planning équipe"
-          secondary="planning-équipe.xlsx — 156 Ko"
-        />
+        <ListItemText primary="Planning équipe" secondary="planning-équipe.xlsx — 156 Ko" />
         <Text size="xsmall" color="subtle">
           09:14
         </Text>
@@ -553,10 +550,7 @@ export const FolderList: Story = {
         <ListItemAvatar>
           <Avatar initials="FIG" size="medium" />
         </ListItemAvatar>
-        <ListItemText
-          primary="Design System v3"
-          secondary="design-system-v3.fig — 8.1 Mo"
-        />
+        <ListItemText primary="Design System v3" secondary="design-system-v3.fig — 8.1 Mo" />
         <Text size="xsmall" color="subtle">
           17:42
         </Text>
@@ -565,10 +559,7 @@ export const FolderList: Story = {
         <ListItemAvatar>
           <Avatar initials="MD" size="medium" />
         </ListItemAvatar>
-        <ListItemText
-          primary="Notes réunion"
-          secondary="notes-réunion.md — 4 Ko"
-        />
+        <ListItemText primary="Notes réunion" secondary="notes-réunion.md — 4 Ko" />
         <Text size="xsmall" color="subtle">
           14:08
         </Text>
@@ -592,8 +583,7 @@ export const WithControls: Story = {
       digest: true,
       marketing: false,
     });
-    const toggle = (key: keyof typeof prefs) =>
-      setPrefs((p) => ({ ...p, [key]: !p[key] }));
+    const toggle = (key: keyof typeof prefs) => setPrefs((p) => ({ ...p, [key]: !p[key] }));
     return (
       <List {...args} aria-label="Notifications">
         <ListHead>Email</ListHead>
@@ -615,10 +605,7 @@ export const WithControls: Story = {
           <ListItemIcon>
             <Icon icon="NotificationsAdd" />
           </ListItemIcon>
-          <ListItemText
-            primary="Récapitulatif quotidien"
-            secondary="Tous les soirs à 18 h"
-          />
+          <ListItemText primary="Récapitulatif quotidien" secondary="Tous les soirs à 18 h" />
           <Checkbox
             isChecked={prefs.digest}
             onChange={() => toggle("digest")}
@@ -630,10 +617,7 @@ export const WithControls: Story = {
           <ListItemIcon>
             <Icon icon="Notifications" />
           </ListItemIcon>
-          <ListItemText
-            primary="Notifications push"
-            secondary="Système, badges, sons"
-          />
+          <ListItemText primary="Notifications push" secondary="Système, badges, sons" />
           <Checkbox
             isChecked={prefs.push}
             onChange={() => toggle("push")}
@@ -644,10 +628,7 @@ export const WithControls: Story = {
           <ListItemIcon>
             <Icon icon="Campaign" />
           </ListItemIcon>
-          <ListItemText
-            primary="Communications produit"
-            secondary="Nouveautés, conseils, offres"
-          />
+          <ListItemText primary="Communications produit" secondary="Nouveautés, conseils, offres" />
           <Checkbox
             isChecked={prefs.marketing}
             onChange={() => toggle("marketing")}
@@ -784,9 +765,7 @@ const noop = () => undefined;
 export const LoadingState: Story = {
   name: "Loading",
   parameters: { controls: { disable: true } },
-  render: () => (
-    <List aria-label="Membres (chargement)" isBordered isLoading skeletonItems={4} />
-  ),
+  render: () => <List aria-label="Membres (chargement)" isBordered isLoading skeletonItems={4} />,
 };
 
 /** **Vide** — état vide natif via `isEmpty` (illustration + message). */
@@ -912,10 +891,7 @@ export const AgentsList: Story = {
           <ListItemAvatar>
             <Avatar size="medium" initials={agentInitials(a.name)} />
           </ListItemAvatar>
-          <ListItemText
-            primary={a.name}
-            secondary={`${a.matricule} · ${a.contrat}`}
-          />
+          <ListItemText primary={a.name} secondary={`${a.matricule} · ${a.contrat}`} />
           <ListItemTrailing>
             <Text size="small" weight="medium" as="span">
               {a.delta}

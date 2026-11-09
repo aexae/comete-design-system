@@ -21,10 +21,8 @@ import { GuidelinesFlat } from "./_guidelines";
 import css from "./BottomNav.stories.module.css";
 import { QuickActionsDemo } from "./_quickActionsDemo";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta — la barre complète. Les stories de l'item vivent dans la sous-page
@@ -36,7 +34,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "La barre de navigation inférieure offre un accès rapide aux sections principales d'une application mobile. Elle reste fixe en bas de l'écran et met en évidence la section active." },
+      description: {
+        component:
+          "La barre de navigation inférieure offre un accès rapide aux sections principales d'une application mobile. Elle reste fixe en bas de l'écran et met en évidence la section active.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -147,7 +148,9 @@ function InteractiveBottomNav({
           icon={item.icon}
           badge={item.badge}
           isSelected={selected === item.label}
-          onClick={() => { setSelected(item.label); }}
+          onClick={() => {
+            setSelected(item.label);
+          }}
         />
       ))}
     </BottomNav>
@@ -223,7 +226,7 @@ export const FourItems: NavStory = {
     design: { type: "figma", url: figmaUrl("2524:18591") },
   },
   argTypes: {
-    active: { name: "Item actif", control: "radio", options: (MANAGER_ITEMS).map((i) => i.label) },
+    active: { name: "Item actif", control: "radio", options: MANAGER_ITEMS.map((i) => i.label) },
   },
   args: { active: "Accueil" },
   render: (args) => (
@@ -241,7 +244,7 @@ export const FiveItems: NavStory = {
     design: { type: "figma", url: figmaUrl("2524:18591") },
   },
   argTypes: {
-    active: { name: "Item actif", control: "radio", options: (AGENT_ITEMS).map((i) => i.label) },
+    active: { name: "Item actif", control: "radio", options: AGENT_ITEMS.map((i) => i.label) },
   },
   args: { active: "Accueil" },
   render: (args) => (
@@ -265,7 +268,14 @@ export const ApplicationTabletPortrait: NavStory = {
   },
   args: { active: "Accueil" },
   render: (args) => (
-    <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", height: "100vh" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "flex-end",
+        height: "100vh",
+      }}
+    >
       <InteractiveBottomNav items={MANAGER_ITEMS} active={args.active} />
     </div>
   ),

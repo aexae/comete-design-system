@@ -30,7 +30,6 @@
   overflow: hidden;
   outline: none;
 
-
   /* React Aria popover enter/exit animation */
   &[data-entering] {
     animation: popover-fade-in 150ms ease-out;

@@ -46,11 +46,7 @@ export interface DensityProviderProps {
  * ```
  */
 export function DensityProvider({ density, children }: DensityProviderProps) {
-  return (
-    <DensityContext.Provider value={density}>
-      {children}
-    </DensityContext.Provider>
-  );
+  return <DensityContext.Provider value={density}>{children}</DensityContext.Provider>;
 }
 
 DensityProvider.displayName = "DensityProvider";

@@ -13,7 +13,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "La grille organise le contenu en colonnes et rangées selon un système de mise en page structuré. Elle assure un alignement cohérent et s'adapte aux différentes tailles d'écran." },
+      description: {
+        component:
+          "La grille organise le contenu en colonnes et rangées selon un système de mise en page structuré. Elle assure un alignement cohérent et s'adapte aux différentes tailles d'écran.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={

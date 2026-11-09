@@ -10,7 +10,7 @@ function renderGroup(props: Record<string, unknown> = {}) {
       <Radio value="a" label="Option A" />
       <Radio value="b" label="Option B" />
       <Radio value="c" label="Option C" />
-    </RadioGroup>,
+    </RadioGroup>
   );
 }
 
@@ -41,7 +41,7 @@ describe("Radio", () => {
       render(
         <RadioGroup aria-label="Test">
           <Radio value="a" label="Option A" description="Help text" />
-        </RadioGroup>,
+        </RadioGroup>
       );
       expect(screen.getByText("Help text")).toBeInTheDocument();
     });
@@ -88,7 +88,7 @@ describe("Radio", () => {
         <RadioGroup aria-label="Test">
           <Radio value="a" label="A" isDisabled />
           <Radio value="b" label="B" />
-        </RadioGroup>,
+        </RadioGroup>
       );
       expect(screen.getAllByRole("radio")[0]).toBeDisabled();
       expect(screen.getAllByRole("radio")[1]).not.toBeDisabled();
@@ -105,7 +105,7 @@ describe("Radio", () => {
       render(
         <RadioGroup aria-label="Test">
           <Radio value="a" label="A" className="custom-radio" />
-        </RadioGroup>,
+        </RadioGroup>
       );
       const radio = screen.getByRole("radio");
       expect(radio.closest(".custom-radio")).toBeInTheDocument();

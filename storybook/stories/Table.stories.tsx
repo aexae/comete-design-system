@@ -34,10 +34,8 @@ import { GuidelinesFlat } from "./_guidelines";
 // -----------------------------------------------------------------------
 // Figma links
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -48,93 +46,96 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Les tableaux organisent des données structurées en lignes et colonnes pour faciliter la comparaison et l'analyse. Ils supportent le tri, la pagination et la sélection pour manipuler de grands jeux de données." },
+      description: {
+        component:
+          "Les tableaux organisent des données structurées en lignes et colonnes pour faciliter la comparaison et l'analyse. Ils supportent le tri, la pagination et la sélection pour manipuler de grands jeux de données.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
             <>
-            <GuidelinesFlat
-              doExample={{
-                example: (
-                  <Table aria-label="Projets">
-                    <TableHead>
-                      <TableRow>
-                        <TableHeaderCell>Projet</TableHeaderCell>
-                        <TableHeaderCell>Statut</TableHeaderCell>
-                        <TableHeaderCell>Responsable</TableHeaderCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell>Alpha</TableCell>
-                        <TableCell>
-                          <Tag label="Actif" appearance="subtle" />
-                        </TableCell>
-                        <TableCell>John Doe</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Beta</TableCell>
-                        <TableCell>
-                          <Tag label="En attente" appearance="subtle" />
-                        </TableCell>
-                        <TableCell>Jane Smith</TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                ),
-                caption: "Comparer des données sur plusieurs colonnes.",
-              }}
-              dontExample={{
-                example: (
-                  <Table aria-label="Agents">
-                    <TableHead>
-                      <TableRow>
-                        <TableHeaderCell>Agent</TableHeaderCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell>John Doe</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Jane Smith</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>Alice Chen</TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                ),
-                caption: "Ne pas l'utiliser pour une seule colonne.",
-              }}
-              when={[
-                "Afficher des données tabulaires comparables sur plusieurs colonnes (listes d'entités, rapports).",
-                "Quand l'utilisateur doit trier, scanner ou comparer des lignes entre elles.",
-                "Associer TablePagination pour les grands jeux de données et Table.View pour un en-tête (toolbar) + pied.",
-              ]}
-              avoid={[
-                "Une seule dimension d'information par ligne → préférer List.",
-                "De la mise en page générale → utiliser Grid ou Stack.",
-              ]}
-              best={[
-                "Aligner les nombres à droite (`align=\"right\"`) et le texte à gauche.",
-                "Colonnes triables via `isSortable` + `aria-sort` ; densité `compact` pour les vues denses.",
-                "Le divider bas disparaît quand un footer/pagination est présent (géré par Table.View).",
-                "Responsive (`hideBelow`, container queries) : `<Table responsive>` (établit le query container ; requiert une largeur définie, pas un parent shrink-to-fit). Priorisez — identifiant + donnée clé toujours visibles (jamais de `hideBelow`), colonnes de contexte en `md`, colonnes de confort en `lg`. Poser `hideBelow` sur l'en-tête ET chaque cellule de la même colonne.",
-                "Une info masquée doit rester accessible : ligne cliquable vers le détail, ou vue cartes. Le tri d'une colonne masquée reste actif côté données — au consommateur de décider s'il le réinitialise.",
-                "Sous ~600px de container, ne compressez PAS la table : passez en liste compacte (`List` : titre en primary, site/méta en secondary, tag de statut + heure en trailing — le pattern Main courante mobile). Une table à 2 colonnes tronquées rend moins service qu'une ligne de liste dense. Les cartes sont la vue alternative (bascule liste/cartes), pas le repli par défaut. La story *Responsive columns* montre cette limite (600px = 2 colonnes étirées) ; la story *Table → List* montre le repli.",
-                "En liste (repli étroit), il n'y a plus d'en-têtes : le tri passe dans un contrôle « Trier par » au-dessus de la liste ; la sélection multiple par case par ligne ou appui long (à brancher sur le hook de sélection).",
-                "Statut → couleur : ne pas coder la couleur en dur dans la cellule ; passer par un mapping centralisé typé `TagStatusColor` et suivre l'axe de l'ADR 0002 — `neutral` (pas commencé) → `information` (en cours) → `warning` (action attendue) → `success` (état souhaité atteint) / `critical` (échec). Voir Foundation/Statut. Les mappings de cette page sont des démonstrations non normatives.",
-                "En méta compacte, l'heure seule aujourd'hui, et uniquement le jour (« Hier ») pour un jour antérieur — pour ne pas fausser la fraîcheur.",
-              ]}
-              accessibility={[
-                "En-têtes de colonnes (TableHeaderCell) reliés aux cellules ; navigation au clavier.",
-                "`align=\"right\"` pour les nombres ; l'état de tri est annoncé (`aria-sort`).",
-                "Jamais de `hideBelow` sur la colonne de sélection ni la colonne d'actions (elles restent toujours visibles).",
-              ]}
-            />
-            <ResponsiveDocSection />
-            <RowClickDoctrineSection />
+              <GuidelinesFlat
+                doExample={{
+                  example: (
+                    <Table aria-label="Projets">
+                      <TableHead>
+                        <TableRow>
+                          <TableHeaderCell>Projet</TableHeaderCell>
+                          <TableHeaderCell>Statut</TableHeaderCell>
+                          <TableHeaderCell>Responsable</TableHeaderCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell>Alpha</TableCell>
+                          <TableCell>
+                            <Tag label="Actif" appearance="subtle" />
+                          </TableCell>
+                          <TableCell>John Doe</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>Beta</TableCell>
+                          <TableCell>
+                            <Tag label="En attente" appearance="subtle" />
+                          </TableCell>
+                          <TableCell>Jane Smith</TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  ),
+                  caption: "Comparer des données sur plusieurs colonnes.",
+                }}
+                dontExample={{
+                  example: (
+                    <Table aria-label="Agents">
+                      <TableHead>
+                        <TableRow>
+                          <TableHeaderCell>Agent</TableHeaderCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell>John Doe</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>Jane Smith</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>Alice Chen</TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  ),
+                  caption: "Ne pas l'utiliser pour une seule colonne.",
+                }}
+                when={[
+                  "Afficher des données tabulaires comparables sur plusieurs colonnes (listes d'entités, rapports).",
+                  "Quand l'utilisateur doit trier, scanner ou comparer des lignes entre elles.",
+                  "Associer TablePagination pour les grands jeux de données et Table.View pour un en-tête (toolbar) + pied.",
+                ]}
+                avoid={[
+                  "Une seule dimension d'information par ligne → préférer List.",
+                  "De la mise en page générale → utiliser Grid ou Stack.",
+                ]}
+                best={[
+                  'Aligner les nombres à droite (`align="right"`) et le texte à gauche.',
+                  "Colonnes triables via `isSortable` + `aria-sort` ; densité `compact` pour les vues denses.",
+                  "Le divider bas disparaît quand un footer/pagination est présent (géré par Table.View).",
+                  "Responsive (`hideBelow`, container queries) : `<Table responsive>` (établit le query container ; requiert une largeur définie, pas un parent shrink-to-fit). Priorisez — identifiant + donnée clé toujours visibles (jamais de `hideBelow`), colonnes de contexte en `md`, colonnes de confort en `lg`. Poser `hideBelow` sur l'en-tête ET chaque cellule de la même colonne.",
+                  "Une info masquée doit rester accessible : ligne cliquable vers le détail, ou vue cartes. Le tri d'une colonne masquée reste actif côté données — au consommateur de décider s'il le réinitialise.",
+                  "Sous ~600px de container, ne compressez PAS la table : passez en liste compacte (`List` : titre en primary, site/méta en secondary, tag de statut + heure en trailing — le pattern Main courante mobile). Une table à 2 colonnes tronquées rend moins service qu'une ligne de liste dense. Les cartes sont la vue alternative (bascule liste/cartes), pas le repli par défaut. La story *Responsive columns* montre cette limite (600px = 2 colonnes étirées) ; la story *Table → List* montre le repli.",
+                  "En liste (repli étroit), il n'y a plus d'en-têtes : le tri passe dans un contrôle « Trier par » au-dessus de la liste ; la sélection multiple par case par ligne ou appui long (à brancher sur le hook de sélection).",
+                  "Statut → couleur : ne pas coder la couleur en dur dans la cellule ; passer par un mapping centralisé typé `TagStatusColor` et suivre l'axe de l'ADR 0002 — `neutral` (pas commencé) → `information` (en cours) → `warning` (action attendue) → `success` (état souhaité atteint) / `critical` (échec). Voir Foundation/Statut. Les mappings de cette page sont des démonstrations non normatives.",
+                  "En méta compacte, l'heure seule aujourd'hui, et uniquement le jour (« Hier ») pour un jour antérieur — pour ne pas fausser la fraîcheur.",
+                ]}
+                accessibility={[
+                  "En-têtes de colonnes (TableHeaderCell) reliés aux cellules ; navigation au clavier.",
+                  '`align="right"` pour les nombres ; l\'état de tri est annoncé (`aria-sort`).',
+                  "Jamais de `hideBelow` sur la colonne de sélection ni la colonne d'actions (elles restent toujours visibles).",
+                ]}
+              />
+              <ResponsiveDocSection />
+              <RowClickDoctrineSection />
             </>
           }
         />
@@ -313,8 +314,7 @@ export const Sortable: Story = {
       return copy;
     }, [sortColumn, direction]);
 
-    const dir = (col: Column): TableSortDirection =>
-      sortColumn === col ? direction : "default";
+    const dir = (col: Column): TableSortDirection => (sortColumn === col ? direction : "default");
 
     return (
       <Table {...args} aria-label="Projets triés">
@@ -382,7 +382,9 @@ export const RichCells: Story = {
           <TableHeaderCell>Key</TableHeaderCell>
           {/* Colonne d'actions : pas de libellé visible mais un nom accessible
               (« Actions »), au lieu d'un placeholder vide inaccessible. */}
-          <TableHeaderCell width={60} isActionColumn>Actions</TableHeaderCell>
+          <TableHeaderCell width={60} isActionColumn>
+            Actions
+          </TableHeaderCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -467,17 +469,11 @@ function SelectionDemo(args: ComponentProps<typeof Table>) {
               {...selection.getRowClickProps(r.id)}
             >
               <TableCell>
-                <Checkbox
-                  {...selection.getRowCheckboxProps(r.id, `Sélectionner ${r.title}`)}
-                />
+                <Checkbox {...selection.getRowCheckboxProps(r.id, `Sélectionner ${r.title}`)} />
               </TableCell>
               <TableCell>{r.title}</TableCell>
               <TableCell>
-                <Tag
-                  label={r.status}
-                  appearance={STATUS_APPEARANCE[r.status]}
-                  shape="rounded"
-                />
+                <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
               </TableCell>
               <TableCell>{r.user}</TableCell>
             </TableRow>
@@ -500,12 +496,10 @@ export const SelectionInteractions: Story = {
   render: (args) => <SelectionDemo {...args} />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const bodyRows = () =>
-      canvas.getAllByRole("row").filter((r) => r.querySelector("td"));
+    const bodyRows = () => canvas.getAllByRole("row").filter((r) => r.querySelector("td"));
 
     // État initial : 2/4 sélectionnées → barre « 2 lignes sélectionnées sur 5 ».
-    const header = () =>
-      canvas.getByRole("checkbox", { name: "Tout sélectionner" });
+    const header = () => canvas.getByRole("checkbox", { name: "Tout sélectionner" });
     await expect(header()).toBeInTheDocument();
     await expect(canvas.getByText(/2 lignes sélectionnées sur/)).toBeInTheDocument();
 
@@ -515,14 +509,10 @@ export const SelectionInteractions: Story = {
     for (const r of bodyRows()) {
       await expect(r).toHaveAttribute("aria-selected", "true");
     }
-    await expect(
-      canvas.getByRole("checkbox", { name: "Tout désélectionner" }),
-    ).toBeInTheDocument();
+    await expect(canvas.getByRole("checkbox", { name: "Tout désélectionner" })).toBeInTheDocument();
 
     // Re-clic → plus aucune ligne sélectionnée (la barre disparaît).
-    await userEvent.click(
-      canvas.getByRole("checkbox", { name: "Tout désélectionner" }),
-    );
+    await userEvent.click(canvas.getByRole("checkbox", { name: "Tout désélectionner" }));
     for (const r of bodyRows()) {
       await expect(r).not.toHaveAttribute("aria-selected");
     }
@@ -582,11 +572,7 @@ export const RowLink: Story = {
             <TableRow key={r.id} href={`/projets/${r.id}`}>
               <TableCell>{r.title}</TableCell>
               <TableCell>
-                <Tag
-                  label={r.status}
-                  appearance={STATUS_APPEARANCE[r.status]}
-                  shape="rounded"
-                />
+                <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
               </TableCell>
               <TableCell>{r.user}</TableCell>
             </TableRow>
@@ -613,7 +599,6 @@ export const RowLink: Story = {
     // 3) Clic sur une autre cellule (Responsable) → délègue au lien.
     await userEvent.click(canvas.getByText("John Doe"));
     await expect(onNavigate).toHaveBeenCalledWith("/projets/1");
-
   },
 };
 
@@ -636,15 +621,16 @@ export const RowAction: Story = {
       </TableHead>
       <TableBody>
         {ROWS.map((r) => (
-          <TableRow key={r.id} onPress={() => { onOpenPanel(r.id); }}>
+          <TableRow
+            key={r.id}
+            onPress={() => {
+              onOpenPanel(r.id);
+            }}
+          >
             <TableCell>{r.title}</TableCell>
             <TableCell>{r.user}</TableCell>
             <TableCell>
-              <Tag
-                label={r.status}
-                appearance={STATUS_APPEARANCE[r.status]}
-                shape="rounded"
-              />
+              <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
             </TableCell>
           </TableRow>
         ))}
@@ -694,7 +680,7 @@ export const Pagination: Story = {
 
     const paged = useMemo(
       () => LARGE_DATASET.slice(page * rowsPerPage, (page + 1) * rowsPerPage),
-      [page, rowsPerPage],
+      [page, rowsPerPage]
     );
 
     return (
@@ -813,12 +799,7 @@ export const Virtualized: Story = {
   render: (args) => (
     // En-tête collant + hauteur bornée gérés nativement par la Table
     // (`stickyHeader` + `maxHeight`) — plus de wrapper ni de styles inline.
-    <Table
-      {...args}
-      aria-label="Large dataset — 200 lignes"
-      stickyHeader
-      maxHeight={400}
-    >
+    <Table {...args} aria-label="Large dataset — 200 lignes" stickyHeader maxHeight={400}>
       <TableHead>
         <TableRow>
           <TableHeaderCell width={80}>#</TableHeaderCell>
@@ -924,8 +905,7 @@ export const FullExample: Story = {
       return copy;
     }, [sortColumn, direction]);
 
-    const dir = (col: Column): TableSortDirection =>
-      sortColumn === col ? direction : "default";
+    const dir = (col: Column): TableSortDirection => (sortColumn === col ? direction : "default");
 
     return (
       <Table {...args} aria-label="Utilisateurs">
@@ -957,7 +937,9 @@ export const FullExample: Story = {
             >
               Key
             </TableHeaderCell>
-            <TableHeaderCell width={60} isActionColumn>Actions</TableHeaderCell>
+            <TableHeaderCell width={60} isActionColumn>
+              Actions
+            </TableHeaderCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -970,17 +952,11 @@ export const FullExample: Story = {
               {...selection.getRowClickProps(r.id)}
             >
               <TableCell>
-                <Checkbox
-                  {...selection.getRowCheckboxProps(r.id, `Sélectionner ${r.title}`)}
-                />
+                <Checkbox {...selection.getRowCheckboxProps(r.id, `Sélectionner ${r.title}`)} />
               </TableCell>
               <TableCell>{r.title}</TableCell>
               <TableCell>
-                <Tag
-                  label={r.status}
-                  appearance={STATUS_APPEARANCE[r.status]}
-                  shape="rounded"
-                />
+                <Tag label={r.status} appearance={STATUS_APPEARANCE[r.status]} shape="rounded" />
               </TableCell>
               <TableCell>{r.user}</TableCell>
               <TableCell align="right">{r.key}</TableCell>
@@ -1105,11 +1081,7 @@ export const ErrorState: Story = {
     <div style={{ width: 640 }}>
       <Table aria-label="Projets (erreur)" style={{ width: "100%" }}>
         <StatesHead />
-        <TableBody
-          columnCount={5}
-          error="Le chargement des projets a échoué."
-          onRetry={onRetry}
-        />
+        <TableBody columnCount={5} error="Le chargement des projets a échoué." onRetry={onRetry} />
       </Table>
     </div>
   ),
@@ -1176,22 +1148,150 @@ interface McEvent {
 }
 
 const MC_EVENTS: McEvent[] = [
-  { id: "1", agent: "DUPONT Marie", type: "Ronde", site: "Hall d'accueil", dayOffset: 0, time: "14:05", statut: "En cours" },
-  { id: "2", agent: "MARTIN Bob", type: "Ronde", site: "Quai de livraison Nord", dayOffset: 0, time: "13:40", statut: "En cours" },
-  { id: "3", agent: "CHEN Alice", type: "Ronde", site: "Parking souterrain niveau -2", dayOffset: 0, time: "13:12" },
-  { id: "4", agent: "NGUYEN Paul", type: "Intrusion détectée en zone de stockage réfrigérée", site: "Entrepôt frigorifique B", dayOffset: 0, time: "12:58", statut: "En cours" },
-  { id: "5", agent: "CLAIRE Sophie", type: "Contrôle d'accès", site: "Tourniquet Est", dayOffset: 0, time: "11:30", statut: "Terminée" },
-  { id: "6", agent: "DIALLO Amadou", type: "Levée de doute", site: "Local technique", dayOffset: 0, time: "10:15", statut: "Terminée" },
-  { id: "7", agent: "PETIT Léa", type: "Ouverture de site", site: "Siège — Bâtiment principal", dayOffset: 0, time: "06:02", statut: "Terminée" },
-  { id: "8", agent: "MOREAU Hugo", type: "Ronde", site: "Toiture terrasse", dayOffset: 1, time: "22:40", statut: "En cours" },
-  { id: "9", agent: "GARCIA Inès", type: "Vérification alarme incendie déclenchée cuisine collective", site: "Réfectoire", dayOffset: 1, time: "21:05", statut: "Absent" },
-  { id: "10", agent: "ROUX Théo", type: "Contrôle d'accès", site: "Hall", dayOffset: 1, time: "18:20" },
-  { id: "11", agent: "FONTAINE Sarah", type: "Fermeture de site", site: "Plateforme logistique Sud-Est — Bâtiment C", dayOffset: 1, time: "19:45", statut: "Terminée" },
-  { id: "12", agent: "LEROY Marc", type: "Ronde", site: "Zone parking visiteurs", dayOffset: 2, time: "23:10", statut: "Terminée" },
-  { id: "13", agent: "BONNET Julie", type: "Intervention", site: "Poste de garde", dayOffset: 2, time: "03:30", statut: "Absent" },
-  { id: "14", agent: "GIRARD Yanis", type: "Vacation de nuit planifiée", site: "Site Est", dayOffset: 3, time: "08:00", shortDate: "02/08", statut: "Planifiée" },
-  { id: "15", agent: "LAMBERT Nour", type: "Maintenance préventive du système de vidéosurveillance périmétrique", site: "Datacenter", dayOffset: 4, time: "09:15", shortDate: "01/08", statut: "Planifiée" },
-  { id: "16", agent: "FAURE Camille", type: "Ouverture de site", site: "Annexe", dayOffset: 0, time: "05:58", statut: "Terminée" },
+  {
+    id: "1",
+    agent: "DUPONT Marie",
+    type: "Ronde",
+    site: "Hall d'accueil",
+    dayOffset: 0,
+    time: "14:05",
+    statut: "En cours",
+  },
+  {
+    id: "2",
+    agent: "MARTIN Bob",
+    type: "Ronde",
+    site: "Quai de livraison Nord",
+    dayOffset: 0,
+    time: "13:40",
+    statut: "En cours",
+  },
+  {
+    id: "3",
+    agent: "CHEN Alice",
+    type: "Ronde",
+    site: "Parking souterrain niveau -2",
+    dayOffset: 0,
+    time: "13:12",
+  },
+  {
+    id: "4",
+    agent: "NGUYEN Paul",
+    type: "Intrusion détectée en zone de stockage réfrigérée",
+    site: "Entrepôt frigorifique B",
+    dayOffset: 0,
+    time: "12:58",
+    statut: "En cours",
+  },
+  {
+    id: "5",
+    agent: "CLAIRE Sophie",
+    type: "Contrôle d'accès",
+    site: "Tourniquet Est",
+    dayOffset: 0,
+    time: "11:30",
+    statut: "Terminée",
+  },
+  {
+    id: "6",
+    agent: "DIALLO Amadou",
+    type: "Levée de doute",
+    site: "Local technique",
+    dayOffset: 0,
+    time: "10:15",
+    statut: "Terminée",
+  },
+  {
+    id: "7",
+    agent: "PETIT Léa",
+    type: "Ouverture de site",
+    site: "Siège — Bâtiment principal",
+    dayOffset: 0,
+    time: "06:02",
+    statut: "Terminée",
+  },
+  {
+    id: "8",
+    agent: "MOREAU Hugo",
+    type: "Ronde",
+    site: "Toiture terrasse",
+    dayOffset: 1,
+    time: "22:40",
+    statut: "En cours",
+  },
+  {
+    id: "9",
+    agent: "GARCIA Inès",
+    type: "Vérification alarme incendie déclenchée cuisine collective",
+    site: "Réfectoire",
+    dayOffset: 1,
+    time: "21:05",
+    statut: "Absent",
+  },
+  {
+    id: "10",
+    agent: "ROUX Théo",
+    type: "Contrôle d'accès",
+    site: "Hall",
+    dayOffset: 1,
+    time: "18:20",
+  },
+  {
+    id: "11",
+    agent: "FONTAINE Sarah",
+    type: "Fermeture de site",
+    site: "Plateforme logistique Sud-Est — Bâtiment C",
+    dayOffset: 1,
+    time: "19:45",
+    statut: "Terminée",
+  },
+  {
+    id: "12",
+    agent: "LEROY Marc",
+    type: "Ronde",
+    site: "Zone parking visiteurs",
+    dayOffset: 2,
+    time: "23:10",
+    statut: "Terminée",
+  },
+  {
+    id: "13",
+    agent: "BONNET Julie",
+    type: "Intervention",
+    site: "Poste de garde",
+    dayOffset: 2,
+    time: "03:30",
+    statut: "Absent",
+  },
+  {
+    id: "14",
+    agent: "GIRARD Yanis",
+    type: "Vacation de nuit planifiée",
+    site: "Site Est",
+    dayOffset: 3,
+    time: "08:00",
+    shortDate: "02/08",
+    statut: "Planifiée",
+  },
+  {
+    id: "15",
+    agent: "LAMBERT Nour",
+    type: "Maintenance préventive du système de vidéosurveillance périmétrique",
+    site: "Datacenter",
+    dayOffset: 4,
+    time: "09:15",
+    shortDate: "01/08",
+    statut: "Planifiée",
+  },
+  {
+    id: "16",
+    agent: "FAURE Camille",
+    type: "Ouverture de site",
+    site: "Annexe",
+    dayOffset: 0,
+    time: "05:58",
+    statut: "Terminée",
+  },
 ];
 
 /**
@@ -1212,12 +1312,7 @@ const compactWhen = (e: McEvent) =>
 function EventStatusTag({ statut }: { statut?: EventStatus }) {
   if (!statut) return null;
   return (
-    <Tag
-      label={statut}
-      color={DEMO_STATUS_COLOR[statut]}
-      appearance="subtle"
-      shape="square"
-    />
+    <Tag label={statut} color={DEMO_STATUS_COLOR[statut]} appearance="subtle" shape="square" />
   );
 }
 
@@ -1269,11 +1364,18 @@ export const TableToList: Story = {
   parameters: { controls: { disable: true }, layout: "fullscreen" },
   render: () => (
     <div style={{ width: 360, padding: "var(--space200)" }}>
-      <Text size="small" color="subtle" as="p">Étroit — liste compacte (cliquable)</Text>
+      <Text size="small" color="subtle" as="p">
+        Étroit — liste compacte (cliquable)
+      </Text>
       <List aria-label="Main courante — liste compacte" gap="150">
         {MC_EVENTS.map((e) => (
           // Ligne cliquable = ListItemButton (bouton natif, clavier + focus).
-          <ListItemButton key={e.id} onPress={() => { onOpenDetail(e.id); }}>
+          <ListItemButton
+            key={e.id}
+            onPress={() => {
+              onOpenDetail(e.id);
+            }}
+          >
             {/* Infos importantes : type (titre, borné à 2 lignes — les
                 incidents ont les libellés les plus longs, les tronquer à une
                 ligne pénaliserait justement les lignes qui comptent) + site
@@ -1318,20 +1420,14 @@ export const TableToList: Story = {
     //    est PLUS HAUT qu'un item à titre court. Démontre la prop en situation.
     const rows = Array.from(list.querySelectorAll("li"));
     const heightOf = (label: RegExp) =>
-      rows
-        .find((r) => label.test(r.textContent ?? ""))
-        ?.getBoundingClientRect().height ?? 0;
-    await expect(heightOf(/Intrusion détectée/)).toBeGreaterThan(
-      heightOf(/Toiture terrasse/),
-    );
+      rows.find((r) => label.test(r.textContent ?? ""))?.getBoundingClientRect().height ?? 0;
+    await expect(heightOf(/Intrusion détectée/)).toBeGreaterThan(heightOf(/Toiture terrasse/));
 
     // 3) Alignement : le trailing est calé en HAUT (`align-self: flex-start`),
     //    pas centré — il reste en regard de la 1re ligne du titre sur 2 lignes.
     const trailing = list.querySelector('[class*="itemTrailing"]');
     await expect(trailing).not.toBeNull();
-    await expect(getComputedStyle(trailing as Element).alignSelf).toBe(
-      "flex-start",
-    );
+    await expect(getComputedStyle(trailing as Element).alignSelf).toBe("flex-start");
   },
 };
 
@@ -1346,10 +1442,27 @@ const RESPONSIVE_DOC_ROWS: Array<{
   preset: string;
   comportement: string;
 }> = [
-  { bp: "≥ 1200px (lg)", preset: "Desktop exploitation (1440)", comportement: "Toutes les colonnes visibles (identifiant + confort + contexte)." },
-  { bp: "900 – 1200px", preset: "—", comportement: "Colonnes de confort masquées (hideBelow=\"lg\")." },
-  { bp: "600 – 900px (md)", preset: "Tablette manager (768)", comportement: "Colonnes de contexte aussi masquées (hideBelow=\"md\")." },
-  { bp: "< 600px (sm)", preset: "Mobile agent (375)", comportement: "Colonnes secondaires masquées (hideBelow=\"sm\") ; sous ce seuil, préférer le repli en liste compacte (List)." },
+  {
+    bp: "≥ 1200px (lg)",
+    preset: "Desktop exploitation (1440)",
+    comportement: "Toutes les colonnes visibles (identifiant + confort + contexte).",
+  },
+  {
+    bp: "900 – 1200px",
+    preset: "—",
+    comportement: 'Colonnes de confort masquées (hideBelow="lg").',
+  },
+  {
+    bp: "600 – 900px (md)",
+    preset: "Tablette manager (768)",
+    comportement: 'Colonnes de contexte aussi masquées (hideBelow="md").',
+  },
+  {
+    bp: "< 600px (sm)",
+    preset: "Mobile agent (375)",
+    comportement:
+      'Colonnes secondaires masquées (hideBelow="sm") ; sous ce seuil, préférer le repli en liste compacte (List).',
+  },
 ];
 
 function ResponsiveDocSection(): ReactNode {
@@ -1397,15 +1510,13 @@ function ResponsiveDocSection(): ReactNode {
           color: "var(--text-subtle)",
         }}
       >
-        La dégradation est pilotée par <strong>container queries</strong> (la
-        largeur du conteneur de la table, pas le viewport) : poser{" "}
-        <code>responsive</code> sur la <code>Table</code> puis <code>hideBelow</code>{" "}
-        (<code>&quot;sm&quot;</code>/<code>&quot;md&quot;</code>/
-        <code>&quot;lg&quot;</code>) sur l&apos;en-tête ET chaque cellule d&apos;une
-        colonne. Les identifiants et la donnée clé ne sont jamais masqués ; sous
-        ~600px on bascule en liste compacte. Les presets viewport « Mobile agent
-        / Tablette manager / Desktop exploitation » (barre d&apos;outils Viewport)
-        permettent d&apos;éprouver chaque palier ; la recette{" "}
+        La dégradation est pilotée par <strong>container queries</strong> (la largeur du conteneur
+        de la table, pas le viewport) : poser <code>responsive</code> sur la <code>Table</code> puis{" "}
+        <code>hideBelow</code> (<code>&quot;sm&quot;</code>/<code>&quot;md&quot;</code>/
+        <code>&quot;lg&quot;</code>) sur l&apos;en-tête ET chaque cellule d&apos;une colonne. Les
+        identifiants et la donnée clé ne sont jamais masqués ; sous ~600px on bascule en liste
+        compacte. Les presets viewport « Mobile agent / Tablette manager / Desktop exploitation »
+        (barre d&apos;outils Viewport) permettent d&apos;éprouver chaque palier ; la recette{" "}
         <em>Table → List (repli téléphone)</em> illustre le repli en liste.
       </p>
       <table
@@ -1419,13 +1530,31 @@ function ResponsiveDocSection(): ReactNode {
       >
         <thead>
           <tr>
-            <th style={{ ...cellStyle, fontWeight: "var(--font-weight-semibold)", background: "var(--background-neutral-subtlest-default)" }}>
+            <th
+              style={{
+                ...cellStyle,
+                fontWeight: "var(--font-weight-semibold)",
+                background: "var(--background-neutral-subtlest-default)",
+              }}
+            >
               Largeur de container
             </th>
-            <th style={{ ...cellStyle, fontWeight: "var(--font-weight-semibold)", background: "var(--background-neutral-subtlest-default)" }}>
+            <th
+              style={{
+                ...cellStyle,
+                fontWeight: "var(--font-weight-semibold)",
+                background: "var(--background-neutral-subtlest-default)",
+              }}
+            >
               Preset viewport
             </th>
-            <th style={{ ...cellStyle, fontWeight: "var(--font-weight-semibold)", background: "var(--background-neutral-subtlest-default)" }}>
+            <th
+              style={{
+                ...cellStyle,
+                fontWeight: "var(--font-weight-semibold)",
+                background: "var(--background-neutral-subtlest-default)",
+              }}
+            >
               Comportement
             </th>
           </tr>
@@ -1522,13 +1651,10 @@ function RowClickDoctrineSection(): ReactNode {
         }}
       >
         Critère :{" "}
-        <strong>
-          « l&apos;utilisateur compare-t-il plusieurs éléments à la suite ? »
-        </strong>{" "}
-        Oui → panneau (on reste dans la liste), non → page. Toujours préférer{" "}
-        <code>href</code> à <code>onPress</code> + navigation programmatique :{" "}
-        <code>href</code> préserve le Ctrl/⌘+clic (nouvel onglet) et l&apos;URL au
-        survol, et rend la ligne activable au clavier.
+        <strong>« l&apos;utilisateur compare-t-il plusieurs éléments à la suite ? »</strong> Oui →
+        panneau (on reste dans la liste), non → page. Toujours préférer <code>href</code> à{" "}
+        <code>onPress</code> + navigation programmatique : <code>href</code> préserve le Ctrl/⌘+clic
+        (nouvel onglet) et l&apos;URL au survol, et rend la ligne activable au clavier.
       </p>
       <table
         style={{
@@ -1571,14 +1697,10 @@ function RowClickDoctrineSection(): ReactNode {
           color: "var(--text-subtle)",
         }}
       >
-        <li>
-          La modale n&apos;est pas un mode de consultation — réservée aux actions
-          courtes.
-        </li>
+        <li>La modale n&apos;est pas un mode de consultation — réservée aux actions courtes.</li>
         <li>Jamais d&apos;action destructrice au clic-ligne.</li>
         <li>
-          Un même type d&apos;objet s&apos;ouvre de la même façon partout dans
-          l&apos;application.
+          Un même type d&apos;objet s&apos;ouvre de la même façon partout dans l&apos;application.
         </li>
       </ul>
     </section>
@@ -1623,11 +1745,7 @@ function TableCardRecipe({ initialView }: { initialView: "table" | "cards" }) {
               }}
             >
               <ToggleButton id="table" iconBefore="List" aria-label="Vue liste" />
-              <ToggleButton
-                id="cards"
-                iconBefore="Category"
-                aria-label="Vue cartes"
-              />
+              <ToggleButton id="cards" iconBefore="Category" aria-label="Vue cartes" />
             </ToggleButtonGroup>
           </div>
         }
@@ -1646,7 +1764,12 @@ function TableCardRecipe({ initialView }: { initialView: "table" | "cards" }) {
               {ROWS.map((r) => (
                 // Ligne = onPress (détail en panneau), cohérent avec la liste
                 // mobile jumelle : même type d'objet, même ouverture partout.
-                <TableRow key={r.id} onPress={() => { onOpenDetail(r.id); }}>
+                <TableRow
+                  key={r.id}
+                  onPress={() => {
+                    onOpenDetail(r.id);
+                  }}
+                >
                   <TableCell>{r.title}</TableCell>
                   <TableCell>
                     <Tag

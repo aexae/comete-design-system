@@ -30,15 +30,18 @@ const RUNTIME_PROPERTIES: Record<string, string> = {
 const isPrivate = (name: string) => name.startsWith("--_");
 
 const sources = listSourceFiles(
-  (path) => /\.(css|tsx?)$/.test(path) && !/\.(test|testUtils)\.tsx?$/.test(path) && !path.endsWith(".d.ts"),
+  (path) =>
+    /\.(css|tsx?)$/.test(path) && !/\.(test|testUtils)\.tsx?$/.test(path) && !path.endsWith(".d.ts")
 );
 const cssFiles = sources.filter((path) => path.endsWith(".css"));
 
 const tokens = declaredProperties(readFileSync(TOKENS_CSS_PATH, "utf8"));
-const localProperties = new Set(cssFiles.flatMap((path) => [...declaredProperties(readFileSync(path, "utf8"))]));
+const localProperties = new Set(
+  cssFiles.flatMap((path) => [...declaredProperties(readFileSync(path, "utf8"))])
+);
 
 const references = sources.flatMap((path) =>
-  [...referencedProperties(readFileSync(path, "utf8"))].map((name) => ({ path, name })),
+  [...referencedProperties(readFileSync(path, "utf8"))].map((name) => ({ path, name }))
 );
 
 describe("tokens consommés — existence", () => {
@@ -48,7 +51,8 @@ describe("tokens consommés — existence", () => {
   });
 
   it("should detect tokens hidden behind a fallback and skip comments and dynamic names", () => {
-    const source = "a { padding: var(--gone, var(--space150)); /* var(--note) */ }\nconst s = `var(--space${gap})`;";
+    const source =
+      "a { padding: var(--gone, var(--space150)); /* var(--note) */ }\nconst s = `var(--space${gap})`;";
 
     expect([...referencedProperties(source)]).toEqual(["--gone", "--space150"]);
   });
@@ -57,7 +61,10 @@ describe("tokens consommés — existence", () => {
     const missing = references
       .filter(
         ({ name }) =>
-          !tokens.has(name) && !localProperties.has(name) && !isPrivate(name) && !(name in RUNTIME_PROPERTIES),
+          !tokens.has(name) &&
+          !localProperties.has(name) &&
+          !isPrivate(name) &&
+          !(name in RUNTIME_PROPERTIES)
       )
       .map(({ path, name }) => `${name} (${path})`);
 
@@ -67,7 +74,7 @@ describe("tokens consommés — existence", () => {
   it("should keep the runtime allowlist free of stale or shadowing entries", () => {
     const referenced = new Set(references.map(({ name }) => name));
     const stale = Object.keys(RUNTIME_PROPERTIES).filter(
-      (name) => !referenced.has(name) || tokens.has(name) || localProperties.has(name),
+      (name) => !referenced.has(name) || tokens.has(name) || localProperties.has(name)
     );
 
     expect(stale).toEqual([]);

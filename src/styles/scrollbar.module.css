@@ -174,8 +174,7 @@
   }
 
   .themed:hover {
-    scrollbar-color: var(--icon-subtlest)
-      var(--background-neutral-subtlest-default);
+    scrollbar-color: var(--icon-subtlest) var(--background-neutral-subtlest-default);
   }
 
   [data-theme="dark"] .themed {
@@ -183,8 +182,7 @@
   }
 
   [data-theme="dark"] .themed:hover {
-    scrollbar-color: var(--icon-subtle)
-      var(--background-neutral-subtlest-default);
+    scrollbar-color: var(--icon-subtle) var(--background-neutral-subtlest-default);
   }
 }
 
@@ -284,20 +282,13 @@
         var(--scroll-shadow-surface, var(--background-surface-default)) 70%
       )
       center bottom,
-    radial-gradient(
-        farthest-side at 50% 0,
-        var(--_scroll-shadow-ink),
-        transparent
-      )
-      center top,
-    radial-gradient(
-        farthest-side at 50% 100%,
-        var(--_scroll-shadow-ink),
-        transparent
-      )
-      center bottom;
+    radial-gradient(farthest-side at 50% 0, var(--_scroll-shadow-ink), transparent) center top,
+    radial-gradient(farthest-side at 50% 100%, var(--_scroll-shadow-ink), transparent) center bottom;
   background-repeat: no-repeat;
-  background-size: 100% var(--space300), 100% var(--space300), 100% var(--space250),
+  background-size:
+    100% var(--space300),
+    100% var(--space300),
+    100% var(--space250),
     100% var(--space250);
   background-attachment: local, local, scroll, scroll;
 }

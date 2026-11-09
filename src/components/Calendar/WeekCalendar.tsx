@@ -53,10 +53,7 @@ export interface WeekCalendarProps {
 // -----------------------------------------------------------------------
 // Utilitaire — calcule les bornes lun/dim à partir d'une date quelconque
 
-function weekRange(
-  date: CalendarDate,
-  locale: string
-): RangeValue<CalendarDate> {
+function weekRange(date: CalendarDate, locale: string): RangeValue<CalendarDate> {
   // NOTE: startOfWeek/endOfWeek retournent AnyCalendarDate ; le cast est sûr
   // car l'entrée est un CalendarDate (calendrier grégorien proleptic).
   return {
@@ -96,12 +93,12 @@ export function WeekCalendar({
   "aria-label": ariaLabel,
 }: WeekCalendarProps) {
   // État interne pour le mode non contrôlé
-  const [internalValue, setInternalValue] = useState<
-    RangeValue<CalendarDate> | null
-  >(defaultValue ?? null);
+  const [internalValue, setInternalValue] = useState<RangeValue<CalendarDate> | null>(
+    defaultValue ?? null
+  );
 
   const controlled = value !== undefined;
-  const resolvedValue = controlled ? value : internalValue ?? undefined;
+  const resolvedValue = controlled ? value : (internalValue ?? undefined);
 
   const handleChange = (range: RangeValue<DateValue>) => {
     const snapped: RangeValue<CalendarDate> = {
@@ -133,16 +130,24 @@ export function WeekCalendar({
       </header>
       <CalendarGrid className={styles.grid}>
         <CalendarGridHeader>
-          {(day) => (
-            <CalendarHeaderCell className={styles.headerCell}>
-              {day}
-            </CalendarHeaderCell>
-          )}
+          {(day) => <CalendarHeaderCell className={styles.headerCell}>{day}</CalendarHeaderCell>}
         </CalendarGridHeader>
         <CalendarGridBody>
           {(date) => (
             <AriaCalendarCell date={date} className={styles.ariaDateCell}>
-              {({ formattedDate, isFocusVisible, isHovered, isPressed, isSelected, isSelectionStart, isSelectionEnd, isToday, isDisabled, isUnavailable, isOutsideMonth }) => (
+              {({
+                formattedDate,
+                isFocusVisible,
+                isHovered,
+                isPressed,
+                isSelected,
+                isSelectionStart,
+                isSelectionEnd,
+                isToday,
+                isDisabled,
+                isUnavailable,
+                isOutsideMonth,
+              }) => (
                 <CometeCalendarCell
                   interactive={false}
                   isSelected={isSelected}

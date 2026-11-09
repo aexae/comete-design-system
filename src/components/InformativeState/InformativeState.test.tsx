@@ -24,9 +24,7 @@ describe("InformativeState", () => {
   });
 
   it("should render the image slot when provided", () => {
-    render(
-      <InformativeState title="Title" image={<img alt="illustration" src="test.png" />} />,
-    );
+    render(<InformativeState title="Title" image={<img alt="illustration" src="test.png" />} />);
     expect(screen.getByAltText("illustration")).toBeInTheDocument();
   });
 
@@ -36,9 +34,7 @@ describe("InformativeState", () => {
   });
 
   it("should render the actions slot when provided", () => {
-    render(
-      <InformativeState title="Title" actions={<button type="button">Action</button>} />,
-    );
+    render(<InformativeState title="Title" actions={<button type="button">Action</button>} />);
     expect(screen.getByText("Action")).toBeInTheDocument();
   });
 
@@ -54,7 +50,7 @@ describe("InformativeState", () => {
         description="Nothing to show"
         image={<span data-testid="illustration">img</span>}
         actions={<button type="button">Create</button>}
-      />,
+      />
     );
     expect(screen.getByText("Empty")).toBeInTheDocument();
     expect(screen.getByText("Nothing to show")).toBeInTheDocument();
