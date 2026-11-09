@@ -3,11 +3,10 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Tag, Cluster, Stack } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Labeled, LabeledRow, Legend } from "./_labeled";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -18,7 +17,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Les tags sont de petites étiquettes qui catégorisent, filtrent ou identifient un élément par un mot-clé. Ils peuvent être interactifs pour permettre à l'utilisateur de les ajouter ou de les retirer." },
+      description: {
+        component:
+          "Les tags sont de petites étiquettes qui catégorisent, filtrent ou identifient un élément par un mot-clé. Ils peuvent être interactifs pour permettre à l'utilisateur de les ajouter ou de les retirer.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -61,7 +63,7 @@ const meta = {
                 "Les couleurs catégorielles (`comete`, `accent*`) classent — rôle, secteur, métier — et ne portent jamais un statut. Typer les mappings sur `TagStatusColor` pour que le compilateur le garantisse.",
                 "Un tag = une dimension. Deux informations indépendantes → deux éléments (un tag + une icône), jamais une teinte composite.",
                 "Ne pas coder une couleur en dur au point d'usage : elle vient d'un mapping statut → couleur centralisé dans la couche produit, pas de l'écran.",
-                "`appearance=\"subtle\"` par défaut ; `bold` réservé à `critical` dans une liste longue ; `outlined` pour la catégorisation.",
+                '`appearance="subtle"` par défaut ; `bold` réservé à `critical` dans une liste longue ; `outlined` pour la catégorisation.',
               ]}
               accessibility={[
                 "La couleur ne doit pas être le seul porteur de sens — `label` est requis, et jamais réduit à une pastille.",
@@ -78,7 +80,19 @@ const meta = {
   argTypes: {
     color: {
       control: "select",
-      options: ["neutral", "comete", "success", "warning", "critical", "information", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey"],
+      options: [
+        "neutral",
+        "comete",
+        "success",
+        "warning",
+        "critical",
+        "information",
+        "accentPurple",
+        "accentTeal",
+        "accentTurquoise",
+        "accentMagenta",
+        "accentBlueGrey",
+      ],
     },
     appearance: {
       control: "inline-radio",
@@ -137,24 +151,48 @@ export const AllAppearances: Story = {
   name: "All appearances",
   render: () => (
     <Stack gap="200">
-      <Cluster gap="100">
-        <Tag label="Bold" appearance="bold" />
-        <Tag label="Bold" appearance="bold" color="comete" />
-        <Tag label="Bold" appearance="bold" color="success" />
-        <Tag label="Bold" appearance="bold" color="critical" />
-      </Cluster>
-      <Cluster gap="100">
-        <Tag label="Subtle" appearance="subtle" />
-        <Tag label="Subtle" appearance="subtle" color="comete" />
-        <Tag label="Subtle" appearance="subtle" color="success" />
-        <Tag label="Subtle" appearance="subtle" color="critical" />
-      </Cluster>
-      <Cluster gap="100">
-        <Tag label="Outlined" appearance="outlined" />
-        <Tag label="Outlined" appearance="outlined" color="comete" />
-        <Tag label="Outlined" appearance="outlined" color="success" />
-        <Tag label="Outlined" appearance="outlined" color="critical" />
-      </Cluster>
+      <LabeledRow gap={16}>
+        <Labeled label="neutral">
+          <Tag label="Bold" appearance="bold" />
+        </Labeled>
+        <Labeled label="comete">
+          <Tag label="Bold" appearance="bold" color="comete" />
+        </Labeled>
+        <Labeled label="success">
+          <Tag label="Bold" appearance="bold" color="success" />
+        </Labeled>
+        <Labeled label="critical">
+          <Tag label="Bold" appearance="bold" color="critical" />
+        </Labeled>
+      </LabeledRow>
+      <LabeledRow gap={16}>
+        <Labeled label="neutral">
+          <Tag label="Subtle" appearance="subtle" />
+        </Labeled>
+        <Labeled label="comete">
+          <Tag label="Subtle" appearance="subtle" color="comete" />
+        </Labeled>
+        <Labeled label="success">
+          <Tag label="Subtle" appearance="subtle" color="success" />
+        </Labeled>
+        <Labeled label="critical">
+          <Tag label="Subtle" appearance="subtle" color="critical" />
+        </Labeled>
+      </LabeledRow>
+      <LabeledRow gap={16}>
+        <Labeled label="neutral">
+          <Tag label="Outlined" appearance="outlined" />
+        </Labeled>
+        <Labeled label="comete">
+          <Tag label="Outlined" appearance="outlined" color="comete" />
+        </Labeled>
+        <Labeled label="success">
+          <Tag label="Outlined" appearance="outlined" color="success" />
+        </Labeled>
+        <Labeled label="critical">
+          <Tag label="Outlined" appearance="outlined" color="critical" />
+        </Labeled>
+      </LabeledRow>
     </Stack>
   ),
 };
@@ -162,12 +200,20 @@ export const AllAppearances: Story = {
 /** Comparaison des 2 formes : square vs rounded. */
 export const Shapes: Story = {
   render: () => (
-    <Cluster gap="100">
-      <Tag label="Square" shape="square" />
-      <Tag label="Rounded" shape="rounded" />
-      <Tag label="Square" shape="square" color="comete" />
-      <Tag label="Rounded" shape="rounded" color="comete" />
-    </Cluster>
+    <LabeledRow gap={16}>
+      <Labeled label="square · neutral">
+        <Tag label="Square" shape="square" />
+      </Labeled>
+      <Labeled label="rounded · neutral">
+        <Tag label="Rounded" shape="rounded" />
+      </Labeled>
+      <Labeled label="square · comete">
+        <Tag label="Square" shape="square" color="comete" />
+      </Labeled>
+      <Labeled label="rounded · comete">
+        <Tag label="Rounded" shape="rounded" color="comete" />
+      </Labeled>
+    </LabeledRow>
   ),
 };
 
@@ -178,9 +224,7 @@ export const Removable: Story = {
     color: "neutral",
     appearance: "subtle",
   },
-  render: (args) => (
-    <Tag {...args} onRemove={() => undefined} />
-  ),
+  render: (args) => <Tag {...args} onRemove={() => undefined} />,
 };
 
 /** Tag avec pastille de couleur avant le label. */
@@ -193,7 +237,14 @@ export const WithElemBefore: Story = {
         color="success"
         appearance="subtle"
         elemBefore={
-          <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--background-success-bold-default)" }} />
+          <span
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              background: "var(--background-success-bold-default)",
+            }}
+          />
         }
       />
       <Tag
@@ -201,7 +252,14 @@ export const WithElemBefore: Story = {
         color="critical"
         appearance="subtle"
         elemBefore={
-          <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--background-critical-bold-default)" }} />
+          <span
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              background: "var(--background-critical-bold-default)",
+            }}
+          />
         }
       />
     </Cluster>
@@ -249,24 +307,38 @@ export const FullMatrix: Story = {
   name: "Full matrix",
   parameters: { design: { type: "figma", url: figmaUrl("2984:15878") } },
   render: () => {
-    const colors = ["neutral", "comete", "success", "warning", "critical", "information", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey"] as const;
+    const colors = [
+      "neutral",
+      "comete",
+      "success",
+      "warning",
+      "critical",
+      "information",
+      "accentPurple",
+      "accentTeal",
+      "accentTurquoise",
+      "accentMagenta",
+      "accentBlueGrey",
+    ] as const;
     const appearances = ["bold", "subtle", "outlined"] as const;
     const shapes = ["square", "rounded"] as const;
     return (
       <Stack gap="400">
         {shapes.map((shape) => (
           <Stack key={shape} gap="200">
-            <span style={{ fontFamily: "var(--font-family-primary)", fontSize: "var(--font-size-ui-xs)", fontWeight: 600, color: "var(--text-default)" }}>
-              {shape}
-            </span>
+            <Legend>{shape}</Legend>
             {appearances.map((a) => (
               <Stack key={a} gap="075">
-                <span style={{ fontFamily: "var(--font-family-primary)", fontSize: "var(--font-size-ui-xxs)", color: "var(--text-subtlest)", textTransform: "uppercase" }}>
-                  {a}
-                </span>
+                <Legend>{a}</Legend>
                 <Cluster gap="100">
                   {colors.map((c) => (
-                    <Tag key={`${shape}-${a}-${c}`} label={c} color={c} appearance={a} shape={shape} />
+                    <Tag
+                      key={`${shape}-${a}-${c}`}
+                      label={c}
+                      color={c}
+                      appearance={a}
+                      shape={shape}
+                    />
                   ))}
                 </Cluster>
               </Stack>

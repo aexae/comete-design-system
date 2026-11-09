@@ -7,12 +7,13 @@ import type { CSSProperties, ComponentType, ReactElement } from "react";
 import { useEffect, useRef, useState } from "react";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Labeled, LabeledRow } from "./_labeled";
 
 // ----------------------------------------------------------------------
 // Build illustration name list from the registry (always in sync with the package)
 
 const ILLUSTRATION_NAMES: IllustrationName[] = Object.keys(
-  illustrationRegistry,
+  illustrationRegistry
 ).sort() as IllustrationName[];
 
 // ----------------------------------------------------------------------
@@ -46,7 +47,10 @@ const meta: Meta<IllustrationComponentProps> = {
   },
   parameters: {
     docs: {
-      description: { component: "Les illustrations sont des images vectorielles décoratives qui communiquent un concept ou un état de manière visuelle. Elles humanisent l'interface dans les écrans vides, les onboardings ou les messages d'état." },
+      description: {
+        component:
+          "Les illustrations sont des images vectorielles décoratives qui communiquent un concept ou un état de manière visuelle. Elles humanisent l'interface dans les écrans vides, les onboardings ou les messages d'état.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -104,24 +108,13 @@ export const WithLabel: Story = {
 
 export const AllSizes: Story = {
   render: (args) => (
-    <div style={{ display: "flex", gap: 24, flexWrap: "wrap", alignItems: "end" }}>
+    <LabeledRow>
       {SIZES.map((s) => (
-        <div
-          key={s}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 8,
-          }}
-        >
+        <Labeled key={s} label={`${s}px`}>
           <Illustration {...args} size={s} illustration="Empty" />
-          <span style={{ fontSize: 12, color: "var(--text-subtlest)" }}>
-            {s}px
-          </span>
-        </div>
+        </Labeled>
       ))}
-    </div>
+    </LabeledRow>
   ),
 };
 
@@ -130,8 +123,8 @@ export const AllSizes: Story = {
 
 type IllustrationComponent = ComponentType<IllustrationProps>;
 
-const ILLUSTRATION_ENTRIES: Array<[string, IllustrationComponent]> = (
-  Object.entries(illustrationRegistry as Record<string, unknown>)
+const ILLUSTRATION_ENTRIES: Array<[string, IllustrationComponent]> = Object.entries(
+  illustrationRegistry as Record<string, unknown>
 ).filter(
   (entry): entry is [string, IllustrationComponent] =>
     typeof entry[1] === "function" && /^[A-Z]/.test(entry[0])
@@ -166,9 +159,7 @@ function IllustrationCard({
         padding: 16,
         border: `1.5px solid ${isCopied ? "var(--border-focused)" : "transparent"}`,
         borderRadius: 12,
-        background: isCopied
-          ? "var(--background-selected-subtlest-default)"
-          : "transparent",
+        background: isCopied ? "var(--background-selected-subtlest-default)" : "transparent",
         cursor: "pointer",
         width: "100%",
         transition: "background 0.1s, border-color 0.1s",
@@ -178,9 +169,7 @@ function IllustrationCard({
       <span
         style={{
           fontSize: 11,
-          color: isCopied
-            ? "var(--text-selected)"
-            : "var(--text-subtlest)",
+          color: isCopied ? "var(--text-selected)" : "var(--text-subtlest)",
           textAlign: "center",
           lineHeight: 1.3,
           width: "100%",

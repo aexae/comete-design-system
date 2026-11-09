@@ -4,14 +4,13 @@ import { useState } from "react";
 import { Switch } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Labeled, Legend } from "./_labeled";
 
 // -----------------------------------------------------------------------
 // Figma links
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -22,7 +21,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "L'interrupteur permet d'activer ou de désactiver un réglage avec un effet immédiat. Il est privilégié par rapport à la case à cocher lorsque le changement prend effet sans validation supplémentaire." },
+      description: {
+        component:
+          "L'interrupteur permet d'activer ou de désactiver un réglage avec un effet immédiat. Il est privilégié par rapport à la case à cocher lorsque le changement prend effet sans validation supplémentaire.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -33,9 +35,7 @@ const meta = {
               }}
               dontExample={{
                 example: (
-                  <div
-                    style={{ display: "flex", flexDirection: "column", gap: 8 }}
-                  >
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                     <Switch>Quotidien</Switch>
                     <Switch>Hebdomadaire</Switch>
                   </div>
@@ -144,26 +144,26 @@ export const Appearances: Story = {
       }}
     >
       <span />
-      <span style={{ fontSize: 12, color: "var(--text-subtle)" }}>Off</span>
-      <span style={{ fontSize: 12, color: "var(--text-subtle)" }}>Indéterminé</span>
-      <span style={{ fontSize: 12, color: "var(--text-subtle)" }}>On</span>
+      <Legend>Off</Legend>
+      <Legend>Indéterminé</Legend>
+      <Legend>On</Legend>
 
-      <span style={{ fontSize: 12 }}>default</span>
+      <Legend>default</Legend>
       <Switch appearance="default" aria-label="default off" />
       <Switch appearance="default" aria-label="default indeterminate" isIndeterminate />
       <Switch appearance="default" aria-label="default on" defaultChecked />
 
-      <span style={{ fontSize: 12 }}>success</span>
+      <Legend>success</Legend>
       <Switch appearance="success" aria-label="success off" />
       <Switch appearance="success" aria-label="success indeterminate" isIndeterminate />
       <Switch appearance="success" aria-label="success on" defaultChecked />
 
-      <span style={{ fontSize: 12 }}>warning</span>
+      <Legend>warning</Legend>
       <Switch appearance="warning" aria-label="warning off" />
       <Switch appearance="warning" aria-label="warning indeterminate" isIndeterminate />
       <Switch appearance="warning" aria-label="warning on" defaultChecked />
 
-      <span style={{ fontSize: 12 }}>critical</span>
+      <Legend>critical</Legend>
       <Switch appearance="critical" aria-label="critical off" />
       <Switch appearance="critical" aria-label="critical indeterminate" isIndeterminate />
       <Switch appearance="critical" aria-label="critical on" defaultChecked />
@@ -176,8 +176,12 @@ export const Disabled: Story = {
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
       <Switch isDisabled>Désactivé (off)</Switch>
-      <Switch isDisabled defaultChecked>Désactivé (on)</Switch>
-      <Switch isDisabled isIndeterminate>Désactivé (indéterminé)</Switch>
+      <Switch isDisabled defaultChecked>
+        Désactivé (on)
+      </Switch>
+      <Switch isDisabled isIndeterminate>
+        Désactivé (indéterminé)
+      </Switch>
     </div>
   ),
 };
@@ -185,19 +189,27 @@ export const Disabled: Story = {
 /** État indéterminé — le pouce devient une petite barre horizontale. */
 export const Indeterminate: Story = {
   render: () => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-      <Switch isIndeterminate appearance="default">
-        Notifications (partiel)
-      </Switch>
-      <Switch isIndeterminate appearance="success">
-        Sync (partiel)
-      </Switch>
-      <Switch isIndeterminate appearance="warning">
-        Alerte (partiel)
-      </Switch>
-      <Switch isIndeterminate appearance="critical">
-        Erreur (partiel)
-      </Switch>
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <Labeled align="flex-start" label="default">
+        <Switch isIndeterminate appearance="default">
+          Notifications (partiel)
+        </Switch>
+      </Labeled>
+      <Labeled align="flex-start" label="success">
+        <Switch isIndeterminate appearance="success">
+          Sync (partiel)
+        </Switch>
+      </Labeled>
+      <Labeled align="flex-start" label="warning">
+        <Switch isIndeterminate appearance="warning">
+          Alerte (partiel)
+        </Switch>
+      </Labeled>
+      <Labeled align="flex-start" label="critical">
+        <Switch isIndeterminate appearance="critical">
+          Erreur (partiel)
+        </Switch>
+      </Labeled>
     </div>
   ),
 };
@@ -210,26 +222,17 @@ export const InPreferences: Story = {
       autoSave: true,
       analytics: false,
     });
-    const set = (k: keyof typeof pref) => (v: boolean) =>
-      setPref((prev) => ({ ...prev, [k]: v }));
+    const set = (k: keyof typeof pref) => (v: boolean) => setPref((prev) => ({ ...prev, [k]: v }));
 
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 320 }}>
         <Switch isChecked={pref.notifications} onChange={set("notifications")}>
           Notifications push
         </Switch>
-        <Switch
-          appearance="success"
-          isChecked={pref.autoSave}
-          onChange={set("autoSave")}
-        >
+        <Switch appearance="success" isChecked={pref.autoSave} onChange={set("autoSave")}>
           Sauvegarde automatique
         </Switch>
-        <Switch
-          appearance="warning"
-          isChecked={pref.analytics}
-          onChange={set("analytics")}
-        >
+        <Switch appearance="warning" isChecked={pref.analytics} onChange={set("analytics")}>
           Partage des données d&apos;utilisation
         </Switch>
       </div>

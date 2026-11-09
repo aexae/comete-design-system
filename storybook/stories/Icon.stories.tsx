@@ -8,6 +8,7 @@ import type { CSSProperties, ComponentType, ReactElement } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Labeled, LabeledRow } from "./_labeled";
 
 // ----------------------------------------------------------------------
 // Build icon name list from the registry (always in sync with the package)
@@ -17,8 +18,7 @@ const ICON_NAMES: IconName[] = Object.keys(iconRegistry).sort() as IconName[];
 // ----------------------------------------------------------------------
 // Figma design URLs
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 
 /** Builds a Figma URL with a specific node ID for the addon-designs panel */
 const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
@@ -91,7 +91,10 @@ const meta: Meta<IconComponentProps> = {
   },
   parameters: {
     docs: {
-      description: { component: "Les icônes sont des symboles graphiques compacts qui renforcent la compréhension d'une action, d'un statut ou d'un concept. Elles accompagnent le texte pour améliorer la lisibilité et la rapidité de lecture." },
+      description: {
+        component:
+          "Les icônes sont des symboles graphiques compacts qui renforcent la compréhension d'une action, d'un statut ou d'un concept. Elles accompagnent le texte pour améliorer la lisibilité et la rapidité de lecture.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -183,7 +186,7 @@ function downloadBlob(blob: Blob, filename: string): void {
 async function downloadPng(
   container: HTMLElement,
   filename: string,
-  targetHeight = 256,
+  targetHeight = 256
 ): Promise<void> {
   const svgEl = buildExportSvg(container);
   if (!svgEl) return;
@@ -256,8 +259,12 @@ function IconWithDownload(props: IconComponentProps): ReactElement {
         <Icon {...props} />
       </div>
       <div style={{ display: "flex", gap: 6 }}>
-        <button type="button" onClick={handleDownloadSvg} style={btnStyle}>SVG</button>
-        <button type="button" onClick={handleDownloadPng} style={btnStyle}>PNG</button>
+        <button type="button" onClick={handleDownloadSvg} style={btnStyle}>
+          SVG
+        </button>
+        <button type="button" onClick={handleDownloadPng} style={btnStyle}>
+          PNG
+        </button>
       </div>
     </div>
   );
@@ -299,32 +306,21 @@ export const WithLabel: Story = {
 
 export const AllColors: Story = {
   render: (args) => (
-    <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+    <LabeledRow gap={12} align="center">
       {COLORS.map((c) => (
-        <div
-          key={c}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 4,
-            padding: c === "inverted" ? "8px" : undefined,
-            background: c === "inverted" ? "var(--background-brand-bold-default)" : undefined,
-            borderRadius: c === "inverted" ? 8 : undefined,
-          }}
-        >
-          <Icon {...args} color={c} icon="AddBox" />
-          <span
+        <Labeled key={c} label={c}>
+          <div
             style={{
-              fontSize: 10,
-              color:  c === "inverted" ? "var(--text-inverted)" : "var(--text-subtlest)",
+              padding: 8,
+              borderRadius: 8,
+              background: c === "inverted" ? "var(--background-brand-bold-default)" : undefined,
             }}
           >
-            {c}
-          </span>
-        </div>
+            <Icon {...args} color={c} icon="AddBox" />
+          </div>
+        </Labeled>
       ))}
-    </div>
+    </LabeledRow>
   ),
 };
 
@@ -332,29 +328,13 @@ export const AllColors: Story = {
 
 export const AllVariants: Story = {
   render: (args) => (
-    <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
+    <LabeledRow align="center">
       {VARIANTS.map((v) => (
-        <div
-          key={v}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 4,
-          }}
-        >
+        <Labeled key={v} label={v}>
           <Icon {...args} appearance={v} icon="AddBox" />
-          <span
-            style={{
-              fontSize: 10,
-              color: "var(--text-subtlest)",
-            }}
-          >
-            {v}
-          </span>
-        </div>
+        </Labeled>
       ))}
-    </div>
+    </LabeledRow>
   ),
 };
 
@@ -363,8 +343,8 @@ export const AllVariants: Story = {
 
 type IconComponent = ComponentType<IconProps>;
 
-const ICON_ENTRIES: Array<[string, IconComponent]> = (
-  Object.entries(Icons as Record<string, unknown>)
+const ICON_ENTRIES: Array<[string, IconComponent]> = Object.entries(
+  Icons as Record<string, unknown>
 ).filter(
   (entry): entry is [string, IconComponent] =>
     typeof entry[1] === "function" && /^[A-Z]/.test(entry[0])
@@ -439,9 +419,7 @@ function IconCard({
           padding: "12px 4px 8px",
           border: `1.5px solid ${isCopied ? "var(--border-focused)" : "transparent"}`,
           borderRadius: 8,
-          background: isCopied
-            ? "var(--background-selected-subtlest-default)"
-            : "transparent",
+          background: isCopied ? "var(--background-selected-subtlest-default)" : "transparent",
           cursor: "pointer",
           width: "100%",
           transition: "background 0.1s, border-color 0.1s",
@@ -454,9 +432,7 @@ function IconCard({
         <span
           style={{
             fontSize: 10,
-            color: isCopied
-              ? "var(--text-selected)"
-              : "var(--text-subtlest)",
+            color: isCopied ? "var(--text-selected)" : "var(--text-subtlest)",
             textAlign: "center",
             lineHeight: 1.2,
             width: "100%",
@@ -600,14 +576,8 @@ function IconExplorer(): ReactElement {
                     variant === v
                       ? "var(--background-selected-subtlest-default)"
                       : "var(--background-neutral-subtler-default)",
-                  borderColor:
-                    variant === v
-                      ? "var(--border-focused)"
-                      : "var(--border-default)",
-                  color:
-                    variant === v
-                      ? "var(--text-selected)"
-                      : "var(--text-default)",
+                  borderColor: variant === v ? "var(--border-focused)" : "var(--border-default)",
+                  color: variant === v ? "var(--text-selected)" : "var(--text-default)",
                   fontWeight: variant === v ? 600 : 400,
                   cursor: "pointer",
                 }}
@@ -669,14 +639,8 @@ function IconExplorer(): ReactElement {
                     spacing === s
                       ? "var(--background-selected-subtlest-default)"
                       : "var(--background-neutral-subtler-default)",
-                  borderColor:
-                    spacing === s
-                      ? "var(--border-focused)"
-                      : "var(--border-default)",
-                  color:
-                    spacing === s
-                      ? "var(--text-selected)"
-                      : "var(--text-default)",
+                  borderColor: spacing === s ? "var(--border-focused)" : "var(--border-default)",
+                  color: spacing === s ? "var(--text-selected)" : "var(--text-default)",
                   fontWeight: spacing === s ? 600 : 400,
                   cursor: "pointer",
                 }}

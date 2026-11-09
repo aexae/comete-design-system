@@ -1,10 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  IconTile,
-  Stack,
-  Cluster,
-  Text,
-} from "@aexae/comete-design-system/components";
+import { IconTile, Stack, Cluster, Text } from "@aexae/comete-design-system/components";
 import type {
   IconTileAppearance,
   IconTileSize,
@@ -14,6 +9,7 @@ import type { IconName } from "@aexae/comete-icons";
 import { iconRegistry } from "@aexae/comete-icons";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Labeled, Legend } from "./_labeled";
 
 // -----------------------------------------------------------------------
 // Constants
@@ -47,7 +43,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "L'icon tile encadre une icône dans un conteneur coloré avec une forme et un fond définis. Il met en valeur l'icône dans les listes de fonctionnalités, les cartes ou les états informatifs." },
+      description: {
+        component:
+          "L'icon tile encadre une icône dans un conteneur coloré avec une forme et un fond définis. Il met en valeur l'icône dans les listes de fonctionnalités, les cartes ou les états informatifs.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -117,12 +116,9 @@ export const Appearances: Story = {
   render: () => (
     <Cluster gap="150" align="center">
       {APPEARANCES.map((appearance) => (
-        <Stack key={appearance} gap="100" align="center">
+        <Labeled key={appearance} label={appearance}>
           <IconTile icon="CalendarMonth" appearance={appearance} />
-          <Text size="xsmall" as="span" color="subtlest">
-            {appearance}
-          </Text>
-        </Stack>
+        </Labeled>
       ))}
     </Cluster>
   ),
@@ -133,12 +129,9 @@ export const Sizes: Story = {
   render: () => (
     <Cluster gap="150" align="end">
       {SIZES.map((size) => (
-        <Stack key={size} gap="100" align="center">
+        <Labeled key={size} label={size}>
           <IconTile icon="CalendarMonth" appearance="information" size={size} />
-          <Text size="xsmall" as="span" color="subtlest">
-            {size}
-          </Text>
-        </Stack>
+        </Labeled>
       ))}
     </Cluster>
   ),
@@ -149,12 +142,9 @@ export const Shapes: Story = {
   render: () => (
     <Cluster gap="200" align="center">
       {SHAPES.map((shape) => (
-        <Stack key={shape} gap="100" align="center">
+        <Labeled key={shape} label={shape}>
           <IconTile icon="Person" appearance="brand" shape={shape} />
-          <Text size="xsmall" as="span" color="subtlest">
-            {shape}
-          </Text>
-        </Stack>
+        </Labeled>
       ))}
     </Cluster>
   ),
@@ -165,22 +155,12 @@ export const AllCombinations: Story = {
   render: () => (
     <Stack gap="200">
       {APPEARANCES.map((appearance) => (
-        <Cluster key={appearance} gap="150" align="center">
-          <Text
-            size="xsmall"
-            as="span"
-            color="subtlest"
-            style={{ width: 80 }}
-          >
-            {appearance}
-          </Text>
+        <Cluster key={appearance} gap="150" align="end">
+          <Legend style={{ width: 80 }}>{appearance}</Legend>
           {SIZES.map((size) => (
-            <IconTile
-              key={size}
-              icon="CalendarMonth"
-              appearance={appearance}
-              size={size}
-            />
+            <Labeled key={size} label={size}>
+              <IconTile icon="CalendarMonth" appearance={appearance} size={size} />
+            </Labeled>
           ))}
         </Cluster>
       ))}
