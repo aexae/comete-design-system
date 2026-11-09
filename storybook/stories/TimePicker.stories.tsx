@@ -9,11 +9,10 @@ import { Time } from "@internationalized/date";
 import { fn } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Legend } from "./_labeled";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -24,7 +23,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le sélecteur d'heure permet de choisir une heure et des minutes via un champ de saisie ou un panneau déroulant. Il assure un format horaire cohérent et réduit les erreurs de saisie." },
+      description: {
+        component:
+          "Le sélecteur d'heure permet de choisir une heure et des minutes via un champ de saisie ou un panneau déroulant. Il assure un format horaire cohérent et réduit les erreurs de saisie.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -129,7 +131,6 @@ export const Invalid: Story = {
   args: { isInvalid: true, defaultValue: new Time(9, 0) },
 };
 
-
 /** Disabled. */
 export const Disabled: Story = {
   args: { isDisabled: true, defaultValue: new Time(9, 0) },
@@ -156,11 +157,7 @@ export const FieldInvalid: Story = {
   name: "Field invalid",
   render: () => (
     <div style={{ width: 200 }}>
-      <Field
-        label="Heure de fin"
-        message="L'heure est invalide"
-        messageType="critical"
-      >
+      <Field label="Heure de fin" message="L'heure est invalide" messageType="critical">
         <TimePicker aria-label="Heure de fin" isInvalid defaultValue={new Time(18, 0)} />
       </Field>
     </div>
@@ -177,15 +174,7 @@ export const AllStates: Story = {
       <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
         {appearances.map((a) => (
           <div key={a} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <span
-              style={{
-                fontFamily: "monospace",
-                fontSize: 12,
-                color: "var(--text-subtlest)",
-              }}
-            >
-              appearance={a}
-            </span>
+            <Legend>appearance={a}</Legend>
             <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
               <div style={col}>
                 <Field label="Default">
@@ -194,17 +183,31 @@ export const AllStates: Story = {
               </div>
               <div style={col}>
                 <Field label="With value">
-                  <TimePicker aria-label="With value" appearance={a} defaultValue={new Time(14, 30)} />
+                  <TimePicker
+                    aria-label="With value"
+                    appearance={a}
+                    defaultValue={new Time(14, 30)}
+                  />
                 </Field>
               </div>
               <div style={col}>
                 <Field label="Invalid" message="Erreur" messageType="critical">
-                  <TimePicker aria-label="Invalid" appearance={a} defaultValue={new Time(14, 30)} isInvalid />
+                  <TimePicker
+                    aria-label="Invalid"
+                    appearance={a}
+                    defaultValue={new Time(14, 30)}
+                    isInvalid
+                  />
                 </Field>
               </div>
               <div style={col}>
                 <Field label="Disabled">
-                  <TimePicker aria-label="Disabled" appearance={a} defaultValue={new Time(14, 30)} isDisabled />
+                  <TimePicker
+                    aria-label="Disabled"
+                    appearance={a}
+                    defaultValue={new Time(14, 30)}
+                    isDisabled
+                  />
                 </Field>
               </div>
             </div>

@@ -12,16 +12,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { logoRegistry } from "@aexae/comete-logos";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Labeled, LabeledRow, Legend } from "./_labeled";
 
 /** All entities (company, software, product lines) from the registry — always up to date. */
 const ALL_ENTITIES = (Object.keys(logoRegistry) as LogoEntity[]).sort((a, b) =>
-  a.localeCompare(b, "fr"),
+  a.localeCompare(b, "fr")
 );
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -61,7 +60,10 @@ const meta = {
   },
   parameters: {
     docs: {
-      description: { component: "Le composant logo affiche l'identité visuelle de la marque dans les dimensions et les couleurs normalisées du design system. Il garantit un usage cohérent du logo sur tous les points de contact." },
+      description: {
+        component:
+          "Le composant logo affiche l'identité visuelle de la marque dans les dimensions et les couleurs normalisées du design system. Il garantit un usage cohérent du logo sur tous les points de contact.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -153,7 +155,13 @@ function LogoWithDownload({
       }}
     >
       <div ref={containerRef}>
-        <Logo entity={entity} appearance={appearance} format={format} taglineAlign={taglineAlign} size={size} />
+        <Logo
+          entity={entity}
+          appearance={appearance}
+          format={format}
+          taglineAlign={taglineAlign}
+          size={size}
+        />
       </div>
       <div style={{ display: "flex", gap: 6 }}>
         <button type="button" onClick={handleDownloadSvg} style={btnStyle}>
@@ -221,49 +229,29 @@ export const TaglineAlignColumn: Story = {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
         {appearances.map((a) => (
-          <div
-            key={a}
-            style={{
-              background: a === "inverted" ? "var(--background-default-inverted)" : undefined,
-              padding: 24,
-              borderRadius: 8,
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 24,
-            }}
-          >
-            <span
-              style={{
-                fontFamily: "monospace",
-                fontSize: 11,
-                width: "100%",
-                color: a === "inverted" ? "var(--text-inverted)" : "var(--text-subtlest)",
-              }}
-            >
-              appearance={a} taglineAlign=&quot;column&quot;
-            </span>
-            {entities.map((p) => (
-              <div
-                key={p}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 8,
-                }}
-              >
-                <Logo entity={p} appearance={a} taglineAlign={args.taglineAlign} size={args.size} />
-                <span
-                  style={{
-                    fontFamily: "monospace",
-                    fontSize: 10,
-                    color: a === "inverted" ? "var(--text-inverted)" : "var(--text-subtlest)",
-                  }}
-                >
-                  {p}
-                </span>
-              </div>
-            ))}
+          <div key={a} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <Legend>{a} · column</Legend>
+            <LabeledRow>
+              {entities.map((p) => (
+                <Labeled key={p} label={p}>
+                  <div
+                    style={{
+                      padding: 16,
+                      borderRadius: 8,
+                      background:
+                        a === "inverted" ? "var(--background-default-inverted)" : undefined,
+                    }}
+                  >
+                    <Logo
+                      entity={p}
+                      appearance={a}
+                      taglineAlign={args.taglineAlign}
+                      size={args.size}
+                    />
+                  </div>
+                </Labeled>
+              ))}
+            </LabeledRow>
           </div>
         ))}
       </div>
@@ -280,39 +268,20 @@ export const AllProducts: Story = {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
         {appearances.map((a) => (
-          <div
-            key={a}
-            style={{
-              background: a === "inverted" ? "var(--background-default-inverted)" : undefined,
-              padding: 24,
-              borderRadius: 8,
-              display: "flex",
-              flexDirection: "column",
-              gap: 16,
-            }}
-          >
-            <span
-              style={{
-                fontFamily: "monospace",
-                fontSize: 11,
-                color: a === "inverted" ? "var(--text-inverted)" : "var(--text-subtlest)",
-              }}
-            >
-              appearance={a}
-            </span>
+          <div key={a} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <Legend>{a}</Legend>
             {entities.map((p) => (
               <div key={p} style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                <span
+                <Legend style={{ width: 80 }}>{p}</Legend>
+                <div
                   style={{
-                    fontFamily: "monospace",
-                    fontSize: 11,
-                    width: 80,
-                    color: a === "inverted" ? "var(--text-inverted)" : "var(--text-subtlest)",
+                    padding: "8px 12px",
+                    borderRadius: 8,
+                    background: a === "inverted" ? "var(--background-default-inverted)" : undefined,
                   }}
                 >
-                  {p}
-                </span>
-                <Logo entity={p} appearance={a} taglineAlign="inline" size={32} />
+                  <Logo entity={p} appearance={a} taglineAlign="inline" size={32} />
+                </div>
               </div>
             ))}
           </div>
@@ -325,7 +294,6 @@ export const AllProducts: Story = {
 // -----------------------------------------------------------------------
 // Logo Explorer — parcourir, copier et télécharger tous les logos
 // -----------------------------------------------------------------------
-
 
 const ALL_APPEARANCES: LogoAppearance[] = ["brand", "neutral", "inverted"];
 
@@ -448,7 +416,7 @@ function buildExportSvg(container: HTMLElement): SVGSVGElement | null {
     // → place le coin (vbX,vbY) du viewBox au point (offsetX, offsetY).
     g.setAttribute(
       "transform",
-      `translate(${offsetX} ${offsetY}) scale(${sx} ${sy}) translate(${-vbX} ${-vbY})`,
+      `translate(${offsetX} ${offsetY}) scale(${sx} ${sy}) translate(${-vbX} ${-vbY})`
     );
 
     const resolved = cloneAndResolveVars(svg);
@@ -625,11 +593,15 @@ function LogoCard({
       >
         {/* Conteneur du SVG — utilisé pour l'export */}
         <div ref={containerRef}>
-          <Logo entity={entity} appearance={appearance} format={format} taglineAlign={taglineAlign} size={size} />
+          <Logo
+            entity={entity}
+            appearance={appearance}
+            format={format}
+            taglineAlign={taglineAlign}
+            size={size}
+          />
         </div>
-        <span style={nameLabelStyle}>
-          {isCopied ? "✓ copié" : entity}
-        </span>
+        <span style={nameLabelStyle}>{isCopied ? "✓ copié" : entity}</span>
       </button>
 
       {/* Boutons de téléchargement */}
@@ -674,9 +646,7 @@ function LogoExplorer(): ReactElement {
     []
   );
 
-  const filtered = ALL_ENTITIES.filter((p) =>
-    p.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = ALL_ENTITIES.filter((p) => p.toLowerCase().includes(search.toLowerCase()));
 
   function handleCopy(entity: LogoEntity): void {
     const formatAttr = format !== "logo" ? ` format="${format}"` : "";
@@ -859,9 +829,7 @@ function LogoExplorer(): ReactElement {
             gap: 8,
             padding: appearance === "inverted" ? 16 : 0,
             background:
-              appearance === "inverted"
-                ? "var(--background-default-inverted)"
-                : "transparent",
+              appearance === "inverted" ? "var(--background-default-inverted)" : "transparent",
             borderRadius: appearance === "inverted" ? 12 : 0,
           }}
         >

@@ -1,10 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ScrollArea, Card, Divider, Text } from "@aexae/comete-design-system/components";
+import { Labeled, LabeledRow } from "./_labeled";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 const meta = {
   title: "Components/ScrollArea",
@@ -174,7 +173,10 @@ export const Visibilite: Story = {
   render: () => (
     <div style={{ display: "flex", gap: "var(--space300)", flexWrap: "wrap" }}>
       {MODES.map(({ mode, titre, note }) => (
-        <div key={mode} style={{ display: "flex", flexDirection: "column", gap: "var(--space100)" }}>
+        <div
+          key={mode}
+          style={{ display: "flex", flexDirection: "column", gap: "var(--space100)" }}
+        >
           <Text size="small" weight="bold">
             {titre}
           </Text>
@@ -202,20 +204,24 @@ export const Visibilite: Story = {
 export const Axes: Story = {
   parameters: { controls: { disable: true } },
   render: () => (
-    <div style={{ display: "flex", gap: "var(--space300)", flexWrap: "wrap", alignItems: "flex-start" }}>
-      <Card appearance="outlined">
-        <ScrollArea axis="horizontal" visibility="always" maxWidth={320}>
-          <Bande />
-        </ScrollArea>
-      </Card>
-      <Card appearance="outlined">
-        <ScrollArea axis="both" visibility="always" maxHeight={200} maxWidth={320}>
-          <div style={{ width: 700 }}>
-            <Journal />
-          </div>
-        </ScrollArea>
-      </Card>
-    </div>
+    <LabeledRow align="flex-start" style={{ gap: "var(--space300)" }}>
+      <Labeled label="horizontal" align="flex-start">
+        <Card appearance="outlined">
+          <ScrollArea axis="horizontal" visibility="always" maxWidth={320}>
+            <Bande />
+          </ScrollArea>
+        </Card>
+      </Labeled>
+      <Labeled label="both" align="flex-start">
+        <Card appearance="outlined">
+          <ScrollArea axis="both" visibility="always" maxHeight={200} maxWidth={320}>
+            <div style={{ width: 700 }}>
+              <Journal />
+            </div>
+          </ScrollArea>
+        </Card>
+      </Labeled>
+    </LabeledRow>
   ),
 };
 

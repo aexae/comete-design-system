@@ -10,11 +10,10 @@ import {
 import { fn } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Legend } from "./_labeled";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -25,7 +24,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le champ de texte permet à l'utilisateur de saisir et de modifier une valeur textuelle sur une ou plusieurs lignes. Il s'intègre au système de formulaires avec label, aide contextuelle et validation." },
+      description: {
+        component:
+          "Le champ de texte permet à l'utilisateur de saisir et de modifier une valeur textuelle sur une ou plusieurs lignes. Il s'intègre au système de formulaires avec label, aide contextuelle et validation.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -40,8 +42,7 @@ const meta = {
               }}
               dontExample={{
                 example: <TextField aria-label="E-mail" placeholder="E-mail" />,
-                caption:
-                  "Ne pas se reposer sur le placeholder en guise de label.",
+                caption: "Ne pas se reposer sur le placeholder en guise de label.",
               }}
               when={[
                 "Saisir une valeur textuelle libre courte (nom, e-mail, référence).",
@@ -171,18 +172,8 @@ export const FieldInvalid: Story = {
   name: "Field invalid",
   render: () => (
     <div style={{ width: 280 }}>
-      <Field
-        label="Email"
-        isRequired
-        message="Ce champ est requis"
-        messageType="critical"
-      >
-        <TextField
-          aria-label="Email"
-          placeholder="nom@example.com"
-          type="email"
-          isInvalid
-        />
+      <Field label="Email" isRequired message="Ce champ est requis" messageType="critical">
+        <TextField aria-label="Email" placeholder="nom@example.com" type="email" isInvalid />
       </Field>
     </div>
   ),
@@ -257,15 +248,7 @@ export const AllStates: Story = {
       <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
         {appearances.map((a) => (
           <div key={a} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <span
-              style={{
-                fontFamily: "monospace",
-                fontSize: 12,
-                color: "var(--text-subtlest)",
-              }}
-            >
-              appearance={a}
-            </span>
+            <Legend>appearance={a}</Legend>
             <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
               <div style={col}>
                 <Field label="Default">
@@ -284,7 +267,13 @@ export const AllStates: Story = {
               </div>
               <div style={col}>
                 <Field label="Loading">
-                  <TextField aria-label="Loading" appearance={a} defaultValue="Value" isLoading isClearable />
+                  <TextField
+                    aria-label="Loading"
+                    appearance={a}
+                    defaultValue="Value"
+                    isLoading
+                    isClearable
+                  />
                 </Field>
               </div>
               <div style={col}>

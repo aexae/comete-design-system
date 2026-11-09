@@ -4,6 +4,7 @@ import type { BadgeAppearance, BadgeImportance } from "@aexae/comete-design-syst
 import { Badge } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Labeled, LabeledRow, Legend } from "./_labeled";
 
 const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
@@ -17,7 +18,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Les badges sont de petits indicateurs numériques ou visuels rattachés à un élément pour signaler une quantité, un statut ou une notification non lue. Ils attirent l'attention sans interrompre le flux de lecture." },
+      description: {
+        component:
+          "Les badges sont de petits indicateurs numériques ou visuels rattachés à un élément pour signaler une quantité, un statut ou une notification non lue. Ils attirent l'attention sans interrompre le flux de lecture.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -32,7 +36,7 @@ const meta = {
               }}
               when={[
                 "Signaler un compteur ou un statut ponctuel greffé sur un élément (notifications, nombre d'items).",
-                "`importance=\"low\"` (pastille) pour signaler une simple présence, sans chiffre.",
+                '`importance="low"` (pastille) pour signaler une simple présence, sans chiffre.',
               ]}
               avoid={[
                 "Étiqueter/catégoriser un contenu → Tag.",
@@ -45,7 +49,7 @@ const meta = {
               ]}
               accessibility={[
                 "Donner le contexte du nombre aux lecteurs d'écran via un `aria-label` sur l'élément porteur (ex. « 3 notifications non lues »).",
-                "`importance=\"low\"` (pastille sans chiffre) exige un libellé accessible sur l'élément parent.",
+                '`importance="low"` (pastille sans chiffre) exige un libellé accessible sur l\'élément parent.',
               ]}
             />
           }
@@ -115,13 +119,26 @@ export const LowImportance: Story = {
     },
   },
   render: () => (
-    <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-      {(["neutral", "information", "critical", "success", "warning", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey"] as BadgeAppearance[]).map(
-        (appearance) => (
-          <Badge key={appearance} appearance={appearance} importance="low" />
-        )
-      )}
-    </div>
+    <LabeledRow gap={16}>
+      {(
+        [
+          "neutral",
+          "information",
+          "critical",
+          "success",
+          "warning",
+          "accentPurple",
+          "accentTeal",
+          "accentTurquoise",
+          "accentMagenta",
+          "accentBlueGrey",
+        ] as BadgeAppearance[]
+      ).map((appearance) => (
+        <Labeled key={appearance} label={appearance}>
+          <Badge appearance={appearance} importance="low" />
+        </Labeled>
+      ))}
+    </LabeledRow>
   ),
 };
 
@@ -150,22 +167,36 @@ export const WithCutoutBorder: Story = {
     },
   },
   render: () => (
-    <div
-      style={{
-        display: "flex",
-        gap: 20,
-        alignItems: "center",
-        padding: 24,
-        background: "var(--background-neutral-bold-default)",
-        borderRadius: 12,
-      }}
-    >
-      {(["neutral", "information", "critical", "success", "warning", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey"] as BadgeAppearance[]).map(
-        (appearance) => (
-          <Badge key={appearance} appearance={appearance} importance="high" label="99" cutoutBorder />
-        )
-      )}
-    </div>
+    <LabeledRow gap={20}>
+      {(
+        [
+          "neutral",
+          "information",
+          "critical",
+          "success",
+          "warning",
+          "accentPurple",
+          "accentTeal",
+          "accentTurquoise",
+          "accentMagenta",
+          "accentBlueGrey",
+        ] as BadgeAppearance[]
+      ).map((appearance) => (
+        <Labeled key={appearance} label={appearance}>
+          {/* Fond sombre par tuile : l'anneau du cutout reste visible, le label lisible. */}
+          <div
+            style={{
+              display: "flex",
+              padding: 24,
+              background: "var(--background-neutral-bold-default)",
+              borderRadius: 12,
+            }}
+          >
+            <Badge appearance={appearance} importance="high" label="99" cutoutBorder />
+          </div>
+        </Labeled>
+      ))}
+    </LabeledRow>
   ),
 };
 
@@ -181,11 +212,17 @@ export const Disabled: Story = {
     },
   },
   render: () => (
-    <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-      <Badge appearance="neutral" importance="high" label="Disabled" isDisabled />
-      <Badge appearance="information" importance="medium" label="Disabled" isDisabled />
-      <Badge appearance="critical" importance="low" isDisabled />
-    </div>
+    <LabeledRow gap={12}>
+      <Labeled label="neutral · high">
+        <Badge appearance="neutral" importance="high" label="Disabled" isDisabled />
+      </Labeled>
+      <Labeled label="information · medium">
+        <Badge appearance="information" importance="medium" label="Disabled" isDisabled />
+      </Labeled>
+      <Labeled label="critical · low">
+        <Badge appearance="critical" importance="low" isDisabled />
+      </Labeled>
+    </LabeledRow>
   ),
 };
 
@@ -226,9 +263,7 @@ export const AllAppearances: Story = {
           <Badge appearance={appearance} importance="high" label="High" />
           <Badge appearance={appearance} importance="medium" label="Medium" />
           <Badge appearance={appearance} importance="low" />
-          <span style={{ marginLeft: 24, width: 120, fontSize: 12, color: "var(--text-subtle)", fontFamily: "monospace" }}>
-            {appearance}
-          </span>
+          <Legend style={{ marginLeft: 24, width: 120 }}>{appearance}</Legend>
         </div>
       ))}
     </div>

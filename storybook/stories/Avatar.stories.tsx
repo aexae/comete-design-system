@@ -5,16 +5,15 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, userEvent, within } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Labeled, LabeledRow } from "./_labeled";
 
 // ----------------------------------------------------------------------
 // Figma design URLs — public file, addon-designs embeds
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 
 /** Builds a Figma URL with a specific node ID for the addon-designs panel */
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // ----------------------------------------------------------------------
 // Icon mapping — IconName n'est pas sérialisable dans args,
@@ -61,8 +60,7 @@ const meta: Meta<AvatarProps> = {
         "accentMagenta",
         "accentBlueGrey",
       ],
-      description:
-        "Couleur catégorielle — identifie, ne juge pas. Sans effet sur une photo.",
+      description: "Couleur catégorielle — identifie, ne juge pas. Sans effet sur une photo.",
     },
     isDisabled: { control: "boolean" },
     isSelected: { control: "boolean" },
@@ -85,13 +83,15 @@ const meta: Meta<AvatarProps> = {
   render: (args) => {
     // Quand une icône est sélectionnée, on retire les initiales
     // pour respecter la priorité du composant (photo > initials > icon).
-    const resolvedArgs =
-      args.icon != null ? { ...args, initials: undefined } : args;
+    const resolvedArgs = args.icon != null ? { ...args, initials: undefined } : args;
     return <Avatar {...resolvedArgs} />;
   },
   parameters: {
     docs: {
-      description: { component: "Les avatars représentent visuellement un utilisateur ou une entité par une photo, des initiales ou une icône. Ils identifient rapidement les personnes dans les listes, commentaires et en-têtes de profil." },
+      description: {
+        component:
+          "Les avatars représentent visuellement un utilisateur ou une entité par une photo, des initiales ou une icône. Ils identifient rapidement les personnes dans les listes, commentaires et en-têtes de profil.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -259,14 +259,13 @@ function LoadingFlowDemo() {
             <span
               style={{
                 color: step === key ? "var(--text-selected)" : "var(--text-subtle)",
-                fontWeight: step === key ? "var(--font-weight-semibold)" : "var(--font-weight-regular)",
+                fontWeight:
+                  step === key ? "var(--font-weight-semibold)" : "var(--font-weight-regular)",
               }}
             >
               {label}
             </span>
-            {i < FLOW_STEPS.length - 1 && (
-              <span style={{ color: "var(--text-subtlest)" }}>→</span>
-            )}
+            {i < FLOW_STEPS.length - 1 && <span style={{ color: "var(--text-subtlest)" }}>→</span>}
           </span>
         ))}
       </div>
@@ -320,19 +319,13 @@ const COULEURS = [
 export const Couleurs: Story = {
   parameters: { controls: { disable: true } },
   render: () => (
-    <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+    <LabeledRow gap={16}>
       {COULEURS.map(({ color, initials }) => (
-        <div
-          key={color}
-          style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}
-        >
+        <Labeled key={color} label={color}>
           <Avatar size="large" color={color} initials={initials} />
-          <Text size="xsmall" color="subtlest">
-            {color}
-          </Text>
-        </div>
+        </Labeled>
       ))}
-    </div>
+    </LabeledRow>
   ),
 };
 
@@ -353,14 +346,28 @@ export const FilDeDiscussion: Story = {
   parameters: { controls: { disable: true } },
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 20, maxWidth: 440 }}>
-      {([
-        { color: "accentPurple", initials: "MB", nom: "MARTIN Bob",
-          message: "Ronde du secteur nord terminée, rien à signaler." },
-        { color: "accentTeal", initials: "CA", nom: "CHEN Alice",
-          message: "Reçu. Tu peux enchaîner sur l'entrepôt 2 ?" },
-        { color: "accentPurple", initials: "MB", nom: "MARTIN Bob",
-          message: "J'y suis dans dix minutes." },
-      ] as const).map(({ color, initials, nom, message }, i) => (
+      {(
+        [
+          {
+            color: "accentPurple",
+            initials: "MB",
+            nom: "MARTIN Bob",
+            message: "Ronde du secteur nord terminée, rien à signaler.",
+          },
+          {
+            color: "accentTeal",
+            initials: "CA",
+            nom: "CHEN Alice",
+            message: "Reçu. Tu peux enchaîner sur l'entrepôt 2 ?",
+          },
+          {
+            color: "accentPurple",
+            initials: "MB",
+            nom: "MARTIN Bob",
+            message: "J'y suis dans dix minutes.",
+          },
+        ] as const
+      ).map(({ color, initials, nom, message }, i) => (
         <div key={i} style={{ display: "flex", gap: 12 }}>
           <Avatar size="medium" color={color} initials={initials} />
           <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -377,29 +384,17 @@ export const FilDeDiscussion: Story = {
 
 export const AllSizes: Story = {
   render: (args) => {
-    const resolvedArgs =
-      args.icon != null ? { ...args, initials: undefined } : args;
+    const resolvedArgs = args.icon != null ? { ...args, initials: undefined } : args;
     return (
-      <div style={{ display: "flex", gap: 16, alignItems: "flex-end" }}>
-        {(
-          ["xsmall", "small", "medium", "large", "xlarge", "xxlarge", "xxxlarge"] as const
-        ).map((size) => (
-          <div
-            key={size}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 8,
-            }}
-          >
-            <Avatar {...resolvedArgs} size={size} />
-            <span style={{ fontFamily: "monospace", fontSize: 12, color: "#666" }}>
-              {size} ({SIZE_PX[size]}px)
-            </span>
-          </div>
-        ))}
-      </div>
+      <LabeledRow gap={16}>
+        {(["xsmall", "small", "medium", "large", "xlarge", "xxlarge", "xxxlarge"] as const).map(
+          (size) => (
+            <Labeled key={size} label={`${size} (${SIZE_PX[size]}px)`}>
+              <Avatar {...resolvedArgs} size={size} />
+            </Labeled>
+          )
+        )}
+      </LabeledRow>
     );
   },
 };

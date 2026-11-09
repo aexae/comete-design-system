@@ -8,11 +8,10 @@ import {
 } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Labeled } from "./_labeled";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -42,7 +41,10 @@ const meta = {
   },
   parameters: {
     docs: {
-      description: { component: "L'indicateur de dépôt signale visuellement la zone de destination lors d'une opération de glisser-déposer. Il guide l'utilisateur en montrant précisément où l'élément sera inséré." },
+      description: {
+        component:
+          "L'indicateur de dépôt signale visuellement la zone de destination lors d'une opération de glisser-déposer. Il guide l'utilisateur en montrant précisément où l'élément sera inséré.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -186,18 +188,9 @@ export const AllVariants: Story = {
       <div style={{ display: "flex", flexDirection: "column", gap: 24, width: 300 }}>
         {appearances.map((a) =>
           sides.map((s) => (
-            <div key={`${a}-${s}`} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              <span
-                style={{
-                  fontFamily: "monospace",
-                  fontSize: 11,
-                  color: "var(--text-subtlest)",
-                }}
-              >
-                appearance={a} side={s}
-              </span>
+            <Labeled key={`${a}-${s}`} label={`${a} · ${s}`} align="stretch">
               <DropIndicator appearance={a} side={s} />
-            </div>
+            </Labeled>
           ))
         )}
       </div>
