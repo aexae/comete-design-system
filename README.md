@@ -63,7 +63,7 @@ import { ThemeProvider, useTheme } from "@aexae/comete-design-system";
 // Provider
 <ThemeProvider mode="light">
   <App />
-</ThemeProvider>
+</ThemeProvider>;
 
 // Hook
 const { mode, toggleTheme, setMode } = useTheme();
@@ -73,12 +73,12 @@ Gère le light/dark mode via l'attribut `data-theme` sur `<html>`, synchronisé 
 
 ## Points d'entrée
 
-| Import | Contenu |
-|---|---|
-| `@aexae/comete-design-system` | Tout (composants + providers + hooks) |
-| `@aexae/comete-design-system/components` | Composants uniquement |
-| `@aexae/comete-design-system/providers` | ThemeProvider, DensityProvider |
-| `@aexae/comete-design-system/hooks` | useTheme, useDensity |
+| Import                                   | Contenu                               |
+| ---------------------------------------- | ------------------------------------- |
+| `@aexae/comete-design-system`            | Tout (composants + providers + hooks) |
+| `@aexae/comete-design-system/components` | Composants uniquement                 |
+| `@aexae/comete-design-system/providers`  | ThemeProvider, DensityProvider        |
+| `@aexae/comete-design-system/hooks`      | useTheme, useDensity                  |
 
 ## Développement
 

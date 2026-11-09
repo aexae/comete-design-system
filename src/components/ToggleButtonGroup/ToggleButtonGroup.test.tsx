@@ -14,7 +14,7 @@ describe("ToggleButtonGroup", () => {
         <ToggleButton id="a">A</ToggleButton>
         <ToggleButton id="b">B</ToggleButton>
         <ToggleButton id="c">C</ToggleButton>
-      </ToggleButtonGroup>,
+      </ToggleButtonGroup>
     );
 
     expect(screen.getByText("A")).toBeInTheDocument();
@@ -26,7 +26,7 @@ describe("ToggleButtonGroup", () => {
     const { container } = render(
       <ToggleButtonGroup aria-label="Options">
         <ToggleButton id="a">A</ToggleButton>
-      </ToggleButtonGroup>,
+      </ToggleButtonGroup>
     );
 
     const group = container.firstElementChild;
@@ -37,7 +37,7 @@ describe("ToggleButtonGroup", () => {
     render(
       <ToggleButtonGroup aria-label="Options">
         <ToggleButton id="a">A</ToggleButton>
-      </ToggleButtonGroup>,
+      </ToggleButtonGroup>
     );
 
     // In single mode, React Aria renders radio buttons
@@ -49,7 +49,7 @@ describe("ToggleButtonGroup", () => {
     const { container } = render(
       <ToggleButtonGroup aria-label="Options" className="custom">
         <ToggleButton id="a">A</ToggleButton>
-      </ToggleButtonGroup>,
+      </ToggleButtonGroup>
     );
 
     const group = container.firstElementChild;
@@ -63,7 +63,7 @@ describe("ToggleButtonGroup", () => {
         <ToggleButton id="a" className="custom">
           A
         </ToggleButton>
-      </ToggleButtonGroup>,
+      </ToggleButtonGroup>
     );
 
     const button = screen.getByRole("radio");
@@ -77,13 +77,10 @@ describe("ToggleButtonGroup", () => {
 
   it("should default to single selection mode", () => {
     render(
-      <ToggleButtonGroup
-        aria-label="Options"
-        defaultSelectedKeys={["a"]}
-      >
+      <ToggleButtonGroup aria-label="Options" defaultSelectedKeys={["a"]}>
         <ToggleButton id="a">A</ToggleButton>
         <ToggleButton id="b">B</ToggleButton>
-      </ToggleButtonGroup>,
+      </ToggleButtonGroup>
     );
 
     const radioA = screen.getByRole("radio", { name: "A" });
@@ -97,7 +94,7 @@ describe("ToggleButtonGroup", () => {
       <ToggleButtonGroup aria-label="Options" selectionMode="single">
         <ToggleButton id="a">A</ToggleButton>
         <ToggleButton id="b">B</ToggleButton>
-      </ToggleButtonGroup>,
+      </ToggleButtonGroup>
     );
 
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
@@ -117,7 +114,7 @@ describe("ToggleButtonGroup", () => {
       >
         <ToggleButton id="a">A</ToggleButton>
         <ToggleButton id="b">B</ToggleButton>
-      </ToggleButtonGroup>,
+      </ToggleButtonGroup>
     );
 
     await user.click(screen.getByRole("radio", { name: "B" }));
@@ -138,7 +135,7 @@ describe("ToggleButtonGroup", () => {
         <ToggleButton id="a">A</ToggleButton>
         <ToggleButton id="b">B</ToggleButton>
         <ToggleButton id="c">C</ToggleButton>
-      </ToggleButtonGroup>,
+      </ToggleButtonGroup>
     );
 
     const buttons = screen.getAllByRole("button");
@@ -149,13 +146,10 @@ describe("ToggleButtonGroup", () => {
 
   it("should render as toolbar with buttons in multiple mode", () => {
     render(
-      <ToggleButtonGroup
-        aria-label="Options"
-        selectionMode="multiple"
-      >
+      <ToggleButtonGroup aria-label="Options" selectionMode="multiple">
         <ToggleButton id="a">A</ToggleButton>
         <ToggleButton id="b">B</ToggleButton>
-      </ToggleButtonGroup>,
+      </ToggleButtonGroup>
     );
 
     expect(screen.getByRole("toolbar")).toBeInTheDocument();
@@ -171,7 +165,7 @@ describe("ToggleButtonGroup", () => {
       <ToggleButtonGroup aria-label="Options" isDisabled>
         <ToggleButton id="a">A</ToggleButton>
         <ToggleButton id="b">B</ToggleButton>
-      </ToggleButtonGroup>,
+      </ToggleButtonGroup>
     );
 
     const radios = screen.getAllByRole("radio");
@@ -187,16 +181,11 @@ describe("ToggleButtonGroup", () => {
         <ToggleButton id="b" isDisabled>
           B
         </ToggleButton>
-      </ToggleButtonGroup>,
+      </ToggleButtonGroup>
     );
 
-    expect(screen.getByRole("radio", { name: "A" })).not.toHaveAttribute(
-      "data-disabled",
-    );
-    expect(screen.getByRole("radio", { name: "B" })).toHaveAttribute(
-      "data-disabled",
-      "true",
-    );
+    expect(screen.getByRole("radio", { name: "A" })).not.toHaveAttribute("data-disabled");
+    expect(screen.getByRole("radio", { name: "B" })).toHaveAttribute("data-disabled", "true");
   });
 
   it("should not trigger selection change on disabled button click", async () => {
@@ -204,15 +193,12 @@ describe("ToggleButtonGroup", () => {
     const onSelectionChange = vi.fn();
 
     render(
-      <ToggleButtonGroup
-        aria-label="Options"
-        onSelectionChange={onSelectionChange}
-      >
+      <ToggleButtonGroup aria-label="Options" onSelectionChange={onSelectionChange}>
         <ToggleButton id="a" isDisabled>
           A
         </ToggleButton>
         <ToggleButton id="b">B</ToggleButton>
-      </ToggleButtonGroup>,
+      </ToggleButtonGroup>
     );
 
     await user.click(screen.getByRole("radio", { name: "A" }));
@@ -225,22 +211,14 @@ describe("ToggleButtonGroup", () => {
 
   it("should support controlled selectedKeys", () => {
     render(
-      <ToggleButtonGroup
-        aria-label="Options"
-        selectedKeys={["b"]}
-      >
+      <ToggleButtonGroup aria-label="Options" selectedKeys={["b"]}>
         <ToggleButton id="a">A</ToggleButton>
         <ToggleButton id="b">B</ToggleButton>
-      </ToggleButtonGroup>,
+      </ToggleButtonGroup>
     );
 
-    expect(screen.getByRole("radio", { name: "A" })).not.toHaveAttribute(
-      "data-selected",
-    );
-    expect(screen.getByRole("radio", { name: "B" })).toHaveAttribute(
-      "data-selected",
-      "true",
-    );
+    expect(screen.getByRole("radio", { name: "A" })).not.toHaveAttribute("data-selected");
+    expect(screen.getByRole("radio", { name: "B" })).toHaveAttribute("data-selected", "true");
   });
 
   // -------------------------------------------------------------------
@@ -251,13 +229,10 @@ describe("ToggleButtonGroup", () => {
     render(
       <ToggleButtonGroup aria-label="Formatting options">
         <ToggleButton id="a">A</ToggleButton>
-      </ToggleButtonGroup>,
+      </ToggleButtonGroup>
     );
 
-    expect(screen.getByRole("radiogroup")).toHaveAttribute(
-      "aria-label",
-      "Formatting options",
-    );
+    expect(screen.getByRole("radiogroup")).toHaveAttribute("aria-label", "Formatting options");
   });
 
   // -------------------------------------------------------------------
@@ -268,7 +243,7 @@ describe("ToggleButtonGroup", () => {
     render(
       <ToggleButtonGroup aria-label="Options">
         <ToggleButton id="a">A</ToggleButton>
-      </ToggleButtonGroup>,
+      </ToggleButtonGroup>
     );
 
     const button = screen.getByRole("radio");
@@ -279,7 +254,7 @@ describe("ToggleButtonGroup", () => {
     render(
       <ToggleButtonGroup aria-label="Options" size="small">
         <ToggleButton id="a">A</ToggleButton>
-      </ToggleButtonGroup>,
+      </ToggleButtonGroup>
     );
 
     const button = screen.getByRole("radio");
@@ -291,7 +266,7 @@ describe("ToggleButtonGroup", () => {
     render(
       <ToggleButtonGroup aria-label="Options" size="large">
         <ToggleButton id="a">A</ToggleButton>
-      </ToggleButtonGroup>,
+      </ToggleButtonGroup>
     );
 
     const button = screen.getByRole("radio");
@@ -309,12 +284,8 @@ describe("ToggleButtonGroup", () => {
     // skip rendering the label when no children are passed.
     const { container } = render(
       <ToggleButtonGroup aria-label="Alignment">
-        <ToggleButton
-          id="left"
-          iconBefore="FormatAlignLeft"
-          aria-label="Align left"
-        />
-      </ToggleButtonGroup>,
+        <ToggleButton id="left" iconBefore="FormatAlignLeft" aria-label="Align left" />
+      </ToggleButtonGroup>
     );
 
     // The label class is unique to ToggleButton — verify no element uses it.

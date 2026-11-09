@@ -13,10 +13,8 @@ import { GuidelinesFlat } from "./_guidelines";
 // -----------------------------------------------------------------------
 // Figma
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -27,7 +25,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le sélecteur de semaine permet de choisir une semaine calendaire complète en un seul clic. Il convient aux plannings, tableaux de bord et rapports hebdomadaires." },
+      description: {
+        component:
+          "Le sélecteur de semaine permet de choisir une semaine calendaire complète en un seul clic. Il convient aux plannings, tableaux de bord et rapports hebdomadaires.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -308,11 +309,7 @@ export const FieldInvalid: Story = {
   name: "Field invalid",
   args: { isInvalid: true },
   render: (args: WeekPickerProps) => (
-    <Field
-      label="Semaine"
-      message="La semaine est invalide"
-      messageType="critical"
-    >
+    <Field label="Semaine" message="La semaine est invalide" messageType="critical">
       <ControlledRender {...args} />
     </Field>
   ),

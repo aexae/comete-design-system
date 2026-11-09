@@ -95,13 +95,7 @@ export function IconTile({
   className,
   style,
 }: IconTileProps): ReactElement {
-  const classNames = [
-    styles.iconTile,
-    styles[size],
-    styles[shape],
-    styles[appearance],
-    className,
-  ]
+  const classNames = [styles.iconTile, styles[size], styles[shape], styles[appearance], className]
     .filter(Boolean)
     .join(" ");
 

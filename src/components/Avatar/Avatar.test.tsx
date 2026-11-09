@@ -104,9 +104,7 @@ describe("Avatar", () => {
 
   describe("contenu — icône", () => {
     it("should render icon inside iconSlot when provided", () => {
-      const { container } = render(
-        <Avatar icon="Person" />
-      );
+      const { container } = render(<Avatar icon="Person" />);
       const slot = container.querySelector(`.iconSlot`);
       expect(slot).toBeInTheDocument();
       expect(slot?.querySelector("svg")).toBeInTheDocument();
@@ -141,7 +139,9 @@ describe("Avatar", () => {
     });
 
     it("should render FocusRing when isSelected with loaded photo in interactive mode", () => {
-      const { container } = render(<Avatar onPress={() => undefined} isSelected src="/photo.jpg" />);
+      const { container } = render(
+        <Avatar onPress={() => undefined} isSelected src="/photo.jpg" />
+      );
       fireEvent.load(container.querySelector("img")!);
       expect(container.querySelector(".ring")).toBeInTheDocument();
     });
@@ -244,18 +244,14 @@ describe("Avatar", () => {
     it("should keep the colour class on a photo avatar", () => {
       // La photo couvre le fond, mais la classe reste : elle porte aussi la
       // couleur du contenu de repli si l'image ne charge pas.
-      const { container } = render(
-        <Avatar src="/photo.jpg" alt="Alice" color="accentTeal" />,
-      );
+      const { container } = render(<Avatar src="/photo.jpg" alt="Alice" color="accentTeal" />);
       expect(container.firstElementChild).toHaveClass("accentTeal");
     });
 
     it("should keep the selected state alongside a colour", () => {
       // `isSelected` l'emporte visuellement (règle CSS de spécificité
       // supérieure) ; les deux marqueurs cohabitent dans le DOM.
-      render(
-        <Avatar onPress={() => undefined} color="accentMagenta" isSelected />,
-      );
+      render(<Avatar onPress={() => undefined} color="accentMagenta" isSelected />);
       const bouton = screen.getByRole("button");
       expect(bouton).toHaveClass("accentMagenta");
       expect(bouton).toHaveAttribute("data-selected");

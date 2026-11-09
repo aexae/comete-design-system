@@ -57,7 +57,7 @@ describe("generateBrandTheme", () => {
   it("should keep bold darker than subtlest in light theme", () => {
     const { light } = generateBrandTheme("#429aef");
     expect(lightnessOf(light["--background-brand-bold-default"]!)).toBeLessThan(
-      lightnessOf(light["--background-brand-subtlest-default"]!),
+      lightnessOf(light["--background-brand-subtlest-default"]!)
     );
   });
 
@@ -71,7 +71,7 @@ describe("generateBrandTheme", () => {
     const theme = generateBrandTheme("#1e3661");
     // bold est sombre en clair, clair en sombre.
     expect(lightnessOf(theme.dark["--background-brand-bold-default"]!)).toBeGreaterThan(
-      lightnessOf(theme.light["--background-brand-bold-default"]!),
+      lightnessOf(theme.light["--background-brand-bold-default"]!)
     );
   });
 
@@ -91,6 +91,8 @@ describe("brandThemeToCss", () => {
   it("should scope both themes when a scope is given", () => {
     const css = brandThemeToCss("#1e3661", { scope: '[data-brand="acme"]' });
     expect(css).toContain('[data-brand="acme"] {');
-    expect(css).toContain('[data-brand="acme"][data-theme="dark"], [data-theme="dark"] [data-brand="acme"] {');
+    expect(css).toContain(
+      '[data-brand="acme"][data-theme="dark"], [data-theme="dark"] [data-brand="acme"] {'
+    );
   });
 });

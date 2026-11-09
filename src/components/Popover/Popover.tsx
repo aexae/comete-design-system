@@ -11,8 +11,7 @@ import styles from "./Popover.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
-export interface PopoverProps
-  extends Omit<AriaPopoverProps, "className" | "style" | "children"> {
+export interface PopoverProps extends Omit<AriaPopoverProps, "className" | "style" | "children"> {
   /** Contenu affiché dans le popover. */
   children: ReactNode;
   /** Classe CSS additionnelle. */
@@ -77,7 +76,14 @@ export function Popover({
   return (
     <AriaPopover
       {...ariaProps}
-      className={[styles.popover, isScrollable && styles.hasScroll, matchTriggerWidth && styles.matchTriggerWidth, className].filter(Boolean).join(" ")}
+      className={[
+        styles.popover,
+        isScrollable && styles.hasScroll,
+        matchTriggerWidth && styles.matchTriggerWidth,
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
       style={style}
       offset={offset}
       shouldFlip={shouldFlip}

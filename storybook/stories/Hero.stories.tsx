@@ -4,17 +4,13 @@ import { Hero, Stack } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
 
-const SIZES = [
-  "xxlarge", "xlarge", "large", "medium", "small", "xsmall", "xxsmall",
-] as const;
+const SIZES = ["xxlarge", "xlarge", "large", "medium", "small", "xsmall", "xxsmall"] as const;
 
 type HeroSize = (typeof SIZES)[number];
 
@@ -34,7 +30,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le hero est une section d'accroche pleine largeur placée en haut de page pour capter l'attention. Il combine généralement un titre, une description et une illustration ou un appel à l'action." },
+      description: {
+        component:
+          "Le hero est une section d'accroche pleine largeur placée en haut de page pour capter l'attention. Il combine généralement un titre, une description et une illustration ou un appel à l'action.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -137,7 +136,9 @@ export const Inverted: Story = {
     children: "Texte inversé sur fond sombre",
   },
   render: (args) => (
-    <div style={{ background: "var(--background-neutral-bold-default)", padding: 32, borderRadius: 8 }}>
+    <div
+      style={{ background: "var(--background-neutral-bold-default)", padding: 32, borderRadius: 8 }}
+    >
       <Hero {...args} />
     </div>
   ),
@@ -146,9 +147,15 @@ export const Inverted: Story = {
 export const Align: Story = {
   render: () => (
     <Stack gap="300" style={{ width: 800 }}>
-      <Hero size="small" align="start" style={{ border: "1px solid var(--border-default)" }}>Aligné à gauche</Hero>
-      <Hero size="small" align="center" style={{ border: "1px solid var(--border-default)" }}>Centré</Hero>
-      <Hero size="small" align="end" style={{ border: "1px solid var(--border-default)" }}>Aligné à droite</Hero>
+      <Hero size="small" align="start" style={{ border: "1px solid var(--border-default)" }}>
+        Aligné à gauche
+      </Hero>
+      <Hero size="small" align="center" style={{ border: "1px solid var(--border-default)" }}>
+        Centré
+      </Hero>
+      <Hero size="small" align="end" style={{ border: "1px solid var(--border-default)" }}>
+        Aligné à droite
+      </Hero>
     </Stack>
   ),
 };

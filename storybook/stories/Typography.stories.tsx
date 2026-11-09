@@ -353,7 +353,7 @@ const SAMPLES: Record<string, string> = {
   hero: "Donnez vie à vos données.",
   heading: "Titre de section",
   body: "Le texte de corps structure le contenu et guide l'utilisateur à travers l'interface. Lisible, clair, sans fioritures.",
-  code: "const theme = useTheme();\nreturn <Button appearance=\"contained\">{label}</Button>;",
+  code: 'const theme = useTheme();\nreturn <Button appearance="contained">{label}</Button>;',
 };
 
 // -----------------------------------------------------------------------
@@ -471,7 +471,15 @@ function TokenTag({ name }: { name: string }): ReactElement {
   );
 }
 
-function StyleRow({ style, sample, isCode }: { style: TypeStyle; sample: string; isCode: boolean }): ReactElement {
+function StyleRow({
+  style,
+  sample,
+  isCode,
+}: {
+  style: TypeStyle;
+  sample: string;
+  isCode: boolean;
+}): ReactElement {
   const textStyle: CSSProperties = {
     fontSize: `var(${style.fontSizeToken}, ${style.fontSize})`,
     lineHeight: `var(${style.lineHeightToken}, ${style.lineHeight})`,
@@ -528,7 +536,14 @@ function StyleRow({ style, sample, isCode }: { style: TypeStyle; sample: string;
             fontFamily: "monospace",
           }}
         >
-          {style.fontSize} / {style.lineHeight} / {style.fontWeight === "400" ? "Regular" : style.fontWeight === "500" ? "Medium" : style.fontWeight === "600" ? "SemiBold" : "Bold"}
+          {style.fontSize} / {style.lineHeight} /{" "}
+          {style.fontWeight === "400"
+            ? "Regular"
+            : style.fontWeight === "500"
+              ? "Medium"
+              : style.fontWeight === "600"
+                ? "SemiBold"
+                : "Bold"}
           {style.letterSpacing && style.letterSpacing !== "0px" ? ` / ${style.letterSpacing}` : ""}
         </p>
       </div>
@@ -570,8 +585,8 @@ function FontFamilySection(): ReactElement {
         <p style={css.groupLabel}>Fondation</p>
         <h2 style={css.groupTitle}>Polices et graisses</h2>
         <p style={css.groupDesc}>
-          Comète utilise <strong>Poppins</strong> comme police principale et{" "}
-          une <strong>pile monospace système</strong> pour le code. Les quatre niveaux de graisse
+          Comète utilise <strong>Poppins</strong> comme police principale et une{" "}
+          <strong>pile monospace système</strong> pour le code. Les quatre niveaux de graisse
           permettent de créer une hiérarchie claire sans multiplier les familles.
         </p>
       </div>
@@ -610,7 +625,10 @@ function FontFamilySection(): ReactElement {
               style={{
                 margin: "0 0 12px",
                 fontSize: 28,
-                fontFamily: f.token === "--font-family-code" ? "var(--font-family-code, monospace)" : "var(--font-family-primary, system-ui)",
+                fontFamily:
+                  f.token === "--font-family-code"
+                    ? "var(--font-family-code, monospace)"
+                    : "var(--font-family-primary, system-ui)",
                 fontWeight: 500,
                 color: "var(--text-default)",
                 lineHeight: 1.3,
@@ -645,7 +663,16 @@ function FontFamilySection(): ReactElement {
           borderRadius: 10,
         }}
       >
-        <p style={{ margin: "0 0 16px", fontSize: 12, fontWeight: 600, color: "var(--text-subtlest)", textTransform: "uppercase", letterSpacing: "0.07em" }}>
+        <p
+          style={{
+            margin: "0 0 16px",
+            fontSize: 12,
+            fontWeight: 600,
+            color: "var(--text-subtlest)",
+            textTransform: "uppercase",
+            letterSpacing: "0.07em",
+          }}
+        >
           Graisses disponibles
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
@@ -663,7 +690,9 @@ function FontFamilySection(): ReactElement {
               >
                 {w.label}
               </p>
-              <code style={{ fontSize: 10, fontFamily: "monospace", color: "var(--text-subtlest)" }}>
+              <code
+                style={{ fontSize: 10, fontFamily: "monospace", color: "var(--text-subtlest)" }}
+              >
                 var({w.token})
               </code>
               <span style={{ fontSize: 11, color: "var(--text-subtle)" }}>
@@ -690,15 +719,32 @@ const TAB_LABELS: Record<TypeTab, string> = {
   code: "Code",
 };
 
-function TypeTabButton({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }): ReactElement {
+function TypeTabButton({
+  label,
+  active,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}): ReactElement {
   return (
-    <button type="button" onClick={onClick} style={{
-      padding: "8px 16px", border: "none",
-      borderBottom: active ? "2px solid var(--border-focused)" : "2px solid transparent",
-      background: "transparent", color: active ? "var(--text-selected)" : "var(--text-subtle)",
-      fontWeight: active ? 600 : 400, fontSize: 13, cursor: "pointer", marginBottom: -2,
-      fontFamily: "inherit",
-    }}>
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        padding: "8px 16px",
+        border: "none",
+        borderBottom: active ? "2px solid var(--border-focused)" : "2px solid transparent",
+        background: "transparent",
+        color: active ? "var(--text-selected)" : "var(--text-subtle)",
+        fontWeight: active ? 600 : 400,
+        fontSize: 13,
+        cursor: "pointer",
+        marginBottom: -2,
+        fontFamily: "inherit",
+      }}
+    >
       {label}
     </button>
   );
@@ -723,7 +769,9 @@ function TypeGroupSection({ group }: { group: TypeGroup }): ReactElement {
           <span style={{ fontSize: 14 }}>ℹ</span>
           <ul style={css.guidanceList}>
             {group.guidance.map((g) => (
-              <li key={g} style={css.guidanceItem}>{g}</li>
+              <li key={g} style={css.guidanceItem}>
+                {g}
+              </li>
             ))}
           </ul>
         </div>
@@ -767,15 +815,31 @@ function TypographyPage(): ReactElement {
             maxWidth: 600,
           }}
         >
-          Une typographie cohérente crée la hiérarchie visuelle et guide l&apos;attention.
-          Comète définit quatre familles de styles — Hero, Heading, Body, Code — chacune
-          avec un rôle précis dans l&apos;interface.
+          Une typographie cohérente crée la hiérarchie visuelle et guide l&apos;attention. Comète
+          définit quatre familles de styles — Hero, Heading, Body, Code — chacune avec un rôle
+          précis dans l&apos;interface.
         </p>
       </div>
 
-      <div style={{ display: "flex", gap: 0, borderBottom: "2px solid var(--border-default)", marginBottom: 32, position: "sticky", top: 0, zIndex: 10, background: "var(--background-default-default)" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: 0,
+          borderBottom: "2px solid var(--border-default)",
+          marginBottom: 32,
+          position: "sticky",
+          top: 0,
+          zIndex: 10,
+          background: "var(--background-default-default)",
+        }}
+      >
         {(Object.keys(TAB_LABELS) as TypeTab[]).map((id) => (
-          <TypeTabButton key={id} label={TAB_LABELS[id]} active={activeTab === id} onClick={() => setActiveTab(id)} />
+          <TypeTabButton
+            key={id}
+            label={TAB_LABELS[id]}
+            active={activeTab === id}
+            onClick={() => setActiveTab(id)}
+          />
         ))}
       </div>
 
@@ -783,8 +847,7 @@ function TypographyPage(): ReactElement {
       {activeTab !== "fonts" &&
         TYPE_GROUPS.filter((g) => g.id === activeTab).map((group) => (
           <TypeGroupSection key={group.id} group={group} />
-        ))
-      }
+        ))}
     </div>
   );
 }

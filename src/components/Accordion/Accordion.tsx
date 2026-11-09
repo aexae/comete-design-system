@@ -118,8 +118,7 @@ export function Accordion({
       defaultExpandedKeys={defaultValue}
       onExpandedChange={
         onValueChange
-          ? (keys: Set<Key>) =>
-              onValueChange(Array.from(keys, (k) => String(k)))
+          ? (keys: Set<Key>) => onValueChange(Array.from(keys, (k) => String(k)))
           : undefined
       }
       isDisabled={disabled}
@@ -186,16 +185,12 @@ export function AccordionTrigger({
       <AriaButton slot="trigger" className={styles.trigger}>
         {({ isFocusVisible }) => (
           <>
-            {startIcon && (
-              <span className={styles.triggerStart}>{startIcon}</span>
-            )}
+            {startIcon && <span className={styles.triggerStart}>{startIcon}</span>}
             <span className={styles.triggerLabel}>{children}</span>
             <span className={styles.triggerChevron} aria-hidden="true">
               <Icon icon="ExpandMore" size={16} />
             </span>
-            {isFocusVisible && (
-              <FocusRing borderRadius={2} position="inside" />
-            )}
+            {isFocusVisible && <FocusRing borderRadius={2} position="inside" />}
           </>
         )}
       </AriaButton>

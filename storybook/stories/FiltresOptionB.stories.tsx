@@ -119,11 +119,21 @@ function FiltresOptionB({ role, initial }: { role?: Role; initial?: Filters }): 
         />
         <div style={{ flex: 1 }} />
         {canSaveViews ? (
-          <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
+          <SavedSearchesMenu
+            views={views}
+            current={f}
+            onApply={(v) => setF(v.filters)}
+            onDelete={remove}
+          />
         ) : null}
       </div>
 
-      <ActiveFilterTags filters={f} onChange={setF} textActionClassName={css["textAction"]} onOpenFacet={panel.openFacet} />
+      <ActiveFilterTags
+        filters={f}
+        onChange={setF}
+        textActionClassName={css["textAction"]}
+        onOpenFacet={panel.openFacet}
+      />
 
       <ResultsTable filters={f} dataset={dataset} />
     </div>
@@ -160,19 +170,36 @@ function FiltresOptionBMobile({ initial }: { initial?: Filters }): ReactElement 
       </div>
 
       {/* Recherche + Filtres. */}
-      <div style={{ display: "flex", gap: "var(--space100)", padding: "0 var(--space200) var(--space150)" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "var(--space100)",
+          padding: "0 var(--space200) var(--space150)",
+        }}
+      >
         <div style={{ flex: 1 }}>
-          <SearchField aria-label="Rechercher un agent" placeholder="Rechercher" value={f.nameQuery} onChange={(v) => patch({ nameQuery: v })} />
+          <SearchField
+            aria-label="Rechercher un agent"
+            placeholder="Rechercher"
+            value={f.nameQuery}
+            onChange={(v) => patch({ nameQuery: v })}
+          />
         </div>
         <Button
           appearance={total > 0 ? "contained" : "outlined"}
           iconBefore="Tune"
-          aria-label={total > 0 ? `Filtres, ${total} critère${total > 1 ? "s" : ""} actif${total > 1 ? "s" : ""}` : "Filtres"}
+          aria-label={
+            total > 0
+              ? `Filtres, ${total} critère${total > 1 ? "s" : ""} actif${total > 1 ? "s" : ""}`
+              : "Filtres"
+          }
           aria-haspopup="dialog"
           aria-expanded={filterOpen}
           onPress={() => setFilterOpen(true)}
         >
-          {total > 0 && <Badge label={String(total)} appearance="information-inverted" importance="high" />}
+          {total > 0 && (
+            <Badge label={String(total)} appearance="information-inverted" importance="high" />
+          )}
         </Button>
       </div>
 
@@ -183,7 +210,16 @@ function FiltresOptionBMobile({ initial }: { initial?: Filters }): ReactElement 
       {/* Liste des agents. */}
       <div style={{ flex: 1, overflowY: "auto" }}>
         {results.length === 0 ? (
-          <p style={{ padding: "var(--space400) var(--space200)", textAlign: "center", color: "var(--text-subtlest)", fontSize: 13 }}>Aucun agent ne correspond.</p>
+          <p
+            style={{
+              padding: "var(--space400) var(--space200)",
+              textAlign: "center",
+              color: "var(--text-subtlest)",
+              fontSize: 13,
+            }}
+          >
+            Aucun agent ne correspond.
+          </p>
         ) : (
           <List isBordered aria-label="Liste des agents">
             {results.map((a) => (
@@ -193,7 +229,12 @@ function FiltresOptionBMobile({ initial }: { initial?: Filters }): ReactElement 
                 </ListItemAvatar>
                 <ListItemText primary={a.nom} secondary={`${a.societe} · ${a.diplome}`} />
                 <ListItemTrailing>
-                  <Tag label={DISPO_TAG[a.dispo].label} color={DISPO_TAG[a.dispo].color} appearance="subtle" shape="rounded" />
+                  <Tag
+                    label={DISPO_TAG[a.dispo].label}
+                    color={DISPO_TAG[a.dispo].color}
+                    appearance="subtle"
+                    shape="rounded"
+                  />
                 </ListItemTrailing>
               </ListItem>
             ))}
@@ -301,95 +342,127 @@ export const DesktopInteractions: Story = {
       await expect(dialog.getByRole("button", { name: "Langues" })).toBeInTheDocument();
     });
 
-    await step("cocher une option ACTIVE (compte > 0) réduit ou maintient les résultats", async () => {
-      const dialog = within(screen.getByRole("dialog"));
-      const before = rowCount();
-      await userEvent.click(dialog.getByRole("button", { name: "Langues" }));
-      // « Anglais » a un compte vivant > 0 sur la sélection initiale (option
-      // activée) ; « Français » y ressort à 0 → désactivée, non cochable.
-      const cb = dialog.getByRole("checkbox", { name: "Anglais" });
-      await userEvent.click(cb);
-      await expect(cb).toBeChecked();
-      await waitFor(() => expect(rowCount()).toBeLessThanOrEqual(before));
-    });
+    await step(
+      "cocher une option ACTIVE (compte > 0) réduit ou maintient les résultats",
+      async () => {
+        const dialog = within(screen.getByRole("dialog"));
+        const before = rowCount();
+        await userEvent.click(dialog.getByRole("button", { name: "Langues" }));
+        // « Anglais » a un compte vivant > 0 sur la sélection initiale (option
+        // activée) ; « Français » y ressort à 0 → désactivée, non cochable.
+        const cb = dialog.getByRole("checkbox", { name: "Anglais" });
+        await userEvent.click(cb);
+        await expect(cb).toBeChecked();
+        await waitFor(() => expect(rowCount()).toBeLessThanOrEqual(before));
+      }
+    );
 
-    await step("une seule case « Tout sélectionner / Tout désélectionner » en tête de la liste", async () => {
-      const dialog = within(screen.getByRole("dialog"));
-      const selectAll = () => dialog.getByRole("checkbox", { name: "Tout sélectionner" });
-      const clearAll = () => dialog.getByRole("checkbox", { name: "Tout désélectionner" });
-      // « Anglais » est la seule option cochable de la facette (« Français » est à 0) : tout est
-      // donc sélectionné → la case propose « Tout désélectionner » (cochée) ; l'autre libellé est absent.
-      await expect(clearAll()).toBeChecked();
-      await expect(dialog.queryByRole("checkbox", { name: "Tout sélectionner" })).toBeNull();
-      // La décocher vide la facette → la MÊME case redevient « Tout sélectionner ».
-      await userEvent.click(clearAll());
-      await waitFor(() => expect(selectAll()).not.toBeChecked());
-      await expect(dialog.queryByRole("checkbox", { name: "Tout désélectionner" })).toBeNull();
-      // Et la cocher re-sélectionne les options cochables.
-      await userEvent.click(selectAll());
-      await waitFor(() => expect(clearAll()).toBeChecked());
-    });
+    await step(
+      "une seule case « Tout sélectionner / Tout désélectionner » en tête de la liste",
+      async () => {
+        const dialog = within(screen.getByRole("dialog"));
+        const selectAll = () => dialog.getByRole("checkbox", { name: "Tout sélectionner" });
+        const clearAll = () => dialog.getByRole("checkbox", { name: "Tout désélectionner" });
+        // « Anglais » est la seule option cochable de la facette (« Français » est à 0) : tout est
+        // donc sélectionné → la case propose « Tout désélectionner » (cochée) ; l'autre libellé est absent.
+        await expect(clearAll()).toBeChecked();
+        await expect(dialog.queryByRole("checkbox", { name: "Tout sélectionner" })).toBeNull();
+        // La décocher vide la facette → la MÊME case redevient « Tout sélectionner ».
+        await userEvent.click(clearAll());
+        await waitFor(() => expect(selectAll()).not.toBeChecked());
+        await expect(dialog.queryByRole("checkbox", { name: "Tout désélectionner" })).toBeNull();
+        // Et la cocher re-sélectionne les options cochables.
+        await userEvent.click(selectAll());
+        await waitFor(() => expect(clearAll()).toBeChecked());
+      }
+    );
 
     await step("fermer le panneau avec Échap", async () => {
       await userEvent.keyboard("{Escape}");
-      await waitFor(() => expect(canvas.getByRole("button", { name: /Filtres,/ })).toHaveAttribute("aria-expanded", "false"));
+      await waitFor(() =>
+        expect(canvas.getByRole("button", { name: /Filtres,/ })).toHaveAttribute(
+          "aria-expanded",
+          "false"
+        )
+      );
     });
 
-    await step("tags actifs : facette nommée, compteur franc, corps = rouvre la facette, croix = facette entière", async () => {
-      const tags = () => within(canvas.getByRole("group", { name: "Filtres actifs" }));
-      // La facette est TOUJOURS nommée, suivie de « : » ; ≥ 2 valeurs → le seul compteur « 7 » (pas « 1re valeur +N »).
-      const secteurs = tags().getByRole("button", { name: "Secteurs, 7 valeurs" });
-      await expect(secteurs).toHaveTextContent(/^Secteurs\s:7$/);
-      await expect(tags().getByRole("button", { name: "Diplômes, SSIAP 2" })).toHaveTextContent(/^Diplômes\s:SSIAP 2$/);
-      // Le CORPS du tag rouvre le panneau sur la facette du tag.
-      await userEvent.click(secteurs);
-      await waitFor(() => expect(screen.getByRole("dialog")).toBeInTheDocument());
-      const dialog = within(screen.getByRole("dialog"));
-      await expect(dialog.getByRole("button", { name: /^Secteurs/ })).toHaveAttribute("aria-current", "true");
-      await expect(dialog.getByRole("checkbox", { name: "Industrie" })).toBeChecked();
-      await userEvent.click(dialog.getByRole("button", { name: "Voir les résultats" }));
-      await waitFor(() => expect(canvas.getByRole("button", { name: /Filtres,/ })).toHaveAttribute("aria-expanded", "false"));
-      // La CROIX efface la facette ENTIÈRE (les 7 valeurs), comme l'annonce le tag.
-      await userEvent.click(tags().getByRole("button", { name: "Retirer Secteurs" }));
-      await waitFor(() => expect(tags().queryByRole("button", { name: /^Secteurs/ })).toBeNull());
-    });
+    await step(
+      "tags actifs : facette nommée, compteur franc, corps = rouvre la facette, croix = facette entière",
+      async () => {
+        const tags = () => within(canvas.getByRole("group", { name: "Filtres actifs" }));
+        // La facette est TOUJOURS nommée, suivie de « : » ; ≥ 2 valeurs → le seul compteur « 7 » (pas « 1re valeur +N »).
+        const secteurs = tags().getByRole("button", { name: "Secteurs, 7 valeurs" });
+        await expect(secteurs).toHaveTextContent(/^Secteurs\s:7$/);
+        await expect(tags().getByRole("button", { name: "Diplômes, SSIAP 2" })).toHaveTextContent(
+          /^Diplômes\s:SSIAP 2$/
+        );
+        // Le CORPS du tag rouvre le panneau sur la facette du tag.
+        await userEvent.click(secteurs);
+        await waitFor(() => expect(screen.getByRole("dialog")).toBeInTheDocument());
+        const dialog = within(screen.getByRole("dialog"));
+        await expect(dialog.getByRole("button", { name: /^Secteurs/ })).toHaveAttribute(
+          "aria-current",
+          "true"
+        );
+        await expect(dialog.getByRole("checkbox", { name: "Industrie" })).toBeChecked();
+        await userEvent.click(dialog.getByRole("button", { name: "Voir les résultats" }));
+        await waitFor(() =>
+          expect(canvas.getByRole("button", { name: /Filtres,/ })).toHaveAttribute(
+            "aria-expanded",
+            "false"
+          )
+        );
+        // La CROIX efface la facette ENTIÈRE (les 7 valeurs), comme l'annonce le tag.
+        await userEvent.click(tags().getByRole("button", { name: "Retirer Secteurs" }));
+        await waitFor(() => expect(tags().queryByRole("button", { name: /^Secteurs/ })).toBeNull());
+      }
+    );
 
-    await step("rôles déclaratifs : deux rôles → deux jeux de facettes, sans littéral", async () => {
-      // Mêmes définitions FACET_DEFS → jeux différents selon le rôle (le point
-      // du recensement : le masquage vivait surtout dans les FILTRES).
-      const manager = facetsForRole("manager").map((d) => d.key);
-      const partenaire = facetsForRole("partenaire").map((d) => d.key);
-      await expect(manager).not.toEqual(partenaire);
-      await expect(manager.length).toBeGreaterThan(partenaire.length); // 11 > 6
-      await expect(manager).toContain("societe"); // Société/Agence réservé manager…
-      await expect(partenaire).not.toContain("societe"); // …absent au partenaire
-      await expect(partenaire).toContain("emploi"); // Emplois = capacité partagée
-      await expect(partenaire).not.toContain("contrat"); // Types de contrats → manager
-      // Client : aucune facette (la page n'existe pas dans sa navigation).
-      await expect(facetsForRole("client")).toHaveLength(0);
-      // Aucun littéral de rôle dans le composant d'AFFICHAGE : la visibilité
-      // vient du champ `roles`, jamais d'un test en dur.
-      await expect(/isPartner|isManager|role_code/.test(FiltresPanel.toString())).toBe(false);
-      await expect(/isPartner|isManager|role_code/.test(FiltresSheet.toString())).toBe(false);
-    });
+    await step(
+      "rôles déclaratifs : deux rôles → deux jeux de facettes, sans littéral",
+      async () => {
+        // Mêmes définitions FACET_DEFS → jeux différents selon le rôle (le point
+        // du recensement : le masquage vivait surtout dans les FILTRES).
+        const manager = facetsForRole("manager").map((d) => d.key);
+        const partenaire = facetsForRole("partenaire").map((d) => d.key);
+        await expect(manager).not.toEqual(partenaire);
+        await expect(manager.length).toBeGreaterThan(partenaire.length); // 11 > 6
+        await expect(manager).toContain("societe"); // Société/Agence réservé manager…
+        await expect(partenaire).not.toContain("societe"); // …absent au partenaire
+        await expect(partenaire).toContain("emploi"); // Emplois = capacité partagée
+        await expect(partenaire).not.toContain("contrat"); // Types de contrats → manager
+        // Client : aucune facette (la page n'existe pas dans sa navigation).
+        await expect(facetsForRole("client")).toHaveLength(0);
+        // Aucun littéral de rôle dans le composant d'AFFICHAGE : la visibilité
+        // vient du champ `roles`, jamais d'un test en dur.
+        await expect(/isPartner|isManager|role_code/.test(FiltresPanel.toString())).toBe(false);
+        await expect(/isPartner|isManager|role_code/.test(FiltresSheet.toString())).toBe(false);
+      }
+    );
 
-    await step("bascule manager → partenaire : l'interrupteur sous-traitants ne laisse aucun tag fantôme", async () => {
-      // Un manager active « Voir les agents sous-traitants » ; en repassant en
-      // partenaire (qui ne gère pas cet interrupteur), le critère ne doit être ni
-      // compté ni affiché. Le périmètre du partenaire vient du jeu de données
-      // (`agentsForRole`), pas de ce filtre.
-      const asManager: Filters = { ...emptyFilters(), sousTraitants: true };
-      await expect(totalActive(asManager)).toBe(1);
-      const asPartner = effectiveFilters(asManager, "partenaire");
-      await expect(asPartner.sousTraitants).toBe(false);
-      await expect(totalActive(asPartner)).toBe(0);
-      // Le jeu du partenaire : uniquement les sous-traitants de SA société.
-      const partner = agentsForRole("partenaire");
-      await expect(partner.length).toBeGreaterThan(0);
-      await expect(partner.every((a) => a.sousTraitant && a.societe === "Sous-traitant Vigilis")).toBe(true);
-      await expect(agentsForRole("manager")).toHaveLength(AGENTS.length);
-      await expect(agentsForRole(undefined)).toHaveLength(AGENTS.length);
-    });
+    await step(
+      "bascule manager → partenaire : l'interrupteur sous-traitants ne laisse aucun tag fantôme",
+      async () => {
+        // Un manager active « Voir les agents sous-traitants » ; en repassant en
+        // partenaire (qui ne gère pas cet interrupteur), le critère ne doit être ni
+        // compté ni affiché. Le périmètre du partenaire vient du jeu de données
+        // (`agentsForRole`), pas de ce filtre.
+        const asManager: Filters = { ...emptyFilters(), sousTraitants: true };
+        await expect(totalActive(asManager)).toBe(1);
+        const asPartner = effectiveFilters(asManager, "partenaire");
+        await expect(asPartner.sousTraitants).toBe(false);
+        await expect(totalActive(asPartner)).toBe(0);
+        // Le jeu du partenaire : uniquement les sous-traitants de SA société.
+        const partner = agentsForRole("partenaire");
+        await expect(partner.length).toBeGreaterThan(0);
+        await expect(
+          partner.every((a) => a.sousTraitant && a.societe === "Sous-traitant Vigilis")
+        ).toBe(true);
+        await expect(agentsForRole("manager")).toHaveLength(AGENTS.length);
+        await expect(agentsForRole(undefined)).toHaveLength(AGENTS.length);
+      }
+    );
   },
 };
 
@@ -404,20 +477,23 @@ export const DesktopPartenaireInteractions: Story = {
     const canvas = within(canvasElement);
     const rows = () => Array.from(canvasElement.querySelectorAll<HTMLElement>("tbody tr"));
 
-    await step("périmètre partenaire : uniquement des agents de « Sous-traitant Vigilis »", async () => {
-      // Les critères hérités du manager (société, secteurs, contrat) sont neutralisés,
-      // le diplôme « SSIAP 2 » reste : on remet à zéro pour voir tout le périmètre.
-      await userEvent.click(canvas.getByRole("button", { name: "Réinitialiser" }));
-      await waitFor(() => expect(rows().length).toBeGreaterThan(0));
-      const texts = rows().map((r) => r.textContent ?? "");
-      await expect(texts.every((t) => t.includes("Sous-traitant Vigilis"))).toBe(true);
-      // Aucun salarié de Comète Sécurité ni d'Agence Lyon.
-      await expect(texts.some((t) => t.includes("Comète Sécurité"))).toBe(false);
-      await expect(texts.some((t) => t.includes("Agence Lyon"))).toBe(false);
-      await expect(rows()).toHaveLength(agentsForRole("partenaire").length);
-      // Un périmètre qui ne se réduit pas à deux lignes : de quoi voir filtrer.
-      await expect(rows().length).toBeGreaterThanOrEqual(8);
-    });
+    await step(
+      "périmètre partenaire : uniquement des agents de « Sous-traitant Vigilis »",
+      async () => {
+        // Les critères hérités du manager (société, secteurs, contrat) sont neutralisés,
+        // le diplôme « SSIAP 2 » reste : on remet à zéro pour voir tout le périmètre.
+        await userEvent.click(canvas.getByRole("button", { name: "Réinitialiser" }));
+        await waitFor(() => expect(rows().length).toBeGreaterThan(0));
+        const texts = rows().map((r) => r.textContent ?? "");
+        await expect(texts.every((t) => t.includes("Sous-traitant Vigilis"))).toBe(true);
+        // Aucun salarié de Comète Sécurité ni d'Agence Lyon.
+        await expect(texts.some((t) => t.includes("Comète Sécurité"))).toBe(false);
+        await expect(texts.some((t) => t.includes("Agence Lyon"))).toBe(false);
+        await expect(rows()).toHaveLength(agentsForRole("partenaire").length);
+        // Un périmètre qui ne se réduit pas à deux lignes : de quoi voir filtrer.
+        await expect(rows().length).toBeGreaterThanOrEqual(8);
+      }
+    );
 
     await step("aucun tag de critère « Sous-traitants » en rôle partenaire", async () => {
       await expect(canvas.queryByRole("button", { name: /Retirer Sous-traitants/ })).toBeNull();
@@ -437,28 +513,46 @@ export const MobileInteractions: Story = {
 
     await step("ouvrir la feuille de filtres", async () => {
       await userEvent.click(canvas.getByRole("button", { name: /Filtres,/ }));
-      await waitFor(() => expect(screen.getByRole("dialog", { name: "Filtres" })).toBeInTheDocument());
+      await waitFor(() =>
+        expect(screen.getByRole("dialog", { name: "Filtres" })).toBeInTheDocument()
+      );
     });
 
-    await step("enregistrer les filtres courants (proposé seulement s'ils ne sont pas déjà enregistrés)", async () => {
-      // Distinct des critères : l'action vit dans le pied, pas dans la liste.
-      await expect(drawer().queryByRole("button", { name: /^Enregistrer ces filtres/ })).toBeNull();
-      // L'explication n'est pas affichée en permanence : seulement à l'étape « nommer ».
-      await expect(drawer().queryByText(/Vous les retrouverez ensuite/)).toBeNull();
-      await userEvent.click(drawer().getByRole("button", { name: /Donner un nom à ces filtres/ }));
-      await expect(drawer().getByText(/Vous les retrouverez ensuite/)).toBeInTheDocument();
-      await userEvent.type(drawer().getByRole("textbox", { name: "Nom de l'enregistrement" }), "Mes filtres");
-      await userEvent.click(drawer().getByRole("button", { name: "Enregistrer" }));
-      // De retour à la racine : les filtres courants correspondent désormais à
-      // l'enregistrement créé → son nom apparaît sur la ligne « Filtres
-      // enregistrés » et l'action d'enregistrement disparaît du pied.
-      await waitFor(() => expect(drawer().getByText("Mes filtres")).toBeInTheDocument());
-      await expect(drawer().queryByRole("button", { name: /Donner un nom à ces filtres/ })).toBeNull();
-    });
+    await step(
+      "enregistrer les filtres courants (proposé seulement s'ils ne sont pas déjà enregistrés)",
+      async () => {
+        // Distinct des critères : l'action vit dans le pied, pas dans la liste.
+        await expect(
+          drawer().queryByRole("button", { name: /^Enregistrer ces filtres/ })
+        ).toBeNull();
+        // L'explication n'est pas affichée en permanence : seulement à l'étape « nommer ».
+        await expect(drawer().queryByText(/Vous les retrouverez ensuite/)).toBeNull();
+        await userEvent.click(
+          drawer().getByRole("button", { name: /Donner un nom à ces filtres/ })
+        );
+        await expect(drawer().getByText(/Vous les retrouverez ensuite/)).toBeInTheDocument();
+        await userEvent.type(
+          drawer().getByRole("textbox", { name: "Nom de l'enregistrement" }),
+          "Mes filtres"
+        );
+        await userEvent.click(drawer().getByRole("button", { name: "Enregistrer" }));
+        // De retour à la racine : les filtres courants correspondent désormais à
+        // l'enregistrement créé → son nom apparaît sur la ligne « Filtres
+        // enregistrés » et l'action d'enregistrement disparaît du pied.
+        await waitFor(() => expect(drawer().getByText("Mes filtres")).toBeInTheDocument());
+        await expect(
+          drawer().queryByRole("button", { name: /Donner un nom à ces filtres/ })
+        ).toBeNull();
+      }
+    );
 
     await step("drill-down dans une facette puis retour", async () => {
       await userEvent.click(drawer().getByRole("button", { name: /Secteurs/ }));
-      await waitFor(() => expect(drawer().getByRole("checkbox", { name: /Tout (dés)?sélectionner/ })).toBeInTheDocument());
+      await waitFor(() =>
+        expect(
+          drawer().getByRole("checkbox", { name: /Tout (dés)?sélectionner/ })
+        ).toBeInTheDocument()
+      );
       // UNE seule case à cocher d'action de masse, au même endroit, qui change de rôle :
       // « Tout sélectionner » tant que tout n'est pas coché (tiret si partiel), puis
       // « Tout désélectionner » une fois tout coché.
@@ -472,7 +566,9 @@ export const MobileInteractions: Story = {
       await expect(selectAll()).toBeEnabled();
       await expect(drawer().queryByRole("button", { name: /Tout (dés)?sélectionner/ })).toBeNull();
       // Cocher une option → sélection partielle : la case reste « Tout sélectionner » (tiret).
-      const firstEnabled = drawer().getAllByRole("checkbox").find((c) => !(c as HTMLInputElement).disabled && c !== selectAll());
+      const firstEnabled = drawer()
+        .getAllByRole("checkbox")
+        .find((c) => !(c as HTMLInputElement).disabled && c !== selectAll());
       await expect(firstEnabled).toBeDefined();
       if (firstEnabled) await userEvent.click(firstEnabled);
       await waitFor(() => expect((selectAll() as HTMLInputElement).indeterminate).toBe(true));
@@ -484,7 +580,9 @@ export const MobileInteractions: Story = {
       await userEvent.click(clearAll());
       await waitFor(() => expect(selectAll()).not.toBeChecked());
       await userEvent.click(drawer().getByRole("button", { name: "Retour" }));
-      await waitFor(() => expect(drawer().getByRole("button", { name: /Secteurs/ })).toBeInTheDocument());
+      await waitFor(() =>
+        expect(drawer().getByRole("button", { name: /Secteurs/ })).toBeInTheDocument()
+      );
     });
 
     await step("« Voir N agents » ferme la feuille", async () => {

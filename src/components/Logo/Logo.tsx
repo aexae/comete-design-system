@@ -77,7 +77,12 @@ export function Logo({
 
   return (
     <span className={className} {...ariaProps} style={style}>
-      <LogoComponent appearance={appearance} format={format} taglineAlign={taglineAlign} size={size} />
+      <LogoComponent
+        appearance={appearance}
+        format={format}
+        taglineAlign={taglineAlign}
+        size={size}
+      />
     </span>
   );
 }

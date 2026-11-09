@@ -11,11 +11,7 @@ import { TablePager } from "./TablePager.js";
 import { Select } from "../Select/index.js";
 import { Skeleton } from "../Skeleton/index.js";
 import { DataStateMessage } from "../_states/DataStateMessage.js";
-import {
-  DensityProvider,
-  useDensity,
-  type Density,
-} from "../../contexts/DensityContext.js";
+import { DensityProvider, useDensity, type Density } from "../../contexts/DensityContext.js";
 import styles from "./Table.module.css";
 
 // `process` n'est pas typé ici (le DS build avec `types: []`, sans @types/node).
@@ -474,11 +470,7 @@ function TableRoot({
   // Wrappe dans un DensityProvider explicite pour que les cellules qui
   // liraient elles-mêmes le contexte (rare, mais possible) voient la
   // même valeur que ce qu'on projette via data-density.
-  return density ? (
-    <DensityProvider density={density}>{framed}</DensityProvider>
-  ) : (
-    framed
-  );
+  return density ? <DensityProvider density={density}>{framed}</DensityProvider> : framed;
 }
 
 TableRoot.displayName = "Table";
@@ -487,16 +479,9 @@ TableRoot.displayName = "Table";
 // TableHead / TableBody
 
 /** TableHead — `<thead>` contenant les `TableRow` d'en-tête. */
-export function TableHead({
-  children,
-  className,
-  style,
-}: TableHeadProps): ReactElement {
+export function TableHead({ children, className, style }: TableHeadProps): ReactElement {
   return (
-    <thead
-      className={[styles.head, className].filter(Boolean).join(" ")}
-      style={style}
-    >
+    <thead className={[styles.head, className].filter(Boolean).join(" ")} style={style}>
       {children}
     </thead>
   );
@@ -567,11 +552,7 @@ export function TableBody({
       <tr>
         <td colSpan={columnCount} className={styles.stateCell}>
           {emptyState ?? (
-            <DataStateMessage
-              kind="empty"
-              title={emptyTitle}
-              description={emptyDescription}
-            />
+            <DataStateMessage kind="empty" title={emptyTitle} description={emptyDescription} />
           )}
         </td>
       </tr>
@@ -644,7 +625,7 @@ export function TableRow({
       // eslint-disable-next-line no-console
       console.warn(
         "TableRow : `href` et `onPress` sont mutuellement exclusifs — " +
-          "`href` (navigation) l'emporte.",
+          "`href` (navigation) l'emporte."
       );
     }
     if (onClick) {
@@ -654,7 +635,7 @@ export function TableRow({
           ? "TableRow : `onClick` est déprécié et ignoré quand `href`/`onPress` " +
               "est fourni — n'en garder qu'un."
           : "TableRow : `onClick` est déprécié — préférez `href` (navigation) ou " +
-              "`onPress` (action) pour une ligne cliquable accessible au clavier.",
+              "`onPress` (action) pour une ligne cliquable accessible au clavier."
       );
     }
   }
@@ -685,14 +666,14 @@ export function TableRow({
         console.warn(
           "TableRow : `href`/`onPress` posé mais aucune `TableCell` éligible " +
             "comme ancre (ligne vide ou cellule 100 % custom) — la ligne ne " +
-            "sera pas activable au clavier.",
+            "sera pas activable au clavier."
         );
       }
       if (explicitCount > 1) {
         // eslint-disable-next-line no-console
         console.warn(
           "TableRow : plusieurs cellules `isRowAnchor` — seule la première " +
-            "est utilisée comme ancre.",
+            "est utilisée comme ancre."
         );
       }
     }
@@ -703,7 +684,7 @@ export function TableRow({
           ? cloneElement(child as ReactElement<TableCellProps>, {
               isRowAnchor: true,
             })
-          : child,
+          : child
       );
     }
   }
@@ -717,9 +698,8 @@ export function TableRow({
     return sel !== null && sel.type === "Range" && sel.toString().length > 0;
   };
   const hitsInternalInteractive = (target: Element): boolean =>
-    target.closest(
-      'a,button,input,select,textarea,label,[role="menuitem"],[role="checkbox"]',
-    ) !== null;
+    target.closest('a,button,input,select,textarea,label,[role="menuitem"],[role="checkbox"]') !==
+    null;
 
   // Navigation (`href`) : rejoue le clic sur le lien en préservant les
   // modificateurs → le navigateur ouvre nativement un onglet (Ctrl/⌘) ou une
@@ -736,7 +716,7 @@ export function TableRow({
           ctrlKey: e.ctrlKey,
           metaKey: e.metaKey,
           shiftKey: e.shiftKey,
-        }),
+        })
       );
     } else {
       anchor.click();
@@ -867,8 +847,7 @@ export function TableHeaderCell({
   const mergedStyle: CSSProperties = width !== undefined ? { ...style, width } : (style ?? {});
   // Colonne d'actions : centrée par défaut (l'alignement par défaut "left"
   // n'a pas de sens pour une colonne d'icônes d'action).
-  const resolvedAlign: TableAlign =
-    isActionColumn && align === "left" ? "center" : align;
+  const resolvedAlign: TableAlign = isActionColumn && align === "left" ? "center" : align;
 
   const handleClick = () => {
     if (!isSortable || !onSortChange) return;
@@ -888,14 +867,13 @@ export function TableHeaderCell({
   // atténuée ; quand un tri est actif, la flèche reflète sa direction.
   const sortIcon = sortDirection === "descending" ? "KeyboardArrowDown" : "KeyboardArrowUp";
 
-  const ariaSort: React.AriaAttributes["aria-sort"] =
-    !isSortable
-      ? undefined
-      : sortDirection === "ascending"
-        ? "ascending"
-        : sortDirection === "descending"
-          ? "descending"
-          : "none";
+  const ariaSort: React.AriaAttributes["aria-sort"] = !isSortable
+    ? undefined
+    : sortDirection === "ascending"
+      ? "ascending"
+      : sortDirection === "descending"
+        ? "descending"
+        : "none";
 
   return (
     <th
@@ -938,11 +916,7 @@ TableHeaderCell.displayName = "TableHeaderCell";
 
 const DEFAULT_ROWS_PER_PAGE_OPTIONS = [25, 50, 100];
 
-function defaultLabelDisplayedRows({
-  from,
-  to,
-  count,
-}: TablePaginationLabelInfo): string {
+function defaultLabelDisplayedRows({ from, to, count }: TablePaginationLabelInfo): string {
   return `${from} à ${to} sur ${count}`;
 }
 

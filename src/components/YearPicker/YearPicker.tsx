@@ -1,11 +1,7 @@
 // YearPicker — Comète Design System
 // Sélecteur d'année : deux modes (saisie / navigation) × (single / range).
 import { useEffect, useRef, useState, type ReactElement, type CSSProperties } from "react";
-import {
-  CalendarDate,
-  today,
-  getLocalTimeZone,
-} from "@internationalized/date";
+import { CalendarDate, today, getLocalTimeZone } from "@internationalized/date";
 import { Dialog as AriaDialog, DialogTrigger } from "react-aria-components";
 import type { RangeValue } from "react-aria-components";
 import { Button } from "../Button/Button.js";
@@ -84,10 +80,7 @@ export interface RangeYearPickerProps extends YearPickerBaseProps {
    * Callback appelé à chaque changement de plage.
    * `undefined` pour les deux = effacé.
    */
-  onChange?: (
-    startYear: number | undefined,
-    endYear: number | undefined,
-  ) => void;
+  onChange?: (startYear: number | undefined, endYear: number | undefined) => void;
 }
 
 /** Union discriminée — TypeScript infère le bon type selon `isRange`. */
@@ -124,18 +117,10 @@ export type YearPickerProps = SingleYearPickerProps | RangeYearPickerProps;
  * ```
  */
 export function YearPicker(props: YearPickerProps): ReactElement {
-  const inner = props.isRange ? (
-    <RangeYearPicker {...props} />
-  ) : (
-    <SingleYearPicker {...props} />
-  );
+  const inner = props.isRange ? <RangeYearPicker {...props} /> : <SingleYearPicker {...props} />;
   // Densité : si fournie, enveloppe le rendu dans un DensityProvider — les
   // InputContainer profonds la lisent via le contexte.
-  return props.density ? (
-    <DensityProvider density={props.density}>{inner}</DensityProvider>
-  ) : (
-    inner
-  );
+  return props.density ? <DensityProvider density={props.density}>{inner}</DensityProvider> : inner;
 }
 
 YearPicker.displayName = "YearPicker";
@@ -262,7 +247,8 @@ function SingleYearPicker({
       data-invalid={isInvalid || undefined}
       style={style}
     >
-      <InputContainer isBorderless={!isEditable}
+      <InputContainer
+        isBorderless={!isEditable}
         appearance={appearance}
         isDisabled={isDisabled}
         isInvalid={isInvalid}
@@ -281,13 +267,7 @@ function SingleYearPicker({
               type="text"
               inputMode="numeric"
               className={styles.yearInput}
-              value={
-                isInputFocused
-                  ? inputValue
-                  : year !== undefined
-                    ? String(year)
-                    : ""
-              }
+              value={isInputFocused ? inputValue : year !== undefined ? String(year) : ""}
               onChange={(e) => setInputValue(e.target.value)}
               onClick={() => !isDisabled && setIsOpen(true)}
               onFocus={handleInputFocus}
@@ -355,11 +335,7 @@ function SingleYearPicker({
               >
                 {resolvedYear}
               </Button>
-              <Popover
-                triggerRef={containerRef}
-                placement="bottom start"
-                shouldFlip={false}
-              >
+              <Popover triggerRef={containerRef} placement="bottom start" shouldFlip={false}>
                 <AriaDialog className={styles.dialog}>
                   <Calendar
                     appearance="year"
@@ -417,9 +393,7 @@ function RangeYearPicker({
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Popover open state — un seul popover ouvert à la fois
-  const [openPopover, setOpenPopover] = useState<
-    "start" | "end" | "range" | null
-  >(null);
+  const [openPopover, setOpenPopover] = useState<"start" | "end" | "range" | null>(null);
 
   // Click outside : ferme le popover + blur de l'input focus.
   useEffect(() => {
@@ -449,8 +423,7 @@ function RangeYearPicker({
   // -- Helper : commit new range (auto-swap if start > end) --
 
   const commitRange = (newStart: number, newEnd: number) => {
-    const [s, e] =
-      newStart > newEnd ? [newEnd, newStart] : [newStart, newEnd];
+    const [s, e] = newStart > newEnd ? [newEnd, newStart] : [newStart, newEnd];
     onChange?.(s, e);
   };
 
@@ -578,14 +551,13 @@ function RangeYearPicker({
     <div
       className={rootClassNames}
       ref={containerRef}
-      aria-label={
-        ariaLabel ?? `Plage d'années : ${resolvedStart} à ${resolvedEnd}`
-      }
+      aria-label={ariaLabel ?? `Plage d'années : ${resolvedStart} à ${resolvedEnd}`}
       data-disabled={isDisabled || undefined}
       data-invalid={effectiveInvalid || undefined}
       style={style}
     >
-      <InputContainer isBorderless={!isEditable}
+      <InputContainer
+        isBorderless={!isEditable}
         appearance={appearance}
         isDisabled={isDisabled}
         isInvalid={effectiveInvalid}
@@ -597,13 +569,7 @@ function RangeYearPicker({
               type="text"
               inputMode="numeric"
               className={styles.yearInput}
-              value={
-                startFocused
-                  ? startInput
-                  : startYear !== undefined
-                    ? String(startYear)
-                    : ""
-              }
+              value={startFocused ? startInput : startYear !== undefined ? String(startYear) : ""}
               onChange={(e) => setStartInput(e.target.value)}
               onClick={() => !isDisabled && setOpenPopover("range")}
               onFocus={handleStartInputFocus}
@@ -611,9 +577,7 @@ function RangeYearPicker({
               onKeyDown={handleInputKeyDown}
               disabled={isDisabled}
               aria-label={
-                startYear !== undefined
-                  ? `Année de début : ${startYear}`
-                  : "Année de début"
+                startYear !== undefined ? `Année de début : ${startYear}` : "Année de début"
               }
               placeholder="AAAA"
             />
@@ -626,24 +590,14 @@ function RangeYearPicker({
               type="text"
               inputMode="numeric"
               className={styles.yearInput}
-              value={
-                endFocused
-                  ? endInput
-                  : endYear !== undefined
-                    ? String(endYear)
-                    : ""
-              }
+              value={endFocused ? endInput : endYear !== undefined ? String(endYear) : ""}
               onChange={(e) => setEndInput(e.target.value)}
               onClick={() => !isDisabled && setOpenPopover("range")}
               onFocus={handleEndInputFocus}
               onBlur={handleEndInputBlur}
               onKeyDown={handleInputKeyDown}
               disabled={isDisabled}
-              aria-label={
-                endYear !== undefined
-                  ? `Année de fin : ${endYear}`
-                  : "Année de fin"
-              }
+              aria-label={endYear !== undefined ? `Année de fin : ${endYear}` : "Année de fin"}
               placeholder="AAAA"
             />
 
@@ -670,8 +624,7 @@ function RangeYearPicker({
                 className={styles.calendarButton}
                 isDisabled={isDisabled}
                 onPress={() =>
-                  !isDisabled &&
-                  setOpenPopover((o) => (o === "range" ? null : "range"))
+                  !isDisabled && setOpenPopover((o) => (o === "range" ? null : "range"))
                 }
                 aria-label="Ouvrir le sélecteur d'années"
               />
@@ -689,9 +642,7 @@ function RangeYearPicker({
               {/* Bouton année de début */}
               <DialogTrigger
                 isOpen={openPopover === "start"}
-                onOpenChange={(open) =>
-                  setOpenPopover(open ? "start" : null)
-                }
+                onOpenChange={(open) => setOpenPopover(open ? "start" : null)}
               >
                 <Button
                   appearance="subtle"
@@ -701,11 +652,7 @@ function RangeYearPicker({
                 >
                   {resolvedStart}
                 </Button>
-                <Popover
-                  triggerRef={containerRef}
-                  placement="bottom start"
-                  shouldFlip={false}
-                >
+                <Popover triggerRef={containerRef} placement="bottom start" shouldFlip={false}>
                   <AriaDialog className={styles.dialog}>
                     {calendars === 2 ? renderRangeCalendar() : renderSingleStartCalendar()}
                   </AriaDialog>
@@ -719,9 +666,7 @@ function RangeYearPicker({
               {/* Bouton année de fin */}
               <DialogTrigger
                 isOpen={openPopover === "end"}
-                onOpenChange={(open) =>
-                  setOpenPopover(open ? "end" : null)
-                }
+                onOpenChange={(open) => setOpenPopover(open ? "end" : null)}
               >
                 <Button
                   appearance="subtle"
@@ -731,11 +676,7 @@ function RangeYearPicker({
                 >
                   {resolvedEnd}
                 </Button>
-                <Popover
-                  triggerRef={containerRef}
-                  placement="bottom start"
-                  shouldFlip={false}
-                >
+                <Popover triggerRef={containerRef} placement="bottom start" shouldFlip={false}>
                   <AriaDialog className={styles.dialog}>
                     {calendars === 2 ? renderRangeCalendar() : renderSingleEndCalendar()}
                   </AriaDialog>
@@ -756,11 +697,7 @@ function RangeYearPicker({
                 isDisabled={isDisabled}
                 aria-label="Ouvrir le sélecteur d'années"
               />
-              <Popover
-                triggerRef={containerRef}
-                placement="bottom start"
-                shouldFlip={false}
-              >
+              <Popover triggerRef={containerRef} placement="bottom start" shouldFlip={false}>
                 <AriaDialog className={styles.dialog}>
                   {calendars === 2 ? renderRangeCalendar() : renderSingleStartCalendar()}
                 </AriaDialog>

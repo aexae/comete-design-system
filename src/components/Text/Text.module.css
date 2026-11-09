@@ -8,39 +8,85 @@
  * Color
  * --------------------------------------------------------------------- */
 
-.color-default { color: var(--text-default); }
-.color-subtle { color: var(--text-subtle); }
-.color-subtlest { color: var(--text-subtlest); }
-.color-disabled { color: var(--text-disabled); }
-.color-inverted { color: var(--text-inverted); }
-.color-comete { color: var(--text-comete); }
-.color-brand { color: var(--text-brand); }
-.color-accentPurple { color: var(--text-accent-purple); }
-.color-accentTeal { color: var(--text-accent-teal); }
-.color-accentTurquoise { color: var(--text-accent-turquoise); }
-.color-accentMagenta { color: var(--text-accent-magenta); }
-.color-accentBlueGrey { color: var(--text-accent-blue-grey); }
-.color-success { color: var(--text-success); }
-.color-information { color: var(--text-information); }
-.color-warning { color: var(--text-warning); }
-.color-critical { color: var(--text-critical); }
-.color-link { color: var(--text-link-default); }
+.color-default {
+  color: var(--text-default);
+}
+.color-subtle {
+  color: var(--text-subtle);
+}
+.color-subtlest {
+  color: var(--text-subtlest);
+}
+.color-disabled {
+  color: var(--text-disabled);
+}
+.color-inverted {
+  color: var(--text-inverted);
+}
+.color-comete {
+  color: var(--text-comete);
+}
+.color-brand {
+  color: var(--text-brand);
+}
+.color-accentPurple {
+  color: var(--text-accent-purple);
+}
+.color-accentTeal {
+  color: var(--text-accent-teal);
+}
+.color-accentTurquoise {
+  color: var(--text-accent-turquoise);
+}
+.color-accentMagenta {
+  color: var(--text-accent-magenta);
+}
+.color-accentBlueGrey {
+  color: var(--text-accent-blue-grey);
+}
+.color-success {
+  color: var(--text-success);
+}
+.color-information {
+  color: var(--text-information);
+}
+.color-warning {
+  color: var(--text-warning);
+}
+.color-critical {
+  color: var(--text-critical);
+}
+.color-link {
+  color: var(--text-link-default);
+}
 
 /* -----------------------------------------------------------------------
  * Align
  * --------------------------------------------------------------------- */
 
-.align-start { text-align: start; }
-.align-center { text-align: center; }
-.align-end { text-align: end; }
+.align-start {
+  text-align: start;
+}
+.align-center {
+  text-align: center;
+}
+.align-end {
+  text-align: end;
+}
 
 /* -----------------------------------------------------------------------
  * Decoration
  * --------------------------------------------------------------------- */
 
-.underline { text-decoration: underline; }
-.italic { font-style: italic; }
-.noWrap { white-space: nowrap; }
+.underline {
+  text-decoration: underline;
+}
+.italic {
+  font-style: italic;
+}
+.noWrap {
+  white-space: nowrap;
+}
 
 /* -----------------------------------------------------------------------
  * Truncation (maxLines)

@@ -7,7 +7,7 @@ allowBuilds:
   unrs-resolver: false
 
 minimumReleaseAgeExclude:
-  - '@aexae/comete-design-tokens'
-  - '@aexae/comete-icons'
-  - '@aexae/comete-logos'
-  - '@aexae/comete-illustrations'
+  - "@aexae/comete-design-tokens"
+  - "@aexae/comete-icons"
+  - "@aexae/comete-logos"
+  - "@aexae/comete-illustrations"

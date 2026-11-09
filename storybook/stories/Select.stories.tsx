@@ -6,10 +6,8 @@ import type { SelectItems } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Data
@@ -55,19 +53,16 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le sélecteur permet de choisir une valeur parmi une liste d'options dans un menu déroulant. Il convient lorsque l'espace est limité ou que le nombre d'options dépasse ce qu'un groupe de radios peut afficher confortablement." },
+      description: {
+        component:
+          "Le sélecteur permet de choisir une valeur parmi une liste d'options dans un menu déroulant. Il convient lorsque l'espace est limité ou que le nombre d'options dépasse ce qu'un groupe de radios peut afficher confortablement.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
             <GuidelinesFlat
               doExample={{
-                example: (
-                  <Select
-                    label="Pays"
-                    placeholder="Choisir un pays"
-                    items={COUNTRIES}
-                  />
-                ),
+                example: <Select label="Pays" placeholder="Choisir un pays" items={COUNTRIES} />,
                 caption: "Sélecteur avec label et placeholder explicites.",
               }}
               dontExample={{
@@ -82,8 +77,7 @@ const meta = {
                     <Radio value="us" label="États-Unis" />
                   </RadioGroup>
                 ),
-                caption:
-                  "Options nombreuses affichées en radios → préférer un Select.",
+                caption: "Options nombreuses affichées en radios → préférer un Select.",
               }}
               when={[
                 "Choisir une valeur parmi une liste finie qui gagne à être repliée (pays, statut, catégorie).",
@@ -234,7 +228,13 @@ export const AllStates: Story = {
       <Select items={COUNTRIES} label="Normal" />
       <Select items={COUNTRIES} label="Avec valeur" value="fr" />
       <Select items={COUNTRIES} label="Requis" isRequired />
-      <Select items={COUNTRIES} label="Invalide" isInvalid message="Erreur" messageType="critical" />
+      <Select
+        items={COUNTRIES}
+        label="Invalide"
+        isInvalid
+        message="Erreur"
+        messageType="critical"
+      />
       <Select items={COUNTRIES} label="Désactivé" isDisabled value="fr" />
       <Select items={COUNTRIES} label="Chargement" isLoading />
       <Select items={COUNTRIES} label="Clearable" value="fr" isClearable />

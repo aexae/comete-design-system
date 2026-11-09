@@ -14,7 +14,13 @@ import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { readFileSync } from "node:fs";
 import { renderIcon, availableIconNames, type IconVariant, type IconSpacing } from "./icons.ts";
-import { renderLogo, type LogoAppearance, type LogoFormat, type LogoProduct, type LogoTaglineAlign } from "./logos.ts";
+import {
+  renderLogo,
+  type LogoAppearance,
+  type LogoFormat,
+  type LogoProduct,
+  type LogoTaglineAlign,
+} from "./logos.ts";
 import { loadTokens } from "./tokens.ts";
 import { toDataUri, csvCell, POWERBI_URL_LIMIT, COLOR_PLACEHOLDER } from "./datauri.ts";
 import { annotateTheme, buildTheme, unmappedColors } from "./theme.ts";
@@ -114,15 +120,22 @@ export async function build(): Promise<Report> {
       const { uri, length, overLimit } = toDataUri(svg);
       if (overLimit) oversized.push(`${entry.name}/${variant} (${length})`);
       write(`svg/icons/${variant}/${entry.name}.svg`, svg);
-      iconRows.push([entry.name, variant, entry.usage, String(iconsConfig.size), uri, String(length)]);
-
+      iconRows.push([
+        entry.name,
+        variant,
+        entry.usage,
+        String(iconsConfig.size),
+        uri,
+        String(length),
+      ]);
     }
   }
 
   for (const set of iconsConfig.coloredSets ?? []) {
     const token = `--icon-${set.color.replace(/^icon-/, "")}`;
     const hex = tokens.get(token);
-    if (hex === undefined) throw new Error(`Token de couleur inconnu pour le jeu ${set.dir} : ${token}`);
+    if (hex === undefined)
+      throw new Error(`Token de couleur inconnu pour le jeu ${set.dir} : ${token}`);
     const missingNames = set.names.filter((n) => !available.has(n as never));
     if (missingNames.length > 0) {
       throw new Error(`Jeu ${set.dir} : icônes absentes du package : ${missingNames.join(", ")}`);
@@ -138,13 +151,21 @@ export async function build(): Promise<Report> {
       write(`svg/icons/${set.dir}/${name}.svg`, svg);
     }
   }
-  writeCsv("icons.csv", ["name", "variant", "usage", "size", "svg_datauri", "uri_length"], iconRows);
+  writeCsv(
+    "icons.csv",
+    ["name", "variant", "usage", "size", "svg_datauri", "uri_length"],
+    iconRows
+  );
 
   // ---- Couleurs sémantiques, pré-encodées pour SUBSTITUTE() ---------------
   const colorRows: string[][] = [];
   for (const [token, value] of [...tokens].sort()) {
     if (!token.startsWith("--icon-") || !/^#[0-9a-fA-F]{6}$/.test(value)) continue;
-    colorRows.push([token.replace("--icon-", ""), value.toUpperCase(), value.replace("#", "%23").toUpperCase()]);
+    colorRows.push([
+      token.replace("--icon-", ""),
+      value.toUpperCase(),
+      value.replace("#", "%23").toUpperCase(),
+    ]);
   }
   writeCsv("colors.csv", ["name", "hex", "dax_value"], colorRows);
 
@@ -172,23 +193,41 @@ export async function build(): Promise<Report> {
       write(`logos/svg/${slug}.svg`, rendered.svg);
       const { uri, length, overLimit } = toDataUri(rendered.svg);
       if (overLimit) oversized.push(`${slug} (${length})`);
-      logoRows.push([slug, entry.product, entry.format, appearance, String(rendered.width), String(rendered.height), uri, String(length)]);
+      logoRows.push([
+        slug,
+        entry.product,
+        entry.format,
+        appearance,
+        String(rendered.width),
+        String(rendered.height),
+        uri,
+        String(length),
+      ]);
       logoCount += 1;
     }
   }
-  writeCsv("logos.csv", ["name", "product", "format", "appearance", "width", "height", "svg_datauri", "uri_length"], logoRows);
+  writeCsv(
+    "logos.csv",
+    ["name", "product", "format", "appearance", "width", "height", "svg_datauri", "uri_length"],
+    logoRows
+  );
 
   // ---- Thème --------------------------------------------------------------
   const themeWarnings: string[] = [];
   // La version du theme-base est reprise dans le nom importé : c'est le seul
   // moyen fiable, côté Desktop, de savoir quelle version du thème est active.
-  const baseName = (readConfig<{ name?: string }>("theme-base.json").name ?? "").replace("Comète BI ", "");
+  const baseName = (readConfig<{ name?: string }>("theme-base.json").name ?? "").replace(
+    "Comète BI ",
+    ""
+  );
   for (const mode of ["light", "dark"] as const) {
     const modeTokens = loadTokens(mode);
     const label = `${mode === "light" ? "Comète BI clair" : "Comète BI sombre"} ${baseName}`.trim();
     const { theme, missing } = buildTheme(modeTokens, mode, label);
     themeWarnings.push(...missing.map((m) => `${mode}: token manquant ${m}`));
-    themeWarnings.push(...unmappedColors(theme, modeTokens).map((c) => `${mode}: couleur hors tokens ${c}`));
+    themeWarnings.push(
+      ...unmappedColors(theme, modeTokens).map((c) => `${mode}: couleur hors tokens ${c}`)
+    );
     write(`theme/comete-bi-${mode}.json`, JSON.stringify(theme, null, 2) + "\n");
     // Version annotée (JSONC) : chaque couleur mappée porte le nom de son token.
     write(`theme/comete-bi-${mode}.annotated.jsonc`, annotateTheme(theme, mode));
@@ -232,19 +271,22 @@ export async function build(): Promise<Report> {
   };
 
   // ---- Documentation ------------------------------------------------------
-  write("README.md", renderReadme({
-    iconCount: entries.length,
-    notes: iconsConfig.notes ?? [],
-    statusColors,
-    seriesColors,
-    semanticColors,
-    nVsN1,
-    variants: iconsConfig.variants,
-    logoCount,
-    colorCount: colorRows.length,
-    placeholder: COLOR_PLACEHOLDER,
-    limit: POWERBI_URL_LIMIT,
-  }));
+  write(
+    "README.md",
+    renderReadme({
+      iconCount: entries.length,
+      notes: iconsConfig.notes ?? [],
+      statusColors,
+      seriesColors,
+      semanticColors,
+      nVsN1,
+      variants: iconsConfig.variants,
+      logoCount,
+      colorCount: colorRows.length,
+      placeholder: COLOR_PLACEHOLDER,
+      limit: POWERBI_URL_LIMIT,
+    })
+  );
 
   return { icons: iconRows.length, logos: logoCount, oversized, themeWarnings };
 }

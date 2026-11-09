@@ -27,10 +27,7 @@ describe("Calendar", () => {
 
     it("should render a heading with month and year", () => {
       render(
-        <Calendar
-          aria-label="Choisir une date"
-          defaultValue={new CalendarDate(2024, 3, 1)}
-        />
+        <Calendar aria-label="Choisir une date" defaultValue={new CalendarDate(2024, 3, 1)} />
       );
       expect(screen.getByRole("heading")).toBeInTheDocument();
     });
@@ -45,12 +42,7 @@ describe("Calendar", () => {
 
   describe("prop value (contrôlé)", () => {
     it("should mark the selected date as selected", () => {
-      render(
-        <Calendar
-          aria-label="Choisir une date"
-          value={new CalendarDate(2024, 3, 15)}
-        />
-      );
+      render(<Calendar aria-label="Choisir une date" value={new CalendarDate(2024, 3, 15)} />);
       const selectedCell = screen.getByRole("gridcell", { selected: true });
       expect(selectedCell).toBeInTheDocument();
     });
@@ -59,10 +51,7 @@ describe("Calendar", () => {
   describe("prop defaultValue", () => {
     it("should display the default month/year when defaultValue is provided", () => {
       render(
-        <Calendar
-          aria-label="Choisir une date"
-          defaultValue={new CalendarDate(2024, 3, 1)}
-        />
+        <Calendar aria-label="Choisir une date" defaultValue={new CalendarDate(2024, 3, 1)} />
       );
       expect(screen.getByRole("heading")).toHaveTextContent(/2024/);
     });
@@ -102,10 +91,7 @@ describe("Calendar", () => {
   describe("navigation", () => {
     it("should navigate to a different month when clicking a nav button", async () => {
       render(
-        <Calendar
-          aria-label="Choisir une date"
-          defaultValue={new CalendarDate(2024, 3, 1)}
-        />
+        <Calendar aria-label="Choisir une date" defaultValue={new CalendarDate(2024, 3, 1)} />
       );
       const headingBefore = screen.getByRole("heading").textContent;
       const [prevButton] = screen.getAllByRole("button");
@@ -115,10 +101,7 @@ describe("Calendar", () => {
 
     it("should navigate forward when clicking the next button", async () => {
       render(
-        <Calendar
-          aria-label="Choisir une date"
-          defaultValue={new CalendarDate(2024, 3, 1)}
-        />
+        <Calendar aria-label="Choisir une date" defaultValue={new CalendarDate(2024, 3, 1)} />
       );
       const headingBefore = screen.getByRole("heading").textContent;
       const buttons = screen.getAllByRole("button");

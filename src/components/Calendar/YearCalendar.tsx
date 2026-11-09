@@ -75,9 +75,7 @@ export function YearCalendar({
   const [rangeStart, setRangeStart] = useState(() => decadeStart(initialYear));
 
   const controlled = value !== undefined;
-  const [internalValue, setInternalValue] = useState<CalendarDate | undefined>(
-    defaultValue
-  );
+  const [internalValue, setInternalValue] = useState<CalendarDate | undefined>(defaultValue);
   const resolvedYear = controlled ? value?.year : internalValue?.year;
 
   const handleSelect = (year: number) => {
@@ -95,9 +93,7 @@ export function YearCalendar({
     <div
       role="group"
       aria-label={`Choisir une année — ${rangeStart}–${rangeEnd}`}
-      className={[calStyles.calendar, styles.yearCalendar, className]
-        .filter(Boolean)
-        .join(" ")}
+      className={[calStyles.calendar, styles.yearCalendar, className].filter(Boolean).join(" ")}
       data-disabled={isDisabled || undefined}
     >
       {/* NOTE: YearCalendar est le niveau max — heading non interactif (pas de onHeadingPress). */}

@@ -88,10 +88,12 @@
 }
 
 /* Hover — unchecked */
-.checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-hovered] .indicator {
+.checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-hovered]
+  .indicator {
   color: var(--background-neutral-bold-hovered);
 }
-.checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-hovered] .indicator::before {
+.checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-hovered]
+  .indicator::before {
   background-color: var(--background-neutral-subtler-hovered);
 }
 
@@ -106,10 +108,12 @@
 }
 
 /* Pressed — unchecked */
-.checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-pressed] .indicator {
+.checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-pressed]
+  .indicator {
   color: var(--background-neutral-bold-pressed);
 }
-.checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-pressed] .indicator::before {
+.checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-pressed]
+  .indicator::before {
   background-color: var(--background-neutral-subtler-pressed);
 }
 

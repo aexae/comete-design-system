@@ -7,10 +7,8 @@ import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 import { SideNavOnly } from "./_appShell";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 /** Seule la section qui porte l'item est montrée : ni l'en-tête ni le pied de la nav. */
 function NavContext({ children }: { children: ReactNode }) {
@@ -81,19 +79,33 @@ type Story = StoryObj<SideNavItemProps>;
 
 /** État par défaut. */
 export const Default: Story = {
-  parameters: { docs: { source: { code: `<SideNav.Item label="Tableau de bord" iconBefore="Dashboard" href="/" />` } } },
+  parameters: {
+    docs: {
+      source: { code: `<SideNav.Item label="Tableau de bord" iconBefore="Dashboard" href="/" />` },
+    },
+  },
 };
 
 /** Item sélectionné (indicateur bleu + icône filled). */
 export const Selected: Story = {
   args: { isSelected: true },
-  parameters: { docs: { source: { code: `<SideNav.Item label="Tableau de bord" iconBefore="Dashboard" isSelected href="/" />` } } },
+  parameters: {
+    docs: {
+      source: {
+        code: `<SideNav.Item label="Tableau de bord" iconBefore="Dashboard" isSelected href="/" />`,
+      },
+    },
+  },
 };
 
 /** Item désactivé. */
 export const Disabled: Story = {
   args: { isDisabled: true },
-  parameters: { docs: { source: { code: `<SideNav.Item label="Expérimental" iconBefore="Extension" isDisabled />` } } },
+  parameters: {
+    docs: {
+      source: { code: `<SideNav.Item label="Expérimental" iconBefore="Extension" isDisabled />` },
+    },
+  },
 };
 
 /** Tous les états côte à côte. */

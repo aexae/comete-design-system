@@ -81,10 +81,13 @@ export function resolveVars(input: string, tokens: Map<string, string>, depth = 
   if (depth > 10) throw new Error(`Résolution var() circulaire : ${input}`);
   if (!input.includes("var(")) return input;
 
-  const resolved = input.replace(/var\(\s*(--[\w-]+)\s*(?:,\s*([^)]*))?\)/g, (_full, name: string, fallback?: string) => {
-    const value = tokens.get(name) ?? fallback?.trim();
-    if (value === undefined) throw new Error(`Token inconnu : ${name}`);
-    return value;
-  });
+  const resolved = input.replace(
+    /var\(\s*(--[\w-]+)\s*(?:,\s*([^)]*))?\)/g,
+    (_full, name: string, fallback?: string) => {
+      const value = tokens.get(name) ?? fallback?.trim();
+      if (value === undefined) throw new Error(`Token inconnu : ${name}`);
+      return value;
+    }
+  );
   return resolveVars(resolved, tokens, depth + 1);
 }

@@ -97,11 +97,5 @@ export function FocusRing({
     ...(position === "outside" ? { "--focus-ring-offset": OFFSET_MAP[offset] } : {}),
   };
 
-  return (
-    <span
-      className={`${styles.ring} ${styles[position]}`}
-      style={style}
-      aria-hidden="true"
-    />
-  );
+  return <span className={`${styles.ring} ${styles[position]}`} style={style} aria-hidden="true" />;
 }

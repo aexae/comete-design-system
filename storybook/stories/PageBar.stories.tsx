@@ -8,20 +8,14 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
 import { within, expect } from "storybook/test";
-import {
-  Page,
-  Button,
-  SearchField,
-} from "@aexae/comete-design-system/components";
+import { Page, Button, SearchField } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 import { PageGlobalActions } from "./_pageChrome";
 import css from "./PageBar.stories.module.css";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 const meta = {
   title: "Layout/Page/Bar",
@@ -29,7 +23,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "La barre de page unifie le titre, la navigation et les actions globales dans un seul bandeau en haut de la page. Elle bascule automatiquement entre une variante large et une variante compacte épinglée selon la largeur de la Page qui la contient (container query, seuil 768 px), et non celle de l'écran ni de la fenêtre. Elle remplace l'ancien duo TopNav + Page.Header." },
+      description: {
+        component:
+          "La barre de page unifie le titre, la navigation et les actions globales dans un seul bandeau en haut de la page. Elle bascule automatiquement entre une variante large et une variante compacte épinglée selon la largeur de la Page qui la contient (container query, seuil 768 px), et non celle de l'écran ni de la fenêtre. Elle remplace l'ancien duo TopNav + Page.Header.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -88,9 +85,7 @@ function ScrollFrame({ children }: { children: ReactNode }) {
 }
 
 function Gutters({ children }: { children: ReactNode }) {
-  return (
-    <div style={{ paddingInline: "var(--space300)" }}>{children}</div>
-  );
+  return <div style={{ paddingInline: "var(--space300)" }}>{children}</div>;
 }
 
 const barFiller = Array.from({ length: 24 }, (_, i) => (
@@ -149,9 +144,7 @@ export const Compact: Story = {
         <Page.Bar
           size="compact"
           title="Fiche agent"
-          leading={
-            <Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Retour" />
-          }
+          leading={<Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Retour" />}
         />
         <Page.Body>{barFiller}</Page.Body>
       </Page>
@@ -165,12 +158,8 @@ export const Compact: Story = {
     await expect(canvas.getByRole("button", { name: "Retour" })).toBeInTheDocument();
     // trailing (globalActions) : la loupe précède les notifications, et il n'y
     // a plus de bouton « Réglages » — remplacé par la recherche globale.
-    await expect(
-      canvas.getByRole("button", { name: "Recherche globale" }),
-    ).toBeInTheDocument();
-    await expect(
-      canvas.getByRole("button", { name: "Notifications" }),
-    ).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Recherche globale" })).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: "Notifications" })).toBeInTheDocument();
     await expect(canvas.queryByRole("button", { name: "Réglages" })).toBeNull();
   },
 };
@@ -208,9 +197,7 @@ export const LongTitle: Story = {
     // Le contenu déborde réellement (titre plus large que la boîte visible).
     await expect(h1.scrollWidth).toBeGreaterThan(h1.clientWidth);
     // Nom accessible complet préservé malgré la coupe visuelle.
-    await expect(h1).toHaveTextContent(
-      "Un titre de page extrêmement long qui doit être tronqué",
-    );
+    await expect(h1).toHaveTextContent("Un titre de page extrêmement long qui doit être tronqué");
   },
 };
 
@@ -225,10 +212,12 @@ export const WithToolbar: Story = {
       <Page globalActions={<PageGlobalActions />}>
         <Page.Bar size="large" title="Agents" />
         <Page.Toolbar
-          start={
-            <SearchField aria-label="Rechercher" placeholder="Rechercher un agent…" />
+          start={<SearchField aria-label="Rechercher" placeholder="Rechercher un agent…" />}
+          end={
+            <Button color="comete" iconBefore="Add">
+              Nouvel agent
+            </Button>
           }
-          end={<Button color="comete" iconBefore="Add">Nouvel agent</Button>}
         />
         <Page.Body>
           <p>Liste des agents…</p>

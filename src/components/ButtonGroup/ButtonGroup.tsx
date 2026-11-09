@@ -45,7 +45,12 @@ export function ButtonGroup({
   style,
 }: ButtonGroupProps): ReactElement {
   return (
-    <div role="group" aria-label={ariaLabel} className={[styles.group, className].filter(Boolean).join(" ")} style={style}>
+    <div
+      role="group"
+      aria-label={ariaLabel}
+      className={[styles.group, className].filter(Boolean).join(" ")}
+      style={style}
+    >
       {children}
     </div>
   );

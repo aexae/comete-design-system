@@ -79,10 +79,8 @@ import { GlobalSearchDialog, useGlobalSearch } from "./_rechercheGlobale";
 // -----------------------------------------------------------------------
 // Figma
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Layout grid overlay (like Figma "Show layout grid")
@@ -140,55 +138,102 @@ type Story = StoryObj;
 // -----------------------------------------------------------------------
 // Helpers
 
-function CC({ children, padding = "var(--space200)" }: { children: React.ReactNode; padding?: string }) {
+function CC({
+  children,
+  padding = "var(--space200)",
+}: {
+  children: React.ReactNode;
+  padding?: string;
+}) {
   return <div style={{ padding, flex: 1, minWidth: 0 }}>{children}</div>;
 }
 
 function PropRow({ icon, label, value }: { icon: IconName; label: string; value: string }) {
   return (
     <Stack direction="row" gap="100" align="start">
-      <Icon icon={icon} size={20}  />
+      <Icon icon={icon} size={20} />
       <Stack gap="0">
-        <Text size="small" as="span" color="subtlest">{label}</Text>
+        <Text size="small" as="span" color="subtlest">
+          {label}
+        </Text>
         <Text as="span">{value}</Text>
       </Stack>
     </Stack>
   );
 }
 
-function MetricTile({ label, value, unit, highlight }: { label: string; value: string; unit?: string; highlight?: "success" | "critical" | "warning" }) {
+function MetricTile({
+  label,
+  value,
+  unit,
+  highlight,
+}: {
+  label: string;
+  value: string;
+  unit?: string;
+  highlight?: "success" | "critical" | "warning";
+}) {
   return (
     <div className={css["metricTile"]}>
       <Stack gap="025">
-        <Text size="small" as="span" color="subtlest">{label}</Text>
+        <Text size="small" as="span" color="subtlest">
+          {label}
+        </Text>
         <Text size="large" weight="bold" as="span" color={highlight}>
           {value}
-          {unit && <Text size="small" as="span" color="subtlest"> {unit}</Text>}
+          {unit && (
+            <Text size="small" as="span" color="subtlest">
+              {" "}
+              {unit}
+            </Text>
+          )}
         </Text>
       </Stack>
     </div>
   );
 }
 
-function KpiTile({ icon, iconColor = "default", value, label, trend, trendUp }: {
-  icon: IconName; iconColor?: "default" | "success" | "critical" | "warning" | "information";
-  value: string; label: string; trend?: string; trendUp?: boolean;
+function KpiTile({
+  icon,
+  iconColor = "default",
+  value,
+  label,
+  trend,
+  trendUp,
+}: {
+  icon: IconName;
+  iconColor?: "default" | "success" | "critical" | "warning" | "information";
+  value: string;
+  label: string;
+  trend?: string;
+  trendUp?: boolean;
 }) {
   return (
     <Card appearance="outlined">
       <CC>
         <Stack gap="150">
           <Cluster justify="between" align="center">
-            <div className={css["iconPuck"]}><Icon icon={icon} color={iconColor} /></div>
+            <div className={css["iconPuck"]}>
+              <Icon icon={icon} color={iconColor} />
+            </div>
             {trend != null && (
-              <Text size="small" weight="medium" as="span" color={trendUp === true ? "success" : trendUp === false ? "critical" : "subtlest"}>
+              <Text
+                size="small"
+                weight="medium"
+                as="span"
+                color={trendUp === true ? "success" : trendUp === false ? "critical" : "subtlest"}
+              >
                 {trend}
               </Text>
             )}
           </Cluster>
           <Stack gap="0">
-            <Heading size="xlarge" as="span">{value}</Heading>
-            <Text size="small" as="span" color="subtlest">{label}</Text>
+            <Heading size="xlarge" as="span">
+              {value}
+            </Heading>
+            <Text size="small" as="span" color="subtlest">
+              {label}
+            </Text>
           </Stack>
         </Stack>
       </CC>
@@ -196,7 +241,17 @@ function KpiTile({ icon, iconColor = "default", value, label, trend, trendUp }: 
   );
 }
 
-function ProgressRow({ icon, label, current, total }: { icon: IconName; label: string; current: number; total: number }) {
+function ProgressRow({
+  icon,
+  label,
+  current,
+  total,
+}: {
+  icon: IconName;
+  label: string;
+  current: number;
+  total: number;
+}) {
   const pct = Math.round((current / total) * 100);
   return (
     <Stack gap="075">
@@ -205,13 +260,23 @@ function ProgressRow({ icon, label, current, total }: { icon: IconName; label: s
           <Icon icon={icon} />
           <Text as="span">{label}</Text>
         </Stack>
-        <Heading size="xsmall" as="span">{current}/{total}</Heading>
+        <Heading size="xsmall" as="span">
+          {current}/{total}
+        </Heading>
       </Cluster>
       <div className={css["progressTrack"]}>
-        <div className={css["progressFill"]} style={{
-          width: `${Math.max(pct, 2)}%`,
-          background: pct < 25 ? "var(--background-critical-bold-default)" : pct < 75 ? "var(--background-warning-bold-default)" : "var(--background-success-bold-default)",
-        }} />
+        <div
+          className={css["progressFill"]}
+          style={{
+            width: `${Math.max(pct, 2)}%`,
+            background:
+              pct < 25
+                ? "var(--background-critical-bold-default)"
+                : pct < 75
+                  ? "var(--background-warning-bold-default)"
+                  : "var(--background-success-bold-default)",
+          }}
+        />
       </div>
     </Stack>
   );
@@ -226,7 +291,11 @@ function MiniTableRow({ cells, isHeader }: { cells: React.ReactNode[]; isHeader?
       data-header={isHeader ? "" : undefined}
       style={{ display: "grid", gridTemplateColumns: `2fr repeat(${cells.length - 1}, 1fr)` }}
     >
-      {cells.map((cell, i) => <span key={i} className={css["tableCell"]}>{cell}</span>)}
+      {cells.map((cell, i) => (
+        <span key={i} className={css["tableCell"]}>
+          {cell}
+        </span>
+      ))}
     </div>
   );
 }
@@ -234,17 +303,110 @@ function MiniTableRow({ cells, isHeader }: { cells: React.ReactNode[]; isHeader?
 // -----------------------------------------------------------------------
 // 1. LIST AND FILTERS
 
-const EXTRA_LASTNAMES = ["LEROY", "ROUX", "DAVID", "BERTRAND", "MOREL", "FOURNIER", "GIRARD", "BONNET", "DUPUIS", "LAMBERT", "FONTAINE", "ROUSSEAU", "VINCENT", "MULLER", "LEFEVRE", "FAURE", "ANDRE", "MERCIER", "BLANC", "GUERIN"];
-const EXTRA_FIRSTNAMES = ["Paul", "Julie", "Marc", "Emma", "Hugo", "Léa", "Théo", "Sarah", "Nicolas", "Inès", "Antoine", "Chloé", "Maxime", "Camille", "Louis"];
+const EXTRA_LASTNAMES = [
+  "LEROY",
+  "ROUX",
+  "DAVID",
+  "BERTRAND",
+  "MOREL",
+  "FOURNIER",
+  "GIRARD",
+  "BONNET",
+  "DUPUIS",
+  "LAMBERT",
+  "FONTAINE",
+  "ROUSSEAU",
+  "VINCENT",
+  "MULLER",
+  "LEFEVRE",
+  "FAURE",
+  "ANDRE",
+  "MERCIER",
+  "BLANC",
+  "GUERIN",
+];
+const EXTRA_FIRSTNAMES = [
+  "Paul",
+  "Julie",
+  "Marc",
+  "Emma",
+  "Hugo",
+  "Léa",
+  "Théo",
+  "Sarah",
+  "Nicolas",
+  "Inès",
+  "Antoine",
+  "Chloé",
+  "Maxime",
+  "Camille",
+  "Louis",
+];
 
 const AGENTS = [
-  { initials: "DM", name: "DUPONT Marie", mat: "150", contrat: "151.67", heures: "151.67", delta: "0.00", status: "success" as const },
-  { initials: "MJ", name: "MARTIN Jean", mat: "A752", contrat: "", heures: "", delta: "", status: "neutral" as const },
-  { initials: "BS", name: "BERNARD Sophie", mat: "0012", contrat: "151.67", heures: "140.00", delta: "-11.67", status: "critical" as const },
-  { initials: "PL", name: "PETIT Luc", mat: "260", contrat: "151.67", heures: "151.67", delta: "0.00", status: "success" as const },
-  { initials: "RC", name: "ROBERT Camille", mat: "88", contrat: "", heures: "", delta: "", status: "neutral" as const },
-  { initials: "RA", name: "RICHARD Alain", mat: "274", contrat: "151.67", heures: "160.00", delta: "+8.33", status: "critical" as const },
-  { initials: "MC", name: "MOREAU Claire", mat: "119", contrat: "151.67", heures: "151.67", delta: "0.00", status: "success" as const },
+  {
+    initials: "DM",
+    name: "DUPONT Marie",
+    mat: "150",
+    contrat: "151.67",
+    heures: "151.67",
+    delta: "0.00",
+    status: "success" as const,
+  },
+  {
+    initials: "MJ",
+    name: "MARTIN Jean",
+    mat: "A752",
+    contrat: "",
+    heures: "",
+    delta: "",
+    status: "neutral" as const,
+  },
+  {
+    initials: "BS",
+    name: "BERNARD Sophie",
+    mat: "0012",
+    contrat: "151.67",
+    heures: "140.00",
+    delta: "-11.67",
+    status: "critical" as const,
+  },
+  {
+    initials: "PL",
+    name: "PETIT Luc",
+    mat: "260",
+    contrat: "151.67",
+    heures: "151.67",
+    delta: "0.00",
+    status: "success" as const,
+  },
+  {
+    initials: "RC",
+    name: "ROBERT Camille",
+    mat: "88",
+    contrat: "",
+    heures: "",
+    delta: "",
+    status: "neutral" as const,
+  },
+  {
+    initials: "RA",
+    name: "RICHARD Alain",
+    mat: "274",
+    contrat: "151.67",
+    heures: "160.00",
+    delta: "+8.33",
+    status: "critical" as const,
+  },
+  {
+    initials: "MC",
+    name: "MOREAU Claire",
+    mat: "119",
+    contrat: "151.67",
+    heures: "151.67",
+    delta: "0.00",
+    status: "success" as const,
+  },
   // Données de démo générées (déterministes) : de quoi paginer (65 agents → 3 pages à 25).
   ...Array.from({ length: 58 }, (_, i) => {
     const last = EXTRA_LASTNAMES[i % EXTRA_LASTNAMES.length] ?? "MARTIN";
@@ -258,7 +420,11 @@ const AGENTS = [
       contrat: unplanned ? "" : "151.67",
       heures: unplanned ? "" : late ? "140.00" : "151.67",
       delta: unplanned ? "" : late ? "-11.67" : "0.00",
-      status: unplanned ? ("neutral" as const) : late ? ("critical" as const) : ("success" as const),
+      status: unplanned
+        ? ("neutral" as const)
+        : late
+          ? ("critical" as const)
+          : ("success" as const),
     };
   }),
 ];
@@ -279,89 +445,91 @@ export const Base: Story = {
 
     return (
       <SideNav.Provider>
-      <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-        {/* Banner globale — pleine largeur, au-dessus de tout */}
-        <Banner appearance="warning">
-          <Text grow>Mise à jour planifiée le 28 avril à 22h.</Text>
-          <Button appearance="link" isInline>En savoir plus</Button>
-        </Banner>
+        <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+          {/* Banner globale — pleine largeur, au-dessus de tout */}
+          <Banner appearance="warning">
+            <Text grow>Mise à jour planifiée le 28 avril à 22h.</Text>
+            <Button appearance="link" isInline>
+              En savoir plus
+            </Button>
+          </Banner>
 
-        {/* Zone principale : SideNav + contenu côte à côte. */}
-        <div style={{ display: "flex", flex: 1, minHeight: 0, position: "relative" }}>
-          {/* SideNav */}
-          <SideNav>
-            <SideNav.Header
-              logo={<Logo entity="link" format="icon" />}
-              companyName="Comète Link"
-              description="Espace manager"
-            />
-            <AppNav />
-            <SideNav.Footer>
-              <AppFooterBrand />
-            </SideNav.Footer>
-          </SideNav>
-
-          {/* Page — wrapper en flex column pour propager une hauteur définie
-              jusqu'à la Page.Body (sinon un enfant en height:100% ne se résout pas). */}
-          <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
-            <Page
-              globalActions={
-                <PageGlobalActions
-                  density="compact"
-                  onSearch={search.open}
-                  isSearching={search.isSearching}
-                />
-              }
-              style={{ flex: 1, minHeight: 0 }}
-            >
-              <GlobalSearchDialog
-                isOpen={search.isSearching}
-                query={search.query}
-                onQueryChange={search.setQuery}
-                onClose={search.close}
+          {/* Zone principale : SideNav + contenu côte à côte. */}
+          <div style={{ display: "flex", flex: 1, minHeight: 0, position: "relative" }}>
+            {/* SideNav */}
+            <SideNav>
+              <SideNav.Header
+                logo={<Logo entity="link" format="icon" />}
+                companyName="Comète Link"
+                description="Espace manager"
               />
-              <Page.Bar title="Tableau de bord" />
-              <Page.Toolbar
-                search={
-                  <SearchField
-                    aria-label="Rechercher"
-                    placeholder="Rechercher…"
+              <AppNav />
+              <SideNav.Footer>
+                <AppFooterBrand />
+              </SideNav.Footer>
+            </SideNav>
+
+            {/* Page — wrapper en flex column pour propager une hauteur définie
+              jusqu'à la Page.Body (sinon un enfant en height:100% ne se résout pas). */}
+            <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
+              <Page
+                globalActions={
+                  <PageGlobalActions
                     density="compact"
+                    onSearch={search.open}
+                    isSearching={search.isSearching}
                   />
                 }
-                end={
-                  <Button color="comete" iconBefore="Add">
-                    Nouveau
-                  </Button>
-                }
-              />
-              {/* Le conteneur descend jusqu'au bord bas, sans retrait : c'est ce
+                style={{ flex: 1, minHeight: 0 }}
+              >
+                <GlobalSearchDialog
+                  isOpen={search.isSearching}
+                  query={search.query}
+                  onQueryChange={search.setQuery}
+                  onClose={search.close}
+                />
+                <Page.Bar title="Tableau de bord" />
+                <Page.Toolbar
+                  search={
+                    <SearchField
+                      aria-label="Rechercher"
+                      placeholder="Rechercher…"
+                      density="compact"
+                    />
+                  }
+                  end={
+                    <Button color="comete" iconBefore="Add">
+                      Nouveau
+                    </Button>
+                  }
+                />
+                {/* Le conteneur descend jusqu'au bord bas, sans retrait : c'est ce
                   qui dit que la zone CONTINUE sous la ligne de flottaison. Un
                   liseré blanc en dessous donnerait l'impression d'une page qui
                   s'arrête là. Le retrait bas a donc été retiré de `Page.Body`. */}
-              <Page.Body>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: "100%",
-                    background: "var(--background-neutral-subtlest-default)",
-                    // Coins du BAS carrés : un angle arrondi posé pile sur le bord
-                    // se lit comme une boîte qui finit là. Carrés, la coupure est
-                    // franche et dit que la zone continue sous la ligne de flottaison.
-                    borderRadius: "var(--radius200) var(--radius200) 0 0",
-                  }}
-                >
-                  <Text as="span" color="subtle">
-                    Contenu de la page
-                  </Text>
-                </div>
-              </Page.Body>
-            </Page>
+                <Page.Body>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: "100%",
+                      background: "var(--background-neutral-subtlest-default)",
+                      // Coins du BAS carrés : un angle arrondi posé pile sur le bord
+                      // se lit comme une boîte qui finit là. Carrés, la coupure est
+                      // franche et dit que la zone continue sous la ligne de flottaison.
+                      borderRadius: "var(--radius200) var(--radius200) 0 0",
+                    }}
+                  >
+                    <Text as="span" color="subtle">
+                      Contenu de la page
+                    </Text>
+                  </div>
+                </Page.Body>
+              </Page>
+            </div>
           </div>
         </div>
-      </div>
       </SideNav.Provider>
     );
   },
@@ -387,18 +555,76 @@ interface AgentColumn {
   cell: (a: Agent) => React.ReactNode;
 }
 const AGENT_COLUMNS: AgentColumn[] = [
-  { id: "agent", header: "Agent", roles: ["manager", "partenaire", "client"], sortable: true, sortValue: (a) => a.name,
-    cell: (a) => <Cluster gap="075" align="center"><Avatar size="xsmall" initials={a.initials} /><Text as="span">{a.name}</Text></Cluster> },
+  {
+    id: "agent",
+    header: "Agent",
+    roles: ["manager", "partenaire", "client"],
+    sortable: true,
+    sortValue: (a) => a.name,
+    cell: (a) => (
+      <Cluster gap="075" align="center">
+        <Avatar size="xsmall" initials={a.initials} />
+        <Text as="span">{a.name}</Text>
+      </Cluster>
+    ),
+  },
   // Matricule et Heures ne sont pas exposés au partenaire (sous-traitance) —
   // via `roles`, pas via un test de rôle dans la cellule.
-  { id: "mat", header: "Matricule", roles: ["manager", "client"], hideBelow: "md", cell: (a) => a.mat },
-  { id: "contrat", header: "Contrat", roles: ["manager", "partenaire", "client"], align: "right", hideBelow: "md", cell: (a) => a.contrat || "—" },
-  { id: "heures", header: "Heures", roles: ["manager", "client"], align: "right", hideBelow: "lg", cell: (a) => a.heures || "—" },
-  { id: "delta", header: "Delta", roles: ["manager", "client"], align: "right", sortable: true, sortValue: (a) => parseFloat(a.delta || "0"),
-    cell: (a) => a.delta ? <Text size="small" weight="bold" as="span" color={a.status === "success" ? "success" : "critical"}>{a.delta}</Text> : <Text as="span" color="subtlest">—</Text> },
+  {
+    id: "mat",
+    header: "Matricule",
+    roles: ["manager", "client"],
+    hideBelow: "md",
+    cell: (a) => a.mat,
+  },
+  {
+    id: "contrat",
+    header: "Contrat",
+    roles: ["manager", "partenaire", "client"],
+    align: "right",
+    hideBelow: "md",
+    cell: (a) => a.contrat || "—",
+  },
+  {
+    id: "heures",
+    header: "Heures",
+    roles: ["manager", "client"],
+    align: "right",
+    hideBelow: "lg",
+    cell: (a) => a.heures || "—",
+  },
+  {
+    id: "delta",
+    header: "Delta",
+    roles: ["manager", "client"],
+    align: "right",
+    sortable: true,
+    sortValue: (a) => parseFloat(a.delta || "0"),
+    cell: (a) =>
+      a.delta ? (
+        <Text
+          size="small"
+          weight="bold"
+          as="span"
+          color={a.status === "success" ? "success" : "critical"}
+        >
+          {a.delta}
+        </Text>
+      ) : (
+        <Text as="span" color="subtlest">
+          —
+        </Text>
+      ),
+  },
 ];
 
-interface AgentAction { id: string; label: string; icon: IconName; primary?: boolean; roles: Role[]; }
+interface AgentAction {
+  id: string;
+  label: string;
+  icon: IconName;
+  primary?: boolean;
+  roles: Role[];
+}
 const AGENT_ACTIONS: AgentAction[] = [
   // Ajouter un agent : réservé au PARTENAIRE (il déclare ses sous-traitants) ;
   // le manager ne crée pas d'agent depuis cette page.
@@ -439,8 +665,12 @@ function ExportMenu({
         >
           {groups.map((g) => (
             <MenuSection key={g.scope} {...(g.title ? { title: g.title } : {})}>
-              <MenuItem id={`${g.scope}:csv`} iconBefore="Download">Exporter en CSV</MenuItem>
-              <MenuItem id={`${g.scope}:pdf`} iconBefore="Download">Exporter en PDF</MenuItem>
+              <MenuItem id={`${g.scope}:csv`} iconBefore="Download">
+                Exporter en CSV
+              </MenuItem>
+              <MenuItem id={`${g.scope}:pdf`} iconBefore="Download">
+                Exporter en PDF
+              </MenuItem>
             </MenuSection>
           ))}
         </Menu>
@@ -528,7 +758,9 @@ function AgentTableCore({
         (showContextToolbar && sel.selectedCount > 0 ? (
           <TableSelectionBar count={sel.selectedCount} total={totalCount} />
         ) : (
-          <Text size="small" as="span" color="subtlest">{totalCount} agents</Text>
+          <Text size="small" as="span" color="subtlest">
+            {totalCount} agents
+          </Text>
         ))}
 
       {/* Repli responsive (§5) : Table du DS sur desktop, liste compacte sur
@@ -537,7 +769,9 @@ function AgentTableCore({
         <Table responsive aria-label={ariaLabel}>
           <TableHead>
             <TableRow>
-              <TableHeaderCell><Checkbox {...sel.getSelectAllProps()} /></TableHeaderCell>
+              <TableHeaderCell>
+                <Checkbox {...sel.getSelectAllProps()} />
+              </TableHeaderCell>
               {cols.map((c) => (
                 <TableHeaderCell
                   key={c.id}
@@ -550,7 +784,9 @@ function AgentTableCore({
                   {c.header}
                 </TableHeaderCell>
               ))}
-              <TableHeaderCell width={60} isActionColumn>Actions</TableHeaderCell>
+              <TableHeaderCell width={60} isActionColumn>
+                Actions
+              </TableHeaderCell>
             </TableRow>
           </TableHead>
           <TableBody
@@ -563,7 +799,11 @@ function AgentTableCore({
             isNoResults={state === "noResults"}
             noResultsTitle="Aucun résultat"
             noResultsDescription="Aucun agent ne correspond aux filtres actifs."
-            noResultsAction={<Button appearance="subtle" onPress={onClearFilters}>Tout effacer</Button>}
+            noResultsAction={
+              <Button appearance="subtle" onPress={onClearFilters}>
+                Tout effacer
+              </Button>
+            }
             error={state === "error"}
             onRetry={() => undefined}
           >
@@ -573,15 +813,26 @@ function AgentTableCore({
                   // (getRowClickProps). Le bouton d'actions (MoreVert) garde la
                   // PRIORITÉ — getRowClickProps ignore les contrôles interactifs
                   // (comme la story Table « All-in-one »).
-                  <TableRow key={a.mat} isSelected={sel.isSelected(a.mat)} {...sel.getRowClickProps(a.mat)}>
-                    <TableCell><Checkbox {...sel.getRowCheckboxProps(a.mat, a.name)} /></TableCell>
+                  <TableRow
+                    key={a.mat}
+                    isSelected={sel.isSelected(a.mat)}
+                    {...sel.getRowClickProps(a.mat)}
+                  >
+                    <TableCell>
+                      <Checkbox {...sel.getRowCheckboxProps(a.mat, a.name)} />
+                    </TableCell>
                     {cols.map((c) => (
                       <TableCell key={c.id} align={c.align} hideBelow={c.hideBelow}>
                         {c.cell(a)}
                       </TableCell>
                     ))}
                     <TableCell align="center">
-                      <Button appearance="subtle" density="compact" iconBefore="MoreVert" aria-label={`Actions pour ${a.name}`} />
+                      <Button
+                        appearance="subtle"
+                        density="compact"
+                        iconBefore="MoreVert"
+                        aria-label={`Actions pour ${a.name}`}
+                      />
                     </TableCell>
                   </TableRow>
                 ))
@@ -607,7 +858,12 @@ function AgentTableCore({
                 <ListItemText primary={a.name} secondary={compactSecondary(a)} lineClamp={2} />
                 {showDelta && a.delta ? (
                   <ListItemTrailing>
-                    <Text size="small" weight="bold" as="span" color={a.status === "success" ? "success" : "critical"}>
+                    <Text
+                      size="small"
+                      weight="bold"
+                      as="span"
+                      color={a.status === "success" ? "success" : "critical"}
+                    >
                       {a.delta}
                     </Text>
                   </ListItemTrailing>
@@ -654,7 +910,11 @@ export const ListAndFilters: Story = {
     role: { name: "Rôle", control: "inline-radio", options: ["manager", "partenaire"] },
     // États de la liste : données, sélection active (barre de sélection), et les
     // quatre placeholders du Table (chargement / vide / aucun résultat / erreur).
-    state: { name: "État", control: "inline-radio", options: ["data", "selection", "loading", "empty", "noResults", "error"] },
+    state: {
+      name: "État",
+      control: "inline-radio",
+      options: ["data", "selection", "loading", "empty", "noResults", "error"],
+    },
     // Toolbar contextuelle : sélectionne une ligne → barre « N lignes sélectionnées sur T ».
     showContextToolbar: { name: "Toolbar contextuelle (showContextToolbar)", control: "boolean" },
   },
@@ -662,10 +922,14 @@ export const ListAndFilters: Story = {
   render: function ListAndFiltersStory(args) {
     const role = (args as { role?: Role }).role ?? "manager";
     const stateArg = (args as { state?: string }).state ?? "data";
-    const showContextToolbar = (args as { showContextToolbar?: boolean }).showContextToolbar ?? true;
+    const showContextToolbar =
+      (args as { showContextToolbar?: boolean }).showContextToolbar ?? true;
     const [f, setF] = useState<Filters>(emptyFilters);
     const { views, save, remove } = useSavedViews();
-    const [sort, setSort] = useState<{ col: string; dir: SortDir }>({ col: "agent", dir: "default" });
+    const [sort, setSort] = useState<{ col: string; dir: SortDir }>({
+      col: "agent",
+      dir: "default",
+    });
     const [page, setPage] = useState(0);
     // Pagination façon story Table « With pagination » : lignes/page pilotables.
     const [rowsPerPage, setRowsPerPage] = useState(25);
@@ -674,7 +938,9 @@ export const ListAndFilters: Story = {
     // table restent interactifs via `onSelectionChange`.
     const [selectedKeys, setSelectedKeys] = useState<Set<string>>(() => new Set());
     useEffect(() => {
-      setSelectedKeys(stateArg === "selection" ? new Set(AGENTS.slice(0, 2).map((a) => a.mat)) : new Set());
+      setSelectedKeys(
+        stateArg === "selection" ? new Set(AGENTS.slice(0, 2).map((a) => a.mat)) : new Set()
+      );
     }, [stateArg]);
 
     const cols = AGENT_COLUMNS.filter((c) => c.roles.includes(role));
@@ -692,14 +958,15 @@ export const ListAndFilters: Story = {
     // — et « aucun résultat » devient atteignable par une recherche sans
     // correspondance, pas seulement via le contrôle « État ».
     const needle = f.nameQuery.trim().toLowerCase();
-    const live = AGENTS
-      .filter((a) => (needle ? a.name.toLowerCase().includes(needle) : true))
-      .filter((a) => (f.contrat.length > 0 ? a.contrat !== "" : true));
+    const live = AGENTS.filter((a) =>
+      needle ? a.name.toLowerCase().includes(needle) : true
+    ).filter((a) => (f.contrat.length > 0 ? a.contrat !== "" : true));
     const sorted = [...live].sort((a, b) => {
       if (sort.dir === "default") return 0;
       const c = AGENT_COLUMNS.find((x) => x.id === sort.col);
       if (!c?.sortValue) return 0;
-      const va = c.sortValue(a), vb = c.sortValue(b);
+      const va = c.sortValue(a),
+        vb = c.sortValue(b);
       const cmp = va < vb ? -1 : va > vb ? 1 : 0;
       return sort.dir === "ascending" ? cmp : -cmp;
     });
@@ -712,17 +979,23 @@ export const ListAndFilters: Story = {
     const columnCount = cols.length + 2; // +1 sélection, +1 colonne d'actions
     const handleExport = (format: ExportFormat, scope: ExportScope) => {
       const n = scope === "selection" ? sel.selectedCount : sorted.length;
-      const what = scope === "selection" ? `${n} agent${n > 1 ? "s" : ""} sélectionné${n > 1 ? "s" : ""}` : `${n} agent${n > 1 ? "s" : ""}`;
+      const what =
+        scope === "selection"
+          ? `${n} agent${n > 1 ? "s" : ""} sélectionné${n > 1 ? "s" : ""}`
+          : `${n} agent${n > 1 ? "s" : ""}`;
       setExportNotice(`Export ${format.toUpperCase()} lancé : ${what}.`);
     };
     // Le contrôle « État » force loading / empty / error ; « selection » montre la
     // barre de sélection sur des données ; sinon l'état découle du filtrage réel
     // (data, ou noResults si le filtrage vide la liste).
-    const state = stateArg === "selection"
-      ? "data"
-      : stateArg === "data"
-        ? (sorted.length === 0 ? "noResults" : "data")
-        : stateArg;
+    const state =
+      stateArg === "selection"
+        ? "data"
+        : stateArg === "data"
+          ? sorted.length === 0
+            ? "noResults"
+            : "data"
+          : stateArg;
     const reset = () => {
       setF(emptyFilters());
       setPage(0);
@@ -739,7 +1012,10 @@ export const ListAndFilters: Story = {
                 placeholder="Rechercher…"
                 density="compact"
                 value={f.nameQuery}
-                onChange={(v) => { setF({ ...f, nameQuery: v }); setPage(0); }}
+                onChange={(v) => {
+                  setF({ ...f, nameQuery: v });
+                  setPage(0);
+                }}
               />
             </div>
           }
@@ -761,18 +1037,40 @@ export const ListAndFilters: Story = {
               {/* Filtres enregistrés : appliquer / supprimer un jeu de critères
                   (réservé au manager — cf. SAVED_VIEWS_ROLES). */}
               {hasSavedViews ? (
-                <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
+                <SavedSearchesMenu
+                  views={views}
+                  current={f}
+                  onApply={(v) => setF(v.filters)}
+                  onDelete={remove}
+                />
               ) : null}
               <ButtonGroup>
                 {actions.map((a) =>
                   a.primary ? (
-                    <Button key={a.id} color="comete" iconBefore={a.icon} collapseLabel shape="square" aria-label={a.label}>{a.label}</Button>
+                    <Button
+                      key={a.id}
+                      color="comete"
+                      iconBefore={a.icon}
+                      collapseLabel
+                      shape="square"
+                      aria-label={a.label}
+                    >
+                      {a.label}
+                    </Button>
                   ) : a.id === "export" ? (
                     // Exporter = menu CSV / PDF. Avec une sélection : on propose la
                     // sélection d'abord, puis toute la liste (filtrée).
                     <ExportMenu
                       key={a.id}
-                      trigger={<Button appearance="subtle" iconBefore={a.icon} className={css["hideOnMobile"]}>{a.label}</Button>}
+                      trigger={
+                        <Button
+                          appearance="subtle"
+                          iconBefore={a.icon}
+                          className={css["hideOnMobile"]}
+                        >
+                          {a.label}
+                        </Button>
+                      }
                       groups={
                         sel.selectedCount > 0
                           ? [
@@ -784,7 +1082,14 @@ export const ListAndFilters: Story = {
                       onExport={handleExport}
                     />
                   ) : (
-                    <Button key={a.id} appearance="subtle" iconBefore={a.icon} className={css["hideOnMobile"]}>{a.label}</Button>
+                    <Button
+                      key={a.id}
+                      appearance="subtle"
+                      iconBefore={a.icon}
+                      className={css["hideOnMobile"]}
+                    >
+                      {a.label}
+                    </Button>
                   )
                 )}
                 <Button appearance="subtle" iconBefore="MoreHoriz" aria-label="Plus d'actions" />
@@ -794,8 +1099,15 @@ export const ListAndFilters: Story = {
         />
         {/* Tags des critères actifs, sous la barre — masqués sous le breakpoint
             compact (badge + feuille en mobile). */}
-        <div className={css["hideBlockUnderCompact"]} style={{ paddingInline: "var(--page-gutter)" }}>
-          <ActiveFilterTags filters={f} onChange={setF} textActionClassName={filtresCss["textAction"]} />
+        <div
+          className={css["hideBlockUnderCompact"]}
+          style={{ paddingInline: "var(--page-gutter)" }}
+        >
+          <ActiveFilterTags
+            filters={f}
+            onChange={setF}
+            textActionClassName={filtresCss["textAction"]}
+          />
         </div>
         <Page.Body>
           <AgentTableCore
@@ -811,14 +1123,26 @@ export const ListAndFilters: Story = {
             page={page}
             onPageChange={setPage}
             rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={(n) => { setRowsPerPage(n); setPage(0); }}
+            onRowsPerPageChange={(n) => {
+              setRowsPerPage(n);
+              setPage(0);
+            }}
             rowsPerPageOptions={[25, 50, 100]}
             onClearFilters={reset}
             showContextToolbar={showContextToolbar}
           />
         </Page.Body>
         {exportNotice ? (
-          <div style={{ position: "fixed", insetInline: "var(--space200)", bottom: "var(--space200)", display: "flex", justifyContent: "center", zIndex: 10 }}>
+          <div
+            style={{
+              position: "fixed",
+              insetInline: "var(--space200)",
+              bottom: "var(--space200)",
+              display: "flex",
+              justifyContent: "center",
+              zIndex: 10,
+            }}
+          >
             <Snackbar appearance="success" onClose={() => setExportNotice(null)}>
               {exportNotice}
             </Snackbar>
@@ -850,9 +1174,33 @@ interface Vacation {
 }
 
 const VACATIONS: Vacation[] = [
-  { id: "v1", start: "09:45", end: "17:45", moment: "jour", pause: "Pause 30 min", profil: "Gardiennage", activite: "SSIAP1" },
-  { id: "v2", start: "09:45", end: "17:45", moment: "jour", pause: "Pause 30 min", profil: "Gardiennage", activite: "SSIAP1" },
-  { id: "v3", start: "09:45", end: "17:45", moment: "jour", pause: "Pause 30 min", profil: "Gardiennage", activite: "SSIAP1" },
+  {
+    id: "v1",
+    start: "09:45",
+    end: "17:45",
+    moment: "jour",
+    pause: "Pause 30 min",
+    profil: "Gardiennage",
+    activite: "SSIAP1",
+  },
+  {
+    id: "v2",
+    start: "09:45",
+    end: "17:45",
+    moment: "jour",
+    pause: "Pause 30 min",
+    profil: "Gardiennage",
+    activite: "SSIAP1",
+  },
+  {
+    id: "v3",
+    start: "09:45",
+    end: "17:45",
+    moment: "jour",
+    pause: "Pause 30 min",
+    profil: "Gardiennage",
+    activite: "SSIAP1",
+  },
   { id: "v4", start: "10:00", end: "18:00", moment: "jour", profil: "SSIAP1", activite: "SSIAP1" },
 ];
 
@@ -882,7 +1230,9 @@ function VacationsSection(): React.ReactElement {
   const [q, setQ] = useState("");
   const needle = q.trim().toLowerCase();
   const rows = needle
-    ? VACATIONS.filter((v) => `${v.profil} ${v.activite} ${v.agent ?? ""}`.toLowerCase().includes(needle))
+    ? VACATIONS.filter((v) =>
+        `${v.profil} ${v.activite} ${v.agent ?? ""}`.toLowerCase().includes(needle)
+      )
     : VACATIONS;
   return (
     <Stack gap="200">
@@ -890,12 +1240,27 @@ function VacationsSection(): React.ReactElement {
           Page.Toolbar. La recherche se comprime ; date + téléchargement restent. */}
       <Cluster justify="between" align="center" gap="150" style={{ flexWrap: "nowrap" }}>
         <div className={css["searchWrapper"]}>
-          <SearchField density="compact" placeholder="Filtrer les vacations" aria-label="Filtrer les vacations" value={q} onChange={setQ} />
+          <SearchField
+            density="compact"
+            placeholder="Filtrer les vacations"
+            aria-label="Filtrer les vacations"
+            value={q}
+            onChange={setQ}
+          />
         </div>
         <Cluster gap="100" align="center" style={{ flexWrap: "nowrap", flex: "none" }}>
           {/* Navigateur de jour (chevrons ← date → ) : DatePicker en mode navigation. */}
-          <DatePicker isEditable={false} defaultValue={parseDate("2026-09-14")} aria-label="Jour des vacations" />
-          <Button appearance="subtle" shape="square" iconBefore="Download" aria-label="Télécharger" />
+          <DatePicker
+            isEditable={false}
+            defaultValue={parseDate("2026-09-14")}
+            aria-label="Jour des vacations"
+          />
+          <Button
+            appearance="subtle"
+            shape="square"
+            iconBefore="Download"
+            aria-label="Télécharger"
+          />
         </Cluster>
       </Cluster>
 
@@ -903,13 +1268,21 @@ function VacationsSection(): React.ReactElement {
       <Table aria-label="Vacations du jour">
         <TableHead>
           <TableRow>
-            <TableHeaderCell isSortable sortDirection="ascending" onSortChange={() => undefined}>Horaires</TableHeaderCell>
+            <TableHeaderCell isSortable sortDirection="ascending" onSortChange={() => undefined}>
+              Horaires
+            </TableHeaderCell>
             <TableHeaderCell>Agent</TableHeaderCell>
             <TableHeaderCell hideBelow="md">Profil</TableHeaderCell>
             <TableHeaderCell>Activité</TableHeaderCell>
-            <TableHeaderCell align="right" hideBelow="lg">PP</TableHeaderCell>
-            <TableHeaderCell align="right" hideBelow="lg">PDS</TableHeaderCell>
-            <TableHeaderCell align="right" hideBelow="lg">FDS</TableHeaderCell>
+            <TableHeaderCell align="right" hideBelow="lg">
+              PP
+            </TableHeaderCell>
+            <TableHeaderCell align="right" hideBelow="lg">
+              PDS
+            </TableHeaderCell>
+            <TableHeaderCell align="right" hideBelow="lg">
+              FDS
+            </TableHeaderCell>
             <TableHeaderCell align="right"> </TableHeaderCell>
           </TableRow>
         </TableHead>
@@ -924,26 +1297,59 @@ function VacationsSection(): React.ReactElement {
               <TableCell>
                 <Stack gap="0">
                   <Cluster gap="075" align="center">
-                    <Text as="span" weight="medium">{v.start}</Text>
-                    <Icon icon={v.moment === "jour" ? "Sunny" : "DarkMode"} size={16} color={v.moment === "jour" ? "warning" : "subtlest"} />
-                    <Text as="span" weight="medium">{v.end}</Text>
+                    <Text as="span" weight="medium">
+                      {v.start}
+                    </Text>
+                    <Icon
+                      icon={v.moment === "jour" ? "Sunny" : "DarkMode"}
+                      size={16}
+                      color={v.moment === "jour" ? "warning" : "subtlest"}
+                    />
+                    <Text as="span" weight="medium">
+                      {v.end}
+                    </Text>
                   </Cluster>
-                  {v.pause ? <Text size="small" as="span" color="subtlest">{v.pause}</Text> : null}
+                  {v.pause ? (
+                    <Text size="small" as="span" color="subtlest">
+                      {v.pause}
+                    </Text>
+                  ) : null}
                 </Stack>
               </TableCell>
               <TableCell>
                 <Cluster gap="075" align="center">
                   <Avatar size="small" icon="Person" />
-                  <Text as="span" color="subtle">Non affecté</Text>
+                  <Text as="span" color="subtle">
+                    Non affecté
+                  </Text>
                 </Cluster>
               </TableCell>
               <TableCell hideBelow="md">{v.profil}</TableCell>
-              <TableCell><Tag label={v.activite} appearance="subtle" shape="rounded" /></TableCell>
-              <TableCell align="right" hideBelow="lg"><Text as="span" color="subtlest">—</Text></TableCell>
-              <TableCell align="right" hideBelow="lg"><Text as="span" color="subtlest">—</Text></TableCell>
-              <TableCell align="right" hideBelow="lg"><Text as="span" color="subtlest">—</Text></TableCell>
+              <TableCell>
+                <Tag label={v.activite} appearance="subtle" shape="rounded" />
+              </TableCell>
+              <TableCell align="right" hideBelow="lg">
+                <Text as="span" color="subtlest">
+                  —
+                </Text>
+              </TableCell>
+              <TableCell align="right" hideBelow="lg">
+                <Text as="span" color="subtlest">
+                  —
+                </Text>
+              </TableCell>
+              <TableCell align="right" hideBelow="lg">
+                <Text as="span" color="subtlest">
+                  —
+                </Text>
+              </TableCell>
               <TableCell align="right">
-                <Button appearance="subtle" shape="square" iconBefore="PersonAdd" aria-label={`Affecter un agent (${v.start}–${v.end})`} />
+                <Button
+                  appearance="subtle"
+                  shape="square"
+                  iconBefore="PersonAdd"
+                  aria-label={`Affecter un agent (${v.start}–${v.end})`}
+                />
               </TableCell>
             </TableRow>
           ))}
@@ -989,7 +1395,9 @@ export const ListeDeSection: Story = {
         <Page.Bar
           size="compact"
           title="Fiche site"
-          leading={<Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Retour aux sites" />}
+          leading={
+            <Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Retour aux sites" />
+          }
         />
         <Page.Body>
           <Grid gap="400">
@@ -998,13 +1406,36 @@ export const ListeDeSection: Story = {
               <Stack gap="300">
                 {/* Informations */}
                 <Stack gap="150">
-                  <Heading size="xsmall" as="h2">Informations</Heading>
+                  <Heading size="xsmall" as="h2">
+                    Informations
+                  </Heading>
                   <Stack gap="100">
                     {SITE_INFO.map((r) => (
-                      <div key={r.label} style={{ display: "grid", gridTemplateColumns: "96px 1fr", gap: "var(--space150)", alignItems: "baseline" }}>
-                        <Text size="small" as="span" color="subtlest">{r.label}</Text>
-                        <span style={{ display: "block", minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={r.value}>
-                          <Text as="span" weight="medium" color={r.muted ? "subtlest" : undefined}>{r.value}</Text>
+                      <div
+                        key={r.label}
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "96px 1fr",
+                          gap: "var(--space150)",
+                          alignItems: "baseline",
+                        }}
+                      >
+                        <Text size="small" as="span" color="subtlest">
+                          {r.label}
+                        </Text>
+                        <span
+                          style={{
+                            display: "block",
+                            minWidth: 0,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                          title={r.value}
+                        >
+                          <Text as="span" weight="medium" color={r.muted ? "subtlest" : undefined}>
+                            {r.value}
+                          </Text>
                         </span>
                       </div>
                     ))}
@@ -1015,14 +1446,20 @@ export const ListeDeSection: Story = {
 
                 {/* Adresse (sans carte) + accès « Voir sur la carte ». */}
                 <Stack gap="100">
-                  <Heading size="xsmall" as="h2">Adresse</Heading>
+                  <Heading size="xsmall" as="h2">
+                    Adresse
+                  </Heading>
                   <Stack gap="0">
                     {SITE_ADDRESS.map((line) => (
-                      <Text key={line} as="span">{line}</Text>
+                      <Text key={line} as="span">
+                        {line}
+                      </Text>
                     ))}
                   </Stack>
                   <Cluster>
-                    <Button appearance="subtle" density="compact" iconBefore="LocationOn">Voir sur la carte</Button>
+                    <Button appearance="subtle" density="compact" iconBefore="LocationOn">
+                      Voir sur la carte
+                    </Button>
                   </Cluster>
                 </Stack>
 
@@ -1030,13 +1467,19 @@ export const ListeDeSection: Story = {
 
                 {/* Contacts — déplacés ici (à gauche), plus un onglet. */}
                 <Stack gap="150">
-                  <Heading size="xsmall" as="h2">Contacts</Heading>
+                  <Heading size="xsmall" as="h2">
+                    Contacts
+                  </Heading>
                   {CONTACTS.map((c) => (
                     <Cluster key={c.name} gap="100" align="center">
                       <Avatar size="small" initials={c.initials} alt={c.name} />
                       <Stack gap="0">
-                        <Text as="span" weight="medium">{c.name}</Text>
-                        <Text size="small" as="span" color="subtlest">{c.role}</Text>
+                        <Text as="span" weight="medium">
+                          {c.name}
+                        </Text>
+                        <Text size="small" as="span" color="subtlest">
+                          {c.role}
+                        </Text>
                       </Stack>
                     </Cluster>
                   ))}
@@ -1049,7 +1492,12 @@ export const ListeDeSection: Story = {
               <Tabs>
                 <TabList>
                   <Tab id="vacations">
-                    Vacations du jour <Badge label={String(VACATIONS.length)} appearance="neutral" importance="medium" />
+                    Vacations du jour{" "}
+                    <Badge
+                      label={String(VACATIONS.length)}
+                      appearance="neutral"
+                      importance="medium"
+                    />
                   </Tab>
                   <Tab id="consignes">Consignes et documents</Tab>
                   <Tab id="maincourante">Main courante</Tab>
@@ -1107,11 +1555,23 @@ export const ListeDeSection: Story = {
     // Section « Vacations du jour » : contrôles + tableau dé-encarté (plus de
     // bandeau d'alerte jaune).
     await expect(canvas.getByRole("button", { name: "Télécharger" })).toBeInTheDocument();
-    const headerText = Array.from(canvasElement.querySelectorAll("th")).map((th) => (th.textContent ?? "").trim()).filter(Boolean);
-    await expect(headerText).toEqual(["Horaires", "Agent", "Profil", "Activité", "PP", "PDS", "FDS"]);
+    const headerText = Array.from(canvasElement.querySelectorAll("th"))
+      .map((th) => (th.textContent ?? "").trim())
+      .filter(Boolean);
+    await expect(headerText).toEqual([
+      "Horaires",
+      "Agent",
+      "Profil",
+      "Activité",
+      "PP",
+      "PDS",
+      "FDS",
+    ]);
     await expect(canvas.getAllByText("Gardiennage").length).toBeGreaterThanOrEqual(1);
     await expect(canvas.getAllByText("Non affecté").length).toBeGreaterThanOrEqual(1);
-    await expect(canvas.getAllByRole("button", { name: /Affecter un agent/ }).length).toBe(VACATIONS.length);
+    await expect(canvas.getAllByRole("button", { name: /Affecter un agent/ }).length).toBe(
+      VACATIONS.length
+    );
 
     // Filtre de SECTION : un terme sans correspondance → « aucune vacation ».
     const search = canvas.getByRole("searchbox", { name: /Filtrer les vacations/ });
@@ -1133,175 +1593,222 @@ export const Entity: Story = {
   name: "Entity (detail page)",
   parameters: { design: { type: "figma", url: figmaUrl("4577:13694") } },
   render: () => (
-      <Page globalActions={null}>
-        <Page.Bar
-          title="Entité"
-          trailing={<Avatar size="medium" initials="AC" />}
-        />
-        <Page.Body>
-          <Grid gap="300">
-            <Grid.Col span={{ mobile: 12, tablet: 5, desktop: 4 }}>
+    <Page globalActions={null}>
+      <Page.Bar title="Entité" trailing={<Avatar size="medium" initials="AC" />} />
+      <Page.Body>
+        <Grid gap="300">
+          <Grid.Col span={{ mobile: 12, tablet: 5, desktop: 4 }}>
+            <Stack gap="200">
               <Stack gap="200">
-                <Stack gap="200">
-                  <Stack direction="row" gap="200" align="center">
-                    <Avatar size="xlarge" initials="DM" />
-                    <Stack align="start" gap="050">
-                      <Stack>
-                        <Heading size="medium" as="span">DUPONT Marie</Heading>
-                      </Stack>
-                      <Tag elemBefore={<Icon icon="AwardStar" size={16} color="success" />} label="Conforme" color="success"  />
+                <Stack direction="row" gap="200" align="center">
+                  <Avatar size="xlarge" initials="DM" />
+                  <Stack align="start" gap="050">
+                    <Stack>
+                      <Heading size="medium" as="span">
+                        DUPONT Marie
+                      </Heading>
+                    </Stack>
+                    <Tag
+                      elemBefore={<Icon icon="AwardStar" size={16} color="success" />}
+                      label="Conforme"
+                      color="success"
+                    />
+                  </Stack>
+                </Stack>
+                <Text size="large">Agent de sureté</Text>
+                <Stack gap="050">
+                  <Stack direction="row" gap="100" align="center">
+                    <Icon icon="LabelImportant" size={20} color="subtlest" />
+                    <Text as="span" weight="medium">
+                      MAT0001
+                    </Text>
+                  </Stack>
+                  <Stack direction="row" gap="100" align="center">
+                    <Icon icon="CorporateFlare" size={20} color="subtlest" />
+                    <Text as="span">Pro sécurité</Text>
+                  </Stack>
+                  <Stack direction="row" gap="100" align="center">
+                    <Icon icon="Email" size={20} color="subtlest" />
+                    <Text as="span">marie.dupont@mail.com</Text>
+                  </Stack>
+                  <Stack direction="row" gap="100" align="center">
+                    <Icon icon="LocationOn" size={20} color="subtlest" />
+                    <Text as="span">Ile de France</Text>
+                  </Stack>
+                  <Stack direction="row" gap="100" align="center">
+                    <Icon icon="School" size={20} color="subtlest" />
+                    <Text as="span">Niveau 3, Échelon 3</Text>
+                  </Stack>
+                </Stack>
+
+                <Card appearance="subtle" color="neutral">
+                  <Stack padding="200" gap="150">
+                    <Stack direction="row" gap="100" align="center">
+                      <IconTile icon="CalendarClock" appearance="success" size="small" />
+                      <Text as="span">WWWW1</Text>
+                    </Stack>
+                    <Divider />
+                    <Stack direction="row" gap="100" align="center">
+                      <IconTile icon="School" appearance="information" size="small" />
+                      <Text as="span">WWWW</Text>
                     </Stack>
                   </Stack>
-                  <Text size="large">Agent de sureté</Text>
-                  <Stack gap="050">
-                    <Stack direction="row" gap="100" align="center">
-                      <Icon icon="LabelImportant" size={20} color="subtlest" />
-                      <Text as="span" weight="medium">MAT0001</Text>
-                    </Stack>
-                    <Stack direction="row" gap="100" align="center">
-                      <Icon icon="CorporateFlare" size={20} color="subtlest" />
-                      <Text as="span">Pro sécurité</Text>
-                    </Stack>
-                    <Stack direction="row" gap="100" align="center">
-                      <Icon icon="Email" size={20} color="subtlest" />
-                      <Text as="span">marie.dupont@mail.com</Text>
-                    </Stack>
-                    <Stack direction="row" gap="100" align="center">
-                      <Icon icon="LocationOn" size={20} color="subtlest" />
-                      <Text as="span">Ile de France</Text>
-                    </Stack>
-                    <Stack direction="row" gap="100" align="center">
-                      <Icon icon="School" size={20} color="subtlest" />
-                      <Text as="span">Niveau 3, Échelon 3</Text>
-                    </Stack>
-                  </Stack>
-
-                  <Card appearance="subtle" color="neutral">
-                    <Stack padding="200" gap="150">
-                      <Stack direction="row" gap="100" align="center">
-                        <IconTile icon="CalendarClock" appearance="success" size="small" />
-                        <Text as="span">WWWW1</Text>
-                      </Stack>
-                      <Divider />
-                      <Stack direction="row" gap="100" align="center">
-                        <IconTile icon="School" appearance="information" size="small" />
-                        <Text as="span">WWWW</Text>
-                      </Stack>
-                    </Stack>
-                  </Card>                  
-                  <Cluster gap="100" justify="center">
-                    <Button appearance="contained" iconBefore="CalendarMonth" color="comete" >Planning</Button>
-                    <Button appearance="contained" iconBefore="Newspaper">Documents</Button>
-                    <Button appearance="contained" iconBefore="History">Rapports</Button>
-                  </Cluster>
-                </Stack>
-                <Divider />
-                <Stack gap="150">
-                  <PropRow icon="Mail" label="E-mail" value="marie.dupont@mail.com" />
-                  <PropRow icon="Badge" label="Matricule" value="150" />
-                  <PropRow icon="BusinessCenter" label="Société" value="AEXAE" />
-                  <PropRow icon="LocationOn" label="Secteur" value="Ile de France" />
-                  <PropRow icon="School" label="Qualification" value="Agent N3E3" />
-                </Stack>
-                <Divider />
-                <Cluster gap="100">
-                  <Button appearance="subtle" iconBefore="Edit">Modifier</Button>
-                  <Button appearance="subtle" color="critical" iconBefore="Archive">Archiver</Button>
-                </Cluster>
-
-                <Card appearance="outlined">
-                  <CC>
-                    <Stack gap="200">
-                      <Heading size="small" as="span">Chiffres clés — Avril 2026</Heading>
-                      <div className={css["metricsGrid"]}>
-                        <MetricTile label="Contrat" value="151.67" unit="h" />
-                        <MetricTile label="Heures pay." value="151.67" unit="h" />
-                        <MetricTile label="Indispo +" value="0.00" unit="h" />
-                        <MetricTile label="Indispo −" value="0.00" unit="h" />
-                        <div className={css["metricsGridFull"]}>
-                          <MetricTile label="Delta" value="0.00" unit="h" highlight="success" />
-                        </div>
-                      </div>
-                    </Stack>
-                  </CC>
                 </Card>
-
+                <Cluster gap="100" justify="center">
+                  <Button appearance="contained" iconBefore="CalendarMonth" color="comete">
+                    Planning
+                  </Button>
+                  <Button appearance="contained" iconBefore="Newspaper">
+                    Documents
+                  </Button>
+                  <Button appearance="contained" iconBefore="History">
+                    Rapports
+                  </Button>
+                </Cluster>
               </Stack>
-            </Grid.Col>
+              <Divider />
+              <Stack gap="150">
+                <PropRow icon="Mail" label="E-mail" value="marie.dupont@mail.com" />
+                <PropRow icon="Badge" label="Matricule" value="150" />
+                <PropRow icon="BusinessCenter" label="Société" value="AEXAE" />
+                <PropRow icon="LocationOn" label="Secteur" value="Ile de France" />
+                <PropRow icon="School" label="Qualification" value="Agent N3E3" />
+              </Stack>
+              <Divider />
+              <Cluster gap="100">
+                <Button appearance="subtle" iconBefore="Edit">
+                  Modifier
+                </Button>
+                <Button appearance="subtle" color="critical" iconBefore="Archive">
+                  Archiver
+                </Button>
+              </Cluster>
 
-            <Grid.Col span={{ mobile: 12, tablet: 7, desktop: 8 }}>
               <Card appearance="outlined">
-                <div className={css["cardColumn"]}>
-                  <Tabs>
-                    <div style={{ padding: "var(--space200) var(--space200) 0" }}>
-                      <TabList>
-                        <Tab id="planning">Planning</Tab>
-                        <Tab id="documents">Documents</Tab>
-                        <Tab id="historique">Historique</Tab>
-                      </TabList>
+                <CC>
+                  <Stack gap="200">
+                    <Heading size="small" as="span">
+                      Chiffres clés — Avril 2026
+                    </Heading>
+                    <div className={css["metricsGrid"]}>
+                      <MetricTile label="Contrat" value="151.67" unit="h" />
+                      <MetricTile label="Heures pay." value="151.67" unit="h" />
+                      <MetricTile label="Indispo +" value="0.00" unit="h" />
+                      <MetricTile label="Indispo −" value="0.00" unit="h" />
+                      <div className={css["metricsGridFull"]}>
+                        <MetricTile label="Delta" value="0.00" unit="h" highlight="success" />
+                      </div>
                     </div>
-                    <TabPanel id="planning">
-                      <CC>
-                        <Stack gap="200">
-                          <Cluster justify="between" align="center">
-                            <MonthPicker month={4} year={2026} isEditable={false} aria-label="Mois du planning" />
-                            <Button appearance="subtle" iconBefore="Download">Exporter</Button>
-                          </Cluster>
-                          <SectionMessage appearance="warning" title="Aucune planification">
-                            {"Aucune vacation n'est planifiée pour avril 2026."}
-                          </SectionMessage>
-                          <div className={css["placeholder"]} style={{ height: 300 }}>Calendrier de planification</div>
-                        </Stack>
-                      </CC>
-                    </TabPanel>
-                    <TabPanel id="documents">
-                      <CC>
-                        <Stack gap="200">
-                          <Cluster justify="between" align="center">
-                            <div style={{ flex: "1 1 auto", minWidth: 0, maxWidth: 300 }}>
-                              <SearchField placeholder="Rechercher un document…" />
-                            </div>
-                            <Button appearance="subtle" iconBefore="UploadFile">Importer</Button>
-                          </Cluster>
-                          <Card appearance="subtle">
-                            <CC padding="var(--space300)">
-                              <Stack gap="100" align="center">
-                                <Icon icon="Newspaper" />
-                                <Text color="subtlest" align="center">Aucun document pour cet agent.</Text>
-                                <Button appearance="subtle" iconBefore="UploadFile">Importer un document</Button>
-                              </Stack>
-                            </CC>
-                          </Card>
-                        </Stack>
-                      </CC>
-                    </TabPanel>
-                    <TabPanel id="historique">
-                      <CC>
-                        <Stack gap="150">
-                          {[
-                            { date: "17/04/2026", action: "Contrat modifié", user: "A. Cremont" },
-                            { date: "15/04/2026", action: "Document ajouté : Attestation SST", user: "M. Dupont" },
-                            { date: "01/04/2026", action: "Planification avril créée", user: "Système" },
-                            { date: "28/03/2026", action: "Fiche agent mise à jour", user: "A. Cremont" },
-                          ].map((e, i) => (
-                            <Stack key={i} direction="row" gap="200" align="start">
-                              <Text size="small" as="span" color="subtlest">{e.date}</Text>
-                              <Stack gap="0">
-                                <Text as="span">{e.action}</Text>
-                                <Text size="small" as="span" color="subtlest">{e.user}</Text>
-                              </Stack>
-                            </Stack>
-                          ))}
-                        </Stack>
-                      </CC>
-                    </TabPanel>
-                  </Tabs>
-                </div>
+                  </Stack>
+                </CC>
               </Card>
-            </Grid.Col>
-          </Grid>
-        </Page.Body>
-      </Page>
+            </Stack>
+          </Grid.Col>
+
+          <Grid.Col span={{ mobile: 12, tablet: 7, desktop: 8 }}>
+            <Card appearance="outlined">
+              <div className={css["cardColumn"]}>
+                <Tabs>
+                  <div style={{ padding: "var(--space200) var(--space200) 0" }}>
+                    <TabList>
+                      <Tab id="planning">Planning</Tab>
+                      <Tab id="documents">Documents</Tab>
+                      <Tab id="historique">Historique</Tab>
+                    </TabList>
+                  </div>
+                  <TabPanel id="planning">
+                    <CC>
+                      <Stack gap="200">
+                        <Cluster justify="between" align="center">
+                          <MonthPicker
+                            month={4}
+                            year={2026}
+                            isEditable={false}
+                            aria-label="Mois du planning"
+                          />
+                          <Button appearance="subtle" iconBefore="Download">
+                            Exporter
+                          </Button>
+                        </Cluster>
+                        <SectionMessage appearance="warning" title="Aucune planification">
+                          {"Aucune vacation n'est planifiée pour avril 2026."}
+                        </SectionMessage>
+                        <div className={css["placeholder"]} style={{ height: 300 }}>
+                          Calendrier de planification
+                        </div>
+                      </Stack>
+                    </CC>
+                  </TabPanel>
+                  <TabPanel id="documents">
+                    <CC>
+                      <Stack gap="200">
+                        <Cluster justify="between" align="center">
+                          <div style={{ flex: "1 1 auto", minWidth: 0, maxWidth: 300 }}>
+                            <SearchField placeholder="Rechercher un document…" />
+                          </div>
+                          <Button appearance="subtle" iconBefore="UploadFile">
+                            Importer
+                          </Button>
+                        </Cluster>
+                        <Card appearance="subtle">
+                          <CC padding="var(--space300)">
+                            <Stack gap="100" align="center">
+                              <Icon icon="Newspaper" />
+                              <Text color="subtlest" align="center">
+                                Aucun document pour cet agent.
+                              </Text>
+                              <Button appearance="subtle" iconBefore="UploadFile">
+                                Importer un document
+                              </Button>
+                            </Stack>
+                          </CC>
+                        </Card>
+                      </Stack>
+                    </CC>
+                  </TabPanel>
+                  <TabPanel id="historique">
+                    <CC>
+                      <Stack gap="150">
+                        {[
+                          { date: "17/04/2026", action: "Contrat modifié", user: "A. Cremont" },
+                          {
+                            date: "15/04/2026",
+                            action: "Document ajouté : Attestation SST",
+                            user: "M. Dupont",
+                          },
+                          {
+                            date: "01/04/2026",
+                            action: "Planification avril créée",
+                            user: "Système",
+                          },
+                          {
+                            date: "28/03/2026",
+                            action: "Fiche agent mise à jour",
+                            user: "A. Cremont",
+                          },
+                        ].map((e, i) => (
+                          <Stack key={i} direction="row" gap="200" align="start">
+                            <Text size="small" as="span" color="subtlest">
+                              {e.date}
+                            </Text>
+                            <Stack gap="0">
+                              <Text as="span">{e.action}</Text>
+                              <Text size="small" as="span" color="subtlest">
+                                {e.user}
+                              </Text>
+                            </Stack>
+                          </Stack>
+                        ))}
+                      </Stack>
+                    </CC>
+                  </TabPanel>
+                </Tabs>
+              </div>
+            </Card>
+          </Grid.Col>
+        </Grid>
+      </Page.Body>
+    </Page>
   ),
 };
 
@@ -1318,8 +1825,9 @@ const HOME_WELCOME_TEXT: CSSProperties = {
   lineHeight: "var(--line-height-ui-m)",
 };
 const toDisplayName = (raw: string): string =>
-  raw.toLowerCase().replace(/(^|[\s-])(\p{L})/gu, (_m, sep: string, c: string) => sep + c.toUpperCase());
-
+  raw
+    .toLowerCase()
+    .replace(/(^|[\s-])(\p{L})/gu, (_m, sep: string, c: string) => sep + c.toUpperCase());
 
 /**
  * **Home** — Vue d'ensemble avec KPIs, activité et résumés.
@@ -1381,9 +1889,21 @@ export const Home: StoryObj<{ isNameLoading: boolean }> = {
           title="Accueil"
           trailing={
             <Stack direction="row" gap="150" align="center">
-              <Button appearance="subtle" density="compact" iconBefore="ChevronLeft" aria-label="Précédent" />
-              <Text weight="medium" as="span">Avril 2026</Text>
-              <Button appearance="subtle" density="compact" iconBefore="ChevronRight" aria-label="Suivant" />
+              <Button
+                appearance="subtle"
+                density="compact"
+                iconBefore="ChevronLeft"
+                aria-label="Précédent"
+              />
+              <Text weight="medium" as="span">
+                Avril 2026
+              </Text>
+              <Button
+                appearance="subtle"
+                density="compact"
+                iconBefore="ChevronRight"
+                aria-label="Suivant"
+              />
               <Avatar size="medium" initials="AC" />
             </Stack>
           }
@@ -1406,10 +1926,45 @@ export const Home: StoryObj<{ isNameLoading: boolean }> = {
 
               {/* KPIs */}
               <Grid columns={{ mobile: 2, tablet: 4 }} gap="200">
-                <Grid.Col><KpiTile icon="CalendarMonth" iconColor="success" value="42" label="Vacations affectées" trend="+12%" trendUp /></Grid.Col>
-                <Grid.Col><KpiTile icon="LocationOn" iconColor="warning" value="3" label="Alertes" trend="+2" trendUp={false} /></Grid.Col>
-                <Grid.Col><KpiTile icon="Schedule" iconColor="information" value="1" label="Retards" trend="−1" trendUp /></Grid.Col>
-                <Grid.Col><KpiTile icon="Warning" iconColor="critical" value="0" label="PDS manquées" trend="0" /></Grid.Col>
+                <Grid.Col>
+                  <KpiTile
+                    icon="CalendarMonth"
+                    iconColor="success"
+                    value="42"
+                    label="Vacations affectées"
+                    trend="+12%"
+                    trendUp
+                  />
+                </Grid.Col>
+                <Grid.Col>
+                  <KpiTile
+                    icon="LocationOn"
+                    iconColor="warning"
+                    value="3"
+                    label="Alertes"
+                    trend="+2"
+                    trendUp={false}
+                  />
+                </Grid.Col>
+                <Grid.Col>
+                  <KpiTile
+                    icon="Schedule"
+                    iconColor="information"
+                    value="1"
+                    label="Retards"
+                    trend="−1"
+                    trendUp
+                  />
+                </Grid.Col>
+                <Grid.Col>
+                  <KpiTile
+                    icon="Warning"
+                    iconColor="critical"
+                    value="0"
+                    label="PDS manquées"
+                    trend="0"
+                  />
+                </Grid.Col>
               </Grid>
             </Stack>
 
@@ -1420,24 +1975,60 @@ export const Home: StoryObj<{ isNameLoading: boolean }> = {
                   <CC>
                     <Stack gap="200">
                       <Cluster justify="between" align="center">
-                        <Heading size="small" as="span">Activité récente</Heading>
-                        <Button appearance="link" density="compact">Tout voir</Button>
+                        <Heading size="small" as="span">
+                          Activité récente
+                        </Heading>
+                        <Button appearance="link" density="compact">
+                          Tout voir
+                        </Button>
                       </Cluster>
                       <Divider />
                       {[
-                        { icon: "Newspaper" as IconName, title: "Mise à jour v1.8.0", sub: "Nouvelles fonctionnalités", date: "Aujourd'hui", bold: true },
-                        { icon: "Warning" as IconName, title: "Maintenance le 25/04", sub: "Indisponible de 2h à 4h", date: "Il y a 2j", bold: true },
-                        { icon: "Newspaper" as IconName, title: "Export PDF disponible", sub: "Depuis la fiche site", date: "Il y a 7j", bold: false },
-                        { icon: "Group" as IconName, title: "3 agents ajoutés", sub: "LEROY, GARNIER, SIMON", date: "22/03", bold: false },
+                        {
+                          icon: "Newspaper" as IconName,
+                          title: "Mise à jour v1.8.0",
+                          sub: "Nouvelles fonctionnalités",
+                          date: "Aujourd'hui",
+                          bold: true,
+                        },
+                        {
+                          icon: "Warning" as IconName,
+                          title: "Maintenance le 25/04",
+                          sub: "Indisponible de 2h à 4h",
+                          date: "Il y a 2j",
+                          bold: true,
+                        },
+                        {
+                          icon: "Newspaper" as IconName,
+                          title: "Export PDF disponible",
+                          sub: "Depuis la fiche site",
+                          date: "Il y a 7j",
+                          bold: false,
+                        },
+                        {
+                          icon: "Group" as IconName,
+                          title: "3 agents ajoutés",
+                          sub: "LEROY, GARNIER, SIMON",
+                          date: "22/03",
+                          bold: false,
+                        },
                       ].map((item, i) => (
                         <Stack key={i} direction="row" gap="150" align="start">
-                          <div className={css["activityIcon"]}><Icon icon={item.icon} /></div>
+                          <div className={css["activityIcon"]}>
+                            <Icon icon={item.icon} />
+                          </div>
                           <Stack gap="0">
-                            <Text weight={item.bold ? "medium" : "regular"} as="span">{item.title}</Text>
-                            <Text size="small" as="span" color="subtlest">{item.sub}</Text>
+                            <Text weight={item.bold ? "medium" : "regular"} as="span">
+                              {item.title}
+                            </Text>
+                            <Text size="small" as="span" color="subtlest">
+                              {item.sub}
+                            </Text>
                           </Stack>
                           <span style={{ marginLeft: "auto", flexShrink: 0 }}>
-                            <Text size="small" as="span" color="subtlest">{item.date}</Text>
+                            <Text size="small" as="span" color="subtlest">
+                              {item.date}
+                            </Text>
                           </span>
                         </Stack>
                       ))}
@@ -1450,13 +2041,22 @@ export const Home: StoryObj<{ isNameLoading: boolean }> = {
                   <CC>
                     <Stack gap="200">
                       <Cluster justify="between" align="center">
-                        <Heading size="small" as="span">Couverture</Heading>
-                        <Text size="small" as="span" color="subtlest">Avril 2026</Text>
+                        <Heading size="small" as="span">
+                          Couverture
+                        </Heading>
+                        <Text size="small" as="span" color="subtlest">
+                          Avril 2026
+                        </Text>
                       </Cluster>
                       <Divider />
                       <ProgressRow icon="Group" label="Agents" current={1} total={140} />
                       <ProgressRow icon="BusinessCenter" label="Sites" current={3} total={65} />
-                      <ProgressRow icon="CalendarMonth" label="Vacations" current={42} total={329} />
+                      <ProgressRow
+                        icon="CalendarMonth"
+                        label="Vacations"
+                        current={42}
+                        total={329}
+                      />
                     </Stack>
                   </CC>
                 </Card>
@@ -1466,29 +2066,84 @@ export const Home: StoryObj<{ isNameLoading: boolean }> = {
             {/* Sites */}
             <Stack gap="200">
               <Cluster justify="between" align="center">
-                <Heading size="small" as="span">Sites actifs</Heading>
-                <Button appearance="link" density="compact">Voir tous</Button>
+                <Heading size="small" as="span">
+                  Sites actifs
+                </Heading>
+                <Button appearance="link" density="compact">
+                  Voir tous
+                </Button>
               </Cluster>
               <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
                 {[
-                  { site: "Carrefour Market Chatel", client: "Vindémia Distribution", secteur: "Ile de France", vac: 30, nonAff: 30, couv: "0%" },
-                  { site: "Imperial Palace", client: "Mairie de Merville", secteur: "Rhône Alpes", vac: 180, nonAff: 179, couv: "0.56%" },
-                  { site: "Jardins de la Roseraie", client: "Syndicat copropriété", secteur: "Grand Est", vac: 119, nonAff: 119, couv: "0%" },
+                  {
+                    site: "Carrefour Market Chatel",
+                    client: "Vindémia Distribution",
+                    secteur: "Ile de France",
+                    vac: 30,
+                    nonAff: 30,
+                    couv: "0%",
+                  },
+                  {
+                    site: "Imperial Palace",
+                    client: "Mairie de Merville",
+                    secteur: "Rhône Alpes",
+                    vac: 180,
+                    nonAff: 179,
+                    couv: "0.56%",
+                  },
+                  {
+                    site: "Jardins de la Roseraie",
+                    client: "Syndicat copropriété",
+                    secteur: "Grand Est",
+                    vac: 119,
+                    nonAff: 119,
+                    couv: "0%",
+                  },
                 ].map((s, i) => (
                   <Grid.Col key={i}>
                     <Card appearance="outlined" onPress={() => undefined}>
                       <CC>
                         <Stack gap="150">
                           <Stack gap="025">
-                            <Heading size="xsmall" as="span">{s.site}</Heading>
-                            <Text size="small" as="span" color="subtlest">{s.client}</Text>
+                            <Heading size="xsmall" as="span">
+                              {s.site}
+                            </Heading>
+                            <Text size="small" as="span" color="subtlest">
+                              {s.client}
+                            </Text>
                           </Stack>
                           <Tag label={s.secteur} />
                           <Divider />
                           <div className={css["siteStats"]}>
-                            <Stack gap="0"><Text size="small" as="span" color="subtlest">Vacations</Text><Heading size="small" as="span">{String(s.vac)}</Heading></Stack>
-                            <Stack gap="0"><Text size="small" as="span" color="subtlest">Non affect.</Text><Text size="small" weight="bold" as="span" color={s.nonAff > 0 ? "warning" : undefined}>{String(s.nonAff)}</Text></Stack>
-                            <Stack gap="0"><Text size="small" as="span" color="subtlest">Couverture</Text><Heading size="small" as="span">{s.couv}</Heading></Stack>
+                            <Stack gap="0">
+                              <Text size="small" as="span" color="subtlest">
+                                Vacations
+                              </Text>
+                              <Heading size="small" as="span">
+                                {String(s.vac)}
+                              </Heading>
+                            </Stack>
+                            <Stack gap="0">
+                              <Text size="small" as="span" color="subtlest">
+                                Non affect.
+                              </Text>
+                              <Text
+                                size="small"
+                                weight="bold"
+                                as="span"
+                                color={s.nonAff > 0 ? "warning" : undefined}
+                              >
+                                {String(s.nonAff)}
+                              </Text>
+                            </Stack>
+                            <Stack gap="0">
+                              <Text size="small" as="span" color="subtlest">
+                                Couverture
+                              </Text>
+                              <Heading size="small" as="span">
+                                {s.couv}
+                              </Heading>
+                            </Stack>
                           </div>
                         </Stack>
                       </CC>
@@ -1517,147 +2172,231 @@ export const Home: StoryObj<{ isNameLoading: boolean }> = {
 export const Settings: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("4577:13694") } },
   render: () => (
-      <Page globalActions={null}>
-        <Page.Bar title="Permissions" trailing={<Avatar size="medium" initials="AC" />} />
-        <Page.Body>
-          <Tabs>
-            <TabList>
-              <Tab id="roles" iconBefore="Manager">Rôles</Tab>
-              <Tab id="fonctions" iconBefore="ManageAccounts">Fonctions</Tab>
-              <Tab id="explorateur" iconBefore="Search">Explorateur</Tab>
-            </TabList>
+    <Page globalActions={null}>
+      <Page.Bar title="Permissions" trailing={<Avatar size="medium" initials="AC" />} />
+      <Page.Body>
+        <Tabs>
+          <TabList>
+            <Tab id="roles" iconBefore="Manager">
+              Rôles
+            </Tab>
+            <Tab id="fonctions" iconBefore="ManageAccounts">
+              Fonctions
+            </Tab>
+            <Tab id="explorateur" iconBefore="Search">
+              Explorateur
+            </Tab>
+          </TabList>
 
-            <TabPanel id="roles">
-              <div style={{ paddingTop: "var(--space300)" }}>
-                <Stack gap="300">
-                  <SectionMessage appearance="information">
-                    {"Les rôles définissent le niveau d'accès système. Ils ne sont pas personnalisables."}
-                  </SectionMessage>
-                  <Grid columns={{ mobile: 1, tablet: 2, desktop: 4 }} gap="200">
-                    {[
-                      { role: "Administrateur", desc: "Accès complet. Gestion des utilisateurs, sites et paramètres.", count: 15, icon: "Administrator" as IconName },
-                      { role: "Manager", desc: "Accès aux sites autorisés. Planification et suivi.", count: 20, icon: "Manager" as IconName },
-                      { role: "Agent", desc: "Pointage et accès planning personnel.", count: 137, icon: "Person" as IconName },
-                      { role: "Client", desc: "Lecture seule sur les sites attribués.", count: 53, icon: "Visibility" as IconName },
-                    ].map((r) => (
-                      <Grid.Col key={r.role}>
-                        <Card appearance="outlined" onPress={() => undefined}>
-                          <CC>
-                            <Stack gap="150">
-                              <Cluster justify="between" align="start">
-                                <div className={css["iconPuck"]}><Icon icon={r.icon} /></div>
-                                <Badge label={`${r.count}`} appearance="neutral" importance="medium" />
-                              </Cluster>
-                              <Stack gap="050">
-                                <Heading size="small" as="span">{r.role}</Heading>
-                                <Text size="small" as="span" color="subtle">{r.desc}</Text>
-                              </Stack>
+          <TabPanel id="roles">
+            <div style={{ paddingTop: "var(--space300)" }}>
+              <Stack gap="300">
+                <SectionMessage appearance="information">
+                  {
+                    "Les rôles définissent le niveau d'accès système. Ils ne sont pas personnalisables."
+                  }
+                </SectionMessage>
+                <Grid columns={{ mobile: 1, tablet: 2, desktop: 4 }} gap="200">
+                  {[
+                    {
+                      role: "Administrateur",
+                      desc: "Accès complet. Gestion des utilisateurs, sites et paramètres.",
+                      count: 15,
+                      icon: "Administrator" as IconName,
+                    },
+                    {
+                      role: "Manager",
+                      desc: "Accès aux sites autorisés. Planification et suivi.",
+                      count: 20,
+                      icon: "Manager" as IconName,
+                    },
+                    {
+                      role: "Agent",
+                      desc: "Pointage et accès planning personnel.",
+                      count: 137,
+                      icon: "Person" as IconName,
+                    },
+                    {
+                      role: "Client",
+                      desc: "Lecture seule sur les sites attribués.",
+                      count: 53,
+                      icon: "Visibility" as IconName,
+                    },
+                  ].map((r) => (
+                    <Grid.Col key={r.role}>
+                      <Card appearance="outlined" onPress={() => undefined}>
+                        <CC>
+                          <Stack gap="150">
+                            <Cluster justify="between" align="start">
+                              <div className={css["iconPuck"]}>
+                                <Icon icon={r.icon} />
+                              </div>
+                              <Badge
+                                label={`${r.count}`}
+                                appearance="neutral"
+                                importance="medium"
+                              />
+                            </Cluster>
+                            <Stack gap="050">
+                              <Heading size="small" as="span">
+                                {r.role}
+                              </Heading>
+                              <Text size="small" as="span" color="subtle">
+                                {r.desc}
+                              </Text>
                             </Stack>
-                          </CC>
-                        </Card>
-                      </Grid.Col>
-                    ))}
-                  </Grid>
-                </Stack>
-              </div>
-            </TabPanel>
+                          </Stack>
+                        </CC>
+                      </Card>
+                    </Grid.Col>
+                  ))}
+                </Grid>
+              </Stack>
+            </div>
+          </TabPanel>
 
-            <TabPanel id="fonctions">
-              <div style={{ paddingTop: "var(--space300)" }}>
-                <Stack gap="300">
-                  <Cluster justify="between" align="center">
-                    <Stack gap="050">
-                      <Heading size="small" as="span">Fonctions</Heading>
-                      <Text as="span" color="subtle">Affinez les permissions au-delà des rôles.</Text>
-                    </Stack>
-                    <Button color="comete" iconBefore="Add">Nouvelle fonction</Button>
-                  </Cluster>
+          <TabPanel id="fonctions">
+            <div style={{ paddingTop: "var(--space300)" }}>
+              <Stack gap="300">
+                <Cluster justify="between" align="center">
+                  <Stack gap="050">
+                    <Heading size="small" as="span">
+                      Fonctions
+                    </Heading>
+                    <Text as="span" color="subtle">
+                      Affinez les permissions au-delà des rôles.
+                    </Text>
+                  </Stack>
+                  <Button color="comete" iconBefore="Add">
+                    Nouvelle fonction
+                  </Button>
+                </Cluster>
 
-                  <div className={css["tableDesktopOnly"]}>
-                    <Card appearance="outlined">
-                      <div className={css["cardColumn"]}>
-                        <MiniTableRow isHeader cells={["Fonction", "Rôle", "Utilisateurs", "Modifié le"]} />
-                        {[
-                          { fn: "Responsable planning", role: "Manager", users: "8", date: "12/04/2026" },
-                          { fn: "Superviseur terrain", role: "Manager", users: "5", date: "08/04/2026" },
-                          { fn: "Gestionnaire RH", role: "Admin.", users: "3", date: "01/04/2026" },
-                        ].map((fn, i) => (
-                          <MiniTableRow key={i} cells={[
-                            <Text key="fn" weight="medium" as="span">{fn.fn}</Text>,
+                <div className={css["tableDesktopOnly"]}>
+                  <Card appearance="outlined">
+                    <div className={css["cardColumn"]}>
+                      <MiniTableRow
+                        isHeader
+                        cells={["Fonction", "Rôle", "Utilisateurs", "Modifié le"]}
+                      />
+                      {[
+                        {
+                          fn: "Responsable planning",
+                          role: "Manager",
+                          users: "8",
+                          date: "12/04/2026",
+                        },
+                        {
+                          fn: "Superviseur terrain",
+                          role: "Manager",
+                          users: "5",
+                          date: "08/04/2026",
+                        },
+                        { fn: "Gestionnaire RH", role: "Admin.", users: "3", date: "01/04/2026" },
+                      ].map((fn, i) => (
+                        <MiniTableRow
+                          key={i}
+                          cells={[
+                            <Text key="fn" weight="medium" as="span">
+                              {fn.fn}
+                            </Text>,
                             <Tag key="r" label={fn.role} />,
                             fn.users,
                             fn.date,
-                          ]} />
-                        ))}
-                      </div>
-                    </Card>
-                  </div>
-
-                  <div className={css["cardsMobileOnly"]}>
-                    <Stack gap="100">
-                      {[
-                        { fn: "Responsable planning", role: "Manager", users: "8", date: "12/04/2026" },
-                        { fn: "Superviseur terrain", role: "Manager", users: "5", date: "08/04/2026" },
-                        { fn: "Gestionnaire RH", role: "Admin.", users: "3", date: "01/04/2026" },
-                      ].map((fn, i) => (
-                        <Card key={i} appearance="outlined">
-                          <CC>
-                            <Stack gap="100">
-                              <Cluster justify="between" align="center">
-                                <Heading size="xsmall" as="span">{fn.fn}</Heading>
-                                <Tag label={fn.role} />
-                              </Cluster>
-                              <Cluster gap="200">
-                                <Text size="small" as="span" color="subtlest">{fn.users} utilisateurs</Text>
-                                <Text size="small" as="span" color="subtlest">Modifié le {fn.date}</Text>
-                              </Cluster>
-                            </Stack>
-                          </CC>
-                        </Card>
+                          ]}
+                        />
                       ))}
-                    </Stack>
-                  </div>
-                </Stack>
-              </div>
-            </TabPanel>
-
-            <TabPanel id="explorateur">
-              <div style={{ paddingTop: "var(--space300)" }}>
-                <Stack gap="300">
-                  <Text color="subtle">{"Vérifiez les permissions effectives d'un utilisateur."}</Text>
-                  <Card appearance="outlined">
-                    <CC>
-                      <Stack gap="200">
-                        <Grid columns={{ mobile: 1, tablet: 3 }} gap="200">
-                          <Grid.Col>
-                            <Field label="Utilisateur">
-                              <TextField placeholder="Rechercher…" />
-                            </Field>
-                          </Grid.Col>
-                          <Grid.Col>
-                            <Field label="Ressource">
-                              <TextField placeholder="Rechercher…" />
-                            </Field>
-                          </Grid.Col>
-                          <Grid.Col>
-                            <Field label=" ">
-                              <Button color="comete" iconBefore="Search">Vérifier</Button>
-                            </Field>
-                          </Grid.Col>
-                        </Grid>
-                        <Divider />
-                        <Stack gap="100" align="center">
-                          <Icon icon="Search" />
-                          <Text color="subtlest" align="center">Sélectionnez un utilisateur et une ressource.</Text>
-                        </Stack>
-                      </Stack>
-                    </CC>
+                    </div>
                   </Card>
-                </Stack>
-              </div>
-            </TabPanel>
-          </Tabs>
-        </Page.Body>
-      </Page>
+                </div>
+
+                <div className={css["cardsMobileOnly"]}>
+                  <Stack gap="100">
+                    {[
+                      {
+                        fn: "Responsable planning",
+                        role: "Manager",
+                        users: "8",
+                        date: "12/04/2026",
+                      },
+                      {
+                        fn: "Superviseur terrain",
+                        role: "Manager",
+                        users: "5",
+                        date: "08/04/2026",
+                      },
+                      { fn: "Gestionnaire RH", role: "Admin.", users: "3", date: "01/04/2026" },
+                    ].map((fn, i) => (
+                      <Card key={i} appearance="outlined">
+                        <CC>
+                          <Stack gap="100">
+                            <Cluster justify="between" align="center">
+                              <Heading size="xsmall" as="span">
+                                {fn.fn}
+                              </Heading>
+                              <Tag label={fn.role} />
+                            </Cluster>
+                            <Cluster gap="200">
+                              <Text size="small" as="span" color="subtlest">
+                                {fn.users} utilisateurs
+                              </Text>
+                              <Text size="small" as="span" color="subtlest">
+                                Modifié le {fn.date}
+                              </Text>
+                            </Cluster>
+                          </Stack>
+                        </CC>
+                      </Card>
+                    ))}
+                  </Stack>
+                </div>
+              </Stack>
+            </div>
+          </TabPanel>
+
+          <TabPanel id="explorateur">
+            <div style={{ paddingTop: "var(--space300)" }}>
+              <Stack gap="300">
+                <Text color="subtle">
+                  {"Vérifiez les permissions effectives d'un utilisateur."}
+                </Text>
+                <Card appearance="outlined">
+                  <CC>
+                    <Stack gap="200">
+                      <Grid columns={{ mobile: 1, tablet: 3 }} gap="200">
+                        <Grid.Col>
+                          <Field label="Utilisateur">
+                            <TextField placeholder="Rechercher…" />
+                          </Field>
+                        </Grid.Col>
+                        <Grid.Col>
+                          <Field label="Ressource">
+                            <TextField placeholder="Rechercher…" />
+                          </Field>
+                        </Grid.Col>
+                        <Grid.Col>
+                          <Field label=" ">
+                            <Button color="comete" iconBefore="Search">
+                              Vérifier
+                            </Button>
+                          </Field>
+                        </Grid.Col>
+                      </Grid>
+                      <Divider />
+                      <Stack gap="100" align="center">
+                        <Icon icon="Search" />
+                        <Text color="subtlest" align="center">
+                          Sélectionnez un utilisateur et une ressource.
+                        </Text>
+                      </Stack>
+                    </Stack>
+                  </CC>
+                </Card>
+              </Stack>
+            </div>
+          </TabPanel>
+        </Tabs>
+      </Page.Body>
+    </Page>
   ),
 };

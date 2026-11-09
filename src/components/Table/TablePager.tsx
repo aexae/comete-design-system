@@ -55,7 +55,11 @@ export type TablePagerItem = number | "ellipsis-start" | "ellipsis-end";
  * de trois pages consécutives centrée sur la courante, avec « … » du côté où des pages sont
  * masquées.
  */
-export function getPageItems(current: number, total: number, slots: 3 | 4 | 5 | 7 = 4): TablePagerItem[] {
+export function getPageItems(
+  current: number,
+  total: number,
+  slots: 3 | 4 | 5 | 7 = 4
+): TablePagerItem[] {
   if (total <= slots) return Array.from({ length: total }, (_, i) => i + 1);
 
   // 4 : jamais plus de QUATRE numéros — première et dernière toujours là, la courante (et sa
@@ -168,7 +172,7 @@ export function TablePager({
           >
             {item}
           </AriaButton>
-        ),
+        )
       )}
 
       <AriaButton

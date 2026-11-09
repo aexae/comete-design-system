@@ -1,7 +1,8 @@
 // Spotlight — Comète Design System
 // Composant d'onboarding mettant en surbrillance un élément cible
 // avec un blanket troué et un dialog flottant positionné.
-import { type ReactElement,
+import {
+  type ReactElement,
   type ReactNode,
   type RefObject,
   useCallback,
@@ -9,7 +10,9 @@ import { type ReactElement,
   useId,
   useLayoutEffect,
   useRef,
-  useState,  type CSSProperties } from "react";
+  useState,
+  type CSSProperties,
+} from "react";
 import {
   Dialog as AriaDialog,
   Heading as AriaHeading,
@@ -108,10 +111,7 @@ interface Rect {
   height: number;
 }
 
-function useTargetRect(
-  targetRef: RefObject<HTMLElement | null>,
-  isOpen: boolean,
-): Rect | null {
+function useTargetRect(targetRef: RefObject<HTMLElement | null>, isOpen: boolean): Rect | null {
   const [rect, setRect] = useState<Rect | null>(null);
 
   const measure = useCallback(() => {
@@ -164,7 +164,7 @@ function computePosition(
   dialogHeight: number,
   placement: SpotlightPlacement,
   offset: number,
-  padding: number,
+  padding: number
 ): Position {
   const tx = targetRect.x - padding;
   const ty = targetRect.y - padding;
@@ -365,7 +365,7 @@ export function Spotlight({
           dialogSize.height,
           placement,
           offset,
-          targetPadding,
+          targetPadding
         )
       : null;
 

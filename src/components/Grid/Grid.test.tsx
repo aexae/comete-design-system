@@ -7,7 +7,7 @@ describe("Grid", () => {
     const { getByText } = render(
       <Grid>
         <Grid.Col>Cell</Grid.Col>
-      </Grid>,
+      </Grid>
     );
     expect(getByText("Cell")).toBeInTheDocument();
   });
@@ -16,7 +16,7 @@ describe("Grid", () => {
     const { container } = render(
       <Grid>
         <Grid.Col>Cell</Grid.Col>
-      </Grid>,
+      </Grid>
     );
     const style = (container.firstChild as HTMLElement).getAttribute("style");
     // default 12 is applied as mobile value
@@ -27,7 +27,7 @@ describe("Grid", () => {
     const { container } = render(
       <Grid columns={4}>
         <Grid.Col>Cell</Grid.Col>
-      </Grid>,
+      </Grid>
     );
     const style = (container.firstChild as HTMLElement).getAttribute("style");
     expect(style).toContain("--_grid-cols-mobile: 4");
@@ -39,7 +39,7 @@ describe("Grid", () => {
     const { container } = render(
       <Grid columns={{ mobile: 1, tablet: 2, desktop: 4 }}>
         <Grid.Col>Cell</Grid.Col>
-      </Grid>,
+      </Grid>
     );
     const style = (container.firstChild as HTMLElement).getAttribute("style");
     expect(style).toContain("--_grid-cols-mobile: 1");
@@ -51,7 +51,7 @@ describe("Grid", () => {
     const { container } = render(
       <Grid columns={{ tablet: 3 }}>
         <Grid.Col>Cell</Grid.Col>
-      </Grid>,
+      </Grid>
     );
     const style = (container.firstChild as HTMLElement).getAttribute("style");
     expect(style).not.toContain("--_grid-cols-mobile");
@@ -63,7 +63,7 @@ describe("Grid", () => {
     const { container } = render(
       <Grid gap="200">
         <Grid.Col>Cell</Grid.Col>
-      </Grid>,
+      </Grid>
     );
     const style = (container.firstChild as HTMLElement).getAttribute("style");
     expect(style).toContain("--_grid-row-gap: var(--space200)");
@@ -74,7 +74,7 @@ describe("Grid", () => {
     const { container } = render(
       <Grid gap="100" rowGap="300">
         <Grid.Col>Cell</Grid.Col>
-      </Grid>,
+      </Grid>
     );
     const style = (container.firstChild as HTMLElement).getAttribute("style");
     expect(style).toContain("--_grid-row-gap: var(--space300)");
@@ -85,7 +85,7 @@ describe("Grid", () => {
     const { container } = render(
       <Grid>
         <Grid.Col>Cell</Grid.Col>
-      </Grid>,
+      </Grid>
     );
     expect((container.firstChild as HTMLElement).className).toContain("grid");
   });
@@ -94,11 +94,9 @@ describe("Grid", () => {
     const { container } = render(
       <Grid className="custom-class">
         <Grid.Col>Cell</Grid.Col>
-      </Grid>,
+      </Grid>
     );
-    expect((container.firstChild as HTMLElement).className).toContain(
-      "custom-class",
-    );
+    expect((container.firstChild as HTMLElement).className).toContain("custom-class");
   });
 });
 
@@ -107,7 +105,7 @@ describe("Grid.Col", () => {
     const { container } = render(
       <Grid>
         <Grid.Col>Cell</Grid.Col>
-      </Grid>,
+      </Grid>
     );
     const col = container.querySelector("[style*='col-span-mobile']");
     expect(col).not.toBeNull();
@@ -118,7 +116,7 @@ describe("Grid.Col", () => {
     const { container } = render(
       <Grid>
         <Grid.Col span={6}>Cell</Grid.Col>
-      </Grid>,
+      </Grid>
     );
     const col = container.querySelectorAll("div")[1] as HTMLElement;
     const style = col.getAttribute("style");
@@ -131,7 +129,7 @@ describe("Grid.Col", () => {
     const { container } = render(
       <Grid>
         <Grid.Col span={{ mobile: 12, tablet: 6, desktop: 3 }}>Cell</Grid.Col>
-      </Grid>,
+      </Grid>
     );
     const col = container.querySelectorAll("div")[1] as HTMLElement;
     const style = col.getAttribute("style");
@@ -146,7 +144,7 @@ describe("Grid.Col", () => {
         <Grid.Col span={6} start={3}>
           Cell
         </Grid.Col>
-      </Grid>,
+      </Grid>
     );
     const col = container.querySelectorAll("div")[1] as HTMLElement;
     expect(col.className).toContain("hasStart");
@@ -157,7 +155,7 @@ describe("Grid.Col", () => {
     const { container } = render(
       <Grid>
         <Grid.Col span={6}>Cell</Grid.Col>
-      </Grid>,
+      </Grid>
     );
     const col = container.querySelectorAll("div")[1] as HTMLElement;
     expect(col.className).not.toContain("hasStart");
@@ -167,7 +165,7 @@ describe("Grid.Col", () => {
     const { container } = render(
       <Grid>
         <Grid.Col className="custom-col">Cell</Grid.Col>
-      </Grid>,
+      </Grid>
     );
     const col = container.querySelectorAll("div")[1] as HTMLElement;
     expect(col.className).toContain("custom-col");
@@ -177,7 +175,7 @@ describe("Grid.Col", () => {
     const { container } = render(
       <Grid>
         <Grid.Col>Cell</Grid.Col>
-      </Grid>,
+      </Grid>
     );
     const col = container.querySelectorAll("div")[1] as HTMLElement;
     expect(col.className).toContain("col");

@@ -14,10 +14,8 @@ import { GuidelinesFlat } from "./_guidelines";
 // -----------------------------------------------------------------------
 // Figma
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Types pour les args du composant Menu
@@ -80,7 +78,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le menu affiche une liste d'actions ou d'options dans un panneau contextuel déclenché par un bouton ou un clic droit. Il supporte les sous-menus, les sections et les états de sélection pour organiser des actions complexes." },
+      description: {
+        component:
+          "Le menu affiche une liste d'actions ou d'options dans un panneau contextuel déclenché par un bouton ou un clic droit. Il supporte les sous-menus, les sections et les états de sélection pour organiser des actions complexes.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -194,18 +195,23 @@ function MenuStory(args: MenuStoryArgs) {
   );
 }
 
-
 // -----------------------------------------------------------------------
-// Stories — Figma variants 
+// Stories — Figma variants
 
 /** Menu simple à 3 options sans description ni icône après. */
 export const SimpleOptions: Story = {
   render: () => (
     <div style={{ width: 360 }}>
       <Menu aria-label="Menu">
-        <MenuItem id="edit" iconBefore="Edit">Modifier</MenuItem>
-        <MenuItem id="duplicate" iconBefore="ContentCopy">Dupliquer</MenuItem>
-        <MenuItem id="delete" iconBefore="Delete">Supprimer</MenuItem>
+        <MenuItem id="edit" iconBefore="Edit">
+          Modifier
+        </MenuItem>
+        <MenuItem id="duplicate" iconBefore="ContentCopy">
+          Dupliquer
+        </MenuItem>
+        <MenuItem id="delete" iconBefore="Delete">
+          Supprimer
+        </MenuItem>
       </Menu>
     </div>
   ),
@@ -216,15 +222,23 @@ export const WithElemAfterButton: Story = {
   render: () => (
     <div style={{ width: 360 }}>
       <Menu aria-label="Menu">
-        <MenuItem id="profile" iconBefore="Person">Profil</MenuItem>
+        <MenuItem id="profile" iconBefore="Person">
+          Profil
+        </MenuItem>
         <MenuItem
           id="invite"
           iconBefore="PersonAdd"
-          elemAfter={<Button density="compact" appearance="outlined">Inviter</Button>}
+          elemAfter={
+            <Button density="compact" appearance="outlined">
+              Inviter
+            </Button>
+          }
         >
           Membres
         </MenuItem>
-        <MenuItem id="settings" iconBefore="Settings">Paramètres</MenuItem>
+        <MenuItem id="settings" iconBefore="Settings">
+          Paramètres
+        </MenuItem>
       </Menu>
     </div>
   ),
@@ -243,7 +257,7 @@ export const OneSection: Story = {
 export const TwoSections: Story = {
   args: {
     menus: 2,
-    hasSeparator: false
+    hasSeparator: false,
   },
   parameters: {
     design: { type: "figma", url: figmaUrl("4711:14822") },
@@ -264,14 +278,16 @@ export const ThreeSections: Story = {
 export const SingleSelection: Story = {
   render: () => (
     <div style={{ width: 360 }}>
-      <Menu
-        aria-label="Tri"
-        mode="select-single"
-        defaultSelectedKeys={new Set(["date"])}
-      >
-        <MenuItem id="date" iconBefore="CalendarToday">Par date</MenuItem>
-        <MenuItem id="name" iconBefore="SortByAlpha">Par nom</MenuItem>
-        <MenuItem id="size" iconBefore="Straighten">Par taille</MenuItem>
+      <Menu aria-label="Tri" mode="select-single" defaultSelectedKeys={new Set(["date"])}>
+        <MenuItem id="date" iconBefore="CalendarToday">
+          Par date
+        </MenuItem>
+        <MenuItem id="name" iconBefore="SortByAlpha">
+          Par nom
+        </MenuItem>
+        <MenuItem id="size" iconBefore="Straighten">
+          Par taille
+        </MenuItem>
       </Menu>
     </div>
   ),
@@ -304,10 +320,18 @@ export const MultipleWithIcons: Story = {
         mode="select-multiple"
         defaultSelectedKeys={new Set(["name", "date"])}
       >
-        <MenuItem id="name" iconBefore="Person" description="Nom complet">Nom</MenuItem>
-        <MenuItem id="email" iconBefore="Mail" description="Adresse email">Email</MenuItem>
-        <MenuItem id="date" iconBefore="CalendarToday" description="Date de création">Date</MenuItem>
-        <MenuItem id="status" iconBefore="Info" description="Statut actuel">Statut</MenuItem>
+        <MenuItem id="name" iconBefore="Person" description="Nom complet">
+          Nom
+        </MenuItem>
+        <MenuItem id="email" iconBefore="Mail" description="Adresse email">
+          Email
+        </MenuItem>
+        <MenuItem id="date" iconBefore="CalendarToday" description="Date de création">
+          Date
+        </MenuItem>
+        <MenuItem id="status" iconBefore="Info" description="Statut actuel">
+          Statut
+        </MenuItem>
       </Menu>
     </div>
   ),
@@ -318,9 +342,13 @@ export const Submenu: Story = {
   render: () => (
     <div style={{ width: 360 }}>
       <Menu aria-label="Menu">
-        <MenuItem id="edit" iconBefore="Edit">Modifier</MenuItem>
+        <MenuItem id="edit" iconBefore="Edit">
+          Modifier
+        </MenuItem>
         <SubmenuTrigger>
-          <MenuItem id="move" iconBefore="Folder">Déplacer vers</MenuItem>
+          <MenuItem id="move" iconBefore="Folder">
+            Déplacer vers
+          </MenuItem>
           <MenuPopover>
             <Menu aria-label="Menu">
               <MenuItem id="drafts">Brouillons</MenuItem>
@@ -337,7 +365,9 @@ export const Submenu: Story = {
             </Menu>
           </MenuPopover>
         </SubmenuTrigger>
-        <MenuItem id="delete" iconBefore="Delete">Supprimer</MenuItem>
+        <MenuItem id="delete" iconBefore="Delete">
+          Supprimer
+        </MenuItem>
       </Menu>
     </div>
   ),

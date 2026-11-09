@@ -11,12 +11,7 @@ import {
   Subtitle,
   Title,
 } from "@storybook/addon-docs/blocks";
-import {
-  Tab,
-  TabList,
-  TabPanel,
-  Tabs,
-} from "@aexae/comete-design-system/components";
+import { Tab, TabList, TabPanel, Tabs } from "@aexae/comete-design-system/components";
 
 export interface DocsTabsPageProps {
   /** Contenu du tab Design — embed Figma, tokens, anatomie. Optionnel. */
@@ -29,10 +24,7 @@ export interface DocsTabsPageProps {
  * DocsTabsPage — remplace la page autodocs par défaut par une page à onglets.
  * Utilisée via `parameters.docs.page` dans le meta d'un composant.
  */
-export function DocsTabsPage({
-  design,
-  guidelines,
-}: DocsTabsPageProps): ReactNode {
+export function DocsTabsPage({ design, guidelines }: DocsTabsPageProps): ReactNode {
   return (
     <>
       <Title />
@@ -50,9 +42,7 @@ export function DocsTabsPage({
           <Stories includePrimary={false} />
         </TabPanel>
         {design ? <TabPanel id="design">{design}</TabPanel> : null}
-        {guidelines ? (
-          <TabPanel id="guidelines">{guidelines}</TabPanel>
-        ) : null}
+        {guidelines ? <TabPanel id="guidelines">{guidelines}</TabPanel> : null}
       </Tabs>
     </>
   );

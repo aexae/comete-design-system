@@ -5,10 +5,8 @@ import { expect, fn, userEvent, within } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -19,20 +17,20 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Les cases à cocher permettent de sélectionner une ou plusieurs options dans une liste. Elles conviennent aux choix non exclusifs et aux formulaires nécessitant un consentement explicite." },
+      description: {
+        component:
+          "Les cases à cocher permettent de sélectionner une ou plusieurs options dans une liste. Elles conviennent aux choix non exclusifs et aux formulaires nécessitant un consentement explicite.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
             <GuidelinesFlat
               doExample={{
                 example: <Checkbox label="J'accepte les conditions" />,
-                caption:
-                  "Option indépendante à cocher, validée avec le formulaire.",
+                caption: "Option indépendante à cocher, validée avec le formulaire.",
               }}
               dontExample={{
-                example: (
-                  <Checkbox label="Activer les notifications" defaultChecked />
-                ),
+                example: <Checkbox label="Activer les notifications" defaultChecked />,
                 caption: "Ne pas utiliser pour un réglage on/off à effet immédiat.",
               }}
               when={[

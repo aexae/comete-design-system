@@ -71,14 +71,21 @@ describe("AvatarGroup", () => {
 
   describe("mode select", () => {
     it("should render avatars as buttons", () => {
-      render(<AvatarGroup items={ITEMS} mode="select" selectedKeys={[]} onSelectionChange={() => {}} />);
+      render(
+        <AvatarGroup items={ITEMS} mode="select" selectedKeys={[]} onSelectionChange={() => {}} />
+      );
       expect(screen.getAllByRole("button")).toHaveLength(3);
     });
 
     it("should call onSelectionChange when avatar is clicked", async () => {
       const handleChange = vi.fn();
       render(
-        <AvatarGroup items={ITEMS} mode="select" selectedKeys={[]} onSelectionChange={handleChange} />,
+        <AvatarGroup
+          items={ITEMS}
+          mode="select"
+          selectedKeys={[]}
+          onSelectionChange={handleChange}
+        />
       );
       const buttons = screen.getAllByRole("button");
       await userEvent.click(buttons[0]!);
@@ -88,7 +95,12 @@ describe("AvatarGroup", () => {
     it("should deselect when clicking a selected avatar", async () => {
       const handleChange = vi.fn();
       render(
-        <AvatarGroup items={ITEMS} mode="select" selectedKeys={["a"]} onSelectionChange={handleChange} />,
+        <AvatarGroup
+          items={ITEMS}
+          mode="select"
+          selectedKeys={["a"]}
+          onSelectionChange={handleChange}
+        />
       );
       const buttons = screen.getAllByRole("button");
       await userEvent.click(buttons[0]!);
@@ -98,9 +110,7 @@ describe("AvatarGroup", () => {
 
   describe("overflow", () => {
     it("should render overflow indicator when overflowItems provided", () => {
-      const { container } = render(
-        <AvatarGroup items={ITEMS} overflowItems={OVERFLOW_ITEMS} />,
-      );
+      const { container } = render(<AvatarGroup items={ITEMS} overflowItems={OVERFLOW_ITEMS} />);
       expect(container.querySelector(".overflow")).toBeInTheDocument();
     });
 
@@ -110,9 +120,7 @@ describe("AvatarGroup", () => {
     });
 
     it("should open menu with overflow items when +N is clicked", async () => {
-      render(
-        <AvatarGroup items={ITEMS} overflowItems={OVERFLOW_ITEMS} mode="navigate" />,
-      );
+      render(<AvatarGroup items={ITEMS} overflowItems={OVERFLOW_ITEMS} mode="navigate" />);
       const buttons = screen.getAllByRole("button");
       // +N trigger is the last button
       await userEvent.click(buttons[buttons.length - 1]!);

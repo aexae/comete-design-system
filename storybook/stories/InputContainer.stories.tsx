@@ -17,7 +17,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le conteneur d'input fournit le cadre visuel commun (bordure, fond, états focus/erreur/disabled) partagé par tous les champs de saisie du design system. Il garantit la cohérence visuelle entre TextField, Select, DatePicker et autres contrôles." },
+      description: {
+        component:
+          "Le conteneur d'input fournit le cadre visuel commun (bordure, fond, états focus/erreur/disabled) partagé par tous les champs de saisie du design system. Il garantit la cohérence visuelle entre TextField, Select, DatePicker et autres contrôles.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -80,7 +83,13 @@ export const Default: Story = {
       <input
         type="text"
         placeholder="Placeholder"
-        style={{ border: "none", outline: "none", background: "transparent", padding: "8px", width: 240 }}
+        style={{
+          border: "none",
+          outline: "none",
+          background: "transparent",
+          padding: "8px",
+          width: 240,
+        }}
       />
     </InputContainer>
   ),
@@ -93,7 +102,13 @@ export const Subtle: Story = {
       <input
         type="text"
         placeholder="Placeholder"
-        style={{ border: "none", outline: "none", background: "transparent", padding: "8px", width: 240 }}
+        style={{
+          border: "none",
+          outline: "none",
+          background: "transparent",
+          padding: "8px",
+          width: 240,
+        }}
       />
     </InputContainer>
   ),
@@ -106,7 +121,13 @@ export const Compact: Story = {
       <input
         type="text"
         placeholder="Placeholder"
-        style={{ border: "none", outline: "none", background: "transparent", padding: "8px", width: 240 }}
+        style={{
+          border: "none",
+          outline: "none",
+          background: "transparent",
+          padding: "8px",
+          width: 240,
+        }}
       />
     </InputContainer>
   ),
@@ -120,7 +141,13 @@ export const Disabled: Story = {
         type="text"
         placeholder="Placeholder"
         disabled
-        style={{ border: "none", outline: "none", background: "transparent", padding: "8px", width: 240 }}
+        style={{
+          border: "none",
+          outline: "none",
+          background: "transparent",
+          padding: "8px",
+          width: 240,
+        }}
       />
     </InputContainer>
   ),
@@ -133,7 +160,13 @@ export const Invalid: Story = {
       <input
         type="text"
         defaultValue="Invalid value"
-        style={{ border: "none", outline: "none", background: "transparent", padding: "8px", width: 240 }}
+        style={{
+          border: "none",
+          outline: "none",
+          background: "transparent",
+          padding: "8px",
+          width: 240,
+        }}
       />
     </InputContainer>
   ),

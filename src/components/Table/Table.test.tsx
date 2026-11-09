@@ -33,7 +33,7 @@ describe("Table", () => {
             <TableCell>Cell</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     expect(screen.getByRole("table")).toBeInTheDocument();
     expect(screen.getByLabelText("Data")).toBeInTheDocument();
@@ -54,7 +54,7 @@ describe("Table", () => {
             <TableCell>B</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     expect(screen.getAllByRole("columnheader")).toHaveLength(2);
   });
@@ -68,7 +68,7 @@ describe("Table", () => {
             <TableCell>Bob</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     expect(screen.getByText("Alice")).toBeInTheDocument();
     expect(screen.getByText("Bob")).toBeInTheDocument();
@@ -86,12 +86,9 @@ describe("Table", () => {
             <TableCell>A</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
-    expect(screen.getByRole("table")).toHaveAttribute(
-      "data-density",
-      "default",
-    );
+    expect(screen.getByRole("table")).toHaveAttribute("data-density", "default");
   });
 
   it("should apply density prop on the table root", () => {
@@ -102,12 +99,9 @@ describe("Table", () => {
             <TableCell>A</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
-    expect(screen.getByRole("table")).toHaveAttribute(
-      "data-density",
-      "compact",
-    );
+    expect(screen.getByRole("table")).toHaveAttribute("data-density", "compact");
   });
 
   // -------------------------------------------------------------------
@@ -125,7 +119,7 @@ describe("Table", () => {
             <TableCell>not selected</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     const rows = screen.getAllByRole("row");
     expect(rows[0]).toHaveAttribute("data-selected", "true");
@@ -142,7 +136,7 @@ describe("Table", () => {
             <TableCell>tap</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     fireEvent.click(screen.getByText("tap"));
     expect(handleClick).toHaveBeenCalledTimes(1);
@@ -156,7 +150,7 @@ describe("Table", () => {
             <TableCell>tap</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     expect(screen.getByRole("row")).toHaveAttribute("data-clickable", "true");
   });
@@ -174,7 +168,7 @@ describe("Table", () => {
             <TableCell>extra</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     const link = screen.getByRole("link", { name: "Site A" });
     expect(link.tagName).toBe("A");
@@ -195,7 +189,7 @@ describe("Table", () => {
             <TableCell>extra</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     const btn = screen.getByRole("button", { name: "Detail" });
     expect(btn.tagName).toBe("BUTTON");
@@ -212,7 +206,7 @@ describe("Table", () => {
             <TableCell isRowAnchor>anchor</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     expect(screen.getByRole("link")).toHaveTextContent("anchor");
     expect(screen.getByText("first").closest("a")).toBeNull();
@@ -228,7 +222,7 @@ describe("Table", () => {
             <TableCell>meta</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     fireEvent.click(screen.getByText("meta"));
     expect(onPress).toHaveBeenCalledTimes(1);
@@ -246,7 +240,7 @@ describe("Table", () => {
             </TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     fireEvent.click(screen.getByText("act"));
     expect(onPress).not.toHaveBeenCalled();
@@ -266,7 +260,7 @@ describe("Table", () => {
             <TableCell>meta</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     fireEvent.click(screen.getByText("meta"));
     expect(onPress).not.toHaveBeenCalled();
@@ -282,7 +276,7 @@ describe("Table", () => {
             <TableCell>extra</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     const link = screen.getByRole("link");
     let forwardedCtrl: boolean | null = null;
@@ -303,11 +297,9 @@ describe("Table", () => {
             <TableCell>a</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
-    expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining("mutuellement exclusifs"),
-    );
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining("mutuellement exclusifs"));
     expect(screen.getByRole("link")).toBeInTheDocument();
     warn.mockRestore();
   });
@@ -322,7 +314,7 @@ describe("Table", () => {
             <TableCell>tap</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     expect(warn).toHaveBeenCalledWith(expect.stringContaining("onClick"));
     fireEvent.click(screen.getByText("tap"));
@@ -344,7 +336,7 @@ describe("Table", () => {
             <TableCell align="right">right</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     const cells = screen.getAllByRole("cell");
     expect(cells[0]).toHaveAttribute("data-align", "left");
@@ -360,7 +352,7 @@ describe("Table", () => {
             <TableCell width={120}>fixed</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     expect(screen.getByRole("cell")).toHaveStyle({ width: "120px" });
   });
@@ -377,7 +369,7 @@ describe("Table", () => {
             <TableHeaderCell>Name</TableHeaderCell>
           </TableRow>
         </TableHead>
-      </Table>,
+      </Table>
     );
     expect(container.querySelector("svg")).toBeNull();
   });
@@ -390,7 +382,7 @@ describe("Table", () => {
             <TableHeaderCell isSortable>Name</TableHeaderCell>
           </TableRow>
         </TableHead>
-      </Table>,
+      </Table>
     );
     expect(container.querySelector("svg")).not.toBeNull();
   });
@@ -401,10 +393,12 @@ describe("Table", () => {
         <Table aria-label="x">
           <TableHead>
             <TableRow>
-              <TableHeaderCell isSortable sortDirection={dir}>Name</TableHeaderCell>
+              <TableHeaderCell isSortable sortDirection={dir}>
+                Name
+              </TableHeaderCell>
             </TableRow>
           </TableHead>
-        </Table>,
+        </Table>
       );
       const html = container.querySelector("svg")?.innerHTML ?? "";
       unmount();
@@ -424,12 +418,9 @@ describe("Table", () => {
             <TableHeaderCell isSortable>Name</TableHeaderCell>
           </TableRow>
         </TableHead>
-      </Table>,
+      </Table>
     );
-    expect(screen.getByRole("columnheader")).toHaveAttribute(
-      "aria-sort",
-      "none",
-    );
+    expect(screen.getByRole("columnheader")).toHaveAttribute("aria-sort", "none");
   });
 
   it("should reflect sortDirection via aria-sort", () => {
@@ -442,12 +433,9 @@ describe("Table", () => {
             </TableHeaderCell>
           </TableRow>
         </TableHead>
-      </Table>,
+      </Table>
     );
-    expect(screen.getByRole("columnheader")).toHaveAttribute(
-      "aria-sort",
-      "ascending",
-    );
+    expect(screen.getByRole("columnheader")).toHaveAttribute("aria-sort", "ascending");
   });
 
   it("should cycle sortDirection: default → ascending → descending → default", () => {
@@ -461,16 +449,12 @@ describe("Table", () => {
         <Table aria-label="x">
           <TableHead>
             <TableRow>
-              <TableHeaderCell
-                isSortable
-                sortDirection={dir}
-                onSortChange={handle}
-              >
+              <TableHeaderCell isSortable sortDirection={dir} onSortChange={handle}>
                 Name
               </TableHeaderCell>
             </TableRow>
           </TableHead>
-        </Table>,
+        </Table>
       );
 
     // Click on default → should emit ascending
@@ -500,7 +484,7 @@ describe("Table", () => {
             <TableHeaderCell onSortChange={handleSort}>Name</TableHeaderCell>
           </TableRow>
         </TableHead>
-      </Table>,
+      </Table>
     );
     fireEvent.click(screen.getByText("Name"));
     expect(handleSort).not.toHaveBeenCalled();
@@ -517,7 +501,7 @@ describe("Table", () => {
             </TableHeaderCell>
           </TableRow>
         </TableHead>
-      </Table>,
+      </Table>
     );
     const header = screen.getByRole("columnheader");
     fireEvent.keyDown(header, { key: "Enter" });
@@ -537,14 +521,17 @@ describe("Table", () => {
             <TableCell colSpan={3}>Wide</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     expect(screen.getByRole("cell")).toHaveAttribute("colspan", "3");
   });
 });
 
 describe("TableHeaderCell — icône de tri subtle (garde CSS)", () => {
-  const css = readFileSync("src/components/Table/Table.module.css", "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+  const css = readFileSync("src/components/Table/Table.module.css", "utf8").replace(
+    /\/\*[\s\S]*?\*\//g,
+    ""
+  );
   const colors = [...css.matchAll(/([^{}]*\.headerSortIcon[^{}]*)\{([^{}]*)\}/g)]
     .map(([, , body]) => (body ?? "").match(/(?:^|;|\s)color:\s*([^;]+);/)?.[1]?.trim())
     .filter(Boolean);
@@ -562,10 +549,12 @@ describe("TableHeaderCell — icône de tri subtle (garde CSS)", () => {
         <Table aria-label="x">
           <TableHead>
             <TableRow>
-              <TableHeaderCell isSortable sortDirection={dir}>Name</TableHeaderCell>
+              <TableHeaderCell isSortable sortDirection={dir}>
+                Name
+              </TableHeaderCell>
             </TableRow>
           </TableHead>
-        </Table>,
+        </Table>
       );
       const svg = container.querySelector("svg");
       expect(svg?.getAttribute("class") ?? "").toMatch(/subtle/);
@@ -576,7 +565,10 @@ describe("TableHeaderCell — icône de tri subtle (garde CSS)", () => {
 });
 
 describe("Table — fonds de rowSeparation (garde CSS)", () => {
-  const css = readFileSync("src/components/Table/Table.module.css", "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+  const css = readFileSync("src/components/Table/Table.module.css", "utf8").replace(
+    /\/\*[\s\S]*?\*\//g,
+    ""
+  );
   const bgOf = (mode: string) =>
     [...css.matchAll(/([^{}]*data-row-separation="([^"]+)"[^{}]*)\{([^{}]*)\}/g)]
       .filter(([, , m, body]) => m === mode && /background-color/.test(body ?? ""))
@@ -593,9 +585,11 @@ describe("Table — rowSeparation (grands écrans)", () => {
     render(
       <Table aria-label="x" rowSeparation={rowSeparation}>
         <TableBody>
-          <TableRow><TableCell>a</TableCell></TableRow>
+          <TableRow>
+            <TableCell>a</TableCell>
+          </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
 
   it("should not set data-row-separation by default", () => {
@@ -608,7 +602,7 @@ describe("Table — rowSeparation (grands écrans)", () => {
     (mode) => {
       renderTable(mode);
       expect(screen.getByRole("table")).toHaveAttribute("data-row-separation", mode);
-    },
+    }
   );
 });
 
@@ -623,11 +617,13 @@ describe("TableRow — mode sélectionnable (onToggleSelect)", () => {
             <TableCell>Nom</TableCell>
             <TableCell data-testid="plain">Texte</TableCell>
             <TableCell>
-              <button type="button" onClick={onAction}>Actions</button>
+              <button type="button" onClick={onAction}>
+                Actions
+              </button>
             </TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     return { onToggleSelect, onAction };
   };
@@ -669,88 +665,47 @@ describe("TableRow — mode sélectionnable (onToggleSelect)", () => {
 describe("TablePagination", () => {
   it("should render the default 'N–M sur Total' label", () => {
     render(
-      <TablePagination
-        count={100}
-        page={0}
-        rowsPerPage={10}
-        onPageChange={() => undefined}
-      />,
+      <TablePagination count={100} page={0} rowsPerPage={10} onPageChange={() => undefined} />
     );
     expect(screen.getByText("1 à 10 sur 100")).toBeInTheDocument();
   });
 
   it("should render '0' bounds when count is zero", () => {
-    render(
-      <TablePagination
-        count={0}
-        page={0}
-        rowsPerPage={10}
-        onPageChange={() => undefined}
-      />,
-    );
+    render(<TablePagination count={0} page={0} rowsPerPage={10} onPageChange={() => undefined} />);
     expect(screen.getByText("0 à 0 sur 0")).toBeInTheDocument();
   });
 
   it("should call onPageChange with next page when clicking 'Page suivante'", () => {
     const onPageChange = vi.fn();
-    render(
-      <TablePagination
-        count={100}
-        page={2}
-        rowsPerPage={10}
-        onPageChange={onPageChange}
-      />,
-    );
+    render(<TablePagination count={100} page={2} rowsPerPage={10} onPageChange={onPageChange} />);
     fireEvent.click(screen.getByLabelText("Page suivante"));
     expect(onPageChange).toHaveBeenCalledWith(3);
   });
 
   it("should call onPageChange with previous page when clicking 'Page précédente'", () => {
     const onPageChange = vi.fn();
-    render(
-      <TablePagination
-        count={100}
-        page={2}
-        rowsPerPage={10}
-        onPageChange={onPageChange}
-      />,
-    );
+    render(<TablePagination count={100} page={2} rowsPerPage={10} onPageChange={onPageChange} />);
     fireEvent.click(screen.getByLabelText("Page précédente"));
     expect(onPageChange).toHaveBeenCalledWith(1);
   });
 
   it("should disable 'Page précédente' on the first page", () => {
     render(
-      <TablePagination
-        count={100}
-        page={0}
-        rowsPerPage={10}
-        onPageChange={() => undefined}
-      />,
+      <TablePagination count={100} page={0} rowsPerPage={10} onPageChange={() => undefined} />
     );
     expect(screen.getByLabelText("Page précédente")).toBeDisabled();
   });
 
   it("should disable 'Page suivante' on the last page", () => {
     render(
-      <TablePagination
-        count={100}
-        page={9}
-        rowsPerPage={10}
-        onPageChange={() => undefined}
-      />,
+      <TablePagination count={100} page={9} rowsPerPage={10} onPageChange={() => undefined} />
     );
     expect(screen.getByLabelText("Page suivante")).toBeDisabled();
   });
 
   it("should not render the rows-per-page picker when onRowsPerPageChange is omitted", () => {
     render(
-      <TablePagination
-        count={100}
-        page={0}
-        rowsPerPage={10}
-        onPageChange={() => undefined}
-      />,
+      <TablePagination count={100} page={0} rowsPerPage={10} onPageChange={() => undefined} />
     );
     expect(screen.queryByText("Résultats par page :")).not.toBeInTheDocument();
   });
@@ -763,7 +718,7 @@ describe("TablePagination", () => {
         rowsPerPage={25}
         onPageChange={() => undefined}
         onRowsPerPageChange={() => undefined}
-      />,
+      />
     );
     fireEvent.click(screen.getByRole("button", { name: /Résultats par page/ }));
     const options = screen.getAllByRole("option").map((o) => o.textContent);
@@ -772,7 +727,7 @@ describe("TablePagination", () => {
 
   it("should render numbered pages with the current one marked aria-current", () => {
     render(
-      <TablePagination count={200} page={1} rowsPerPage={25} onPageChange={() => undefined} />,
+      <TablePagination count={200} page={1} rowsPerPage={25} onPageChange={() => undefined} />
     );
     // 8 pages, page courante 2 → 1 2 3 4 5 … 8
     expect(screen.getByRole("button", { name: "Page 2" })).toHaveAttribute("aria-current", "page");
@@ -783,26 +738,20 @@ describe("TablePagination", () => {
 
   it("should go to the clicked page (0-indexed)", () => {
     const onPageChange = vi.fn();
-    render(
-      <TablePagination count={200} page={0} rowsPerPage={25} onPageChange={onPageChange} />,
-    );
+    render(<TablePagination count={200} page={0} rowsPerPage={25} onPageChange={onPageChange} />);
     fireEvent.click(screen.getByRole("button", { name: "Page 3" }));
     expect(onPageChange).toHaveBeenCalledWith(2);
   });
 
   it("should not call onPageChange when the current page is clicked", () => {
     const onPageChange = vi.fn();
-    render(
-      <TablePagination count={200} page={0} rowsPerPage={25} onPageChange={onPageChange} />,
-    );
+    render(<TablePagination count={200} page={0} rowsPerPage={25} onPageChange={onPageChange} />);
     fireEvent.click(screen.getByRole("button", { name: "Page 1" }));
     expect(onPageChange).not.toHaveBeenCalled();
   });
 
   it("should not render page numbers when there is a single page", () => {
-    render(
-      <TablePagination count={10} page={0} rowsPerPage={25} onPageChange={() => undefined} />,
-    );
+    render(<TablePagination count={10} page={0} rowsPerPage={25} onPageChange={() => undefined} />);
     expect(screen.queryByRole("button", { name: "Page 1" })).toBeNull();
   });
 
@@ -814,7 +763,7 @@ describe("TablePagination", () => {
         rowsPerPage={10}
         onPageChange={() => undefined}
         onRowsPerPageChange={() => undefined}
-      />,
+      />
     );
     expect(screen.getByText("Résultats par page :")).toBeInTheDocument();
   });
@@ -826,10 +775,8 @@ describe("TablePagination", () => {
         page={0}
         rowsPerPage={10}
         onPageChange={() => undefined}
-        labelDisplayedRows={({ from, to, count }) =>
-          `Rows ${from}-${to} of ${count}`
-        }
-      />,
+        labelDisplayedRows={({ from, to, count }) => `Rows ${from}-${to} of ${count}`}
+      />
     );
     expect(screen.getByText("Rows 1-10 of 100")).toBeInTheDocument();
   });
@@ -843,7 +790,7 @@ describe("TableView", () => {
         footer={<span data-testid="ftr">Footer</span>}
       >
         <span data-testid="body">Body</span>
-      </TableView>,
+      </TableView>
     );
     expect(screen.getByTestId("hdr")).toBeInTheDocument();
     expect(screen.getByTestId("body")).toBeInTheDocument();
@@ -854,7 +801,7 @@ describe("TableView", () => {
     const { container } = render(
       <TableView>
         <span data-testid="body">Body</span>
-      </TableView>,
+      </TableView>
     );
     // Only the content div should exist as a child of .view — no header/footer wrappers.
     const view = container.firstChild as HTMLElement | null;
@@ -866,7 +813,7 @@ describe("TableView", () => {
     const { container } = render(
       <TableView header={<span>Header</span>}>
         <span data-testid="body">Body</span>
-      </TableView>,
+      </TableView>
     );
     const view = container.firstChild as HTMLElement | null;
     // header + content wrappers → 2 children (no footer).
@@ -881,7 +828,7 @@ describe("TableView", () => {
     const { container } = render(
       <TableView className="custom" style={{ margin: 8 }}>
         <span>body</span>
-      </TableView>,
+      </TableView>
     );
     const view = container.firstChild as HTMLElement;
     expect(view.className).toContain("custom");
@@ -894,7 +841,7 @@ describe("TableBody — états natifs", () => {
     const { container } = render(
       <Table aria-label="t">
         <TableBody isLoading columnCount={3} skeletonRows={4} />
-      </Table>,
+      </Table>
     );
     expect(container.querySelectorAll("tbody tr")).toHaveLength(4);
     // 4 lignes × 3 cellules, un Skeleton (role=status) par cellule
@@ -905,7 +852,7 @@ describe("TableBody — états natifs", () => {
     render(
       <Table aria-label="t">
         <TableBody isEmpty columnCount={3} emptyTitle="Rien ici" />
-      </Table>,
+      </Table>
     );
     expect(screen.getByText("Rien ici")).toBeInTheDocument();
   });
@@ -918,12 +865,10 @@ describe("TableBody — états natifs", () => {
           columnCount={3}
           noResultsAction={<button>Réinitialiser les filtres</button>}
         />
-      </Table>,
+      </Table>
     );
     expect(screen.getByText("Aucun résultat")).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Réinitialiser les filtres" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Réinitialiser les filtres" })).toBeInTheDocument();
   });
 
   it("should render a custom no-results title and description", () => {
@@ -935,7 +880,7 @@ describe("TableBody — états natifs", () => {
           noResultsTitle="Rien ne correspond"
           noResultsDescription="Ajustez vos filtres."
         />
-      </Table>,
+      </Table>
     );
     expect(screen.getByText("Rien ne correspond")).toBeInTheDocument();
     expect(screen.getByText("Ajustez vos filtres.")).toBeInTheDocument();
@@ -945,7 +890,7 @@ describe("TableBody — états natifs", () => {
     render(
       <Table aria-label="t">
         <TableBody isEmpty isNoResults columnCount={2} />
-      </Table>,
+      </Table>
     );
     expect(screen.getByText("Aucune donnée")).toBeInTheDocument();
     expect(screen.queryByText("Aucun résultat")).toBeNull();
@@ -956,7 +901,7 @@ describe("TableBody — états natifs", () => {
     render(
       <Table aria-label="t">
         <TableBody error="Boom" columnCount={3} onRetry={onRetry} />
-      </Table>,
+      </Table>
     );
     expect(screen.getByText("Boom")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Réessayer" }));
@@ -967,7 +912,7 @@ describe("TableBody — états natifs", () => {
     render(
       <Table aria-label="t">
         <TableBody error isLoading isEmpty columnCount={2} />
-      </Table>,
+      </Table>
     );
     expect(screen.getByText("Une erreur est survenue")).toBeInTheDocument();
     expect(screen.queryByText("Aucune donnée")).toBeNull();
@@ -981,7 +926,7 @@ describe("TableBody — états natifs", () => {
             <TableCell>Contenu</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     expect(screen.getByText("Contenu")).toBeInTheDocument();
   });
@@ -997,11 +942,9 @@ describe("TableHeaderCell — colonne d'actions", () => {
             <TableHeaderCell isActionColumn>Actions</TableHeaderCell>
           </TableRow>
         </TableHead>
-      </Table>,
+      </Table>
     );
-    expect(
-      screen.getByRole("columnheader", { name: "Actions" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Actions" })).toBeInTheDocument();
   });
 
   it("should default the action column to a hidden name when no children given", () => {
@@ -1012,11 +955,9 @@ describe("TableHeaderCell — colonne d'actions", () => {
             <TableHeaderCell isActionColumn />
           </TableRow>
         </TableHead>
-      </Table>,
+      </Table>
     );
-    expect(
-      screen.getByRole("columnheader", { name: "Actions" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Actions" })).toBeInTheDocument();
   });
 });
 
@@ -1029,11 +970,9 @@ describe("Table — stickyHeader / maxHeight", () => {
             <TableHeaderCell>A</TableHeaderCell>
           </TableRow>
         </TableHead>
-      </Table>,
+      </Table>
     );
-    expect(container.querySelector("table")).toHaveAttribute(
-      "data-sticky-header",
-    );
+    expect(container.querySelector("table")).toHaveAttribute("data-sticky-header");
   });
 
   it("should wrap the table in a bounded scroll container when maxHeight is set", () => {
@@ -1044,7 +983,7 @@ describe("Table — stickyHeader / maxHeight", () => {
             <TableHeaderCell>A</TableHeaderCell>
           </TableRow>
         </TableHead>
-      </Table>,
+      </Table>
     );
     const scroller = container.querySelector("[class*='scrollContainer']");
     expect(scroller).toBeInTheDocument();
@@ -1060,11 +999,9 @@ describe("Table — stickyHeader / maxHeight", () => {
             <TableHeaderCell>A</TableHeaderCell>
           </TableRow>
         </TableHead>
-      </Table>,
+      </Table>
     );
-    expect(
-      container.querySelector("[class*='scrollContainer']"),
-    ).toBeNull();
+    expect(container.querySelector("[class*='scrollContainer']")).toBeNull();
   });
 });
 
@@ -1073,12 +1010,10 @@ describe("Table.SelectionBar", () => {
     render(
       <TableSelectionBar count={3}>
         <button>Supprimer</button>
-      </TableSelectionBar>,
+      </TableSelectionBar>
     );
     expect(screen.getByText("3 lignes sélectionnées")).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Supprimer" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Supprimer" })).toBeInTheDocument();
   });
 
   it("should render a singular label for one selected row", () => {
@@ -1113,9 +1048,7 @@ describe("Table.SelectionBar", () => {
   });
 
   it("should accept a custom label", () => {
-    render(
-      <TableSelectionBar count={5} label={(n) => `${n} sélection(s)`} />,
-    );
+    render(<TableSelectionBar count={5} label={(n) => `${n} sélection(s)`} />);
     expect(screen.getByText("5 sélection(s)")).toBeInTheDocument();
   });
 });
@@ -1129,11 +1062,11 @@ describe("Table — colonnes responsives (hideBelow)", () => {
             <TableHeaderCell hideBelow="md">Site</TableHeaderCell>
           </TableRow>
         </TableHead>
-      </Table>,
+      </Table>
     );
     expect(screen.getByRole("columnheader", { name: "Site" })).toHaveAttribute(
       "data-hide-below",
-      "md",
+      "md"
     );
   });
 
@@ -1145,12 +1078,9 @@ describe("Table — colonnes responsives (hideBelow)", () => {
             <TableCell hideBelow="lg">06 12 34 56 78</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
-    expect(container.querySelector("td")).toHaveAttribute(
-      "data-hide-below",
-      "lg",
-    );
+    expect(container.querySelector("td")).toHaveAttribute("data-hide-below", "lg");
   });
 
   it("should not set data-hide-below when the prop is absent (régression)", () => {
@@ -1166,7 +1096,7 @@ describe("Table — colonnes responsives (hideBelow)", () => {
             <TableCell>DUPONT</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     expect(container.querySelector("th")).not.toHaveAttribute("data-hide-below");
     expect(container.querySelector("td")).not.toHaveAttribute("data-hide-below");
@@ -1180,7 +1110,7 @@ describe("Table — colonnes responsives (hideBelow)", () => {
             <TableCell>x</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     expect(container.querySelector("[class*='queryContainer']")).toBeNull();
     // La table est rendue telle quelle (enfant direct de la racine de rendu).
@@ -1195,7 +1125,7 @@ describe("Table — colonnes responsives (hideBelow)", () => {
             <TableCell>x</TableCell>
           </TableRow>
         </TableBody>
-      </Table>,
+      </Table>
     );
     const wrapper = container.querySelector("[class*='queryContainer']");
     expect(wrapper).toBeInTheDocument();

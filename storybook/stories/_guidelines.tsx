@@ -101,9 +101,7 @@ const COMPONENT_DOC_IDS: Record<string, string> = {
 // Clés triées par longueur décroissante → matche les noms les plus longs
 // d'abord (RadioGroup avant Radio, TextField avant Text, SideNavItem avant
 // SideNav…).
-const LINK_KEYS = Object.keys(COMPONENT_DOC_IDS).sort(
-  (a, b) => b.length - a.length,
-);
+const LINK_KEYS = Object.keys(COMPONENT_DOC_IDS).sort((a, b) => b.length - a.length);
 
 /** Un caractère est une borne de mot s'il n'est ni une lettre ni un chiffre. */
 function isBoundary(ch: string): boolean {
@@ -147,7 +145,7 @@ function linkify(text: string, pill = false): ReactNode[] {
       (name) =>
         text.startsWith(name, i) &&
         isBoundary(text.charAt(i - 1)) &&
-        isBoundary(text.charAt(i + name.length)),
+        isBoundary(text.charAt(i + name.length))
     );
     if (match) {
       if (buffer) {
@@ -162,7 +160,7 @@ function linkify(text: string, pill = false): ReactNode[] {
           style={pill ? PILL_STYLE : LINK_STYLE}
         >
           {match}
-        </a>,
+        </a>
       );
       i += match.length;
     } else {
@@ -251,10 +249,7 @@ function GuidelineList({
       }}
     >
       {items.map((text, i) => (
-        <li
-          key={i}
-          style={{ display: "flex", gap: "var(--space100)", alignItems: "flex-start" }}
-        >
+        <li key={i} style={{ display: "flex", gap: "var(--space100)", alignItems: "flex-start" }}>
           <span style={{ flex: "none", marginTop: 1 }}>
             <Icon icon={icon} size={18} color={color} appearance="filled" />
           </span>
@@ -425,12 +420,13 @@ function AltRow({ item }: { item: string }): ReactElement {
     );
   }
   const reason = item.slice(0, idx).trimEnd();
-  const target = item.slice(idx + 1).trim().replace(/\.$/, "");
+  const target = item
+    .slice(idx + 1)
+    .trim()
+    .replace(/\.$/, "");
   return (
     <Card appearance="subtle" style={rowStyle}>
-      <span style={{ ...textStyle, flex: "0 1 auto", minWidth: 0 }}>
-        {renderInline(reason)}
-      </span>
+      <span style={{ ...textStyle, flex: "0 1 auto", minWidth: 0 }}>{renderInline(reason)}</span>
       <span
         style={{
           display: "flex",
@@ -564,30 +560,18 @@ export function GuidelinesFlat({
             alignItems: "stretch",
           }}
         >
-          <DoDontCard
-            kind="do"
-            example={doExample.example}
-            caption={doExample.caption}
-          />
-          <DoDontCard
-            kind="dont"
-            example={dontExample.example}
-            caption={dontExample.caption}
-          />
+          <DoDontCard kind="do" example={doExample.example} caption={doExample.caption} />
+          <DoDontCard kind="dont" example={dontExample.example} caption={dontExample.caption} />
         </div>
       ) : null}
 
       <section>
-        <SectionHeading dot="var(--text-success)">
-          Quand l&apos;utiliser
-        </SectionHeading>
+        <SectionHeading dot="var(--text-success)">Quand l&apos;utiliser</SectionHeading>
         <BulletList items={when} />
       </section>
 
       <section>
-        <SectionHeading dot="var(--text-information)">
-          Plutôt utiliser
-        </SectionHeading>
+        <SectionHeading dot="var(--text-information)">Plutôt utiliser</SectionHeading>
         <p
           style={{
             margin: "var(--space150) 0 var(--space100)",
@@ -613,9 +597,7 @@ export function GuidelinesFlat({
 
       {best ? (
         <section>
-          <SectionHeading dot="var(--text-warning)">
-            Bonnes pratiques
-          </SectionHeading>
+          <SectionHeading dot="var(--text-warning)">Bonnes pratiques</SectionHeading>
           <BulletList items={best} />
         </section>
       ) : null}

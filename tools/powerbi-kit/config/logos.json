@@ -32,9 +32,5 @@
       "taglineAlign": "none"
     }
   ],
-  "appearances": [
-    "brand",
-    "neutral",
-    "inverse"
-  ]
+  "appearances": ["brand", "neutral", "inverse"]
 }

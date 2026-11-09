@@ -171,9 +171,9 @@ export function MonthRangeCalendar({
   const [displayYear, setDisplayYear] = useState(initialYear);
   const [drillLevel, setDrillLevel] = useState<"month" | "year">("month");
 
-  const [internalValue, setInternalValue] = useState<
-    RangeValue<CalendarDate> | undefined
-  >(defaultValue);
+  const [internalValue, setInternalValue] = useState<RangeValue<CalendarDate> | undefined>(
+    defaultValue
+  );
   const [pending, setPending] = useState<CalendarDate | undefined>(undefined);
   const [hovered, setHovered] = useState<CalendarDate | undefined>(undefined);
 
@@ -237,9 +237,7 @@ export function MonthRangeCalendar({
     <div
       role="group"
       aria-label={`Choisir une période — ${displayYear}`}
-      className={[calStyles.calendar, styles.monthCalendar, className]
-        .filter(Boolean)
-        .join(" ")}
+      className={[calStyles.calendar, styles.monthCalendar, className].filter(Boolean).join(" ")}
       data-disabled={isDisabled || undefined}
       data-selecting={pending ? true : undefined}
     >
@@ -315,9 +313,7 @@ export function DualMonthSingleCalendar({
   const [drillLevel, setDrillLevel] = useState<"month" | "year">("month");
   const [drilledPanel, setDrilledPanel] = useState<"left" | "right">("left");
 
-  const [internalValue, setInternalValue] = useState<CalendarDate | undefined>(
-    defaultValue
-  );
+  const [internalValue, setInternalValue] = useState<CalendarDate | undefined>(defaultValue);
 
   const controlled = value !== undefined;
   const resolvedValue = controlled ? value : internalValue;
@@ -428,9 +424,9 @@ export function DualMonthCalendar({
   // Panel ayant déclenché le drill-up : détermine quel panel est mis à jour au retour.
   const [drilledPanel, setDrilledPanel] = useState<"left" | "right">("left");
 
-  const [internalValue, setInternalValue] = useState<
-    RangeValue<CalendarDate> | undefined
-  >(defaultValue);
+  const [internalValue, setInternalValue] = useState<RangeValue<CalendarDate> | undefined>(
+    defaultValue
+  );
   // Première cellule cliquée en attente du deuxième clic.
   const [pending, setPending] = useState<CalendarDate | undefined>(undefined);
   // Cellule survolée pendant la sélection.

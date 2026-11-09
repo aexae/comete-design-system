@@ -4,7 +4,8 @@
 import { readdirSync, readFileSync } from "node:fs";
 
 // Lu depuis la racine du repo (cwd de vitest = racine de la config).
-export const TOKENS_CSS_PATH = "node_modules/@aexae/comete-design-tokens/build/css/comete-tokens.css";
+export const TOKENS_CSS_PATH =
+  "node_modules/@aexae/comete-design-tokens/build/css/comete-tokens.css";
 
 /** Fichiers sources (chemins relatifs à la racine) dont le nom passe le filtre. */
 export function listSourceFiles(filter: (path: string) => boolean): string[] {

@@ -50,7 +50,7 @@ export interface ProgressBarProps {
  */
 function resolveAppearance(
   appearance: ProgressBarAppearance | "auto",
-  value: number,
+  value: number
 ): ProgressBarAppearance {
   if (appearance !== "auto") return appearance;
   return value >= 100 ? "success" : "information";
@@ -80,14 +80,9 @@ export function ProgressBar({
         aria-valuemax={100}
         aria-label={ariaLabel}
       >
-        <div
-          className={fillClass}
-          style={{ width: `${String(clamped)}%` }}
-        />
+        <div className={fillClass} style={{ width: `${String(clamped)}%` }} />
       </div>
-      {showLabel && (
-        <span className={styles.label}>{`${String(clamped)}\u00A0%`}</span>
-      )}
+      {showLabel && <span className={styles.label}>{`${String(clamped)}\u00A0%`}</span>}
     </div>
   );
 }

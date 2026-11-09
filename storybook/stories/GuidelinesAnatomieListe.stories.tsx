@@ -58,7 +58,7 @@ const RichText = ({ parts }: { parts: Rich[] }): ReactElement => (
         <Text size="medium" key={i} as="span" weight="bold">
           {p.b}
         </Text>
-      ),
+      )
     )}
   </>
 );
@@ -96,7 +96,7 @@ const ZONES: Zone[] = [
     n: "2",
     el: "SideNav",
     note: "Le menu de gauche : déployé (240 px, mode expanded) ou réduit en rail (80 px, mode rail), jamais agrandi au survol ; le bouton de bascule est dans son en-tête. Il est permanent dans l'application dès 769 px et sur le web dès 1200 px. Sur le web en dessous de 1200 px, il disparaît de l'écran : on l'ouvre dans un Drawer depuis le hamburger du Page.Bar. Dans l'application à 768 px et moins, il n'y en a pas : la BottomNav le remplace.",
-    tech: "SideNav + SideNav.Provider (mode expanded / rail) : application ≥ 769 px, web ≥ 1200 px ; web sous 1200 px : Drawer placement=\"left\" ; application ≤ 768 px : BottomNav.",
+    tech: 'SideNav + SideNav.Provider (mode expanded / rail) : application ≥ 769 px, web ≥ 1200 px ; web sous 1200 px : Drawer placement="left" ; application ≤ 768 px : BottomNav.',
   },
   {
     n: "3",
@@ -109,7 +109,9 @@ const ZONES: Zone[] = [
     el: "Page.Toolbar",
     note: (
       <>
-        {"La barre d'outils : la recherche (SearchField), le bouton Filtres et les « Actions page », celles qui agissent sur cette page, comme exporter ou créer. Elles changent d'un écran à l'autre, contrairement aux Actions app du Page.Bar. "}
+        {
+          "La barre d'outils : la recherche (SearchField), le bouton Filtres et les « Actions page », celles qui agissent sur cette page, comme exporter ou créer. Elles changent d'un écran à l'autre, contrairement aux Actions app du Page.Bar. "
+        }
         <Text size="medium" as="span" weight="bold">
           Une seule par écran.
         </Text>
@@ -138,7 +140,8 @@ const ZONES: Zone[] = [
 const ACCUEIL_TITLE = "L'écran d'accueil";
 const ACCUEIL_INTRO =
   "L'accueil n'est pas un écran de liste : ni Page.Toolbar ni Table. Il garde la même base (Banner, SideNav, Page.Bar) et commence par une ligne de bienvenue.";
-const ACCUEIL_CAPTION = "Le titre nomme la destination ; la bienvenue est une ligne de contenu, juste avant les KPI.";
+const ACCUEIL_CAPTION =
+  "Le titre nomme la destination ; la bienvenue est une ligne de contenu, juste avant les KPI.";
 
 /** La ligne de bienvenue passe au palier 20 px de l'échelle du DS par ses tokens (Text s'arrête à 16 px). */
 const ACCUEIL_LINE_STYLE: React.CSSProperties = {
@@ -155,11 +158,12 @@ const ACCUEIL_ITEMS: Array<{ el: string; note: string; tech: ReactNode }> = [
   {
     el: "La ligne de bienvenue",
     note: "La première ligne du Page.Body : « Bonjour, Axel ! », en texte courant, sans Card ni titre. Toute la ligne est en graisse medium, sans nom de famille. Une seule ligne : pas de résumé chiffré (les KPI juste dessous le disent déjà) ni de contexte (l'en-tête du SideNav affiche déjà la société). Le DS ne fournit ni slot ni composant pour ça : c'est du contenu de l'écran.",
-    tech: "Text à 20 px (--font-size-ui-m), couleur par défaut, toute la ligne weight=\"medium\" ; Skeleton inline (1lh) pendant le chargement du prénom. Côté Link : dashboards/Welcome (h6 gras) supprimé à la migration.",
+    tech: 'Text à 20 px (--font-size-ui-m), couleur par défaut, toute la ligne weight="medium" ; Skeleton inline (1lh) pendant le chargement du prénom. Côté Link : dashboards/Welcome (h6 gras) supprimé à la migration.',
   },
 ];
 const ACCUEIL_OK = "Une ligne « Bonjour, Axel ! » en texte courant, puis les KPI.";
-const ACCUEIL_KO = "Une Card grise avec un gros titre « Bonjour, Axel ! », un sous-titre et des boutons.";
+const ACCUEIL_KO =
+  "Une Card grise avec un gros titre « Bonjour, Axel ! », un sous-titre et des boutons.";
 
 interface Rule {
   n: string;
@@ -251,8 +255,10 @@ const RULES: Rule[] = [
 ];
 
 const CLIC_TITLE = "Le clic de ligne";
-const CLIC_INTRO = "C'est le point le plus souvent raté, et celui qui coûte le plus cher à l'usage.";
-const CLIC_CALLOUT_TITLE = "Si l'objet de la ligne a une page à lui, le clic doit être un vrai lien.";
+const CLIC_INTRO =
+  "C'est le point le plus souvent raté, et celui qui coûte le plus cher à l'usage.";
+const CLIC_CALLOUT_TITLE =
+  "Si l'objet de la ligne a une page à lui, le clic doit être un vrai lien.";
 const CLIC_CALLOUT = "Pas un comportement JavaScript qui imite un lien.";
 const CLIC_BODY =
   "Avec un vrai lien, l'utilisateur peut ouvrir dans un nouvel onglet avec Ctrl ou ⌘, cliquer avec la molette, copier l'adresse, revenir en arrière. Le clavier y accède, et un lecteur d'écran annonce un lien. Un comportement JavaScript casse tout cela d'un coup, sans que personne ne s'en rende compte avant de s'en servir.";
@@ -266,14 +272,38 @@ const MODALE_BODY: Rich[] = [
 ];
 
 const GLOSSAIRE: Array<{ term: string; def: string }> = [
-  { term: "Filtre", def: "Un critère qu'on pose dans le panneau : un secteur, un profil, une période, un état de travail." },
-  { term: "Page.Bar", def: "La barre de page, la bande du haut : affordance de navigation, titre à gauche, Actions app." },
-  { term: "Actions app", def: "Les actions générales à l'application (recherche, notifications, réglages), à droite de la barre de page. Les mêmes sur tous les écrans." },
-  { term: "Page.Toolbar", def: "La barre d'outils, la bande juste en dessous : recherche, filtres, Actions page. Une seule par écran." },
-  { term: "Actions page", def: "Les actions contextuelles à la page (exporter, créer…), à droite de la barre d'outils. Elles changent d'un écran à l'autre." },
-  { term: "SideNav", def: "La navigation latérale : déployée (expanded) ou en rail ; permanente dans l'application dès 769 px et sur le web dès 1200 px, dans un Drawer sur le web en dessous." },
-  { term: "Liste de section", def: "Une liste qui vit à l'intérieur d'une fiche, et non comme sujet de l'écran." },
-  { term: "Dé-encarter", def: "Retirer les Card qui servaient de conteneur, et poser les sections sur le fond." },
+  {
+    term: "Filtre",
+    def: "Un critère qu'on pose dans le panneau : un secteur, un profil, une période, un état de travail.",
+  },
+  {
+    term: "Page.Bar",
+    def: "La barre de page, la bande du haut : affordance de navigation, titre à gauche, Actions app.",
+  },
+  {
+    term: "Actions app",
+    def: "Les actions générales à l'application (recherche, notifications, réglages), à droite de la barre de page. Les mêmes sur tous les écrans.",
+  },
+  {
+    term: "Page.Toolbar",
+    def: "La barre d'outils, la bande juste en dessous : recherche, filtres, Actions page. Une seule par écran.",
+  },
+  {
+    term: "Actions page",
+    def: "Les actions contextuelles à la page (exporter, créer…), à droite de la barre d'outils. Elles changent d'un écran à l'autre.",
+  },
+  {
+    term: "SideNav",
+    def: "La navigation latérale : déployée (expanded) ou en rail ; permanente dans l'application dès 769 px et sur le web dès 1200 px, dans un Drawer sur le web en dessous.",
+  },
+  {
+    term: "Liste de section",
+    def: "Une liste qui vit à l'intérieur d'une fiche, et non comme sujet de l'écran.",
+  },
+  {
+    term: "Dé-encarter",
+    def: "Retirer les Card qui servaient de conteneur, et poser les sections sur le fond.",
+  },
 ];
 
 // -----------------------------------------------------------------------
@@ -285,7 +315,14 @@ const GLOSSAIRE: Array<{ term: string; def: string }> = [
  * qui ne rétrécit pas et le centre, pour que tous les marqueurs occupent la même place.
  */
 const Num = ({ n }: { n: string }): ReactElement => (
-  <span style={{ display: "inline-flex", flex: "none", justifyContent: "center", minWidth: "var(--size300)" }}>
+  <span
+    style={{
+      display: "inline-flex",
+      flex: "none",
+      justifyContent: "center",
+      minWidth: "var(--size300)",
+    }}
+  >
     <Badge label={n} appearance="information" importance="high" />
   </span>
 );
@@ -312,12 +349,20 @@ const Verdict = ({ kind, text }: { kind: "ok" | "ko"; text: string }): ReactElem
       <Text size="medium" weight="bold" color={kind === "ok" ? "success" : "critical"} as="span">
         {kind === "ok" ? "À faire" : "À éviter"}
       </Text>
-      <Text size="medium" color="subtle" as="p">{text}</Text>
+      <Text size="medium" color="subtle" as="p">
+        {text}
+      </Text>
     </Stack>
   </Cluster>
 );
 
-const TechNote = ({ audience, children }: { audience: Audience; children: ReactNode }): ReactElement | null =>
+const TechNote = ({
+  audience,
+  children,
+}: {
+  audience: Audience;
+  children: ReactNode;
+}): ReactElement | null =>
   audience === "dev" ? (
     <Text size="medium" as="p" color="subtlest">
       {children}
@@ -330,124 +375,163 @@ const TechNote = ({ audience, children }: { audience: Audience; children: ReactN
 function Schema(): ReactElement {
   return (
     <SideNav.Provider>
-    <Stack gap="150">
-      {/* 1 — Alerte globale */}
-      <Cluster gap="150" align="center" style={{ flexWrap: "nowrap" }}>
-        <Num n="1" />
-        <div style={{ flex: 1 }}>
-          <Banner appearance="warning">Alerte globale, au-dessus de toute la mise en page</Banner>
-        </div>
-      </Cluster>
+      <Stack gap="150">
+        {/* 1 — Alerte globale */}
+        <Cluster gap="150" align="center" style={{ flexWrap: "nowrap" }}>
+          <Num n="1" />
+          <div style={{ flex: 1 }}>
+            <Banner appearance="warning">Alerte globale, au-dessus de toute la mise en page</Banner>
+          </div>
+        </Cluster>
 
-      <Cluster gap="200" align="stretch" style={{ flexWrap: "nowrap" }}>
-        {/* 2 — SideNav : le vrai composant du DS. Comme dans le template « Base », il occupe toute la
+        <Cluster gap="200" align="stretch" style={{ flexWrap: "nowrap" }}>
+          {/* 2 — SideNav : le vrai composant du DS. Comme dans le template « Base », il occupe toute la
             hauteur de la zone sous le Banner : il démarre en face du Page.Bar et finit avec le contenu (la
             colonne s'étire, plus de hauteur fixe). Le repère « 2 » est dans son pied, pour ne pas
             décaler son départ. */}
-        <div style={{ display: "flex", position: "relative", flex: "0 0 auto" }}>
-          <SideNav>
-            <SideNav.Header
-              logo={<Logo entity="link" format="icon" />}
-              companyName="Comète Link"
-              description="Espace manager"
-            />
-            <SideNav.Section>
-              <SideNav.Item label="Tableau de bord" iconBefore="Dashboard" href="#" />
-              <SideNav.Item label="Agents" iconBefore="Group" isSelected href="#" />
-              <SideNav.Item label="Sites" iconBefore="Site" href="#" />
-              <SideNav.Item label="Pointages" iconBefore="Clockings" href="#" />
-            </SideNav.Section>
-            <SideNav.Divider />
-            <SideNav.Section title="Administration" shortTitle="Admin">
-              <SideNav.Item label="Utilisateurs" iconBefore="Group" href="#" />
-              <SideNav.Item label="Droits d'accès" iconBefore="VisibilityLock" href="#" />
-            </SideNav.Section>
-            <SideNav.Footer>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "var(--space100)" }}>
-                <Num n="2" />
-                <AppFooterBrand />
-              </div>
-            </SideNav.Footer>
-          </SideNav>
-        </div>
-
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <Stack gap="150">
-            {/* 3 — Barre de page */}
-            <div style={frame()}>
-              <Cluster gap="150" align="center" justify="between" style={{ flexWrap: "nowrap" }}>
-                <Cluster gap="150" align="center" style={{ flexWrap: "nowrap" }}>
-                  <Num n="3" />
-                  <Button appearance="subtle" density="compact" iconBefore="ArrowBack" aria-label="Retour" />
-                  <Heading size="small" as="div">Titre de l’écran</Heading>
-                </Cluster>
-                <Button color="comete" density="compact">Actions app</Button>
-              </Cluster>
-            </div>
-
-            {/* 4 — Barre d'outils */}
-            <div style={frame()}>
-              <Cluster gap="150" align="center" justify="between" style={{ flexWrap: "nowrap" }}>
-                <Cluster gap="150" align="center" style={{ flexWrap: "nowrap" }}>
-                  <Num n="4" />
-                  <div style={{ width: 200 }}>
-                    <SearchField aria-label="Rechercher" placeholder="Rechercher" density="compact" />
-                  </div>
-                  <Button appearance="outlined" iconBefore="Tune" density="compact">Filtres</Button>
-                </Cluster>
-                <Button appearance="outlined" density="compact">Actions page</Button>
-              </Cluster>
-            </div>
-
-            {/* 5 — Critères actifs (conditionnel) */}
-            <div style={frame(true)}>
-              <Cluster gap="100" align="center">
-                <Num n="5" />
-                <Tag label="Secteurs : Nord" color="information" appearance="subtle" onRemove={() => undefined} />
-                <Tag label="Diplômes : SSIAP 2" color="information" appearance="subtle" onRemove={() => undefined} />
-                <Tag label="Types de contrats : 2" color="information" appearance="subtle" onRemove={() => undefined} />
-                <Button appearance="link">Réinitialiser</Button>
-              </Cluster>
-            </div>
-
-            {/* 6 — Contenu (ici un tableau) */}
-            <div style={frame()}>
-              <Stack gap="100">
-                <div>
-                  <Num n="6" />
+          <div style={{ display: "flex", position: "relative", flex: "0 0 auto" }}>
+            <SideNav>
+              <SideNav.Header
+                logo={<Logo entity="link" format="icon" />}
+                companyName="Comète Link"
+                description="Espace manager"
+              />
+              <SideNav.Section>
+                <SideNav.Item label="Tableau de bord" iconBefore="Dashboard" href="#" />
+                <SideNav.Item label="Agents" iconBefore="Group" isSelected href="#" />
+                <SideNav.Item label="Sites" iconBefore="Site" href="#" />
+                <SideNav.Item label="Pointages" iconBefore="Clockings" href="#" />
+              </SideNav.Section>
+              <SideNav.Divider />
+              <SideNav.Section title="Administration" shortTitle="Admin">
+                <SideNav.Item label="Utilisateurs" iconBefore="Group" href="#" />
+                <SideNav.Item label="Droits d'accès" iconBefore="VisibilityLock" href="#" />
+              </SideNav.Section>
+              <SideNav.Footer>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "var(--space100)",
+                  }}
+                >
+                  <Num n="2" />
+                  <AppFooterBrand />
                 </div>
-                <Table aria-label="Schéma du tableau">
-                  <TableHead>
-                    <TableRow>
-                      <TableHeaderCell>Colonne</TableHeaderCell>
-                      <TableHeaderCell>Colonne</TableHeaderCell>
-                      <TableHeaderCell>Colonne</TableHeaderCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {[0, 1, 2, 3].map((r) => (
-                      <TableRow key={r}>
-                        <TableCell>Valeur</TableCell>
-                        <TableCell>Valeur</TableCell>
-                        <TableCell>Valeur</TableCell>
+              </SideNav.Footer>
+            </SideNav>
+          </div>
+
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <Stack gap="150">
+              {/* 3 — Barre de page */}
+              <div style={frame()}>
+                <Cluster gap="150" align="center" justify="between" style={{ flexWrap: "nowrap" }}>
+                  <Cluster gap="150" align="center" style={{ flexWrap: "nowrap" }}>
+                    <Num n="3" />
+                    <Button
+                      appearance="subtle"
+                      density="compact"
+                      iconBefore="ArrowBack"
+                      aria-label="Retour"
+                    />
+                    <Heading size="small" as="div">
+                      Titre de l’écran
+                    </Heading>
+                  </Cluster>
+                  <Button color="comete" density="compact">
+                    Actions app
+                  </Button>
+                </Cluster>
+              </div>
+
+              {/* 4 — Barre d'outils */}
+              <div style={frame()}>
+                <Cluster gap="150" align="center" justify="between" style={{ flexWrap: "nowrap" }}>
+                  <Cluster gap="150" align="center" style={{ flexWrap: "nowrap" }}>
+                    <Num n="4" />
+                    <div style={{ width: 200 }}>
+                      <SearchField
+                        aria-label="Rechercher"
+                        placeholder="Rechercher"
+                        density="compact"
+                      />
+                    </div>
+                    <Button appearance="outlined" iconBefore="Tune" density="compact">
+                      Filtres
+                    </Button>
+                  </Cluster>
+                  <Button appearance="outlined" density="compact">
+                    Actions page
+                  </Button>
+                </Cluster>
+              </div>
+
+              {/* 5 — Critères actifs (conditionnel) */}
+              <div style={frame(true)}>
+                <Cluster gap="100" align="center">
+                  <Num n="5" />
+                  <Tag
+                    label="Secteurs : Nord"
+                    color="information"
+                    appearance="subtle"
+                    onRemove={() => undefined}
+                  />
+                  <Tag
+                    label="Diplômes : SSIAP 2"
+                    color="information"
+                    appearance="subtle"
+                    onRemove={() => undefined}
+                  />
+                  <Tag
+                    label="Types de contrats : 2"
+                    color="information"
+                    appearance="subtle"
+                    onRemove={() => undefined}
+                  />
+                  <Button appearance="link">Réinitialiser</Button>
+                </Cluster>
+              </div>
+
+              {/* 6 — Contenu (ici un tableau) */}
+              <div style={frame()}>
+                <Stack gap="100">
+                  <div>
+                    <Num n="6" />
+                  </div>
+                  <Table aria-label="Schéma du tableau">
+                    <TableHead>
+                      <TableRow>
+                        <TableHeaderCell>Colonne</TableHeaderCell>
+                        <TableHeaderCell>Colonne</TableHeaderCell>
+                        <TableHeaderCell>Colonne</TableHeaderCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-                <TablePagination
-                  count={4}
-                  page={0}
-                  rowsPerPage={25}
-                  rowsPerPageOptions={[25, 50, 100]}
-                  onPageChange={() => undefined}
-                  onRowsPerPageChange={() => undefined}
-                />
-              </Stack>
-            </div>
-          </Stack>
-        </div>
-      </Cluster>
-    </Stack>
+                    </TableHead>
+                    <TableBody>
+                      {[0, 1, 2, 3].map((r) => (
+                        <TableRow key={r}>
+                          <TableCell>Valeur</TableCell>
+                          <TableCell>Valeur</TableCell>
+                          <TableCell>Valeur</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                  <TablePagination
+                    count={4}
+                    page={0}
+                    rowsPerPage={25}
+                    rowsPerPageOptions={[25, 50, 100]}
+                    onPageChange={() => undefined}
+                    onRowsPerPageChange={() => undefined}
+                  />
+                </Stack>
+              </div>
+            </Stack>
+          </div>
+        </Cluster>
+      </Stack>
     </SideNav.Provider>
   );
 }
@@ -461,8 +545,15 @@ function AccueilSchema(): ReactElement {
     <div style={frame()}>
       <Stack gap="200">
         <Cluster gap="150" align="center" justify="between" style={{ flexWrap: "nowrap" }}>
-          <Heading size="small" as="div">Accueil</Heading>
-          <Button appearance="subtle" density="compact" iconBefore="Settings" aria-label="Réglages" />
+          <Heading size="small" as="div">
+            Accueil
+          </Heading>
+          <Button
+            appearance="subtle"
+            density="compact"
+            iconBefore="Settings"
+            aria-label="Réglages"
+          />
         </Cluster>
         <Divider />
         <Text size="large" weight="medium" style={ACCUEIL_LINE_STYLE} as="p">
@@ -472,7 +563,9 @@ function AccueilSchema(): ReactElement {
           {["KPI", "KPI", "KPI", "KPI"].map((k, i) => (
             <Grid.Col key={i}>
               <div style={frame()}>
-                <Text size="small" color="subtlest" as="span">{k}</Text>
+                <Text size="small" color="subtlest" as="span">
+                  {k}
+                </Text>
               </div>
             </Grid.Col>
           ))}
@@ -513,7 +606,9 @@ function GuidelinesAnatomie(): ReactElement {
         title={TITLE}
         trailing={
           <Cluster gap="100" align="center">
-            <Text size="medium" color="subtlest" as="span">PUBLIC</Text>
+            <Text size="medium" color="subtlest" as="span">
+              PUBLIC
+            </Text>
             {audienceGroup("Public", { tous: "Tous", produit: "Produit", dev: "Dev" })}
           </Cluster>
         }
@@ -527,10 +622,16 @@ function GuidelinesAnatomie(): ReactElement {
 
             {/* Les six zones */}
             <Stack gap="200">
-              <Heading size="medium" as="h2">Les six zones</Heading>
-              <Text size="medium" as="p" color="subtle">{ZONES_INTRO}</Text>
+              <Heading size="medium" as="h2">
+                Les six zones
+              </Heading>
+              <Text size="medium" as="p" color="subtle">
+                {ZONES_INTRO}
+              </Text>
               <Schema />
-              <Text size="medium" as="p" color="subtlest">{FIG_CAPTION}</Text>
+              <Text size="medium" as="p" color="subtlest">
+                {FIG_CAPTION}
+              </Text>
 
               <Grid gap="300">
                 {ZONES.map((z) => (
@@ -539,10 +640,16 @@ function GuidelinesAnatomie(): ReactElement {
                       <Num n={z.n} />
                       <Stack gap="050">
                         <Cluster gap="075" align="center">
-                          <Text size="medium" weight="bold" as="span">{z.el}</Text>
-                          {z.optional && <Tag label="Conditionnel" color="neutral" appearance="subtle" />}
+                          <Text size="medium" weight="bold" as="span">
+                            {z.el}
+                          </Text>
+                          {z.optional && (
+                            <Tag label="Conditionnel" color="neutral" appearance="subtle" />
+                          )}
                         </Cluster>
-                        <Text size="medium" color="subtle" as="p">{z.note}</Text>
+                        <Text size="medium" color="subtle" as="p">
+                          {z.note}
+                        </Text>
                         <TechNote audience={audience}>{z.tech}</TechNote>
                       </Stack>
                     </Cluster>
@@ -555,16 +662,26 @@ function GuidelinesAnatomie(): ReactElement {
 
             {/* L'écran d'accueil */}
             <Stack gap="200">
-              <Heading size="medium" as="h2">{ACCUEIL_TITLE}</Heading>
-              <Text size="medium" as="p" color="subtle">{ACCUEIL_INTRO}</Text>
+              <Heading size="medium" as="h2">
+                {ACCUEIL_TITLE}
+              </Heading>
+              <Text size="medium" as="p" color="subtle">
+                {ACCUEIL_INTRO}
+              </Text>
               <AccueilSchema />
-              <Text size="medium" as="p" color="subtlest">{ACCUEIL_CAPTION}</Text>
+              <Text size="medium" as="p" color="subtlest">
+                {ACCUEIL_CAPTION}
+              </Text>
               <Grid gap="300">
                 {ACCUEIL_ITEMS.map((it) => (
                   <Grid.Col key={it.el} span={{ mobile: 12, desktop: 6 }}>
                     <Stack gap="050">
-                      <Text size="medium" weight="bold" as="span">{it.el}</Text>
-                      <Text size="medium" color="subtle" as="p">{it.note}</Text>
+                      <Text size="medium" weight="bold" as="span">
+                        {it.el}
+                      </Text>
+                      <Text size="medium" color="subtle" as="p">
+                        {it.note}
+                      </Text>
                       <TechNote audience={audience}>{it.tech}</TechNote>
                     </Stack>
                   </Grid.Col>
@@ -585,7 +702,9 @@ function GuidelinesAnatomie(): ReactElement {
             {/* Les cinq règles */}
             <Stack gap="200">
               <Heading size="medium" as="h2">
-                {rules.length === 1 ? "La règle" : `Les ${COUNT_WORDS[rules.length] ?? rules.length} règles`}
+                {rules.length === 1
+                  ? "La règle"
+                  : `Les ${COUNT_WORDS[rules.length] ?? rules.length} règles`}
               </Heading>
               <Grid gap="300">
                 {rules.map((r, i) => (
@@ -593,9 +712,15 @@ function GuidelinesAnatomie(): ReactElement {
                     <Stack gap="150">
                       {i >= 2 && <Divider />}
                       <Cluster gap="150" align="baseline" style={{ flexWrap: "nowrap" }}>
-                        <Text size="medium" weight="bold" color="subtlest" as="span">{String(i + 1).padStart(2, "0")}</Text>
-                        <Heading size="xsmall" as="h3">{r.title}</Heading>
-                        {r.devOnly && <Tag label="Développeur" color="neutral" appearance="subtle" />}
+                        <Text size="medium" weight="bold" color="subtlest" as="span">
+                          {String(i + 1).padStart(2, "0")}
+                        </Text>
+                        <Heading size="xsmall" as="h3">
+                          {r.title}
+                        </Heading>
+                        {r.devOnly && (
+                          <Tag label="Développeur" color="neutral" appearance="subtle" />
+                        )}
                       </Cluster>
                       <Text size="medium" color="subtle" as="p">
                         <RichText parts={r.why} />
@@ -619,24 +744,33 @@ function GuidelinesAnatomie(): ReactElement {
 
             {/* Le clic de ligne */}
             <Stack gap="200">
-              <Heading size="medium" as="h2">{CLIC_TITLE}</Heading>
-              <Text size="medium" as="p" color="subtle">{CLIC_INTRO}</Text>
+              <Heading size="medium" as="h2">
+                {CLIC_TITLE}
+              </Heading>
+              <Text size="medium" as="p" color="subtle">
+                {CLIC_INTRO}
+              </Text>
               <Grid gap="300">
                 <Grid.Col span={{ mobile: 12, desktop: 6 }}>
                   <Stack gap="150">
                     <SectionMessage appearance="information" title={CLIC_CALLOUT_TITLE}>
                       {CLIC_CALLOUT}
                     </SectionMessage>
-                    <Text size="medium" as="p" color="subtle">{CLIC_BODY}</Text>
+                    <Text size="medium" as="p" color="subtle">
+                      {CLIC_BODY}
+                    </Text>
                     <TechNote audience={audience}>
                       <Code>href</Code> sur la cellule primaire, étendu à la ligne via{" "}
-                      <Code>isRowAnchor</Code>. C’est le défaut relevé sur les listes actuelles de Link.
+                      <Code>isRowAnchor</Code>. C’est le défaut relevé sur les listes actuelles de
+                      Link.
                     </TechNote>
                   </Stack>
                 </Grid.Col>
                 <Grid.Col span={{ mobile: 12, desktop: 6 }}>
                   <Stack gap="100">
-                    <Heading size="xsmall" as="h3">{MODALE_TITLE}</Heading>
+                    <Heading size="xsmall" as="h3">
+                      {MODALE_TITLE}
+                    </Heading>
                     <Text size="medium" as="p" color="subtle">
                       <RichText parts={MODALE_BODY} />
                     </Text>
@@ -649,15 +783,21 @@ function GuidelinesAnatomie(): ReactElement {
 
             {/* Vocabulaire */}
             <Stack gap="200">
-              <Heading size="medium" as="h2">Le vocabulaire</Heading>
+              <Heading size="medium" as="h2">
+                Le vocabulaire
+              </Heading>
               <Grid gap="300">
                 {GLOSSAIRE.map((g) => (
                   <Grid.Col key={g.term} span={{ mobile: 12, desktop: 6 }}>
                     <Cluster gap="200" align="baseline" style={{ flexWrap: "nowrap" }}>
                       <div style={{ flex: "0 0 150px" }}>
-                        <Text size="medium" weight="bold" as="span">{g.term}</Text>
+                        <Text size="medium" weight="bold" as="span">
+                          {g.term}
+                        </Text>
                       </div>
-                      <Text size="medium" color="subtle" as="span">{g.def}</Text>
+                      <Text size="medium" color="subtle" as="span">
+                        {g.def}
+                      </Text>
                     </Cluster>
                   </Grid.Col>
                 ))}

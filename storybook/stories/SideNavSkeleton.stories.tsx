@@ -6,10 +6,8 @@ import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 import { SideNavOnly } from "./_appShell";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 const meta = {
   title: "Navigation/SideNav/Skeleton",
@@ -34,7 +32,7 @@ const meta = {
                 "Garder la marque (SideNav.Header) et le footer réels si déjà connus ; ne charger que les rubriques.",
               ]}
               accessibility={[
-                "Chaque placeholder porte `role=\"status\"` + `aria-label` (via Skeleton) pour signaler le chargement.",
+                'Chaque placeholder porte `role="status"` + `aria-label` (via Skeleton) pour signaler le chargement.',
                 "Retirer le skeleton dès que le contenu est prêt pour ne pas laisser un état occupé permanent.",
               ]}
             />
@@ -45,9 +43,7 @@ const meta = {
     layout: "fullscreen",
     design: { type: "figma", url: figmaUrl("4319:15156") },
   },
-  decorators: [
-    (Story) => <SideNavOnly focus="body" nav={<Story />} />,
-  ],
+  decorators: [(Story) => <SideNavOnly focus="body" nav={<Story />} />],
   argTypes: {
     count: { control: { type: "number", min: 1, max: 12 } },
     withSectionTitle: { control: "boolean" },

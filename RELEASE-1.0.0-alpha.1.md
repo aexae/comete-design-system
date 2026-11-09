@@ -31,7 +31,7 @@ import { ThemeProvider, useTheme } from "@aexae/comete-design-system";
 
 <ThemeProvider mode="light">
   <App />
-</ThemeProvider>
+</ThemeProvider>;
 
 // Dans un composant enfant :
 const { mode, toggleTheme, setMode } = useTheme();

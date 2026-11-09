@@ -6,10 +6,8 @@ import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 import { SideNavOnly, AppNav } from "./_appShell";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 /** Seul l'en-tête est montré : ni le corps ni le pied de la nav. */
 function NavContext({ children }: { children: ReactNode }) {
@@ -96,7 +94,24 @@ export const Default: Story = {
 export const CustomLogo: Story = {
   name: "Custom logo",
   args: {
-    logo: <div style={{ width: 32, height: 32, borderRadius: 4, background: "var(--background-brand-bold-default)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontSize: 14, fontWeight: 700 }}>PS</div>,
+    logo: (
+      <div
+        style={{
+          width: 32,
+          height: 32,
+          borderRadius: 4,
+          background: "var(--background-brand-bold-default)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "white",
+          fontSize: 14,
+          fontWeight: 700,
+        }}
+      >
+        PS
+      </div>
+    ),
     companyName: "Pro Sécurité",
     description: "Espace manager",
   },

@@ -202,19 +202,13 @@ const PageContext = createContext<PageContextValue>({
  * </Page>
  * ```
  */
-export function Page({
-  children,
-  globalActions,
-  className,
-  style,
-}: PageProps): ReactElement {
+export function Page({ children, globalActions, className, style }: PageProps): ReactElement {
   const classNames = [styles.page, className].filter(Boolean).join(" ");
   const contextValue = useMemo<PageContextValue>(
     () => ({
-      globalActions:
-        globalActions === undefined ? <DefaultGlobalActions /> : globalActions,
+      globalActions: globalActions === undefined ? <DefaultGlobalActions /> : globalActions,
     }),
-    [globalActions],
+    [globalActions]
   );
   // En dev uniquement : prévenir une fois par montage que le placeholder de démo
   // est affiché faute de prop `globalActions`.
@@ -224,7 +218,7 @@ export function Page({
       console.warn(
         "Page : aucune prop globalActions fournie — le placeholder de démo est " +
           "affiché. Passez globalActions={<VosActions />} ou globalActions={null} " +
-          "pour le désactiver.",
+          "pour le désactiver."
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -265,13 +259,7 @@ Page.displayName = "Page";
  * </Page>
  * ```
  */
-function PageBar({
-  title,
-  leading,
-  trailing,
-  size,
-  className,
-}: PageBarProps): ReactElement {
+function PageBar({ title, leading, trailing, size, className }: PageBarProps): ReactElement {
   const { globalActions } = useContext(PageContext);
   const sizeClass =
     size === "large" ? styles.large : size === "compact" ? styles.compact : undefined;
@@ -313,25 +301,13 @@ PageBar.displayName = "Page.Bar";
  * son plancher (160px, placeholder préservé) — sans jamais descendre sur une
  * seconde rangée.
  */
-function PageToolbar({
-  search,
-  filters,
-  start,
-  end,
-  className,
-}: PageToolbarProps): ReactElement {
+function PageToolbar({ search, filters, start, end, className }: PageToolbarProps): ReactElement {
   const classNames = [styles.toolbar, className].filter(Boolean).join(" ");
   return (
     <div className={classNames}>
-      {search !== undefined && (
-        <div className={styles.toolbarSearch}>{search}</div>
-      )}
-      {filters !== undefined && (
-        <div className={styles.toolbarFilters}>{filters}</div>
-      )}
-      {start !== undefined && (
-        <div className={styles.toolbarStart}>{start}</div>
-      )}
+      {search !== undefined && <div className={styles.toolbarSearch}>{search}</div>}
+      {filters !== undefined && <div className={styles.toolbarFilters}>{filters}</div>}
+      {start !== undefined && <div className={styles.toolbarStart}>{start}</div>}
       {end !== undefined && <div className={styles.toolbarEnd}>{end}</div>}
     </div>
   );
@@ -386,11 +362,7 @@ function PageBody({
     content = (
       <div className={styles.bodyState}>
         {emptyState ?? (
-          <DataStateMessage
-            kind="empty"
-            title={emptyTitle}
-            description={emptyDescription}
-          />
+          <DataStateMessage kind="empty" title={emptyTitle} description={emptyDescription} />
         )}
       </div>
     );

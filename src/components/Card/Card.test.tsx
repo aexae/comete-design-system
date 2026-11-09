@@ -39,7 +39,7 @@ describe("Card", () => {
       (appearance) => {
         const { container } = render(<Card appearance={appearance}>x</Card>);
         expect(container.firstElementChild).toHaveClass(appearance);
-      },
+      }
     );
   });
 
@@ -49,13 +49,23 @@ describe("Card", () => {
       expect(container.firstElementChild).toHaveClass("color-neutral");
     });
 
-    it.each(["neutral", "comete", "success", "warning", "critical", "information", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey", "brand"] as const)(
-      "should apply color-%s class",
-      (color) => {
-        const { container } = render(<Card color={color}>x</Card>);
-        expect(container.firstElementChild).toHaveClass(`color-${color}`);
-      },
-    );
+    it.each([
+      "neutral",
+      "comete",
+      "success",
+      "warning",
+      "critical",
+      "information",
+      "accentPurple",
+      "accentTeal",
+      "accentTurquoise",
+      "accentMagenta",
+      "accentBlueGrey",
+      "brand",
+    ] as const)("should apply color-%s class", (color) => {
+      const { container } = render(<Card color={color}>x</Card>);
+      expect(container.firstElementChild).toHaveClass(`color-${color}`);
+    });
   });
 
   describe("prop className", () => {
@@ -67,64 +77,40 @@ describe("Card", () => {
 
   describe("actionable (onPress defined)", () => {
     it("should set role=button and tabIndex=0 when onPress is provided", () => {
-      render(
-        <Card onPress={() => {}}>
-          x
-        </Card>,
-      );
+      render(<Card onPress={() => {}}>x</Card>);
       const card = screen.getByRole("button");
       expect(card).toHaveAttribute("tabindex", "0");
     });
 
     it("should set data-interactive attribute when onPress is provided", () => {
-      const { container } = render(
-        <Card onPress={() => {}}>
-          x
-        </Card>,
-      );
+      const { container } = render(<Card onPress={() => {}}>x</Card>);
       expect(container.firstElementChild).toHaveAttribute("data-interactive");
     });
 
     it("should call onPress on click", () => {
       const handlePress = vi.fn();
-      render(
-        <Card onPress={handlePress}>
-          x
-        </Card>,
-      );
+      render(<Card onPress={handlePress}>x</Card>);
       fireEvent.click(screen.getByRole("button"));
       expect(handlePress).toHaveBeenCalledOnce();
     });
 
     it("should call onPress on Enter key", () => {
       const handlePress = vi.fn();
-      render(
-        <Card onPress={handlePress}>
-          x
-        </Card>,
-      );
+      render(<Card onPress={handlePress}>x</Card>);
       fireEvent.keyDown(screen.getByRole("button"), { key: "Enter" });
       expect(handlePress).toHaveBeenCalledOnce();
     });
 
     it("should call onPress on Space key", () => {
       const handlePress = vi.fn();
-      render(
-        <Card onPress={handlePress}>
-          x
-        </Card>,
-      );
+      render(<Card onPress={handlePress}>x</Card>);
       fireEvent.keyDown(screen.getByRole("button"), { key: " " });
       expect(handlePress).toHaveBeenCalledOnce();
     });
 
     it("should not call onPress on other keys", () => {
       const handlePress = vi.fn();
-      render(
-        <Card onPress={handlePress}>
-          x
-        </Card>,
-      );
+      render(<Card onPress={handlePress}>x</Card>);
       fireEvent.keyDown(screen.getByRole("button"), { key: "Escape" });
       expect(handlePress).not.toHaveBeenCalled();
     });
@@ -142,7 +128,11 @@ describe("Card", () => {
     });
 
     it("should not be actionable when disabled with onPress", () => {
-      const { container } = render(<Card isDisabled onPress={() => {}}>x</Card>);
+      const { container } = render(
+        <Card isDisabled onPress={() => {}}>
+          x
+        </Card>
+      );
       expect(container.firstElementChild).not.toHaveAttribute("role");
       expect(container.firstElementChild).not.toHaveAttribute("data-interactive");
     });
@@ -231,7 +221,7 @@ describe("Card", () => {
       const { container } = render(
         <Card drag="top" onDrag={handleDrag}>
           x
-        </Card>,
+        </Card>
       );
       const dragArea = container.querySelector(".dragArea")!;
       fireEvent.dragStart(dragArea);
@@ -242,7 +232,7 @@ describe("Card", () => {
       const { container } = render(
         <Card drag="top" onDrag={() => {}}>
           x
-        </Card>,
+        </Card>
       );
       const card = container.firstElementChild!;
       const dragArea = container.querySelector(".dragArea")!;
@@ -259,7 +249,7 @@ describe("Card", () => {
       const { container } = render(
         <Card drag="top" onDragEnd={handleDragEnd}>
           x
-        </Card>,
+        </Card>
       );
       const dragArea = container.querySelector(".dragArea")!;
       fireEvent.dragStart(dragArea);
@@ -271,7 +261,7 @@ describe("Card", () => {
       const { container } = render(
         <Card drag="top" onDrag={() => {}}>
           x
-        </Card>,
+        </Card>
       );
       const card = container.firstElementChild!;
       const dragArea = container.querySelector(".dragArea")!;
@@ -287,9 +277,7 @@ describe("Card", () => {
     it("shows a loading skeleton (role=status) and sets aria-busy", () => {
       const { container } = render(<Card isLoading>Contenu</Card>);
       // Le wrapper nommé porte l'annonce ; les Skeleton internes sont muets.
-      expect(
-        screen.getByRole("status", { name: "Chargement…" }),
-      ).toBeInTheDocument();
+      expect(screen.getByRole("status", { name: "Chargement…" })).toBeInTheDocument();
       expect(container.firstChild).toHaveAttribute("aria-busy", "true");
     });
 
@@ -303,7 +291,7 @@ describe("Card", () => {
       render(
         <Card isLoading onPress={onPress}>
           x
-        </Card>,
+        </Card>
       );
       expect(screen.queryByRole("button")).not.toBeInTheDocument();
       fireEvent.click(screen.getByRole("status", { name: "Chargement…" }));

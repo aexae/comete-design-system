@@ -59,22 +59,18 @@ export interface GridColProps {
 // Helpers
 
 function isResponsiveObject<T>(
-  value: GridResponsive<T> | undefined,
+  value: GridResponsive<T> | undefined
 ): value is { mobile?: T; tablet?: T; desktop?: T } {
   return typeof value === "object" && value !== null;
 }
 
-function responsiveVars(
-  prefix: string,
-  value: GridResponsive<number> | undefined,
-): CSSProperties {
+function responsiveVars(prefix: string, value: GridResponsive<number> | undefined): CSSProperties {
   if (value === undefined) return {};
   const vars: Record<string, string | number> = {};
   if (isResponsiveObject(value)) {
     if (value.mobile !== undefined) vars[`--_${prefix}-mobile`] = value.mobile;
     if (value.tablet !== undefined) vars[`--_${prefix}-tablet`] = value.tablet;
-    if (value.desktop !== undefined)
-      vars[`--_${prefix}-desktop`] = value.desktop;
+    if (value.desktop !== undefined) vars[`--_${prefix}-desktop`] = value.desktop;
   } else {
     vars[`--_${prefix}-mobile`] = value;
   }
@@ -154,11 +150,7 @@ function GridCol({
   };
 
   const hasStart = start !== undefined;
-  const classNames = [
-    styles.col,
-    hasStart ? styles.hasStart : undefined,
-    className,
-  ]
+  const classNames = [styles.col, hasStart ? styles.hasStart : undefined, className]
     .filter(Boolean)
     .join(" ");
 

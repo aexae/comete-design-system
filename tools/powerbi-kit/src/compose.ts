@@ -53,19 +53,44 @@ function parseStyle(raw: string): Style {
       return Number.isNaN(n) ? undefined : n;
     };
     switch (prop) {
-      case "display": style.display = value; break;
-      case "flex-direction": style.flexDirection = value; break;
-      case "align-items": style.alignItems = value; break;
-      case "position": style.position = value; break;
-      case "left": style.left = px(); break;
-      case "top": style.top = px(); break;
-      case "margin-top": style.marginTop = px(); break;
-      case "margin-right": style.marginRight = px(); break;
-      case "margin-bottom": style.marginBottom = px(); break;
-      case "margin-left": style.marginLeft = px(); break;
-      case "width": style.width = px(); break;
-      case "height": style.height = px(); break;
-      default: break; // line-height, etc. : sans effet sur la géométrie ici
+      case "display":
+        style.display = value;
+        break;
+      case "flex-direction":
+        style.flexDirection = value;
+        break;
+      case "align-items":
+        style.alignItems = value;
+        break;
+      case "position":
+        style.position = value;
+        break;
+      case "left":
+        style.left = px();
+        break;
+      case "top":
+        style.top = px();
+        break;
+      case "margin-top":
+        style.marginTop = px();
+        break;
+      case "margin-right":
+        style.marginRight = px();
+        break;
+      case "margin-bottom":
+        style.marginBottom = px();
+        break;
+      case "margin-left":
+        style.marginLeft = px();
+        break;
+      case "width":
+        style.width = px();
+        break;
+      case "height":
+        style.height = px();
+        break;
+      default:
+        break; // line-height, etc. : sans effet sur la géométrie ici
     }
   }
   return style;
@@ -99,7 +124,11 @@ export function parseMarkup(html: string): Node {
         const end = html.indexOf("</span>", pos);
         if (end === -1) throw new Error("</span> manquante dans le markup SSR");
         pos = end + "</span>".length;
-        nodes.push({ kind: "span", style: parseStyle(parseAttrs(tag).get("style") ?? ""), children });
+        nodes.push({
+          kind: "span",
+          style: parseStyle(parseAttrs(tag).get("style") ?? ""),
+          children,
+        });
       } else if (tag.startsWith("<svg")) {
         const end = html.indexOf("</svg>", close);
         if (end === -1) throw new Error("</svg> manquante dans le markup SSR");
@@ -113,14 +142,18 @@ export function parseMarkup(html: string): Node {
   }
 
   const roots = parseNodes();
-  if (roots.length !== 1 || !roots[0]) throw new Error("Le markup logo doit avoir une racine unique");
+  if (roots.length !== 1 || !roots[0])
+    throw new Error("Le markup logo doit avoir une racine unique");
   return roots[0];
 }
 
 // ---------------------------------------------------------------------------
 // Mesure
 
-interface Size { width: number; height: number }
+interface Size {
+  width: number;
+  height: number;
+}
 
 function outerSize(node: Node): Size {
   const inner = measure(node);
@@ -166,7 +199,11 @@ function measure(node: Node): Size {
 // ---------------------------------------------------------------------------
 // Placement
 
-interface Placed { node: Extract<Node, { kind: "svg" }>; x: number; y: number }
+interface Placed {
+  node: Extract<Node, { kind: "svg" }>;
+  x: number;
+  y: number;
+}
 
 function place(node: Node, x: number, y: number, out: Placed[]): void {
   if (node.kind === "svg") {
@@ -190,16 +227,20 @@ function place(node: Node, x: number, y: number, out: Placed[]): void {
 
     if (column) {
       const offsetX =
-        align === "flex-end" ? box.width - size.width
-        : align === "center" ? (box.width - size.width) / 2
-        : 0;
+        align === "flex-end"
+          ? box.width - size.width
+          : align === "center"
+            ? (box.width - size.width) / 2
+            : 0;
       place(child, x + offsetX + (margin?.marginLeft ?? 0), cursor + (margin?.marginTop ?? 0), out);
       cursor += size.height;
     } else {
       const offsetY =
-        align === "center" ? (box.height - size.height) / 2
-        : align === "flex-end" ? box.height - size.height
-        : 0;
+        align === "center"
+          ? (box.height - size.height) / 2
+          : align === "flex-end"
+            ? box.height - size.height
+            : 0;
       place(child, cursor + (margin?.marginLeft ?? 0), y + offsetY + (margin?.marginTop ?? 0), out);
       cursor += size.width;
     }

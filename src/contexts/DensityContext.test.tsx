@@ -16,7 +16,7 @@ describe("useDensity", () => {
     render(
       <DensityProvider density="touch">
         <Consumer />
-      </DensityProvider>,
+      </DensityProvider>
     );
     expect(screen.getByTestId("result")).toHaveTextContent("touch");
   });
@@ -25,7 +25,7 @@ describe("useDensity", () => {
     render(
       <DensityProvider density="touch">
         <Consumer density="compact" />
-      </DensityProvider>,
+      </DensityProvider>
     );
     expect(screen.getByTestId("result")).toHaveTextContent("compact");
   });

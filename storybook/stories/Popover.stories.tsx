@@ -6,10 +6,8 @@ import { DialogTrigger, Dialog } from "react-aria-components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -20,7 +18,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le popover affiche un contenu riche dans un panneau flottant ancré à un élément déclencheur. Contrairement au tooltip, il peut contenir des éléments interactifs et reste ouvert jusqu'à fermeture explicite." },
+      description: {
+        component:
+          "Le popover affiche un contenu riche dans un panneau flottant ancré à un élément déclencheur. Contrairement au tooltip, il peut contenir des éléments interactifs et reste ouvert jusqu'à fermeture explicite.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -115,10 +116,7 @@ export const Default: Story = {
     <DialogTrigger>
       <Button>Ouvrir le popover</Button>
       <Popover>
-        <Dialog
-          aria-label="Informations"
-          style={{ padding: "var(--space200)", outline: "none" }}
-        >
+        <Dialog aria-label="Informations" style={{ padding: "var(--space200)", outline: "none" }}>
           <p
             style={{
               margin: 0,
@@ -143,10 +141,7 @@ export const RichContent: Story = {
     <DialogTrigger>
       <Button>Détails</Button>
       <Popover>
-        <Dialog
-          aria-label="Détails"
-          style={{ padding: "var(--space200)", outline: "none" }}
-        >
+        <Dialog aria-label="Détails" style={{ padding: "var(--space200)", outline: "none" }}>
           <div
             style={{
               fontFamily: "var(--font-family-primary)",

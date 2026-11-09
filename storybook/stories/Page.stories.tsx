@@ -26,10 +26,8 @@ import {
 import css from "./Page.stories.module.css";
 import filtresCss from "./FiltresOptionB.stories.module.css";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -40,7 +38,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le composant page structure la mise en page globale en organisant l'en-tête, le contenu principal et les barres latérales. Il gère les points de rupture et assure une disposition cohérente sur tous les écrans." },
+      description: {
+        component:
+          "Le composant page structure la mise en page globale en organisant l'en-tête, le contenu principal et les barres latérales. Il gère les points de rupture et assure une disposition cohérente sur tous les écrans.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -79,11 +80,7 @@ type Story = StoryObj<typeof Page>;
 // Helpers
 
 function Gutters({ children }: { children: React.ReactNode }) {
-  return (
-    <div style={{ paddingInline: "var(--space300)", minHeight: "100vh" }}>
-      {children}
-    </div>
-  );
+  return <div style={{ paddingInline: "var(--space300)", minHeight: "100vh" }}>{children}</div>;
 }
 
 // -----------------------------------------------------------------------
@@ -124,7 +121,12 @@ export const Default: Story = {
             }
             end={
               <Cluster gap="100">
-                <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
+                <SavedSearchesMenu
+                  views={views}
+                  current={f}
+                  onApply={(v) => setF(v.filters)}
+                  onDelete={remove}
+                />
                 <ButtonGroup>
                   <Button
                     color="comete"
@@ -143,7 +145,11 @@ export const Default: Story = {
           />
           {/* Tags des critères actifs, sous la barre. */}
           <div style={{ paddingInline: "var(--page-gutter)" }}>
-            <ActiveFilterTags filters={f} onChange={setF} textActionClassName={filtresCss["textAction"]} />
+            <ActiveFilterTags
+              filters={f}
+              onChange={setF}
+              textActionClassName={filtresCss["textAction"]}
+            />
           </div>
           <Page.Body>
             <SectionMessage appearance="information" style={{ marginBottom: 16 }}>
@@ -155,9 +161,7 @@ export const Default: Story = {
                   <Card appearance="outlined">
                     <div style={{ padding: "var(--space200)" }}>
                       <strong>Agent {i + 1}</strong>
-                      <p style={{ margin: "var(--space100) 0 0" }}>
-                        Description courte
-                      </p>
+                      <p style={{ margin: "var(--space100) 0 0" }}>Description courte</p>
                     </div>
                   </Card>
                 </Grid.Col>
@@ -238,7 +242,12 @@ function ListingPage({ leading }: { leading?: React.ReactNode }) {
         end={
           <Cluster gap="100">
             {/* Filtres enregistrés : appliquer / supprimer un jeu de critères. */}
-            <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
+            <SavedSearchesMenu
+              views={views}
+              current={f}
+              onApply={(v) => setF(v.filters)}
+              onDelete={remove}
+            />
             <ButtonGroup>
               {/* Action primaire — comète (navy) ; en compact, se réduit en
                   icône seule « + » (squared) pour libérer la place */}
@@ -264,7 +273,11 @@ function ListingPage({ leading }: { leading?: React.ReactNode }) {
           Masqués sous le breakpoint compact : en mobile, les critères sont portés
           par le badge du bouton « Filtres » et la feuille (drill-down). */}
       <div className={css["hideBlockUnderCompact"]} style={{ paddingInline: "var(--page-gutter)" }}>
-        <ActiveFilterTags filters={f} onChange={setF} textActionClassName={filtresCss["textAction"]} />
+        <ActiveFilterTags
+          filters={f}
+          onChange={setF}
+          textActionClassName={filtresCss["textAction"]}
+        />
       </div>
       <Page.Body>
         <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
@@ -284,9 +297,7 @@ function ListingPage({ leading }: { leading?: React.ReactNode }) {
   );
 }
 
-const HAMBURGER = (
-  <Button appearance="subtle" iconBefore="Menu" aria-label="Ouvrir le menu" />
-);
+const HAMBURGER = <Button appearance="subtle" iconBefore="Menu" aria-label="Ouvrir le menu" />;
 
 /**
  * **Full page — responsive.** Une seule story : changer le viewport via la

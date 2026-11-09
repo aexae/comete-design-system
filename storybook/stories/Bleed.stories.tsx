@@ -33,7 +33,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le bleed permet à un élément de déborder au-delà des marges de son conteneur parent. Il est utile pour étendre une image ou un fond de bord à bord sans rompre la grille de mise en page." },
+      description: {
+        component:
+          "Le bleed permet à un élément de déborder au-delà des marges de son conteneur parent. Il est utile pour étendre une image ou un fond de bord à bord sans rompre la grille de mise en page.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -67,7 +70,24 @@ const meta = {
     isBordered: { control: "boolean" },
     color: {
       control: "select",
-      options: [undefined, "neutral", "comete", "brand", "success", "warning", "critical", "information", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey", "subtlest", "subtler", "bold"],
+      options: [
+        undefined,
+        "neutral",
+        "comete",
+        "brand",
+        "success",
+        "warning",
+        "critical",
+        "information",
+        "accentPurple",
+        "accentTeal",
+        "accentTurquoise",
+        "accentMagenta",
+        "accentBlueGrey",
+        "subtlest",
+        "subtler",
+        "bold",
+      ],
     },
     inline: {
       control: "select",
@@ -98,8 +118,12 @@ function SampleCard({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <Card appearance="outlined">
       <Stack padding="200" gap="075">
-        <Heading size="xsmall" as="span">{title}</Heading>
-        <Text size="small" as="span" color="subtlest">{subtitle}</Text>
+        <Heading size="xsmall" as="span">
+          {title}
+        </Heading>
+        <Text size="small" as="span" color="subtlest">
+          {subtitle}
+        </Text>
       </Stack>
     </Card>
   );
@@ -109,8 +133,10 @@ function BleedBanner() {
   return (
     <div style={{ padding: "var(--space300)" }}>
       <Stack gap="100" align="center">
-        <Icon icon="Campaign" size={32}  />
-        <Heading size="small" as="span">Bannière full-bleed</Heading>
+        <Icon icon="Campaign" size={32} />
+        <Heading size="small" as="span">
+          Bannière full-bleed
+        </Heading>
         <Text size="small" as="span" color="subtlest" align="center">
           Ce contenu traverse les gouttières de Page et va bord-à-bord.
         </Text>
@@ -125,7 +151,7 @@ function BleedBanner() {
 /** Story interactive : testez les props via le panneau Controls. */
 export const Default: Story = {
   args: {
-    color: "comete"
+    color: "comete",
   },
 
   parameters: { layout: "fullscreen" },
@@ -151,7 +177,7 @@ export const Default: Story = {
         </Page.Body>
       </Page>
     </div>
-  )
+  ),
 };
 
 // -----------------------------------------------------------------------
@@ -175,7 +201,17 @@ export const BleedMobile: Story = {
     chromatic: { viewports: [375] },
   },
   render: () => (
-    <div style={{ width: 402, height: 874, border: "3px solid var(--border-default)", borderRadius: "58px", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+    <div
+      style={{
+        width: 402,
+        height: 874,
+        border: "3px solid var(--border-default)",
+        borderRadius: "58px",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+      }}
+    >
       <Page globalActions={<Avatar size="small" initials="AC" />} style={{ flex: 1, minHeight: 0 }}>
         <Page.Bar
           size="compact"
@@ -184,7 +220,9 @@ export const BleedMobile: Story = {
         />
         <Page.Body>
           <Stack gap="200">
-            <Heading size="medium" as="span">Bonjour Axel</Heading>
+            <Heading size="medium" as="span">
+              Bonjour Axel
+            </Heading>
             <Text as="span" color="subtle">
               Contenu standard — indenté par les gouttières (16px).
             </Text>
@@ -207,22 +245,42 @@ export const BleedMobile: Story = {
 
             {/* ---- Second bleed ---- */}
             <Bleed isFull>
-              <div style={{
-                background: "var(--background-neutral-subtlest-default)",
-                padding: "var(--space200)",
-              }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "var(--space100)" }}>
+              <div
+                style={{
+                  background: "var(--background-neutral-subtlest-default)",
+                  padding: "var(--space200)",
+                }}
+              >
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr 1fr",
+                    gap: "var(--space100)",
+                  }}
+                >
                   <Stack gap="0" align="center">
-                    <Heading size="medium" as="span">42</Heading>
-                    <Text size="xsmall" as="span" color="subtlest">Vacations</Text>
+                    <Heading size="medium" as="span">
+                      42
+                    </Heading>
+                    <Text size="xsmall" as="span" color="subtlest">
+                      Vacations
+                    </Text>
                   </Stack>
                   <Stack gap="0" align="center">
-                    <Heading size="medium" as="span">3</Heading>
-                    <Text size="xsmall" as="span" color="subtlest">Alertes</Text>
+                    <Heading size="medium" as="span">
+                      3
+                    </Heading>
+                    <Text size="xsmall" as="span" color="subtlest">
+                      Alertes
+                    </Text>
                   </Stack>
                   <Stack gap="0" align="center">
-                    <Heading size="medium" as="span">0</Heading>
-                    <Text size="xsmall" as="span" color="subtlest">Retards</Text>
+                    <Heading size="medium" as="span">
+                      0
+                    </Heading>
+                    <Text size="xsmall" as="span" color="subtlest">
+                      Retards
+                    </Text>
                   </Stack>
                 </div>
               </div>
@@ -289,12 +347,14 @@ export const BleedDesktop: Story = {
         <Page.Body>
           <Stack gap="300">
             <Text as="span" color="subtle">
-              Le contenu respecte les gouttières de Page (24px desktop).
-              Les sections <code>&lt;Bleed isFull&gt;</code> les traversent pour aller bord-à-bord.
+              Le contenu respecte les gouttières de Page (24px desktop). Les sections{" "}
+              <code>&lt;Bleed isFull&gt;</code> les traversent pour aller bord-à-bord.
             </Text>
 
             <Stack gap="200">
-              <Heading size="small" as="span">Chiffres clés</Heading>
+              <Heading size="small" as="span">
+                Chiffres clés
+              </Heading>
               <Stack direction="row" gap="200">
                 <SampleCard title="42" subtitle="Vacations affectées" />
                 <SampleCard title="3" subtitle="Alertes" />
@@ -309,7 +369,9 @@ export const BleedDesktop: Story = {
             </Bleed>
 
             <Stack gap="200">
-              <Heading size="small" as="span">Agents récents</Heading>
+              <Heading size="small" as="span">
+                Agents récents
+              </Heading>
               <Stack direction="row" gap="200">
                 {[
                   { initials: "DM", name: "DUPONT Marie", tag: "Conforme" },
@@ -320,7 +382,9 @@ export const BleedDesktop: Story = {
                     <Stack padding="200" gap="100">
                       <Stack direction="row" gap="100" align="center">
                         <Avatar size="small" initials={a.initials} />
-                        <Heading size="xsmall" as="span">{a.name}</Heading>
+                        <Heading size="xsmall" as="span">
+                          {a.name}
+                        </Heading>
                       </Stack>
                       <Tag label={a.tag} />
                     </Stack>
@@ -333,17 +397,23 @@ export const BleedDesktop: Story = {
 
             {/* ---- Second bleed ---- */}
             <Bleed isFull>
-              <div style={{
-                background: "var(--background-neutral-subtlest-default)",
-                padding: "var(--space400) var(--space300)",
-              }}>
+              <div
+                style={{
+                  background: "var(--background-neutral-subtlest-default)",
+                  padding: "var(--space400) var(--space300)",
+                }}
+              >
                 <Stack gap="100" align="center">
-                  <Heading size="medium" as="span">Section pleine largeur</Heading>
+                  <Heading size="medium" as="span">
+                    Section pleine largeur
+                  </Heading>
                   <Text as="span" color="subtlest" align="center">
-                    Cette section traverse les gouttières de Page.
-                    Elle va du bord gauche (après la SideNav) au bord droit du viewport.
+                    Cette section traverse les gouttières de Page. Elle va du bord gauche (après la
+                    SideNav) au bord droit du viewport.
                   </Text>
-                  <Button color="comete" iconBefore="Add">Action</Button>
+                  <Button color="comete" iconBefore="Add">
+                    Action
+                  </Button>
                 </Stack>
               </div>
             </Bleed>

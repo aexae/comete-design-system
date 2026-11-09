@@ -37,8 +37,9 @@
   line-height: var(--line-height-ui-xs);
   color: var(--text-default);
   cursor: pointer;
-  transition: background-color var(--duration-fast) var(--easing-default),
-              color var(--duration-fast) var(--easing-default);
+  transition:
+    background-color var(--duration-fast) var(--easing-default),
+    color var(--duration-fast) var(--easing-default);
 }
 
 .button[data-hovered] {

@@ -62,36 +62,28 @@ describe("TimePicker", () => {
 
   describe("prop appearance", () => {
     it("should apply subtle class on InputContainer", () => {
-      const { container } = render(
-        <TimePicker aria-label="Heure" appearance="subtle" />,
-      );
+      const { container } = render(<TimePicker aria-label="Heure" appearance="subtle" />);
       expect(container.querySelector(".inputContainer")).toHaveClass("subtle");
     });
   });
 
   describe("prop density", () => {
     it("should apply densityCompact class on InputContainer", () => {
-      const { container } = render(
-        <TimePicker aria-label="Heure" density="compact" />,
-      );
+      const { container } = render(<TimePicker aria-label="Heure" density="compact" />);
       expect(container.querySelector(".inputContainer")).toHaveClass("densityCompact");
     });
   });
 
   describe("prop isDisabled", () => {
     it("should set data-disabled", () => {
-      const { container } = render(
-        <TimePicker aria-label="Heure" isDisabled />,
-      );
+      const { container } = render(<TimePicker aria-label="Heure" isDisabled />);
       expect(container.querySelector("[data-disabled]")).toBeInTheDocument();
     });
   });
 
   describe("prop isInvalid", () => {
     it("should set data-invalid", () => {
-      const { container } = render(
-        <TimePicker aria-label="Heure" isInvalid />,
-      );
+      const { container } = render(<TimePicker aria-label="Heure" isInvalid />);
       expect(container.querySelector("[data-invalid]")).toBeInTheDocument();
     });
   });
@@ -110,9 +102,7 @@ describe("TimePicker", () => {
 
   describe("prop hourCycle", () => {
     it("should render AM/PM segment when hourCycle is 12", () => {
-      const { container } = render(
-        <TimePicker aria-label="Heure" hourCycle={12} />,
-      );
+      const { container } = render(<TimePicker aria-label="Heure" hourCycle={12} />);
       const segments = container.querySelectorAll(".segment");
       // hour + : + minute + space + dayPeriod = 5 segments
       expect(segments.length).toBeGreaterThanOrEqual(4);
@@ -122,10 +112,12 @@ describe("TimePicker", () => {
   describe("valeur par défaut", () => {
     it("should render non-placeholder segments when value is provided", () => {
       const { container } = render(
-        <TimePicker aria-label="Heure" defaultValue={new Time(14, 30)} />,
+        <TimePicker aria-label="Heure" defaultValue={new Time(14, 30)} />
       );
       // With a value set, segments should not have the placeholder attribute
-      const segments = container.querySelectorAll(".segment[data-type='hour'], .segment[data-type='minute']");
+      const segments = container.querySelectorAll(
+        ".segment[data-type='hour'], .segment[data-type='minute']"
+      );
       for (const segment of segments) {
         expect(segment).not.toHaveAttribute("data-placeholder");
       }
@@ -135,13 +127,7 @@ describe("TimePicker", () => {
   describe("interaction", () => {
     it("should call onChange when value changes", async () => {
       const onChange = vi.fn();
-      render(
-        <TimePicker
-          aria-label="Heure"
-          defaultValue={new Time(10, 0)}
-          onChange={onChange}
-        />,
-      );
+      render(<TimePicker aria-label="Heure" defaultValue={new Time(10, 0)} onChange={onChange} />);
       const hourSegment = screen.getByText("10");
       await userEvent.click(hourSegment);
       await userEvent.keyboard("{ArrowUp}");
@@ -151,9 +137,7 @@ describe("TimePicker", () => {
 
   describe("prop className", () => {
     it("should append custom className", () => {
-      const { container } = render(
-        <TimePicker aria-label="Heure" className="custom" />,
-      );
+      const { container } = render(<TimePicker aria-label="Heure" className="custom" />);
       expect(container.firstElementChild).toHaveClass("custom");
     });
   });
@@ -165,11 +149,7 @@ describe("TimePicker", () => {
   describe("non-editable mode states", () => {
     it("should render formatted time in .timeDisplay", () => {
       const { container } = render(
-        <TimePicker
-          aria-label="Heure"
-          isEditable={false}
-          defaultValue={new Time(14, 30)}
-        />,
+        <TimePicker aria-label="Heure" isEditable={false} defaultValue={new Time(14, 30)} />
       );
       const timeDisplay = container.querySelector(".timeDisplay");
       expect(timeDisplay).toHaveTextContent("14:30");
@@ -182,7 +162,7 @@ describe("TimePicker", () => {
           isEditable={false}
           isDisabled
           defaultValue={new Time(14, 30)}
-        />,
+        />
       );
       expect(container.firstElementChild).toHaveAttribute("data-disabled", "true");
     });
@@ -194,7 +174,7 @@ describe("TimePicker", () => {
           isEditable={false}
           isInvalid
           defaultValue={new Time(14, 30)}
-        />,
+        />
       );
       expect(container.firstElementChild).toHaveAttribute("data-invalid", "true");
     });
@@ -206,7 +186,7 @@ describe("TimePicker", () => {
           isEditable={false}
           isInvalid
           defaultValue={new Time(14, 30)}
-        />,
+        />
       );
       const inputContainer = container.querySelector(".inputContainer");
       expect(inputContainer).toHaveClass("invalid");
@@ -219,7 +199,7 @@ describe("TimePicker", () => {
           isEditable={false}
           isDisabled
           defaultValue={new Time(14, 30)}
-        />,
+        />
       );
       const inputContainer = container.querySelector(".inputContainer");
       expect(inputContainer).toHaveClass("disabled");
@@ -233,7 +213,7 @@ describe("TimePicker", () => {
           isDisabled
           isInvalid
           defaultValue={new Time(14, 30)}
-        />,
+        />
       );
       expect(container.firstElementChild).toHaveAttribute("data-disabled", "true");
       expect(container.firstElementChild).toHaveAttribute("data-invalid", "true");
@@ -246,18 +226,14 @@ describe("TimePicker", () => {
           isEditable={false}
           showSeconds
           defaultValue={new Time(14, 30, 45)}
-        />,
+        />
       );
       expect(container.querySelector(".timeDisplay")).toHaveTextContent("14:30:45");
     });
 
     it("should omit seconds in timeDisplay when showSeconds is false (default)", () => {
       const { container } = render(
-        <TimePicker
-          aria-label="Heure"
-          isEditable={false}
-          defaultValue={new Time(14, 30, 45)}
-        />,
+        <TimePicker aria-label="Heure" isEditable={false} defaultValue={new Time(14, 30, 45)} />
       );
       expect(container.querySelector(".timeDisplay")).toHaveTextContent("14:30");
       expect(container.querySelector(".timeDisplay")).not.toHaveTextContent("14:30:45");
@@ -270,7 +246,7 @@ describe("TimePicker", () => {
           isEditable={false}
           hourCycle={12}
           defaultValue={new Time(9, 5)}
-        />,
+        />
       );
       expect(container.querySelector(".timeDisplay")).toHaveTextContent("09:05 AM");
     });
@@ -282,7 +258,7 @@ describe("TimePicker", () => {
           isEditable={false}
           hourCycle={12}
           defaultValue={new Time(14, 30)}
-        />,
+        />
       );
       expect(container.querySelector(".timeDisplay")).toHaveTextContent("02:30 PM");
     });
@@ -294,7 +270,7 @@ describe("TimePicker", () => {
           isEditable={false}
           hourCycle={12}
           defaultValue={new Time(12, 0)}
-        />,
+        />
       );
       expect(container.querySelector(".timeDisplay")).toHaveTextContent("12:00 PM");
     });
@@ -306,7 +282,7 @@ describe("TimePicker", () => {
           isEditable={false}
           hourCycle={12}
           defaultValue={new Time(0, 0)}
-        />,
+        />
       );
       expect(container.querySelector(".timeDisplay")).toHaveTextContent("12:00 AM");
     });
@@ -318,7 +294,7 @@ describe("TimePicker", () => {
           isEditable={false}
           hourCycle={24}
           defaultValue={new Time(14, 30)}
-        />,
+        />
       );
       expect(container.querySelector(".timeDisplay")).toHaveTextContent("14:30");
       expect(container.querySelector(".timeDisplay")).not.toHaveTextContent("PM");

@@ -7,10 +7,8 @@ import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 import { AppShell, AppNav, DemoPageContent, SideNavOnly, AppFooterBrand } from "./_appShell";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 const meta: Meta = {
   title: "Navigation/SideNav",
@@ -198,7 +196,9 @@ function MobileWebDemo() {
               donne toute la hauteur du Drawer à la nav. */}
           <div
             style={{ height: "100%" }}
-            onClickCapture={(e) => { if ((e.target as HTMLElement).closest("a")) setIsOpen(false); }}
+            onClickCapture={(e) => {
+              if ((e.target as HTMLElement).closest("a")) setIsOpen(false);
+            }}
           >
             <SideNav>
               <SideNav.Header
@@ -367,33 +367,33 @@ export const Scrollable: Story = {
     <AppShell
       nav={
         <>
-            <SideNav.Section>
-              <SideNav.Item label="Tableau de bord" iconBefore="Dashboard" isSelected href="/" />
-              <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
-              <SideNav.Item label="Sites" iconBefore="Site" href="/sites" />
-              <SideNav.Item label="Pointages" iconBefore="Clockings" href="/pointages" />
-              <SideNav.Item label="Plannings" iconBefore="CalendarMonth" href="/plannings" />
-              <SideNav.Item label="Vacations" iconBefore="EventAvailable" href="/vacations" />
-              <SideNav.Item label="Équipes" iconBefore="Group" href="/equipes" />
-              <SideNav.Item label="Secteurs" iconBefore="LocationOn" href="/secteurs" />
-              <SideNav.Item label="Contrats" iconBefore="Description" href="/contrats" />
-              <SideNav.Item label="Absences" iconBefore="EventBusy" href="/absences" />
-              <SideNav.Item label="Remplacements" iconBefore="SwapVert" href="/remplacements" />
-              <SideNav.Item label="Astreintes" iconBefore="Alarm" href="/astreintes" />
-              <SideNav.Item label="Utilisateurs" iconBefore="Group" href="/users" />
-              <SideNav.Item label="Droits" iconBefore="ManageAccounts" href="/permissions" />
-              <SideNav.Item label="Licences" iconBefore="Key" href="/licences" />
-              <SideNav.Item label="Facturation" iconBefore="Payments" href="/billing" />
-              <SideNav.Item label="Intégrations" iconBefore="Extension" href="/integrations" />
-              <SideNav.Item label="Journaux" iconBefore="Description" href="/logs" />
-              <SideNav.Item label="Paramètres" iconBefore="Settings" href="/settings" />
-              <SideNav.Item label="Import" iconBefore="UploadFile" href="/import" />
-              <SideNav.Item label="Export" iconBefore="Download" href="/export" />
-              <SideNav.Item label="Archives" iconBefore="Archive" href="/archives" />
-              <SideNav.Item label="Audit" iconBefore="FolderManaged" href="/audit" />
-              <SideNav.Item label="Notifications" iconBefore="Notifications" href="/notifications" />
-              <SideNav.Item label="Modèles" iconBefore="Category" href="/modeles" />
-            </SideNav.Section>
+          <SideNav.Section>
+            <SideNav.Item label="Tableau de bord" iconBefore="Dashboard" isSelected href="/" />
+            <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
+            <SideNav.Item label="Sites" iconBefore="Site" href="/sites" />
+            <SideNav.Item label="Pointages" iconBefore="Clockings" href="/pointages" />
+            <SideNav.Item label="Plannings" iconBefore="CalendarMonth" href="/plannings" />
+            <SideNav.Item label="Vacations" iconBefore="EventAvailable" href="/vacations" />
+            <SideNav.Item label="Équipes" iconBefore="Group" href="/equipes" />
+            <SideNav.Item label="Secteurs" iconBefore="LocationOn" href="/secteurs" />
+            <SideNav.Item label="Contrats" iconBefore="Description" href="/contrats" />
+            <SideNav.Item label="Absences" iconBefore="EventBusy" href="/absences" />
+            <SideNav.Item label="Remplacements" iconBefore="SwapVert" href="/remplacements" />
+            <SideNav.Item label="Astreintes" iconBefore="Alarm" href="/astreintes" />
+            <SideNav.Item label="Utilisateurs" iconBefore="Group" href="/users" />
+            <SideNav.Item label="Droits" iconBefore="ManageAccounts" href="/permissions" />
+            <SideNav.Item label="Licences" iconBefore="Key" href="/licences" />
+            <SideNav.Item label="Facturation" iconBefore="Payments" href="/billing" />
+            <SideNav.Item label="Intégrations" iconBefore="Extension" href="/integrations" />
+            <SideNav.Item label="Journaux" iconBefore="Description" href="/logs" />
+            <SideNav.Item label="Paramètres" iconBefore="Settings" href="/settings" />
+            <SideNav.Item label="Import" iconBefore="UploadFile" href="/import" />
+            <SideNav.Item label="Export" iconBefore="Download" href="/export" />
+            <SideNav.Item label="Archives" iconBefore="Archive" href="/archives" />
+            <SideNav.Item label="Audit" iconBefore="FolderManaged" href="/audit" />
+            <SideNav.Item label="Notifications" iconBefore="Notifications" href="/notifications" />
+            <SideNav.Item label="Modèles" iconBefore="Category" href="/modeles" />
+          </SideNav.Section>
         </>
       }
     />

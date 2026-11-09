@@ -18,6 +18,8 @@ pnpm test:watch          # Mode watch
 # Lint & format
 pnpm lint                # Vérification (zéro warning toléré)
 pnpm lint:fix            # Auto-correction sur src/
+pnpm format              # Prettier --write sur tout le dépôt (racine + storybook/)
+pnpm format:check        # Vérification Prettier (bloquante en CI)
 
 # Storybook (catalogue de composants)
 cd storybook && pnpm install && pnpm start  # → http://localhost:6006
@@ -69,6 +71,7 @@ src/
 ### Thème
 
 Le thème fonctionne via l'attribut `data-theme` sur `<html>` :
+
 - `ThemeProvider` expose un contexte pour switcher light/dark
 - `useTheme` retourne le mode actif et les fonctions de bascule
 - Les CSS custom properties de `@aexae/comete-design-tokens` gèrent les couleurs via `:root` (light) et `[data-theme="dark"]`
@@ -76,6 +79,7 @@ Le thème fonctionne via l'attribut `data-theme` sur `<html>` :
 ### Conventions composants
 
 Chaque composant suit la structure :
+
 ```
 ComponentName/
 ├── ComponentName.tsx          # Composant (React Aria)
@@ -124,6 +128,7 @@ curl -s -H "X-Figma-Token: $FIGMA_TOKEN" \
 ```
 
 Extraire via des scripts Python inline (`python3 -c "..."`) :
+
 - **Props/variantes** : structure du COMPONENT_SET (`children[].name`)
 - **Dimensions** : `absoluteBoundingBox`, `cornerRadius`, `paddingTop/Right/Bottom/Left`, `itemSpacing`
 - **Couleurs** : `fills[].color` (RGB 0–1) → convertir en hex → matcher dans `comete-tokens.css`
@@ -131,6 +136,7 @@ Extraire via des scripts Python inline (`python3 -c "..."`) :
 - **Node IDs** des variantes représentatives pour les stories
 
 Matcher les couleurs RGB aux tokens sémantiques :
+
 ```bash
 TOKEN_CSS=$(find node_modules -path "*comete-design-tokens*comete-tokens.css" | head -1)
 # Extraire uniquement les blocs :root (thème clair) pour avoir les bonnes valeurs
@@ -159,25 +165,33 @@ for t,v in re.findall(r'(--[\w-]+)\s*:\s*(#[0-9a-fA-F]{6})\s*;', root):
 ### 2. Fichiers à créer
 
 **`src/components/ComponentName/ComponentName.tsx`**
+
 - `export function ComponentName(props): ReactElement` (pas de forwardRef sauf si ref explicitement nécessaire)
 - Utiliser React Aria (`react-aria-components`) uniquement pour les composants interactifs
 - Types exportés : `ComponentNameAppearance`, `ComponentNameSize`, `ComponentNameProps`
 - JSDoc sur la fonction et les props non évidentes
 
 **`src/components/ComponentName/ComponentName.module.css`**
+
 - Zéro valeur hardcodée — uniquement `var(--token)`
 - Structure : base → dimensions/tailles → apparences × états
 - **Priorité des overrides** : les sélecteurs composés (`.appearance.importance`) ont spécificité `(0,2,0)`. Les états prioritaires (`.disabled`, `.badge.disabled`) doivent être déclarés **en dernier** pour gagner par ordre de source à spécificité égale. Ne jamais utiliser `!important`.
 
 **`src/components/ComponentName/ComponentName.test.tsx`**
+
 - Couvrir : rendu de base, valeurs par défaut, chaque prop, combinaisons, états (disabled, etc.)
 - Nommage : `"should [comportement] when [condition]"`
 - CSS Modules en test = proxy identité → asserter sur le nom de classe brut (ex: `"medium"` pas `"ComponentName_medium__xxx"`)
 
 **`src/components/ComponentName/index.ts`**
+
 ```ts
 export { ComponentName } from "./ComponentName";
-export type { ComponentNameProps, ComponentNameAppearance, ComponentNameSize } from "./ComponentName";
+export type {
+  ComponentNameProps,
+  ComponentNameAppearance,
+  ComponentNameSize,
+} from "./ComponentName";
 ```
 
 ### 3. Brancher les exports
@@ -190,17 +204,21 @@ export * from "./ComponentName";
 ### 4. Validation — obligatoire avant tout commit
 
 ```bash
+pnpm format             # Prettier --write systématique (tout le dépôt, storybook inclus)
 pnpm build              # TypeScript strict + génère dist/
 pnpm test               # Tous les tests unitaires
 pnpm lint               # Zéro warning (root)
+pnpm format:check       # Zéro écart Prettier (bloquant en CI)
 cd storybook && pnpm lint && npx tsc --noEmit   # Zéro warning + zéro erreur TS (storybook)
 ```
 
-Aucune erreur ni warning toléré. Corriger avant de continuer.
+Aucune erreur ni warning toléré. Corriger avant de continuer. Prettier s'applique
+systématiquement à tout code écrit ou modifié (la CI exécute `pnpm format:check`).
 
 ### 5. Story Storybook
 
 Créer `storybook/stories/ComponentName.stories.tsx` :
+
 - `meta` avec `argTypes` pour chaque prop contrôlable et `parameters.design` pointant sur le COMPONENT_SET Figma
 - Chaque story individuelle lie son propre node Figma via `parameters.design`
 - Stories couvrant au minimum : toutes les apparences, tous les états (disabled, etc.), variantes de contenu
@@ -245,6 +263,7 @@ gh pr create --title "feat(component-name): add ComponentName" --body "..." --ba
 ```
 
 La PR doit inclure dans son body :
+
 - Résumé des props et variantes implémentées
 - Lien vers le node Figma
 - Test plan (build, tests, lint, Storybook)

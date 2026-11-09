@@ -8,12 +8,7 @@ import styles from "./Banner.module.css";
 // Types publics
 
 /** Sévérité / nature du banner. */
-export type BannerAppearance =
-  | "warning"
-  | "critical"
-  | "announcement"
-  | "success"
-  | "information";
+export type BannerAppearance = "warning" | "critical" | "announcement" | "success" | "information";
 
 // -----------------------------------------------------------------------
 // Mapping appearance → icône contextuelle (aligné sur SectionMessage)

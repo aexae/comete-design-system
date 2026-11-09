@@ -41,6 +41,8 @@
     "test:stories": "pnpm --filter @aexae/comete-design-system-storybook test",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint src --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "clean": "rimraf dist coverage"
   },
   "dependencies": {
@@ -73,6 +75,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "globals": "^17.4.0",
     "jsdom": "^29.0.0",
+    "prettier": "^3.9.10",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "rimraf": "^6.1.3",

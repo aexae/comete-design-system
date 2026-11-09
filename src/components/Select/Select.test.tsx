@@ -94,7 +94,9 @@ describe("Select", () => {
   });
 
   it("should render with appearance subtle", () => {
-    const { container } = render(<Select items={BASIC_ITEMS} appearance="subtle" aria-label="Pays" />);
+    const { container } = render(
+      <Select items={BASIC_ITEMS} appearance="subtle" aria-label="Pays" />
+    );
     expect(container.querySelector(".subtle")).not.toBeNull();
   });
 
@@ -126,7 +128,9 @@ describe("Select", () => {
   });
 
   it("should render compact variant", () => {
-    const { container } = render(<Select items={BASIC_ITEMS} density="compact" aria-label="Pays" />);
+    const { container } = render(
+      <Select items={BASIC_ITEMS} density="compact" aria-label="Pays" />
+    );
     expect(container.querySelector(".densityCompact")).not.toBeNull();
   });
 
@@ -153,7 +157,9 @@ describe("Select", () => {
   });
 
   it("should render message via Field", () => {
-    render(<Select items={BASIC_ITEMS} label="Pays" message="Sélection requise" messageType="critical" />);
+    render(
+      <Select items={BASIC_ITEMS} label="Pays" message="Sélection requise" messageType="critical" />
+    );
     expect(screen.getByText("Sélection requise")).toBeDefined();
   });
 });

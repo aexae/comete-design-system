@@ -70,8 +70,24 @@ const TONES = ["comete", "critical", "warning", "success", "information"] as con
 
 /** Icônes proposées dans les controls (n'importe quel nom d'icône reste possible via le code). */
 const ICON_OPTIONS = [
-  "Campaign", "Patrol", "Report", "Scanner", "Camera", "Add", "EventNote", "MenuBook", "FormEdit",
-  "Notifications", "Warning", "CheckCircle", "Send", "Call", "Mic", "LocationOn", "Star", "Flag",
+  "Campaign",
+  "Patrol",
+  "Report",
+  "Scanner",
+  "Camera",
+  "Add",
+  "EventNote",
+  "MenuBook",
+  "FormEdit",
+  "Notifications",
+  "Warning",
+  "CheckCircle",
+  "Send",
+  "Call",
+  "Mic",
+  "LocationOn",
+  "Star",
+  "Flag",
 ] as const satisfies readonly IconName[];
 
 /**
@@ -90,7 +106,8 @@ const PLAYGROUND_ARGTYPES = Object.fromEntries([
     "count",
     {
       name: "Nombre de pastilles",
-      description: "De 2 à 5 (le plafond : au-delà, plus de place entre le FAB et la barre de page).",
+      description:
+        "De 2 à 5 (le plafond : au-delà, plus de place entre le FAB et la barre de page).",
       control: { type: "range", min: 2, max: 5, step: 1 },
       table: { category: "Menu" },
     },
@@ -99,7 +116,8 @@ const PLAYGROUND_ARGTYPES = Object.fromEntries([
     "menuOpen",
     {
       name: "Menu ouvert",
-      description: "Ouvre / ferme la couche. Synchronisé avec le « + » : le toucher bascule aussi ce control.",
+      description:
+        "Ouvre / ferme la couche. Synchronisé avec le « + » : le toucher bascule aussi ce control.",
       control: "boolean",
       table: { category: "Menu" },
     },
@@ -110,12 +128,16 @@ const PLAYGROUND_ARGTYPES = Object.fromEntries([
     const cond = n > 2 ? { if: { arg: "count", gte: n } } : {};
     return [
       [`label${n}`, { name: "Texte", control: "text", table: cat, ...cond }],
-      [`icon${n}`, { name: "Icône", control: "select", options: ICON_OPTIONS, table: cat, ...cond }],
+      [
+        `icon${n}`,
+        { name: "Icône", control: "select", options: ICON_OPTIONS, table: cat, ...cond },
+      ],
       [
         `tone${n}`,
         {
           name: "Couleur (ton)",
-          description: "Nature de l'action, pas son identité : plus de 2 tons distincts ou plus d'un `critical` → avertissement en console.",
+          description:
+            "Nature de l'action, pas son identité : plus de 2 tons distincts ou plus d'un `critical` → avertissement en console.",
           control: "inline-radio",
           options: TONES,
           table: cat,
@@ -219,15 +241,18 @@ export const Interactions: Story = {
       await waitFor(() => expect(d.contains(document.activeElement)).toBe(true));
     });
 
-    await step("les deux rangées sont du ton par défaut, porté par la pastille (IconTile)", async () => {
-      for (const name of ["Déclarer un évènement", "Démarrer une ronde"]) {
-        // La pastille est un `IconTile` décoratif : premier enfant de la rangée, qui garde
-        // le nom accessible. Son ton se lit sur la classe d'apparence.
-        const tile = screen.getByRole("button", { name }).firstElementChild;
-        await expect(tile).toHaveAttribute("aria-hidden", "true");
-        await expect(tile?.className).toMatch(/comete/);
+    await step(
+      "les deux rangées sont du ton par défaut, porté par la pastille (IconTile)",
+      async () => {
+        for (const name of ["Déclarer un évènement", "Démarrer une ronde"]) {
+          // La pastille est un `IconTile` décoratif : premier enfant de la rangée, qui garde
+          // le nom accessible. Son ton se lit sur la classe d'apparence.
+          const tile = screen.getByRole("button", { name }).firstElementChild;
+          await expect(tile).toHaveAttribute("aria-hidden", "true");
+          await expect(tile?.className).toMatch(/comete/);
+        }
       }
-    });
+    );
 
     await step("Échap referme et le focus revient sur le FAB", async () => {
       const trigger = fab();

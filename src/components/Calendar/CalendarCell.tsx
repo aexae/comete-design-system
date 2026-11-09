@@ -156,9 +156,7 @@ export function CalendarCell({
   const content = (
     <>
       <span className={styles.cellText}>{children}</span>
-      {isToday && (
-        <span className={styles.todayDot} aria-hidden="true" />
-      )}
+      {isToday && <span className={styles.todayDot} aria-hidden="true" />}
       {focusVisible && <FocusRing borderRadius={3} position="inside" />}
     </>
   );

@@ -79,7 +79,9 @@ span.cell {
    États interactifs (hover / pressed) — sur button uniquement
    ========================================================================== */
 
-button.cell:hover:not([data-disabled]):not([data-selected]):not([data-selection-start]):not([data-selection-end]) {
+button.cell:hover:not([data-disabled]):not([data-selected]):not([data-selection-start]):not(
+    [data-selection-end]
+  ) {
   background-color: var(--background-neutral-subtler-hovered);
 }
 
@@ -88,7 +90,9 @@ button.cell:active:not([data-disabled]) {
 }
 
 /* Hover fourni explicitement par React Aria (date grid) */
-.cell[data-hovered]:not([data-disabled]):not([data-selected]):not([data-selection-start]):not([data-selection-end]) {
+.cell[data-hovered]:not([data-disabled]):not([data-selected]):not([data-selection-start]):not(
+    [data-selection-end]
+  ) {
   background-color: var(--background-neutral-subtler-hovered);
 }
 

@@ -112,7 +112,7 @@ describe("Icon", () => {
     const { container } = render(
       <InputContextProvider isDisabled isInvalid={false}>
         <Icon icon="Add" color="subtlest" />
-      </InputContextProvider>,
+      </InputContextProvider>
     );
     const svg = container.querySelector("svg");
     expect(svg).toHaveClass("comete-icon--disabled");
@@ -123,7 +123,7 @@ describe("Icon", () => {
     const { container } = render(
       <InputContextProvider isDisabled={false} isInvalid={false}>
         <Icon icon="Add" color="brand" />
-      </InputContextProvider>,
+      </InputContextProvider>
     );
     expect(container.querySelector("svg")).toHaveClass("comete-icon--brand");
   });

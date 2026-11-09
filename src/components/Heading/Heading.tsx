@@ -8,7 +8,7 @@ import styles from "./Heading.module.css";
 // Types publics
 
 export type HeadingSize =
-  | "xxlarge" | "xlarge" | "large" | "medium" | "small" | "xsmall" | "xxsmall";
+  "xxlarge" | "xlarge" | "large" | "medium" | "small" | "xsmall" | "xxsmall";
 
 export type HeadingColor = "default" | "inverted";
 

@@ -16,9 +16,9 @@
 
 .separator {
   font-family: var(--font-family-primary);
-  font-size: var(--font-size-ui-xs);       /* 14px */
+  font-size: var(--font-size-ui-xs); /* 14px */
   font-weight: var(--font-weight-regular);
-  line-height: var(--line-height-ui-xs);   /* 20px */
+  line-height: var(--line-height-ui-xs); /* 20px */
   color: var(--text-subtlest);
   user-select: none;
 }
@@ -35,9 +35,9 @@
   align-items: center;
   gap: var(--space075); /* 6px entre icône et label */
   font-family: var(--font-family-primary);
-  font-size: var(--font-size-ui-xs);       /* 14px */
+  font-size: var(--font-size-ui-xs); /* 14px */
   font-weight: var(--font-weight-regular);
-  line-height: var(--line-height-ui-xs);   /* 20px */
+  line-height: var(--line-height-ui-xs); /* 20px */
   color: var(--text-subtle);
   text-decoration: none;
   outline: none;

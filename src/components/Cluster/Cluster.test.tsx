@@ -8,7 +8,7 @@ describe("Cluster", () => {
       <Cluster>
         <span>A</span>
         <span>B</span>
-      </Cluster>,
+      </Cluster>
     );
     expect(getByText("A")).toBeInTheDocument();
     expect(getByText("B")).toBeInTheDocument();
@@ -18,7 +18,7 @@ describe("Cluster", () => {
     const { container } = render(
       <Cluster>
         <span>A</span>
-      </Cluster>,
+      </Cluster>
     );
     const el = container.firstChild as HTMLElement;
     expect(el.className).toContain("align-center");
@@ -29,7 +29,7 @@ describe("Cluster", () => {
     const { container } = render(
       <Cluster gap="200">
         <span>A</span>
-      </Cluster>,
+      </Cluster>
     );
     const style = (container.firstChild as HTMLElement).getAttribute("style");
     expect(style).toContain("--_cluster-row-gap");
@@ -41,7 +41,7 @@ describe("Cluster", () => {
     const { container } = render(
       <Cluster rowGap="300" columnGap="100">
         <span>A</span>
-      </Cluster>,
+      </Cluster>
     );
     const style = (container.firstChild as HTMLElement).getAttribute("style");
     expect(style).toContain("--_cluster-row-gap: var(--space300)");
@@ -52,7 +52,7 @@ describe("Cluster", () => {
     const { container } = render(
       <Cluster gap="200" columnGap="050">
         <span>A</span>
-      </Cluster>,
+      </Cluster>
     );
     const style = (container.firstChild as HTMLElement).getAttribute("style");
     expect(style).toContain("--_cluster-row-gap: var(--space200)");
@@ -63,7 +63,7 @@ describe("Cluster", () => {
     const { container } = render(
       <Cluster align="baseline" justify="between">
         <span>A</span>
-      </Cluster>,
+      </Cluster>
     );
     const el = container.firstChild as HTMLElement;
     expect(el.className).toContain("align-baseline");
@@ -74,21 +74,17 @@ describe("Cluster", () => {
     const { container } = render(
       <Cluster className="custom-class">
         <span>A</span>
-      </Cluster>,
+      </Cluster>
     );
-    expect((container.firstChild as HTMLElement).className).toContain(
-      "custom-class",
-    );
+    expect((container.firstChild as HTMLElement).className).toContain("custom-class");
   });
 
   it("should always include the base cluster class", () => {
     const { container } = render(
       <Cluster>
         <span>A</span>
-      </Cluster>,
+      </Cluster>
     );
-    expect((container.firstChild as HTMLElement).className).toContain(
-      "cluster",
-    );
+    expect((container.firstChild as HTMLElement).className).toContain("cluster");
   });
 });

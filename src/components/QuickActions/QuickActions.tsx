@@ -152,7 +152,7 @@ export function QuickActions({
       // eslint-disable-next-line no-console
       console.warn(
         `QuickActions : ${actions.length} actions reçues, ${MAX_ACTIONS} au maximum — au-delà, ` +
-          `il n'y a plus de place entre le FAB et la barre de page. Utiliser un tiroir (Drawer).`,
+          `il n'y a plus de place entre le FAB et la barre de page. Utiliser un tiroir (Drawer).`
       );
     }
     const tones = new Set(actions.map((a) => a.tone ?? "comete"));
@@ -160,7 +160,7 @@ export function QuickActions({
       // eslint-disable-next-line no-console
       console.warn(
         `QuickActions : ${tones.size} tons distincts dans un même menu (${[...tones].join(", ")}). ` +
-          TONE_RATIONALE,
+          TONE_RATIONALE
       );
     }
     const criticalCount = actions.filter((a) => a.tone === "critical").length;
@@ -168,7 +168,7 @@ export function QuickActions({
       // eslint-disable-next-line no-console
       console.warn(
         `QuickActions : ${criticalCount} actions portent le ton "critical" — une seule au plus. ` +
-          TONE_RATIONALE,
+          TONE_RATIONALE
       );
     }
   }

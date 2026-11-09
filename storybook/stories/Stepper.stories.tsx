@@ -1,12 +1,7 @@
 // Stepper — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import {
-  Stepper,
-  Step,
-  Button,
-  ButtonGroup,
-} from "@aexae/comete-design-system/components";
+import { Stepper, Step, Button, ButtonGroup } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
@@ -26,7 +21,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le stepper affiche la progression à travers une séquence d'étapes numérotées. Il indique l'étape courante, les étapes complétées et celles à venir dans un processus multi-étapes." },
+      description: {
+        component:
+          "Le stepper affiche la progression à travers une séquence d'étapes numérotées. Il indique l'étape courante, les étapes complétées et celles à venir dans un processus multi-étapes.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -262,16 +260,12 @@ export const NonLinear: Story = {
             ))}
           </Stepper>
           <p style={{ margin: 0, color: "var(--text-subtle)" }}>
-            Étape active : <strong>{steps[step]}</strong> ({step + 1} / 4) —
-            clique sur n&apos;importe quelle étape pour y sauter, sans que
-            les précédentes soient auto-validées.
+            Étape active : <strong>{steps[step]}</strong> ({step + 1} / 4) — clique sur
+            n&apos;importe quelle étape pour y sauter, sans que les précédentes soient
+            auto-validées.
           </p>
           <div style={{ display: "flex", gap: 8 }}>
-            <button
-              type="button"
-              onClick={validateCurrent}
-              disabled={completed.has(step)}
-            >
+            <button type="button" onClick={validateCurrent} disabled={completed.has(step)}>
               Valider l&apos;étape courante
             </button>
             <button type="button" onClick={reset}>
@@ -336,8 +330,8 @@ export const LinearClickable: Story = {
             <Step label="Confirmation" />
           </Stepper>
           <p style={{ marginTop: 16, color: "var(--text-subtle)" }}>
-            Toutes les étapes &lt; {step + 1} sont auto-complétées. Clique sur
-            une étape précédente pour y revenir.
+            Toutes les étapes &lt; {step + 1} sont auto-complétées. Clique sur une étape précédente
+            pour y revenir.
           </p>
         </div>
       );

@@ -24,10 +24,7 @@ describe("Breadcrumbs", () => {
         <BreadcrumbItem label="Accueil" href="/" />
       </Breadcrumbs>
     );
-    expect(screen.getByRole("navigation")).toHaveAttribute(
-      "aria-label",
-      "Fil d'Ariane"
-    );
+    expect(screen.getByRole("navigation")).toHaveAttribute("aria-label", "Fil d'Ariane");
   });
 
   it("should use custom aria-label when provided", () => {
@@ -36,10 +33,7 @@ describe("Breadcrumbs", () => {
         <BreadcrumbItem label="Accueil" href="/" />
       </Breadcrumbs>
     );
-    expect(screen.getByRole("navigation")).toHaveAttribute(
-      "aria-label",
-      "Navigation"
-    );
+    expect(screen.getByRole("navigation")).toHaveAttribute("aria-label", "Navigation");
   });
 
   it("should render children inside a list", () => {
@@ -73,10 +67,7 @@ describe("BreadcrumbItem", () => {
         <BreadcrumbItem label="Accueil" href="/" />
       </Breadcrumbs>
     );
-    expect(screen.getByRole("link", { name: "Accueil" })).toHaveAttribute(
-      "href",
-      "/"
-    );
+    expect(screen.getByRole("link", { name: "Accueil" })).toHaveAttribute("href", "/");
   });
 
   it("should render as span when isCurrent is true", () => {
@@ -123,11 +114,7 @@ describe("BreadcrumbItem", () => {
   it("should render iconBefore when provided", () => {
     const { container } = render(
       <Breadcrumbs>
-        <BreadcrumbItem
-          label="Accueil"
-          href="/"
-          iconBefore="Home"
-        />
+        <BreadcrumbItem label="Accueil" href="/" iconBefore="Home" />
       </Breadcrumbs>
     );
     expect(container.querySelector("svg")).toBeInTheDocument();
@@ -136,11 +123,7 @@ describe("BreadcrumbItem", () => {
   it("should render iconAfter when provided", () => {
     const { container } = render(
       <Breadcrumbs>
-        <BreadcrumbItem
-          label="Accueil"
-          href="/"
-          iconAfter="Home"
-        />
+        <BreadcrumbItem label="Accueil" href="/" iconAfter="Home" />
       </Breadcrumbs>
     );
     expect(container.querySelector("svg")).toBeInTheDocument();

@@ -54,11 +54,7 @@ function pad(n: number): string {
 /** Animation custom du scroll en RAF — courte, ease-out-cubic, légère.
  *  Remplace `scrollTo({behavior:"smooth"})` dont la durée native (~400-500ms,
  *  ease-in-out) donne un ressenti pesant. */
-function animateScrollTo(
-  el: HTMLElement,
-  target: number,
-  duration = 180,
-): () => void {
+function animateScrollTo(el: HTMLElement, target: number, duration = 180): () => void {
   const start = el.scrollTop;
   const change = target - start;
   if (Math.abs(change) < 0.5) {
@@ -352,9 +348,7 @@ export function TimeDrumPicker({
   const [hour, setHour] = useState(resolvedValue.hour);
   const [minute, setMinute] = useState(resolvedValue.minute);
   const [second, setSecond] = useState(resolvedValue.second);
-  const [period, setPeriod] = useState<"AM" | "PM">(
-    resolvedValue.hour >= 12 ? "PM" : "AM",
-  );
+  const [period, setPeriod] = useState<"AM" | "PM">(resolvedValue.hour >= 12 ? "PM" : "AM");
 
   // Synchroniser si la valeur contrôlée change
   useEffect(() => {

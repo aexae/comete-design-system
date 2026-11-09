@@ -32,13 +32,7 @@ export type StackGap =
 
 export type StackDirection = "row" | "column";
 export type StackAlign = "start" | "center" | "end" | "stretch" | "baseline";
-export type StackJustify =
-  | "start"
-  | "center"
-  | "end"
-  | "between"
-  | "around"
-  | "evenly";
+export type StackJustify = "start" | "center" | "end" | "between" | "around" | "evenly";
 
 export interface StackProps {
   /** Direction du flex container. @default "column" */

@@ -38,10 +38,7 @@ for (const cssPath of globSync("dist/**/*.module.css{,.map}")) {
 //     donc jamais "./X.module.css.js" qui est le chunk JS.)
 for (const jsPath of globSync("dist/**/*.module.css.js")) {
   const src = readFileSync(jsPath, "utf8");
-  const out = src.replace(
-    /(import\s*['"]\.\/[^'"]+?)\.module\.css(['"])/g,
-    "$1.css$2",
-  );
+  const out = src.replace(/(import\s*['"]\.\/[^'"]+?)\.module\.css(['"])/g, "$1.css$2");
   if (out !== src) {
     writeFileSync(jsPath, out);
     rewritten++;
@@ -49,5 +46,5 @@ for (const jsPath of globSync("dist/**/*.module.css.js")) {
 }
 
 console.log(
-  `[plainify-css] ${renamed} feuille(s) renommée(s) *.module.css → *.css, ${rewritten} import(s) réécrit(s).`,
+  `[plainify-css] ${renamed} feuille(s) renommée(s) *.module.css → *.css, ${rewritten} import(s) réécrit(s).`
 );

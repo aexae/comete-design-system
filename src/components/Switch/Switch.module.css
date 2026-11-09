@@ -38,8 +38,7 @@
   height: 20px;
   border-radius: var(--radius300);
   background-color: var(--background-neutral-subtler-default);
-  transition:
-    background-color var(--duration-fast) var(--easing-default);
+  transition: background-color var(--duration-fast) var(--easing-default);
 }
 
 /* Unchecked (off) — le rail est neutre (gris) pour TOUTES les apparences,
@@ -149,12 +148,18 @@
 /* Unchecked (off) — warning / critical : le pouce devient un cercle plein
    coloré avec un glyphe contrasté (inverse de l'état checked). Exclut
    indeterminate (pouce = dash blanc) et disabled. */
-.track[data-appearance="warning"]:not([data-selected]):not([data-indeterminate]):not([data-disabled]) .thumb {
+.track[data-appearance="warning"]:not([data-selected]):not([data-indeterminate]):not(
+    [data-disabled]
+  )
+  .thumb {
   background-color: var(--background-warning-subtlest-default);
   color: var(--icon-bold);
 }
 
-.track[data-appearance="critical"]:not([data-selected]):not([data-indeterminate]):not([data-disabled]) .thumb {
+.track[data-appearance="critical"]:not([data-selected]):not([data-indeterminate]):not(
+    [data-disabled]
+  )
+  .thumb {
   background-color: var(--background-critical-subtlest-default);
   color: var(--icon-critical);
 }

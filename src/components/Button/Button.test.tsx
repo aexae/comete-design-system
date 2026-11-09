@@ -90,7 +90,11 @@ describe("Button", () => {
     });
 
     it("should ignore density classes when isInline even if density is set", () => {
-      render(<Button isInline density="touch">Label</Button>);
+      render(
+        <Button isInline density="touch">
+          Label
+        </Button>
+      );
       const button = screen.getByRole("button");
       expect(button).toHaveClass("inline");
       expect(button).not.toHaveClass("densityTouch");
@@ -184,7 +188,7 @@ describe("Button", () => {
       render(
         <Button collapseLabel iconBefore="FilterList" aria-label="Filtres">
           Filtres
-        </Button>,
+        </Button>
       );
       const btn = screen.getByRole("button", { name: "Filtres" });
       expect(btn).toHaveClass("collapsible");
@@ -196,11 +200,9 @@ describe("Button", () => {
       render(
         <Button collapseLabel iconBefore="FilterList" aria-label="Filtres">
           Filtres
-        </Button>,
+        </Button>
       );
-      expect(
-        screen.getByRole("button", { name: "Filtres" }),
-      ).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Filtres" })).toBeInTheDocument();
     });
 
     it("does not wrap the label when collapseLabel is not set", () => {
@@ -214,23 +216,19 @@ describe("Button", () => {
   describe("shape", () => {
     it("should default to round (no shapeSquare class)", () => {
       render(<Button iconBefore="MoreHoriz" aria-label="Plus" />);
-      expect(screen.getByRole("button", { name: "Plus" })).not.toHaveClass(
-        "shapeSquare",
-      );
+      expect(screen.getByRole("button", { name: "Plus" })).not.toHaveClass("shapeSquare");
     });
 
     it("should apply the shapeSquare class when shape=square", () => {
       render(<Button iconBefore="MoreHoriz" aria-label="Plus" shape="square" />);
-      expect(screen.getByRole("button", { name: "Plus" })).toHaveClass(
-        "shapeSquare",
-      );
+      expect(screen.getByRole("button", { name: "Plus" })).toHaveClass("shapeSquare");
     });
 
     it("should combine shapeSquare with collapseLabel", () => {
       render(
         <Button iconBefore="Add" collapseLabel shape="square" aria-label="Nouvel agent">
           Nouvel agent
-        </Button>,
+        </Button>
       );
       const btn = screen.getByRole("button", { name: "Nouvel agent" });
       expect(btn).toHaveClass("shapeSquare");

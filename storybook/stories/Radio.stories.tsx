@@ -5,10 +5,8 @@ import { expect, fn, userEvent, within } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -19,7 +17,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Les boutons radio permettent de sélectionner une seule option dans un groupe de choix mutuellement exclusifs. Ils conviennent lorsque toutes les options doivent être visibles simultanément." },
+      description: {
+        component:
+          "Les boutons radio permettent de sélectionner une seule option dans un groupe de choix mutuellement exclusifs. Ils conviennent lorsque toutes les options doivent être visibles simultanément.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -32,8 +33,7 @@ const meta = {
                     <Radio value="month" label="Mensuel" />
                   </RadioGroup>
                 ),
-                caption:
-                  "Choix unique parmi 2 à 5 options exclusives, toutes visibles.",
+                caption: "Choix unique parmi 2 à 5 options exclusives, toutes visibles.",
               }}
               dontExample={{
                 example: (
@@ -46,8 +46,7 @@ const meta = {
                     <Radio value="ca" label="Canada" />
                   </RadioGroup>
                 ),
-                caption:
-                  "Ne pas empiler un grand nombre d'options en boutons radio.",
+                caption: "Ne pas empiler un grand nombre d'options en boutons radio.",
               }}
               when={[
                 "Proposer un choix unique parmi 2 à ~5 options mutuellement exclusives, toutes visibles.",
@@ -258,11 +257,7 @@ export const FocusVisible: Story = {
       <Radio value="b" label="Option B" />
     </RadioGroup>
   ),
-  play: ({
-    canvasElement,
-  }: {
-    canvasElement: HTMLElement;
-  }) => {
+  play: ({ canvasElement }: { canvasElement: HTMLElement }) => {
     const canvas = within(canvasElement);
     const radios = canvas.getAllByRole("radio");
     radios[0].focus();

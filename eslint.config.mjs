@@ -9,7 +9,15 @@ import prettierConfig from "eslint-config-prettier";
 export default tseslint.config(
   // Fichiers ignorés
   {
-    ignores: ["node_modules", "dist", "build", "storybook", "storybook-static", "coverage", "tools"],
+    ignores: [
+      "node_modules",
+      "dist",
+      "build",
+      "storybook",
+      "storybook-static",
+      "coverage",
+      "tools",
+    ],
   },
 
   // Base JS + globals pour tous les fichiers

@@ -4,10 +4,8 @@ import { Code } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -18,7 +16,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le composant code affiche des extraits de code source ou des valeurs techniques dans une police à chasse fixe. Il distingue visuellement le contenu technique du reste du texte." },
+      description: {
+        component:
+          "Le composant code affiche des extraits de code source ou des valeurs techniques dans une police à chasse fixe. Il distingue visuellement le contenu technique du reste du texte.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -88,8 +89,8 @@ export const InlineWithText: Story = {
         margin: 0,
       }}
     >
-      La propriété <Code>font-size</Code> accepte des valeurs en{" "}
-      <Code>rem</Code> ou en <Code>px</Code>.
+      La propriété <Code>font-size</Code> accepte des valeurs en <Code>rem</Code> ou en{" "}
+      <Code>px</Code>.
     </p>
   ),
 };

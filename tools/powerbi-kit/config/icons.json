@@ -7,10 +7,7 @@
     "  · ligne 13 « Settings ou ManageAccounts » est tranché en AdminPanelSettings (arbitrage du 03/09/2026)",
     "Mettre \"entries\": \"*\" pour exporter tout le package."
   ],
-  "variants": [
-    "outlined",
-    "filled"
-  ],
+  "variants": ["outlined", "filled"],
   "spacing": "default",
   "size": 24,
   "entries": [

@@ -29,11 +29,7 @@ const VIDE: ThumbGeometry = { isOverflowing: false, size: 0, offset: 0 };
 /** Taille de pouce en deçà de laquelle il devient impossible à viser. */
 const TAILLE_MINIMALE_POURCENT = 8;
 
-function mesurer(
-  longueurVisible: number,
-  longueurTotale: number,
-  position: number,
-): ThumbGeometry {
+function mesurer(longueurVisible: number, longueurTotale: number, position: number): ThumbGeometry {
   if (longueurTotale <= longueurVisible + 1) return VIDE;
 
   const brut = (longueurVisible / longueurTotale) * 100;
@@ -73,7 +69,7 @@ export interface UseScrollbarResult {
  */
 export function useScrollbar(
   visibility: ScrollAreaVisibility = "hover",
-  hideDelay = 600,
+  hideDelay = 600
 ): UseScrollbarResult {
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const [vertical, setVertical] = useState<ThumbGeometry>(VIDE);
@@ -120,43 +116,40 @@ export function useScrollbar(
 
   // Glisser du pouce. On capture le pointeur : le glisser survit à une sortie
   // de la zone, comme un vrai ascenseur.
-  const startDrag = useCallback(
-    (axis: "vertical" | "horizontal", event: React.PointerEvent) => {
-      const el = viewportRef.current;
-      if (!el) return;
-      event.preventDefault();
-      event.stopPropagation();
-      const cible = event.currentTarget as HTMLElement;
-      cible.setPointerCapture(event.pointerId);
-      setIsDragging(true);
+  const startDrag = useCallback((axis: "vertical" | "horizontal", event: React.PointerEvent) => {
+    const el = viewportRef.current;
+    if (!el) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const cible = event.currentTarget as HTMLElement;
+    cible.setPointerCapture(event.pointerId);
+    setIsDragging(true);
 
-      const vertical = axis === "vertical";
-      const departPointeur = vertical ? event.clientY : event.clientX;
-      const departScroll = vertical ? el.scrollTop : el.scrollLeft;
-      const piste = vertical ? el.clientHeight : el.clientWidth;
-      const total = vertical ? el.scrollHeight : el.scrollWidth;
-      // Un pixel de pouce vaut d'autant plus de contenu que celui-ci est long.
-      const facteur = piste > 0 ? total / piste : 1;
+    const vertical = axis === "vertical";
+    const departPointeur = vertical ? event.clientY : event.clientX;
+    const departScroll = vertical ? el.scrollTop : el.scrollLeft;
+    const piste = vertical ? el.clientHeight : el.clientWidth;
+    const total = vertical ? el.scrollHeight : el.scrollWidth;
+    // Un pixel de pouce vaut d'autant plus de contenu que celui-ci est long.
+    const facteur = piste > 0 ? total / piste : 1;
 
-      const auMouvement = (e: PointerEvent) => {
-        const delta = (vertical ? e.clientY : e.clientX) - departPointeur;
-        const cible2 = departScroll + delta * facteur;
-        if (vertical) el.scrollTop = cible2;
-        else el.scrollLeft = cible2;
-      };
-      const auRelachement = (e: PointerEvent) => {
-        cible.releasePointerCapture(e.pointerId);
-        cible.removeEventListener("pointermove", auMouvement);
-        cible.removeEventListener("pointerup", auRelachement);
-        cible.removeEventListener("pointercancel", auRelachement);
-        setIsDragging(false);
-      };
-      cible.addEventListener("pointermove", auMouvement);
-      cible.addEventListener("pointerup", auRelachement);
-      cible.addEventListener("pointercancel", auRelachement);
-    },
-    [],
-  );
+    const auMouvement = (e: PointerEvent) => {
+      const delta = (vertical ? e.clientY : e.clientX) - departPointeur;
+      const cible2 = departScroll + delta * facteur;
+      if (vertical) el.scrollTop = cible2;
+      else el.scrollLeft = cible2;
+    };
+    const auRelachement = (e: PointerEvent) => {
+      cible.releasePointerCapture(e.pointerId);
+      cible.removeEventListener("pointermove", auMouvement);
+      cible.removeEventListener("pointerup", auRelachement);
+      cible.removeEventListener("pointercancel", auRelachement);
+      setIsDragging(false);
+    };
+    cible.addEventListener("pointermove", auMouvement);
+    cible.addEventListener("pointerup", auRelachement);
+    cible.addEventListener("pointercancel", auRelachement);
+  }, []);
 
   const isVisible =
     visibility === "always" ||

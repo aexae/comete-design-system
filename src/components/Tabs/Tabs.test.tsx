@@ -17,7 +17,7 @@ function renderTabs(props?: { disabledKeys?: string[] }) {
       <TabPanel id="tab1">Content 1</TabPanel>
       <TabPanel id="tab2">Content 2</TabPanel>
       <TabPanel id="tab3">Content 3</TabPanel>
-    </Tabs>,
+    </Tabs>
   );
 }
 
@@ -57,7 +57,7 @@ describe("Tabs", () => {
     renderTabs({ disabledKeys: ["tab2"] });
     expect(screen.getByText("Tab 2").closest("[role=tab]")).toHaveAttribute(
       "aria-disabled",
-      "true",
+      "true"
     );
   });
 
@@ -73,10 +73,12 @@ describe("Tabs", () => {
     render(
       <Tabs>
         <TabList>
-          <Tab id="tab1" iconBefore="Star">Tab 1</Tab>
+          <Tab id="tab1" iconBefore="Star">
+            Tab 1
+          </Tab>
         </TabList>
         <TabPanel id="tab1">Content</TabPanel>
-      </Tabs>,
+      </Tabs>
     );
     expect(screen.getByText("Tab 1")).toBeInTheDocument();
   });
@@ -85,10 +87,12 @@ describe("Tabs", () => {
     render(
       <Tabs>
         <TabList>
-          <Tab id="tab1" iconAfter="ChevronRight">Tab 1</Tab>
+          <Tab id="tab1" iconAfter="ChevronRight">
+            Tab 1
+          </Tab>
         </TabList>
         <TabPanel id="tab1">Content</TabPanel>
-      </Tabs>,
+      </Tabs>
     );
     expect(screen.getByText("Tab 1")).toBeInTheDocument();
   });
@@ -102,7 +106,7 @@ describe("Tabs", () => {
           </Tab>
         </TabList>
         <TabPanel id="tab1">Content</TabPanel>
-      </Tabs>,
+      </Tabs>
     );
     expect(screen.getByText("Tab 1")).toBeInTheDocument();
   });
@@ -133,7 +137,7 @@ describe("Tabs", () => {
         </TabList>
         <TabPanel id="tab1">Content 1</TabPanel>
         <TabPanel id="tab2">Content 2</TabPanel>
-      </Tabs>,
+      </Tabs>
     );
     expect(screen.getByText("Content 2")).toBeInTheDocument();
     const user = userEvent.setup();
@@ -150,7 +154,7 @@ describe("Tabs", () => {
         </TabList>
         <TabPanel id="tab1">Content 1</TabPanel>
         <TabPanel id="tab2">Content 2</TabPanel>
-      </Tabs>,
+      </Tabs>
     );
     expect(screen.getByText("Content 2")).toBeInTheDocument();
   });

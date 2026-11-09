@@ -12,7 +12,7 @@ import type { Decorator, Preview } from "@storybook/react-vite";
 import { useGlobals } from "storybook/preview-api";
 import { GLOBALS_UPDATED } from "storybook/internal/core-events";
 import { themes } from "storybook/theming";
-import { INITIAL_VIEWPORTS } from 'storybook/viewport';
+import { INITIAL_VIEWPORTS } from "storybook/viewport";
 
 // ----------------------------------------------------------------------
 // Presets viewport Comète — nommés selon nos usages métier (sécurité privée).
@@ -50,7 +50,11 @@ const withThemeProvider: Decorator = (Story) => {
   // different timing guarantees and was not reliably updating the DOM attribute.
   document.documentElement.setAttribute("data-theme", mode);
 
-  return <ThemeProvider mode={mode}><Story /></ThemeProvider>;
+  return (
+    <ThemeProvider mode={mode}>
+      <Story />
+    </ThemeProvider>
+  );
 };
 
 // ----------------------------------------------------------------------
@@ -86,12 +90,15 @@ const preview: Preview = {
       container: (props: ComponentProps<typeof DocsContainer>) => {
         const initial = document.documentElement.getAttribute("data-theme") === "dark";
         const [isDark, setIsDark] = useState(initial); // eslint-disable-line react-hooks/rules-of-hooks
-        useEffect(() => { // eslint-disable-line react-hooks/rules-of-hooks
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        useEffect(() => {
           const onGlobalsUpdated = (event: { globals: Record<string, unknown> }) => {
             setIsDark(event.globals["theme"] === "dark");
           };
           props.context.channel.on(GLOBALS_UPDATED, onGlobalsUpdated);
-          return () => { props.context.channel.off(GLOBALS_UPDATED, onGlobalsUpdated); };
+          return () => {
+            props.context.channel.off(GLOBALS_UPDATED, onGlobalsUpdated);
+          };
         }, [props.context.channel]);
         // Propage le thème Comète au <html> : le contenu Docs hors stories
         // (ex. GuidelinesFlat dans l'onglet Guidelines) doit résoudre les tokens

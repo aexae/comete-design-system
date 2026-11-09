@@ -43,9 +43,7 @@ export function InputContextProvider({
   children,
 }: InputContextProviderProps) {
   return (
-    <InputContext.Provider value={{ isDisabled, isInvalid }}>
-      {children}
-    </InputContext.Provider>
+    <InputContext.Provider value={{ isDisabled, isInvalid }}>{children}</InputContext.Provider>
   );
 }
 

@@ -2,6 +2,32 @@
 
 ## Fiabilité / qualité
 
+- **Stories Storybook : libellés de variantes (2026-11-09)**
+  Helper `Labeled` / `LabeledRow` / `Legend` (`stories/_labeled.tsx`) généralisé et
+  légendes homogénéisées (12 px, `--text-subtle`, sous l'instance). Restes :
+  - **Valeurs non brutes** : `Tag` AllColors (« Purple », « Blue Grey » pour
+    `accentPurple`, `accentBlueGrey`), `Select` AllStates, `Heading`/`Hero` Align et
+    `CalendarCell` (libellés français) : jugés auto-descriptifs, pas relabellisés.
+  - **`Banner` AllAppearances** en layout `fullscreen` : le libellé est collé au bord
+    gauche du viewport, pas de gouttière.
+  - **Fonds sombres des variantes `inverted`** : `Icon` garde
+    `--background-brand-bold-default`, `Logo` garde `--background-default-inverted`,
+    `Badge` cutout utilise `--background-neutral-bold-default`. Trois tokens pour un même
+    rôle « tuile sombre de démo » : unifier si l'on veut une homogénéité stricte.
+  - **`Tag` FullMatrix** : l'en-tête de shape a perdu sa hiérarchie (même style que
+    l'en-tête d'appearance).
+  - **`clip-path` en attribut JSX** : corrigé dans les sources de `comete-icons`
+    (générateur + 20 icônes) et `comete-illustrations` (générateur + 2 illustrations),
+    non commité ni publié. Reste : livrer les deux paquets (tag → CI) puis bumper le DS
+    et le Storybook. Côté icônes, le dossier local `svg/` contient des SVG bruts non
+    optimisés : `pnpm generate` seul produit des couleurs hardcodées, toujours passer par
+    `pnpm pipeline` (sync → optimize → generate → build).
+  - **Fragilités hors périmètre** : `ScrollArea.stories.tsx` utilise `React.ReactNode`
+    sans import de `React` ; `ProgressIndicator` WithNavigationButtons appelle
+    `useState` dans un `render` anonyme (règle des hooks respectée par chance).
+  - **`comete-illustrations` : `pnpm lint` (biome) échoue** sur le formatage de
+    `.claude/settings.local.json` (préexistant, hors de la correction clip-path).
+
 - **`Button` link / link-subtle en texte pur + couleur link (2026-11-09)**
   Faiblesses relevées après le passage de `link` à `--text-link-*` et le retrait
   des fonds hover/press sur `link` / `link-subtle` :
@@ -25,10 +51,12 @@
     sur le fond de page. À vérifier sur fonds clairs et sombres (seuil AA 4,5:1) ;
     `subtlest` est volontairement peu contrasté et peut passer sous le seuil hors
     contexte bouton-icône. Usage à cadrer dans les guidelines (réservé IconButton).
-  - **Pilote tokens Figma `Button-test`** : les variables `button/link/*/background/*`
-    créées le 2026-11-09 ne correspondent plus au DS (link sans fond) et
-    `button/link/default/text/*` doit pointer `text/link/*`. À re-synchroniser quand
-    on reprend la couche de tokens de composants.
+  - ~~**Pilote tokens Figma `Button-test`** : variables `button/link/*/background/*`
+    à retirer, `button/link/default/text/*` à pointer vers `text/link/*`~~ fait
+    (2026-11-09) : 4 variables de fond `link` supprimées, `link/default/text/{default,
+hovered}` repointées vers `text/link/{default,hovered}`, ajout de
+    `button/link/default/text/pressed` -> `text/link/pressed`, spécimens
+    comete/critical hover+press vidés de leur fond. Validé en capture (clair/sombre).
 
 - **Storybook GitHub Pages : chunks supprimés à chaque déploiement** (2026-10-23)
   `deploy-pages` remplace tout l'artefact à chaque push sur `main` : les anciens assets

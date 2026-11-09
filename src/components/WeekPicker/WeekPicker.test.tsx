@@ -10,9 +10,7 @@ describe("WeekPicker", () => {
     render(<WeekPicker />);
     // Input + calendar button should be present
     expect(screen.getByRole("textbox")).toBeInTheDocument();
-    expect(
-      screen.getByLabelText("Ouvrir le sélecteur de semaine"),
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText("Ouvrir le sélecteur de semaine")).toBeInTheDocument();
   });
 
   it("should render week label in editable input", () => {
@@ -29,13 +27,8 @@ describe("WeekPicker", () => {
   });
 
   it("should use a custom aria-label", () => {
-    const { container } = render(
-      <WeekPicker aria-label="Semaine de paie" />,
-    );
-    expect(container.firstChild).toHaveAttribute(
-      "aria-label",
-      "Semaine de paie",
-    );
+    const { container } = render(<WeekPicker aria-label="Semaine de paie" />);
+    expect(container.firstChild).toHaveAttribute("aria-label", "Semaine de paie");
   });
 
   it("should set data-invalid when isInvalid", () => {
@@ -46,9 +39,7 @@ describe("WeekPicker", () => {
   it("should disable input and calendar button when isDisabled", () => {
     render(<WeekPicker week={28} year={2025} isDisabled />);
     expect(screen.getByRole("textbox")).toBeDisabled();
-    expect(
-      screen.getByLabelText("Ouvrir le sélecteur de semaine"),
-    ).toBeDisabled();
+    expect(screen.getByLabelText("Ouvrir le sélecteur de semaine")).toBeDisabled();
   });
 
   // -- Editable mode (default) --
@@ -56,21 +47,15 @@ describe("WeekPicker", () => {
   it("should render input and calendar icon in editable mode", () => {
     render(<WeekPicker week={28} year={2025} />);
     expect(screen.getByRole("textbox")).toBeInTheDocument();
-    expect(
-      screen.getByLabelText("Ouvrir le sélecteur de semaine"),
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText("Ouvrir le sélecteur de semaine")).toBeInTheDocument();
     // No chevrons in editable mode
-    expect(
-      screen.queryByLabelText("Semaine précédente"),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Semaine précédente")).not.toBeInTheDocument();
   });
 
   it("should open calendar when clicking calendar icon in editable mode", async () => {
     const user = userEvent.setup();
     render(<WeekPicker week={28} year={2025} />);
-    await user.click(
-      screen.getByLabelText("Ouvrir le sélecteur de semaine"),
-    );
+    await user.click(screen.getByLabelText("Ouvrir le sélecteur de semaine"));
     expect(screen.getByRole("grid")).toBeInTheDocument();
   });
 
@@ -134,9 +119,7 @@ describe("WeekPicker", () => {
   });
 
   it("should disable all buttons when isDisabled (navigation)", () => {
-    render(
-      <WeekPicker week={28} year={2025} isEditable={false} isDisabled />,
-    );
+    render(<WeekPicker week={28} year={2025} isEditable={false} isDisabled />);
     expect(screen.getByLabelText("Semaine précédente")).toBeDisabled();
     expect(screen.getByRole("button", { name: /Semaine : / })).toBeDisabled();
     expect(screen.getByLabelText("Semaine suivante")).toBeDisabled();
@@ -145,14 +128,7 @@ describe("WeekPicker", () => {
   it("should call onChange with week - 1 when chevron left is clicked", async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
-    render(
-      <WeekPicker
-        week={28}
-        year={2025}
-        isEditable={false}
-        onChange={onChange}
-      />,
-    );
+    render(<WeekPicker week={28} year={2025} isEditable={false} onChange={onChange} />);
     await user.click(screen.getByLabelText("Semaine précédente"));
     expect(onChange).toHaveBeenCalledWith(27, 2025);
   });
@@ -160,14 +136,7 @@ describe("WeekPicker", () => {
   it("should call onChange with week + 1 when chevron right is clicked", async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
-    render(
-      <WeekPicker
-        week={28}
-        year={2025}
-        isEditable={false}
-        onChange={onChange}
-      />,
-    );
+    render(<WeekPicker week={28} year={2025} isEditable={false} onChange={onChange} />);
     await user.click(screen.getByLabelText("Semaine suivante"));
     expect(onChange).toHaveBeenCalledWith(29, 2025);
   });
@@ -175,14 +144,7 @@ describe("WeekPicker", () => {
   it("should wrap to previous year when going before week 1", async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
-    render(
-      <WeekPicker
-        week={1}
-        year={2025}
-        isEditable={false}
-        onChange={onChange}
-      />,
-    );
+    render(<WeekPicker week={1} year={2025} isEditable={false} onChange={onChange} />);
     await user.click(screen.getByLabelText("Semaine précédente"));
     // Week 1 of 2025 starts Mon 2024-12-30, going back 7 days = Mon 2024-12-23 = week 52 of 2024
     expect(onChange).toHaveBeenCalledWith(52, 2024);
@@ -191,14 +153,7 @@ describe("WeekPicker", () => {
   it("should wrap to next year when going after last week", async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
-    render(
-      <WeekPicker
-        week={52}
-        year={2024}
-        isEditable={false}
-        onChange={onChange}
-      />,
-    );
+    render(<WeekPicker week={52} year={2024} isEditable={false} onChange={onChange} />);
     await user.click(screen.getByLabelText("Semaine suivante"));
     // Week 52 of 2024 starts Mon 2024-12-23, going forward 7 days = Mon 2024-12-30 = week 1 of 2025
     expect(onChange).toHaveBeenCalledWith(1, 2025);
@@ -216,52 +171,28 @@ describe("WeekPicker", () => {
 
   it("should set data-invalid when range is inverted (start > end, same year)", () => {
     const { container } = render(
-      <WeekPicker
-        isRange
-        startWeek={28}
-        startYear={2026}
-        endWeek={27}
-        endYear={2026}
-      />,
+      <WeekPicker isRange startWeek={28} startYear={2026} endWeek={27} endYear={2026} />
     );
     expect(container.firstChild).toHaveAttribute("data-invalid", "true");
   });
 
   it("should set data-invalid when range is inverted across years", () => {
     const { container } = render(
-      <WeekPicker
-        isRange
-        startWeek={3}
-        startYear={2026}
-        endWeek={50}
-        endYear={2025}
-      />,
+      <WeekPicker isRange startWeek={3} startYear={2026} endWeek={50} endYear={2025} />
     );
     expect(container.firstChild).toHaveAttribute("data-invalid", "true");
   });
 
   it("should not set data-invalid when range is valid (start <= end)", () => {
     const { container } = render(
-      <WeekPicker
-        isRange
-        startWeek={27}
-        startYear={2026}
-        endWeek={28}
-        endYear={2026}
-      />,
+      <WeekPicker isRange startWeek={27} startYear={2026} endWeek={28} endYear={2026} />
     );
     expect(container.firstChild).not.toHaveAttribute("data-invalid");
   });
 
   it("should not set data-invalid when range bounds are equal", () => {
     const { container } = render(
-      <WeekPicker
-        isRange
-        startWeek={28}
-        startYear={2026}
-        endWeek={28}
-        endYear={2026}
-      />,
+      <WeekPicker isRange startWeek={28} startYear={2026} endWeek={28} endYear={2026} />
     );
     expect(container.firstChild).not.toHaveAttribute("data-invalid");
   });

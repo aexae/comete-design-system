@@ -19,10 +19,7 @@ import {
   Tag,
   Text,
 } from "@aexae/comete-design-system/components";
-import type {
-  TagCategoryColor,
-  TagStatusColor,
-} from "@aexae/comete-design-system/components";
+import type { TagCategoryColor, TagStatusColor } from "@aexae/comete-design-system/components";
 
 // -----------------------------------------------------------------------
 
@@ -238,20 +235,17 @@ export const Axe: Story = {
           Statut
         </Heading>
         <Text color="subtle">
-          Cinq couleurs, un seul axe : de « rien à en attendre » à « l&apos;état
-          souhaité est atteint », avec ce qui attend une décision d&apos;un côté
-          et ce qui a échoué de l&apos;autre. Deux lectures possibles de cet axe
-          — <em>progression</em> et <em>cycle de vie</em> — détaillées dans la
-          story suivante.
+          Cinq couleurs, un seul axe : de « rien à en attendre » à « l&apos;état souhaité est
+          atteint », avec ce qui attend une décision d&apos;un côté et ce qui a échoué de
+          l&apos;autre. Deux lectures possibles de cet axe — <em>progression</em> et{" "}
+          <em>cycle de vie</em> — détaillées dans la story suivante.
         </Text>
         <Text color="subtle">
-          <strong>Cet axe vaut pour tout le design system</strong>, pas pour le
-          seul <code>Tag</code> : <code>Badge</code>, <code>IconTile</code>,{" "}
-          <code>SectionMessage</code>, <code>Banner</code>,{" "}
-          <code>Snackbar</code> et <code>ProgressBar</code> exposent les mêmes
-          couleurs et leur doivent le même sens. Les <code>Tag</code> ci-dessous
-          ne sont qu&apos;un support de démonstration — voir{" "}
-          <em>Un axe, plusieurs composants</em>.
+          <strong>Cet axe vaut pour tout le design system</strong>, pas pour le seul{" "}
+          <code>Tag</code> : <code>Badge</code>, <code>IconTile</code>, <code>SectionMessage</code>,{" "}
+          <code>Banner</code>, <code>Snackbar</code> et <code>ProgressBar</code> exposent les mêmes
+          couleurs et leur doivent le même sens. Les <code>Tag</code> ci-dessous ne sont qu&apos;un
+          support de démonstration — voir <em>Un axe, plusieurs composants</em>.
         </Text>
       </Stack>
 
@@ -288,10 +282,10 @@ export const Axe: Story = {
       </Section>
 
       <Text size="small" color="subtlest">
-        Les libellés ci-dessus sont des exemples <strong>génériques</strong>. La
-        liste des statuts métier et leur correspondance exacte ne vivent pas
-        dans le design system : c&apos;est une couche produit, versionnée
-        séparément. Voir <code>docs/adr/0002-semantique-couleurs-statut.md</code>.
+        Les libellés ci-dessus sont des exemples <strong>génériques</strong>. La liste des statuts
+        métier et leur correspondance exacte ne vivent pas dans le design system : c&apos;est une
+        couche produit, versionnée séparément. Voir{" "}
+        <code>docs/adr/0002-semantique-couleurs-statut.md</code>.
       </Text>
     </Stack>
   ),
@@ -333,9 +327,8 @@ export const ProgressionVsCycleDeVie: Story = {
             ))}
           </Cluster>
           <Text size="xsmall" as="span" color="subtle">
-            L&apos;état souhaité est <strong>l&apos;arrivée</strong>. L&apos;état
-            courant est une étape : elle se termine d&apos;elle-même, donc{" "}
-            <code>information</code>.
+            L&apos;état souhaité est <strong>l&apos;arrivée</strong>. L&apos;état courant est une
+            étape : elle se termine d&apos;elle-même, donc <code>information</code>.
           </Text>
         </Stack>
 
@@ -349,19 +342,17 @@ export const ProgressionVsCycleDeVie: Story = {
             ))}
           </Cluster>
           <Text size="xsmall" as="span" color="subtle">
-            L&apos;état souhaité est <strong>le régime normal</strong>, dans
-            lequel on veut que l&apos;objet reste : c&apos;est lui qui porte le{" "}
-            <code>success</code>.
+            L&apos;état souhaité est <strong>le régime normal</strong>, dans lequel on veut que
+            l&apos;objet reste : c&apos;est lui qui porte le <code>success</code>.
           </Text>
         </Stack>
       </Stack>
 
       <Text size="small" color="subtle">
-        Un cycle de vie n&apos;a pas d&apos;<code>information</code> : il
-        n&apos;a aucune étape transitoire. Ce n&apos;est pas un manque à combler
-        — on n&apos;invente pas un statut pour remplir une couleur. Un jeu qui
-        mélange les deux lectures cache en général deux dimensions (voir{" "}
-        <em>Deux dimensions</em>).
+        Un cycle de vie n&apos;a pas d&apos;<code>information</code> : il n&apos;a aucune étape
+        transitoire. Ce n&apos;est pas un manque à combler — on n&apos;invente pas un statut pour
+        remplir une couleur. Un jeu qui mélange les deux lectures cache en général deux dimensions
+        (voir <em>Deux dimensions</em>).
       </Text>
     </Stack>
   ),
@@ -377,9 +368,7 @@ export const ProgressionVsCycleDeVie: Story = {
     await expect(actif?.color).toBe("success");
 
     // Un cycle de vie n'a pas d'étape transitoire.
-    await expect(
-      CYCLE_DE_VIE.filter((s) => s.color === "information"),
-    ).toEqual([]);
+    await expect(CYCLE_DE_VIE.filter((s) => s.color === "information")).toEqual([]);
 
     for (const s of [...PROGRESSION, ...CYCLE_DE_VIE]) {
       await expect(canvas.getByText(s.label)).toBeVisible();
@@ -408,9 +397,8 @@ export const UnAxePlusieursComposants: Story = {
   render: () => (
     <Stack gap="300" style={{ maxWidth: 860 }}>
       <Text color="subtle">
-        Le même sens, rendu par des composants différents. La couleur ne change
-        pas parce que le support change — sinon l&apos;utilisateur devrait
-        apprendre un vocabulaire par composant.
+        Le même sens, rendu par des composants différents. La couleur ne change pas parce que le
+        support change — sinon l&apos;utilisateur devrait apprendre un vocabulaire par composant.
       </Text>
 
       <Section title="warning — quelqu'un doit agir ou décider">
@@ -431,16 +419,16 @@ export const UnAxePlusieursComposants: Story = {
           <IconTile icon="Report" appearance="critical" />
         </Cluster>
         <Banner appearance="critical">
-          Le résultat est acquis et négatif — il n&apos;y a plus de décision à
-          prendre sur cet objet.
+          Le résultat est acquis et négatif — il n&apos;y a plus de décision à prendre sur cet
+          objet.
         </Banner>
       </Section>
 
       <Text size="small" color="subtlest">
-        Seul le <code>Tag</code> type aujourd&apos;hui la frontière statut /
-        catégorie (<code>TagStatusColor</code> vs <code>TagCategoryColor</code>).
-        Étendre ce typage aux autres composants est un travail d&apos;API à
-        part : l&apos;ADR pose la doctrine, il ne renomme pas huit unions.
+        Seul le <code>Tag</code> type aujourd&apos;hui la frontière statut / catégorie (
+        <code>TagStatusColor</code> vs <code>TagCategoryColor</code>). Étendre ce typage aux autres
+        composants est un travail d&apos;API à part : l&apos;ADR pose la doctrine, il ne renomme pas
+        huit unions.
       </Text>
     </Stack>
   ),
@@ -490,12 +478,7 @@ export const CategorieVsStatut: Story = {
           </Heading>
           <Cluster gap="100">
             {CATEGORIES.map((c) => (
-              <Tag
-                key={c.color}
-                label={c.label}
-                color={c.color}
-                appearance="outlined"
-              />
+              <Tag key={c.color} label={c.label} color={c.color} appearance="outlined" />
             ))}
           </Cluster>
           <Cluster gap="100" align="center">
@@ -505,21 +488,19 @@ export const CategorieVsStatut: Story = {
             <Badge appearance="accentBlueGrey" label="B" />
           </Cluster>
           <Text size="xsmall" as="span" color="subtle">
-            Rôle, secteur, code d&apos;activité, métier. Aucun axe bon/mauvais.
-            Les accents existent aussi sur <code>Badge</code>,{" "}
-            <code>IconTile</code> et <code>SectionMessage</code> — la frontière
-            statut / catégorie est la même partout.
+            Rôle, secteur, code d&apos;activité, métier. Aucun axe bon/mauvais. Les accents existent
+            aussi sur <code>Badge</code>, <code>IconTile</code> et <code>SectionMessage</code> — la
+            frontière statut / catégorie est la même partout.
           </Text>
         </Stack>
       </Stack>
 
       <Text size="small" color="subtle">
         <strong>Les accents ne sont jamais un statut.</strong> Utiliser
-        <code> accentPurple</code> pour dire « en attente » remet en circulation
-        une couleur dont personne ne connaît le sens, et prive la catégorisation
-        d&apos;une de ses teintes. Le typage rend la règle vérifiable :
-        <code> TagStatusColor</code> d&apos;un côté, <code>TagCategoryColor</code>{" "}
-        de l&apos;autre.
+        <code> accentPurple</code> pour dire « en attente » remet en circulation une couleur dont
+        personne ne connaît le sens, et prive la catégorisation d&apos;une de ses teintes. Le typage
+        rend la règle vérifiable :<code> TagStatusColor</code> d&apos;un côté,{" "}
+        <code>TagCategoryColor</code> de l&apos;autre.
       </Text>
     </Stack>
   ),
@@ -531,9 +512,7 @@ export const CategorieVsStatut: Story = {
     const canvas = within(canvasElement);
 
     const statutColors = new Set<string>(AXE.map((s) => s.color));
-    const chevauchement = CATEGORIES.filter((c) =>
-      statutColors.has(c.color),
-    ).map((c) => c.color);
+    const chevauchement = CATEGORIES.filter((c) => statutColors.has(c.color)).map((c) => c.color);
     await expect(chevauchement).toEqual([]);
 
     // Règle 3 : les deux colonnes restent lisibles par leur texte seul.
@@ -558,9 +537,8 @@ export const DeuxDimensions: Story = {
   render: () => (
     <Stack gap="200" style={{ maxWidth: 860 }}>
       <Text color="subtle">
-        Un même objet porte ici deux informations indépendantes : où il en est
-        (dimension 1 — l&apos;axe) et s&apos;il est signalé (dimension 2 —
-        binaire, orthogonale).
+        Un même objet porte ici deux informations indépendantes : où il en est (dimension 1 —
+        l&apos;axe) et s&apos;il est signalé (dimension 2 — binaire, orthogonale).
       </Text>
 
       <Stack direction="row" gap="200" wrap align="stretch">
@@ -571,13 +549,7 @@ export const DeuxDimensions: Story = {
         >
           <Cluster gap="100">
             <Tag label="En cours" color="information" />
-            <Icon
-              icon="Flag"
-              size={18}
-              color="warning"
-              appearance="filled"
-              aria-label="Signalé"
-            />
+            <Icon icon="Flag" size={18} color="warning" appearance="filled" aria-label="Signalé" />
           </Cluster>
         </Exemple>
 
@@ -659,63 +631,50 @@ export const Emphase: Story = {
           <Badge appearance="information" importance="medium" label="7" />
         </Cluster>
         <Text size="xsmall" as="span" color="subtle">
-          Lisible sans dominer. C&apos;est le réglage de tous les statuts, y
-          compris <code>critical</code>, sauf l&apos;exception ci-dessous.
+          Lisible sans dominer. C&apos;est le réglage de tous les statuts, y compris{" "}
+          <code>critical</code>, sauf l&apos;exception ci-dessous.
         </Text>
       </Section>
 
       <Section title="L'emphase, réservée à critical — et rare">
         <Cluster gap="150" align="center">
           {LISTE_LONGUE.map((l) => (
-            <Tag
-              key={l.label}
-              label={l.label}
-              color={l.color}
-              appearance={l.appearance}
-            />
+            <Tag key={l.label} label={l.label} color={l.color} appearance={l.appearance} />
           ))}
           <Badge appearance="critical" importance="high" label="1" />
         </Cluster>
         <Text size="xsmall" as="span" color="subtle">
-          Un seul élément monte le ton, et c&apos;est un échec. Si chaque ligne
-          porte l&apos;emphase, plus aucune ne ressort — le budget est dépensé.
+          Un seul élément monte le ton, et c&apos;est un échec. Si chaque ligne porte
+          l&apos;emphase, plus aucune ne ressort — le budget est dépensé.
         </Text>
       </Section>
 
       <Section title="Sans levier — l'intensité vient du composant">
         <Stack gap="150">
           <SectionMessage appearance="warning" title="Calme par construction">
-            Un bloc informatif dans le flux : il attend d&apos;être lu, il
-            n&apos;interrompt pas.
+            Un bloc informatif dans le flux : il attend d&apos;être lu, il n&apos;interrompt pas.
           </SectionMessage>
           <Banner appearance="critical">
-            Fort par construction — un bandeau pleine largeur interrompt. C&apos;est
-            son rôle, pas un réglage.
+            Fort par construction — un bandeau pleine largeur interrompt. C&apos;est son rôle, pas
+            un réglage.
           </Banner>
         </Stack>
         <Text size="xsmall" as="span" color="subtle">
-          Ni l&apos;un ni l&apos;autre n&apos;expose de prop d&apos;intensité. Le
-          choix du composant <em>est</em> le choix de l&apos;intensité — d&apos;où
-          la tentation, à refuser, de promouvoir un statut en{" "}
-          <code>Banner</code> pour le faire remarquer.
+          Ni l&apos;un ni l&apos;autre n&apos;expose de prop d&apos;intensité. Le choix du composant{" "}
+          <em>est</em> le choix de l&apos;intensité — d&apos;où la tentation, à refuser, de
+          promouvoir un statut en <code>Banner</code> pour le faire remarquer.
         </Text>
       </Section>
 
       <Section title="outlined — spécifique au Tag, pour la catégorisation">
         <Cluster gap="100">
           {CATEGORIES.map((c) => (
-            <Tag
-              key={c.color}
-              label={c.label}
-              color={c.color}
-              appearance="outlined"
-            />
+            <Tag key={c.color} label={c.label} color={c.color} appearance="outlined" />
           ))}
         </Cluster>
         <Text size="xsmall" as="span" color="subtle">
-          Se distingue des surfaces colorées sans revendiquer d&apos;urgence.
-          C&apos;est le seul des trois réglages du <code>Tag</code> qui
-          n&apos;ait pas d&apos;équivalent ailleurs.
+          Se distingue des surfaces colorées sans revendiquer d&apos;urgence. C&apos;est le seul des
+          trois réglages du <code>Tag</code> qui n&apos;ait pas d&apos;équivalent ailleurs.
         </Text>
       </Section>
     </Stack>

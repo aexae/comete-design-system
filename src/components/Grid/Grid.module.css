@@ -31,10 +31,7 @@
 @media (min-width: 1200px) {
   .grid {
     grid-template-columns: repeat(
-      var(
-        --_grid-cols-desktop,
-        var(--_grid-cols-tablet, var(--_grid-cols-mobile, 12))
-      ),
+      var(--_grid-cols-desktop, var(--_grid-cols-tablet, var(--_grid-cols-mobile, 12))),
       minmax(0, 1fr)
     );
   }
@@ -56,32 +53,20 @@
 
 @media (min-width: 600px) {
   .col {
-    grid-column:
-      span var(--_col-span-tablet, var(--_col-span-mobile, 1))
-      / span var(--_col-span-tablet, var(--_col-span-mobile, 1));
+    grid-column: span var(--_col-span-tablet, var(--_col-span-mobile, 1)) / span
+      var(--_col-span-tablet, var(--_col-span-mobile, 1));
   }
   .col.hasStart {
-    grid-column-start: var(
-      --_col-start-tablet,
-      var(--_col-start-mobile, auto)
-    );
+    grid-column-start: var(--_col-start-tablet, var(--_col-start-mobile, auto));
     grid-column-end: span var(--_col-span-tablet, var(--_col-span-mobile, 1));
   }
 }
 
 @media (min-width: 1200px) {
   .col {
-    grid-column:
-      span
-      var(
-        --_col-span-desktop,
-        var(--_col-span-tablet, var(--_col-span-mobile, 1))
-      )
-      / span
-      var(
-        --_col-span-desktop,
-        var(--_col-span-tablet, var(--_col-span-mobile, 1))
-      );
+    grid-column: span
+      var(--_col-span-desktop, var(--_col-span-tablet, var(--_col-span-mobile, 1))) / span
+      var(--_col-span-desktop, var(--_col-span-tablet, var(--_col-span-mobile, 1)));
   }
   .col.hasStart {
     grid-column-start: var(
@@ -89,9 +74,6 @@
       var(--_col-start-tablet, var(--_col-start-mobile, auto))
     );
     grid-column-end: span
-      var(
-        --_col-span-desktop,
-        var(--_col-span-tablet, var(--_col-span-mobile, 1))
-      );
+      var(--_col-span-desktop, var(--_col-span-tablet, var(--_col-span-mobile, 1)));
   }
 }

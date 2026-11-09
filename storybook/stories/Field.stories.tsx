@@ -17,7 +17,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le champ est le conteneur structurant d'un élément de formulaire : il associe un label, un message d'aide ou d'erreur et un indicateur obligatoire à un contrôle de saisie." },
+      description: {
+        component:
+          "Le champ est le conteneur structurant d'un élément de formulaire : il associe un label, un message d'aide ou d'erreur et un indicateur obligatoire à un contrôle de saisie.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={

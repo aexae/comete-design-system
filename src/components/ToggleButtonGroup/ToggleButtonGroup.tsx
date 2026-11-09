@@ -29,11 +29,10 @@ export type ToggleButtonGroupSize = "small" | "medium" | "large";
 
 const SizeContext = createContext<ToggleButtonGroupSize>("medium");
 
-export interface ToggleButtonGroupProps
-  extends Omit<
-    AriaToggleButtonGroupProps,
-    "className" | "style" | "orientation"
-  > {
+export interface ToggleButtonGroupProps extends Omit<
+  AriaToggleButtonGroupProps,
+  "className" | "style" | "orientation"
+> {
   /** Mode de selection : "single" (defaut) ou "multiple". */
   selectionMode?: ToggleButtonGroupSelectionMode;
   /** Taille des boutons : "small", "medium" (defaut) ou "large". */
@@ -54,8 +53,10 @@ export interface ToggleButtonGroupProps
   children: ReactNode;
 }
 
-export interface ToggleButtonProps
-  extends Omit<AriaToggleButtonProps, "className" | "style" | "children"> {
+export interface ToggleButtonProps extends Omit<
+  AriaToggleButtonProps,
+  "className" | "style" | "children"
+> {
   /** Identifiant unique du bouton dans le groupe (requis pour la selection). */
   id: string;
   /**
@@ -103,11 +104,7 @@ export function ToggleButtonGroup({
 }: ToggleButtonGroupProps): ReactElement {
   const classNames = [styles.group, className].filter(Boolean).join(" ");
   return (
-    <AriaToggleButtonGroup
-      {...ariaProps}
-      selectionMode={selectionMode}
-      className={classNames}
-    >
+    <AriaToggleButtonGroup {...ariaProps} selectionMode={selectionMode} className={classNames}>
       <SizeContext.Provider value={size}>{children}</SizeContext.Provider>
     </AriaToggleButtonGroup>
   );
@@ -146,31 +143,18 @@ export function ToggleButton({
   return (
     <AriaToggleButton
       {...ariaProps}
-      className={[styles.item, styles[size], className]
-        .filter(Boolean)
-        .join(" ")}
+      className={[styles.item, styles[size], className].filter(Boolean).join(" ")}
       style={style}
     >
       {({ isSelected, isDisabled, isFocusVisible }) => {
-        const iconColor = isDisabled
-          ? "disabled"
-          : isSelected
-            ? "inverted"
-            : "default";
+        const iconColor = isDisabled ? "disabled" : isSelected ? "inverted" : "default";
 
         return (
           <>
             {iconBefore && (
-              <Icon
-                icon={iconBefore}
-                size={iconSize}
-                appearance="outlined"
-                color={iconColor}
-              />
+              <Icon icon={iconBefore} size={iconSize} appearance="outlined" color={iconColor} />
             )}
-            {children ? (
-              <span className={styles.label}>{children}</span>
-            ) : null}
+            {children ? <span className={styles.label}>{children}</span> : null}
             {badge && (
               <Badge
                 label={badge}
@@ -180,16 +164,9 @@ export function ToggleButton({
               />
             )}
             {iconAfter && (
-              <Icon
-                icon={iconAfter}
-                size={iconSize}
-                appearance="outlined"
-                color={iconColor}
-              />
+              <Icon icon={iconAfter} size={iconSize} appearance="outlined" color={iconColor} />
             )}
-            {isFocusVisible && (
-              <FocusRing borderRadius={4} position="inside" />
-            )}
+            {isFocusVisible && <FocusRing borderRadius={4} position="inside" />}
           </>
         );
       }}
