@@ -11,6 +11,10 @@ entre versions alpha.
 
 ### Modifié (icônes)
 
+- **`@aexae/comete-icons` 0.11.1** et **`@aexae/comete-illustrations` 0.1.0-alpha.5** :
+  attribut SVG `clip-path` converti en `clipPath` dans les composants générés
+  (plus d'erreur console « Invalid DOM property `clip-path` » dans React).
+
 - **`@aexae/comete-icons` 0.11.0** (dépendance de dev, Storybook épinglé ;
   peer élargie à `^0.11.0`) : icônes `SignatureExpired` (signature électronique
   expirée, ID Omnis 180010), `Reference` et `Sunny`. **Cassant côté icônes** :
