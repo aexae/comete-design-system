@@ -5,15 +5,19 @@
    Spec Figma : node 4559:6656 (❖ Page header).
 
    Layout global :
-   - `--page-gutter` — CSS custom property héritée par tous les descendants.
-   - Header, Toolbar et Body utilisent `padding-inline: var(--page-gutter)`.
+   - `--page-gutter` — gouttière de contenu (Page.Body), 12px fixe, héritée
+     par tous les descendants : Bleed isFull la compense, les stories
+     l'utilisent pour aligner du contenu sur le Body.
+   - `--page-header-gutter` — gouttière de la Bar et de la Toolbar, responsive
+     (24 / 16 / 8 selon le viewport).
    - Body utilise `overflow-x: clip` (pas `hidden`) pour que
      `overflow-y: auto` ne force pas `overflow-x: auto` par la spec.
      Les margins négatives de Bleed restent donc visibles.
    ========================================================================== */
 
 .page {
-  --page-gutter: var(--space300);
+  --page-gutter: var(--space150);
+  --page-header-gutter: var(--space300);
   display: flex;
   flex-direction: column;
   min-height: 100%;
@@ -28,13 +32,13 @@
 
 @media (min-width: 600px) and (max-width: 1199px) {
   .page {
-    --page-gutter: var(--space200);
+    --page-header-gutter: var(--space200);
   }
 }
 
 @media (max-width: 599px) {
   .page {
-    --page-gutter: var(--space100);
+    --page-header-gutter: var(--space100);
   }
 }
 
@@ -63,7 +67,7 @@
   align-items: center;
   gap: var(--space100);
   padding-block: var(--space200);
-  padding-inline: var(--page-gutter);
+  padding-inline: var(--page-header-gutter);
   flex-shrink: 0;
 
   /* Métriques de la variante compacte — SOURCE UNIQUE, consommée à la fois par
@@ -164,7 +168,7 @@
   flex-wrap: nowrap;
   gap: var(--space100);
   padding-block: var(--space100);
-  padding-inline: var(--page-gutter);
+  padding-inline: var(--page-header-gutter);
   flex-shrink: 0;
 }
 

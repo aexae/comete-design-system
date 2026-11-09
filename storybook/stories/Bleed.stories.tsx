@@ -190,7 +190,7 @@ export const Default: Story = {
  * bord-à-bord dans la zone de contenu. En mobile, cela correspond
  * au viewport complet (pas de SideNav).
  *
- * - **`--page-gutter`** : `var(--space200)` (16px) sous 1200px
+ * - **`--page-gutter`** : `var(--space150)` (12px), fixe quelle que soit la largeur
  * - Le contenu standard reste indenté par les gouttières
  * - `<Bleed isFull>` atteint les bords du viewport
  */
@@ -311,7 +311,7 @@ export const BleedMobile: Story = {
  * bord-à-bord dans la **zone de contenu** (viewport − SideNav).
  * Le bleed ne passe PAS sous la SideNav.
  *
- * - **`--page-gutter`** : `var(--space300)` (24px) à ≥1200px
+ * - **`--page-gutter`** : `var(--space150)` (12px), fixe quelle que soit la largeur
  * - Page.Body utilise un content-grid : gouttières = colonnes CSS Grid
  * - `Bleed isFull` compense `--page-gutter` via margins négatives (CSS pur)
  */

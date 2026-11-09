@@ -2,6 +2,26 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-09 — Page : Body à 12px fixe, Bar alignée sur la Toolbar
+
+**Contexte** : demande d'Axel : « paddingX de PageBar à 24px, paddingX du
+Page.Body à 12px, Figma et code », puis, le point Toolbar soulevé,
+« aligne la bar sur la toolbar ».
+
+**Décisions** :
+
+- **Body** : `--page-gutter` devient la gouttière de contenu à `var(--space150)`
+  (12px) fixe à toutes les tailles. C'est elle que `Bleed isFull` compense et que
+  les stories utilisent pour s'aligner sur le Body : aucun autre changement requis.
+- **Bar et Toolbar** : même gouttière responsive qu'avant (24 / 16 / 8 selon le
+  viewport), renommée `--page-header-gutter`. La Bar n'a donc pas de retrait fixe
+  de 24px : Axel a préféré l'aligner sur la Toolbar.
+- **Figma** : frames `<Page.Body>` de ❖ Page → `space150` sur les 4 variantes ;
+  ❖ PageBar inchangé au final (compact `space100`, large `space300`) ; en desktop
+  la gouttière portée par le frame `Viewport` (space300) descend aux enfants
+  (Viewport → `space0`, Bar, Toolbar et footer → `space300`) pour que le Body
+  puisse différer.
+
 ## 2026-11-09 — Prettier systématique, légendes homogènes, clip-path
 
 **Contexte** : suite de la généralisation des libellés de variantes dans Storybook.
