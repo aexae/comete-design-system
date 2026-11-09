@@ -1,9 +1,6 @@
 // BottomNavItem — item individuel de la BottomNav
 import type { ReactElement } from "react";
-import {
-  Button as AriaButton,
-  type ButtonProps as AriaButtonProps,
-} from "react-aria-components";
+import { Button as AriaButton, type ButtonProps as AriaButtonProps } from "react-aria-components";
 import type { IconName, IconColor } from "@aexae/comete-icons";
 import { Icon, type IconAppearance } from "../Icon/index.js";
 import { Badge } from "../Badge/index.js";
@@ -56,17 +53,17 @@ export function BottomNavItem({
   onClick,
 }: BottomNavItemProps): ReactElement {
   // Source icon: apparence au repos (fermé)
-  const sourceColor: IconColor = isDisabled
-    ? "disabled"
-    : isSelected
-      ? "selected"
-      : "subtlest";
+  const sourceColor: IconColor = isDisabled ? "disabled" : isSelected ? "selected" : "subtlest";
   const sourceAppearance: IconAppearance = isSelected ? "filled" : "outlined";
 
   // Close icon: apparence quand le popup est ouvert
   const closeColor: IconColor = isDisabled ? "disabled" : "selected";
 
-  const handlePress: AriaButtonProps["onPress"] = onClick ? () => { onClick(); } : undefined;
+  const handlePress: AriaButtonProps["onPress"] = onClick
+    ? () => {
+        onClick();
+      }
+    : undefined;
 
   return (
     <AriaButton
@@ -82,20 +79,10 @@ export function BottomNavItem({
           <span className={styles.content}>
             <span className={styles.iconWrapper}>
               <span className={styles.iconSource}>
-                <Icon
-                  icon={icon}
-                  size={24}
-                  appearance={sourceAppearance}
-                  color={sourceColor}
-                />
+                <Icon icon={icon} size={24} appearance={sourceAppearance} color={sourceColor} />
               </span>
               <span className={styles.iconClose}>
-                <Icon
-                  icon="Close"
-                  size={24}
-                  appearance="outlined"
-                  color={closeColor}
-                />
+                <Icon icon="Close" size={24} appearance="outlined" color={closeColor} />
               </span>
               {badge !== undefined && (
                 <span className={styles.badge}>
