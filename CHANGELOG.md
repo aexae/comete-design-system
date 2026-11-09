@@ -49,6 +49,14 @@ entre versions alpha.
 
 ### Modifié
 
+- **`Page` — gouttière de contenu à 12px** : `Page.Body` passe à un retrait
+  horizontal fixe de 12px (`space150`) au lieu de la gouttière responsive
+  24 / 16 / 8. `--page-gutter` désigne désormais cette gouttière de contenu :
+  `Bleed isFull` et les stories qui alignent du contenu sur le Body la suivent
+  automatiquement. `Page.Bar` et `Page.Toolbar` gardent la gouttière responsive,
+  renommée `--page-header-gutter`. Figma aligné (frames `<Page.Body>` de ❖ Page
+  à `space150`).
+
 - **`BottomNav.Item` — pastille pour les états sélectionné et ouvert** : la zone
   icône + libellé prend un fond `background-selected-subtlest-default` (rayon
   rond) quand l'item est sélectionné ou ouvert (`isOpen`), et le libellé passe
