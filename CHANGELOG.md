@@ -22,6 +22,21 @@ entre versions alpha.
 
 ### Modifié
 
+- **`Button` — `link` / `link-subtle` en texte pur et couleur link rétablie** :
+  les apparences `link` et `link-subtle` n'ont plus de couleur de fond au survol
+  ni à la pression (feedback uniquement sur le texte, via l'épaississement du
+  soulignement), conformément à Figma. L'apparence `link` retrouve sa couleur
+  dédiée (`--text-link-default` / `-hovered` / `-pressed`) par défaut, tout en
+  acceptant les couleurs sémantiques (`comete`, `critical`, etc.). La couleur
+  link reste réservée à `link` (ce n'est pas une valeur de `ButtonColor`, donc
+  inapplicable à `contained` / `outlined`). L'apparence `subtle` et les couleurs
+  `subtle` / `subtlest` sont **conservées** (elles servent aux boutons-icônes).
+  Aucun changement d'API.
+- **`Button` — couleurs `subtle` / `subtlest` sans fond au repos** : en apparence
+  `contained`, les couleurs `subtle` et `subtlest` n'ont plus de fond gris au
+  repos (elles portaient le même `--background-neutral-subtler-default` que
+  `default`). Le fond réapparaît au survol et à la pression (comportement ghost
+  des boutons-icônes). Changement visuel uniquement, aucun changement d'API.
 - **`Logo` — vocabulaire aligné sur Figma et `@aexae/comete-logos` 0.14.0** :
   la prop `product` devient **`entity`** (type `LogoEntity`, alias déprécié
   `LogoProduct`) car l'entreprise Comète n'est pas un produit mais a un logo ;

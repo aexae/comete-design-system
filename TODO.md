@@ -2,6 +2,34 @@
 
 ## Fiabilité / qualité
 
+- **`Button` link / link-subtle en texte pur + couleur link (2026-11-09)**
+  Faiblesses relevées après le passage de `link` à `--text-link-*` et le retrait
+  des fonds hover/press sur `link` / `link-subtle` :
+  - **Accessibilité** : `link` par défaut (#0076d8) sous le seuil AA sur les fonds
+    `comete-subtlest` / `information-subtlest` (3,9:1), cf. la note « Lien sur fond
+    comete-subtlest » plus bas. Un bouton `link` posé sur ces surfaces est concerné.
+  - **Couleur d'icône de `link` par défaut** : `resolveIconColor` renvoie encore
+    `default` (icône sombre) alors que le texte est maintenant bleu link. Pas de
+    régression interne (aucun bouton `link` interne n'a d'icône), mais mismatch
+    possible côté consommateur. Correctif propre = couleur d'icône `link` dédiée
+    dans `@aexae/comete-icons` (repo séparé, création de token à approuver), ou
+    mapper `link`+`default` sur `information` en attendant (approximation).
+  - **Feedback des liens sémantiques** : hover/press sans fond, feedback via
+    épaississement du soulignement uniquement (pas de token de texte survolé par
+    couleur sémantique). À valider visuellement en Storybook.
+  - **État `selected` de `link-subtle`** : conserve volontairement une puce de fond
+    (`background-selected-subtlest-*`), car la consigne ne visait que hover/press.
+    À rouvrir si un texte pur est voulu aussi en `selected`.
+  - **Contraste des couleurs `subtle` / `subtlest` sans fond** : depuis le retrait
+    du fond au repos (apparence `contained`), le texte `--text-subtlest` repose
+    sur le fond de page. À vérifier sur fonds clairs et sombres (seuil AA 4,5:1) ;
+    `subtlest` est volontairement peu contrasté et peut passer sous le seuil hors
+    contexte bouton-icône. Usage à cadrer dans les guidelines (réservé IconButton).
+  - **Pilote tokens Figma `Button-test`** : les variables `button/link/*/background/*`
+    créées le 2026-11-09 ne correspondent plus au DS (link sans fond) et
+    `button/link/default/text/*` doit pointer `text/link/*`. À re-synchroniser quand
+    on reprend la couche de tokens de composants.
+
 - **Storybook GitHub Pages : chunks supprimés à chaque déploiement** (2026-10-23)
   `deploy-pages` remplace tout l'artefact à chaque push sur `main` : les anciens assets
   hashés disparaissent. Un onglet ouvert (ou un `iframe.html` en cache, max-age=600)
@@ -31,11 +59,8 @@
 ## Environnement
 
 - ~~**`NPM_AUTH_TOKEN` du shell sans accès à `@aexae/comete-logos`**~~ fait (2026-10-21) :
-  `~/.zshrc` exporte `$(gh auth token)`, ancien PAT retiré des `.env` et de `~/.npmrc`.
-  **Reste : révoquer l'ancien PAT classic sur GitHub** (scopes `repo` + `write:packages`,
-  sans expiration, toujours valide).
-  `pnpm install` renvoie 403 sur `comete-logos@0.13.1` avec le token exporté dans le shell,
-  alors que `gh auth token` y a accès. Mettre à jour la variable exportée.
+  `~/.zshrc` exporte `$(gh auth token)`, ancien PAT retiré des `.env` et de `~/.npmrc`,
+  puis révoqué sur GitHub (2026-10-23).
 
 - **`node_modules` désynchronisé du lockfile** (2026-10-21)
   Tokens 0.13.2 installés alors que le lockfile demandait 0.17.0. Les tests tournaient

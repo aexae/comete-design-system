@@ -178,9 +178,9 @@
   background-color: var(--background-neutral-subtler-pressed);
 }
 
-/* — subtle — */
+/* — subtle — ghost : pas de fond au repos (rôle IconButton), le fond
+   apparaît au survol/pression. */
 .contained.color-subtle {
-  background-color: var(--background-neutral-subtler-default);
   color: var(--text-subtle);
 }
 .contained.color-subtle:not([data-disabled])[data-hovered] {
@@ -190,9 +190,8 @@
   background-color: var(--background-neutral-subtler-pressed);
 }
 
-/* — subtlest — */
+/* — subtlest — ghost : pas de fond au repos, fond au survol/pression. */
 .contained.color-subtlest {
-  background-color: var(--background-neutral-subtler-default);
   color: var(--text-subtlest);
 }
 .contained.color-subtlest:not([data-disabled])[data-hovered] {
@@ -459,11 +458,25 @@
   text-underline-offset: 16%;
 }
 
+/* Feedback au survol/pression : uniquement sur le texte, jamais de fond.
+   link est un lien, il ne porte pas de couleur de fond. L'épaississement du
+   soulignement donne le retour visuel pour toutes les couleurs (y compris les
+   couleurs sémantiques, qui n'ont pas de token de texte survolé dédié). */
+.link:not([data-disabled])[data-hovered],
+.link:not([data-disabled])[data-pressed] {
+  text-decoration-thickness: 12%;
+}
+
+/* Couleur link réservée à l'apparence link (token --text-link-*). Elle n'est
+   pas exposée comme ButtonColor, donc inapplicable à contained/outlined. */
 .link.default {
-  color: var(--text-default);
+  color: var(--text-link-default);
 }
 .link.default:not([data-disabled])[data-hovered] {
-  color: var(--text-subtle);
+  color: var(--text-link-hovered);
+}
+.link.default:not([data-disabled])[data-pressed] {
+  color: var(--text-link-pressed);
 }
 
 .link.color-subtle {
@@ -480,54 +493,27 @@
   color: var(--text-subtle);
 }
 
+/* Couleurs sémantiques sur link : couleur de texte uniquement, pas de fond.
+   Le feedback au survol est l'épaississement du soulignement (règle partagée
+   ci-dessus). */
 .link.comete {
   color: var(--text-comete);
-}
-.link.comete:not([data-disabled])[data-hovered] {
-  background-color: var(--background-comete-subtlest-hovered);
-}
-.link.comete:not([data-disabled])[data-pressed] {
-  background-color: var(--background-comete-subtlest-pressed);
 }
 
 .link.success {
   color: var(--text-success);
 }
-.link.success:not([data-disabled])[data-hovered] {
-  background-color: var(--background-success-subtlest-hovered);
-}
-.link.success:not([data-disabled])[data-pressed] {
-  background-color: var(--background-success-subtlest-pressed);
-}
 
 .link.critical {
   color: var(--text-critical);
-}
-.link.critical:not([data-disabled])[data-hovered] {
-  background-color: var(--background-critical-subtlest-hovered);
-}
-.link.critical:not([data-disabled])[data-pressed] {
-  background-color: var(--background-critical-subtlest-pressed);
 }
 
 .link.warning {
   color: var(--text-warning);
 }
-.link.warning:not([data-disabled])[data-hovered] {
-  background-color: var(--background-warning-subtlest-hovered);
-}
-.link.warning:not([data-disabled])[data-pressed] {
-  background-color: var(--background-warning-subtlest-pressed);
-}
 
 .link.information {
   color: var(--text-information);
-}
-.link.information:not([data-disabled])[data-hovered] {
-  background-color: var(--background-information-subtlest-hovered);
-}
-.link.information:not([data-disabled])[data-pressed] {
-  background-color: var(--background-information-subtlest-pressed);
 }
 
 /* ==========================================================================
@@ -549,7 +535,6 @@
 
 .link-subtle:not([data-disabled])[data-pressed] {
   color: var(--text-default);
-  background-color: var(--background-neutral-subtlest-pressed);
 }
 
 /* ==========================================================================
