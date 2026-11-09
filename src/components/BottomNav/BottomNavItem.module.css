@@ -21,9 +21,8 @@
   border-radius: var(--radius150);
 }
 
-/* État sélectionné : PAS de fond — seuls le texte et l'icône changent de couleur.
-   L'état ouvert (aria-expanded) n'en a pas non plus : le bleu (--text-selected)
-   n'appartient qu'à `data-selected`. */
+/* États sélectionné et ouvert (aria-expanded) : pastille de fond sur la zone
+   contenu + texte et icône en bleu (--text-selected). Voir plus bas. */
 
 /* Zone contenu : icône + label */
 
@@ -53,8 +52,9 @@
 /* ==========================================================================
    Icon cross-fade (fondu pur) — swap source ↔ close
 
-   Seul signal de l'état ouvert : un fondu d'icône en `--duration-fast`. Rien ne
-   se déplace ni ne change de taille, et le libellé reste lisible. Délibérément
+   À l'état ouvert, l'icône passe à Close par un fondu en `--duration-fast` (en
+   plus de la pastille et du bleu). Rien ne se déplace ni ne change de taille,
+   et le libellé reste lisible. Délibérément
    plus sobre que `BottomNavAction` : l'item est une destination, le FAB ouvre un
    tiroir — les deux n'ont pas à s'animer pareil.
    ========================================================================== */
@@ -115,17 +115,27 @@
 }
 
 /* ==========================================================================
-   État sélectionné
+   États sélectionné et open (aria-expanded) — même traitement : pastille de
+   fond sur la zone contenu et libellé en bleu. L'open ajoute le fondu d'icône
+   vers Close (voir plus haut).
    ========================================================================== */
 
-.item[data-selected] .label {
-  color: var(--text-selected);
+.item[data-selected] .content,
+.item[aria-expanded="true"] .content {
+  background-color: var(--background-selected-subtlest-default);
+  border-radius: var(--radius-round);
 }
 
-/* ==========================================================================
-   État open (aria-expanded) — ouvre un popup : fondu d'icône uniquement (voir
-   plus haut). Pas de bleu : l'item n'est pas sélectionné.
-   ========================================================================== */
+/* Le badge chevauche la pastille : sa découpe prend la couleur de la pastille. */
+.item[data-selected] .badge,
+.item[aria-expanded="true"] .badge {
+  --badge-cutout-color: var(--background-selected-subtlest-default);
+}
+
+.item[data-selected] .label,
+.item[aria-expanded="true"] .label {
+  color: var(--text-selected);
+}
 
 @media (prefers-reduced-motion: reduce) {
   .iconSource,
@@ -143,7 +153,6 @@
   cursor: not-allowed;
   opacity: var(--opacity-disabled);
 }
-
 
 .item[data-disabled] .label {
   color: var(--text-disabled);

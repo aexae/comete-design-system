@@ -66,19 +66,15 @@ export function BottomNav({
   "aria-label": ariaLabel = "Navigation principale",
 }: BottomNavProps): ReactElement {
   const all = Children.toArray(children);
-  const action = all.find(
-    (child) => isValidElement(child) && child.type === BottomNavAction,
-  );
-  const items = all.filter(
-    (child) => !(isValidElement(child) && child.type === BottomNavAction),
-  );
+  const action = all.find((child) => isValidElement(child) && child.type === BottomNavAction);
+  const items = all.filter((child) => !(isValidElement(child) && child.type === BottomNavAction));
 
   if (process.env.NODE_ENV !== "production" && items.length > MAX_ITEMS) {
     // eslint-disable-next-line no-console
     console.warn(
       `BottomNav : ${items.length} items de navigation reçus, ${MAX_ITEMS} au ` +
         `maximum recommandé. Réservez le débordement à un menu « Plus ». ` +
-        `La <BottomNav.Action> ne compte pas.`,
+        `La <BottomNav.Action> ne compte pas.`
     );
   }
 
@@ -99,7 +95,11 @@ export function BottomNav({
   );
 
   return (
-    <nav aria-label={ariaLabel} className={[styles.nav, className].filter(Boolean).join(" ")} style={style}>
+    <nav
+      aria-label={ariaLabel}
+      className={[styles.nav, className].filter(Boolean).join(" ")}
+      style={style}
+    >
       {content}
     </nav>
   );
