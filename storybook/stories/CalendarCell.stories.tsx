@@ -3,6 +3,7 @@
 // Aucun contexte Calendar requis — correspond à la vue "Parts" du fichier Figma.
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { CSSProperties } from "react";
+import { Labeled } from "./_labeled";
 
 // -----------------------------------------------------------------------
 // Constantes de style — reprises à l'identique de Calendar.module.css
@@ -72,14 +73,7 @@ function CellPreview({
   label,
 }: CellPreviewProps) {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 8,
-      }}
-    >
+    <Labeled label={label} style={{ whiteSpace: "nowrap" }}>
       <div
         style={{
           ...BASE_CELL,
@@ -87,9 +81,7 @@ function CellPreview({
           borderRadius,
           cursor,
           opacity,
-          boxShadow: focusRing
-            ? "inset 0 0 0 2px var(--border-focused)"
-            : undefined,
+          boxShadow: focusRing ? "inset 0 0 0 2px var(--border-focused)" : undefined,
         }}
       >
         <span
@@ -119,25 +111,14 @@ function CellPreview({
           />
         )}
       </div>
-      <span
-        style={{
-          fontFamily: "var(--font-family-primary)",
-          fontSize: "var(--font-size-ui-xxs)",
-          color: "var(--text-subtlest)",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {label}
-      </span>
-    </div>
+    </Labeled>
   );
 }
 
 // -----------------------------------------------------------------------
 // Meta
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 
 const meta = {
   title: "Components/Calendar/Cellule",
@@ -175,15 +156,9 @@ export const AllStates: StoryObj = {
     >
       <CellPreview label="Défaut" />
 
-      <CellPreview
-        label="Survol"
-        background="var(--background-neutral-subtler-hovered)"
-      />
+      <CellPreview label="Survol" background="var(--background-neutral-subtler-hovered)" />
 
-      <CellPreview
-        label="Pressé"
-        background="var(--background-neutral-subtler-pressed)"
-      />
+      <CellPreview label="Pressé" background="var(--background-neutral-subtler-pressed)" />
 
       <CellPreview
         label="Aujourd'hui"

@@ -13,6 +13,7 @@ import {
   Text,
 } from "@aexae/comete-design-system/components";
 import { BrandProvider } from "@aexae/comete-design-system/providers";
+import { Labeled } from "./_labeled";
 
 // -----------------------------------------------------------------------
 
@@ -78,10 +79,9 @@ export const Philosophie: Story = {
           Couleur
         </Heading>
         <Text color="subtle">
-          Comète est l&apos;éditeur ; chaque client a sa propre couleur de marque. Le
-          système de couleur sépare donc deux notions qu&apos;on ne doit jamais
-          confondre : la couleur <strong>fixe</strong> de l&apos;éditeur et la{" "}
-          <strong>charte</strong> du client.
+          Comète est l&apos;éditeur ; chaque client a sa propre couleur de marque. Le système de
+          couleur sépare donc deux notions qu&apos;on ne doit jamais confondre : la couleur{" "}
+          <strong>fixe</strong> de l&apos;éditeur et la <strong>charte</strong> du client.
         </Text>
       </Stack>
 
@@ -93,9 +93,8 @@ export const Philosophie: Story = {
                 comète
               </Text>
               <Text size="small" as="span" color="subtle">
-                Couleur fixe de l&apos;éditeur (navy). Porte les éléments interactifs
-                et l&apos;identité Comète. <strong>Jamais</strong> surchargée par le
-                client.
+                Couleur fixe de l&apos;éditeur (navy). Porte les éléments interactifs et
+                l&apos;identité Comète. <strong>Jamais</strong> surchargée par le client.
               </Text>
             </Stack>
           </Card>
@@ -105,36 +104,35 @@ export const Philosophie: Story = {
                 brand
               </Text>
               <Text size="small" as="span" color="subtle">
-                Charte couleur du <strong>client</strong>. Défaut = navy Comète,
-                surchargeable au runtime via le BrandProvider.
+                Charte couleur du <strong>client</strong>. Défaut = navy Comète, surchargeable au
+                runtime via le BrandProvider.
               </Text>
             </Stack>
           </Card>
           <Text size="small" color="subtlest">
-            (<code>accent-&lt;couleur&gt;</code> — teal, purple, magenta… — est un
-            troisième système, purement catégoriel/décoratif, indépendant.)
+            (<code>accent-&lt;couleur&gt;</code> — teal, purple, magenta… — est un troisième
+            système, purement catégoriel/décoratif, indépendant.)
           </Text>
           <Text size="small" color="subtlest">
             Les couleurs d&apos;<strong>état</strong> (<code>neutral</code>,{" "}
             <code>information</code>, <code>warning</code>, <code>success</code>,{" "}
-            <code>critical</code>) forment un quatrième système, avec son propre
-            axe de sens : voir <strong>Foundation/Statut</strong> et{" "}
-            <code>docs/adr/0002-semantique-couleurs-statut.md</code>. C&apos;est
-            là qu&apos;est actée l&apos;exclusion des accents du vocabulaire de
-            statut.
+            <code>critical</code>) forment un quatrième système, avec son propre axe de sens : voir{" "}
+            <strong>Foundation/Statut</strong> et{" "}
+            <code>docs/adr/0002-semantique-couleurs-statut.md</code>. C&apos;est là qu&apos;est
+            actée l&apos;exclusion des accents du vocabulaire de statut.
           </Text>
         </Stack>
       </Section>
 
       <Section title="École A — où la marque a le droit d'apparaître">
         <Text color="subtle">
-          Principe directeur : <em>les éléments interactifs ne suivent jamais la
-          charte client.</em> Un bouton primaire qui prendrait la teinte du client
-          pourrait se lire comme un statut (un primaire rouge = « danger »).
+          Principe directeur : <em>les éléments interactifs ne suivent jamais la charte client.</em>{" "}
+          Un bouton primaire qui prendrait la teinte du client pourrait se lire comme un statut (un
+          primaire rouge = « danger »).
         </Text>
         <Text size="small" color="subtle">
-          Litmus : plus un élément est petit et interactif, moins la marque y a sa
-          place ; plus une surface est grande et ambiante, plus elle y est bienvenue.
+          Litmus : plus un élément est petit et interactif, moins la marque y a sa place ; plus une
+          surface est grande et ambiante, plus elle y est bienvenue.
         </Text>
         <Stack direction="row" gap="200" wrap>
           <Stack gap="050">
@@ -151,8 +149,12 @@ export const Philosophie: Story = {
               Surface ambiante → comète ou brand
             </Text>
             <Stack direction="row" gap="100">
-              <IconTile icon="Campaign" appearance="comete" />
-              <IconTile icon="Campaign" appearance="brand" />
+              <Labeled label="comete">
+                <IconTile icon="Campaign" appearance="comete" />
+              </Labeled>
+              <Labeled label="brand">
+                <IconTile icon="Campaign" appearance="brand" />
+              </Labeled>
             </Stack>
           </Stack>
         </Stack>
@@ -160,8 +162,8 @@ export const Philosophie: Story = {
 
       <Section title="Tokens brand générés">
         <Text size="small" color="subtle">
-          Le BrandProvider génère toute la famille depuis une seule couleur HEX
-          (rampe OKLCH à luminosité normalisée par rôle) :
+          Le BrandProvider génère toute la famille depuis une seule couleur HEX (rampe OKLCH à
+          luminosité normalisée par rôle) :
         </Text>
         <Stack direction="row" gap="150" wrap>
           <Swatch token="--background-brand-subtlest-default" label="subtlest" />

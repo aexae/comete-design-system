@@ -1,13 +1,11 @@
 // MenuItem — stories Storybook (Figma code part)
 import type { ComponentType } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  Menu,
-  MenuItem,
-} from "@aexae/comete-design-system/components";
+import { Menu, MenuItem } from "@aexae/comete-design-system/components";
 import type { IconName } from "@aexae/comete-icons";
 import { iconRegistry } from "@aexae/comete-icons";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
+import { Labeled, LabeledRow } from "./_labeled";
 
 // -----------------------------------------------------------------------
 // Icon options (from registry — always in sync)
@@ -18,10 +16,8 @@ const ICON_OPTIONS: Array<IconName | "none"> = ["none", ...ICON_NAMES];
 // -----------------------------------------------------------------------
 // Figma
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Types pour les args (Figma code part props)
@@ -49,9 +45,7 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      page: () => (
-        <DocsTabsPage />
-      ),
+      page: () => <DocsTabsPage />,
     },
     layout: "centered",
     design: {
@@ -156,7 +150,7 @@ export const Default: Story = {
     design: { type: "figma", url: figmaUrl("4711:15206") },
   },
 
-  render: MenuItemStory
+  render: MenuItemStory,
 };
 
 /** État sélectionné. */
@@ -181,16 +175,13 @@ export const Disabled: Story = {
 export const AllStates: Story = {
   name: "All states",
   render: () => (
-    <div style={{ display: "flex", gap: 24 }}>
+    <LabeledRow align="flex-start">
       {[
-        { label: "Default", disabled: false, selected: false },
-        { label: "Selected", disabled: false, selected: true },
-        { label: "Disabled", disabled: true, selected: false },
+        { label: "default", disabled: false, selected: false },
+        { label: "isSelected", disabled: false, selected: true },
+        { label: "isDisabled", disabled: true, selected: false },
       ].map(({ label, disabled, selected }) => (
-        <div key={label} style={{ width: 280 }}>
-          <span style={{ fontFamily: "monospace", fontSize: 11, color: "var(--text-subtlest)" }}>
-            {label}
-          </span>
+        <Labeled key={label} label={label} align="stretch" style={{ width: 280 }}>
           <Menu
             aria-label={label}
             mode={selected ? "select-multiple" : "default"}
@@ -206,8 +197,8 @@ export const AllStates: Story = {
               Option
             </MenuItem>
           </Menu>
-        </div>
+        </Labeled>
       ))}
-    </div>
+    </LabeledRow>
   ),
 };

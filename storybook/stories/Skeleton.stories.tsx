@@ -4,11 +4,10 @@ import { Skeleton } from "@aexae/comete-design-system/components";
 import type { ReactElement } from "react";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Labeled, LabeledRow, Legend } from "./_labeled";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -34,7 +33,10 @@ const meta = {
   },
   parameters: {
     docs: {
-      description: { component: "Les squelettes sont des formes de substitution animées qui occupent l'espace du contenu pendant son chargement. Ils réduisent la perception d'attente en préfigurant la mise en page finale." },
+      description: {
+        component:
+          "Les squelettes sont des formes de substitution animées qui occupent l'espace du contenu pendant son chargement. Ils réduisent la perception d'attente en préfigurant la mise en page finale.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -43,9 +45,7 @@ const meta = {
                 example: (
                   <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
                     <Skeleton shape="circle" width={40} height={40} />
-                    <div
-                      style={{ display: "flex", flexDirection: "column", gap: 8 }}
-                    >
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                       <Skeleton width={140} height={12} />
                       <Skeleton width={90} height={12} />
                     </div>
@@ -55,8 +55,7 @@ const meta = {
               }}
               dontExample={{
                 example: <Skeleton shape="rectangle" width={200} height={120} />,
-                caption:
-                  "Ne pas utiliser un bloc générique sans rapport avec le contenu.",
+                caption: "Ne pas utiliser un bloc générique sans rapport avec le contenu.",
               }}
               when={[
                 "Réserver l'espace du contenu pendant son chargement (listes, cartes, textes).",
@@ -111,24 +110,26 @@ export const Block: Story = {
 /** Avatars circulaires de différentes tailles. */
 export const Avatars: Story = {
   render: () => (
-    <div style={{ display: "flex", gap: 40, alignItems: "center" }}>
-      <Skeleton shape="circle" height={48} />
-      <Skeleton shape="circle" height={32} />
-      <Skeleton shape="circle" height={24} />
-      <Skeleton shape="circle" height={16} />
-    </div>
+    <LabeledRow gap={40}>
+      {([48, 32, 24, 16] as const).map((size) => (
+        <Labeled key={size} label={size}>
+          <Skeleton shape="circle" height={size} />
+        </Labeled>
+      ))}
+    </LabeledRow>
   ),
 };
 
 /** Carrés (icônes / vignettes) de différentes tailles. */
 export const Squares: Story = {
   render: () => (
-    <div style={{ display: "flex", gap: 40, alignItems: "center" }}>
-      <Skeleton width={48} height={48} />
-      <Skeleton width={32} height={32} />
-      <Skeleton width={24} height={24} />
-      <Skeleton width={16} height={16} />
-    </div>
+    <LabeledRow gap={40}>
+      {([48, 32, 24, 16] as const).map((size) => (
+        <Labeled key={size} label={size}>
+          <Skeleton width={size} height={size} />
+        </Labeled>
+      ))}
+    </LabeledRow>
   ),
 };
 
@@ -187,12 +188,6 @@ export const Image: Story = {
 // -----------------------------------------------------------------------
 // All appearances — reproduction complète des exemples Figma
 
-const labelStyle = {
-  fontSize: 12,
-  color: "var(--text-subtlest)",
-  fontFamily: "monospace",
-} as const;
-
 /** Toutes les apparences d'usage du Skeleton. */
 export const AllAppearances: Story = {
   name: "All appearances",
@@ -208,30 +203,32 @@ export const AllAppearances: Story = {
         alignItems: "center",
       }}
     >
-      <span style={labelStyle}>avatar</span>
-      <div style={{ display: "flex", gap: 40, alignItems: "center" }}>
-        <Skeleton shape="circle" height={48} />
-        <Skeleton shape="circle" height={32} />
-        <Skeleton shape="circle" height={24} />
-        <Skeleton shape="circle" height={16} />
-      </div>
+      <Legend>avatar</Legend>
+      <LabeledRow gap={40}>
+        {([48, 32, 24, 16] as const).map((size) => (
+          <Labeled key={size} label={size}>
+            <Skeleton shape="circle" height={size} />
+          </Labeled>
+        ))}
+      </LabeledRow>
 
-      <span style={labelStyle}>square</span>
-      <div style={{ display: "flex", gap: 40, alignItems: "center" }}>
-        <Skeleton width={48} height={48} />
-        <Skeleton width={32} height={32} />
-        <Skeleton width={24} height={24} />
-        <Skeleton width={16} height={16} />
-      </div>
+      <Legend>square</Legend>
+      <LabeledRow gap={40}>
+        {([48, 32, 24, 16] as const).map((size) => (
+          <Labeled key={size} label={size}>
+            <Skeleton width={size} height={size} />
+          </Labeled>
+        ))}
+      </LabeledRow>
 
-      <span style={labelStyle}>icon list</span>
+      <Legend>icon list</Legend>
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         <ListLine textWidth={112} />
         <ListLine textWidth={200} />
         <ListLine textWidth={160} />
       </div>
 
-      <span style={labelStyle}>avatar + paragraph</span>
+      <Legend>avatar + paragraph</Legend>
       <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
         <Skeleton width={48} height={48} />
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -240,7 +237,7 @@ export const AllAppearances: Story = {
         </div>
       </div>
 
-      <span style={labelStyle}>title + paragraph</span>
+      <Legend>title + paragraph</Legend>
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <Skeleton width={272} height={40} />
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -250,7 +247,7 @@ export const AllAppearances: Story = {
         </div>
       </div>
 
-      <span style={labelStyle}>image</span>
+      <Legend>image</Legend>
       <Skeleton width={320} height={200} radius={8} />
     </div>
   ),

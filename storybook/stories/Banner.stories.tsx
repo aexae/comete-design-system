@@ -4,6 +4,7 @@ import { Banner } from "@aexae/comete-design-system/components";
 import type { BannerAppearance } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Labeled } from "./_labeled";
 
 const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
@@ -19,16 +20,17 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Les bannières affichent un message contextuel important en haut de page ou d'une section. Elles servent à communiquer des informations globales, des alertes système ou des actions requises." },
+      description: {
+        component:
+          "Les bannières affichent un message contextuel important en haut de page ou d'une section. Elles servent à communiquer des informations globales, des alertes système ou des actions requises.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
             <GuidelinesFlat
               doExample={{
                 example: (
-                  <Banner appearance="warning">
-                    Maintenance prévue ce soir de 22h à minuit.
-                  </Banner>
+                  <Banner appearance="warning">Maintenance prévue ce soir de 22h à minuit.</Banner>
                 ),
                 caption: "Message global, pleine largeur, en haut de page.",
               }}
@@ -38,8 +40,7 @@ const meta = {
                     3 fichiers n&apos;ont pas pu être importés dans ce tableau.
                   </Banner>
                 ),
-                caption:
-                  "Ne pas l'utiliser pour un message limité à une section.",
+                caption: "Ne pas l'utiliser pour un message limité à une section.",
               }}
               when={[
                 "Communiquer un message global concernant toute la page/l'app (maintenance, quota, annonce).",
@@ -69,7 +70,13 @@ const meta = {
   argTypes: {
     appearance: {
       control: "select",
-      options: ["warning", "critical", "announcement", "success", "information"] satisfies BannerAppearance[],
+      options: [
+        "warning",
+        "critical",
+        "announcement",
+        "success",
+        "information",
+      ] satisfies BannerAppearance[],
     },
     children: { control: "text" },
   },
@@ -116,12 +123,14 @@ export const AllAppearances: Story = {
   name: "All appearances",
   parameters: { design: { type: "figma", url: figmaUrl("4559-5335") } },
   render: () => (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <Banner appearance="warning">{LOREM}</Banner>
-      <Banner appearance="critical">{LOREM}</Banner>
-      <Banner appearance="announcement">{LOREM}</Banner>
-      <Banner appearance="success">{LOREM}</Banner>
-      <Banner appearance="information">{LOREM}</Banner>
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      {(["warning", "critical", "announcement", "success", "information"] as const).map(
+        (appearance) => (
+          <Labeled key={appearance} label={appearance} align="stretch">
+            <Banner appearance={appearance}>{LOREM}</Banner>
+          </Labeled>
+        )
+      )}
     </div>
   ),
 };

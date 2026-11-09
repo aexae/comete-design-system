@@ -11,11 +11,10 @@ import {
 import { expect } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Labeled, LabeledRow } from "./_labeled";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -43,24 +42,21 @@ const meta = {
   },
   parameters: {
     docs: {
-      description: { component: "La modale est une fenêtre superposée qui interrompt le flux principal pour demander une confirmation, afficher un formulaire ou présenter un contenu critique. Elle bloque l'interaction avec la page sous-jacente jusqu'à sa fermeture." },
+      description: {
+        component:
+          "La modale est une fenêtre superposée qui interrompt le flux principal pour demander une confirmation, afficher un formulaire ou présenter un contenu critique. Elle bloque l'interaction avec la page sous-jacente jusqu'à sa fermeture.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
             <GuidelinesFlat
               doExample={{
-                example: (
-                  <ModalStory
-                    title="Supprimer l'élément ?"
-                    appearance="critical"
-                  />
-                ),
+                example: <ModalStory title="Supprimer l'élément ?" appearance="critical" />,
                 caption: "Décision courte ou confirmation, actions explicites.",
               }}
               dontExample={{
                 example: <ModalStory title="Modifier le profil complet" />,
-                caption:
-                  "Ne pas y loger un long formulaire ou un flux en plusieurs étapes.",
+                caption: "Ne pas y loger un long formulaire ou un flux en plusieurs étapes.",
               }}
               when={[
                 "Interrompre le flux pour une tâche courte ou une décision nécessitant l'attention (confirmation, formulaire bref).",
@@ -73,7 +69,7 @@ const meta = {
               ]}
               best={[
                 "Titre clair + actions explicites en pied (ButtonGroup, action principale à droite).",
-                "`appearance=\"critical\"` pour une action destructrice ; `isDismissable` sauf décision obligatoire.",
+                '`appearance="critical"` pour une action destructrice ; `isDismissable` sauf décision obligatoire.',
               ]}
               accessibility={[
                 "Focus piégé dans la modale ; Échap ferme ; focus rendu au déclencheur à la fermeture.",
@@ -111,15 +107,17 @@ function ModalStory({
   const [isOpen, setIsOpen] = useState(false);
 
   const confirmColor =
-    appearance === "critical"
-      ? "critical"
-      : appearance === "warning"
-        ? "warning"
-        : "comete";
+    appearance === "critical" ? "critical" : appearance === "warning" ? "warning" : "comete";
 
   return (
     <>
-      <Button onPress={() => { setIsOpen(true); }}>Ouvrir la modale</Button>
+      <Button
+        onPress={() => {
+          setIsOpen(true);
+        }}
+      >
+        Ouvrir la modale
+      </Button>
       <ModalDialog
         isOpen={isOpen}
         onOpenChange={setIsOpen}
@@ -127,21 +125,37 @@ function ModalStory({
         isDismissable={isDismissable}
         appearance={appearance}
         width={width}
-        onClose={showClose ? () => { setIsOpen(false); } : undefined}
+        onClose={
+          showClose
+            ? () => {
+                setIsOpen(false);
+              }
+            : undefined
+        }
         footer={
           <ButtonGroup>
-            <Button appearance="subtle" onPress={() => { setIsOpen(false); }}>
+            <Button
+              appearance="subtle"
+              onPress={() => {
+                setIsOpen(false);
+              }}
+            >
               Annuler
             </Button>
-            <Button color={confirmColor} onPress={() => { setIsOpen(false); }}>
+            <Button
+              color={confirmColor}
+              onPress={() => {
+                setIsOpen(false);
+              }}
+            >
               Confirmer
             </Button>
           </ButtonGroup>
         }
       >
         <p style={{ margin: 0 }}>
-          Êtes-vous sûr de vouloir effectuer cette action ? Cette opération ne
-          peut pas être annulée.
+          Êtes-vous sûr de vouloir effectuer cette action ? Cette opération ne peut pas être
+          annulée.
         </p>
       </ModalDialog>
     </>
@@ -154,7 +168,14 @@ function ModalStory({
 /** Modale par défaut. */
 export const Default: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("4616:7280") } },
-  render: (args) => <ModalStory appearance={args.appearance} width={args.width} isDismissable={args.isDismissable} title={args.title} />,
+  render: (args) => (
+    <ModalStory
+      appearance={args.appearance}
+      width={args.width}
+      isDismissable={args.isDismissable}
+      title={args.title}
+    />
+  ),
 };
 
 /** Modale warning. */
@@ -197,11 +218,13 @@ export const AllAppearances: Story = {
   render: () => {
     const appearances: ModalDialogAppearance[] = ["default", "warning", "critical"];
     return (
-      <div style={{ display: "flex", gap: 16 }}>
+      <LabeledRow gap={16}>
         {appearances.map((a) => (
-          <ModalStory key={a} appearance={a} />
+          <Labeled key={a} label={a}>
+            <ModalStory appearance={a} />
+          </Labeled>
         ))}
-      </div>
+      </LabeledRow>
     );
   },
 };
@@ -229,9 +252,7 @@ export const ScrollableBody: Story = {
       }
     >
       {Array.from({ length: 40 }, (_, i) => (
-        <p key={i}>
-          Ligne {i + 1} — contenu qui déborde largement la hauteur de la modale.
-        </p>
+        <p key={i}>Ligne {i + 1} — contenu qui déborde largement la hauteur de la modale.</p>
       ))}
     </ModalDialog>
   ),
