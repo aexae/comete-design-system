@@ -531,6 +531,12 @@ const PANEL_SIZE_MIN = 16;
 const PANEL_SIZE_MAX = 128;
 const PANEL_SIZE_DEFAULT = 96;
 
+// La grille est un catalogue : elle montre les icônes à une taille et un
+// spacing fixes, pour rester lisible et comparable. Les réglages d'essai
+// (taille, spacing, couleur, variante) vivent dans le panneau de détail.
+const GRID_ICON_SIZE = 24;
+const GRID_ICON_SPACING: IconSpacing = "default";
+
 function IconDetailPanel({
   name,
   Component,
@@ -540,6 +546,7 @@ function IconDetailPanel({
   const previewRef = useRef<HTMLButtonElement>(null);
   const [panelVariant, setPanelVariant] = useState<IconVariant>("outlined");
   const [panelColor, setPanelColor] = useState<IconColor>("default");
+  const [panelSpacing, setPanelSpacing] = useState<IconSpacing>("default");
   const [panelSize, setPanelSize] = useState(PANEL_SIZE_DEFAULT);
   const [codeCopied, setCodeCopied] = useState(false);
   const [svgCopied, setSvgCopied] = useState(false);
@@ -554,6 +561,7 @@ function IconDetailPanel({
     if (isOpen) {
       setPanelVariant("outlined");
       setPanelColor("default");
+      setPanelSpacing("default");
       setPanelSize(PANEL_SIZE_DEFAULT);
       setCodeCopied(false);
       setSvgCopied(false);
@@ -596,6 +604,7 @@ function IconDetailPanel({
     `<Icon icon="${name}"`,
     panelVariant === "outlined" ? "" : ` appearance="${panelVariant}"`,
     panelColor === "default" ? "" : ` color="${panelColor}"`,
+    panelSpacing === "default" ? "" : ` spacing="${panelSpacing}"`,
     " />",
   ].join("");
 
@@ -612,10 +621,14 @@ function IconDetailPanel({
 
   // Nom de fichier des exports — la couleur n'y figure que si elle s'écarte du
   // défaut, sinon deux teintes de la même icône écraseraient le même fichier.
-  const exportBase =
-    panelColor === "default"
-      ? `${name}-${panelVariant}`
-      : `${name}-${panelVariant}-${panelColor}`;
+  const exportBase = [
+    name,
+    panelVariant,
+    panelColor === "default" ? "" : panelColor,
+    panelSpacing === "default" ? "" : "sans-marge",
+  ]
+    .filter(Boolean)
+    .join("-");
 
   /**
    * Copie l'icône en PNG dans le presse-papiers.
@@ -718,6 +731,7 @@ function IconDetailPanel({
             <Component
               variant={panelVariant}
               color={panelColor}
+              spacing={panelSpacing}
               size={panelSize}
             />
             {/* Feedback de copie en overlay (sans déplacer la preview) */}
@@ -811,7 +825,12 @@ function IconDetailPanel({
                       transition: "background 0.15s, border-color 0.15s",
                     }}
                   >
-                    <Component variant={v} color={panelColor} size={32} />
+                    <Component
+                      variant={v}
+                      color={panelColor}
+                      spacing={panelSpacing}
+                      size={32}
+                    />
                     <span
                       style={{
                         fontSize: 10,
@@ -828,6 +847,28 @@ function IconDetailPanel({
                 );
               })}
             </div>
+          </div>
+
+          {/* Spacing — marge interne du viewBox. `none` colle le tracé aux
+              bords, utile quand l'icône est déjà dans un conteneur qui porte
+              son propre rembourrage. */}
+          <div>
+            <div style={sectionLabel}>Spacing</div>
+            <ToggleButtonGroup
+              aria-label="Spacing"
+              selectionMode="single"
+              selectedKeys={[panelSpacing]}
+              onSelectionChange={(keys) => {
+                const first = Array.from(keys as Set<string>)[0];
+                if (first !== undefined) setPanelSpacing(first as IconSpacing);
+              }}
+            >
+              {(["default", "none"] as const).map((s) => (
+                <ToggleButton key={s} id={s}>
+                  {s}
+                </ToggleButton>
+              ))}
+            </ToggleButtonGroup>
           </div>
 
           {/* Code d'import */}
@@ -911,8 +952,6 @@ function IconExplorer(): ReactElement {
   const [search, setSearch] = useState("");
   const [variant, setVariant] = useState<IconVariant>("outlined");
   const [color, setColor] = useState<IconColor>("default");
-  const [size, setSize] = useState(24);
-  const [spacing, setSpacing] = useState<IconSpacing>("default");
   const [copied, setCopied] = useState<string | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const timerRef = useRef<number | null>(null);
@@ -1029,45 +1068,6 @@ function IconExplorer(): ReactElement {
           />
         </div>
 
-        {/* Taille — range natif avec accent-color en brand */}
-        <div>
-          <div style={label}>Taille — {size}px</div>
-          <input
-            type="range"
-            min={12}
-            max={48}
-            step={4}
-            value={size}
-            onChange={(e) => {
-              setSize(Number(e.target.value));
-            }}
-            style={{
-              width: 100,
-              cursor: "pointer",
-              accentColor: "var(--background-brand-bold-default)",
-            }}
-          />
-        </div>
-
-        {/* Spacing — ToggleButtonGroup n'a pas de prop label, label inline minimal */}
-        <div>
-          <div style={label}>Spacing</div>
-          <ToggleButtonGroup
-            aria-label="Spacing"
-            selectionMode="single"
-            selectedKeys={[spacing]}
-            onSelectionChange={(keys) => {
-              const first = Array.from(keys as Set<string>)[0];
-              if (first !== undefined) setSpacing(first as IconSpacing);
-            }}
-          >
-            {(["default", "none"] as const).map((s) => (
-              <ToggleButton key={s} id={s}>
-                {s}
-              </ToggleButton>
-            ))}
-          </ToggleButtonGroup>
-        </div>
       </div>
 
       {/* Compteur */}
@@ -1099,8 +1099,8 @@ function IconExplorer(): ReactElement {
               Component={Component}
               variant={variant}
               color={color}
-              size={size}
-              spacing={spacing}
+              size={GRID_ICON_SIZE}
+              spacing={GRID_ICON_SPACING}
               isCopied={copied === name}
               isSelected={selected === name}
               onClick={handleIconClick}
