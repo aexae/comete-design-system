@@ -16,10 +16,8 @@ import { within, userEvent, expect } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -58,7 +56,10 @@ const meta = {
   },
   parameters: {
     docs: {
-      description: { component: "Le drawer est un panneau latéral qui coulisse depuis le bord de l'écran pour afficher du contenu secondaire ou des actions contextuelles. Il préserve le contexte de la page principale tout en offrant un espace dédié." },
+      description: {
+        component:
+          "Le drawer est un panneau latéral qui coulisse depuis le bord de l'écran pour afficher du contenu secondaire ou des actions contextuelles. Il préserve le contexte de la page principale tout en offrant un espace dédié.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -69,8 +70,7 @@ const meta = {
                     <DrawerStory placement="right" />
                   </DrawerProvider>
                 ),
-                caption:
-                  "Tâche secondaire dans un panneau latéral, sans quitter la page.",
+                caption: "Tâche secondaire dans un panneau latéral, sans quitter la page.",
               }}
               dontExample={{
                 example: (
@@ -140,17 +140,15 @@ function DrawerStory({
         swipeable={swipeable}
         aria-label="Drawer exemple"
       >
-        <DrawerHeader onClose={() => setIsOpen(false)}>
-          Drawer {placement}
-        </DrawerHeader>
+        <DrawerHeader onClose={() => setIsOpen(false)}>Drawer {placement}</DrawerHeader>
         <DrawerBody>
           <p style={{ marginBottom: 16 }}>
             Placement : <strong>{placement}</strong> — Size : <strong>{size}</strong>
           </p>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+            exercitation ullamco laboris.
           </p>
           {Array.from({ length: 10 }, (_, i) => (
             <p key={i} style={{ marginTop: 12 }}>
@@ -162,9 +160,7 @@ function DrawerStory({
           <Button appearance="subtle" onPress={() => setIsOpen(false)}>
             Annuler
           </Button>
-          <Button onPress={() => setIsOpen(false)}>
-            Confirmer
-          </Button>
+          <Button onPress={() => setIsOpen(false)}>Confirmer</Button>
         </DrawerFooter>
       </Drawer>
     </div>
@@ -210,9 +206,7 @@ function PlacementDemo({ placement }: { placement: DrawerPlacement }) {
         size="narrow"
         aria-label={`Drawer ${placement}`}
       >
-        <DrawerHeader onClose={() => setIsOpen(false)}>
-          {placement}
-        </DrawerHeader>
+        <DrawerHeader onClose={() => setIsOpen(false)}>{placement}</DrawerHeader>
         <DrawerBody>
           <p>Drawer {placement}</p>
         </DrawerBody>
@@ -245,9 +239,7 @@ function SizeDemo({ size }: { size: DrawerSize }) {
         size={size}
         aria-label={`Drawer ${size}`}
       >
-        <DrawerHeader onClose={() => setIsOpen(false)}>
-          Size: {size}
-        </DrawerHeader>
+        <DrawerHeader onClose={() => setIsOpen(false)}>Size: {size}</DrawerHeader>
         <DrawerBody>
           <p>Ce drawer utilise la taille &quot;{size}&quot;.</p>
         </DrawerBody>
@@ -335,9 +327,7 @@ function StackableDrawer({
         size={size}
         aria-label={`Drawer ${depth}`}
       >
-        <DrawerHeader onClose={() => setIsOpen(false)}>
-          Drawer {depth}
-        </DrawerHeader>
+        <DrawerHeader onClose={() => setIsOpen(false)}>Drawer {depth}</DrawerHeader>
         <DrawerBody>
           <p>Drawer de niveau {depth}.</p>
           <div style={{ marginTop: 16 }}>
@@ -393,7 +383,8 @@ function PushableDrawer({
         aria-label={`Drawer ${depth}`}
       >
         <DrawerHeader onClose={() => setIsOpen(false)}>
-          Drawer {depth}{depth > 1 ? " (push)" : ""}
+          Drawer {depth}
+          {depth > 1 ? " (push)" : ""}
         </DrawerHeader>
         <DrawerBody>
           <p>Drawer de niveau {depth}.</p>
@@ -422,9 +413,7 @@ export const Swipeable: Story = {
           swipeable={args.swipeable}
           aria-label="Drawer swipeable"
         >
-          <DrawerHeader onClose={() => setIsOpen(false)}>
-            Swipeable drawer
-          </DrawerHeader>
+          <DrawerHeader onClose={() => setIsOpen(false)}>Swipeable drawer</DrawerHeader>
           <DrawerBody>
             <p>Glissez vers le bas pour fermer.</p>
           </DrawerBody>
@@ -462,7 +451,7 @@ export const PersistentRight: Story = {
         {["Tour Nord", "Entrepôt B", "Site Est", "Galerie Comète", "Mairie de Merville"].map(
           (s) => (
             <li key={s}>{s}</li>
-          ),
+          )
         )}
       </ul>
     );
@@ -502,8 +491,8 @@ export const PersistentRight: Story = {
               <DrawerHeader onClose={() => setNonModalOpen(false)}>Détails</DrawerHeader>
               <DrawerBody>
                 <p>
-                  Ce panneau occupe sa place : la liste se réduit à côté, elle
-                  n&apos;est jamais recouverte. Échap ne le ferme pas.
+                  Ce panneau occupe sa place : la liste se réduit à côté, elle n&apos;est jamais
+                  recouverte. Échap ne le ferme pas.
                 </p>
               </DrawerBody>
             </Drawer>
@@ -543,7 +532,7 @@ export const PersistentRight: Story = {
       await expect((panel as HTMLElement).tagName).toBe("SECTION");
       // aucun voile (overlay) dans le document pour le panneau non modal
       await expect(
-        document.body.querySelector('[class*="overlay"]:not([class*="overlayTransparent"])'),
+        document.body.querySelector('[class*="overlay"]:not([class*="overlayTransparent"])')
       ).toBeNull();
     });
 
@@ -584,9 +573,7 @@ export const ScrollableBody: Story = {
       <DrawerHeader>Contenu long</DrawerHeader>
       <DrawerBody>
         {Array.from({ length: 60 }, (_, i) => (
-          <p key={i}>
-            Ligne {i + 1} — contenu qui déborde largement la hauteur du drawer.
-          </p>
+          <p key={i}>Ligne {i + 1} — contenu qui déborde largement la hauteur du drawer.</p>
         ))}
       </DrawerBody>
       <DrawerFooter>
@@ -597,7 +584,7 @@ export const ScrollableBody: Story = {
   play: async () => {
     // Le drawer modal est portalisé dans document.body.
     const dialog = document.body.querySelector<HTMLElement>(
-      '[role="dialog"][aria-label="Drawer défilant"]',
+      '[role="dialog"][aria-label="Drawer défilant"]'
     );
     await expect(dialog).not.toBeNull();
     // Le corps est un `ScrollArea` : sa racine tient la place dans la colonne,

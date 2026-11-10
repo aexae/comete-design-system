@@ -2,12 +2,7 @@
 import React from "react";
 import { Button as AriaButton } from "react-aria-components";
 import { Avatar, type AvatarSize } from "../Avatar/index.js";
-import {
-  Menu,
-  MenuItem,
-  MenuTrigger,
-  MenuPopover,
-} from "../Menu/index.js";
+import { Menu, MenuItem, MenuTrigger, MenuPopover } from "../Menu/index.js";
 import type { Selection } from "react-aria-components";
 import styles from "./AvatarGroup.module.css";
 
@@ -121,14 +116,14 @@ export function AvatarGroup({
   const total = items.length + (overflowCount > 0 ? 1 : 0);
   const isInteractive = mode !== "display";
 
-  const selectedSet = React.useMemo(
-    () => new Set(selectedKeys),
-    [selectedKeys],
-  );
+  const selectedSet = React.useMemo(() => new Set(selectedKeys), [selectedKeys]);
 
   const hasOverflowSelection = React.useMemo(
-    () => mode === "select" && overflowItems != null && overflowItems.some((item) => selectedSet.has(item.key ?? "")),
-    [mode, overflowItems, selectedSet],
+    () =>
+      mode === "select" &&
+      overflowItems != null &&
+      overflowItems.some((item) => selectedSet.has(item.key ?? "")),
+    [mode, overflowItems, selectedSet]
   );
 
   function handleToggle(item: AvatarGroupItem) {
@@ -158,7 +153,9 @@ export function AvatarGroup({
         return (
           <div
             key={key}
-            className={[styles.item, isInteractive ? styles.interactive : ""].filter(Boolean).join(" ")}
+            className={[styles.item, isInteractive ? styles.interactive : ""]
+              .filter(Boolean)
+              .join(" ")}
             style={{
               marginLeft: i === 0 ? 0 : -overlapPx,
               zIndex: total - i,
@@ -183,10 +180,7 @@ export function AvatarGroup({
         );
       })}
       {overflowCount > 0 && (
-        <div
-          className={styles.overflow}
-          style={{ marginLeft: -overlapPx }}
-        >
+        <div className={styles.overflow} style={{ marginLeft: -overlapPx }}>
           <MenuTrigger>
             <AriaButton className={styles.overflowTrigger}>
               <Avatar

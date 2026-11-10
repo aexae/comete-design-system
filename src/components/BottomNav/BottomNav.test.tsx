@@ -12,12 +12,20 @@ import { BottomNavAction } from "./BottomNavAction";
 
 describe("BottomNav", () => {
   it("should render as a nav element", () => {
-    render(<BottomNav><span>item</span></BottomNav>);
+    render(
+      <BottomNav>
+        <span>item</span>
+      </BottomNav>
+    );
     expect(screen.getByRole("navigation")).toBeInTheDocument();
   });
 
   it("should apply nav CSS class", () => {
-    render(<BottomNav><span>item</span></BottomNav>);
+    render(
+      <BottomNav>
+        <span>item</span>
+      </BottomNav>
+    );
     expect(screen.getByRole("navigation")).toHaveClass("nav");
   });
 
@@ -226,12 +234,13 @@ describe("BottomNavItem — état ouvert (CSS)", () => {
       .filter(([, sel]) => selector.test(sel ?? ""))
       .map(([, , body]) => body ?? "");
 
-  it("should not give --text-selected to an open item (blue belongs to data-selected)", () => {
-    const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)];
-    const offenders = rules.filter(
-      ([, sel, body]) => /aria-expanded/.test(sel ?? "") && /--text-selected|--background-selected/.test(body ?? ""),
-    );
-    expect(offenders).toHaveLength(0);
+  it("should give the open item the same pill and blue label as the selected item", () => {
+    for (const state of [/data-selected/, /aria-expanded="true"/]) {
+      const content = bodies(new RegExp(state.source + String.raw`\]\s*\.content`)).join("");
+      expect(content).toMatch(/background-color:\s*var\(--background-selected-subtlest-default\)/);
+      const label = bodies(new RegExp(state.source + String.raw`\]\s*\.label`)).join("");
+      expect(label).toMatch(/color:\s*var\(--text-selected\)/);
+    }
   });
 
   it("should not declare a transform transition on iconWrapper, iconSource or iconClose", () => {
@@ -244,7 +253,9 @@ describe("BottomNavItem — état ouvert (CSS)", () => {
   });
 
   it("should keep the label visible when open", () => {
-    expect(css).not.toMatch(/aria-expanded="true"\]\s*\.label/);
+    for (const body of bodies(/aria-expanded="true"\]\s*\.label/)) {
+      expect(body).not.toMatch(/opacity|display|visibility/);
+    }
   });
 
   it("should open with a pure cross-fade: opacity only, --duration-fast", () => {

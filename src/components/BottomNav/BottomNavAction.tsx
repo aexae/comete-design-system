@@ -1,9 +1,6 @@
 // BottomNavAction — bouton d'action central (FAB) de la BottomNav
 import type { ReactElement } from "react";
-import {
-  Button as AriaButton,
-  type ButtonProps as AriaButtonProps,
-} from "react-aria-components";
+import { Button as AriaButton, type ButtonProps as AriaButtonProps } from "react-aria-components";
 import type { IconName } from "@aexae/comete-icons";
 import { Icon } from "../Icon/index.js";
 import { FocusRing } from "../FocusRing/index.js";
@@ -61,7 +58,9 @@ export function BottomNavAction({
   onPress,
 }: BottomNavActionProps): ReactElement {
   const handlePress: AriaButtonProps["onPress"] = onPress
-    ? () => { onPress(); }
+    ? () => {
+        onPress();
+      }
     : undefined;
 
   return (

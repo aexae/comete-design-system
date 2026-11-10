@@ -41,9 +41,7 @@ export interface MonthCalendarProps {
 
 export function getMonthLabels(locale: string): string[] {
   return Array.from({ length: 12 }, (_, i) =>
-    new Intl.DateTimeFormat(locale, { month: "short" }).format(
-      new Date(2000, i, 1)
-    )
+    new Intl.DateTimeFormat(locale, { month: "short" }).format(new Date(2000, i, 1))
   );
 }
 
@@ -92,9 +90,7 @@ export function MonthCalendar({
   const selectedMonth = controlled ? value?.month : undefined;
 
   // Non-controlled internal selection
-  const [internalValue, setInternalValue] = useState<CalendarDate | undefined>(
-    defaultValue
-  );
+  const [internalValue, setInternalValue] = useState<CalendarDate | undefined>(defaultValue);
   const resolvedYear = controlled ? value?.year : internalValue?.year;
   const resolvedMonth = controlled ? value?.month : internalValue?.month;
 
@@ -135,9 +131,7 @@ export function MonthCalendar({
     <div
       role="group"
       aria-label={`Choisir un mois — ${displayYear}`}
-      className={[calStyles.calendar, styles.monthCalendar, className]
-        .filter(Boolean)
-        .join(" ")}
+      className={[calStyles.calendar, styles.monthCalendar, className].filter(Boolean).join(" ")}
       data-disabled={isDisabled || undefined}
     >
       <MainHeader
@@ -157,8 +151,7 @@ export function MonthCalendar({
               const isSelected =
                 (controlled ? selectedYear : resolvedYear) === displayYear &&
                 (controlled ? selectedMonth : resolvedMonth) === month;
-              const isToday =
-                todayDate.year === displayYear && todayDate.month === month;
+              const isToday = todayDate.year === displayYear && todayDate.month === month;
 
               return (
                 <CalendarCell

@@ -121,27 +121,22 @@ export interface UseTableSelectionResult<K = string> {
  * ```
  */
 export function useTableSelection<K = string>(
-  options: UseTableSelectionOptions<K>,
+  options: UseTableSelectionOptions<K>
 ): UseTableSelectionResult<K> {
   const { keys, defaultSelectedKeys, selectedKeys, onSelectionChange } = options;
 
   const isControlled = selectedKeys !== undefined;
-  const [internal, setInternal] = useState<Set<K>>(
-    () => new Set(defaultSelectedKeys ?? []),
-  );
+  const [internal, setInternal] = useState<Set<K>>(() => new Set(defaultSelectedKeys ?? []));
 
   // Source de vérité : la prop en mode contrôlé, l'état interne sinon.
   const current = useMemo<Set<K>>(
     () => (isControlled ? new Set(selectedKeys) : internal),
-    [isControlled, selectedKeys, internal],
+    [isControlled, selectedKeys, internal]
   );
 
   // Clés de la page courante (périmètre de « tout sélectionner »).
   const pageKeys = useMemo<K[]>(() => Array.from(keys), [keys]);
-  const selectedOnPage = pageKeys.reduce(
-    (n, k) => (current.has(k) ? n + 1 : n),
-    0,
-  );
+  const selectedOnPage = pageKeys.reduce((n, k) => (current.has(k) ? n + 1 : n), 0);
   const isAllSelected = pageKeys.length > 0 && selectedOnPage === pageKeys.length;
   const isSomeSelected = selectedOnPage > 0 && !isAllSelected;
 
@@ -152,7 +147,7 @@ export function useTableSelection<K = string>(
       if (!isControlled) setInternal(next);
       onSelectionChange?.(next);
     },
-    [isControlled, onSelectionChange],
+    [isControlled, onSelectionChange]
   );
 
   const isSelected = useCallback((key: K) => current.has(key), [current]);
@@ -164,7 +159,7 @@ export function useTableSelection<K = string>(
       else next.add(key);
       commit(next);
     },
-    [current, commit],
+    [current, commit]
   );
 
   const select = useCallback(
@@ -174,7 +169,7 @@ export function useTableSelection<K = string>(
       next.add(key);
       commit(next);
     },
-    [current, commit],
+    [current, commit]
   );
 
   const deselect = useCallback(
@@ -184,7 +179,7 @@ export function useTableSelection<K = string>(
       next.delete(key);
       commit(next);
     },
-    [current, commit],
+    [current, commit]
   );
 
   const selectAll = useCallback(() => {
@@ -215,7 +210,7 @@ export function useTableSelection<K = string>(
       onChange: toggleAll,
       "aria-label": isAllSelected ? "Tout désélectionner" : "Tout sélectionner",
     }),
-    [isAllSelected, isSomeSelected, toggleAll],
+    [isAllSelected, isSomeSelected, toggleAll]
   );
 
   const getRowCheckboxProps = useCallback(
@@ -224,7 +219,7 @@ export function useTableSelection<K = string>(
       onChange: () => toggle(key),
       "aria-label": label ?? "Sélectionner la ligne",
     }),
-    [current, toggle],
+    [current, toggle]
   );
 
   const getRowClickProps = useCallback(
@@ -233,7 +228,7 @@ export function useTableSelection<K = string>(
       // `TableRow` : un bouton dans la ligne a la priorité sur le clic de ligne.
       onToggleSelect: () => toggle(key),
     }),
-    [toggle],
+    [toggle]
   );
 
   return {

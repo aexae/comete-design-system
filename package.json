@@ -2,7 +2,7 @@
   "name": "@aexae/comete-design-system",
   "description": "Comète Design System — React Aria + CSS Modules + Design Tokens",
   "author": "aexae",
-  "version": "1.0.0-alpha.172",
+  "version": "1.0.0-alpha.175",
   "license": "AGPL-3.0-only",
   "private": false,
   "type": "module",
@@ -41,6 +41,8 @@
     "test:stories": "pnpm --filter @aexae/comete-design-system-storybook test",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint src --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "clean": "rimraf dist coverage"
   },
   "dependencies": {
@@ -55,8 +57,8 @@
   },
   "devDependencies": {
     "@aexae/comete-design-tokens": "^0.19.0",
-    "@aexae/comete-icons": "^0.11.0",
-    "@aexae/comete-illustrations": "alpha",
+    "@aexae/comete-icons": "^0.11.1",
+    "@aexae/comete-illustrations": "0.1.0-alpha.5",
     "@aexae/comete-logos": "0.15.0",
     "@eslint/js": "^9.39.4",
     "@internationalized/date": "^3.12.0",
@@ -73,6 +75,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "globals": "^17.4.0",
     "jsdom": "^29.0.0",
+    "prettier": "^3.9.10",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "rimraf": "^6.1.3",

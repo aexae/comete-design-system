@@ -13,12 +13,7 @@ import styles from "./Snackbar.module.css";
 // Types publics
 
 /** Nature / sévérité de la snackbar — détermine le fond et l'icône. */
-export type SnackbarAppearance =
-  | "information"
-  | "success"
-  | "warning"
-  | "critical"
-  | "discovery";
+export type SnackbarAppearance = "information" | "success" | "warning" | "critical" | "discovery";
 
 /** Bouton d'action optionnel affiché à droite du message. */
 export interface SnackbarAction {
@@ -104,9 +99,7 @@ export function Snackbar({
 
   return (
     <div
-      className={[styles.snackbar, styles[appearance], className]
-        .filter(Boolean)
-        .join(" ")}
+      className={[styles.snackbar, styles[appearance], className].filter(Boolean).join(" ")}
       role={role}
       style={style}
     >
@@ -123,13 +116,9 @@ export function Snackbar({
         <AriaButton className={styles.action} onPress={action.onPress}>
           {({ isFocusVisible }) => (
             <>
-              {action.iconBefore && (
-                <Icon icon={action.iconBefore} size={20} color={iconColor} />
-              )}
+              {action.iconBefore && <Icon icon={action.iconBefore} size={20} color={iconColor} />}
               <span className={styles.actionLabel}>{action.label}</span>
-              {action.iconAfter && (
-                <Icon icon={action.iconAfter} size={20} color={iconColor} />
-              )}
+              {action.iconAfter && <Icon icon={action.iconAfter} size={20} color={iconColor} />}
               {isFocusVisible && <FocusRing borderRadius={3} position="inside" />}
             </>
           )}
@@ -137,11 +126,7 @@ export function Snackbar({
       )}
 
       {onClose && (
-        <AriaButton
-          className={styles.close}
-          onPress={onClose}
-          aria-label={closeLabel}
-        >
+        <AriaButton className={styles.close} onPress={onClose} aria-label={closeLabel}>
           {({ isFocusVisible }) => (
             <>
               <Icon icon="Close" size={24} color={iconColor} />

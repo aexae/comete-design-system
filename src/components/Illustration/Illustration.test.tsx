@@ -67,9 +67,7 @@ describe("Illustration", () => {
   // Prop className ---------------------------------------------------------
 
   it("should forward className to the wrapper span", () => {
-    const { container } = render(
-      <Illustration illustration="Empty" className="custom-class" />,
-    );
+    const { container } = render(<Illustration illustration="Empty" className="custom-class" />);
     const span = container.firstChild as HTMLElement;
     expect(span.className).toContain("custom-class");
     expect(span.className).toContain("illustration");
@@ -79,7 +77,7 @@ describe("Illustration", () => {
 
   it("should set aria-label and role='img' when aria-label is provided", () => {
     const { container } = render(
-      <Illustration illustration="ForbiddenAccess" aria-label="Accès refusé" />,
+      <Illustration illustration="ForbiddenAccess" aria-label="Accès refusé" />
     );
     const span = container.firstChild as HTMLElement;
     expect(span).toHaveAttribute("aria-label", "Accès refusé");
@@ -88,7 +86,7 @@ describe("Illustration", () => {
 
   it("should not have aria-hidden when aria-label is provided", () => {
     const { container } = render(
-      <Illustration illustration="ForbiddenAccess" aria-label="Accès refusé" />,
+      <Illustration illustration="ForbiddenAccess" aria-label="Accès refusé" />
     );
     const span = container.firstChild as HTMLElement;
     expect(span).not.toHaveAttribute("aria-hidden");

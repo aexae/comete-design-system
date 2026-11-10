@@ -37,8 +37,7 @@ export function rgbToHex({ r, g, b }: Rgb): string {
   return `#${to(r)}${to(g)}${to(b)}`;
 }
 
-const toLinear = (c: number): number =>
-  c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+const toLinear = (c: number): number => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
 const toGamma = (c: number): number =>
   c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055;
 

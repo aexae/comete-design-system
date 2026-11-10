@@ -4,6 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, userEvent, within } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Labeled, LabeledRow } from "./_labeled";
 
 // ----------------------------------------------------------------------
 // Figma design URLs — public file, addon-designs embeds
@@ -26,7 +27,16 @@ const meta: Meta<ButtonProps> = {
     },
     color: {
       control: "select",
-      options: ["default", "subtle", "subtlest", "comete", "success", "critical", "warning", "information"],
+      options: [
+        "default",
+        "subtle",
+        "subtlest",
+        "comete",
+        "success",
+        "critical",
+        "warning",
+        "information",
+      ],
     },
     density: {
       control: "select",
@@ -77,7 +87,10 @@ const meta: Meta<ButtonProps> = {
   },
   parameters: {
     docs: {
-      description: { component: "Les boutons déclenchent des actions ou des événements lorsque l'utilisateur interagit avec eux. Ils se déclinent en plusieurs variantes pour hiérarchiser les actions principales, secondaires et tertiaires." },
+      description: {
+        component:
+          "Les boutons déclenchent des actions ou des événements lorsque l'utilisateur interagit avec eux. Ils se déclinent en plusieurs variantes pour hiérarchiser les actions principales, secondaires et tertiaires.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -89,20 +102,17 @@ const meta: Meta<ButtonProps> = {
               }}
               dontExample={{
                 example: <Button color="critical">Enregistrer</Button>,
-                caption:
-                  "Ne pas utiliser une couleur critique pour une action non destructrice.",
+                caption: "Ne pas utiliser une couleur critique pour une action non destructrice.",
               }}
               when={[
                 "Déclencher une action immédiate (soumettre, enregistrer, ouvrir une modale, lancer un traitement).",
                 "Hiérarchiser les actions par apparence : `contained` pour l'action principale, `outlined`/`subtle` pour les secondaires.",
               ]}
-              avoid={[
-                "Naviguer entre des pages → Breadcrumbs ou SideNavItem.",
-              ]}
+              avoid={["Naviguer entre des pages → Breadcrumbs ou SideNavItem."]}
               best={[
                 "Regrouper des actions liées dans un ButtonGroup (action principale à droite).",
                 "Densité alignée sur les champs voisins (`compact`/`default`/`touch`) ; `isLoading` pour désactiver + signaler un traitement.",
-                "Réserver `color=\"critical\"` aux actions destructrices, avec confirmation si irréversible.",
+                'Réserver `color="critical"` aux actions destructrices, avec confirmation si irréversible.',
               ]}
               accessibility={[
                 "Libellé = verbe d'action explicite ; éviter les libellés vagues (« OK », « Oui »).",
@@ -202,7 +212,7 @@ export const Outlined: Story = {
 };
 
 export const Subtle: Story = {
-  args: { appearance: "subtle", color: "comete", children: "Voir plus" },
+  args: { appearance: "subtle", color: "default", children: "Voir plus" },
   parameters: {
     design: {
       type: "figma",
@@ -212,7 +222,7 @@ export const Subtle: Story = {
 };
 
 export const Link: Story = {
-  args: { appearance: "link", color: "comete", children: "En savoir plus" },
+  args: { appearance: "link", color: "default", children: "En savoir plus" },
   parameters: {
     design: {
       type: "figma",
@@ -231,13 +241,13 @@ export const InlineLink: Story = {
   args: {
     isInline: true,
     appearance: "link",
-    color: "information",
+    color: "default",
     children: "politique de confidentialité",
   },
   render: (args) => (
     <p style={{ maxWidth: 420, lineHeight: 1.6 }}>
-      Consultez notre <Button {...args} /> avant de continuer. Le bouton reste
-      dans le fil du texte, sans padding superflu.
+      Consultez notre <Button {...args} /> avant de continuer. Le bouton reste dans le fil du texte,
+      sans padding superflu.
     </p>
   ),
 };
@@ -316,35 +326,6 @@ export const WithIconAfter: Story = {
   },
 };
 
-/** Icône + label sur toutes les couleurs contained */
-export const IconAllColors: Story = {
-  render: (args) => (
-    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-      {(
-        [
-          "default",
-          "subtle",
-          "subtlest",
-          "comete",
-          "success",
-          "critical",
-          "warning",
-          "information",
-        ] as const
-      ).map((color) => (
-        <Button
-          key={color}
-          color={color}
-          appearance={args.appearance}
-          iconBefore="Image"
-        >
-          {color}
-        </Button>
-      ))}
-    </div>
-  ),
-};
-
 // ----------------------------------------------------------------------
 
 /** Bouton icon-only (sans label) */
@@ -363,22 +344,65 @@ export const IconOnly: Story = {
   render: (args) => <Button {...args} />,
 };
 
+/** Bouton icon-only (sans label) sur toutes les couleurs */
+export const IconOnlyAllColors: Story = {
+  name: "Icon only — All colors",
+  render: (args) => (
+    <LabeledRow>
+      {(
+        [
+          "default",
+          "subtle",
+          "subtlest",
+          "comete",
+          "success",
+          "critical",
+          "warning",
+          "information",
+        ] as const
+      ).map((color) => (
+        <Labeled key={color} label={color}>
+          <Button color={color} appearance={args.appearance} iconBefore="Add" aria-label={color} />
+        </Labeled>
+      ))}
+    </LabeledRow>
+  ),
+};
+
+/** Les 5 apparences en bouton icon-only (sans label), couleur default. */
+export const IconOnlyAllVariants: Story = {
+  name: "Icon only — All variants",
+  render: () => (
+    <LabeledRow>
+      {(
+        [
+          ["contained", "Contained"],
+          ["outlined", "Outlined"],
+          ["link", "Link"],
+          ["subtle", "Subtle"],
+          ["link-subtle", "Link Subtle"],
+        ] as const
+      ).map(([appearance, label]) => (
+        <Labeled key={appearance} label={label}>
+          <Button appearance={appearance} color="default" iconBefore="Add" aria-label={label} />
+        </Labeled>
+      ))}
+    </LabeledRow>
+  ),
+};
+
 /** Bouton icon-only à chaque densité : toujours circulaire et parfaitement carré
  *  (width = height), quelle que soit la densité. */
 export const IconOnlyAllDensities: Story = {
   name: "Icon only — All densities",
   render: () => (
-    <div style={{ display: "flex", gap: 24, alignItems: "flex-end" }}>
+    <LabeledRow>
       {(["compact", "default", "touch"] as const).map((density) => (
-        <div
-          key={density}
-          style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "center" }}
-        >
+        <Labeled key={density} label={density}>
           <Button iconBefore="Add" color="comete" density={density} />
-          <span style={{ fontSize: 12, color: "var(--text-subtle)" }}>{density}</span>
-        </div>
+        </Labeled>
       ))}
-    </div>
+    </LabeledRow>
   ),
 };
 
@@ -393,14 +417,30 @@ export const Loading: Story = {
 export const AllColors: Story = {
   render: (args) => (
     <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-      <Button color="default" appearance={args.appearance}>Default</Button>
-      <Button color="subtle" appearance={args.appearance}>Subtle</Button>
-      <Button color="subtlest" appearance={args.appearance}>Subtlest</Button>
-      <Button color="comete" appearance={args.appearance}>Comete</Button>
-      <Button color="success" appearance={args.appearance}>Success</Button>
-      <Button color="critical" appearance={args.appearance}>Critical</Button>
-      <Button color="warning" appearance={args.appearance}>Warning</Button>
-      <Button color="information" appearance={args.appearance}>Information</Button>
+      <Button color="default" appearance={args.appearance}>
+        Default
+      </Button>
+      <Button color="subtle" appearance={args.appearance}>
+        Subtle
+      </Button>
+      <Button color="subtlest" appearance={args.appearance}>
+        Subtlest
+      </Button>
+      <Button color="comete" appearance={args.appearance}>
+        Comete
+      </Button>
+      <Button color="success" appearance={args.appearance}>
+        Success
+      </Button>
+      <Button color="critical" appearance={args.appearance}>
+        Critical
+      </Button>
+      <Button color="warning" appearance={args.appearance}>
+        Warning
+      </Button>
+      <Button color="information" appearance={args.appearance}>
+        Information
+      </Button>
     </div>
   ),
 };
@@ -409,11 +449,21 @@ export const AllColors: Story = {
 export const AllVariants: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Button appearance="contained" color="default">Contained</Button>
-      <Button appearance="outlined" color="default">Outlined</Button>
-      <Button appearance="link" color="information">Link</Button>
-      <Button appearance="subtle" color="default">Subtle</Button>
-      <Button appearance="link-subtle" color="default">Link Subtle</Button>
+      <Button appearance="contained" color="default">
+        Contained
+      </Button>
+      <Button appearance="outlined" color="default">
+        Outlined
+      </Button>
+      <Button appearance="link" color="default">
+        Link
+      </Button>
+      <Button appearance="subtle" color="default">
+        Subtle
+      </Button>
+      <Button appearance="link-subtle" color="default">
+        Link Subtle
+      </Button>
     </div>
   ),
 };
@@ -422,9 +472,15 @@ export const AllDensities: Story = {
   name: "All densities",
   render: () => (
     <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-      <Button density="compact" color="comete">Compact · 24</Button>
-      <Button density="default" color="comete">Default · 32</Button>
-      <Button density="touch" color="comete">Touch · 48</Button>
+      <Button density="compact" color="comete">
+        Compact · 24
+      </Button>
+      <Button density="default" color="comete">
+        Default · 32
+      </Button>
+      <Button density="touch" color="comete">
+        Touch · 48
+      </Button>
     </div>
   ),
 };

@@ -3,3 +3,6 @@ build
 dist
 coverage
 storybook/storybook-static
+storybook-static
+pnpm-lock.yaml
+*.module.css.d.ts

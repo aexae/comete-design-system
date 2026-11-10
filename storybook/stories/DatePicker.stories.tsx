@@ -10,10 +10,8 @@ import { fn } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -24,7 +22,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le sélecteur de date permet de choisir une date via un champ de saisie couplé à un calendrier déroulant. Il garantit un format de date cohérent et réduit les erreurs de saisie." },
+      description: {
+        component:
+          "Le sélecteur de date permet de choisir une date via un champ de saisie couplé à un calendrier déroulant. Il garantit un format de date cohérent et réduit les erreurs de saisie.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -134,12 +135,13 @@ export const FieldInvalid: Story = {
   args: { isInvalid: true, defaultValue: today(getLocalTimeZone()) },
   render: (args) => (
     <div style={{ width: 320 }}>
-      <Field
-        label="Date de fin"
-        message="La date est invalide"
-        messageType="critical"
-      >
-        <DatePicker {...(args as Record<string, unknown>)} isRange={false} aria-label="Date de fin" defaultValue={today(getLocalTimeZone())} />
+      <Field label="Date de fin" message="La date est invalide" messageType="critical">
+        <DatePicker
+          {...(args as Record<string, unknown>)}
+          isRange={false}
+          aria-label="Date de fin"
+          defaultValue={today(getLocalTimeZone())}
+        />
       </Field>
     </div>
   ),
@@ -169,7 +171,12 @@ export const AllAppearances: Story = {
     <div style={{ display: "flex", gap: 32 }}>
       <div style={{ width: 280 }}>
         <Field label="Default">
-          <DatePicker {...(args as Record<string, unknown>)} isRange={false} aria-label="Default" defaultValue={today(getLocalTimeZone())} />
+          <DatePicker
+            {...(args as Record<string, unknown>)}
+            isRange={false}
+            aria-label="Default"
+            defaultValue={today(getLocalTimeZone())}
+          />
         </Field>
       </div>
       <div style={{ width: 280 }}>

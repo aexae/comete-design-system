@@ -24,7 +24,11 @@ import { CalendarCell as CometeCalendarCell } from "./CalendarCell.js";
 import { MainHeader } from "./MainHeader.js";
 import { WeekGrid, DualWeekGrid } from "./WeekGrid.js";
 import { MonthCalendar } from "./MonthCalendar.js";
-import { DualMonthCalendar, DualMonthSingleCalendar, MonthRangeCalendar } from "./DualMonthCalendar.js";
+import {
+  DualMonthCalendar,
+  DualMonthSingleCalendar,
+  MonthRangeCalendar,
+} from "./DualMonthCalendar.js";
 import { YearCalendar } from "./YearCalendar.js";
 import { DualYearCalendar, DualYearSingleCalendar, YearRangeCalendar } from "./DualYearCalendar.js";
 import { TimeCalendar } from "./TimeCalendar.js";
@@ -269,13 +273,7 @@ export function Calendar(props: CalendarProps): ReactElement {
     return <DateRangeGrid {...rangeProps} />;
   }
 
-  const {
-    appearance: _a,
-    isOpen: _o,
-    calendars = 1,
-    isRange: _r,
-    ...dateProps
-  } = props;
+  const { appearance: _a, isOpen: _o, calendars = 1, isRange: _r, ...dateProps } = props;
   if (calendars === 2) {
     return <DualDateCalendar {...dateProps} />;
   }
@@ -371,11 +369,7 @@ function DualPanelHeadingButton({
     );
   }
 
-  return (
-    <span className={[styles.heading, className].filter(Boolean).join(" ")}>
-      {label}
-    </span>
-  );
+  return <span className={[styles.heading, className].filter(Boolean).join(" ")}>{label}</span>;
 }
 
 // -----------------------------------------------------------------------
@@ -457,11 +451,7 @@ function DateGrid({
       <CalendarDateHeader onDrillUp={handleDrillUp} isDisabled={isDisabled} />
       <CalendarGrid className={styles.grid}>
         <CalendarGridHeader>
-          {(day) => (
-            <CalendarHeaderCell className={styles.headerCell}>
-              {day}
-            </CalendarHeaderCell>
-          )}
+          {(day) => <CalendarHeaderCell className={styles.headerCell}>{day}</CalendarHeaderCell>}
         </CalendarGridHeader>
         <SingleCalendarGridBody calendarDisabled={isDisabled ?? false} />
       </CalendarGrid>
@@ -517,9 +507,7 @@ function DualDateCalendar({
   // - panel gauche → left = sélection, right = sélection + 1 (defaultFocusedValue = sélection)
   // - panel droit  → right = sélection, left = sélection - 1 (defaultFocusedValue = sélection - 1)
   const handleMonthSelect = (month: CalendarDate) => {
-    const newPivot = drilledPanel === "right"
-      ? month.subtract({ months: 1 })
-      : month;
+    const newPivot = drilledPanel === "right" ? month.subtract({ months: 1 }) : month;
     setPivotDate(newPivot);
     setCalendarKey((k) => k + 1);
     setDrillLevel("date");
@@ -578,10 +566,7 @@ function DualDateCalendar({
       <CalendarGrid className={[styles.grid, styles.dualGrid1].join(" ")}>
         <CalendarGridContent calendarDisabled={isDisabled ?? false} />
       </CalendarGrid>
-      <CalendarGrid
-        offset={{ months: 1 }}
-        className={[styles.grid, styles.dualGrid2].join(" ")}
-      >
+      <CalendarGrid offset={{ months: 1 }} className={[styles.grid, styles.dualGrid2].join(" ")}>
         <CalendarGridContent calendarDisabled={isDisabled ?? false} />
       </CalendarGrid>
     </AriaRangeCalendar>
@@ -674,9 +659,7 @@ function DualDateRangeCalendar({
   };
 
   const handleMonthSelect = (month: CalendarDate) => {
-    const newPivot = drilledPanel === "right"
-      ? month.subtract({ months: 1 })
-      : month;
+    const newPivot = drilledPanel === "right" ? month.subtract({ months: 1 }) : month;
     setPivotDate(newPivot);
     setCalendarKey((k) => k + 1);
     setDrillLevel("date");
@@ -738,10 +721,7 @@ function DualDateRangeCalendar({
       <CalendarGrid className={[styles.grid, styles.dualGrid1].join(" ")}>
         <CalendarGridContent calendarDisabled={isDisabled ?? false} />
       </CalendarGrid>
-      <CalendarGrid
-        offset={{ months: 1 }}
-        className={[styles.grid, styles.dualGrid2].join(" ")}
-      >
+      <CalendarGrid offset={{ months: 1 }} className={[styles.grid, styles.dualGrid2].join(" ")}>
         <CalendarGridContent calendarDisabled={isDisabled ?? false} />
       </CalendarGrid>
     </AriaRangeCalendar>
@@ -764,7 +744,19 @@ function SingleCalendarGridBody({ calendarDisabled }: { calendarDisabled: boolea
     <CalendarGridBody>
       {(date) => (
         <AriaCalendarCell date={date} className={styles.ariaDateCell}>
-          {({ formattedDate, isFocusVisible, isHovered, isPressed, isSelected, isSelectionStart, isSelectionEnd, isToday, isDisabled: cellDisabled, isUnavailable, isOutsideMonth }) => {
+          {({
+            formattedDate,
+            isFocusVisible,
+            isHovered,
+            isPressed,
+            isSelected,
+            isSelectionStart,
+            isSelectionEnd,
+            isToday,
+            isDisabled: cellDisabled,
+            isUnavailable,
+            isOutsideMonth,
+          }) => {
             if (isOutsideMonth) {
               return (
                 <CometeCalendarCell
@@ -813,18 +805,28 @@ function CalendarGridContent({ calendarDisabled }: { calendarDisabled: boolean }
   // REASON: En mode interactif, state.value peut refléter transitoirement
   // l'ancre + hover pendant la sélection, ce qui provoquerait un highlight
   // incorrect. La fallback reste donc limitée au cas disabled.
-  const selectedRange = calendarDisabled ? state?.value ?? null : null;
+  const selectedRange = calendarDisabled ? (state?.value ?? null) : null;
   return (
     <>
       <CalendarGridHeader>
-        {(day) => (
-          <CalendarHeaderCell className={styles.headerCell}>{day}</CalendarHeaderCell>
-        )}
+        {(day) => <CalendarHeaderCell className={styles.headerCell}>{day}</CalendarHeaderCell>}
       </CalendarGridHeader>
       <CalendarGridBody>
         {(date) => (
           <AriaCalendarCell date={date} className={styles.ariaDateCell}>
-            {({ formattedDate, isFocusVisible, isHovered, isPressed, isSelected, isSelectionStart, isSelectionEnd, isToday, isDisabled: cellDisabled, isUnavailable, isOutsideMonth }) => {
+            {({
+              formattedDate,
+              isFocusVisible,
+              isHovered,
+              isPressed,
+              isSelected,
+              isSelectionStart,
+              isSelectionEnd,
+              isToday,
+              isDisabled: cellDisabled,
+              isUnavailable,
+              isOutsideMonth,
+            }) => {
               if (isOutsideMonth) {
                 return (
                   <CometeCalendarCell
@@ -839,11 +841,9 @@ function CalendarGridContent({ calendarDisabled }: { calendarDisabled: boolean }
                 );
               }
               const isInRange = selectedRange
-                ? date.compare(selectedRange.start) >= 0 &&
-                  date.compare(selectedRange.end) <= 0
+                ? date.compare(selectedRange.start) >= 0 && date.compare(selectedRange.end) <= 0
                 : false;
-              const isRangePart =
-                (isSelected || isInRange) && !isSelectionStart && !isSelectionEnd;
+              const isRangePart = (isSelected || isInRange) && !isSelectionStart && !isSelectionEnd;
               return (
                 <CometeCalendarCell
                   interactive={false}

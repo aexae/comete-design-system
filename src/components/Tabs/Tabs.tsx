@@ -19,22 +19,22 @@ import styles from "./Tabs.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
-export interface TabsProps
-  extends Omit<AriaTabsProps, "className" | "style"> {
+export interface TabsProps extends Omit<AriaTabsProps, "className" | "style"> {
   /** Additional CSS class. */
   className?: string;
   children: ReactNode;
 }
 
-export interface TabListProps<T extends object = object>
-  extends Omit<AriaTabListProps<T>, "className" | "style"> {
+export interface TabListProps<T extends object = object> extends Omit<
+  AriaTabListProps<T>,
+  "className" | "style"
+> {
   /** Additional CSS class. */
   className?: string;
   children: ReactNode;
 }
 
-export interface TabProps
-  extends Omit<AriaTabProps, "className" | "style" | "children"> {
+export interface TabProps extends Omit<AriaTabProps, "className" | "style" | "children"> {
   /** Label du tab. */
   children: ReactNode;
   /** Icône affichée avant le label. */
@@ -47,8 +47,7 @@ export interface TabProps
   style?: React.CSSProperties;
 }
 
-export interface TabPanelProps
-  extends Omit<AriaTabPanelProps, "className" | "style"> {
+export interface TabPanelProps extends Omit<AriaTabPanelProps, "className" | "style"> {
   /** Additional CSS class. */
   className?: string;
   children?: ReactNode;
@@ -79,11 +78,7 @@ export interface TabPanelProps
  *
  * @param children - TabList + TabPanels
  */
-export function Tabs({
-  className,
-  children,
-  ...props
-}: TabsProps): ReactElement {
+export function Tabs({ className, children, ...props }: TabsProps): ReactElement {
   const classNames = [styles.tabs, className].filter(Boolean).join(" ");
   return (
     <AriaTabs {...props} className={classNames}>
@@ -140,29 +135,19 @@ export function Tab({
               : "subtle";
 
         return (
-        <>
-          <span className={styles.tabContainer}>
-            {iconBefore && (
-              <Icon
-                icon={iconBefore}
-                size={20}
-                appearance="outlined"
-                color={iconColor}
-              />
-            )}
-            <span className={styles.tabLabel}>{children}</span>
-            {iconAfter && (
-              <Icon
-                icon={iconAfter}
-                size={20}
-                appearance="outlined"
-                color={iconColor}
-              />
-            )}
-          </span>
-          <span className={styles.tabIndicator} />
-          {isFocusVisible && <FocusRing borderRadius={2} position="outside" />}
-        </>
+          <>
+            <span className={styles.tabContainer}>
+              {iconBefore && (
+                <Icon icon={iconBefore} size={20} appearance="outlined" color={iconColor} />
+              )}
+              <span className={styles.tabLabel}>{children}</span>
+              {iconAfter && (
+                <Icon icon={iconAfter} size={20} appearance="outlined" color={iconColor} />
+              )}
+            </span>
+            <span className={styles.tabIndicator} />
+            {isFocusVisible && <FocusRing borderRadius={2} position="outside" />}
+          </>
         );
       }}
     </AriaTab>
@@ -174,11 +159,7 @@ Tab.displayName = "Tab";
 // -----------------------------------------------------------------------
 // TabPanel — content area
 
-export function TabPanel({
-  className,
-  children,
-  ...props
-}: TabPanelProps): ReactElement {
+export function TabPanel({ className, children, ...props }: TabPanelProps): ReactElement {
   const classNames = [styles.tabPanel, className].filter(Boolean).join(" ");
   return (
     <AriaTabPanel {...props} className={classNames}>

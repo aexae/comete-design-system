@@ -1,7 +1,14 @@
 // DatePicker — Comète Design System
 // Sélecteur de date : deux modes (navigation / saisie) selon isEditable
 // + single vs range via isRange.
-import { useCallback, useEffect, useRef, useState, type ReactElement, type CSSProperties } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactElement,
+  type CSSProperties,
+} from "react";
 import {
   DatePicker as AriaDatePicker,
   DateRangePicker as AriaDateRangePicker,
@@ -64,15 +71,15 @@ interface DatePickerBaseProps {
 
 /** Props pour le mode simple (sélection d'une date unique). */
 export interface SingleDatePickerProps<T extends DateValue = DateValue>
-  extends DatePickerBaseProps,
-    Omit<AriaDatePickerProps<T>, "className" | "style" | "children"> {
+  extends DatePickerBaseProps, Omit<AriaDatePickerProps<T>, "className" | "style" | "children"> {
   /** @default false */
   isRange?: false;
 }
 
 /** Props pour le mode plage (sélection de deux dates start/end). */
 export interface RangeDatePickerProps<T extends DateValue = DateValue>
-  extends DatePickerBaseProps,
+  extends
+    DatePickerBaseProps,
     Omit<AriaDateRangePickerProps<T>, "className" | "style" | "children"> {
   /** Active la sélection de plage. */
   isRange: true;
@@ -80,8 +87,7 @@ export interface RangeDatePickerProps<T extends DateValue = DateValue>
 
 /** Union discriminée — TypeScript infère le bon type selon `isRange`. */
 export type DatePickerProps<T extends DateValue = DateValue> =
-  | SingleDatePickerProps<T>
-  | RangeDatePickerProps<T>;
+  SingleDatePickerProps<T> | RangeDatePickerProps<T>;
 
 // -----------------------------------------------------------------------
 // Helpers
@@ -126,7 +132,7 @@ function formatDateLong(date: CalendarDate, locale: string): string {
  * ```
  */
 export function DatePicker<T extends DateValue = DateValue>(
-  props: DatePickerProps<T>,
+  props: DatePickerProps<T>
 ): ReactElement {
   const appearance = props.appearance ?? "default";
   const isEditable = props.isEditable ?? true;
@@ -176,7 +182,7 @@ export function DatePicker<T extends DateValue = DateValue>(
       <EditableDatePicker {...commonEditable} {...ariaProps} />
     ) : (
       <NavigationDatePicker {...commonNav} {...ariaProps} />
-    ),
+    )
   );
 }
 
@@ -205,7 +211,7 @@ function EditableDatePicker<T extends DateValue = DateValue>({
 
   // Traque la valeur courante pour synchroniser le calendrier
   const [currentValue, setCurrentValue] = useState<DateValue | null>(
-    () => ariaProps.value ?? ariaProps.defaultValue ?? null,
+    () => ariaProps.value ?? ariaProps.defaultValue ?? null
   );
 
   // Sync si la valeur contrôlée change depuis l'extérieur
@@ -220,39 +226,33 @@ function EditableDatePicker<T extends DateValue = DateValue>({
     (newValue: DateValue | null) => {
       if (!newValue) return;
       setCurrentValue(newValue);
-      const onChangeProp = ariaProps.onChange as
-        | ((value: DateValue) => void)
-        | undefined;
+      const onChangeProp = ariaProps.onChange as ((value: DateValue) => void) | undefined;
       onChangeProp?.(newValue);
     },
-    [ariaProps.onChange],
+    [ariaProps.onChange]
   );
 
   // Quand le calendrier change, met à jour la valeur locale + appelle onChange
   const handleCalendarChange = useCallback(
     (newDate: DateValue) => {
       setCurrentValue(newDate);
-      const onChangeProp = ariaProps.onChange as
-        | ((value: DateValue) => void)
-        | undefined;
+      const onChangeProp = ariaProps.onChange as ((value: DateValue) => void) | undefined;
       onChangeProp?.(newDate);
       // Date choisie → le calendrier se referme.
       setIsOpen(false);
     },
-    [ariaProps.onChange],
+    [ariaProps.onChange]
   );
 
   // Vide la valeur. Replace le focus sur le premier segment.
   const handleClear = useCallback(() => {
     setCurrentValue(null);
-    const onChangeProp = ariaProps.onChange as
-      | ((value: DateValue | null) => void)
-      | undefined;
+    const onChangeProp = ariaProps.onChange as ((value: DateValue | null) => void) | undefined;
     onChangeProp?.(null);
     onClear?.();
     requestAnimationFrame(() => {
       const segment = containerRef.current?.querySelector<HTMLElement>(
-        "[data-type]:not([data-type='literal'])",
+        "[data-type]:not([data-type='literal'])"
       );
       segment?.focus();
     });
@@ -263,7 +263,9 @@ function EditableDatePicker<T extends DateValue = DateValue>({
     if (ariaProps.isDisabled) return;
     setIsOpen(true);
     // Focus le premier segment (curseur au début pour les champs formatés)
-    const segment = containerRef.current?.querySelector<HTMLElement>("[data-type]:not([data-type='literal'])");
+    const segment = containerRef.current?.querySelector<HTMLElement>(
+      "[data-type]:not([data-type='literal'])"
+    );
     segment?.focus();
   }, [ariaProps.isDisabled]);
 
@@ -292,10 +294,7 @@ function EditableDatePicker<T extends DateValue = DateValue>({
   useEffect(() => {
     const handleMouseDown = (e: MouseEvent) => {
       const target = e.target as Node;
-      if (
-        containerRef.current?.contains(target) ||
-        popoverRef.current?.contains(target)
-      ) {
+      if (containerRef.current?.contains(target) || popoverRef.current?.contains(target)) {
         return;
       }
       setIsOpen(false);
@@ -328,69 +327,66 @@ function EditableDatePicker<T extends DateValue = DateValue>({
       onChange={handleFieldChange}
     >
       {({ isDisabled, isInvalid, isReadOnly }) => {
-        const showClear =
-          isClearable && currentValue !== null && !isReadOnly;
+        const showClear = isClearable && currentValue !== null && !isReadOnly;
         return (
-        <div ref={containerRef}>
-          <AriaGroup>
-            <InputContainer
-              appearance={appearance}
-              isDisabled={isDisabled}
-              isInvalid={isInvalid}
-              onContainerClick={handleContainerClick}
-            >
-              <AriaDateInput className={styles.dateInput}>
-                {(segment) => (
-                  <AriaDateSegment className={styles.segment} segment={segment} />
-                )}
-              </AriaDateInput>
-              <div className={styles.trailingButtons}>
-                {showClear && (
+          <div ref={containerRef}>
+            <AriaGroup>
+              <InputContainer
+                appearance={appearance}
+                isDisabled={isDisabled}
+                isInvalid={isInvalid}
+                onContainerClick={handleContainerClick}
+              >
+                <AriaDateInput className={styles.dateInput}>
+                  {(segment) => <AriaDateSegment className={styles.segment} segment={segment} />}
+                </AriaDateInput>
+                <div className={styles.trailingButtons}>
+                  {showClear && (
+                    <Button
+                      appearance="subtle"
+                      isInline
+                      iconBefore="CloseSmall"
+                      className={[styles.calendarButton, styles.clearButton].join(" ")}
+                      isDisabled={isDisabled}
+                      aria-label="Effacer"
+                      // Hors du contexte de bouton du champ (bascule du calendrier).
+                      slot={null}
+                      onPress={handleClear}
+                      // REASON: empêcher le blur du segment pendant le click. Sans
+                      // ça, le mousedown sur le bouton transfert le focus → segment
+                      // blur, ce qui peut surprendre l'UX d'édition.
+                      onPointerDown={(e) => e.preventDefault()}
+                    />
+                  )}
                   <Button
                     appearance="subtle"
                     isInline
-                    iconBefore="CloseSmall"
-                    className={[styles.calendarButton, styles.clearButton].join(" ")}
+                    iconBefore="CalendarToday"
+                    className={styles.calendarButton}
                     isDisabled={isDisabled}
-                    aria-label="Effacer"
-                    // Hors du contexte de bouton du champ (bascule du calendrier).
+                    aria-label="Ouvrir le calendrier"
+                    // Hors du contexte de bouton de React Aria (voir ci-dessus) : le
+                    // DS gère l'ouverture ET la fermeture de son calendrier.
                     slot={null}
-                    onPress={handleClear}
-                    // REASON: empêcher le blur du segment pendant le click. Sans
-                    // ça, le mousedown sur le bouton transfert le focus → segment
-                    // blur, ce qui peut surprendre l'UX d'édition.
-                    onPointerDown={(e) => e.preventDefault()}
+                    aria-haspopup="dialog"
+                    aria-expanded={isOpen}
+                    onPress={() => setIsOpen(!isOpen)}
                   />
-                )}
-                <Button
-                  appearance="subtle"
-                  isInline
-                  iconBefore="CalendarToday"
-                  className={styles.calendarButton}
-                  isDisabled={isDisabled}
-                  aria-label="Ouvrir le calendrier"
-                  // Hors du contexte de bouton de React Aria (voir ci-dessus) : le
-                  // DS gère l'ouverture ET la fermeture de son calendrier.
-                  slot={null}
-                  aria-haspopup="dialog"
-                  aria-expanded={isOpen}
-                  onPress={() => setIsOpen(!isOpen)}
+                </div>
+              </InputContainer>
+            </AriaGroup>
+
+            {isOpen && (
+              <div ref={popoverRef} role="dialog" className={styles.calendarPopover}>
+                <Calendar
+                  key={currentValue ? `${currentValue.year}-${currentValue.month}` : "empty"}
+                  appearance="date"
+                  value={currentValue ?? undefined}
+                  onChange={handleCalendarChange}
                 />
               </div>
-            </InputContainer>
-          </AriaGroup>
-
-          {isOpen && (
-            <div ref={popoverRef} role="dialog" className={styles.calendarPopover}>
-              <Calendar
-                key={currentValue ? `${currentValue.year}-${currentValue.month}` : "empty"}
-                appearance="date"
-                value={currentValue ?? undefined}
-                onChange={handleCalendarChange}
-              />
-            </div>
-          )}
-        </div>
+            )}
+          </div>
         );
       }}
     </AriaDatePicker>
@@ -422,7 +418,7 @@ function NavigationDatePicker<T extends DateValue = DateValue>({
   const todayDate = today(getLocalTimeZone());
   const isControlled = value !== undefined;
   const [internalValue, setInternalValue] = useState<CalendarDate>(
-    () => (value ?? defaultValue ?? todayDate) as CalendarDate,
+    () => (value ?? defaultValue ?? todayDate) as CalendarDate
   );
   const resolvedValue = (isControlled ? value : internalValue) as CalendarDate;
 
@@ -451,9 +447,7 @@ function NavigationDatePicker<T extends DateValue = DateValue>({
     setIsOpen(false);
   };
 
-  const rootClassNames = [styles.datePicker, className]
-    .filter(Boolean)
-    .join(" ");
+  const rootClassNames = [styles.datePicker, className].filter(Boolean).join(" ");
 
   return (
     <div
@@ -489,11 +483,7 @@ function NavigationDatePicker<T extends DateValue = DateValue>({
             >
               {formattedDate}
             </Button>
-            <Popover
-              triggerRef={containerRef}
-              placement="bottom start"
-              shouldFlip={false}
-            >
+            <Popover triggerRef={containerRef} placement="bottom start" shouldFlip={false}>
               <AriaDialog className={styles.dialog}>
                 <Calendar
                   appearance="date"
@@ -542,7 +532,7 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
   const [isOpen, setIsOpen] = useState(false);
 
   const [currentValue, setCurrentValue] = useState<RangeValue<DateValue> | null>(
-    () => (ariaProps.value ?? ariaProps.defaultValue ?? null),
+    () => ariaProps.value ?? ariaProps.defaultValue ?? null
   );
 
   useEffect(() => {
@@ -556,37 +546,34 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
       if (!newValue) return;
       setCurrentValue(newValue);
       const onChangeProp = ariaProps.onChange as
-        | ((value: RangeValue<DateValue>) => void)
-        | undefined;
+        ((value: RangeValue<DateValue>) => void) | undefined;
       onChangeProp?.(newValue);
     },
-    [ariaProps.onChange],
+    [ariaProps.onChange]
   );
 
   const handleCalendarChange = useCallback(
     (newRange: RangeValue<DateValue>) => {
       setCurrentValue(newRange);
       const onChangeProp = ariaProps.onChange as
-        | ((value: RangeValue<DateValue>) => void)
-        | undefined;
+        ((value: RangeValue<DateValue>) => void) | undefined;
       onChangeProp?.(newRange);
       // Plage complète choisie (début ET fin) → le calendrier se referme.
       setIsOpen(false);
     },
-    [ariaProps.onChange],
+    [ariaProps.onChange]
   );
 
   // Vide la valeur. Replace le focus sur le premier segment.
   const handleClear = useCallback(() => {
     setCurrentValue(null);
     const onChangeProp = ariaProps.onChange as
-      | ((value: RangeValue<DateValue> | null) => void)
-      | undefined;
+      ((value: RangeValue<DateValue> | null) => void) | undefined;
     onChangeProp?.(null);
     onClear?.();
     requestAnimationFrame(() => {
       const segment = containerRef.current?.querySelector<HTMLElement>(
-        "[data-type]:not([data-type='literal'])",
+        "[data-type]:not([data-type='literal'])"
       );
       segment?.focus();
     });
@@ -596,7 +583,9 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
   const handleContainerClick = useCallback(() => {
     if (ariaProps.isDisabled) return;
     setIsOpen(true);
-    const segment = containerRef.current?.querySelector<HTMLElement>("[data-type]:not([data-type='literal'])");
+    const segment = containerRef.current?.querySelector<HTMLElement>(
+      "[data-type]:not([data-type='literal'])"
+    );
     segment?.focus();
   }, [ariaProps.isDisabled]);
 
@@ -619,10 +608,7 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
   useEffect(() => {
     const handleMouseDown = (e: MouseEvent) => {
       const target = e.target as Node;
-      if (
-        containerRef.current?.contains(target) ||
-        popoverRef.current?.contains(target)
-      ) {
+      if (containerRef.current?.contains(target) || popoverRef.current?.contains(target)) {
         return;
       }
       setIsOpen(false);
@@ -655,87 +641,80 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
       onChange={handleFieldChange}
     >
       {({ isDisabled, isInvalid, isReadOnly }) => {
-        const showClear =
-          isClearable && currentValue !== null && !isReadOnly;
+        const showClear = isClearable && currentValue !== null && !isReadOnly;
         // Plage inversée (end < start) : force l'état invalide. React Aria's
         // DateRangePicker ne valide pas systématiquement cet ordre au rendu
         // initial — on garantit le feedback visuel ici.
         const isInverted =
-          currentValue !== null &&
-          currentValue.start.compare(currentValue.end) > 0;
+          currentValue !== null && currentValue.start.compare(currentValue.end) > 0;
         const effectiveInvalid = isInvalid || isInverted;
         return (
-        <div
-          ref={containerRef}
-          data-invalid={effectiveInvalid || undefined}
-        >
-          <AriaGroup>
-            <InputContainer
-              appearance={appearance}
-              isDisabled={isDisabled}
-              isInvalid={effectiveInvalid}
-              onContainerClick={handleContainerClick}
-            >
-              <AriaDateInput slot="start" className={styles.dateInput}>
-                {(segment) => (
-                  <AriaDateSegment className={styles.segment} segment={segment} />
-                )}
-              </AriaDateInput>
-              <span aria-hidden="true" className={styles.rangeSeparator}>
-                –
-              </span>
-              <AriaDateInput slot="end" className={styles.dateInput}>
-                {(segment) => (
-                  <AriaDateSegment className={styles.segment} segment={segment} />
-                )}
-              </AriaDateInput>
-              <div className={styles.trailingButtons}>
-                {showClear && (
+          <div ref={containerRef} data-invalid={effectiveInvalid || undefined}>
+            <AriaGroup>
+              <InputContainer
+                appearance={appearance}
+                isDisabled={isDisabled}
+                isInvalid={effectiveInvalid}
+                onContainerClick={handleContainerClick}
+              >
+                <AriaDateInput slot="start" className={styles.dateInput}>
+                  {(segment) => <AriaDateSegment className={styles.segment} segment={segment} />}
+                </AriaDateInput>
+                <span aria-hidden="true" className={styles.rangeSeparator}>
+                  –
+                </span>
+                <AriaDateInput slot="end" className={styles.dateInput}>
+                  {(segment) => <AriaDateSegment className={styles.segment} segment={segment} />}
+                </AriaDateInput>
+                <div className={styles.trailingButtons}>
+                  {showClear && (
+                    <Button
+                      appearance="subtle"
+                      isInline
+                      iconBefore="CloseSmall"
+                      className={[styles.calendarButton, styles.clearButton].join(" ")}
+                      isDisabled={isDisabled}
+                      aria-label="Effacer"
+                      // Hors du contexte de bouton du champ (bascule du calendrier).
+                      slot={null}
+                      onPress={handleClear}
+                      onPointerDown={(e) => e.preventDefault()}
+                    />
+                  )}
                   <Button
                     appearance="subtle"
                     isInline
-                    iconBefore="CloseSmall"
-                    className={[styles.calendarButton, styles.clearButton].join(" ")}
+                    iconBefore="CalendarToday"
+                    className={styles.calendarButton}
                     isDisabled={isDisabled}
-                    aria-label="Effacer"
-                    // Hors du contexte de bouton du champ (bascule du calendrier).
+                    aria-label="Ouvrir le calendrier"
+                    // Hors du contexte de bouton de React Aria (voir ci-dessus) : le
+                    // DS gère l'ouverture ET la fermeture de son calendrier.
                     slot={null}
-                    onPress={handleClear}
-                    onPointerDown={(e) => e.preventDefault()}
+                    aria-haspopup="dialog"
+                    aria-expanded={isOpen}
+                    onPress={() => setIsOpen(!isOpen)}
                   />
-                )}
-                <Button
-                  appearance="subtle"
-                  isInline
-                  iconBefore="CalendarToday"
-                  className={styles.calendarButton}
-                  isDisabled={isDisabled}
-                  aria-label="Ouvrir le calendrier"
-                  // Hors du contexte de bouton de React Aria (voir ci-dessus) : le
-                  // DS gère l'ouverture ET la fermeture de son calendrier.
-                  slot={null}
-                  aria-haspopup="dialog"
-                  aria-expanded={isOpen}
-                  onPress={() => setIsOpen(!isOpen)}
+                </div>
+              </InputContainer>
+            </AriaGroup>
+
+            {isOpen && (
+              <div ref={popoverRef} role="dialog" className={styles.calendarPopover}>
+                <Calendar
+                  key={
+                    currentValue
+                      ? `${currentValue.start.year}-${currentValue.start.month}`
+                      : "empty"
+                  }
+                  appearance="date"
+                  isRange
+                  value={currentValue ?? undefined}
+                  onChange={handleCalendarChange}
                 />
               </div>
-            </InputContainer>
-          </AriaGroup>
-
-          {isOpen && (
-            <div ref={popoverRef} role="dialog" className={styles.calendarPopover}>
-              <Calendar
-                key={currentValue
-                  ? `${currentValue.start.year}-${currentValue.start.month}`
-                  : "empty"}
-                appearance="date"
-                isRange
-                value={currentValue ?? undefined}
-                onChange={handleCalendarChange}
-              />
-            </div>
-          )}
-        </div>
+            )}
+          </div>
         );
       }}
     </AriaDateRangePicker>

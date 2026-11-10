@@ -86,9 +86,12 @@ describe("getPageItems — emplacements réduits", () => {
     expect(getPageItems(20, 20, 5)).toEqual([1, "ellipsis-start", 18, 19, 20]);
   });
 
-  it.each([5, 7] as const)("should keep a stable slot count (%i) once there are more pages", (slots) => {
-    for (let c = 1; c <= 30; c += 1) expect(getPageItems(c, 30, slots)).toHaveLength(slots);
-  });
+  it.each([5, 7] as const)(
+    "should keep a stable slot count (%i) once there are more pages",
+    (slots) => {
+      for (let c = 1; c <= 30; c += 1) expect(getPageItems(c, 30, slots)).toHaveLength(slots);
+    }
+  );
 
   it("should always show exactly 3 page numbers in the 3-slot window", () => {
     for (let c = 1; c <= 30; c += 1) {
@@ -105,7 +108,12 @@ describe("TablePager", () => {
 
   it("should accept a custom aria-label", () => {
     render(
-      <TablePager page={0} pageCount={8} aria-label="Pages des agents" onPageChange={() => undefined} />,
+      <TablePager
+        page={0}
+        pageCount={8}
+        aria-label="Pages des agents"
+        onPageChange={() => undefined}
+      />
     );
     expect(screen.getByRole("navigation", { name: "Pages des agents" })).toBeInTheDocument();
   });
@@ -142,7 +150,9 @@ describe("TablePager", () => {
   });
 
   it("should disable previous on the first page and next on the last", () => {
-    const { rerender } = render(<TablePager page={0} pageCount={8} onPageChange={() => undefined} />);
+    const { rerender } = render(
+      <TablePager page={0} pageCount={8} onPageChange={() => undefined} />
+    );
     expect(screen.getByRole("button", { name: "Page précédente" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Page suivante" })).toBeEnabled();
     rerender(<TablePager page={7} pageCount={8} onPageChange={() => undefined} />);
@@ -159,7 +169,7 @@ describe("TablePager", () => {
 
   it("should render nothing when there is a single page or fewer", () => {
     const { container, rerender } = render(
-      <TablePager page={0} pageCount={1} onPageChange={() => undefined} />,
+      <TablePager page={0} pageCount={1} onPageChange={() => undefined} />
     );
     expect(container).toBeEmptyDOMElement();
     rerender(<TablePager page={0} pageCount={0} onPageChange={() => undefined} />);

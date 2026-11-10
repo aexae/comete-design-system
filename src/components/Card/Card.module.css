@@ -47,23 +47,45 @@
    ========================================================================== */
 
 /* ---- neutral ---- */
-.outlined.color-neutral { border-color: var(--border-default); }
-.subtle.color-neutral   { background-color: var(--background-neutral-subtler-default); }
-.bold.color-neutral     { background-color: var(--background-neutral-bold-default); }
+.outlined.color-neutral {
+  border-color: var(--border-default);
+}
+.subtle.color-neutral {
+  background-color: var(--background-neutral-subtler-default);
+}
+.bold.color-neutral {
+  background-color: var(--background-neutral-bold-default);
+}
 
 /* ---- comete ---- */
-.outlined.color-comete { border-color: var(--border-comete-bold); }
-.subtle.color-comete   { background-color: var(--background-comete-subtlest-default); }
-.bold.color-comete     { background-color: var(--background-comete-bold-default); }
+.outlined.color-comete {
+  border-color: var(--border-comete-bold);
+}
+.subtle.color-comete {
+  background-color: var(--background-comete-subtlest-default);
+}
+.bold.color-comete {
+  background-color: var(--background-comete-bold-default);
+}
 
 /* ---- success ---- */
-.outlined.color-success { border-color: var(--border-success-bold); }
-.subtle.color-success   { background-color: var(--background-success-subtlest-default); }
-.bold.color-success     { background-color: var(--background-success-bold-default); }
+.outlined.color-success {
+  border-color: var(--border-success-bold);
+}
+.subtle.color-success {
+  background-color: var(--background-success-subtlest-default);
+}
+.bold.color-success {
+  background-color: var(--background-success-bold-default);
+}
 
 /* ---- warning ---- */
-.outlined.color-warning { border-color: var(--border-warning-bold); }
-.subtle.color-warning   { background-color: var(--background-warning-subtlest-default); }
+.outlined.color-warning {
+  border-color: var(--border-warning-bold);
+}
+.subtle.color-warning {
+  background-color: var(--background-warning-subtlest-default);
+}
 .bold.color-warning {
   background-color: var(--background-warning-bold-default);
   color: var(--text-on-warning);
@@ -76,44 +98,92 @@
 }
 
 /* ---- critical ---- */
-.outlined.color-critical { border-color: var(--border-critical-bold); }
-.subtle.color-critical   { background-color: var(--background-critical-subtlest-default); }
-.bold.color-critical     { background-color: var(--background-critical-bold-default); }
+.outlined.color-critical {
+  border-color: var(--border-critical-bold);
+}
+.subtle.color-critical {
+  background-color: var(--background-critical-subtlest-default);
+}
+.bold.color-critical {
+  background-color: var(--background-critical-bold-default);
+}
 
 /* ---- information ---- */
-.outlined.color-information { border-color: var(--border-information-bold); }
-.subtle.color-information   { background-color: var(--background-information-subtlest-default); }
-.bold.color-information     { background-color: var(--background-information-bold-default); }
+.outlined.color-information {
+  border-color: var(--border-information-bold);
+}
+.subtle.color-information {
+  background-color: var(--background-information-subtlest-default);
+}
+.bold.color-information {
+  background-color: var(--background-information-bold-default);
+}
 
 /* ---- accentPurple ---- */
-.outlined.color-accentPurple { border-color: var(--border-accent-purple-bold); }
-.subtle.color-accentPurple   { background-color: var(--background-accent-purple-subtlest-default); }
-.bold.color-accentPurple     { background-color: var(--background-accent-purple-bold-default); }
+.outlined.color-accentPurple {
+  border-color: var(--border-accent-purple-bold);
+}
+.subtle.color-accentPurple {
+  background-color: var(--background-accent-purple-subtlest-default);
+}
+.bold.color-accentPurple {
+  background-color: var(--background-accent-purple-bold-default);
+}
 
 /* ---- accentTeal ---- */
-.outlined.color-accentTeal { border-color: var(--border-accent-teal-bold); }
-.subtle.color-accentTeal   { background-color: var(--background-accent-teal-subtlest-default); }
-.bold.color-accentTeal     { background-color: var(--background-accent-teal-bold-default); }
+.outlined.color-accentTeal {
+  border-color: var(--border-accent-teal-bold);
+}
+.subtle.color-accentTeal {
+  background-color: var(--background-accent-teal-subtlest-default);
+}
+.bold.color-accentTeal {
+  background-color: var(--background-accent-teal-bold-default);
+}
 
 /* ---- accentTurquoise ---- */
-.outlined.color-accentTurquoise { border-color: var(--border-accent-turquoise-bold); }
-.subtle.color-accentTurquoise   { background-color: var(--background-accent-turquoise-subtlest-default); }
-.bold.color-accentTurquoise     { background-color: var(--background-accent-turquoise-bold-default); }
+.outlined.color-accentTurquoise {
+  border-color: var(--border-accent-turquoise-bold);
+}
+.subtle.color-accentTurquoise {
+  background-color: var(--background-accent-turquoise-subtlest-default);
+}
+.bold.color-accentTurquoise {
+  background-color: var(--background-accent-turquoise-bold-default);
+}
 
 /* ---- accentMagenta ---- */
-.outlined.color-accentMagenta { border-color: var(--border-accent-magenta-bold); }
-.subtle.color-accentMagenta   { background-color: var(--background-accent-magenta-subtlest-default); }
-.bold.color-accentMagenta     { background-color: var(--background-accent-magenta-bold-default); }
+.outlined.color-accentMagenta {
+  border-color: var(--border-accent-magenta-bold);
+}
+.subtle.color-accentMagenta {
+  background-color: var(--background-accent-magenta-subtlest-default);
+}
+.bold.color-accentMagenta {
+  background-color: var(--background-accent-magenta-bold-default);
+}
 
 /* ---- accentBlueGrey ---- */
-.outlined.color-accentBlueGrey { border-color: var(--border-accent-blue-grey-bold); }
-.subtle.color-accentBlueGrey   { background-color: var(--background-accent-blue-grey-subtlest-default); }
-.bold.color-accentBlueGrey     { background-color: var(--background-accent-blue-grey-bold-default); }
+.outlined.color-accentBlueGrey {
+  border-color: var(--border-accent-blue-grey-bold);
+}
+.subtle.color-accentBlueGrey {
+  background-color: var(--background-accent-blue-grey-subtlest-default);
+}
+.bold.color-accentBlueGrey {
+  background-color: var(--background-accent-blue-grey-bold-default);
+}
 
 /* ---- brand (charte client, défaut = navy Comète) ---- */
-.outlined.color-brand { border-color: var(--border-brand-bold); }
-.subtle.color-brand   { background-color: var(--background-brand-subtlest-default); }
-.bold.color-brand     { background-color: var(--background-brand-bold-default); }
+.outlined.color-brand {
+  border-color: var(--border-brand-bold);
+}
+.subtle.color-brand {
+  background-color: var(--background-brand-subtlest-default);
+}
+.bold.color-brand {
+  background-color: var(--background-brand-bold-default);
+}
 
 /* ==========================================================================
    Layout drag
@@ -194,33 +264,81 @@
 
 /* ---- Hover background : subtle ---- */
 
-.subtle.color-neutral[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-neutral-subtler-hovered); }
-.subtle.color-comete[data-interactive]:not([data-dragging]):hover       { background-color: var(--background-comete-subtlest-hovered); }
-.subtle.color-success[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-success-subtlest-hovered); }
-.subtle.color-warning[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-warning-subtlest-hovered); }
-.subtle.color-critical[data-interactive]:not([data-dragging]):hover    { background-color: var(--background-critical-subtlest-hovered); }
-.subtle.color-information[data-interactive]:not([data-dragging]):hover { background-color: var(--background-information-subtlest-hovered); }
-.subtle.color-accentPurple[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-accent-purple-subtlest-hovered); }
-.subtle.color-accentTeal[data-interactive]:not([data-dragging]):hover       { background-color: var(--background-accent-teal-subtlest-hovered); }
-.subtle.color-accentTurquoise[data-interactive]:not([data-dragging]):hover  { background-color: var(--background-accent-turquoise-subtlest-hovered); }
-.subtle.color-accentMagenta[data-interactive]:not([data-dragging]):hover    { background-color: var(--background-accent-magenta-subtlest-hovered); }
-.subtle.color-accentBlueGrey[data-interactive]:not([data-dragging]):hover   { background-color: var(--background-accent-blue-grey-subtlest-hovered); }
-.subtle.color-brand[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-brand-subtlest-hovered); }
+.subtle.color-neutral[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-neutral-subtler-hovered);
+}
+.subtle.color-comete[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-comete-subtlest-hovered);
+}
+.subtle.color-success[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-success-subtlest-hovered);
+}
+.subtle.color-warning[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-warning-subtlest-hovered);
+}
+.subtle.color-critical[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-critical-subtlest-hovered);
+}
+.subtle.color-information[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-information-subtlest-hovered);
+}
+.subtle.color-accentPurple[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-accent-purple-subtlest-hovered);
+}
+.subtle.color-accentTeal[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-accent-teal-subtlest-hovered);
+}
+.subtle.color-accentTurquoise[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-accent-turquoise-subtlest-hovered);
+}
+.subtle.color-accentMagenta[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-accent-magenta-subtlest-hovered);
+}
+.subtle.color-accentBlueGrey[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-accent-blue-grey-subtlest-hovered);
+}
+.subtle.color-brand[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-brand-subtlest-hovered);
+}
 
 /* ---- Hover background : bold ---- */
 
-.bold.color-neutral[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-neutral-bold-hovered); }
-.bold.color-comete[data-interactive]:not([data-dragging]):hover       { background-color: var(--background-comete-bold-hovered); }
-.bold.color-success[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-success-bold-hovered); }
-.bold.color-warning[data-interactive]:not([data-dragging]):hover     { background-color: var(--background-warning-bold-hovered); }
-.bold.color-critical[data-interactive]:not([data-dragging]):hover    { background-color: var(--background-critical-bold-hovered); }
-.bold.color-information[data-interactive]:not([data-dragging]):hover { background-color: var(--background-information-bold-hovered); }
-.bold.color-accentPurple[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-accent-purple-bold-hovered); }
-.bold.color-accentTeal[data-interactive]:not([data-dragging]):hover       { background-color: var(--background-accent-teal-bold-hovered); }
-.bold.color-accentTurquoise[data-interactive]:not([data-dragging]):hover  { background-color: var(--background-accent-turquoise-bold-hovered); }
-.bold.color-accentMagenta[data-interactive]:not([data-dragging]):hover    { background-color: var(--background-accent-magenta-bold-hovered); }
-.bold.color-accentBlueGrey[data-interactive]:not([data-dragging]):hover   { background-color: var(--background-accent-blue-grey-bold-hovered); }
-.bold.color-brand[data-interactive]:not([data-dragging]):hover      { background-color: var(--background-brand-bold-hovered); }
+.bold.color-neutral[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-neutral-bold-hovered);
+}
+.bold.color-comete[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-comete-bold-hovered);
+}
+.bold.color-success[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-success-bold-hovered);
+}
+.bold.color-warning[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-warning-bold-hovered);
+}
+.bold.color-critical[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-critical-bold-hovered);
+}
+.bold.color-information[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-information-bold-hovered);
+}
+.bold.color-accentPurple[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-accent-purple-bold-hovered);
+}
+.bold.color-accentTeal[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-accent-teal-bold-hovered);
+}
+.bold.color-accentTurquoise[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-accent-turquoise-bold-hovered);
+}
+.bold.color-accentMagenta[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-accent-magenta-bold-hovered);
+}
+.bold.color-accentBlueGrey[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-accent-blue-grey-bold-hovered);
+}
+.bold.color-brand[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-brand-bold-hovered);
+}
 
 /* ---- Pressed ---- */
 
@@ -233,31 +351,79 @@
   box-shadow: none;
 }
 
-.subtle.color-neutral[data-interactive]:not([data-dragging]):active     { background-color: var(--background-neutral-subtler-pressed); }
-.subtle.color-comete[data-interactive]:not([data-dragging]):active       { background-color: var(--background-comete-subtlest-pressed); }
-.subtle.color-success[data-interactive]:not([data-dragging]):active     { background-color: var(--background-success-subtlest-pressed); }
-.subtle.color-warning[data-interactive]:not([data-dragging]):active     { background-color: var(--background-warning-subtlest-pressed); }
-.subtle.color-critical[data-interactive]:not([data-dragging]):active    { background-color: var(--background-critical-subtlest-pressed); }
-.subtle.color-information[data-interactive]:not([data-dragging]):active { background-color: var(--background-information-subtlest-pressed); }
-.subtle.color-accentPurple[data-interactive]:not([data-dragging]):active      { background-color: var(--background-accent-purple-subtlest-pressed); }
-.subtle.color-accentTeal[data-interactive]:not([data-dragging]):active       { background-color: var(--background-accent-teal-subtlest-pressed); }
-.subtle.color-accentTurquoise[data-interactive]:not([data-dragging]):active  { background-color: var(--background-accent-turquoise-subtlest-pressed); }
-.subtle.color-accentMagenta[data-interactive]:not([data-dragging]):active    { background-color: var(--background-accent-magenta-subtlest-pressed); }
-.subtle.color-accentBlueGrey[data-interactive]:not([data-dragging]):active   { background-color: var(--background-accent-blue-grey-subtlest-pressed); }
-.subtle.color-brand[data-interactive]:not([data-dragging]):active      { background-color: var(--background-brand-subtlest-pressed); }
+.subtle.color-neutral[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-neutral-subtler-pressed);
+}
+.subtle.color-comete[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-comete-subtlest-pressed);
+}
+.subtle.color-success[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-success-subtlest-pressed);
+}
+.subtle.color-warning[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-warning-subtlest-pressed);
+}
+.subtle.color-critical[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-critical-subtlest-pressed);
+}
+.subtle.color-information[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-information-subtlest-pressed);
+}
+.subtle.color-accentPurple[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-accent-purple-subtlest-pressed);
+}
+.subtle.color-accentTeal[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-accent-teal-subtlest-pressed);
+}
+.subtle.color-accentTurquoise[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-accent-turquoise-subtlest-pressed);
+}
+.subtle.color-accentMagenta[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-accent-magenta-subtlest-pressed);
+}
+.subtle.color-accentBlueGrey[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-accent-blue-grey-subtlest-pressed);
+}
+.subtle.color-brand[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-brand-subtlest-pressed);
+}
 
-.bold.color-neutral[data-interactive]:not([data-dragging]):active     { background-color: var(--background-neutral-bold-pressed); }
-.bold.color-comete[data-interactive]:not([data-dragging]):active       { background-color: var(--background-comete-bold-pressed); }
-.bold.color-success[data-interactive]:not([data-dragging]):active     { background-color: var(--background-success-bold-pressed); }
-.bold.color-warning[data-interactive]:not([data-dragging]):active     { background-color: var(--background-warning-bold-pressed); }
-.bold.color-critical[data-interactive]:not([data-dragging]):active    { background-color: var(--background-critical-bold-pressed); }
-.bold.color-information[data-interactive]:not([data-dragging]):active { background-color: var(--background-information-bold-pressed); }
-.bold.color-accentPurple[data-interactive]:not([data-dragging]):active      { background-color: var(--background-accent-purple-bold-pressed); }
-.bold.color-accentTeal[data-interactive]:not([data-dragging]):active       { background-color: var(--background-accent-teal-bold-pressed); }
-.bold.color-accentTurquoise[data-interactive]:not([data-dragging]):active  { background-color: var(--background-accent-turquoise-bold-pressed); }
-.bold.color-accentMagenta[data-interactive]:not([data-dragging]):active    { background-color: var(--background-accent-magenta-bold-pressed); }
-.bold.color-accentBlueGrey[data-interactive]:not([data-dragging]):active   { background-color: var(--background-accent-blue-grey-bold-pressed); }
-.bold.color-brand[data-interactive]:not([data-dragging]):active      { background-color: var(--background-brand-bold-pressed); }
+.bold.color-neutral[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-neutral-bold-pressed);
+}
+.bold.color-comete[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-comete-bold-pressed);
+}
+.bold.color-success[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-success-bold-pressed);
+}
+.bold.color-warning[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-warning-bold-pressed);
+}
+.bold.color-critical[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-critical-bold-pressed);
+}
+.bold.color-information[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-information-bold-pressed);
+}
+.bold.color-accentPurple[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-accent-purple-bold-pressed);
+}
+.bold.color-accentTeal[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-accent-teal-bold-pressed);
+}
+.bold.color-accentTurquoise[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-accent-turquoise-bold-pressed);
+}
+.bold.color-accentMagenta[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-accent-magenta-bold-pressed);
+}
+.bold.color-accentBlueGrey[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-accent-blue-grey-bold-pressed);
+}
+.bold.color-brand[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-brand-bold-pressed);
+}
 
 /* Focus visible — géré par le composant FocusRing */
 .card[data-interactive]:focus-visible {

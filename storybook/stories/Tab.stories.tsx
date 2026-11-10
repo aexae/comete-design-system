@@ -1,12 +1,7 @@
 // Tab (code part) — stories Storybook
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  Tabs,
-  TabList,
-  Tab,
-  TabPanel,
-} from "@aexae/comete-design-system/components";
+import { Tabs, TabList, Tab, TabPanel } from "@aexae/comete-design-system/components";
 import type { IconName } from "@aexae/comete-icons";
 import { iconRegistry } from "@aexae/comete-icons";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
@@ -14,10 +9,8 @@ import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 // -----------------------------------------------------------------------
 // Figma
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Icon options (from registry — always in sync)
@@ -52,9 +45,7 @@ const meta = {
   ],
   parameters: {
     docs: {
-      page: () => (
-        <DocsTabsPage />
-      ),
+      page: () => <DocsTabsPage />,
     },
     layout: "centered",
     design: {
@@ -135,7 +126,6 @@ export const Default: Story = {
   render: TabStory,
 };
 
-
 // -----------------------------------------------------------------------
 // Stories — state = selected
 
@@ -172,7 +162,9 @@ export const AllStates: Story = {
         <Tab id="default">Default</Tab>
         <Tab id="selected">Selected</Tab>
         <Tab id="disabled">Disabled</Tab>
-        <Tab id="with-icon" iconBefore="Star">With icon</Tab>
+        <Tab id="with-icon" iconBefore="Star">
+          With icon
+        </Tab>
       </TabList>
       <TabPanel id="default" />
       <TabPanel id="selected" />

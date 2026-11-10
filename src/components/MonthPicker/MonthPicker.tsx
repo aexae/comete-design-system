@@ -1,16 +1,8 @@
 // MonthPicker — Comète Design System
 // Sélecteur de mois : deux modes (saisie / navigation) × (single / range).
 import { useEffect, useRef, useState, type ReactElement, type CSSProperties } from "react";
-import {
-  CalendarDate,
-  today,
-  getLocalTimeZone,
-} from "@internationalized/date";
-import {
-  Dialog as AriaDialog,
-  DialogTrigger,
-  useLocale,
-} from "react-aria-components";
+import { CalendarDate, today, getLocalTimeZone } from "@internationalized/date";
+import { Dialog as AriaDialog, DialogTrigger, useLocale } from "react-aria-components";
 import type { RangeValue } from "react-aria-components";
 import { Button } from "../Button/Button.js";
 import { Calendar } from "../Calendar/Calendar.js";
@@ -75,10 +67,7 @@ export interface SingleMonthPickerProps extends MonthPickerBaseProps {
    * Callback appelé à chaque changement de mois/année.
    * `undefined` pour les deux = effacé.
    */
-  onChange?: (
-    month: number | undefined,
-    year: number | undefined,
-  ) => void;
+  onChange?: (month: number | undefined, year: number | undefined) => void;
 }
 
 /** Props du mode plage (sélection d'une plage de mois). */
@@ -106,7 +95,7 @@ export interface RangeMonthPickerProps extends MonthPickerBaseProps {
     startMonth: number | undefined,
     startYear: number | undefined,
     endMonth: number | undefined,
-    endYear: number | undefined,
+    endYear: number | undefined
   ) => void;
 }
 
@@ -124,23 +113,17 @@ function capitalize(str: string): string {
 /** Formate le nom du mois en toutes lettres avec majuscule (ex: "Juin"). */
 function formatMonthLong(month: number, locale: string): string {
   return capitalize(
-    new Intl.DateTimeFormat(locale, { month: "long" }).format(
-      new Date(2000, month - 1, 1),
-    ),
+    new Intl.DateTimeFormat(locale, { month: "long" }).format(new Date(2000, month - 1, 1))
   );
 }
 
 /** Formate "Mois Année" avec majuscule (ex: "Juin 2025"). */
-function formatMonthYear(
-  month: number,
-  year: number,
-  locale: string,
-): string {
+function formatMonthYear(month: number, year: number, locale: string): string {
   return capitalize(
     new Intl.DateTimeFormat(locale, {
       month: "long",
       year: "numeric",
-    }).format(new Date(year, month - 1, 1)),
+    }).format(new Date(year, month - 1, 1))
   );
 }
 
@@ -148,10 +131,7 @@ function formatMonthYear(
  * Parse une chaîne "Mois Année" (ex: "Août 2025", "août 2025", "08 2025", "08/2025").
  * Retourne `{ month, year }` ou `null`.
  */
-function parseMonthYear(
-  input: string,
-  locale: string,
-): { month: number; year: number } | null {
+function parseMonthYear(input: string, locale: string): { month: number; year: number } | null {
   const trimmed = input.trim();
 
   // Format numérique : "08 2025", "08/2025", "8/2025"
@@ -165,7 +145,7 @@ function parseMonthYear(
   // Format texte : "Août 2025" — matcher le nom du mois dans la locale
   for (let m = 1; m <= 12; m++) {
     const monthName = new Intl.DateTimeFormat(locale, { month: "long" }).format(
-      new Date(2000, m - 1, 1),
+      new Date(2000, m - 1, 1)
     );
     if (trimmed.toLowerCase().startsWith(monthName.toLowerCase())) {
       const rest = trimmed.slice(monthName.length).trim();
@@ -215,18 +195,10 @@ function monthToOrdinal(month: number, year: number): number {
  * ```
  */
 export function MonthPicker(props: MonthPickerProps): ReactElement {
-  const inner = props.isRange ? (
-    <RangeMonthPicker {...props} />
-  ) : (
-    <SingleMonthPicker {...props} />
-  );
+  const inner = props.isRange ? <RangeMonthPicker {...props} /> : <SingleMonthPicker {...props} />;
   // Densité : si fournie, enveloppe le rendu dans un DensityProvider — les
   // InputContainer profonds la lisent via le contexte.
-  return props.density ? (
-    <DensityProvider density={props.density}>{inner}</DensityProvider>
-  ) : (
-    inner
-  );
+  return props.density ? <DensityProvider density={props.density}>{inner}</DensityProvider> : inner;
 }
 
 MonthPicker.displayName = "MonthPicker";
@@ -420,11 +392,7 @@ function SingleMonthPicker({
               onBlur={handleMonthInputBlur}
               onKeyDown={handleInputKeyDown}
               disabled={isDisabled}
-              aria-label={
-                month !== undefined
-                  ? `Mois : ${formatMonthLong(month, locale)}`
-                  : "Mois"
-              }
+              aria-label={month !== undefined ? `Mois : ${formatMonthLong(month, locale)}` : "Mois"}
               placeholder="MM"
             />
 
@@ -436,13 +404,7 @@ function SingleMonthPicker({
               type="text"
               inputMode="numeric"
               className={styles.yearInput}
-              value={
-                yearFocused
-                  ? yearInput
-                  : year !== undefined
-                    ? String(year)
-                    : ""
-              }
+              value={yearFocused ? yearInput : year !== undefined ? String(year) : ""}
               onChange={(e) => setYearInput(e.target.value)}
               onClick={() => !isDisabled && setIsOpen(true)}
               onFocus={handleYearInputFocus}
@@ -512,11 +474,7 @@ function SingleMonthPicker({
               >
                 {formattedLabel}
               </Button>
-              <Popover
-                triggerRef={containerRef}
-                placement="bottom start"
-                shouldFlip={false}
-              >
+              <Popover triggerRef={containerRef} placement="bottom start" shouldFlip={false}>
                 <AriaDialog className={styles.dialog}>
                   <Calendar
                     appearance="month"
@@ -582,9 +540,7 @@ function RangeMonthPicker({
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Popover open state — un seul popover ouvert à la fois
-  const [openPopover, setOpenPopover] = useState<
-    "start" | "end" | "range" | null
-  >(null);
+  const [openPopover, setOpenPopover] = useState<"start" | "end" | "range" | null>(null);
 
   // Click outside : ferme le popover + blur de l'input focus pour qu'on
   // sorte effectivement du mode "focused".
@@ -614,12 +570,7 @@ function RangeMonthPicker({
 
   // -- Helper : commit range (auto-swap if start > end) --
 
-  const commitRange = (
-    sm: number,
-    sy: number,
-    em: number,
-    ey: number,
-  ) => {
+  const commitRange = (sm: number, sy: number, em: number, ey: number) => {
     if (monthToOrdinal(sm, sy) > monthToOrdinal(em, ey)) {
       onChange?.(em, ey, sm, sy);
     } else {
@@ -630,12 +581,7 @@ function RangeMonthPicker({
   // -- Handler calendar range selection --
 
   const handleRangeSelect = (range: RangeValue<CalendarDate>) => {
-    commitRange(
-      range.start.month,
-      range.start.year,
-      range.end.month,
-      range.end.year,
-    );
+    commitRange(range.start.month, range.start.year, range.end.month, range.end.year);
     setOpenPopover(null);
   };
 
@@ -644,12 +590,7 @@ function RangeMonthPicker({
   // même si temporairement start > end. Le second clic committera la plage
   // finale avec swap si nécessaire.
   const handleIntermediateStart = (date: CalendarDate) => {
-    onChange?.(
-      date.month,
-      date.year,
-      resolvedEndMonth,
-      resolvedEndYear,
-    );
+    onChange?.(date.month, date.year, resolvedEndMonth, resolvedEndYear);
   };
 
   // -- Editable input state --
@@ -675,16 +616,8 @@ function RangeMonthPicker({
     });
   };
 
-  const startLabel = formatMonthYear(
-    resolvedStartMonth,
-    resolvedStartYear,
-    locale,
-  );
-  const endLabel = formatMonthYear(
-    resolvedEndMonth,
-    resolvedEndYear,
-    locale,
-  );
+  const startLabel = formatMonthYear(resolvedStartMonth, resolvedStartYear, locale);
+  const endLabel = formatMonthYear(resolvedEndMonth, resolvedEndYear, locale);
   const startHasValue = startMonth !== undefined && startYear !== undefined;
   const endHasValue = endMonth !== undefined && endYear !== undefined;
 
@@ -697,12 +630,7 @@ function RangeMonthPicker({
     setStartFocused(false);
     const parsed = parseMonthYear(startInput, locale);
     if (parsed) {
-      commitRange(
-        parsed.month,
-        parsed.year,
-        resolvedEndMonth,
-        resolvedEndYear,
-      );
+      commitRange(parsed.month, parsed.year, resolvedEndMonth, resolvedEndYear);
     }
   };
 
@@ -715,12 +643,7 @@ function RangeMonthPicker({
     setEndFocused(false);
     const parsed = parseMonthYear(endInput, locale);
     if (parsed) {
-      commitRange(
-        resolvedStartMonth,
-        resolvedStartYear,
-        parsed.month,
-        parsed.year,
-      );
+      commitRange(resolvedStartMonth, resolvedStartYear, parsed.month, parsed.year);
     }
   };
 
@@ -769,9 +692,7 @@ function RangeMonthPicker({
     <div
       className={rootClassNames}
       ref={containerRef}
-      aria-label={
-        ariaLabel ?? `Plage de mois : ${startLabel} à ${endLabel}`
-      }
+      aria-label={ariaLabel ?? `Plage de mois : ${startLabel} à ${endLabel}`}
       data-disabled={isDisabled || undefined}
       data-invalid={effectiveInvalid || undefined}
       style={style}
@@ -788,24 +709,14 @@ function RangeMonthPicker({
             <input
               type="text"
               className={styles.rangeInput}
-              value={
-                startFocused
-                  ? startInput
-                  : startHasValue
-                    ? startLabel
-                    : ""
-              }
+              value={startFocused ? startInput : startHasValue ? startLabel : ""}
               onChange={(e) => setStartInput(e.target.value)}
               onClick={() => !isDisabled && setOpenPopover("range")}
               onFocus={handleStartFocus}
               onBlur={handleStartBlur}
               onKeyDown={handleInputKeyDown}
               disabled={isDisabled}
-              aria-label={
-                startHasValue
-                  ? `Mois de début : ${startLabel}`
-                  : "Mois de début"
-              }
+              aria-label={startHasValue ? `Mois de début : ${startLabel}` : "Mois de début"}
               placeholder="Mois AAAA"
             />
 
@@ -816,22 +727,14 @@ function RangeMonthPicker({
             <input
               type="text"
               className={styles.rangeInput}
-              value={
-                endFocused
-                  ? endInput
-                  : endHasValue
-                    ? endLabel
-                    : ""
-              }
+              value={endFocused ? endInput : endHasValue ? endLabel : ""}
               onChange={(e) => setEndInput(e.target.value)}
               onClick={() => !isDisabled && setOpenPopover("range")}
               onFocus={handleEndFocus}
               onBlur={handleEndBlur}
               onKeyDown={handleInputKeyDown}
               disabled={isDisabled}
-              aria-label={
-                endHasValue ? `Mois de fin : ${endLabel}` : "Mois de fin"
-              }
+              aria-label={endHasValue ? `Mois de fin : ${endLabel}` : "Mois de fin"}
               placeholder="Mois AAAA"
             />
 
@@ -859,8 +762,7 @@ function RangeMonthPicker({
                 className={styles.calendarButton}
                 isDisabled={isDisabled}
                 onPress={() =>
-                  !isDisabled &&
-                  setOpenPopover((o) => (o === "range" ? null : "range"))
+                  !isDisabled && setOpenPopover((o) => (o === "range" ? null : "range"))
                 }
                 aria-label="Ouvrir le sélecteur de mois"
               />
@@ -876,9 +778,7 @@ function RangeMonthPicker({
               {/* Bouton mois de début */}
               <DialogTrigger
                 isOpen={openPopover === "start"}
-                onOpenChange={(open) =>
-                  setOpenPopover(open ? "start" : null)
-                }
+                onOpenChange={(open) => setOpenPopover(open ? "start" : null)}
               >
                 <Button
                   appearance="subtle"
@@ -888,14 +788,8 @@ function RangeMonthPicker({
                 >
                   {startLabel}
                 </Button>
-                <Popover
-                  triggerRef={containerRef}
-                  placement="bottom start"
-                  shouldFlip={false}
-                >
-                  <AriaDialog className={styles.dialog}>
-                    {renderCalendar()}
-                  </AriaDialog>
+                <Popover triggerRef={containerRef} placement="bottom start" shouldFlip={false}>
+                  <AriaDialog className={styles.dialog}>{renderCalendar()}</AriaDialog>
                 </Popover>
               </DialogTrigger>
 
@@ -906,9 +800,7 @@ function RangeMonthPicker({
               {/* Bouton mois de fin */}
               <DialogTrigger
                 isOpen={openPopover === "end"}
-                onOpenChange={(open) =>
-                  setOpenPopover(open ? "end" : null)
-                }
+                onOpenChange={(open) => setOpenPopover(open ? "end" : null)}
               >
                 <Button
                   appearance="subtle"
@@ -918,14 +810,8 @@ function RangeMonthPicker({
                 >
                   {endLabel}
                 </Button>
-                <Popover
-                  triggerRef={containerRef}
-                  placement="bottom start"
-                  shouldFlip={false}
-                >
-                  <AriaDialog className={styles.dialog}>
-                    {renderCalendar()}
-                  </AriaDialog>
+                <Popover triggerRef={containerRef} placement="bottom start" shouldFlip={false}>
+                  <AriaDialog className={styles.dialog}>{renderCalendar()}</AriaDialog>
                 </Popover>
               </DialogTrigger>
             </div>
@@ -943,14 +829,8 @@ function RangeMonthPicker({
                 isDisabled={isDisabled}
                 aria-label="Ouvrir le sélecteur de mois"
               />
-              <Popover
-                triggerRef={containerRef}
-                placement="bottom start"
-                shouldFlip={false}
-              >
-                <AriaDialog className={styles.dialog}>
-                  {renderCalendar()}
-                </AriaDialog>
+              <Popover triggerRef={containerRef} placement="bottom start" shouldFlip={false}>
+                <AriaDialog className={styles.dialog}>{renderCalendar()}</AriaDialog>
               </Popover>
             </DialogTrigger>
           </>

@@ -78,12 +78,18 @@ export function InputContainer({
       // Ne réagir que si le clic est sur le conteneur lui-même (padding/fond),
       // pas sur un enfant interactif (input, button, select, a, [tabindex]).
       const target = e.target as HTMLElement;
-      if (target !== containerRef.current && target.closest("input, button, select, textarea, a, [tabindex]")) {
+      if (
+        target !== containerRef.current &&
+        target.closest("input, button, select, textarea, a, [tabindex]")
+      ) {
         return;
       }
 
       // Si le conteneur a déjà le focus (un enfant est focusé), ne rien faire.
-      if (containerRef.current?.contains(document.activeElement) && document.activeElement !== containerRef.current) {
+      if (
+        containerRef.current?.contains(document.activeElement) &&
+        document.activeElement !== containerRef.current
+      ) {
         return;
       }
 
@@ -96,12 +102,12 @@ export function InputContainer({
       } else {
         // Comportement par défaut : focus le premier élément focusable
         const focusable = containerRef.current?.querySelector<HTMLElement>(
-          "input, [tabindex]:not([tabindex='-1']), button:not([aria-label='Effacer'])",
+          "input, [tabindex]:not([tabindex='-1']), button:not([aria-label='Effacer'])"
         );
         focusable?.focus();
       }
     },
-    [isDisabled, onContainerClick],
+    [isDisabled, onContainerClick]
   );
 
   // Densité : prop `density` > contexte (DensityProvider) > "default".
@@ -114,11 +120,7 @@ export function InputContainer({
 
   const classNames = [
     styles.inputContainer,
-    isBorderless
-      ? styles.borderless
-      : appearance === "default"
-        ? styles.bordered
-        : styles.subtle,
+    isBorderless ? styles.borderless : appearance === "default" ? styles.bordered : styles.subtle,
     densityClassMap[resolvedDensity],
     isDisabled ? styles.disabled : undefined,
     isInvalid ? styles.invalid : undefined,

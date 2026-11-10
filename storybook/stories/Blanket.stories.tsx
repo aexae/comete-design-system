@@ -16,7 +16,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le blanket est une couche semi-transparente qui recouvre le contenu de la page pour focaliser l'attention sur un élément au premier plan, comme une modale ou un drawer." },
+      description: {
+        component:
+          "Le blanket est une couche semi-transparente qui recouvre le contenu de la page pour focaliser l'attention sur un élément au premier plan, comme une modale ou un drawer.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={

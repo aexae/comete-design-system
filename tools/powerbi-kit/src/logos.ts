@@ -95,7 +95,7 @@ export function renderLogo(options: RenderLogoOptions): RenderedLogo {
   };
   const markup = dropHiddenBody(
     renderToStaticMarkup(createElement(Component, props)),
-    visibleBody(options.appearance, options.theme),
+    visibleBody(options.appearance, options.theme)
   );
 
   // Table de résolution : tokens de thème + variables d'apparence du logo.
@@ -107,7 +107,7 @@ export function renderLogo(options: RenderLogoOptions): RenderedLogo {
   const composed = composeSvg(markup, (svg) =>
     resolveVars(svg, table)
       .replace(/\sclass="[^"]*"/g, "")
-      .replace(/\saria-hidden="[^"]*"/g, ""),
+      .replace(/\saria-hidden="[^"]*"/g, "")
   );
 
   if (composed.svg.includes("var(")) {

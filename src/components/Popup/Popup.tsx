@@ -30,16 +30,16 @@ export type PopupPlacement =
  *  React Aria uses start/end for cross-axis alignment on top/bottom,
  *  and top/bottom for cross-axis alignment on left/right. */
 const PLACEMENT_MAP: Record<PopupPlacement, NonNullable<AriaPopoverProps["placement"]>> = {
-  "top": "top",
+  top: "top",
   "top-left": "top start",
   "top-right": "top end",
-  "bottom": "bottom",
+  bottom: "bottom",
   "bottom-left": "bottom start",
   "bottom-right": "bottom end",
-  "left": "left",
+  left: "left",
   "left-top": "left top",
   "left-bottom": "left bottom",
-  "right": "right",
+  right: "right",
   "right-top": "right top",
   "right-bottom": "right bottom",
 };

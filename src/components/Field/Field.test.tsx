@@ -37,7 +37,7 @@ describe("Field", () => {
       render(
         <Field label="Nom" isRequired>
           x
-        </Field>,
+        </Field>
       );
       expect(screen.getByText("*")).toBeInTheDocument();
     });
@@ -63,7 +63,7 @@ describe("Field", () => {
       const { container } = render(
         <Field message="Error" messageType="critical">
           x
-        </Field>,
+        </Field>
       );
       expect(container.querySelector(".message")).toHaveClass("critical");
     });
@@ -72,7 +72,7 @@ describe("Field", () => {
       const { container } = render(
         <Field message="OK" messageType="success">
           x
-        </Field>,
+        </Field>
       );
       expect(container.querySelector(".message")).toHaveClass("success");
     });

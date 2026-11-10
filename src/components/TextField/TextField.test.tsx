@@ -24,25 +24,19 @@ describe("TextField", () => {
 
   describe("prop appearance", () => {
     it("should apply subtle class on InputContainer", () => {
-      const { container } = render(
-        <TextField aria-label="test" appearance="subtle" />,
-      );
+      const { container } = render(<TextField aria-label="test" appearance="subtle" />);
       expect(container.querySelector(".inputContainer")).toHaveClass("subtle");
     });
   });
 
   describe("prop density", () => {
     it("should apply densityCompact class on InputContainer", () => {
-      const { container } = render(
-        <TextField aria-label="test" density="compact" />,
-      );
+      const { container } = render(<TextField aria-label="test" density="compact" />);
       expect(container.querySelector(".inputContainer")).toHaveClass("densityCompact");
     });
 
     it("should forward density to InputContainer", () => {
-      const { container } = render(
-        <TextField aria-label="test" density="touch" />,
-      );
+      const { container } = render(<TextField aria-label="test" density="touch" />);
       expect(container.querySelector(".inputContainer")).toHaveClass("densityTouch");
     });
   });
@@ -56,18 +50,14 @@ describe("TextField", () => {
 
   describe("prop isDisabled", () => {
     it("should set data-disabled", () => {
-      const { container } = render(
-        <TextField aria-label="test" isDisabled />,
-      );
+      const { container } = render(<TextField aria-label="test" isDisabled />);
       expect(container.querySelector("[data-disabled]")).toBeInTheDocument();
     });
   });
 
   describe("prop isInvalid", () => {
     it("should set data-invalid", () => {
-      const { container } = render(
-        <TextField aria-label="test" isInvalid />,
-      );
+      const { container } = render(<TextField aria-label="test" isInvalid />);
       expect(container.querySelector("[data-invalid]")).toBeInTheDocument();
     });
   });
@@ -75,9 +65,7 @@ describe("TextField", () => {
   describe("interaction", () => {
     it("should call onChange on typing", async () => {
       const onChange = vi.fn();
-      render(
-        <TextField aria-label="test" onChange={onChange} />,
-      );
+      render(<TextField aria-label="test" onChange={onChange} />);
       await userEvent.type(screen.getByRole("textbox"), "hello");
       expect(onChange).toHaveBeenLastCalledWith("hello");
     });
@@ -92,16 +80,12 @@ describe("TextField", () => {
 
   describe("slots elemBefore / elemAfter", () => {
     it("should render elemBefore", () => {
-      render(
-        <TextField aria-label="test" elemBefore={<span>Before</span>} />,
-      );
+      render(<TextField aria-label="test" elemBefore={<span>Before</span>} />);
       expect(screen.getByText("Before")).toBeInTheDocument();
     });
 
     it("should render elemAfter", () => {
-      render(
-        <TextField aria-label="test" elemAfter={<span>After</span>} />,
-      );
+      render(<TextField aria-label="test" elemAfter={<span>After</span>} />);
       expect(screen.getByText("After")).toBeInTheDocument();
     });
   });
@@ -109,47 +93,25 @@ describe("TextField", () => {
   describe("prop isClearable", () => {
     it("should not show clear button when empty", () => {
       render(<TextField aria-label="test" isClearable />);
-      expect(
-        screen.queryByRole("button", { name: "Effacer" }),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: "Effacer" })).not.toBeInTheDocument();
     });
 
     it("should show clear button when has value", () => {
-      render(
-        <TextField aria-label="test" isClearable defaultValue="hello" />,
-      );
-      expect(
-        screen.getByRole("button", { name: "Effacer" }),
-      ).toBeInTheDocument();
+      render(<TextField aria-label="test" isClearable defaultValue="hello" />);
+      expect(screen.getByRole("button", { name: "Effacer" })).toBeInTheDocument();
     });
 
     it("should clear value on clear button click", async () => {
       const onChange = vi.fn();
-      render(
-        <TextField
-          aria-label="test"
-          isClearable
-          defaultValue="hello"
-          onChange={onChange}
-        />,
-      );
+      render(<TextField aria-label="test" isClearable defaultValue="hello" onChange={onChange} />);
       await userEvent.click(screen.getByRole("button", { name: "Effacer" }));
       expect(onChange).toHaveBeenCalledWith("");
       expect(screen.getByRole("textbox")).toHaveValue("");
     });
 
     it("should not show clear button when disabled", () => {
-      render(
-        <TextField
-          aria-label="test"
-          isClearable
-          defaultValue="hello"
-          isDisabled
-        />,
-      );
-      expect(
-        screen.queryByRole("button", { name: "Effacer" }),
-      ).not.toBeInTheDocument();
+      render(<TextField aria-label="test" isClearable defaultValue="hello" isDisabled />);
+      expect(screen.queryByRole("button", { name: "Effacer" })).not.toBeInTheDocument();
     });
   });
 
@@ -167,9 +129,7 @@ describe("TextField", () => {
 
   describe("prop className", () => {
     it("should append custom className", () => {
-      const { container } = render(
-        <TextField aria-label="test" className="custom" />,
-      );
+      const { container } = render(<TextField aria-label="test" className="custom" />);
       expect(container.firstElementChild).toHaveClass("custom");
     });
   });

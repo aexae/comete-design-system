@@ -1,9 +1,6 @@
 // Avatar — Comète Design System
 import React from "react";
-import {
-  Button as AriaButton,
-  type ButtonProps as AriaButtonProps,
-} from "react-aria-components";
+import { Button as AriaButton, type ButtonProps as AriaButtonProps } from "react-aria-components";
 import type { IconName } from "@aexae/comete-icons";
 import { Icon } from "../Icon/index.js";
 import { Badge } from "../Badge/index.js";
@@ -13,13 +10,7 @@ import styles from "./Avatar.module.css";
 // ----------------------------------------------------------------------
 
 export type AvatarSize =
-  | "xsmall"
-  | "small"
-  | "medium"
-  | "large"
-  | "xlarge"
-  | "xxlarge"
-  | "xxxlarge";
+  "xsmall" | "small" | "medium" | "large" | "xlarge" | "xxlarge" | "xxxlarge";
 
 /**
  * Couleurs de l'avatar — **catégorielles**, jamais un statut.
@@ -91,12 +82,12 @@ export interface AvatarProps {
 
 /** Maps each avatar size to the icon size in pixels (matching size tokens). */
 const SIZE_ICON_MAP: Record<AvatarSize, number> = {
-  xsmall: 10,   // --size125
-  small: 14,    // --size175
-  medium: 16,   // --size200
-  large: 20,    // --size250
-  xlarge: 32,   // --size400
-  xxlarge: 48,  // --size600
+  xsmall: 10, // --size125
+  small: 14, // --size175
+  medium: 16, // --size200
+  large: 20, // --size250
+  xlarge: 32, // --size400
+  xxlarge: 48, // --size600
   xxxlarge: 64, // --size800
 };
 
@@ -142,13 +133,7 @@ export function Avatar({
     setImageLoaded(false);
   }, [src]);
 
-  const classNames = [
-    styles.avatar,
-    styles.rounded,
-    styles[size],
-    styles[color],
-    className,
-  ]
+  const classNames = [styles.avatar, styles.rounded, styles[size], styles[color], className]
     .filter(Boolean)
     .join(" ");
 
@@ -269,12 +254,7 @@ export function Avatar({
       )}
       {presence && (
         <span className={styles.presenceSlot}>
-          <Badge
-            appearance="success"
-            importance="low"
-            cutoutBorder
-            isDisabled={isDisabled}
-          />
+          <Badge appearance="success" importance="low" cutoutBorder isDisabled={isDisabled} />
         </span>
       )}
     </div>

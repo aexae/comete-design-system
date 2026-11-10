@@ -13,7 +13,7 @@ describe("Stepper", () => {
         <Step label="Compte" />
         <Step label="Adresse" />
         <Step label="Paiement" />
-      </Stepper>,
+      </Stepper>
     );
     expect(screen.getByText("Compte")).toBeInTheDocument();
     expect(screen.getByText("Adresse")).toBeInTheDocument();
@@ -25,7 +25,7 @@ describe("Stepper", () => {
       <Stepper activeStep={0}>
         <Step label="Step 1" />
         <Step label="Step 2" />
-      </Stepper>,
+      </Stepper>
     );
     expect(container.querySelector("ol")).toBeInTheDocument();
     expect(container.querySelectorAll("li")).toHaveLength(2);
@@ -35,7 +35,7 @@ describe("Stepper", () => {
     const { container } = render(
       <Stepper activeStep={0}>
         <Step label="Step 1" />
-      </Stepper>,
+      </Stepper>
     );
     expect(container.querySelector("ol")).toHaveAttribute("aria-label", "Progression");
   });
@@ -44,7 +44,7 @@ describe("Stepper", () => {
     const { container } = render(
       <Stepper activeStep={0} aria-label="Checkout steps">
         <Step label="Step 1" />
-      </Stepper>,
+      </Stepper>
     );
     expect(container.querySelector("ol")).toHaveAttribute("aria-label", "Checkout steps");
   });
@@ -57,7 +57,7 @@ describe("Stepper", () => {
         <Step label="Step 1" />
         <Step label="Step 2" />
         <Step label="Step 3" />
-      </Stepper>,
+      </Stepper>
     );
     const items = container.querySelectorAll("li");
     expect(items[0]).toHaveAttribute("data-status", "completed");
@@ -70,7 +70,7 @@ describe("Stepper", () => {
       <Stepper activeStep={0}>
         <Step label="Step 1" />
         <Step label="Step 2" />
-      </Stepper>,
+      </Stepper>
     );
     const items = container.querySelectorAll("li");
     expect(items[0]).toHaveAttribute("data-status", "active");
@@ -82,7 +82,7 @@ describe("Stepper", () => {
       <Stepper activeStep={99}>
         <Step label="Step 1" />
         <Step label="Step 2" />
-      </Stepper>,
+      </Stepper>
     );
     const items = container.querySelectorAll("li");
     expect(items[0]).toHaveAttribute("data-status", "completed");
@@ -97,7 +97,7 @@ describe("Stepper", () => {
         <Step label="Step 1" />
         <Step label="Step 2" isError />
         <Step label="Step 3" />
-      </Stepper>,
+      </Stepper>
     );
     const items = container.querySelectorAll("li");
     expect(items[1]).toHaveAttribute("data-status", "error");
@@ -109,7 +109,7 @@ describe("Stepper", () => {
         <Step label="Step 1" />
         <Step label="Step 2" isError />
         <Step label="Step 3" />
-      </Stepper>,
+      </Stepper>
     );
     const items = container.querySelectorAll("li");
     // Step 2 is index 1 < activeStep (2), would normally be "completed", but isError wins
@@ -124,7 +124,7 @@ describe("Stepper", () => {
         <Step label="Step 1" />
         <Step label="Step 2" />
         <Step label="Step 3" />
-      </Stepper>,
+      </Stepper>
     );
     // Linear by default → div, not button
     const activeContent = container.querySelector('[aria-current="step"]');
@@ -138,7 +138,7 @@ describe("Stepper", () => {
     const { container } = render(
       <Stepper activeStep={0}>
         <Step label="Step 1" />
-      </Stepper>,
+      </Stepper>
     );
     expect(container.querySelector("ol")).toHaveAttribute("data-orientation", "horizontal");
   });
@@ -148,7 +148,7 @@ describe("Stepper", () => {
       <Stepper activeStep={0} orientation="vertical">
         <Step label="Step 1" />
         <Step label="Step 2" />
-      </Stepper>,
+      </Stepper>
     );
     expect(container.querySelector("ol")).toHaveAttribute("data-orientation", "vertical");
     const items = container.querySelectorAll("li");
@@ -165,7 +165,7 @@ describe("Stepper", () => {
         <Step label="Step 1" />
         <Step label="Step 2" />
         <Step label="Step 3" />
-      </Stepper>,
+      </Stepper>
     );
     const connectors = container.querySelectorAll(".connector");
     // 3 steps → 2 connectors
@@ -177,7 +177,7 @@ describe("Stepper", () => {
       <Stepper activeStep={0}>
         <Step label="Step 1" />
         <Step label="Step 2" />
-      </Stepper>,
+      </Stepper>
     );
     const items = container.querySelectorAll("li");
     expect(items[0]).not.toHaveAttribute("data-last");
@@ -191,7 +191,7 @@ describe("Stepper", () => {
       <Stepper activeStep={1}>
         <Step label="Step 1" />
         <Step label="Step 2" />
-      </Stepper>,
+      </Stepper>
     );
     expect(container.querySelectorAll("button")).toHaveLength(0);
   });
@@ -203,7 +203,7 @@ describe("Stepper", () => {
       <Stepper activeStep={0} onStepChange={onStepChange}>
         <Step label="Step 1" />
         <Step label="Step 2" />
-      </Stepper>,
+      </Stepper>
     );
     await user.click(screen.getByText("Step 2"));
     expect(onStepChange).not.toHaveBeenCalled();
@@ -216,7 +216,7 @@ describe("Stepper", () => {
       <Stepper activeStep={0} isClickable onStepChange={() => {}}>
         <Step label="Step 1" />
         <Step label="Step 2" />
-      </Stepper>,
+      </Stepper>
     );
     expect(screen.getAllByRole("button")).toHaveLength(2);
   });
@@ -226,7 +226,7 @@ describe("Stepper", () => {
       <Stepper activeStep={0} onStepChange={() => {}}>
         <Step label="Step 1" />
         <Step label="Step 2" />
-      </Stepper>,
+      </Stepper>
     );
     expect(screen.queryAllByRole("button")).toHaveLength(0);
   });
@@ -237,7 +237,7 @@ describe("Stepper", () => {
         <Step label="Step 1" />
         <Step label="Step 2" />
         <Step label="Step 3" />
-      </Stepper>,
+      </Stepper>
     );
     // Clickable → boutons
     expect(screen.getAllByRole("button")).toHaveLength(3);
@@ -256,7 +256,7 @@ describe("Stepper", () => {
         <Step label="Step 1" />
         <Step label="Step 2" />
         <Step label="Step 3" />
-      </Stepper>,
+      </Stepper>
     );
     await user.click(screen.getByRole("button", { name: "Step 3" }));
     expect(onStepChange).toHaveBeenCalledWith(2);
@@ -271,7 +271,7 @@ describe("Stepper", () => {
       <Stepper activeStep={0} isClickable onStepChange={onStepChange}>
         <Step label="Step 1" />
         <Step label="Step 2" isDisabled />
-      </Stepper>,
+      </Stepper>
     );
     const step2Button = screen.getByRole("button", { name: "Step 2" });
     expect(step2Button).toBeDisabled();
@@ -287,14 +287,14 @@ describe("Stepper", () => {
         <Step label="Step 1" />
         <Step label="Step 2" />
         <Step label="Step 3" />
-      </Stepper>,
+      </Stepper>
     );
     // Step 1 = completed → check icon (no number text)
     // Step 2 = active → number "2"
     // Step 3 = upcoming → number "3"
     expect(container.querySelector(".indicatorNumber")?.textContent).toBeDefined();
     const numbers = Array.from(container.querySelectorAll(".indicatorNumber")).map(
-      (n) => n.textContent,
+      (n) => n.textContent
     );
     expect(numbers).toEqual(["2", "3"]); // 1 is completed, no number
   });
@@ -307,7 +307,7 @@ describe("Stepper", () => {
         <Step label="Step 1" />
         <Step label="Step 2" />
         <Step label="Step 3" />
-      </Stepper>,
+      </Stepper>
     );
     const items = container.querySelectorAll("li");
     // En non-linéaire, sans `isCompleted` explicite, les steps avant activeStep
@@ -323,7 +323,7 @@ describe("Stepper", () => {
         <Step label="Step 1" isCompleted />
         <Step label="Step 2" />
         <Step label="Step 3" />
-      </Stepper>,
+      </Stepper>
     );
     const items = container.querySelectorAll("li");
     expect(items[0]).toHaveAttribute("data-status", "completed");
@@ -336,7 +336,7 @@ describe("Stepper", () => {
       <Stepper activeStep={0}>
         <Step label="Step 1" />
         <Step label="Step 2" isCompleted />
-      </Stepper>,
+      </Stepper>
     );
     const items = container.querySelectorAll("li");
     expect(items[0]).toHaveAttribute("data-status", "active");
@@ -349,7 +349,7 @@ describe("Stepper", () => {
         <Step label="Step 1" />
         <Step label="Step 2" isCompleted={false} />
         <Step label="Step 3" />
-      </Stepper>,
+      </Stepper>
     );
     const items = container.querySelectorAll("li");
     expect(items[0]).toHaveAttribute("data-status", "completed");
@@ -363,9 +363,7 @@ describe("Stepper", () => {
   it("should throw when <Step> is used outside <Stepper>", () => {
     // Silence console.error for this test
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-    expect(() => render(<Step label="Standalone" />)).toThrow(
-      /Step.*Stepper/,
-    );
+    expect(() => render(<Step label="Standalone" />)).toThrow(/Step.*Stepper/);
     consoleSpy.mockRestore();
   });
 });

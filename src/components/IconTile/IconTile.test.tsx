@@ -16,27 +16,21 @@ describe("IconTile", () => {
   });
 
   it("should apply appearance class", () => {
-    const { container } = render(
-      <IconTile icon="Warning" appearance="critical" />,
-    );
+    const { container } = render(<IconTile icon="Warning" appearance="critical" />);
     const tile = container.firstElementChild as HTMLElement;
 
     expect(tile.className).toContain("critical");
   });
 
   it("should apply size class", () => {
-    const { container } = render(
-      <IconTile icon="CalendarMonth" size="large" />,
-    );
+    const { container } = render(<IconTile icon="CalendarMonth" size="large" />);
     const tile = container.firstElementChild as HTMLElement;
 
     expect(tile.className).toContain("large");
   });
 
   it("should apply shape class", () => {
-    const { container } = render(
-      <IconTile icon="CalendarMonth" shape="circle" />,
-    );
+    const { container } = render(<IconTile icon="CalendarMonth" shape="circle" />);
     const tile = container.firstElementChild as HTMLElement;
 
     expect(tile.className).toContain("circle");
@@ -59,9 +53,7 @@ describe("IconTile", () => {
   });
 
   it("should accept a custom className", () => {
-    const { container } = render(
-      <IconTile icon="CalendarMonth" className="custom" />,
-    );
+    const { container } = render(<IconTile icon="CalendarMonth" className="custom" />);
     const tile = container.firstElementChild as HTMLElement;
 
     expect(tile.className).toContain("custom");
@@ -84,9 +76,7 @@ describe("IconTile", () => {
     ] as const;
 
     for (const appearance of appearances) {
-      const { container } = render(
-        <IconTile icon="CalendarMonth" appearance={appearance} />,
-      );
+      const { container } = render(<IconTile icon="CalendarMonth" appearance={appearance} />);
       const tile = container.firstElementChild as HTMLElement;
 
       expect(tile.className).toContain(appearance);
@@ -97,9 +87,7 @@ describe("IconTile", () => {
     const sizes = ["xsmall", "small", "medium", "large"] as const;
 
     for (const size of sizes) {
-      const { container } = render(
-        <IconTile icon="CalendarMonth" size={size} />,
-      );
+      const { container } = render(<IconTile icon="CalendarMonth" size={size} />);
       const tile = container.firstElementChild as HTMLElement;
 
       expect(tile.className).toContain(size);
@@ -110,9 +98,7 @@ describe("IconTile", () => {
     const shapes = ["square", "circle"] as const;
 
     for (const shape of shapes) {
-      const { container } = render(
-        <IconTile icon="CalendarMonth" shape={shape} />,
-      );
+      const { container } = render(<IconTile icon="CalendarMonth" shape={shape} />);
       const tile = container.firstElementChild as HTMLElement;
 
       expect(tile.className).toContain(shape);

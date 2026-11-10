@@ -105,23 +105,23 @@ export function TimeCalendar({
         data-disabled={isDisabled || undefined}
         ref={listRef}
       >
-      {slots.map((time) => {
-        const selected = isSameTime(value, time);
-        const label = formatTimeSlot(time);
-        return (
-          <button
-            key={`${time.hour}-${time.minute}`}
-            type="button"
-            role="option"
-            ref={selected ? selectedRef : undefined}
-            className={styles.timeOption}
-            aria-selected={selected}
-            data-selected={selected || undefined}
-            disabled={isDisabled}
-            onClick={() => handleSelect(time)}
-          >
-            {label}
-          </button>
+        {slots.map((time) => {
+          const selected = isSameTime(value, time);
+          const label = formatTimeSlot(time);
+          return (
+            <button
+              key={`${time.hour}-${time.minute}`}
+              type="button"
+              role="option"
+              ref={selected ? selectedRef : undefined}
+              className={styles.timeOption}
+              aria-selected={selected}
+              data-selected={selected || undefined}
+              disabled={isDisabled}
+              onClick={() => handleSelect(time)}
+            >
+              {label}
+            </button>
           );
         })}
       </div>

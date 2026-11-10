@@ -11,7 +11,7 @@ describe("Popup", () => {
       render(
         <Popup trigger={<Button>Open</Button>}>
           <p>Content</p>
-        </Popup>,
+        </Popup>
       );
       expect(screen.getByRole("button", { name: "Open" })).toBeInTheDocument();
     });
@@ -24,7 +24,7 @@ describe("Popup", () => {
       render(
         <Popup trigger={<Button>Open</Button>}>
           <p>Content</p>
-        </Popup>,
+        </Popup>
       );
       expect(screen.queryByText("Content")).not.toBeInTheDocument();
     });
@@ -35,7 +35,7 @@ describe("Popup", () => {
       render(
         <Popup trigger={<Button>Open</Button>}>
           <p>Content</p>
-        </Popup>,
+        </Popup>
       );
       await userEvent.click(screen.getByRole("button", { name: "Open" }));
       expect(screen.getByText("Content")).toBeInTheDocument();
@@ -45,7 +45,7 @@ describe("Popup", () => {
       render(
         <Popup trigger={<Button>Open</Button>}>
           <p>Content</p>
-        </Popup>,
+        </Popup>
       );
       await userEvent.click(screen.getByRole("button", { name: "Open" }));
       expect(screen.getByText("Content")).toBeInTheDocument();
@@ -59,7 +59,7 @@ describe("Popup", () => {
       render(
         <Popup trigger={<Button>Open</Button>} isOpen onOpenChange={() => {}}>
           <p>Content</p>
-        </Popup>,
+        </Popup>
       );
       expect(screen.getByText("Content")).toBeInTheDocument();
     });
@@ -71,7 +71,7 @@ describe("Popup", () => {
       render(
         <Popup trigger={<Button>Open</Button>} onOpenChange={onOpenChange}>
           <p>Content</p>
-        </Popup>,
+        </Popup>
       );
       await userEvent.click(screen.getByRole("button", { name: "Open" }));
       expect(onOpenChange).toHaveBeenCalledWith(true);

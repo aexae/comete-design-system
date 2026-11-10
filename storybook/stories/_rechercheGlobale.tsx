@@ -42,12 +42,7 @@ export { GlobalSearchButton } from "./_pageChrome";
 // rend atteignable en trois lettres une page enfouie derrière un menu « Plus ».
 
 /** Famille d'un résultat. Sert aussi de titre de section dans la liste. */
-export type SearchGroup =
-  | "Agents"
-  | "Sites"
-  | "Vacations"
-  | "Documents"
-  | "Aller à";
+export type SearchGroup = "Agents" | "Sites" | "Vacations" | "Documents" | "Aller à";
 
 export interface SearchHit {
   group: SearchGroup;
@@ -84,22 +79,77 @@ export const GROUP_ORDER: readonly SearchGroup[] = [
 ];
 
 export const SEARCH_INDEX: readonly SearchHit[] = [
-  { group: "Agents", icon: "Person", title: "MARTIN Bob", subtitle: "Comète Sécurité · Agent de sécurité" },
-  { group: "Agents", icon: "Person", title: "MARCHAND Lucie", subtitle: "Agence Lyon · Agent de sécurité" },
-  { group: "Agents", icon: "Person", title: "CHEN Alice", subtitle: "Comète Sécurité · Cheffe de poste" },
-  { group: "Agents", icon: "Person", title: "BARDET Romain", subtitle: "Sous-traitant Vigilis · Agent de sécurité" },
-  { group: "Agents", icon: "Person", title: "MARQUES Elsa", subtitle: "Agence Lyon · Maître-chien" },
+  {
+    group: "Agents",
+    icon: "Person",
+    title: "MARTIN Bob",
+    subtitle: "Comète Sécurité · Agent de sécurité",
+  },
+  {
+    group: "Agents",
+    icon: "Person",
+    title: "MARCHAND Lucie",
+    subtitle: "Agence Lyon · Agent de sécurité",
+  },
+  {
+    group: "Agents",
+    icon: "Person",
+    title: "CHEN Alice",
+    subtitle: "Comète Sécurité · Cheffe de poste",
+  },
+  {
+    group: "Agents",
+    icon: "Person",
+    title: "BARDET Romain",
+    subtitle: "Sous-traitant Vigilis · Agent de sécurité",
+  },
+  {
+    group: "Agents",
+    icon: "Person",
+    title: "MARQUES Elsa",
+    subtitle: "Agence Lyon · Maître-chien",
+  },
   { group: "Sites", icon: "LocationOn", title: "Site Marché Nord", subtitle: "Secteur Nord" },
   { group: "Sites", icon: "LocationOn", title: "Entrepôt Nord 2", subtitle: "Secteur Nord" },
-  { group: "Sites", icon: "LocationOn", title: "Centre commercial Rivoli", subtitle: "Secteur Ouest" },
+  {
+    group: "Sites",
+    icon: "LocationOn",
+    title: "Centre commercial Rivoli",
+    subtitle: "Secteur Ouest",
+  },
   { group: "Sites", icon: "LocationOn", title: "Siège Marmande", subtitle: "Secteur Ouest" },
-  { group: "Vacations", icon: "CalendarMonth", title: "Vacation du 14 mars, Site Marché Nord", subtitle: "06:00 à 14:00 · MARTIN Bob" },
-  { group: "Vacations", icon: "CalendarMonth", title: "Vacation du 15 mars, Entrepôt Nord 2", subtitle: "22:00 à 06:00 · non affectée" },
-  { group: "Documents", icon: "Description", title: "Attestation MARTIN Bob", subtitle: "Carte professionnelle · expire le 30 mars" },
-  { group: "Documents", icon: "Description", title: "Rapport d'incident Marché Nord", subtitle: "Main courante · 12 mars" },
+  {
+    group: "Vacations",
+    icon: "CalendarMonth",
+    title: "Vacation du 14 mars, Site Marché Nord",
+    subtitle: "06:00 à 14:00 · MARTIN Bob",
+  },
+  {
+    group: "Vacations",
+    icon: "CalendarMonth",
+    title: "Vacation du 15 mars, Entrepôt Nord 2",
+    subtitle: "22:00 à 06:00 · non affectée",
+  },
+  {
+    group: "Documents",
+    icon: "Description",
+    title: "Attestation MARTIN Bob",
+    subtitle: "Carte professionnelle · expire le 30 mars",
+  },
+  {
+    group: "Documents",
+    icon: "Description",
+    title: "Rapport d'incident Marché Nord",
+    subtitle: "Main courante · 12 mars",
+  },
   { group: "Aller à", icon: "Administrator", title: "Droits d'accès", subtitle: "Administration" },
   { group: "Aller à", icon: "Person", title: "Utilisateurs", subtitle: "Administration" },
-  { group: "Aller à", icon: "Description", title: "Formulaires d'évènements", subtitle: "Main courante" },
+  {
+    group: "Aller à",
+    icon: "Description",
+    title: "Formulaires d'évènements",
+    subtitle: "Main courante",
+  },
   { group: "Aller à", icon: "LocationOn", title: "Sites", subtitle: "Navigation" },
 ];
 
@@ -137,15 +187,16 @@ export const RECENT_HITS: readonly SearchHit[] = [
 
 /** Normalise pour une comparaison insensible à la casse ET aux accents. */
 const norm = (s: string): string =>
-  s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+  s
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase();
 
 /** Résultats pour une requête. Chaîne vide ou blanche → aucun résultat. */
 export function searchHits(query: string): SearchHit[] {
   const q = norm(query.trim());
   if (!q) return [];
-  return SEARCH_INDEX.filter(
-    (h) => norm(h.title).includes(q) || norm(h.subtitle).includes(q),
-  );
+  return SEARCH_INDEX.filter((h) => norm(h.title).includes(q) || norm(h.subtitle).includes(q));
 }
 
 // -----------------------------------------------------------------------
@@ -245,7 +296,13 @@ function Highlight({ text, query }: { text: string; query: string }): ReactEleme
   return (
     <>
       {text.slice(0, i)}
-      <mark style={{ background: "var(--background-warning-subtlest-default, #fff3b0)", color: "inherit", borderRadius: 2 }}>
+      <mark
+        style={{
+          background: "var(--background-warning-subtlest-default, #fff3b0)",
+          color: "inherit",
+          borderRadius: 2,
+        }}
+      >
         {text.slice(i, i + q.length)}
       </mark>
       {text.slice(i + q.length)}
@@ -367,7 +424,6 @@ const titleTextStyle = {
 /** Le statut garde sa place quoi qu'il arrive au titre. */
 const titleEndStyle = { flex: "none", display: "inline-flex", alignItems: "center" } as const;
 
-
 /**
  * Ligne de la palette, partagée par les récents et les résultats : une seule
  * anatomie à apprendre, et les récents gagnent gratuitement la surbrillance et
@@ -486,7 +542,7 @@ export function GlobalSearchDialog({
   // l'écouteur clavier réattaché en boucle.
   const hits = useMemo(
     () => (query.trim() ? orderedHits(searchHits(query)) : [...RECENT_HITS]),
-    [query],
+    [query]
   );
   const [current, setCurrent] = useState(0);
 
@@ -742,10 +798,7 @@ export function GlobalSearchSheet({
       <Divider />
 
       <DrawerBody>
-        <GlobalSearchResults
-          query={query}
-          {...(onOpenHit ? { onOpenHit } : {})}
-        />
+        <GlobalSearchResults query={query} {...(onOpenHit ? { onOpenHit } : {})} />
       </DrawerBody>
     </Drawer>
   );

@@ -87,7 +87,12 @@ export const FACET_DEFS: FacetDef[] = [
   { key: "emploi", label: "Emplois", kind: "multi", roles: ["manager", "partenaire"] },
   { key: "langue", label: "Langues", kind: "multi", roles: ["manager", "partenaire"] },
   // Voir les agents sous-traitants : interrupteur seul (périmètre) → manager.
-  { key: "sousTraitants", label: "Voir les agents sous-traitants", kind: "switches", roles: ["manager"] },
+  {
+    key: "sousTraitants",
+    label: "Voir les agents sous-traitants",
+    kind: "switches",
+    roles: ["manager"],
+  },
   // Types de contrats (CDD / CDI / CDI2) : facette multi → manager.
   { key: "contrat", label: "Types de contrats", kind: "multi", roles: ["manager"] },
   { key: "dispo", label: "Disponibilités", kind: "dispo", roles: ["manager"] },
@@ -127,28 +132,262 @@ export interface Agent {
 
 export const AGENTS: Agent[] = (
   [
-    ["DUPONT Marie", "Comète Sécurité", "Événementiel", "SST", "Complètes", "Radio", "CQP APS", "Agent de sécurité", "Français", "CDI", false, "planifies"],
-    ["MARTIN Bob", "Comète Sécurité", "Industrie", "H0B0", "Pièce manquante", "Véhicule", "SSIAP 1", "Agent SSIAP", "Français", "CDI", false, "non"],
-    ["CHEN Alice", "Comète Sécurité", "Événementiel", "SST", "Complètes", "Radio", "SSIAP 2", "Chef de poste", "Anglais", "CDI", false, "disponibles"],
-    ["CLAIRE Sophie", "Agence Lyon", "Centres commerciaux", "Palpation", "Complètes", "Chien", "CQP APS", "Agent cynophile", "Français", "CDI2", false, "disponibles"],
-    ["BARDET Romain", "Sous-traitant Vigilis", "Logistique / Entrepôts", "SST", "Pièce manquante", "Radio", "CQP APS", "Agent de sécurité", "Espagnol", "CDD", true, "planifies"],
-    ["BENOIT Armand", "Agence Lyon", "Tertiaire / Bureaux", "H0B0", "Complètes", "Véhicule", "SSIAP 1", "Agent SSIAP", "Français", "CDI", false, "planifies"],
-    ["BERNARD Alex", "Comète Sécurité", "Industrie", "SST", "Complètes", "Radio", "CQP APS", "Agent de sécurité", "Anglais", "CDI2", false, "non"],
-    ["ORSAL Guillaume", "Agence Lyon", "Événementiel", "SST", "Complètes", "Véhicule", "SSIAP 2", "Chef de poste", "Français", "CDI", false, "disponibles"],
-    ["COCHARD Cédric", "Sous-traitant Vigilis", "Transports", "Palpation", "Pièce manquante", "Radio", "CQP APS", "Agent de sécurité", "Portugais", "CDD", true, "non"],
-    ["ARMAND Fred", "Comète Sécurité", "Centres commerciaux", "Palpation", "Complètes", "Chien", "CQP APS", "Agent cynophile", "Français", "CDI", false, "planifies"],
-    ["BELLANGER Georgie", "Agence Lyon", "Grande distribution", "SST", "Complètes", "Radio", "SSIAP 1", "Agent SSIAP", "Anglais", "CDI2", false, "disponibles"],
-    ["ANAIS Alfred", "Comète Sécurité", "Hôpitaux / Santé", "H0B0", "Complètes", "Véhicule", "SSIAP 2", "Chef de poste", "Français", "CDI", false, "planifies"],
+    [
+      "DUPONT Marie",
+      "Comète Sécurité",
+      "Événementiel",
+      "SST",
+      "Complètes",
+      "Radio",
+      "CQP APS",
+      "Agent de sécurité",
+      "Français",
+      "CDI",
+      false,
+      "planifies",
+    ],
+    [
+      "MARTIN Bob",
+      "Comète Sécurité",
+      "Industrie",
+      "H0B0",
+      "Pièce manquante",
+      "Véhicule",
+      "SSIAP 1",
+      "Agent SSIAP",
+      "Français",
+      "CDI",
+      false,
+      "non",
+    ],
+    [
+      "CHEN Alice",
+      "Comète Sécurité",
+      "Événementiel",
+      "SST",
+      "Complètes",
+      "Radio",
+      "SSIAP 2",
+      "Chef de poste",
+      "Anglais",
+      "CDI",
+      false,
+      "disponibles",
+    ],
+    [
+      "CLAIRE Sophie",
+      "Agence Lyon",
+      "Centres commerciaux",
+      "Palpation",
+      "Complètes",
+      "Chien",
+      "CQP APS",
+      "Agent cynophile",
+      "Français",
+      "CDI2",
+      false,
+      "disponibles",
+    ],
+    [
+      "BARDET Romain",
+      "Sous-traitant Vigilis",
+      "Logistique / Entrepôts",
+      "SST",
+      "Pièce manquante",
+      "Radio",
+      "CQP APS",
+      "Agent de sécurité",
+      "Espagnol",
+      "CDD",
+      true,
+      "planifies",
+    ],
+    [
+      "BENOIT Armand",
+      "Agence Lyon",
+      "Tertiaire / Bureaux",
+      "H0B0",
+      "Complètes",
+      "Véhicule",
+      "SSIAP 1",
+      "Agent SSIAP",
+      "Français",
+      "CDI",
+      false,
+      "planifies",
+    ],
+    [
+      "BERNARD Alex",
+      "Comète Sécurité",
+      "Industrie",
+      "SST",
+      "Complètes",
+      "Radio",
+      "CQP APS",
+      "Agent de sécurité",
+      "Anglais",
+      "CDI2",
+      false,
+      "non",
+    ],
+    [
+      "ORSAL Guillaume",
+      "Agence Lyon",
+      "Événementiel",
+      "SST",
+      "Complètes",
+      "Véhicule",
+      "SSIAP 2",
+      "Chef de poste",
+      "Français",
+      "CDI",
+      false,
+      "disponibles",
+    ],
+    [
+      "COCHARD Cédric",
+      "Sous-traitant Vigilis",
+      "Transports",
+      "Palpation",
+      "Pièce manquante",
+      "Radio",
+      "CQP APS",
+      "Agent de sécurité",
+      "Portugais",
+      "CDD",
+      true,
+      "non",
+    ],
+    [
+      "ARMAND Fred",
+      "Comète Sécurité",
+      "Centres commerciaux",
+      "Palpation",
+      "Complètes",
+      "Chien",
+      "CQP APS",
+      "Agent cynophile",
+      "Français",
+      "CDI",
+      false,
+      "planifies",
+    ],
+    [
+      "BELLANGER Georgie",
+      "Agence Lyon",
+      "Grande distribution",
+      "SST",
+      "Complètes",
+      "Radio",
+      "SSIAP 1",
+      "Agent SSIAP",
+      "Anglais",
+      "CDI2",
+      false,
+      "disponibles",
+    ],
+    [
+      "ANAIS Alfred",
+      "Comète Sécurité",
+      "Hôpitaux / Santé",
+      "H0B0",
+      "Complètes",
+      "Véhicule",
+      "SSIAP 2",
+      "Chef de poste",
+      "Français",
+      "CDI",
+      false,
+      "planifies",
+    ],
     // Sous-traitants de « Sous-traitant Vigilis » — le périmètre du rôle partenaire
     // (cf. `agentsForRole`). Valeurs variées pour que chaque facette de capacité
     // propose de vraies options. Masqués côté manager tant que l'interrupteur
     // « sous-traitants » n'est pas activé.
-    ["LEROY Nadia", "Sous-traitant Vigilis", "Aéroportuaire", "SST", "Complètes", "Radio", "SSIAP 1", "Agent SSIAP", "Français", "CDD", true, "disponibles"],
-    ["PETIT Karim", "Sous-traitant Vigilis", "Centres commerciaux", "H0B0", "Complètes", "Véhicule", "CQP APS", "Agent de sécurité", "Anglais", "CDI2", true, "planifies"],
-    ["ROUX Élodie", "Sous-traitant Vigilis", "Événementiel", "Palpation", "Pièce manquante", "Chien", "CQP APS", "Agent cynophile", "Français", "CDD", true, "non"],
-    ["FABRE Lucas", "Sous-traitant Vigilis", "Industrie", "SST", "Complètes", "Radio", "SSIAP 2", "Chef de poste", "Français", "CDI", true, "disponibles"],
-    ["MERCIER Inès", "Sous-traitant Vigilis", "Hôpitaux / Santé", "H0B0", "Complètes", "Véhicule", "SSIAP 1", "Agent SSIAP", "Espagnol", "CDD", true, "planifies"],
-    ["GAUTIER Paul", "Sous-traitant Vigilis", "Transports", "SST", "Pièce manquante", "Radio", "CQP APS", "Agent de sécurité", "Anglais", "CDD", true, "disponibles"],
+    [
+      "LEROY Nadia",
+      "Sous-traitant Vigilis",
+      "Aéroportuaire",
+      "SST",
+      "Complètes",
+      "Radio",
+      "SSIAP 1",
+      "Agent SSIAP",
+      "Français",
+      "CDD",
+      true,
+      "disponibles",
+    ],
+    [
+      "PETIT Karim",
+      "Sous-traitant Vigilis",
+      "Centres commerciaux",
+      "H0B0",
+      "Complètes",
+      "Véhicule",
+      "CQP APS",
+      "Agent de sécurité",
+      "Anglais",
+      "CDI2",
+      true,
+      "planifies",
+    ],
+    [
+      "ROUX Élodie",
+      "Sous-traitant Vigilis",
+      "Événementiel",
+      "Palpation",
+      "Pièce manquante",
+      "Chien",
+      "CQP APS",
+      "Agent cynophile",
+      "Français",
+      "CDD",
+      true,
+      "non",
+    ],
+    [
+      "FABRE Lucas",
+      "Sous-traitant Vigilis",
+      "Industrie",
+      "SST",
+      "Complètes",
+      "Radio",
+      "SSIAP 2",
+      "Chef de poste",
+      "Français",
+      "CDI",
+      true,
+      "disponibles",
+    ],
+    [
+      "MERCIER Inès",
+      "Sous-traitant Vigilis",
+      "Hôpitaux / Santé",
+      "H0B0",
+      "Complètes",
+      "Véhicule",
+      "SSIAP 1",
+      "Agent SSIAP",
+      "Espagnol",
+      "CDD",
+      true,
+      "planifies",
+    ],
+    [
+      "GAUTIER Paul",
+      "Sous-traitant Vigilis",
+      "Transports",
+      "SST",
+      "Pièce manquante",
+      "Radio",
+      "CQP APS",
+      "Agent de sécurité",
+      "Anglais",
+      "CDD",
+      true,
+      "disponibles",
+    ],
   ] as const
 ).map((r) => ({
   nom: r[0],
@@ -173,7 +412,9 @@ export const AGENTS: Agent[] = (
  */
 export const PARTENAIRE_SOCIETE = "Sous-traitant Vigilis";
 export const agentsForRole = (role?: Role): Agent[] =>
-  role === "partenaire" ? AGENTS.filter((a) => a.sousTraitant && a.societe === PARTENAIRE_SOCIETE) : AGENTS;
+  role === "partenaire"
+    ? AGENTS.filter((a) => a.sousTraitant && a.societe === PARTENAIRE_SOCIETE)
+    : AGENTS;
 
 export const DISPO_MODES = [
   { id: "tous", label: "Tous" },
@@ -252,8 +493,11 @@ export function match(a: Agent, f: Filters, applySousTraitants = true): boolean 
   return MULTI_KEYS.every((k) => !f[k].length || f[k].includes(a[k]));
 }
 
-export const filteredAgents = (f: Filters, agents: Agent[] = AGENTS, applySousTraitants = true): Agent[] =>
-  agents.filter((a) => match(a, f, applySousTraitants));
+export const filteredAgents = (
+  f: Filters,
+  agents: Agent[] = AGENTS,
+  applySousTraitants = true
+): Agent[] => agents.filter((a) => match(a, f, applySousTraitants));
 
 // Match en ignorant une facette (comptes qui ne s'effondrent pas quand on
 // coche plusieurs valeurs de la même facette).
@@ -268,8 +512,9 @@ export const optionCount = (
   key: MultiKey,
   value: string,
   agents: Agent[] = AGENTS,
-  applySousTraitants = true,
-): number => agents.filter((a) => a[key] === value && matchExcept(a, f, key, applySousTraitants)).length;
+  applySousTraitants = true
+): number =>
+  agents.filter((a) => a[key] === value && matchExcept(a, f, key, applySousTraitants)).length;
 
 // Secteurs d'activité — CAS DUR « facette à ~60 options » : liste longue (bien
 // au-delà des valeurs réellement portées par les agents) → le volet droit
@@ -340,12 +585,13 @@ const SECTEURS = [
 export const domainsOf = (agents: Agent[]): Record<MultiKey, string[]> =>
   MULTI_KEYS.reduce(
     (acc, key) => {
-      acc[key] = key === "secteur"
-        ? SECTEURS
-        : [...new Set(agents.map((a) => a[key]))].sort((x, y) => x.localeCompare(y, "fr"));
+      acc[key] =
+        key === "secteur"
+          ? SECTEURS
+          : [...new Set(agents.map((a) => a[key]))].sort((x, y) => x.localeCompare(y, "fr"));
       return acc;
     },
-    {} as Record<MultiKey, string[]>,
+    {} as Record<MultiKey, string[]>
   );
 
 export const DOMAINS = domainsOf(AGENTS);
@@ -361,7 +607,11 @@ export interface FiltresDataset {
   applySousTraitants: boolean;
 }
 
-export const DEFAULT_DATASET: FiltresDataset = { agents: AGENTS, domains: DOMAINS, applySousTraitants: true };
+export const DEFAULT_DATASET: FiltresDataset = {
+  agents: AGENTS,
+  domains: DOMAINS,
+  applySousTraitants: true,
+};
 
 const optionCountIn = (f: Filters, key: MultiKey, value: string, ds: FiltresDataset): number =>
   optionCount(f, key, value, ds.agents, ds.applySousTraitants);
@@ -419,7 +669,8 @@ function groupsOf(f: Filters): { key: string; facet: string; values: string; cou
     const d = FACET_DEFS.find((x) => x.key === k)!;
     out.push({ key: k, facet: d.label, values: f[k].join(", "), count: f[k].length });
   });
-  if (f.sousTraitants) out.push({ key: "sousTraitants", facet: "Sous-traitants", values: "Inclus", count: 1 });
+  if (f.sousTraitants)
+    out.push({ key: "sousTraitants", facet: "Sous-traitants", values: "Inclus", count: 1 });
   if (f.dispoMode !== "tous") {
     const m = DISPO_MODES.find((x) => x.id === f.dispoMode)!;
     out.push({ key: "dispo", facet: "Disponibilité", values: m.label, count: 1 });
@@ -439,9 +690,21 @@ export function sameFilters(a: Filters, b: Filters): boolean {
 }
 
 export const INITIAL_VIEWS: SavedView[] = [
-  { id: "v-seed-1", name: "SSIAP 2 disponibles", filters: { ...emptyFilters(), diplome: ["SSIAP 2"], dispoMode: "disponibles" } },
-  { id: "v-seed-2", name: "Cynophiles secteur Nord et Est", filters: { ...emptyFilters(), secteur: ["Nord", "Est"], emploi: ["Agent cynophile"] } },
-  { id: "v-seed-3", name: "Formalités incomplètes", filters: { ...emptyFilters(), formalite: ["Pièce manquante"] } },
+  {
+    id: "v-seed-1",
+    name: "SSIAP 2 disponibles",
+    filters: { ...emptyFilters(), diplome: ["SSIAP 2"], dispoMode: "disponibles" },
+  },
+  {
+    id: "v-seed-2",
+    name: "Cynophiles secteur Nord et Est",
+    filters: { ...emptyFilters(), secteur: ["Nord", "Est"], emploi: ["Agent cynophile"] },
+  },
+  {
+    id: "v-seed-3",
+    name: "Formalités incomplètes",
+    filters: { ...emptyFilters(), formalite: ["Pièce manquante"] },
+  },
 ];
 
 export const initialsOf = (nom: string): string =>
@@ -494,7 +757,9 @@ function ClearAllRow({
   tightTop?: boolean;
 }): ReactElement {
   const isOn = (i: OptionRef): boolean => filters[i.key].includes(i.value);
-  const selectable = items.filter((i) => isOn(i) || optionCountIn(filters, i.key, i.value, dataset) > 0);
+  const selectable = items.filter(
+    (i) => isOn(i) || optionCountIn(filters, i.key, i.value, dataset) > 0
+  );
   const hasSelection = items.some(isOn);
   const allSelected = selectable.length > 0 && selectable.every(isOn);
   const clear = () => {
@@ -508,7 +773,9 @@ function ClearAllRow({
   const selectAll = () => {
     const next: Filters = { ...filters };
     MULTI_KEYS.forEach((k) => {
-      const add = selectable.filter((i) => i.key === k && !filters[k].includes(i.value)).map((i) => i.value);
+      const add = selectable
+        .filter((i) => i.key === k && !filters[k].includes(i.value))
+        .map((i) => i.value);
       if (add.length) next[k] = [...filters[k], ...add];
     });
     onChange(next);
@@ -523,7 +790,14 @@ function ClearAllRow({
     />
   );
   const row = tall ? (
-    <div style={{ display: "flex", alignItems: "center", boxSizing: "border-box", minHeight: "calc(var(--size300) + 2 * var(--space125))" }}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        boxSizing: "border-box",
+        minHeight: "calc(var(--size300) + 2 * var(--space125))",
+      }}
+    >
       {toggle}
     </div>
   ) : (
@@ -568,7 +842,10 @@ function OptionControls({
   const patch = (p: Partial<Filters>) => onChange({ ...filters, ...p });
   const toggleMulti = (key: MultiKey, value: string) => {
     const has = filters[key].includes(value);
-    onChange({ ...filters, [key]: has ? filters[key].filter((v) => v !== value) : [...filters[key], value] });
+    onChange({
+      ...filters,
+      [key]: has ? filters[key].filter((v) => v !== value) : [...filters[key], value],
+    });
   };
   if (def.kind === "switches") {
     return (
@@ -580,14 +857,25 @@ function OptionControls({
   if (def.kind === "dispo") {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)" }}>
-        <RadioGroup aria-label="Disponibilités" value={filters.dispoMode} onChange={(v) => patch({ dispoMode: v })}>
+        <RadioGroup
+          aria-label="Disponibilités"
+          value={filters.dispoMode}
+          onChange={(v) => patch({ dispoMode: v })}
+        >
           {DISPO_MODES.map((m) => (
             <Radio key={m.id} value={m.id} label={m.label} />
           ))}
         </RadioGroup>
         {/* CAS DUR « plage de dates » : une plage Du → Au (deux DatePicker),
             plus une plage horaire début → fin. */}
-        <div style={{ display: "flex", gap: "var(--space150)", flexWrap: "wrap", alignItems: "flex-end" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "var(--space150)",
+            flexWrap: "wrap",
+            alignItems: "flex-end",
+          }}
+        >
           <DatePicker aria-label="Du (date de début)" defaultValue={parseDate("2026-08-20")} />
           <DatePicker aria-label="Au (date de fin)" defaultValue={parseDate("2026-08-27")} />
           <TimePicker aria-label="Heure de début" defaultValue={new Time(18, 0)} />
@@ -601,14 +889,37 @@ function OptionControls({
   const shown = dataset.domains[key];
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "var(--space050)" }}>
-      <ClearAllRow items={shown.map((value) => ({ key, value }))} filters={filters} onChange={onChange} dataset={dataset} withDivider />
+      <ClearAllRow
+        items={shown.map((value) => ({ key, value }))}
+        filters={filters}
+        onChange={onChange}
+        dataset={dataset}
+        withDivider
+      />
       {shown.map((value) => {
         const n = optionCountIn(filters, key, value, dataset);
         const checked = filters[key].includes(value);
         return (
-          <div key={value} style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
-            <Checkbox isChecked={checked} isDisabled={n === 0 && !checked} onChange={() => toggleMulti(key, value)} label={value} />
-            <span style={{ marginLeft: "auto", fontSize: 12, color: "var(--text-subtlest)", fontVariantNumeric: "tabular-nums" }}>{n}</span>
+          <div
+            key={value}
+            style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}
+          >
+            <Checkbox
+              isChecked={checked}
+              isDisabled={n === 0 && !checked}
+              onChange={() => toggleMulti(key, value)}
+              label={value}
+            />
+            <span
+              style={{
+                marginLeft: "auto",
+                fontSize: 12,
+                color: "var(--text-subtlest)",
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              {n}
+            </span>
           </div>
         );
       })}
@@ -624,10 +935,7 @@ function OptionControls({
 // une feuille (bottom sheet) au lieu du popover — comme la recette mobile. Sans
 // conteneur ancêtre ou sans ResizeObserver (SSR, tests), on reste en popover.
 
-function useTriggerCollapsed(
-  ref: React.RefObject<HTMLElement | null>,
-  enabled: boolean,
-): boolean {
+function useTriggerCollapsed(ref: React.RefObject<HTMLElement | null>, enabled: boolean): boolean {
   const [collapsed, setCollapsed] = useState(false);
   useEffect(() => {
     if (!enabled) {
@@ -635,7 +943,11 @@ function useTriggerCollapsed(
       return undefined;
     }
     const start = ref.current;
-    if (!start || typeof ResizeObserver === "undefined" || typeof getComputedStyle === "undefined") {
+    if (
+      !start ||
+      typeof ResizeObserver === "undefined" ||
+      typeof getComputedStyle === "undefined"
+    ) {
       return undefined;
     }
     // Conteneur ancêtre le plus proche établissant un contexte de requête
@@ -742,7 +1054,10 @@ export function FiltresPanel({
 
   const toggleMulti = (key: MultiKey, value: string) => {
     const has = filters[key].includes(value);
-    onChange({ ...filters, [key]: has ? filters[key].filter((v) => v !== value) : [...filters[key], value] });
+    onChange({
+      ...filters,
+      [key]: has ? filters[key].filter((v) => v !== value) : [...filters[key], value],
+    });
   };
   const clearAll = () => onChange(emptyFilters());
 
@@ -757,7 +1072,9 @@ export function FiltresPanel({
   const q = query.trim().toLowerCase();
   const searchHits = q
     ? visibleMultiKeys.flatMap((k) =>
-        dataset.domains[k].filter((v) => v.toLowerCase().includes(q)).map((v) => ({ key: k, value: v })),
+        dataset.domains[k]
+          .filter((v) => v.toLowerCase().includes(q))
+          .map((v) => ({ key: k, value: v }))
       )
     : [];
   const saveView = () => {
@@ -767,7 +1084,10 @@ export function FiltresPanel({
     setSavingName(null);
   };
 
-  const label = total > 0 ? `Filtres, ${total} critère${total > 1 ? "s" : ""} actif${total > 1 ? "s" : ""}` : "Filtres";
+  const label =
+    total > 0
+      ? `Filtres, ${total} critère${total > 1 ? "s" : ""} actif${total > 1 ? "s" : ""}`
+      : "Filtres";
   // `managed` = chemin feuille : c'est nous qui ouvrons (onPress) ; en popover
   // c'est le DialogTrigger de Popup qui gère le press.
   const triggerBtn = (managed: boolean): ReactElement => (
@@ -776,7 +1096,13 @@ export function FiltresPanel({
       iconBefore="Tune"
       {...(collapseLabel ? { collapseLabel: true, shape: "square" as const } : {})}
       aria-label={label}
-      {...(managed ? { onPress: () => setOpen(true), "aria-haspopup": "dialog" as const, "aria-expanded": open } : {})}
+      {...(managed
+        ? {
+            onPress: () => setOpen(true),
+            "aria-haspopup": "dialog" as const,
+            "aria-expanded": open,
+          }
+        : {})}
     >
       Filtres
       {/* Le badge vit dans le même `span` que le libellé (le `gap` du Button ne
@@ -817,151 +1143,247 @@ export function FiltresPanel({
 
   return (
     <span ref={rootRef} style={{ display: "inline-flex" }}>
-    <Popup
-      isOpen={open}
-      onOpenChange={setOpen}
-      placement="bottom-left"
-      // `--popup-padding: 0` → la carte du Popup ne pose AUCUN padding : chaque
-      // zone (recherche, volet gauche, volet droit, pied) porte déjà le sien, et
-      // les filets de séparation doivent filer d'un bord à l'autre.
-      style={{ width: 720, maxWidth: "calc(100vw - 32px)", maxHeight: "min(calc(100vh - 24px), 520px)", overflow: "hidden", "--popup-padding": 0 } as CSSProperties}
-      trigger={triggerBtn(false)}
-    >
-      <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
-        <div style={{ flex: "none", padding: "var(--space200)" }}>
-          <SearchField
-            aria-label="Rechercher dans les filtres"
-            placeholder="Rechercher une société, un secteur, un diplôme..."
-            value={query}
-            onChange={setQuery}
-          />
-        </div>
-        {/* Les deux volets : hauteur RAISONNABLE et bornée (jamais tout le
+      <Popup
+        isOpen={open}
+        onOpenChange={setOpen}
+        placement="bottom-left"
+        // `--popup-padding: 0` → la carte du Popup ne pose AUCUN padding : chaque
+        // zone (recherche, volet gauche, volet droit, pied) porte déjà le sien, et
+        // les filets de séparation doivent filer d'un bord à l'autre.
+        style={
+          {
+            width: 720,
+            maxWidth: "calc(100vw - 32px)",
+            maxHeight: "min(calc(100vh - 24px), 520px)",
+            overflow: "hidden",
+            "--popup-padding": 0,
+          } as CSSProperties
+        }
+        trigger={triggerBtn(false)}
+      >
+        <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
+          <div style={{ flex: "none", padding: "var(--space200)" }}>
+            <SearchField
+              aria-label="Rechercher dans les filtres"
+              placeholder="Rechercher une société, un secteur, un diplôme..."
+              value={query}
+              onChange={setQuery}
+            />
+          </div>
+          {/* Les deux volets : hauteur RAISONNABLE et bornée (jamais tout le
             viewport). Le popover reste à la taille de son contenu ; le
             débordement (facette à ~60 options) défile DANS le volet droit, pas
             dans le popover. S'adapte vers le bas sur petit écran. */}
-        <div style={{ display: "flex", height: "min(380px, calc(100vh - 220px))", borderTop: "1px solid var(--border-subtle)" }}>
-          {/* Volet gauche : liste des facettes. */}
-          <ul
-            aria-label="Facettes"
-            className={scrollClassName}
+          <div
             style={{
-              flex: "none",
-              width: 232,
-              minHeight: 0,
-              margin: 0,
-              padding: "var(--space100)",
-              listStyle: "none",
-              overflowY: "auto",
-              borderRight: "1px solid var(--border-subtle)",
+              display: "flex",
+              height: "min(380px, calc(100vh - 220px))",
+              borderTop: "1px solid var(--border-subtle)",
             }}
           >
-            {visibleFacets.map((d) => {
-              const c = facetCount(filters, d.key);
-              const active = !q && d.key === cat;
-              return (
-                <li key={d.key}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setQuery("");
-                      setCat(d.key);
-                    }}
-                    aria-current={active || undefined}
+            {/* Volet gauche : liste des facettes. */}
+            <ul
+              aria-label="Facettes"
+              className={scrollClassName}
+              style={{
+                flex: "none",
+                width: 232,
+                minHeight: 0,
+                margin: 0,
+                padding: "var(--space100)",
+                listStyle: "none",
+                overflowY: "auto",
+                borderRight: "1px solid var(--border-subtle)",
+              }}
+            >
+              {visibleFacets.map((d) => {
+                const c = facetCount(filters, d.key);
+                const active = !q && d.key === cat;
+                return (
+                  <li key={d.key}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setQuery("");
+                        setCat(d.key);
+                      }}
+                      aria-current={active || undefined}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "var(--space100)",
+                        width: "100%",
+                        padding: "0 var(--space150)",
+                        height: 40,
+                        border: 0,
+                        borderRadius: "var(--radius100)",
+                        background: active ? "var(--background-brand-subtlest-default)" : "none",
+                        color: active ? "var(--text-brand)" : "var(--text-default)",
+                        fontSize: 13.5,
+                        fontWeight: active ? 600 : 500,
+                        textAlign: "left",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <span style={{ flex: 1 }}>{d.label}</span>
+                      {c > 0 && (
+                        <Badge label={String(c)} appearance="information" importance="high" />
+                      )}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+
+            {/* Volet droit : options de la facette courante, ou résultats de recherche. */}
+            <div
+              className={scrollClassName}
+              style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "var(--space200)" }}
+            >
+              {q ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: "var(--space050)" }}>
+                  <p
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "var(--space100)",
-                      width: "100%",
-                      padding: "0 var(--space150)",
-                      height: 40,
-                      border: 0,
-                      borderRadius: "var(--radius100)",
-                      background: active ? "var(--background-brand-subtlest-default)" : "none",
-                      color: active ? "var(--text-brand)" : "var(--text-default)",
-                      fontSize: 13.5,
-                      fontWeight: active ? 600 : 500,
-                      textAlign: "left",
-                      cursor: "pointer",
+                      margin: "0 0 var(--space100)",
+                      fontSize: 12,
+                      color: "var(--text-subtlest)",
                     }}
                   >
-                    <span style={{ flex: 1 }}>{d.label}</span>
-                    {c > 0 && <Badge label={String(c)} appearance="information" importance="high" />}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+                    {searchHits.length} résultat{searchHits.length > 1 ? "s" : ""} pour «{" "}
+                    {query.trim()} »
+                  </p>
+                  {searchHits.length > 0 ? (
+                    <ClearAllRow
+                      items={searchHits}
+                      filters={filters}
+                      onChange={onChange}
+                      dataset={dataset}
+                      withDivider
+                    />
+                  ) : null}
+                  {searchHits.map(({ key, value }) => {
+                    const n = optionCountIn(filters, key, value, dataset);
+                    const facetLabel = FACET_DEFS.find((d) => d.key === key)!.label;
+                    return (
+                      <div
+                        key={`${key}:${value}`}
+                        style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}
+                      >
+                        <Checkbox
+                          isChecked={filters[key].includes(value)}
+                          isDisabled={n === 0 && !filters[key].includes(value)}
+                          onChange={() => toggleMulti(key, value)}
+                          label={value}
+                        />
+                        <span style={{ fontSize: 11.5, color: "var(--text-subtlest)" }}>
+                          {facetLabel}
+                        </span>
+                        <span
+                          style={{
+                            marginLeft: "auto",
+                            fontSize: 12,
+                            color: "var(--text-subtlest)",
+                            fontVariantNumeric: "tabular-nums",
+                          }}
+                        >
+                          {n}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <OptionControls
+                  def={curDef}
+                  filters={filters}
+                  onChange={onChange}
+                  dataset={dataset}
+                />
+              )}
+            </div>
+          </div>
 
-          {/* Volet droit : options de la facette courante, ou résultats de recherche. */}
-          <div className={scrollClassName} style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "var(--space200)" }}>
-            {q ? (
-              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space050)" }}>
-                <p style={{ margin: "0 0 var(--space100)", fontSize: 12, color: "var(--text-subtlest)" }}>
-                  {searchHits.length} résultat{searchHits.length > 1 ? "s" : ""} pour « {query.trim()} »
-                </p>
-                {searchHits.length > 0 ? (
-                  <ClearAllRow items={searchHits} filters={filters} onChange={onChange} dataset={dataset} withDivider />
-                ) : null}
-                {searchHits.map(({ key, value }) => {
-                  const n = optionCountIn(filters, key, value, dataset);
-                  const facetLabel = FACET_DEFS.find((d) => d.key === key)!.label;
-                  return (
-                    <div key={`${key}:${value}`} style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
-                      <Checkbox isChecked={filters[key].includes(value)} isDisabled={n === 0 && !filters[key].includes(value)} onChange={() => toggleMulti(key, value)} label={value} />
-                      <span style={{ fontSize: 11.5, color: "var(--text-subtlest)" }}>{facetLabel}</span>
-                      <span style={{ marginLeft: "auto", fontSize: 12, color: "var(--text-subtlest)", fontVariantNumeric: "tabular-nums" }}>{n}</span>
-                    </div>
-                  );
-                })}
-              </div>
+          {/* Pied : enregistrer / compteur / réinitialiser. */}
+          <div
+            style={{
+              flex: "none",
+              display: "flex",
+              alignItems: "center",
+              gap: "var(--space150)",
+              padding: "var(--space150) var(--space200)",
+              borderTop: "1px solid var(--border-subtle)",
+            }}
+          >
+            {savingName === null ? (
+              <>
+                {!canSaveViews ? null : isCurrentSaved ? (
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "var(--space075)",
+                      padding: "0 var(--space075)",
+                      fontSize: 13.5,
+                      fontWeight: 600,
+                      color: "var(--text-default)",
+                    }}
+                  >
+                    <Icon icon="Bookmark" appearance="filled" size={18} />
+                    Filtres enregistrés
+                  </span>
+                ) : (
+                  <Button
+                    appearance="link"
+                    className={textActionClassName}
+                    onPress={() => setSavingName("")}
+                    isDisabled={total === 0}
+                  >
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "var(--space075)",
+                      }}
+                    >
+                      <Icon icon="Bookmark" size={18} />
+                      Enregistrer ces filtres
+                    </span>
+                  </Button>
+                )}
+                <div style={{ flex: 1 }} />
+                <Button appearance="subtle" onPress={clearAll} isDisabled={total === 0}>
+                  Réinitialiser
+                </Button>
+                <Button appearance="contained" color="comete" onPress={() => setOpen(false)}>
+                  Voir les résultats
+                </Button>
+              </>
             ) : (
-              <OptionControls def={curDef} filters={filters} onChange={onChange} dataset={dataset} />
+              <>
+                <div style={{ flex: 1, maxWidth: 260 }}>
+                  <TextField
+                    aria-label="Nom de l'enregistrement"
+                    placeholder="Nom de l'enregistrement"
+                    value={savingName}
+                    onChange={setSavingName}
+                  />
+                </div>
+                <Button
+                  appearance="contained"
+                  color="comete"
+                  onPress={saveView}
+                  isDisabled={!savingName.trim()}
+                >
+                  Enregistrer
+                </Button>
+                <Button appearance="subtle" onPress={() => setSavingName(null)}>
+                  Annuler
+                </Button>
+              </>
             )}
           </div>
         </div>
-
-        {/* Pied : enregistrer / compteur / réinitialiser. */}
-        <div style={{ flex: "none", display: "flex", alignItems: "center", gap: "var(--space150)", padding: "var(--space150) var(--space200)", borderTop: "1px solid var(--border-subtle)" }}>
-          {savingName === null ? (
-            <>
-              {!canSaveViews ? null : isCurrentSaved ? (
-                <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space075)", padding: "0 var(--space075)", fontSize: 13.5, fontWeight: 600, color: "var(--text-default)" }}>
-                  <Icon icon="Bookmark" appearance="filled" size={18} />
-                  Filtres enregistrés
-                </span>
-              ) : (
-                <Button appearance="link" className={textActionClassName} onPress={() => setSavingName("")} isDisabled={total === 0}>
-                  <span style={{ display: "inline-flex", alignItems: "center", gap: "var(--space075)" }}>
-                    <Icon icon="Bookmark" size={18} />
-                    Enregistrer ces filtres
-                  </span>
-                </Button>
-              )}
-              <div style={{ flex: 1 }} />
-              <Button appearance="subtle" onPress={clearAll} isDisabled={total === 0}>
-                Réinitialiser
-              </Button>
-              <Button appearance="contained" color="comete" onPress={() => setOpen(false)}>
-                Voir les résultats
-              </Button>
-            </>
-          ) : (
-            <>
-              <div style={{ flex: 1, maxWidth: 260 }}>
-                <TextField aria-label="Nom de l'enregistrement" placeholder="Nom de l'enregistrement" value={savingName} onChange={setSavingName} />
-              </div>
-              <Button appearance="contained" color="comete" onPress={saveView} isDisabled={!savingName.trim()}>
-                Enregistrer
-              </Button>
-              <Button appearance="subtle" onPress={() => setSavingName(null)}>
-                Annuler
-              </Button>
-            </>
-          )}
-        </div>
-      </div>
-    </Popup>
+      </Popup>
     </span>
   );
 }
@@ -1028,7 +1450,10 @@ export function FiltresSheet({
   const patch = (p: Partial<Filters>) => onChange({ ...filters, ...p });
   const toggleMulti = (key: MultiKey, value: string) => {
     const has = filters[key].includes(value);
-    onChange({ ...filters, [key]: has ? filters[key].filter((v) => v !== value) : [...filters[key], value] });
+    onChange({
+      ...filters,
+      [key]: has ? filters[key].filter((v) => v !== value) : [...filters[key], value],
+    });
   };
   const clearAll = () => onChange(emptyFilters());
 
@@ -1093,14 +1518,25 @@ export function FiltresSheet({
     if (def.kind === "dispo") {
       return (
         <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)" }}>
-          <RadioGroup aria-label="Disponibilités" value={filters.dispoMode} onChange={(v) => patch({ dispoMode: v })}>
+          <RadioGroup
+            aria-label="Disponibilités"
+            value={filters.dispoMode}
+            onChange={(v) => patch({ dispoMode: v })}
+          >
             {DISPO_MODES.map((m) => (
               <Radio key={m.id} value={m.id} label={m.label} />
             ))}
           </RadioGroup>
           {/* CAS DUR « plage de dates » : une plage Du → Au (deux DatePicker),
               plus une plage horaire début → fin. */}
-          <div style={{ display: "flex", gap: "var(--space150)", flexWrap: "wrap", alignItems: "flex-end" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: "var(--space150)",
+              flexWrap: "wrap",
+              alignItems: "flex-end",
+            }}
+          >
             <DatePicker aria-label="Du (date de début)" defaultValue={parseDate("2026-08-20")} />
             <DatePicker aria-label="Au (date de fin)" defaultValue={parseDate("2026-08-27")} />
             <TimePicker aria-label="Heure de début" defaultValue={new Time(18, 0)} />
@@ -1114,7 +1550,8 @@ export function FiltresSheet({
     // Liste longue → barre de recherche pour filtrer les options par texte.
     const searchable = domain.length > 8;
     const query = optionQuery.trim().toLowerCase();
-    const shown = searchable && query ? domain.filter((v) => v.toLowerCase().includes(query)) : domain;
+    const shown =
+      searchable && query ? domain.filter((v) => v.toLowerCase().includes(query)) : domain;
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "var(--space150)" }}>
         {searchable ? (
@@ -1126,21 +1563,55 @@ export function FiltresSheet({
           />
         ) : null}
         <div style={{ display: "flex", flexDirection: "column", gap: "var(--space050)" }}>
-          <ClearAllRow items={shown.map((value) => ({ key, value }))} filters={filters} onChange={onChange} dataset={dataset} tall withDivider={shown.length > 0} tightTop={!searchable} />
+          <ClearAllRow
+            items={shown.map((value) => ({ key, value }))}
+            filters={filters}
+            onChange={onChange}
+            dataset={dataset}
+            tall
+            withDivider={shown.length > 0}
+            tightTop={!searchable}
+          />
           {shown.map((value) => {
             const n = optionCountIn(filters, key, value, dataset);
             const checked = filters[key].includes(value);
             return (
-              <div key={value} style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
+              <div
+                key={value}
+                style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}
+              >
                 <span style={{ flex: "1 1 auto", minWidth: 0 }}>
-                  <Checkbox isChecked={checked} isDisabled={n === 0 && !checked} onChange={() => toggleMulti(key, value)} label={value} />
+                  <Checkbox
+                    isChecked={checked}
+                    isDisabled={n === 0 && !checked}
+                    onChange={() => toggleMulti(key, value)}
+                    label={value}
+                  />
                 </span>
-                <span style={{ flex: "none", fontSize: "var(--font-size-ui-xs)", color: "var(--text-subtlest)", fontVariantNumeric: "tabular-nums" }}>{n}</span>
+                <span
+                  style={{
+                    flex: "none",
+                    fontSize: "var(--font-size-ui-xs)",
+                    color: "var(--text-subtlest)",
+                    fontVariantNumeric: "tabular-nums",
+                  }}
+                >
+                  {n}
+                </span>
               </div>
             );
           })}
           {shown.length === 0 ? (
-            <p style={{ padding: "var(--space200) 0", textAlign: "center", color: "var(--text-subtlest)", fontSize: 13 }}>Aucune option ne correspond.</p>
+            <p
+              style={{
+                padding: "var(--space200) 0",
+                textAlign: "center",
+                color: "var(--text-subtlest)",
+                fontSize: 13,
+              }}
+            >
+              Aucune option ne correspond.
+            </p>
           ) : null}
         </div>
       </div>
@@ -1154,16 +1625,42 @@ export function FiltresSheet({
     dataset.domains[detailDef.key as MultiKey].length <= 8;
 
   const facetValue = (d: FacetDef): string => {
-    if (d.kind === "dispo") return filters.dispoMode === "tous" ? "" : (DISPO_MODES.find((m) => m.id === filters.dispoMode)?.label ?? "");
-    if (d.kind === "multi" && facetCount(filters, d.key) === 1) return filters[d.key as MultiKey][0] ?? "";
+    if (d.kind === "dispo")
+      return filters.dispoMode === "tous"
+        ? ""
+        : (DISPO_MODES.find((m) => m.id === filters.dispoMode)?.label ?? "");
+    if (d.kind === "multi" && facetCount(filters, d.key) === 1)
+      return filters[d.key as MultiKey][0] ?? "";
     return "";
   };
 
   // Styles inline (D11) repris des classes de la recette mobile : libellé de
   // facette prioritaire (ne rétrécit pas), valeur en fin de ligne qui se tronque.
-  const facetLabelStyle = { flex: "none", fontFamily: "var(--font-family-primary)", fontSize: "var(--font-size-ui-s)", lineHeight: "var(--line-height-ui-s)", color: "var(--text-default)", whiteSpace: "nowrap" } as const;
-  const facetTrailingStyle = { flex: "0 1 auto", marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: "var(--space100)", minWidth: 0, color: "var(--text-subtlest)" } as const;
-  const facetValueStyle = { minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: "var(--font-size-ui-s)", color: "var(--text-subtlest)" } as const;
+  const facetLabelStyle = {
+    flex: "none",
+    fontFamily: "var(--font-family-primary)",
+    fontSize: "var(--font-size-ui-s)",
+    lineHeight: "var(--line-height-ui-s)",
+    color: "var(--text-default)",
+    whiteSpace: "nowrap",
+  } as const;
+  const facetTrailingStyle = {
+    flex: "0 1 auto",
+    marginLeft: "auto",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "var(--space100)",
+    minWidth: 0,
+    color: "var(--text-subtlest)",
+  } as const;
+  const facetValueStyle = {
+    minWidth: 0,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    fontSize: "var(--font-size-ui-s)",
+    color: "var(--text-subtlest)",
+  } as const;
   // `textTransform: none` en inline bat le `.head` du DS (capitales) sans classe.
   const sectionTitleStyle = { textTransform: "none" } as const;
   // Les lignes DÉBORDENT sur toute la largeur de la feuille (`Bleed` compense le
@@ -1198,11 +1695,35 @@ export function FiltresSheet({
       <DrawerHeader>
         {/* Chevron retour dans les vues détail / recherches (drill-down). */}
         {showViews || detailDef ? (
-          <Button appearance="subtle" density="touch" iconBefore="ChevronLeft" aria-label="Retour" onPress={back} />
+          <Button
+            appearance="subtle"
+            density="touch"
+            iconBefore="ChevronLeft"
+            aria-label="Retour"
+            onPress={back}
+          />
         ) : null}
-        <strong style={{ flex: 1, minWidth: 0, fontSize: "var(--font-size-ui-m)", fontWeight: "var(--font-weight-semibold)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{sheetTitle}</strong>
+        <strong
+          style={{
+            flex: 1,
+            minWidth: 0,
+            fontSize: "var(--font-size-ui-m)",
+            fontWeight: "var(--font-weight-semibold)",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {sheetTitle}
+        </strong>
         {!showViews && savingName === null ? (
-          <Button appearance="link" density="touch" className={textActionClassName} onPress={clearAll} isDisabled={total === 0}>
+          <Button
+            appearance="link"
+            density="touch"
+            className={textActionClassName}
+            onPress={clearAll}
+            isDisabled={total === 0}
+          >
             Réinitialiser
           </Button>
         ) : null}
@@ -1213,41 +1734,95 @@ export function FiltresSheet({
       <DrawerBody className={scrollClassName}>
         {showViews ? (
           views.length === 0 ? (
-            <p style={{ padding: "var(--space300) 0", textAlign: "center", color: "var(--text-subtlest)", fontSize: 13 }}>Aucun filtre enregistré.</p>
+            <p
+              style={{
+                padding: "var(--space300) 0",
+                textAlign: "center",
+                color: "var(--text-subtlest)",
+                fontSize: 13,
+              }}
+            >
+              Aucun filtre enregistré.
+            </p>
           ) : (
             <Bleed inline="300">
-            <List aria-label="Filtres enregistrés">
-              {views.map((v) => {
-                const n = totalActive(v.filters);
-                return (
-                  <ListItemButton key={v.id} style={rowInsetWithAction} onPress={() => applyView(v)}>
-                    <ListItemText primary={v.name} secondary={`${n} filtre${n > 1 ? "s" : ""} appliqué${n > 1 ? "s" : ""}`} />
-                    {onDeleteView ? (
-                      <ListItemSecondaryAction style={{ right: actionOffset }}>
-                        <Button appearance="subtle" density="touch" iconBefore="Close" aria-label={`Supprimer ${v.name}`} onPress={() => onDeleteView(v.id)} />
-                      </ListItemSecondaryAction>
-                    ) : null}
-                  </ListItemButton>
-                );
-              })}
-            </List>
+              <List aria-label="Filtres enregistrés">
+                {views.map((v) => {
+                  const n = totalActive(v.filters);
+                  return (
+                    <ListItemButton
+                      key={v.id}
+                      style={rowInsetWithAction}
+                      onPress={() => applyView(v)}
+                    >
+                      <ListItemText
+                        primary={v.name}
+                        secondary={`${n} filtre${n > 1 ? "s" : ""} appliqué${n > 1 ? "s" : ""}`}
+                      />
+                      {onDeleteView ? (
+                        <ListItemSecondaryAction style={{ right: actionOffset }}>
+                          <Button
+                            appearance="subtle"
+                            density="touch"
+                            iconBefore="Close"
+                            aria-label={`Supprimer ${v.name}`}
+                            onPress={() => onDeleteView(v.id)}
+                          />
+                        </ListItemSecondaryAction>
+                      ) : null}
+                    </ListItemButton>
+                  );
+                })}
+              </List>
             </Bleed>
           )
         ) : savingName !== null ? (
           // Enregistrement : vue FOCALISÉE — seuls le champ et ses deux actions
           // sont présents/actifs. Facettes, pied « Voir N » et « Réinitialiser »
           // disparaissent le temps de nommer l'enregistrement.
-          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space200)", paddingBlock: "var(--space100)" }}>
-            <TextField aria-label="Nom de l'enregistrement" placeholder="Nom de l'enregistrement" value={savingName} onChange={setSavingName} />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--space200)",
+              paddingBlock: "var(--space100)",
+            }}
+          >
+            <TextField
+              aria-label="Nom de l'enregistrement"
+              placeholder="Nom de l'enregistrement"
+              value={savingName}
+              onChange={setSavingName}
+            />
             {/* Expliqué ICI, au moment de nommer — pas en permanence dans le pied. */}
-            <p style={{ margin: 0, fontSize: "var(--font-size-ui-xxs)", lineHeight: "var(--line-height-ui-xxs)", color: "var(--text-subtlest)" }}>
-              Vous les retrouverez ensuite dans vos filtres enregistrés, et vous les réappliquerez en un geste.
+            <p
+              style={{
+                margin: 0,
+                fontSize: "var(--font-size-ui-xxs)",
+                lineHeight: "var(--line-height-ui-xxs)",
+                color: "var(--text-subtlest)",
+              }}
+            >
+              Vous les retrouverez ensuite dans vos filtres enregistrés, et vous les réappliquerez
+              en un geste.
             </p>
             <div style={{ display: "flex", gap: "var(--space100)" }}>
-              <Button appearance="contained" color="comete" density="touch" onPress={saveView} isDisabled={!savingName.trim()} style={{ flex: 1 }}>
+              <Button
+                appearance="contained"
+                color="comete"
+                density="touch"
+                onPress={saveView}
+                isDisabled={!savingName.trim()}
+                style={{ flex: 1 }}
+              >
                 Enregistrer
               </Button>
-              <Button appearance="subtle" density="touch" onPress={() => setSavingName(null)} style={{ flex: 1 }}>
+              <Button
+                appearance="subtle"
+                density="touch"
+                onPress={() => setSavingName(null)}
+                style={{ flex: 1 }}
+              >
                 Annuler
               </Button>
             </div>
@@ -1257,7 +1832,9 @@ export function FiltresSheet({
           // Drawer n'a pas de padding haut) — pour la recherche comme l'interrupteur. Sans champ
           // de recherche, la vue commence par « Tout sélectionner » : son texte est alors à 12 px du
           // filet de l'en-tête (8 px du filet qui le suit) (pas de padding ici, `tightTop` en bas).
-          <div style={{ paddingTop: startsWithSelectAll ? 0 : "var(--space150)" }}>{optionControls(detailDef)}</div>
+          <div style={{ paddingTop: startsWithSelectAll ? 0 : "var(--space150)" }}>
+            {optionControls(detailDef)}
+          </div>
         ) : (
           // Colonne flex SANS `gap` : l'espace autour du filet entre les deux groupes est
           // celui du `Divider` (marge de 4 px de chaque côté) + le padding de la ligne
@@ -1267,52 +1844,55 @@ export function FiltresSheet({
           <div style={{ display: "flex", flexDirection: "column" }}>
             {canSaveViews ? (
               <>
-            {/* List and filters : accéder aux filtres enregistrés. L'action « donner un nom »
+                {/* List and filters : accéder aux filtres enregistrés. L'action « donner un nom »
                 n'est PAS ici (elle se mélangeait aux critères) : elle vit dans le pied,
                 à côté de « Voir N agents ». */}
-            <Bleed inline="300">
-            <List aria-label="Filtres enregistrés">
-              <ListItemButton style={rowInset} onPress={() => setShowViews(true)}>
-                <span style={facetLabelStyle}>Filtres enregistrés</span>
-                <span style={facetTrailingStyle}>
-                  {appliedView ? (
-                    <span style={facetValueStyle}>{appliedView.name}</span>
-                  ) : views.length > 0 ? (
-                    <Badge label={String(views.length)} appearance="information" importance="medium" />
-                  ) : null}
-                  <Icon icon="ChevronRight" color="subtlest" />
-                </span>
-              </ListItemButton>
-            </List>
-            </Bleed>
+                <Bleed inline="300">
+                  <List aria-label="Filtres enregistrés">
+                    <ListItemButton style={rowInset} onPress={() => setShowViews(true)}>
+                      <span style={facetLabelStyle}>Filtres enregistrés</span>
+                      <span style={facetTrailingStyle}>
+                        {appliedView ? (
+                          <span style={facetValueStyle}>{appliedView.name}</span>
+                        ) : views.length > 0 ? (
+                          <Badge
+                            label={String(views.length)}
+                            appearance="information"
+                            importance="medium"
+                          />
+                        ) : null}
+                        <Icon icon="ChevronRight" color="subtlest" />
+                      </span>
+                    </ListItemButton>
+                  </List>
+                </Bleed>
 
-            <Divider />
-
+                <Divider />
               </>
             ) : null}
 
             {/* Facettes — libellé prioritaire, valeur en fin de ligne tronquée. */}
             <Bleed inline="300">
-            <List aria-label="Critères">
-              <ListHead style={{ ...sectionTitleStyle, ...rowInset }}>Critères</ListHead>
-              {visibleFacets.map((d) => {
-                const c = facetCount(filters, d.key);
-                const val = facetValue(d);
-                return (
-                  <ListItemButton key={d.key} style={rowInset} onPress={() => openFacet(d.key)}>
-                    <span style={facetLabelStyle}>{d.label}</span>
-                    <span style={facetTrailingStyle}>
-                      {val ? (
-                        <span style={facetValueStyle}>{val}</span>
-                      ) : c > 0 ? (
-                        <Badge label={String(c)} appearance="information" importance="high" />
-                      ) : null}
-                      <Icon icon="ChevronRight" color="subtlest" />
-                    </span>
-                  </ListItemButton>
-                );
-              })}
-            </List>
+              <List aria-label="Critères">
+                <ListHead style={{ ...sectionTitleStyle, ...rowInset }}>Critères</ListHead>
+                {visibleFacets.map((d) => {
+                  const c = facetCount(filters, d.key);
+                  const val = facetValue(d);
+                  return (
+                    <ListItemButton key={d.key} style={rowInset} onPress={() => openFacet(d.key)}>
+                      <span style={facetLabelStyle}>{d.label}</span>
+                      <span style={facetTrailingStyle}>
+                        {val ? (
+                          <span style={facetValueStyle}>{val}</span>
+                        ) : c > 0 ? (
+                          <Badge label={String(c)} appearance="information" importance="high" />
+                        ) : null}
+                        <Icon icon="ChevronRight" color="subtlest" />
+                      </span>
+                    </ListItemButton>
+                  );
+                })}
+              </List>
             </Bleed>
           </div>
         )}
@@ -1321,15 +1901,34 @@ export function FiltresSheet({
       {/* Pied masqué pendant l'enregistrement : aucun autre élément actif. */}
       {savingName === null ? (
         <DrawerFooter>
-          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space150)", width: "100%" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--space150)",
+              width: "100%",
+            }}
+          >
             {/* Proposé UNIQUEMENT s'il y a des filtres appliqués qui ne correspondent
                 pas déjà à un filtre enregistré. */}
             {canSave ? (
-              <Button appearance="outlined" density="touch" iconBefore="Bookmark" onPress={() => setSavingName("")} style={{ width: "100%" }}>
+              <Button
+                appearance="outlined"
+                density="touch"
+                iconBefore="Bookmark"
+                onPress={() => setSavingName("")}
+                style={{ width: "100%" }}
+              >
                 Donner un nom à ces filtres
               </Button>
             ) : null}
-            <Button appearance="contained" color="comete" density="touch" onPress={() => onOpenChange(false)} style={{ width: "100%" }}>
+            <Button
+              appearance="contained"
+              color="comete"
+              density="touch"
+              onPress={() => onOpenChange(false)}
+              style={{ width: "100%" }}
+            >
               Voir {results.length} agent{results.length > 1 ? "s" : ""}
             </Button>
           </div>
@@ -1390,10 +1989,25 @@ export function SavedSearchesMenu({
                     key={v.id}
                     id={v.id}
                     // Indicateur d'état : bookmark REMPLI = appliqué, contour = non.
-                    elemBefore={<Icon icon="Bookmark" appearance={isApplied ? "filled" : "outlined"} size={18} />}
-                    description={isApplied ? `Appliqué · ${n} critère${n > 1 ? "s" : ""}` : `${n} critère${n > 1 ? "s" : ""}`}
+                    elemBefore={
+                      <Icon
+                        icon="Bookmark"
+                        appearance={isApplied ? "filled" : "outlined"}
+                        size={18}
+                      />
+                    }
+                    description={
+                      isApplied
+                        ? `Appliqué · ${n} critère${n > 1 ? "s" : ""}`
+                        : `${n} critère${n > 1 ? "s" : ""}`
+                    }
                     elemAfter={
-                      <Button appearance="subtle" iconBefore="Close" aria-label={`Supprimer ${v.name}`} onPress={() => onDelete(v.id)} />
+                      <Button
+                        appearance="subtle"
+                        iconBefore="Close"
+                        aria-label={`Supprimer ${v.name}`}
+                        onPress={() => onDelete(v.id)}
+                      />
                     }
                   >
                     {v.name}
@@ -1414,7 +2028,12 @@ export function SavedSearchesMenu({
 // se passe à `ActiveFilterTags` (`onOpenFacet`).
 
 export function useFiltresPanelControl(): {
-  panelProps: { isOpen: boolean; onOpenChange: (open: boolean) => void; facet: string | undefined; onFacetChange: (facet: string) => void };
+  panelProps: {
+    isOpen: boolean;
+    onOpenChange: (open: boolean) => void;
+    facet: string | undefined;
+    onFacetChange: (facet: string) => void;
+  };
   openFacet: (facet: string) => void;
 } {
   const [isOpen, setIsOpen] = useState(false);
@@ -1485,10 +2104,26 @@ export function ActiveFilterTags({
     const body = (
       <>
         <span style={{ flex: "none" }}>{g.facet}&nbsp;:</span>
-        <span style={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{value}</span>
+        <span
+          style={{
+            minWidth: 0,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {value}
+        </span>
       </>
     );
-    const bodyStyle = { display: "inline-flex", alignItems: "center", gap: "var(--space050)", minWidth: 0, color: "inherit", font: "inherit" } as const;
+    const bodyStyle = {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: "var(--space050)",
+      minWidth: 0,
+      color: "inherit",
+      font: "inherit",
+    } as const;
     return (
       <span
         key={g.key}
@@ -1523,7 +2158,17 @@ export function ActiveFilterTags({
           type="button"
           onClick={g.clear}
           aria-label={`Retirer ${g.facet}`}
-          style={{ flex: "none", display: "inline-flex", padding: 4, border: 0, background: "none", borderRadius: "var(--radius-round)", cursor: "pointer", color: "inherit", opacity: 0.7 }}
+          style={{
+            flex: "none",
+            display: "inline-flex",
+            padding: 4,
+            border: 0,
+            background: "none",
+            borderRadius: "var(--radius-round)",
+            cursor: "pointer",
+            color: "inherit",
+            opacity: 0.7,
+          }}
         >
           <Icon icon="Close" size={12} />
         </button>
@@ -1536,7 +2181,13 @@ export function ActiveFilterTags({
     <div
       role="group"
       aria-label="Filtres actifs"
-      style={{ display: "flex", alignItems: "center", gap: "var(--space075)", minHeight: 40, flexWrap: "wrap" }}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "var(--space075)",
+        minHeight: 40,
+        flexWrap: "wrap",
+      }}
     >
       {visibleGroups.map(renderChip)}
       {hiddenCount > 0 && (
@@ -1611,7 +2262,12 @@ export function ResultsTable({
             <TableCell>{a.diplome}</TableCell>
             <TableCell>{a.contrat}</TableCell>
             <TableCell>
-              <Tag label={DISPO_TAG[a.dispo].label} color={DISPO_TAG[a.dispo].color} appearance="subtle" shape="rounded" />
+              <Tag
+                label={DISPO_TAG[a.dispo].label}
+                color={DISPO_TAG[a.dispo].color}
+                appearance="subtle"
+                shape="rounded"
+              />
             </TableCell>
           </TableRow>
         ))}

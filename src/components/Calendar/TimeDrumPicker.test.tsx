@@ -13,7 +13,9 @@ describe("TimeDrumPicker", () => {
     it("should call onChange but NOT onComplete when an hour is clicked", async () => {
       const onChange = vi.fn();
       const onComplete = vi.fn();
-      render(<TimeDrumPicker value={new Time(14, 30)} onChange={onChange} onComplete={onComplete} />);
+      render(
+        <TimeDrumPicker value={new Time(14, 30)} onChange={onChange} onComplete={onComplete} />
+      );
       await userEvent.click(option("Heures", "09"));
       expect(onChange).toHaveBeenCalledWith(new Time(9, 30, 0));
       expect(onComplete).not.toHaveBeenCalled();
@@ -22,7 +24,9 @@ describe("TimeDrumPicker", () => {
     it("should call onComplete when a minute is clicked (24h, no seconds)", async () => {
       const onChange = vi.fn();
       const onComplete = vi.fn();
-      render(<TimeDrumPicker value={new Time(14, 30)} onChange={onChange} onComplete={onComplete} />);
+      render(
+        <TimeDrumPicker value={new Time(14, 30)} onChange={onChange} onComplete={onComplete} />
+      );
       await userEvent.click(option("Minutes", "45"));
       expect(onChange).toHaveBeenCalledWith(new Time(14, 45, 0));
       expect(onComplete).toHaveBeenCalledTimes(1);
@@ -42,7 +46,9 @@ describe("TimeDrumPicker", () => {
       render(<TimeDrumPicker value={new Time(14, 30)} hourCycle={12} onComplete={onComplete} />);
       await userEvent.click(option("Minutes", "45"));
       expect(onComplete).not.toHaveBeenCalled();
-      await userEvent.click(within(screen.getByRole("listbox", { name: "Période" })).getByRole("option", { name: "AM" }));
+      await userEvent.click(
+        within(screen.getByRole("listbox", { name: "Période" })).getByRole("option", { name: "AM" })
+      );
       expect(onComplete).toHaveBeenCalledTimes(1);
     });
 

@@ -88,24 +88,12 @@ describe("ProgressIndicator", () => {
 
   it("should generate an aria-label from selectedIndex and total", () => {
     render(<ProgressIndicator selectedIndex={1} total={4} />);
-    expect(screen.getByRole("tablist")).toHaveAttribute(
-      "aria-label",
-      "Etape 2 sur 4",
-    );
+    expect(screen.getByRole("tablist")).toHaveAttribute("aria-label", "Etape 2 sur 4");
   });
 
   it("should use a custom aria-label when provided", () => {
-    render(
-      <ProgressIndicator
-        selectedIndex={0}
-        total={3}
-        aria-label="Step 1 of 3"
-      />,
-    );
-    expect(screen.getByRole("tablist")).toHaveAttribute(
-      "aria-label",
-      "Step 1 of 3",
-    );
+    render(<ProgressIndicator selectedIndex={0} total={3} aria-label="Step 1 of 3" />);
+    expect(screen.getByRole("tablist")).toHaveAttribute("aria-label", "Step 1 of 3");
   });
 
   it("should label each dot with its step number", () => {

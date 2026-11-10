@@ -18,9 +18,7 @@ function getCssVar(el: Element, name: string): string {
  * We query directly by attribute instead.
  */
 function getDialogByLabel(label: string): HTMLElement {
-  const el = document.body.querySelector<HTMLElement>(
-    `[role="dialog"][aria-label="${label}"]`,
-  );
+  const el = document.body.querySelector<HTMLElement>(`[role="dialog"][aria-label="${label}"]`);
   if (!el) throw new Error(`No dialog with aria-label="${label}" found`);
   return el;
 }
@@ -37,7 +35,7 @@ function renderDrawer(props: Partial<React.ComponentProps<typeof Drawer>> = {}) 
       <Drawer {...defaultProps}>
         <p>Drawer content</p>
       </Drawer>
-    </DrawerProvider>,
+    </DrawerProvider>
   );
 }
 
@@ -123,7 +121,7 @@ describe("DrawerHeader", () => {
         <Drawer isOpen onOpenChange={vi.fn()} aria-label="Test">
           <DrawerHeader>Mon titre</DrawerHeader>
         </Drawer>
-      </DrawerProvider>,
+      </DrawerProvider>
     );
     expect(screen.getByText("Mon titre")).toBeInTheDocument();
   });
@@ -135,7 +133,7 @@ describe("DrawerHeader", () => {
         <Drawer isOpen onOpenChange={vi.fn()} aria-label="Test">
           <DrawerHeader onClose={onClose}>Titre</DrawerHeader>
         </Drawer>
-      </DrawerProvider>,
+      </DrawerProvider>
     );
     const closeBtn = screen.getByLabelText("Fermer");
     expect(closeBtn).toBeInTheDocument();
@@ -149,7 +147,7 @@ describe("DrawerBody", () => {
         <Drawer isOpen onOpenChange={vi.fn()} aria-label="Test">
           <DrawerBody>Body content</DrawerBody>
         </Drawer>
-      </DrawerProvider>,
+      </DrawerProvider>
     );
     expect(screen.getByText("Body content")).toBeInTheDocument();
   });
@@ -162,7 +160,7 @@ describe("DrawerFooter", () => {
         <Drawer isOpen onOpenChange={vi.fn()} aria-label="Test">
           <DrawerFooter>Footer content</DrawerFooter>
         </Drawer>
-      </DrawerProvider>,
+      </DrawerProvider>
     );
     expect(screen.getByText("Footer content")).toBeInTheDocument();
   });
@@ -190,7 +188,7 @@ describe("Drawer — overlay stacking", () => {
       placement?: DrawerPlacement;
       stacking?: DrawerStacking;
       size?: string;
-    }>,
+    }>
   ) {
     return render(
       <DrawerProvider>
@@ -207,7 +205,7 @@ describe("Drawer — overlay stacking", () => {
             <p>{e.label} content</p>
           </Drawer>
         ))}
-      </DrawerProvider>,
+      </DrawerProvider>
     );
   }
 
@@ -231,11 +229,7 @@ describe("Drawer — overlay stacking", () => {
   });
 
   it("three overlay drawers: insets and shades scale with depth from top", () => {
-    renderStack([
-      { label: "deepest" },
-      { label: "middle" },
-      { label: "top" },
-    ]);
+    renderStack([{ label: "deepest" }, { label: "middle" }, { label: "top" }]);
     const deepest = getDialogByLabel("deepest");
     const middle = getDialogByLabel("middle");
     const top = getDialogByLabel("top");
@@ -328,12 +322,13 @@ describe("Drawer — overlay stacking", () => {
   });
 
   it("push-stacked shifts the correct anchor edge for each placement", () => {
-    const cases: Array<{ placement: DrawerPlacement; edge: "left" | "right" | "top" | "bottom" }> = [
-      { placement: "left", edge: "left" },
-      { placement: "right", edge: "right" },
-      { placement: "top", edge: "top" },
-      { placement: "bottom", edge: "bottom" },
-    ];
+    const cases: Array<{ placement: DrawerPlacement; edge: "left" | "right" | "top" | "bottom" }> =
+      [
+        { placement: "left", edge: "left" },
+        { placement: "right", edge: "right" },
+        { placement: "top", edge: "top" },
+        { placement: "bottom", edge: "bottom" },
+      ];
     cases.forEach(({ placement, edge }) => {
       const { unmount } = renderStack([
         { label: `pushed-${placement}`, placement },
@@ -349,7 +344,7 @@ describe("Drawer — overlay stacking", () => {
     renderStack([{ label: "first" }, { label: "second" }]);
     // Overlays are portaled into document.body, not the render container
     const opaqueOverlays = document.body.querySelectorAll(
-      '[class*="overlay"]:not([class*="overlayTransparent"])',
+      '[class*="overlay"]:not([class*="overlayTransparent"])'
     );
     const transparentOverlays = document.body.querySelectorAll('[class*="overlayTransparent"]');
     expect(opaqueOverlays.length).toBe(1);
@@ -407,16 +402,10 @@ describe("Drawer — mode non modal", () => {
 
   it("DrawerHeader rend un <h2> en non modal", () => {
     render(
-      <Drawer
-        isOpen
-        onOpenChange={vi.fn()}
-        isModal={false}
-        placement="right"
-        aria-label="Filtres"
-      >
+      <Drawer isOpen onOpenChange={vi.fn()} isModal={false} placement="right" aria-label="Filtres">
         <DrawerHeader>Filtres</DrawerHeader>
         <DrawerBody>contenu</DrawerBody>
-      </Drawer>,
+      </Drawer>
     );
     const heading = screen.getByRole("heading", { name: "Filtres", level: 2 });
     expect(heading.tagName).toBe("H2");
@@ -477,7 +466,7 @@ describe("Drawer — zone défilante", () => {
             <p>Corps défilant</p>
           </DrawerBody>
         </Drawer>
-      </DrawerProvider>,
+      </DrawerProvider>
     );
     return screen.getByText("Corps défilant").closest(".body");
   }
@@ -507,7 +496,7 @@ describe("Drawer — zone défilante", () => {
     // Sans ce jeton les masques tirent vers `--background-surface-default`,
     // qui n'est pas la couleur du panneau — ils jureraient sur le tiroir.
     expect(css).toMatch(
-      /\.body\s*\{[^}]*--scroll-shadow-surface:\s*var\(--background-surface-elevation-overlay-default\)/,
+      /\.body\s*\{[^}]*--scroll-shadow-surface:\s*var\(--background-surface-elevation-overlay-default\)/
     );
   });
 

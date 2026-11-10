@@ -15,7 +15,7 @@ describe("useTableSelection — non contrôlé", () => {
 
   it("should honor defaultSelectedKeys", () => {
     const { result } = renderHook(() =>
-      useTableSelection({ keys: PAGE, defaultSelectedKeys: ["2"] }),
+      useTableSelection({ keys: PAGE, defaultSelectedKeys: ["2"] })
     );
     expect(result.current.selectedCount).toBe(1);
     expect(result.current.isSelected("2")).toBe(true);
@@ -70,7 +70,7 @@ describe("useTableSelection — non contrôlé", () => {
 
   it("clear() should empty the whole selection", () => {
     const { result } = renderHook(() =>
-      useTableSelection({ keys: PAGE, defaultSelectedKeys: PAGE }),
+      useTableSelection({ keys: PAGE, defaultSelectedKeys: PAGE })
     );
     expect(result.current.selectedCount).toBe(3);
     act(() => result.current.clear());
@@ -82,7 +82,7 @@ describe("useTableSelection — périmètre page (pagination)", () => {
   it("toggleAll should only clear current-page keys, preserving off-page selection", () => {
     // Sélection initiale : une clé hors page ("9") + toute la page.
     const { result } = renderHook(() =>
-      useTableSelection({ keys: PAGE, defaultSelectedKeys: ["9", "1", "2", "3"] }),
+      useTableSelection({ keys: PAGE, defaultSelectedKeys: ["9", "1", "2", "3"] })
     );
     expect(result.current.isAllSelected).toBe(true);
     act(() => result.current.toggleAll()); // désélectionne la page uniquement
@@ -93,7 +93,7 @@ describe("useTableSelection — périmètre page (pagination)", () => {
 
   it("isAllSelected should reflect the current page, not off-page keys", () => {
     const { result } = renderHook(() =>
-      useTableSelection({ keys: PAGE, defaultSelectedKeys: ["9"] }),
+      useTableSelection({ keys: PAGE, defaultSelectedKeys: ["9"] })
     );
     // "9" sélectionnée mais hors page → la page n'a rien de sélectionné.
     expect(result.current.isAllSelected).toBe(false);
@@ -107,7 +107,7 @@ describe("useTableSelection — contrôlé", () => {
     const { result, rerender } = renderHook(
       ({ selected }: { selected: string[] }) =>
         useTableSelection({ keys: PAGE, selectedKeys: selected, onSelectionChange }),
-      { initialProps: { selected: ["1"] } },
+      { initialProps: { selected: ["1"] } }
     );
     expect(result.current.isSelected("1")).toBe(true);
 
@@ -161,9 +161,7 @@ describe("useTableSelection — prop-getters", () => {
 
   it("getRowCheckboxProps should fall back to a default label", () => {
     const { result } = renderHook(() => useTableSelection({ keys: PAGE }));
-    expect(result.current.getRowCheckboxProps("1")["aria-label"]).toBe(
-      "Sélectionner la ligne",
-    );
+    expect(result.current.getRowCheckboxProps("1")["aria-label"]).toBe("Sélectionner la ligne");
   });
 });
 

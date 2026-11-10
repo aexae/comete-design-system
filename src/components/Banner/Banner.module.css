@@ -9,7 +9,7 @@
 .banner {
   display: flex;
   align-items: center;
-  gap: var(--space150);     /* 12px */
+  gap: var(--space150); /* 12px */
   padding: var(--space150); /* 12px */
   width: 100%;
   box-sizing: border-box;
@@ -24,9 +24,9 @@
   flex: 1;
   min-width: 0; /* empêche le débordement en flex */
   font-family: var(--font-family-primary);
-  font-size: var(--font-size-ui-xs);       /* 14px */
+  font-size: var(--font-size-ui-xs); /* 14px */
   font-weight: var(--font-weight-regular); /* 400 */
-  line-height: var(--line-height-ui-xs);   /* 20px */
+  line-height: var(--line-height-ui-xs); /* 20px */
 }
 
 /* ==========================================================================

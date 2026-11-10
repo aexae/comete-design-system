@@ -18,8 +18,10 @@ import styles from "./Calendar.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
-export interface RangeCalendarProps<T extends DateValue>
-  extends Omit<AriaRangeCalendarProps<T>, "className" | "style"> {
+export interface RangeCalendarProps<T extends DateValue> extends Omit<
+  AriaRangeCalendarProps<T>,
+  "className" | "style"
+> {
   /** Classe CSS additionnelle sur le conteneur. */
   className?: string;
   /** Styles inline additionnels. */
@@ -54,10 +56,7 @@ export interface RangeCalendarProps<T extends DateValue>
  * @param maxValue     - Date maximale
  * @param isDisabled   - Désactive tout le calendrier
  */
-export function RangeCalendar<T extends DateValue>({
-  className,
-  ...props
-}: RangeCalendarProps<T>) {
+export function RangeCalendar<T extends DateValue>({ className, ...props }: RangeCalendarProps<T>) {
   return (
     <AriaRangeCalendar
       {...props}
@@ -66,16 +65,24 @@ export function RangeCalendar<T extends DateValue>({
       <RangeCalendarHeader />
       <CalendarGrid className={styles.grid}>
         <CalendarGridHeader>
-          {(day) => (
-            <CalendarHeaderCell className={styles.headerCell}>
-              {day}
-            </CalendarHeaderCell>
-          )}
+          {(day) => <CalendarHeaderCell className={styles.headerCell}>{day}</CalendarHeaderCell>}
         </CalendarGridHeader>
         <CalendarGridBody>
           {(date) => (
             <AriaCalendarCell date={date} className={styles.ariaDateCell}>
-              {({ formattedDate, isFocusVisible, isHovered, isPressed, isSelected, isSelectionStart, isSelectionEnd, isToday, isDisabled, isUnavailable, isOutsideMonth }) => (
+              {({
+                formattedDate,
+                isFocusVisible,
+                isHovered,
+                isPressed,
+                isSelected,
+                isSelectionStart,
+                isSelectionEnd,
+                isToday,
+                isDisabled,
+                isUnavailable,
+                isOutsideMonth,
+              }) => (
                 <CometeCalendarCell
                   interactive={false}
                   isSelected={isSelected}

@@ -13,10 +13,8 @@ import { GuidelinesFlat } from "./_guidelines";
 // -----------------------------------------------------------------------
 // Figma
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -27,7 +25,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le sélecteur d'année permet de choisir une année sans descendre au niveau du mois ou du jour. Il convient aux rapports annuels, filtres historiques et vues agrégées longue période." },
+      description: {
+        component:
+          "Le sélecteur d'année permet de choisir une année sans descendre au niveau du mois ou du jour. Il convient aux rapports annuels, filtres historiques et vues agrégées longue période.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -127,12 +128,7 @@ function SingleRender({ args }: { args: SingleYearPickerProps }) {
         alignItems: "center",
       }}
     >
-      <YearPicker
-        {...args}
-        isRange={false}
-        year={year}
-        onChange={setYear}
-      />
+      <YearPicker {...args} isRange={false} year={year} onChange={setYear} />
       <p
         style={{
           fontFamily: "var(--font-family-primary)",

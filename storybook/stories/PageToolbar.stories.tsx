@@ -26,15 +26,11 @@ import {
 import css from "./Page.stories.module.css";
 import filtresCss from "./FiltresOptionB.stories.module.css";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 function Gutters({ children }: { children: ReactNode }) {
-  return (
-    <div style={{ paddingInline: "var(--space300)" }}>{children}</div>
-  );
+  return <div style={{ paddingInline: "var(--space300)" }}>{children}</div>;
 }
 
 const meta = {
@@ -43,7 +39,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "La barre d'outils regroupe, sous l'en-tête, les commandes agissant sur le contenu de la page : recherche et filtres d'un côté, actions groupées de l'autre. Elle est particulièrement adaptée aux pages de listing (tableaux, collections)." },
+      description: {
+        component:
+          "La barre d'outils regroupe, sous l'en-tête, les commandes agissant sur le contenu de la page : recherche et filtres d'un côté, actions groupées de l'autre. Elle est particulièrement adaptée aux pages de listing (tableaux, collections).",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -121,7 +120,12 @@ export const Full: Story = {
             }
             end={
               <Cluster gap="100">
-                <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
+                <SavedSearchesMenu
+                  views={views}
+                  current={f}
+                  onApply={(v) => setF(v.filters)}
+                  onDelete={remove}
+                />
                 <ButtonGroup>
                   <Button
                     color="comete"
@@ -140,7 +144,11 @@ export const Full: Story = {
           />
           {/* Tags des critères actifs, sous la barre (façon option B). */}
           <div style={{ paddingInline: "var(--page-gutter)" }}>
-            <ActiveFilterTags filters={f} onChange={setF} textActionClassName={filtresCss["textAction"]} />
+            <ActiveFilterTags
+              filters={f}
+              onChange={setF}
+              textActionClassName={filtresCss["textAction"]}
+            />
           </div>
           <Divider />
         </Page>
@@ -186,7 +194,11 @@ export const SearchOnly: Story = {
           />
           {/* Tags des critères actifs, sous la barre (façon option B). */}
           <div style={{ paddingInline: "var(--page-gutter)" }}>
-            <ActiveFilterTags filters={f} onChange={setF} textActionClassName={filtresCss["textAction"]} />
+            <ActiveFilterTags
+              filters={f}
+              onChange={setF}
+              textActionClassName={filtresCss["textAction"]}
+            />
           </div>
           <Divider />
         </Page>
@@ -208,8 +220,12 @@ export const ActionsOnly: Story = {
         <Page.Toolbar
           end={
             <ButtonGroup>
-              <Button color="comete" iconBefore="Add">Créer une vacation</Button>
-              <Button appearance="subtle" iconBefore="Download">Exporter PDF</Button>
+              <Button color="comete" iconBefore="Add">
+                Créer une vacation
+              </Button>
+              <Button appearance="subtle" iconBefore="Download">
+                Exporter PDF
+              </Button>
             </ButtonGroup>
           }
         />
@@ -227,10 +243,7 @@ export const None: Story = {
   render: () => (
     <Gutters>
       <Page globalActions={null}>
-        <Page.Bar
-          title="Paramètres du compte"
-          trailing={<Avatar size="medium" initials="AC" />}
-        />
+        <Page.Bar title="Paramètres du compte" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Body>
           <Cluster gap="200">
             <Badge label="En ligne" appearance="success" />
@@ -279,7 +292,12 @@ export const WithActiveFilters: Story = {
             }
             end={
               <Cluster gap="100">
-                <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
+                <SavedSearchesMenu
+                  views={views}
+                  current={f}
+                  onApply={(v) => setF(v.filters)}
+                  onDelete={remove}
+                />
                 <ButtonGroup>
                   <Button
                     color="comete"
@@ -298,7 +316,11 @@ export const WithActiveFilters: Story = {
           />
           {/* Tags des critères actifs, sous la barre (façon option B). */}
           <div style={{ paddingInline: "var(--page-gutter)" }}>
-            <ActiveFilterTags filters={f} onChange={setF} textActionClassName={filtresCss["textAction"]} />
+            <ActiveFilterTags
+              filters={f}
+              onChange={setF}
+              textActionClassName={filtresCss["textAction"]}
+            />
           </div>
           <Divider />
         </Page>

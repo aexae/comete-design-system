@@ -4,11 +4,10 @@ import { ButtonGroup } from "@aexae/comete-design-system/components";
 import { Button } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Labeled } from "./_labeled";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -19,7 +18,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le groupe de boutons rassemble des actions liées dans un ensemble cohérent, avec un espacement et un alignement uniformes. Il facilite la hiérarchie visuelle entre action principale et actions secondaires." },
+      description: {
+        component:
+          "Le groupe de boutons rassemble des actions liées dans un ensemble cohérent, avec un espacement et un alignement uniformes. Il facilite la hiérarchie visuelle entre action principale et actions secondaires.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -105,7 +107,9 @@ export const ThreeButtons: Story = {
   render: () => (
     <ButtonGroup aria-label="Actions du formulaire">
       <Button appearance="subtle">Annuler</Button>
-      <Button appearance="outlined" color="comete">Enregistrer en brouillon</Button>
+      <Button appearance="outlined" color="comete">
+        Enregistrer en brouillon
+      </Button>
       <Button color="comete">Publier</Button>
     </ButtonGroup>
   ),
@@ -116,19 +120,35 @@ export const MixedVariants: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("4608:17266") } },
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      <ButtonGroup>
-        <Button appearance="outlined">Annuler</Button>
-        <Button appearance="contained" color="comete">Confirmer</Button>
-      </ButtonGroup>
-      <ButtonGroup>
-        <Button appearance="contained" color="default">Exporter</Button>
-        <Button appearance="contained" color="critical">Supprimer</Button>
-      </ButtonGroup>
-      <ButtonGroup>
-        <Button appearance="subtle">Ignorer</Button>
-        <Button appearance="subtle" color="comete">Enregistrer</Button>
-        <Button appearance="subtle" color="critical">Rejeter</Button>
-      </ButtonGroup>
+      <Labeled label="outlined · contained" align="flex-start">
+        <ButtonGroup>
+          <Button appearance="outlined">Annuler</Button>
+          <Button appearance="contained" color="comete">
+            Confirmer
+          </Button>
+        </ButtonGroup>
+      </Labeled>
+      <Labeled label="contained · default · critical" align="flex-start">
+        <ButtonGroup>
+          <Button appearance="contained" color="default">
+            Exporter
+          </Button>
+          <Button appearance="contained" color="critical">
+            Supprimer
+          </Button>
+        </ButtonGroup>
+      </Labeled>
+      <Labeled label="subtle" align="flex-start">
+        <ButtonGroup>
+          <Button appearance="subtle">Ignorer</Button>
+          <Button appearance="subtle" color="comete">
+            Enregistrer
+          </Button>
+          <Button appearance="subtle" color="critical">
+            Rejeter
+          </Button>
+        </ButtonGroup>
+      </Labeled>
     </div>
   ),
 };
@@ -138,14 +158,20 @@ export const AllSpacings: Story = {
   name: "All densities",
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "flex-start" }}>
-      <ButtonGroup aria-label="Actions default">
-        <Button>Annuler</Button>
-        <Button color="comete">Confirmer</Button>
-      </ButtonGroup>
-      <ButtonGroup aria-label="Actions compact">
-        <Button density="compact">Annuler</Button>
-        <Button density="compact" color="comete">Confirmer</Button>
-      </ButtonGroup>
+      <Labeled label="default" align="flex-start">
+        <ButtonGroup aria-label="Actions default">
+          <Button>Annuler</Button>
+          <Button color="comete">Confirmer</Button>
+        </ButtonGroup>
+      </Labeled>
+      <Labeled label="compact" align="flex-start">
+        <ButtonGroup aria-label="Actions compact">
+          <Button density="compact">Annuler</Button>
+          <Button density="compact" color="comete">
+            Confirmer
+          </Button>
+        </ButtonGroup>
+      </Labeled>
     </div>
   ),
 };
@@ -156,13 +182,23 @@ export const WithIcons: Story = {
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "flex-start" }}>
       <ButtonGroup aria-label="Navigation">
-        <Button appearance="outlined" iconBefore="ChevronLeft">Précédent</Button>
-        <Button color="comete" iconAfter="ChevronRight">Suivant</Button>
+        <Button appearance="outlined" iconBefore="ChevronLeft">
+          Précédent
+        </Button>
+        <Button color="comete" iconAfter="ChevronRight">
+          Suivant
+        </Button>
       </ButtonGroup>
       <ButtonGroup aria-label="Actions">
-        <Button appearance="subtle" iconBefore="Download">Télécharger</Button>
-        <Button appearance="subtle" iconBefore="IosShare">Partager</Button>
-        <Button appearance="subtle" color="critical" iconBefore="Delete">Supprimer</Button>
+        <Button appearance="subtle" iconBefore="Download">
+          Télécharger
+        </Button>
+        <Button appearance="subtle" iconBefore="IosShare">
+          Partager
+        </Button>
+        <Button appearance="subtle" color="critical" iconBefore="Delete">
+          Supprimer
+        </Button>
       </ButtonGroup>
     </div>
   ),

@@ -1,17 +1,13 @@
 // SectionMessage — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  Button,
-  SectionMessage,
-} from "@aexae/comete-design-system/components";
+import { Button, SectionMessage } from "@aexae/comete-design-system/components";
 import type { SectionMessageAppearance } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Labeled } from "./_labeled";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 const LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
@@ -36,7 +32,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le message de section affiche une information contextuelle, un avertissement ou une confirmation à l'intérieur d'une zone de contenu. Il se décline en plusieurs niveaux de sévérité pour adapter le ton au message." },
+      description: {
+        component:
+          "Le message de section affiche une information contextuelle, un avertissement ou une confirmation à l'intérieur d'une zone de contenu. Il se décline en plusieurs niveaux de sévérité pour adapter le ton au message.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -47,8 +46,7 @@ const meta = {
                     3 lignes n&apos;ont pas pu être importées.
                   </SectionMessage>
                 ),
-                caption:
-                  "Message contextuel, dans le flux, près de l'élément concerné.",
+                caption: "Message contextuel, dans le flux, près de l'élément concerné.",
               }}
               dontExample={{
                 example: (
@@ -182,9 +180,11 @@ export const AllAppearances: Story = {
       }}
     >
       {APPEARANCES.map((appearance) => (
-        <SectionMessage key={appearance} appearance={appearance} title="Titre">
-          {LOREM}
-        </SectionMessage>
+        <Labeled key={appearance} label={appearance} align="stretch">
+          <SectionMessage appearance={appearance} title="Titre">
+            {LOREM}
+          </SectionMessage>
+        </Labeled>
       ))}
     </div>
   ),
@@ -203,23 +203,24 @@ export const AllAppearancesWithActions: Story = {
       }}
     >
       {APPEARANCES.map((appearance) => (
-        <SectionMessage
-          key={appearance}
-          appearance={appearance}
-          title="Titre"
-          actions={
-            <>
-              <Button appearance="link" density="compact">
-                Action link
-              </Button>
-              <Button appearance="link" density="compact">
-                Action link
-              </Button>
-            </>
-          }
-        >
-          {LOREM}
-        </SectionMessage>
+        <Labeled key={appearance} label={appearance} align="stretch">
+          <SectionMessage
+            appearance={appearance}
+            title="Titre"
+            actions={
+              <>
+                <Button appearance="link" density="compact">
+                  Action link
+                </Button>
+                <Button appearance="link" density="compact">
+                  Action link
+                </Button>
+              </>
+            }
+          >
+            {LOREM}
+          </SectionMessage>
+        </Labeled>
       ))}
     </div>
   ),

@@ -1,16 +1,9 @@
 // Tests unitaires pour Accordion + AccordionItem + AccordionTrigger + AccordionContent
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "./Accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./Accordion";
 
-function renderAccordion(
-  props: Partial<React.ComponentProps<typeof Accordion>> = {},
-) {
+function renderAccordion(props: Partial<React.ComponentProps<typeof Accordion>> = {}) {
   return render(
     <Accordion {...props}>
       <AccordionItem value="a">
@@ -21,7 +14,7 @@ function renderAccordion(
         <AccordionTrigger>Trigger B</AccordionTrigger>
         <AccordionContent>Content B</AccordionContent>
       </AccordionItem>
-    </Accordion>,
+    </Accordion>
   );
 }
 
@@ -40,7 +33,7 @@ describe("Accordion", () => {
     renderAccordion();
     expect(screen.getByRole("button", { name: "Trigger A" })).toHaveAttribute(
       "aria-expanded",
-      "false",
+      "false"
     );
   });
 
@@ -48,11 +41,11 @@ describe("Accordion", () => {
     renderAccordion({ defaultValue: ["a"] });
     expect(screen.getByRole("button", { name: "Trigger A" })).toHaveAttribute(
       "aria-expanded",
-      "true",
+      "true"
     );
     expect(screen.getByRole("button", { name: "Trigger B" })).toHaveAttribute(
       "aria-expanded",
-      "false",
+      "false"
     );
   });
 
@@ -60,7 +53,7 @@ describe("Accordion", () => {
     renderAccordion({ value: ["b"] });
     expect(screen.getByRole("button", { name: "Trigger B" })).toHaveAttribute(
       "aria-expanded",
-      "true",
+      "true"
     );
   });
 
@@ -110,7 +103,7 @@ describe("Accordion", () => {
           <AccordionTrigger>Trigger A</AccordionTrigger>
           <AccordionContent>Content A</AccordionContent>
         </AccordionItem>
-      </Accordion>,
+      </Accordion>
     );
     const btn = screen.getByRole("button", { name: "Trigger A" });
     expect(btn).toBeDisabled();
@@ -135,7 +128,7 @@ describe("Accordion", () => {
           <AccordionTrigger>Trigger A</AccordionTrigger>
           <AccordionContent>Content A</AccordionContent>
         </AccordionItem>
-      </Accordion>,
+      </Accordion>
     );
     expect(container.querySelector("h3")).not.toBeNull();
     rerender(
@@ -144,7 +137,7 @@ describe("Accordion", () => {
           <AccordionTrigger headingLevel={2}>Trigger A</AccordionTrigger>
           <AccordionContent>Content A</AccordionContent>
         </AccordionItem>
-      </Accordion>,
+      </Accordion>
     );
     expect(container.querySelector("h2")).not.toBeNull();
   });
@@ -157,11 +150,7 @@ describe("Accordion", () => {
   it("should expose data-slot hooks on root, item and content", () => {
     const { container } = renderAccordion({ defaultValue: ["a"] });
     expect(container.querySelector('[data-slot="accordion"]')).not.toBeNull();
-    expect(
-      container.querySelector('[data-slot="accordion-item"]'),
-    ).not.toBeNull();
-    expect(
-      container.querySelector('[data-slot="accordion-content"]'),
-    ).not.toBeNull();
+    expect(container.querySelector('[data-slot="accordion-item"]')).not.toBeNull();
+    expect(container.querySelector('[data-slot="accordion-content"]')).not.toBeNull();
   });
 });

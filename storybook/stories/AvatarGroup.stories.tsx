@@ -5,14 +5,13 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Legend } from "./_labeled";
 
 // ----------------------------------------------------------------------
 // Figma
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // ----------------------------------------------------------------------
 // Sample data
@@ -57,7 +56,10 @@ const meta: Meta<AvatarGroupProps> = {
   },
   parameters: {
     docs: {
-      description: { component: "Le groupe d'avatars affiche plusieurs avatars superposés pour représenter un ensemble d'utilisateurs. Il condense l'information en montrant les premiers membres et un compteur pour le reste." },
+      description: {
+        component:
+          "Le groupe d'avatars affiche plusieurs avatars superposés pour représenter un ensemble d'utilisateurs. Il condense l'information en montrant les premiers membres et un compteur pour le reste.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -85,8 +87,7 @@ const meta: Meta<AvatarGroupProps> = {
                     ]}
                   />
                 ),
-                caption:
-                  "Ne pas afficher un grand nombre d'avatars sans regroupement.",
+                caption: "Ne pas afficher un grand nombre d'avatars sans regroupement.",
               }}
               when={[
                 "Afficher un ensemble de personnes de façon compacte — participants, assignés, équipe.",
@@ -233,14 +234,14 @@ export const SelectWithOverflow: Story = {
 export const AllSizes: Story = {
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      {(
-        ["xsmall", "small", "medium", "large", "xlarge", "xxlarge"] as const
-      ).map((size) => (
+      {(["xsmall", "small", "medium", "large", "xlarge", "xxlarge"] as const).map((size) => (
         <div key={size} style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <span style={{ fontFamily: "monospace", fontSize: 12, color: "var(--text-subtle)", width: 120 }}>
-            {size}
-          </span>
-          <AvatarGroup items={PHOTO_ITEMS.slice(0, 3)} overflowItems={PHOTO_ITEMS.slice(3)} size={size} />
+          <Legend style={{ width: 120 }}>{size}</Legend>
+          <AvatarGroup
+            items={PHOTO_ITEMS.slice(0, 3)}
+            overflowItems={PHOTO_ITEMS.slice(3)}
+            size={size}
+          />
         </div>
       ))}
     </div>
@@ -255,11 +256,17 @@ export const AllModes: Story = {
   name: "All modes",
   render: () => {
     const modes = ["display", "navigate", "select"] as const;
-    const labelStyle = { fontFamily: "monospace", fontSize: 12, color: "var(--text-subtlest)", width: 100 };
     return (
-      <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "24px 24px", alignItems: "center" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "auto 1fr",
+          gap: "24px 24px",
+          alignItems: "center",
+        }}
+      >
         {modes.map((mode) => (
-          <ModeRow key={mode} mode={mode} labelStyle={labelStyle} />
+          <ModeRow key={mode} mode={mode} />
         ))}
       </div>
     );
@@ -267,11 +274,11 @@ export const AllModes: Story = {
   parameters: { controls: { disable: true } },
 };
 
-function ModeRow({ mode, labelStyle }: { mode: "display" | "navigate" | "select"; labelStyle: React.CSSProperties }) {
+function ModeRow({ mode }: { mode: "display" | "navigate" | "select" }) {
   const [selected, setSelected] = useState<string[]>(["alice"]);
   return (
     <>
-      <span style={labelStyle}>{mode}</span>
+      <Legend style={{ width: 100 }}>{mode}</Legend>
       <AvatarGroup
         items={PHOTO_ITEMS.slice(0, 3)}
         overflowItems={PHOTO_ITEMS.slice(3)}

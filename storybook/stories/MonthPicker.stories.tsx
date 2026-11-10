@@ -13,10 +13,8 @@ import { GuidelinesFlat } from "./_guidelines";
 // -----------------------------------------------------------------------
 // Figma
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -27,7 +25,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le sélecteur de mois permet de choisir un mois et une année sans descendre au niveau du jour. Il convient aux rapports, filtres et vues agrégées par période mensuelle." },
+      description: {
+        component:
+          "Le sélecteur de mois permet de choisir un mois et une année sans descendre au niveau du jour. Il convient aux rapports, filtres et vues agrégées par période mensuelle.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -220,7 +221,8 @@ function RangeRender({ args }: { args: RangeMonthPickerProps }) {
           color: "var(--text-subtlest)",
         }}
       >
-        Sélection : {String(startMonth).padStart(2, "0")}/{startYear} → {String(endMonth).padStart(2, "0")}/{endYear}
+        Sélection : {String(startMonth).padStart(2, "0")}/{startYear} →{" "}
+        {String(endMonth).padStart(2, "0")}/{endYear}
       </p>
     </div>
   );

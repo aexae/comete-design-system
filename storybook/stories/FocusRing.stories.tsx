@@ -2,23 +2,23 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
 import { FocusRing } from "@aexae/comete-design-system/components";
-import type { FocusRingBorderRadius, FocusRingPosition } from "@aexae/comete-design-system/components";
+import type {
+  FocusRingBorderRadius,
+  FocusRingPosition,
+} from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Labeled } from "./_labeled";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Decorator — conteneur position: relative nécessaire pour l'overlay
 
 function WithContainer({ children }: { children: ReactNode }) {
   return (
-    <div style={{ display: "inline-flex", gap: 32, padding: 32, flexWrap: "wrap" }}>
-      {children}
-    </div>
+    <div style={{ display: "inline-flex", gap: 32, padding: 32, flexWrap: "wrap" }}>{children}</div>
   );
 }
 
@@ -32,7 +32,7 @@ function Box({
   label: string;
 }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+    <Labeled label={label}>
       <div
         style={{
           position: "relative",
@@ -47,10 +47,7 @@ function Box({
       >
         <FocusRing borderRadius={borderRadius} position={position} />
       </div>
-      <span style={{ fontSize: 11, color: "var(--text-subtlest)", fontFamily: "monospace" }}>
-        {label}
-      </span>
-    </div>
+    </Labeled>
   );
 }
 
@@ -63,7 +60,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le focus ring affiche un contour visible autour de l'élément qui détient le focus clavier. Il garantit l'accessibilité en rendant la navigation au clavier perceptible pour tous les utilisateurs." },
+      description: {
+        component:
+          "Le focus ring affiche un contour visible autour de l'élément qui détient le focus clavier. Il garantit l'accessibilité en rendant la navigation au clavier perceptible pour tous les utilisateurs.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -117,7 +117,15 @@ type Story = StoryObj<typeof FocusRing>;
 export const Default: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("3134:45684") } },
   render: (args) => (
-    <div style={{ position: "relative", width: 64, height: 32, background: "var(--background-neutral-subtler-default)", borderRadius: 4 }}>
+    <div
+      style={{
+        position: "relative",
+        width: 64,
+        height: 32,
+        background: "var(--background-neutral-subtler-default)",
+        borderRadius: 4,
+      }}
+    >
       <FocusRing {...args} />
     </div>
   ),

@@ -1,10 +1,7 @@
 // ProgressIndicator — stories Storybook
 import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  Button,
-  ProgressIndicator,
-} from "@aexae/comete-design-system/components";
+import { Button, ProgressIndicator } from "@aexae/comete-design-system/components";
 import type {
   ProgressIndicatorAppearance,
   ProgressIndicatorProps,
@@ -13,14 +10,13 @@ import type {
 } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Labeled } from "./_labeled";
 
 // -----------------------------------------------------------------------
 // Figma
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Interactive render (controlled state)
@@ -30,13 +26,7 @@ function InteractiveProgressIndicator(props: ProgressIndicatorProps) {
   useEffect(() => {
     setSelected(props.selectedIndex ?? 0);
   }, [props.selectedIndex]);
-  return (
-    <ProgressIndicator
-      {...props}
-      selectedIndex={selected}
-      onChange={setSelected}
-    />
-  );
+  return <ProgressIndicator {...props} selectedIndex={selected} onChange={setSelected} />;
 }
 
 // -----------------------------------------------------------------------
@@ -48,7 +38,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "L'indicateur de progression circulaire signale qu'une opération est en cours de traitement. Il convient aux chargements localisés ou aux états d'attente dans un espace restreint." },
+      description: {
+        component:
+          "L'indicateur de progression circulaire signale qu'une opération est en cours de traitement. Il convient aux chargements localisés ou aux états d'attente dans un espace restreint.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -84,12 +77,7 @@ const meta = {
   argTypes: {
     appearance: {
       control: "select",
-      options: [
-        "default",
-        "neutral",
-        "help",
-        "inverted",
-      ] satisfies ProgressIndicatorAppearance[],
+      options: ["default", "neutral", "help", "inverted"] satisfies ProgressIndicatorAppearance[],
       description: "Apparence visuelle des points",
     },
     size: {
@@ -99,11 +87,7 @@ const meta = {
     },
     spacing: {
       control: "select",
-      options: [
-        "comfortable",
-        "cozy",
-        "compact",
-      ] satisfies ProgressIndicatorSpacing[],
+      options: ["comfortable", "cozy", "compact"] satisfies ProgressIndicatorSpacing[],
       description: "Espacement entre les points",
     },
     selectedIndex: {
@@ -203,17 +187,11 @@ export const WithNavigationButtons: Story = {
         >
           Precedent
         </Button>
-        <ProgressIndicator
-          {...args}
-          selectedIndex={selected}
-          onChange={setSelected}
-        />
+        <ProgressIndicator {...args} selectedIndex={selected} onChange={setSelected} />
         <Button
           appearance="contained"
           color="comete"
-          onPress={() =>
-            setSelected((prev) => Math.min(total - 1, prev + 1))
-          }
+          onPress={() => setSelected((prev) => Math.min(total - 1, prev + 1))}
           isDisabled={selected === total - 1}
         >
           Suivant
@@ -230,18 +208,26 @@ export const AllAppearances: Story = {
   name: "All appearances",
   render: (args) => (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      <InteractiveProgressIndicator {...args} appearance="default" />
-      <InteractiveProgressIndicator {...args} appearance="neutral" />
-      <InteractiveProgressIndicator {...args} appearance="help" />
-      <div
-        style={{
-          backgroundColor: "var(--background-accent-purple-bold-default)",
-          padding: "var(--space200)",
-          borderRadius: "var(--radius100)",
-        }}
-      >
-        <InteractiveProgressIndicator {...args} appearance="inverted" />
-      </div>
+      <Labeled label="default" align="flex-start">
+        <InteractiveProgressIndicator {...args} appearance="default" />
+      </Labeled>
+      <Labeled label="neutral" align="flex-start">
+        <InteractiveProgressIndicator {...args} appearance="neutral" />
+      </Labeled>
+      <Labeled label="help" align="flex-start">
+        <InteractiveProgressIndicator {...args} appearance="help" />
+      </Labeled>
+      <Labeled label="inverted" align="flex-start">
+        <div
+          style={{
+            backgroundColor: "var(--background-accent-purple-bold-default)",
+            padding: "var(--space200)",
+            borderRadius: "var(--radius100)",
+          }}
+        >
+          <InteractiveProgressIndicator {...args} appearance="inverted" />
+        </div>
+      </Labeled>
     </div>
   ),
 };
@@ -251,9 +237,15 @@ export const AllSizes: Story = {
   name: "All sizes",
   render: (args) => (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      <InteractiveProgressIndicator {...args} size="small" />
-      <InteractiveProgressIndicator {...args} size="medium" />
-      <InteractiveProgressIndicator {...args} size="large" />
+      <Labeled label="small" align="flex-start">
+        <InteractiveProgressIndicator {...args} size="small" />
+      </Labeled>
+      <Labeled label="medium" align="flex-start">
+        <InteractiveProgressIndicator {...args} size="medium" />
+      </Labeled>
+      <Labeled label="large" align="flex-start">
+        <InteractiveProgressIndicator {...args} size="large" />
+      </Labeled>
     </div>
   ),
 };

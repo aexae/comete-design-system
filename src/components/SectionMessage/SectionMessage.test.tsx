@@ -44,9 +44,7 @@ describe("SectionMessage", () => {
     ] as const;
 
     for (const appearance of appearances) {
-      const { unmount } = render(
-        <SectionMessage appearance={appearance}>Content</SectionMessage>,
-      );
+      const { unmount } = render(<SectionMessage appearance={appearance}>Content</SectionMessage>);
 
       expect(screen.getByRole("group")).toHaveClass(appearance);
       unmount();
@@ -54,27 +52,21 @@ describe("SectionMessage", () => {
   });
 
   it("should render the default icon for each appearance", () => {
-    render(
-      <SectionMessage appearance="information">Content</SectionMessage>,
-    );
+    render(<SectionMessage appearance="information">Content</SectionMessage>);
 
     const el = screen.getByRole("group");
     expect(el.querySelector(".icon")).toBeInTheDocument();
   });
 
   it("should hide the icon when icon is null", () => {
-    const { container } = render(
-      <SectionMessage icon={null}>Content</SectionMessage>,
-    );
+    const { container } = render(<SectionMessage icon={null}>Content</SectionMessage>);
 
     expect(container.querySelector(".icon")).not.toBeInTheDocument();
   });
 
   it("should render a custom icon when provided", () => {
     render(
-      <SectionMessage icon={<span data-testid="custom-icon">★</span>}>
-        Content
-      </SectionMessage>,
+      <SectionMessage icon={<span data-testid="custom-icon">★</span>}>Content</SectionMessage>
     );
 
     expect(screen.getByTestId("custom-icon")).toBeInTheDocument();
@@ -82,11 +74,7 @@ describe("SectionMessage", () => {
 
   it("should render actions when provided", () => {
     render(
-      <SectionMessage
-        actions={<button type="button">Click me</button>}
-      >
-        Content
-      </SectionMessage>,
+      <SectionMessage actions={<button type="button">Click me</button>}>Content</SectionMessage>
     );
 
     expect(screen.getByText("Click me")).toBeInTheDocument();
@@ -107,12 +95,9 @@ describe("SectionMessage", () => {
 
   it("should render title, content and actions together", () => {
     render(
-      <SectionMessage
-        title="Title"
-        actions={<button type="button">Action</button>}
-      >
+      <SectionMessage title="Title" actions={<button type="button">Action</button>}>
         Body text
-      </SectionMessage>,
+      </SectionMessage>
     );
 
     expect(screen.getByText("Title")).toBeInTheDocument();

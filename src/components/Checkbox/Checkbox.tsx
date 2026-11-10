@@ -14,11 +14,10 @@ import styles from "./Checkbox.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
-export interface CheckboxProps
-  extends Omit<
-    AriaCheckboxProps,
-    "className" | "style" | "children" | "isSelected" | "defaultSelected"
-  > {
+export interface CheckboxProps extends Omit<
+  AriaCheckboxProps,
+  "className" | "style" | "children" | "isSelected" | "defaultSelected"
+> {
   /** État coché (contrôlé). */
   isChecked?: boolean;
   /** État coché initial (non contrôlé). */
@@ -33,8 +32,10 @@ export interface CheckboxProps
   style?: React.CSSProperties;
 }
 
-export interface CheckboxGroupProps
-  extends Omit<AriaCheckboxGroupProps, "className" | "style" | "children"> {
+export interface CheckboxGroupProps extends Omit<
+  AriaCheckboxGroupProps,
+  "className" | "style" | "children"
+> {
   /** Checkbox items. */
   children: React.ReactNode;
   /** Classe CSS additionnelle. */
@@ -48,35 +49,15 @@ export interface CheckboxGroupProps
 
 function IconUnchecked() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      aria-hidden="true"
-    >
-      <rect
-        x="1.5"
-        y="1.5"
-        width="13"
-        height="13"
-        rx="1.5"
-        stroke="currentColor"
-        strokeWidth="2"
-      />
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <rect x="1.5" y="1.5" width="13" height="13" rx="1.5" stroke="currentColor" strokeWidth="2" />
     </svg>
   );
 }
 
 function IconChecked() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      aria-hidden="true"
-    >
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
       <rect width="16" height="16" rx="2.5" fill="currentColor" />
       <path
         className={styles.innerMark}
@@ -88,13 +69,7 @@ function IconChecked() {
 
 function IconIndeterminate() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      aria-hidden="true"
-    >
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
       <rect width="16" height="16" rx="2.5" fill="currentColor" />
       <rect className={styles.innerMark} x="4" y="7" width="8" height="2" rx="0.5" />
     </svg>
@@ -155,9 +130,7 @@ export function Checkbox({
               {label !== undefined && (
                 <span className={styles.labelRow}>
                   <span className={styles.label}>{label}</span>
-                  {isRequired && (
-                    <span className={styles.required}>*</span>
-                  )}
+                  {isRequired && <span className={styles.required}>*</span>}
                 </span>
               )}
               {description !== undefined && (

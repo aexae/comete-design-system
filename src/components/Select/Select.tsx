@@ -1,7 +1,14 @@
 // Select — Comète Design System
 // Sélecteur déroulant accessible basé sur React Aria.
 // Intègre Field (label + message) comme wrapper obligatoire.
-import { type ReactElement, type ReactNode, type Key, useCallback, useRef, type CSSProperties } from "react";
+import {
+  type ReactElement,
+  type ReactNode,
+  type Key,
+  useCallback,
+  useRef,
+  type CSSProperties,
+} from "react";
 import {
   Select as AriaSelect,
   ListBox as AriaListBox,
@@ -119,7 +126,10 @@ function Spinner(): ReactElement {
 // -----------------------------------------------------------------------
 // SelectOptionItem (interne)
 
-interface SelectOptionItemProps extends Omit<AriaListBoxItemProps<object>, "className" | "style" | "children"> {
+interface SelectOptionItemProps extends Omit<
+  AriaListBoxItemProps<object>,
+  "className" | "style" | "children"
+> {
   children: ReactNode;
 }
 
@@ -285,13 +295,29 @@ export function Select({
               matchTriggerWidth
               isScrollable={false}
             >
-              <AriaListBox className={[styles.listBox, scrollbarStyles.scrollable, scrollbarStyles.themed].join(" ")}>
+              <AriaListBox
+                className={[
+                  styles.listBox,
+                  scrollbarStyles.scrollable,
+                  scrollbarStyles.themed,
+                ].join(" ")}
+              >
                 {allOptions.length === 0 && !isLoading ? (
-                  <AriaListBoxItem id="__empty__" isDisabled textValue={emptyMessage} className={styles.stateItem}>
+                  <AriaListBoxItem
+                    id="__empty__"
+                    isDisabled
+                    textValue={emptyMessage}
+                    className={styles.stateItem}
+                  >
                     <span className={styles.emptyState}>{emptyMessage}</span>
                   </AriaListBoxItem>
                 ) : isLoading && allOptions.length === 0 ? (
-                  <AriaListBoxItem id="__loading__" isDisabled textValue="Chargement" className={styles.stateItem}>
+                  <AriaListBoxItem
+                    id="__loading__"
+                    isDisabled
+                    textValue="Chargement"
+                    className={styles.stateItem}
+                  >
                     <span className={styles.loadingState}>Chargement{"\u2026"}</span>
                   </AriaListBoxItem>
                 ) : (
@@ -299,9 +325,7 @@ export function Select({
                     if (isGroup(item)) {
                       return (
                         <AriaListBoxSection key={item.label} className={styles.group}>
-                          <AriaHeader className={styles.groupLabel}>
-                            {item.label}
-                          </AriaHeader>
+                          <AriaHeader className={styles.groupLabel}>{item.label}</AriaHeader>
                           {item.options.map((opt) => (
                             <SelectOptionItem
                               key={opt.value}

@@ -4,10 +4,8 @@ import { Text, Stack } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -18,7 +16,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le composant text affiche du contenu textuel avec les styles typographiques normalisés du design system. Il garantit la cohérence des tailles, graisses et interlignes à travers l'interface." },
+      description: {
+        component:
+          "Le composant text affiche du contenu textuel avec les styles typographiques normalisés du design system. Il garantit la cohérence des tailles, graisses et interlignes à travers l'interface.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -76,8 +77,23 @@ const meta = {
     color: {
       control: "select",
       options: [
-        "default", "subtle", "subtlest", "disabled", "inverted",
-        "comete", "brand", "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey", "success", "information", "warning", "critical", "link",
+        "default",
+        "subtle",
+        "subtlest",
+        "disabled",
+        "inverted",
+        "comete",
+        "brand",
+        "accentPurple",
+        "accentTeal",
+        "accentTurquoise",
+        "accentMagenta",
+        "accentBlueGrey",
+        "success",
+        "information",
+        "warning",
+        "critical",
+        "link",
       ],
     },
     align: {
@@ -96,7 +112,8 @@ const meta = {
     color: "default",
     underline: false,
     italic: false,
-    children: "Le texte de corps structure le contenu et guide l'utilisateur à travers l'interface.",
+    children:
+      "Le texte de corps structure le contenu et guide l'utilisateur à travers l'interface.",
   },
 } satisfies Meta<typeof Text>;
 
@@ -152,9 +169,22 @@ export const SizeWeightMatrix: Story = {
 };
 
 const COLOR_OPTIONS = [
-  "default", "subtle", "subtlest", "disabled", "comete", "brand",
-  "accentPurple", "accentTeal", "accentTurquoise", "accentMagenta", "accentBlueGrey",
-  "success", "information", "warning", "critical", "link",
+  "default",
+  "subtle",
+  "subtlest",
+  "disabled",
+  "comete",
+  "brand",
+  "accentPurple",
+  "accentTeal",
+  "accentTurquoise",
+  "accentMagenta",
+  "accentBlueGrey",
+  "success",
+  "information",
+  "warning",
+  "critical",
+  "link",
 ] as const;
 
 export const Colors: Story = {
@@ -165,10 +195,14 @@ export const Colors: Story = {
           color=&quot;{c}&quot; — Exemple de texte avec cette couleur.
         </Text>
       ))}
-      <div style={{ background: "var(--background-neutral-bold-default)", padding: 12, borderRadius: 8 }}>
-        <Text color="inverted">
-          color=&quot;inverted&quot; — Texte inversé sur fond sombre.
-        </Text>
+      <div
+        style={{
+          background: "var(--background-neutral-bold-default)",
+          padding: 12,
+          borderRadius: 8,
+        }}
+      >
+        <Text color="inverted">color=&quot;inverted&quot; — Texte inversé sur fond sombre.</Text>
       </div>
     </Stack>
   ),
@@ -180,9 +214,15 @@ export const UnderlineAndItalic: Story = {
       <Text>Normal</Text>
       <Text underline>Underline</Text>
       <Text italic>Italic</Text>
-      <Text underline italic>Underline + Italic</Text>
-      <Text weight="medium" underline>Medium Underline</Text>
-      <Text weight="medium" underline color="subtle">Medium Underline Subtle</Text>
+      <Text underline italic>
+        Underline + Italic
+      </Text>
+      <Text weight="medium" underline>
+        Medium Underline
+      </Text>
+      <Text weight="medium" underline color="subtle">
+        Medium Underline Subtle
+      </Text>
     </Stack>
   ),
 };
@@ -197,13 +237,13 @@ export const MaxLines: Story = {
         </Text>
         <Text maxLines={2}>
           Ce texte est tronqué à 2 lignes. Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-          quis nostrud exercitation ullamco laboris.
+          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+          veniam, quis nostrud exercitation ullamco laboris.
         </Text>
         <Text maxLines={3}>
           Ce texte est tronqué à 3 lignes. Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+          veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
         </Text>
       </Stack>
     </div>

@@ -58,34 +58,26 @@ describe("Switch", () => {
   // -------------------------------------------------------------------
 
   it("should NOT render an icon for the default appearance", () => {
-    const { container } = render(
-      <Switch aria-label="x" appearance="default" isChecked />,
-    );
+    const { container } = render(<Switch aria-label="x" appearance="default" isChecked />);
     expect(container.querySelector("svg")).toBeNull();
   });
 
   it("should render the check icon ONLY when success is checked", () => {
-    const { container, rerender } = render(
-      <Switch aria-label="x" appearance="success" />,
-    );
+    const { container, rerender } = render(<Switch aria-label="x" appearance="success" />);
     expect(container.querySelector("svg")).toBeNull();
     rerender(<Switch aria-label="x" appearance="success" isChecked />);
     expect(container.querySelector("svg")).not.toBeNull();
   });
 
   it("should ALWAYS render the icon for warning (checked or not)", () => {
-    const { container, rerender } = render(
-      <Switch aria-label="x" appearance="warning" />,
-    );
+    const { container, rerender } = render(<Switch aria-label="x" appearance="warning" />);
     expect(container.querySelector("svg")).not.toBeNull();
     rerender(<Switch aria-label="x" appearance="warning" isChecked />);
     expect(container.querySelector("svg")).not.toBeNull();
   });
 
   it("should ALWAYS render the icon for critical (checked or not)", () => {
-    const { container, rerender } = render(
-      <Switch aria-label="x" appearance="critical" />,
-    );
+    const { container, rerender } = render(<Switch aria-label="x" appearance="critical" />);
     expect(container.querySelector("svg")).not.toBeNull();
     rerender(<Switch aria-label="x" appearance="critical" isChecked />);
     expect(container.querySelector("svg")).not.toBeNull();
@@ -96,10 +88,8 @@ describe("Switch", () => {
   // -------------------------------------------------------------------
 
   it("should apply data-indeterminate on the track when isIndeterminate is true", () => {
-    const { container } = render(
-      <Switch aria-label="x" isIndeterminate />,
-    );
-    const track = container.querySelector('[data-appearance]');
+    const { container } = render(<Switch aria-label="x" isIndeterminate />);
+    const track = container.querySelector("[data-appearance]");
     expect(track).toHaveAttribute("data-indeterminate", "true");
   });
 
@@ -109,10 +99,12 @@ describe("Switch", () => {
 
   it("should apply data-disabled on the label and track when isDisabled", () => {
     const { container } = render(
-      <Switch aria-label="x" isDisabled>Label</Switch>,
+      <Switch aria-label="x" isDisabled>
+        Label
+      </Switch>
     );
     const label = container.querySelector("label");
-    const track = container.querySelector('[data-appearance]');
+    const track = container.querySelector("[data-appearance]");
     expect(label).toHaveAttribute("data-disabled");
     expect(track).toHaveAttribute("data-disabled", "true");
   });

@@ -15,7 +15,7 @@ permissions:
 jobs:
   ci:
     name: Lint, Test & Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # ubuntu-latest = 26.04, non supporté par Playwright 1.60
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -38,6 +38,10 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+
+      # Formatage Prettier (racine + storybook/, config unique à la racine).
+      - name: Format check (Prettier)
+        run: pnpm format:check
 
       - name: Test
         run: pnpm test

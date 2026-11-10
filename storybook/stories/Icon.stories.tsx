@@ -23,6 +23,7 @@ import type { CSSProperties, ComponentType, ReactElement } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Labeled, LabeledRow } from "./_labeled";
 
 // ----------------------------------------------------------------------
 // Build icon name list from the registry (always in sync with the package)
@@ -32,8 +33,7 @@ const ICON_NAMES: IconName[] = Object.keys(iconRegistry).sort() as IconName[];
 // ----------------------------------------------------------------------
 // Figma design URLs
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 
 /** Builds a Figma URL with a specific node ID for the addon-designs panel */
 const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
@@ -106,7 +106,10 @@ const meta: Meta<IconComponentProps> = {
   },
   parameters: {
     docs: {
-      description: { component: "Les icônes sont des symboles graphiques compacts qui renforcent la compréhension d'une action, d'un statut ou d'un concept. Elles accompagnent le texte pour améliorer la lisibilité et la rapidité de lecture." },
+      description: {
+        component:
+          "Les icônes sont des symboles graphiques compacts qui renforcent la compréhension d'une action, d'un statut ou d'un concept. Elles accompagnent le texte pour améliorer la lisibilité et la rapidité de lecture.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -201,10 +204,7 @@ function downloadBlob(blob: Blob, filename: string): void {
  * Isolé du téléchargement parce que le presse-papiers en a besoin aussi :
  * `ClipboardItem` veut un `Blob`, pas un fichier déjà posé sur le disque.
  */
-async function buildPngBlob(
-  container: HTMLElement,
-  targetHeight = 256,
-): Promise<Blob | null> {
+async function buildPngBlob(container: HTMLElement, targetHeight = 256): Promise<Blob | null> {
   const svgEl = buildExportSvg(container);
   if (!svgEl) return null;
 
@@ -244,7 +244,7 @@ async function buildPngBlob(
 async function downloadPng(
   container: HTMLElement,
   filename: string,
-  targetHeight = 256,
+  targetHeight = 256
 ): Promise<void> {
   const blob = await buildPngBlob(container, targetHeight);
   if (blob) downloadBlob(blob, filename);
@@ -287,8 +287,12 @@ function IconWithDownload(props: IconComponentProps): ReactElement {
         <Icon {...props} />
       </div>
       <div style={{ display: "flex", gap: 6 }}>
-        <button type="button" onClick={handleDownloadSvg} style={btnStyle}>SVG</button>
-        <button type="button" onClick={handleDownloadPng} style={btnStyle}>PNG</button>
+        <button type="button" onClick={handleDownloadSvg} style={btnStyle}>
+          SVG
+        </button>
+        <button type="button" onClick={handleDownloadPng} style={btnStyle}>
+          PNG
+        </button>
       </div>
     </div>
   );
@@ -330,32 +334,21 @@ export const WithLabel: Story = {
 
 export const AllColors: Story = {
   render: (args) => (
-    <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+    <LabeledRow gap={12} align="center">
       {COLORS.map((c) => (
-        <div
-          key={c}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 4,
-            padding: c === "inverted" ? "8px" : undefined,
-            background: c === "inverted" ? "var(--background-brand-bold-default)" : undefined,
-            borderRadius: c === "inverted" ? 8 : undefined,
-          }}
-        >
-          <Icon {...args} color={c} icon="AddBox" />
-          <span
+        <Labeled key={c} label={c}>
+          <div
             style={{
-              fontSize: 10,
-              color:  c === "inverted" ? "var(--text-inverted)" : "var(--text-subtlest)",
+              padding: 8,
+              borderRadius: 8,
+              background: c === "inverted" ? "var(--background-brand-bold-default)" : undefined,
             }}
           >
-            {c}
-          </span>
-        </div>
+            <Icon {...args} color={c} icon="AddBox" />
+          </div>
+        </Labeled>
       ))}
-    </div>
+    </LabeledRow>
   ),
 };
 
@@ -363,29 +356,13 @@ export const AllColors: Story = {
 
 export const AllVariants: Story = {
   render: (args) => (
-    <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
+    <LabeledRow align="center">
       {VARIANTS.map((v) => (
-        <div
-          key={v}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 4,
-          }}
-        >
+        <Labeled key={v} label={v}>
           <Icon {...args} appearance={v} icon="AddBox" />
-          <span
-            style={{
-              fontSize: 10,
-              color: "var(--text-subtlest)",
-            }}
-          >
-            {v}
-          </span>
-        </div>
+        </Labeled>
       ))}
-    </div>
+    </LabeledRow>
   ),
 };
 
@@ -394,8 +371,8 @@ export const AllVariants: Story = {
 
 type IconComponent = ComponentType<IconProps>;
 
-const ICON_ENTRIES: Array<[string, IconComponent]> = (
-  Object.entries(Icons as Record<string, unknown>)
+const ICON_ENTRIES: Array<[string, IconComponent]> = Object.entries(
+  Icons as Record<string, unknown>
 ).filter(
   (entry): entry is [string, IconComponent] =>
     typeof entry[1] === "function" && /^[A-Z]/.test(entry[0])
@@ -463,9 +440,7 @@ function IconCard({
         alignItems: "center",
         gap: 8,
         padding: "16px 8px",
-        border: `1.5px solid ${
-          isSelected ? "var(--border-focus)" : "transparent"
-        }`,
+        border: `1.5px solid ${isSelected ? "var(--border-focus)" : "transparent"}`,
         borderRadius: 8,
         background: isCopied
           ? "var(--background-success-subtlest-default)"
@@ -479,8 +454,7 @@ function IconCard({
       }}
       onMouseEnter={(e) => {
         if (!isCopied && !isSelected) {
-          e.currentTarget.style.background =
-            "var(--background-neutral-subtlest-hovered)";
+          e.currentTarget.style.background = "var(--background-neutral-subtlest-hovered)";
         }
       }}
       onMouseLeave={(e) => {
@@ -581,7 +555,7 @@ function IconDetailPanel({
         window.clearTimeout(pngCopyTimerRef.current);
       }
     },
-    [],
+    []
   );
 
   /** Clic sur la preview → copie le SVG (variant + taille courants) + check. */
@@ -706,9 +680,7 @@ function IconDetailPanel({
               background: svgCopied
                 ? "var(--background-success-subtlest-default)"
                 : "var(--background-surface-elevation-sunken-default)",
-              border: `1.5px solid ${
-                svgCopied ? "var(--border-success)" : "transparent"
-              }`,
+              border: `1.5px solid ${svgCopied ? "var(--border-success)" : "transparent"}`,
               borderRadius: 8,
               cursor: "pointer",
               transition: "background 0.15s, border-color 0.15s",
@@ -717,8 +689,7 @@ function IconDetailPanel({
             }}
             onMouseEnter={(e) => {
               if (!svgCopied) {
-                e.currentTarget.style.background =
-                  "var(--background-neutral-subtlest-hovered)";
+                e.currentTarget.style.background = "var(--background-neutral-subtlest-hovered)";
               }
             }}
             onMouseLeave={(e) => {
@@ -816,27 +787,18 @@ function IconDetailPanel({
                       background: isActive
                         ? "var(--background-selected-subtlest-default)"
                         : "var(--background-surface-elevation-sunken-default)",
-                      border: `1.5px solid ${
-                        isActive ? "var(--border-focus)" : "transparent"
-                      }`,
+                      border: `1.5px solid ${isActive ? "var(--border-focus)" : "transparent"}`,
                       borderRadius: 6,
                       cursor: "pointer",
                       fontFamily: "inherit",
                       transition: "background 0.15s, border-color 0.15s",
                     }}
                   >
-                    <Component
-                      variant={v}
-                      color={panelColor}
-                      spacing={panelSpacing}
-                      size={32}
-                    />
+                    <Component variant={v} color={panelColor} spacing={panelSpacing} size={32} />
                     <span
                       style={{
                         fontSize: 10,
-                        color: isActive
-                          ? "var(--text-selected)"
-                          : "var(--text-subtlest)",
+                        color: isActive ? "var(--text-selected)" : "var(--text-subtlest)",
                         textTransform: "capitalize",
                         fontWeight: isActive ? 600 : 400,
                       }}
@@ -890,8 +852,7 @@ function IconDetailPanel({
                   ? "var(--background-success-subtlest-default)"
                   : "var(--background-surface-elevation-sunken-default)",
                 cursor: "pointer",
-                fontFamily:
-                  "var(--font-family-monospace, ui-monospace, monospace)",
+                fontFamily: "var(--font-family-monospace, ui-monospace, monospace)",
                 fontSize: 12,
                 color: "var(--text-default)",
                 textAlign: "left",
@@ -902,9 +863,7 @@ function IconDetailPanel({
               <span
                 style={{
                   fontSize: 11,
-                  color: codeCopied
-                    ? "var(--text-success)"
-                    : "var(--text-subtlest)",
+                  color: codeCopied ? "var(--text-success)" : "var(--text-subtlest)",
                   fontWeight: 600,
                   fontFamily: "inherit",
                   flexShrink: 0,
@@ -989,9 +948,7 @@ function IconExplorer(): ReactElement {
 
   // Composant de l'icône sélectionnée (pour passer au panneau de détail).
   const selectedComponent =
-    selected !== null
-      ? ICON_ENTRIES.find(([name]) => name === selected)?.[1]
-      : null;
+    selected !== null ? ICON_ENTRIES.find(([name]) => name === selected)?.[1] : null;
 
   const label: CSSProperties = {
     fontSize: 11,
@@ -1011,103 +968,102 @@ function IconExplorer(): ReactElement {
           minHeight: "100vh",
         }}
       >
-      {/* Barre d'outils */}
-      <div
-        style={{
-          display: "flex",
-          gap: 20,
-          alignItems: "flex-end",
-          flexWrap: "wrap",
-          marginBottom: 20,
-          padding: 16,
-          background: "var(--background-surface-elevation-sunken-default)",
-          borderRadius: 8,
-          border: "1px solid var(--border-default)",
-        }}
-      >
-        {/* Recherche — SearchField wrappé dans Field pour le label intégré */}
-        <div style={{ flex: "1 1 220px", minWidth: 160 }}>
-          <Field label="Recherche">
-            <SearchField
-              placeholder="Nom, usage ou ID Omnis…"
-              value={search}
-              onChange={setSearch}
-            />
-          </Field>
-        </div>
-
-        {/* Variant — ToggleButtonGroup n'a pas de prop label, label inline minimal */}
-        <div>
-          <div style={label}>Variant</div>
-          <ToggleButtonGroup
-            aria-label="Variant"
-            selectionMode="single"
-            selectedKeys={[variant]}
-            onSelectionChange={(keys) => {
-              const first = Array.from(keys as Set<string>)[0];
-              if (first !== undefined) setVariant(first as IconVariant);
-            }}
-          >
-            {VARIANTS.map((v) => (
-              <ToggleButton key={v} id={v}>
-                {v}
-              </ToggleButton>
-            ))}
-          </ToggleButtonGroup>
-        </div>
-
-        {/* Couleur — Select avec son label intégré */}
-        <div style={{ width: 140 }}>
-          <Select
-            label="Couleur"
-            items={COLORS.map((c) => ({ value: c, label: c }))}
-            value={color}
-            onChange={(v) => {
-              if (v !== null) setColor(v as IconColor);
-            }}
-          />
-        </div>
-
-      </div>
-
-      {/* Compteur */}
-      <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-subtlest)" }}>
-        <strong style={{ color: "var(--text-default)" }}>{filtered.length}</strong>
-        {" / "}
-        {ICON_ENTRIES.length} icônes
-        {search !== "" && ` — "${search}"`}
-        {" · cliquer pour copier le SVG et ouvrir les détails"}
-      </p>
-
-      {/* Grille */}
-      {filtered.length === 0 ? (
-        <p style={{ textAlign: "center", padding: 48, color: "var(--text-subtlest)" }}>
-          Aucune icône pour &ldquo;{search}&rdquo;
-        </p>
-      ) : (
+        {/* Barre d'outils */}
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(88px, 1fr))",
-            gap: 4,
+            display: "flex",
+            gap: 20,
+            alignItems: "flex-end",
+            flexWrap: "wrap",
+            marginBottom: 20,
+            padding: 16,
+            background: "var(--background-surface-elevation-sunken-default)",
+            borderRadius: 8,
+            border: "1px solid var(--border-default)",
           }}
         >
-          {filtered.map(([name, Component]) => (
-            <IconCard
-              key={name}
-              name={name}
-              Component={Component}
-              variant={variant}
-              color={color}
-              size={GRID_ICON_SIZE}
-              spacing={GRID_ICON_SPACING}
-              isCopied={copied === name}
-              isSelected={selected === name}
-              onClick={handleIconClick}
+          {/* Recherche — SearchField wrappé dans Field pour le label intégré */}
+          <div style={{ flex: "1 1 220px", minWidth: 160 }}>
+            <Field label="Recherche">
+              <SearchField
+                placeholder="Nom, usage ou ID Omnis…"
+                value={search}
+                onChange={setSearch}
+              />
+            </Field>
+          </div>
+
+          {/* Variant — ToggleButtonGroup n'a pas de prop label, label inline minimal */}
+          <div>
+            <div style={label}>Variant</div>
+            <ToggleButtonGroup
+              aria-label="Variant"
+              selectionMode="single"
+              selectedKeys={[variant]}
+              onSelectionChange={(keys) => {
+                const first = Array.from(keys as Set<string>)[0];
+                if (first !== undefined) setVariant(first as IconVariant);
+              }}
+            >
+              {VARIANTS.map((v) => (
+                <ToggleButton key={v} id={v}>
+                  {v}
+                </ToggleButton>
+              ))}
+            </ToggleButtonGroup>
+          </div>
+
+          {/* Couleur — Select avec son label intégré */}
+          <div style={{ width: 140 }}>
+            <Select
+              label="Couleur"
+              items={COLORS.map((c) => ({ value: c, label: c }))}
+              value={color}
+              onChange={(v) => {
+                if (v !== null) setColor(v as IconColor);
+              }}
             />
-          ))}
+          </div>
         </div>
-      )}
+
+        {/* Compteur */}
+        <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-subtlest)" }}>
+          <strong style={{ color: "var(--text-default)" }}>{filtered.length}</strong>
+          {" / "}
+          {ICON_ENTRIES.length} icônes
+          {search !== "" && ` — "${search}"`}
+          {" · cliquer pour copier le SVG et ouvrir les détails"}
+        </p>
+
+        {/* Grille */}
+        {filtered.length === 0 ? (
+          <p style={{ textAlign: "center", padding: 48, color: "var(--text-subtlest)" }}>
+            Aucune icône pour &ldquo;{search}&rdquo;
+          </p>
+        ) : (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(88px, 1fr))",
+              gap: 4,
+            }}
+          >
+            {filtered.map(([name, Component]) => (
+              <IconCard
+                key={name}
+                name={name}
+                Component={Component}
+                variant={variant}
+                color={color}
+                size={GRID_ICON_SIZE}
+                spacing={GRID_ICON_SPACING}
+                isCopied={copied === name}
+                isSelected={selected === name}
+                onClick={handleIconClick}
+              />
+            ))}
+          </div>
+        )}
       </div>
       {/* Drawer de détail latéral (pattern Material Symbols) — rendu
           inconditionnellement et contrôlé par `isOpen` pour bénéficier des

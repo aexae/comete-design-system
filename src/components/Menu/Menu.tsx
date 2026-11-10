@@ -39,8 +39,10 @@ import styles from "./Menu.module.css";
  */
 export type MenuMode = "default" | "select-single" | "select-multiple";
 
-export interface MenuProps<T extends object = object>
-  extends Omit<AriaMenuProps<T>, "className" | "style" | "selectionMode"> {
+export interface MenuProps<T extends object = object> extends Omit<
+  AriaMenuProps<T>,
+  "className" | "style" | "selectionMode"
+> {
   /**
    * Mode du menu. Câble automatiquement le selectionMode React Aria
    * et affiche les indicateurs visuels (radios / checkboxes) dans le elemBefore.
@@ -57,8 +59,7 @@ export interface MenuTriggerProps extends AriaMenuTriggerProps {
   children: ReactNode;
 }
 
-export interface MenuItemProps
-  extends Omit<AriaMenuItemProps, "className" | "style"> {
+export interface MenuItemProps extends Omit<AriaMenuItemProps, "className" | "style"> {
   /** Label principal affiché dans l'item. */
   children: ReactNode;
   /** Description secondaire affichée sous le label. */
@@ -182,16 +183,12 @@ SubmenuTrigger.displayName = "SubmenuTrigger";
  * le trigger, aligné à sa gauche**, recouvrant visuellement le menu parent
  * plutôt que de sortir du viewport.
  */
-export function MenuPopover({
-  width = 320,
-  className,
-  children,
-}: MenuPopoverProps): ReactElement {
+export function MenuPopover({ width = 320, className, children }: MenuPopoverProps): ReactElement {
   // Lit le contexte que SubmenuTrigger / DialogTrigger injecte sur le Popover.
   // Type opaque côté react-aria-components — on cast pour récupérer triggerRef.
-  const popoverContext = useContext(AriaPopoverContext) as
-    | { triggerRef?: RefObject<HTMLElement | null> }
-    | null;
+  const popoverContext = useContext(AriaPopoverContext) as {
+    triggerRef?: RefObject<HTMLElement | null>;
+  } | null;
   const triggerRef = popoverContext?.triggerRef;
 
   // Bascule en overlay quand ni le côté droit ni le côté gauche du trigger
@@ -361,11 +358,9 @@ export function MenuItem({
   return (
     <AriaMenuItem
       {...ariaProps}
-      className={[
-        styles.item,
-        hasDescription ? styles.withDescription : styles.compact,
-        className,
-      ].filter(Boolean).join(" ")}
+      className={[styles.item, hasDescription ? styles.withDescription : styles.compact, className]
+        .filter(Boolean)
+        .join(" ")}
     >
       {({ isFocusVisible, isDisabled, isSelected, hasSubmenu, selectionMode }) => {
         const trailingIcon = iconAfter ?? (hasSubmenu ? "ChevronRight" : undefined);
@@ -379,19 +374,23 @@ export function MenuItem({
         const isSelectable = selectionMode !== "none";
 
         // Selection indicator replaces elemBefore in selection modes
-        const resolvedElemBefore = isSelectable
-          ? (
-              <Icon
-                icon={
-                  selectionMode === "multiple"
-                    ? isSelected ? "CheckBox" : "CheckBoxOutlineBlank"
-                    : isSelected ? "RadioButtonChecked" : "RadioButtonUnchecked"
-                }
-                size={24}
-                color={iconColor}
-              />
-            )
-          : elemBefore;
+        const resolvedElemBefore = isSelectable ? (
+          <Icon
+            icon={
+              selectionMode === "multiple"
+                ? isSelected
+                  ? "CheckBox"
+                  : "CheckBoxOutlineBlank"
+                : isSelected
+                  ? "RadioButtonChecked"
+                  : "RadioButtonUnchecked"
+            }
+            size={24}
+            color={iconColor}
+          />
+        ) : (
+          elemBefore
+        );
 
         return (
           <>
@@ -416,14 +415,10 @@ export function MenuItem({
 
               <span className={styles.content}>
                 <span className={styles.title}>{children}</span>
-                {hasDescription && (
-                  <span className={styles.description}>{description}</span>
-                )}
+                {hasDescription && <span className={styles.description}>{description}</span>}
               </span>
 
-              {elemAfter && (
-                <span className={styles.elemAfter}>{elemAfter}</span>
-              )}
+              {elemAfter && <span className={styles.elemAfter}>{elemAfter}</span>}
 
               {trailingIcon && (
                 <Icon
@@ -434,7 +429,9 @@ export function MenuItem({
                   className={[
                     styles.iconAfter,
                     isAutoSubmenuChevron ? styles.submenuChevron : undefined,
-                  ].filter(Boolean).join(" ")}
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
                 />
               )}
             </span>
@@ -463,16 +460,13 @@ export function MenuSection({
   children,
   className,
 }: MenuSectionProps): ReactElement {
-  const classNames = [
-    hasSeparator ? styles.section : styles.sectionNoSeparator,
-    className,
-  ].filter(Boolean).join(" ");
+  const classNames = [hasSeparator ? styles.section : styles.sectionNoSeparator, className]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <AriaMenuSection className={classNames}>
-      {title && (
-        <AriaHeader className={styles.sectionHeading}>{title}</AriaHeader>
-      )}
+      {title && <AriaHeader className={styles.sectionHeading}>{title}</AriaHeader>}
       {children}
     </AriaMenuSection>
   );

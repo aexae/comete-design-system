@@ -1,10 +1,13 @@
 // Card — Comète Design System
 // Conteneur de surface interactif pour grouper du contenu connexe.
-import type { DragEvent,
+import type {
+  DragEvent,
   KeyboardEvent,
   MouseEvent,
   ReactElement,
-  ReactNode, CSSProperties } from "react";
+  ReactNode,
+  CSSProperties,
+} from "react";
 import { useEffect, useRef, useState } from "react";
 import { DragIndicator } from "@aexae/comete-icons";
 import { FocusRing } from "../FocusRing/FocusRing.js";
@@ -122,8 +125,7 @@ export function Card({
   const hadKeyboardEvent = useRef(false);
 
   const isActionable = onPress !== undefined && !isDisabled && !isLoading;
-  const isDraggable =
-    (drag === "top" || drag === "left") && !isDisabled && !isLoading;
+  const isDraggable = (drag === "top" || drag === "left") && !isDisabled && !isLoading;
 
   useEffect(() => {
     if (!isActionable) return;
@@ -188,11 +190,7 @@ export function Card({
     styles.card,
     styles[appearance],
     styles[`color-${color}`],
-    isDraggable
-      ? drag === "top"
-        ? styles.dragTop
-        : styles.dragLeft
-      : undefined,
+    isDraggable ? (drag === "top" ? styles.dragTop : styles.dragLeft) : undefined,
     isDisabled ? styles.disabled : undefined,
     className,
   ]
@@ -215,9 +213,7 @@ export function Card({
       data-dragging={isDragging || undefined}
       data-selected={isSelected || undefined}
     >
-      {showRing && (
-        <FocusRing borderRadius={4} position="outside" offset={2} />
-      )}
+      {showRing && <FocusRing borderRadius={4} position="outside" offset={2} />}
       {isDraggable && (
         <div
           ref={dragAreaRef}
@@ -229,9 +225,7 @@ export function Card({
           <DragIndicator
             size={16}
             color="subtlest"
-            className={
-              drag === "top" ? styles.dragIconRotated : undefined
-            }
+            className={drag === "top" ? styles.dragIconRotated : undefined}
           />
         </div>
       )}

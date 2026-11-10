@@ -8,8 +8,7 @@ import type { TextFieldProps } from "../TextField/TextField.js";
 // -----------------------------------------------------------------------
 // Types publics
 
-export interface SearchFieldProps
-  extends Omit<TextFieldProps, "elemBefore" | "type"> {
+export interface SearchFieldProps extends Omit<TextFieldProps, "elemBefore" | "type"> {
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */

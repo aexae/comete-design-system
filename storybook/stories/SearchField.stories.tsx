@@ -25,8 +25,7 @@ const meta = {
               }}
               dontExample={{
                 example: <SearchField placeholder="Adresse e-mail" />,
-                caption:
-                  "Ne pas l'utiliser pour saisir une donnée de formulaire.",
+                caption: "Ne pas l'utiliser pour saisir une donnée de formulaire.",
               }}
               when={[
                 "Filtrer ou rechercher dans un contenu (liste, tableau, page).",
@@ -37,7 +36,7 @@ const meta = {
                 "Un filtre à choix finis → Select ou ToggleButtonGroup.",
               ]}
               best={[
-                "Placeholder décrivant la portée (« Rechercher un agent… ») ; `density=\"compact\"` dans une toolbar.",
+                'Placeholder décrivant la portée (« Rechercher un agent… ») ; `density="compact"` dans une toolbar.',
                 "Débouncer la recherche côté application ; conserver le focus après effacement.",
               ]}
               accessibility={[
@@ -77,7 +76,13 @@ export const Default: Story = {};
 export const CustomPlaceholder: Story = {
   name: "Custom placeholder",
   args: { placeholder: "Rechercher un agent…" },
-  decorators: [(Story) => <div style={{ width: 300 }}><Story /></div>],
+  decorators: [
+    (Story) => (
+      <div style={{ width: 300 }}>
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 /** Mode compact pour les toolbars. */
@@ -109,12 +114,12 @@ export const AllVariants: Story = {
   name: "All variants",
   render: () => (
     <div style={{ width: 300 }}>
-    <Stack gap="200">
-      <SearchField placeholder="Default" />
-      <SearchField placeholder="Compact" density="compact" />
-      <SearchField placeholder="Subtle" appearance="subtle" />
-      <SearchField placeholder="Disabled" isDisabled />
-    </Stack>
+      <Stack gap="200">
+        <SearchField placeholder="Default" />
+        <SearchField placeholder="Compact" density="compact" />
+        <SearchField placeholder="Subtle" appearance="subtle" />
+        <SearchField placeholder="Disabled" isDisabled />
+      </Stack>
     </div>
   ),
 };

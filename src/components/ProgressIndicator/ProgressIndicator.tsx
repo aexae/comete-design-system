@@ -6,18 +6,11 @@ import styles from "./ProgressIndicator.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
-export type ProgressIndicatorAppearance =
-  | "default"
-  | "neutral"
-  | "help"
-  | "inverted";
+export type ProgressIndicatorAppearance = "default" | "neutral" | "help" | "inverted";
 
 export type ProgressIndicatorSize = "small" | "medium" | "large";
 
-export type ProgressIndicatorSpacing =
-  | "comfortable"
-  | "cozy"
-  | "compact";
+export type ProgressIndicatorSpacing = "comfortable" | "cozy" | "compact";
 
 export interface ProgressIndicatorProps {
   /** Apparence visuelle des points. */
@@ -79,12 +72,7 @@ export function ProgressIndicator({
 }: ProgressIndicatorProps): ReactElement {
   const dotsRef = useRef<(HTMLButtonElement | null)[]>([]);
 
-  const rootClassNames = [
-    styles.root,
-    styles[size],
-    styles[spacing],
-    className,
-  ]
+  const rootClassNames = [styles.root, styles[size], styles[spacing], className]
     .filter(Boolean)
     .join(" ");
 

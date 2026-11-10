@@ -41,8 +41,7 @@
   overflow-x: hidden;
 }
 
-
-@media  (max-width: 1199px) {
+@media (max-width: 1199px) {
   .gutters {
     padding-inline: var(--space200);
   }

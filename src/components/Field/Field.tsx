@@ -61,9 +61,7 @@ export function Field({
       )}
       {children}
       {message !== undefined && (
-        <span className={[styles.message, styles[messageType]].join(" ")}>
-          {message}
-        </span>
+        <span className={[styles.message, styles[messageType]].join(" ")}>{message}</span>
       )}
     </div>
   );

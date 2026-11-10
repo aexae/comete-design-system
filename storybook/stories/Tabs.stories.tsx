@@ -1,21 +1,14 @@
 // Tabs — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import {
-  Tabs,
-  TabList,
-  Tab,
-  TabPanel,
-} from "@aexae/comete-design-system/components";
+import { Tabs, TabList, Tab, TabPanel } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
 // -----------------------------------------------------------------------
 // Figma
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Meta
@@ -26,7 +19,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Les onglets organisent le contenu en panneaux alternatifs accessibles depuis une barre de navigation horizontale. Ils permettent de basculer entre des vues liées sans quitter la page." },
+      description: {
+        component:
+          "Les onglets organisent le contenu en panneaux alternatifs accessibles depuis une barre de navigation horizontale. Ils permettent de basculer entre des vues liées sans quitter la page.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -155,22 +151,34 @@ export const IconsBefore: Story = {
   render: () => (
     <Tabs>
       <TabList>
-        <Tab id="tab1" iconBefore="Home">Accueil</Tab>
-        <Tab id="tab2" iconBefore="Person">Profil</Tab>
-        <Tab id="tab3" iconBefore="Settings">Paramètres</Tab>
+        <Tab id="tab1" iconBefore="Home">
+          Accueil
+        </Tab>
+        <Tab id="tab2" iconBefore="Person">
+          Profil
+        </Tab>
+        <Tab id="tab3" iconBefore="Settings">
+          Paramètres
+        </Tab>
       </TabList>
       <TabPanel id="tab1">
-        <div style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}>
+        <div
+          style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}
+        >
           <p>Contenu accueil</p>
         </div>
       </TabPanel>
       <TabPanel id="tab2">
-        <div style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}>
+        <div
+          style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}
+        >
           <p>Contenu profil</p>
         </div>
       </TabPanel>
       <TabPanel id="tab3">
-        <div style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}>
+        <div
+          style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}
+        >
           <p>Contenu paramètres</p>
         </div>
       </TabPanel>
@@ -184,22 +192,30 @@ export const IconsAfter: Story = {
   render: () => (
     <Tabs>
       <TabList>
-        <Tab id="tab1" iconAfter="KeyboardArrowDown">Tab 1</Tab>
+        <Tab id="tab1" iconAfter="KeyboardArrowDown">
+          Tab 1
+        </Tab>
         <Tab id="tab2">Tab 2</Tab>
         <Tab id="tab3">Tab 3</Tab>
       </TabList>
       <TabPanel id="tab1">
-        <div style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}>
+        <div
+          style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}
+        >
           <p>Contenu 1</p>
         </div>
       </TabPanel>
       <TabPanel id="tab2">
-        <div style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}>
+        <div
+          style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}
+        >
           <p>Contenu 2</p>
         </div>
       </TabPanel>
       <TabPanel id="tab3">
-        <div style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}>
+        <div
+          style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}
+        >
           <p>Contenu 3</p>
         </div>
       </TabPanel>
@@ -217,17 +233,23 @@ export const Content: Story = {
         <Tab id="settings">Paramètres</Tab>
       </TabList>
       <TabPanel id="details">
-        <div style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}>
+        <div
+          style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}
+        >
           <p>Contenu du panneau Détails.</p>
         </div>
       </TabPanel>
       <TabPanel id="activity">
-        <div style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}>
+        <div
+          style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}
+        >
           <p>Contenu du panneau Activité.</p>
         </div>
       </TabPanel>
       <TabPanel id="settings">
-        <div style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}>
+        <div
+          style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}
+        >
           <p>Contenu du panneau Paramètres.</p>
         </div>
       </TabPanel>

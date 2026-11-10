@@ -14,10 +14,8 @@ import { GuidelinesFlat } from "./_guidelines";
 // -----------------------------------------------------------------------
 // Figma
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Illustration options (from registry — always in sync)
@@ -54,7 +52,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "L'état informatif affiche un message contextuel accompagné d'une illustration lorsqu'il n'y a aucun contenu à montrer. Il guide l'utilisateur en proposant une explication et souvent une action corrective." },
+      description: {
+        component:
+          "L'état informatif affiche un message contextuel accompagné d'une illustration lorsqu'il n'y a aucun contenu à montrer. Il guide l'utilisateur en proposant une explication et souvent une action corrective.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -65,12 +66,7 @@ const meta = {
                     <InformativeState
                       title="Aucun résultat"
                       description="Aucun élément ne correspond à votre recherche."
-                      image={
-                        <Illustration
-                          illustration={ILLUSTRATION_NAMES[0]}
-                          size={128}
-                        />
-                      }
+                      image={<Illustration illustration={ILLUSTRATION_NAMES[0]} size={128} />}
                       actions={
                         <ButtonGroup>
                           <Button appearance="contained" color="comete">

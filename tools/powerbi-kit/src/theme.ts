@@ -30,7 +30,9 @@ function setAtPath(root: Json, path: string, value: Json): boolean {
   let node: Json = root;
   for (const step of steps.slice(0, -1)) {
     if (node === null || typeof node !== "object") return false;
-    node = Array.isArray(node) ? (node[Number(step)] as Json) : (node as Record<string, Json>)[step] as Json;
+    node = Array.isArray(node)
+      ? (node[Number(step)] as Json)
+      : ((node as Record<string, Json>)[step] as Json);
     if (node === undefined) return false;
   }
   const last = steps[steps.length - 1];
@@ -67,7 +69,11 @@ export interface ThemeResult {
  * résolue pour ce mode. `name` distingue les variantes dans le sélecteur de
  * thèmes de Power BI.
  */
-export function buildTheme(tokens: Map<string, string>, mode: ThemeMode, name: string): ThemeResult {
+export function buildTheme(
+  tokens: Map<string, string>,
+  mode: ThemeMode,
+  name: string
+): ThemeResult {
   const theme = readJson("theme-base.json");
   const mapping = readJson("theme-tokens.json") as Record<string, TokenRef>;
   const missing: string[] = [];
@@ -84,9 +90,12 @@ export function buildTheme(tokens: Map<string, string>, mode: ThemeMode, name: s
     // un hex reste une chaîne normalisée.
     const resolved = resolveVars(raw, tokens);
     const pixels = /^(-?\d+(?:\.\d+)?)px$/.exec(resolved);
-    const value: Json = pixels !== null ? Number(pixels[1])
-      : /^#[0-9a-fA-F]{6}$/.test(resolved) ? resolved.toUpperCase()
-      : resolved;
+    const value: Json =
+      pixels !== null
+        ? Number(pixels[1])
+        : /^#[0-9a-fA-F]{6}$/.test(resolved)
+          ? resolved.toUpperCase()
+          : resolved;
     if (!setAtPath(theme, path, value)) missing.push(`${path} (chemin absent)`);
   }
 
@@ -134,7 +143,8 @@ export function unmappedColors(theme: Json, tokens: Map<string, string>): string
   const found = new Set<string>();
   const walk = (node: Json): void => {
     if (typeof node === "string") {
-      if (/^#[0-9a-fA-F]{6}$/.test(node) && !known.has(node.toUpperCase())) found.add(node.toUpperCase());
+      if (/^#[0-9a-fA-F]{6}$/.test(node) && !known.has(node.toUpperCase()))
+        found.add(node.toUpperCase());
     } else if (Array.isArray(node)) node.forEach(walk);
     else if (node !== null && typeof node === "object") Object.values(node).forEach(walk);
   };

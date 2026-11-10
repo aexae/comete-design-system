@@ -137,7 +137,7 @@ describe("ScrollArea", () => {
     render(
       <ScrollArea visibility="scroll" hideDelay={500}>
         Contenu
-      </ScrollArea>,
+      </ScrollArea>
     );
     expect(barres()[0]).toHaveAttribute("data-state", "hidden");
 
@@ -171,7 +171,7 @@ describe("ScrollArea", () => {
     const { container } = render(
       <ScrollArea maxHeight={320} maxWidth="40rem">
         Contenu
-      </ScrollArea>,
+      </ScrollArea>
     );
     expect(container.firstChild).toHaveStyle({
       maxHeight: "320px",
@@ -193,7 +193,7 @@ describe("ScrollArea", () => {
     render(
       <ScrollArea role="log" aria-label="Main courante">
         Contenu
-      </ScrollArea>,
+      </ScrollArea>
     );
     expect(screen.getByRole("log", { name: "Main courante" })).toBeInTheDocument();
   });
@@ -209,7 +209,7 @@ describe("ScrollArea", () => {
     const { container } = render(
       <ScrollArea className="mien" style={{ padding: "8px" }}>
         Contenu
-      </ScrollArea>,
+      </ScrollArea>
     );
     expect(container.firstChild).toHaveClass("mien");
     expect(container.firstChild).toHaveStyle({ padding: "8px" });

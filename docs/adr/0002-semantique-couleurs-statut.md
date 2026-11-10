@@ -42,13 +42,13 @@ dans un dépôt qui n'en porte pas.
 
 ### L'axe — cinq sens
 
-| Couleur | Sens | Formulation de référence |
-|---|---|---|
-| `neutral` | Pas commencé, brouillon, archivé, sans objet | « Rien à en attendre pour l'instant » |
-| `information` | En cours, déroulement normal | « Ça avance, rien à faire » |
-| `warning` | Action, décision ou échéance attendue | « Quelqu'un doit agir ou décider » |
-| `success` | **L'état souhaité est atteint** | « On y est » |
-| `critical` | Échec, refus, annulation | « Ça a raté, ou ça a été refusé » |
+| Couleur       | Sens                                         | Formulation de référence              |
+| ------------- | -------------------------------------------- | ------------------------------------- |
+| `neutral`     | Pas commencé, brouillon, archivé, sans objet | « Rien à en attendre pour l'instant » |
+| `information` | En cours, déroulement normal                 | « Ça avance, rien à faire »           |
+| `warning`     | Action, décision ou échéance attendue        | « Quelqu'un doit agir ou décider »    |
+| `success`     | **L'état souhaité est atteint**              | « On y est »                          |
+| `critical`    | Échec, refus, annulation                     | « Ça a raté, ou ça a été refusé »     |
 
 ### Progression vs cycle de vie — deux lectures du même axe
 
@@ -124,16 +124,16 @@ cinq couleurs sémantiques. Un axe qui ne vaudrait que pour le `Tag` laisserait
 chacun des huit autres réarbitrer — c'est-à-dire reproduire exactement la
 divergence décrite dans le Contexte, à l'échelle du design system cette fois.
 
-| Composant | Prop | Sens portés | État |
-|---|---|---|---|
-| `Tag` | `color` | les 5 | Aligné, **typé** (`TagStatusColor`) |
-| `Badge` | `appearance` | les 5 (+ `information-inverted`) | Aligné |
-| `IconTile` | `appearance` | les 5 | Aligné |
-| `SectionMessage` | `appearance` | 4 (pas de `neutral`) + accents | Aligné ; accents à questionner |
-| `Banner` | `appearance` | 4 + `announcement` | **À trancher** |
-| `Snackbar` | `appearance` | 4 + `discovery` | **À trancher** |
-| `ProgressBar` | `appearance` | 4 + `comete`, et un mode `auto` | `auto` réaligné (voir point 3) |
-| `Text`, `Icon` | `color` | les 5 | Porteurs, pas décideurs |
+| Composant        | Prop         | Sens portés                      | État                                |
+| ---------------- | ------------ | -------------------------------- | ----------------------------------- |
+| `Tag`            | `color`      | les 5                            | Aligné, **typé** (`TagStatusColor`) |
+| `Badge`          | `appearance` | les 5 (+ `information-inverted`) | Aligné                              |
+| `IconTile`       | `appearance` | les 5                            | Aligné                              |
+| `SectionMessage` | `appearance` | 4 (pas de `neutral`) + accents   | Aligné ; accents à questionner      |
+| `Banner`         | `appearance` | 4 + `announcement`               | **À trancher**                      |
+| `Snackbar`       | `appearance` | 4 + `discovery`                  | **À trancher**                      |
+| `ProgressBar`    | `appearance` | 4 + `comete`, et un mode `auto`  | `auto` réaligné (voir point 3)      |
+| `Text`, `Icon`   | `color`      | les 5                            | Porteurs, pas décideurs             |
 
 `Text` et `Icon` sont un cas distinct : ils **rendent** une couleur qu'on leur
 donne, ils ne qualifient pas un objet. Ils suivent l'axe quand ils servent un
@@ -152,18 +152,18 @@ des API publiques et méritent leur propre décision.
 
 1. **`Banner.appearance = "announcement"`** — un sixième nom, hors axe. Est-ce
    un sens supplémentaire, ou un alias d'`information` sur un composant dont la
-   fonction est déjà d'annoncer ? *Piste* : alias à déprécier.
+   fonction est déjà d'annoncer ? _Piste_ : alias à déprécier.
 2. **`Snackbar.appearance = "discovery"`** — un septième nom, sur un composant
    voisin de `Banner` qui, lui, ne l'a pas. Deux composants proches, deux
    vocabulaires : la divergence de cet ADR en miniature.
 3. **`ProgressBar.appearance = "auto"`** — code déjà une sémantique
    (`critical ≤ 20`, `warning 21–99`, `success 100`) qui contredit l'axe : une
    progression à 50 % est « ça avance, rien à faire » (`information`), pas
-   « quelqu'un doit agir ». *Piste* : soit réaligner `auto`, soit exempter le
+   « quelqu'un doit agir ». _Piste_ : soit réaligner `auto`, soit exempter le
    composant au motif qu'une **jauge** exprime un seuil et non une étape — ce
    qui se défend, mais doit être écrit pour ne pas passer pour un oubli.
 
-   *Tranché* : `auto` est réaligné sur l'axe. Une progression en cours est
+   _Tranché_ : `auto` est réaligné sur l'axe. Une progression en cours est
    `information`, 100 % est `success`. La valeur seule ne permet pas de dire
    qu'une progression est en retard, donc le DS ne colore plus `warning` ni
    `critical` par seuil. Une jauge qui a besoin de seuils les applique dans la
@@ -186,12 +186,10 @@ indépendant ». Cet ADR ne fait qu'en tirer la conséquence côté composant.
 Le typage rend la distinction lisible à l'autocomplétion :
 
 ```ts
-export type TagStatusColor =
-  | "neutral" | "information" | "warning" | "success" | "critical";
+export type TagStatusColor = "neutral" | "information" | "warning" | "success" | "critical";
 
 export type TagCategoryColor =
-  | "comete" | "accentPurple" | "accentTeal"
-  | "accentTurquoise" | "accentMagenta" | "accentBlueGrey";
+  "comete" | "accentPurple" | "accentTeal" | "accentTurquoise" | "accentMagenta" | "accentBlueGrey";
 
 export type TagColor = TagStatusColor | TagCategoryColor;
 ```
@@ -209,7 +207,7 @@ existant continue de compiler à l'identique.
 
 2. **Un tag = une dimension.** Deux dimensions indépendantes se lisent sur deux
    éléments — un tag + une icône — jamais dans une couleur composite.
-   *Anti-exemple, dans le produit aujourd'hui* : les pointages fusionnent statut
+   _Anti-exemple, dans le produit aujourd'hui_ : les pointages fusionnent statut
    temporel et statut de géolocalisation en concaténant des variantes, ce qui
    produit une teinte qu'aucune règle ne peut plus expliquer, et dont le nombre
    de cas croît comme le produit des deux dimensions.
@@ -225,13 +223,13 @@ existant continue de compiler à l'identique.
    annule l'effet recherché. Chaque composant applique cette règle avec le
    levier dont il dispose :
 
-   | Composant | Levier | Réglage |
-   |---|---|---|
-   | `Tag` | `appearance` | `subtle` par défaut ; `bold` pour `critical` ; `outlined` pour la catégorisation |
-   | `Badge` | `importance` | `high` réservé à ce qui doit être vu |
-   | `IconTile` | — aucun | l'intensité tient à la taille et à la forme |
-   | `SectionMessage` | — aucun | calme par construction : un bloc dans le flux |
-   | `Banner` | — aucun | fort par construction : un bandeau qui interrompt |
+   | Composant        | Levier       | Réglage                                                                          |
+   | ---------------- | ------------ | -------------------------------------------------------------------------------- |
+   | `Tag`            | `appearance` | `subtle` par défaut ; `bold` pour `critical` ; `outlined` pour la catégorisation |
+   | `Badge`          | `importance` | `high` réservé à ce qui doit être vu                                             |
+   | `IconTile`       | — aucun      | l'intensité tient à la taille et à la forme                                      |
+   | `SectionMessage` | — aucun      | calme par construction : un bloc dans le flux                                    |
+   | `Banner`         | — aucun      | fort par construction : un bandeau qui interrompt                                |
 
    Pour les composants sans levier, **choisir le composant, c'est choisir
    l'intensité**. Corollaire à refuser explicitement : on ne promeut pas un

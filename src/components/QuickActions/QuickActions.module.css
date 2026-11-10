@@ -56,7 +56,8 @@
   flex-direction: column;
   gap: var(--space150);
   margin: 0;
-  padding: var(--space200) var(--space200) calc(var(--quick-actions-offset) + env(safe-area-inset-bottom, 0px));
+  padding: var(--space200) var(--space200)
+    calc(var(--quick-actions-offset) + env(safe-area-inset-bottom, 0px));
   list-style: none;
 }
 
@@ -101,7 +102,9 @@
 }
 
 .row[data-focus-visible] {
-  box-shadow: var(--elevation-medium), 0 0 0 var(--size025) var(--background-focused-default);
+  box-shadow:
+    var(--elevation-medium),
+    0 0 0 var(--size025) var(--background-focused-default);
 }
 
 .label {
@@ -110,18 +113,32 @@
 }
 
 @keyframes overlay-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes overlay-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 @keyframes row-in {
-  from { transform: translateY(var(--space200)); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(var(--space200));
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

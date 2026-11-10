@@ -22,32 +22,26 @@ describe("InputContext", () => {
     render(
       <InputContextProvider isDisabled isInvalid={false}>
         <Consumer />
-      </InputContextProvider>,
+      </InputContextProvider>
     );
-    expect(screen.getByTestId("result")).toHaveTextContent(
-      "disabled=true invalid=false",
-    );
+    expect(screen.getByTestId("result")).toHaveTextContent("disabled=true invalid=false");
   });
 
   it("should provide false values", () => {
     render(
       <InputContextProvider isDisabled={false} isInvalid={false}>
         <Consumer />
-      </InputContextProvider>,
+      </InputContextProvider>
     );
-    expect(screen.getByTestId("result")).toHaveTextContent(
-      "disabled=false invalid=false",
-    );
+    expect(screen.getByTestId("result")).toHaveTextContent("disabled=false invalid=false");
   });
 
   it("should provide isInvalid=true", () => {
     render(
       <InputContextProvider isDisabled={false} isInvalid>
         <Consumer />
-      </InputContextProvider>,
+      </InputContextProvider>
     );
-    expect(screen.getByTestId("result")).toHaveTextContent(
-      "disabled=false invalid=true",
-    );
+    expect(screen.getByTestId("result")).toHaveTextContent("disabled=false invalid=true");
   });
 });

@@ -32,15 +32,11 @@ import {
 import css from "./Page.stories.module.css";
 import filtresCss from "./FiltresOptionB.stories.module.css";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 function Gutters({ children }: { children: ReactNode }) {
-  return (
-    <div style={{ paddingInline: "var(--space300)" }}>{children}</div>
-  );
+  return <div style={{ paddingInline: "var(--space300)" }}>{children}</div>;
 }
 
 const meta = {
@@ -49,7 +45,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le corps de page est la zone de contenu principale, placée sous l'en-tête et la barre d'outils. Il accueille le contenu métier — grilles de cartes, colonnes ou tableaux — dans un flux vertical cohérent avec les marges du gabarit." },
+      description: {
+        component:
+          "Le corps de page est la zone de contenu principale, placée sous l'en-tête et la barre d'outils. Il accueille le contenu métier — grilles de cartes, colonnes ou tableaux — dans un flux vertical cohérent avec les marges du gabarit.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -103,10 +102,22 @@ export const GridLayout: Story = {
                 <Card appearance="outlined">
                   <div style={{ padding: "var(--space200)", width: "100%" }}>
                     <Stack gap="050">
-                      <strong style={{ fontFamily: "var(--font-family-primary)", fontSize: "var(--font-size-ui-xs)", color: "var(--text-default)" }}>
+                      <strong
+                        style={{
+                          fontFamily: "var(--font-family-primary)",
+                          fontSize: "var(--font-size-ui-xs)",
+                          color: "var(--text-default)",
+                        }}
+                      >
                         Agent {i + 1}
                       </strong>
-                      <span style={{ fontFamily: "var(--font-family-primary)", fontSize: "var(--font-size-ui-xxs)", color: "var(--text-subtlest)" }}>
+                      <span
+                        style={{
+                          fontFamily: "var(--font-family-primary)",
+                          fontSize: "var(--font-size-ui-xxs)",
+                          color: "var(--text-subtlest)",
+                        }}
+                      >
                         Description courte
                       </span>
                     </Stack>
@@ -131,10 +142,7 @@ export const SidebarLayout: Story = {
   render: () => (
     <Gutters>
       <Page globalActions={null}>
-        <Page.Bar
-          title="Fiche agent"
-          trailing={<Avatar size="medium" initials="AC" />}
-        />
+        <Page.Bar title="Fiche agent" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Body>
           <Grid gap="300">
             <Grid.Col span={{ mobile: 12, tablet: 5, desktop: 4 }}>
@@ -144,18 +152,29 @@ export const SidebarLayout: Story = {
                     <Stack direction="row" gap="100" align="center" grow>
                       <Avatar size="medium" initials="DM" />
                       <Text weight="medium">DUPONT Marie</Text>
-                      <div style={{ flexGrow: 1}}></div>
-                      <Tag label="Conforme" elemBefore={<Icon icon="AwardStar" size={16} color="success" />} color="success" />
+                      <div style={{ flexGrow: 1 }}></div>
+                      <Tag
+                        label="Conforme"
+                        elemBefore={<Icon icon="AwardStar" size={16} color="success" />}
+                        color="success"
+                      />
                     </Stack>
                     <Stack direction="row" gap="200" grow>
                       <Stack direction="row" gap="025" grow>
                         <Icon icon="Numbers" color="subtle" size={16} />
                         <Text>MAT-0001</Text>
                       </Stack>
-                      <Text size="small" color="subtle">Contrat{' '}
-                        <Text as="span" weight="medium" size="small">151.67</Text></Text>
-                      <Text size="small" color="subtle">Delta{' '}
-                        <Text as="span" weight="medium" size="small" color="success">151.67</Text>
+                      <Text size="small" color="subtle">
+                        Contrat{" "}
+                        <Text as="span" weight="medium" size="small">
+                          151.67
+                        </Text>
+                      </Text>
+                      <Text size="small" color="subtle">
+                        Delta{" "}
+                        <Text as="span" weight="medium" size="small" color="success">
+                          151.67
+                        </Text>
                       </Text>
                     </Stack>
                   </Stack>
@@ -165,7 +184,13 @@ export const SidebarLayout: Story = {
             <Grid.Col span={{ mobile: 12, tablet: 7, desktop: 8 }}>
               <Card appearance="outlined">
                 <div style={{ padding: "var(--space200)", width: "100%", minHeight: 300 }}>
-                  <span style={{ fontFamily: "var(--font-family-primary)", fontSize: "var(--font-size-ui-xs)", color: "var(--text-subtlest)" }}>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-family-primary)",
+                      fontSize: "var(--font-size-ui-xs)",
+                      color: "var(--text-subtlest)",
+                    }}
+                  >
                     Contenu principal (planning, documents, historique…)
                   </span>
                 </div>
@@ -190,7 +215,11 @@ export const FullWidth: Story = {
         <Page.Bar title="Utilisateurs" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Toolbar
           start={<TextField aria-label="Rechercher" placeholder="Rechercher un utilisateur…" />}
-          end={<Button color="comete" iconBefore="PersonAdd">Inviter</Button>}
+          end={
+            <Button color="comete" iconBefore="PersonAdd">
+              Inviter
+            </Button>
+          }
         />
         <Page.Body>
           <Stack gap="200">
@@ -202,7 +231,13 @@ export const FullWidth: Story = {
             </Cluster>
             <Card appearance="outlined">
               <div style={{ padding: "var(--space200)", width: "100%", minHeight: 200 }}>
-                <span style={{ fontFamily: "var(--font-family-primary)", fontSize: "var(--font-size-ui-xs)", color: "var(--text-subtlest)" }}>
+                <span
+                  style={{
+                    fontFamily: "var(--font-family-primary)",
+                    fontSize: "var(--font-size-ui-xs)",
+                    color: "var(--text-subtlest)",
+                  }}
+                >
                   Tableau de données en pleine largeur
                 </span>
               </div>
@@ -256,7 +291,12 @@ function AgentsChrome() {
         }
         end={
           <Cluster gap="100">
-            <SavedSearchesMenu views={views} current={f} onApply={(v) => setF(v.filters)} onDelete={remove} />
+            <SavedSearchesMenu
+              views={views}
+              current={f}
+              onApply={(v) => setF(v.filters)}
+              onDelete={remove}
+            />
             <ButtonGroup>
               <Button
                 color="comete"
@@ -275,7 +315,11 @@ function AgentsChrome() {
       />
       {/* Tags des critères actifs, sous la barre (façon option B). */}
       <div style={{ paddingInline: "var(--page-gutter)" }}>
-        <ActiveFilterTags filters={f} onChange={setF} textActionClassName={filtresCss["textAction"]} />
+        <ActiveFilterTags
+          filters={f}
+          onChange={setF}
+          textActionClassName={filtresCss["textAction"]}
+        />
       </div>
     </>
   );

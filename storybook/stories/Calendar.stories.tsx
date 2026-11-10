@@ -3,18 +3,13 @@ import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CalendarDate, Time } from "@internationalized/date";
 import type { DateValue, RangeValue } from "react-aria-components";
-import {
-  Calendar,
-  type CalendarAppearance,
-} from "@aexae/comete-design-system/components";
+import { Calendar, type CalendarAppearance } from "@aexae/comete-design-system/components";
 import { expect } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Types raccourcis pour les args destructurés
@@ -30,10 +25,7 @@ type Args = {
 // DefaultValue adapté à l'appearance et à isRange.
 // Permet de voir immédiatement le mode actif dans Storybook.
 
-function getDefaultValue(
-  appearance: CalendarAppearance = "date",
-  isRange?: boolean,
-): unknown {
+function getDefaultValue(appearance: CalendarAppearance = "date", isRange?: boolean): unknown {
   if (appearance === "week") {
     return {
       start: new CalendarDate(2026, 4, 13),
@@ -92,12 +84,7 @@ function renderCalendar(args: Args, extra?: Record<string, unknown>) {
     props["isRange"] = true;
   }
 
-  return (
-    <Calendar
-      key={`${appearance}-${isRange}-${calendars}`}
-      {...(props)}
-    />
-  );
+  return <Calendar key={`${appearance}-${isRange}-${calendars}`} {...props} />;
 }
 
 // -----------------------------------------------------------------------
@@ -106,46 +93,25 @@ function renderCalendar(args: Args, extra?: Record<string, unknown>) {
 
 function ControlledCalendar(args: Args) {
   const { appearance = "date", isRange } = args;
-  return (
-    <ControlledCalendarInner key={`${appearance}-${isRange}`} {...args} />
-  );
+  return <ControlledCalendarInner key={`${appearance}-${isRange}`} {...args} />;
 }
 
-function ControlledCalendarInner({
-  appearance = "date",
-  calendars,
-  isRange,
-  isDisabled,
-}: Args) {
+function ControlledCalendarInner({ appearance = "date", calendars, isRange, isDisabled }: Args) {
   // --- Week (toujours range) ---
   if (appearance === "week") {
-    return (
-      <WeekControlledInner
-        calendars={calendars}
-        isRange={isRange}
-        isDisabled={isDisabled}
-      />
-    );
+    return <WeekControlledInner calendars={calendars} isRange={isRange} isDisabled={isDisabled} />;
   }
 
   // --- Range (date, month, year) ---
   if (isRange) {
     return (
-      <RangeControlledInner
-        appearance={appearance}
-        calendars={calendars}
-        isDisabled={isDisabled}
-      />
+      <RangeControlledInner appearance={appearance} calendars={calendars} isDisabled={isDisabled} />
     );
   }
 
   // --- Single (date, month, year) ---
   return (
-    <SingleControlledInner
-      appearance={appearance}
-      calendars={calendars}
-      isDisabled={isDisabled}
-    />
+    <SingleControlledInner appearance={appearance} calendars={calendars} isDisabled={isDisabled} />
   );
 }
 
@@ -223,10 +189,8 @@ function RangeControlledInner({
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <Calendar {...(calProps)} />
-      <p style={{ fontFamily: "monospace", fontSize: 13 }}>
-        {formatRange(appearance, range)}
-      </p>
+      <Calendar {...calProps} />
+      <p style={{ fontFamily: "monospace", fontSize: 13 }}>{formatRange(appearance, range)}</p>
     </div>
   );
 }
@@ -262,7 +226,7 @@ function SingleControlledInner({
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <Calendar {...(calProps)} />
+      <Calendar {...calProps} />
       <p style={{ fontFamily: "monospace", fontSize: 13 }}>
         Sélectionné : {formatSingle(appearance, value)}
       </p>
@@ -272,10 +236,7 @@ function SingleControlledInner({
 
 // --- Helpers de formatage ---
 
-function formatRange(
-  appearance: string,
-  range: RangeValue<CalendarDate>,
-): string {
+function formatRange(appearance: string, range: RangeValue<CalendarDate>): string {
   if (appearance === "year") return `${range.start.year} → ${range.end.year}`;
   if (appearance === "month")
     return `${range.start.year}/${String(range.start.month).padStart(2, "0")} → ${range.end.year}/${String(range.end.month).padStart(2, "0")}`;
@@ -284,8 +245,7 @@ function formatRange(
 
 function formatSingle(appearance: string, value: DateValue): string {
   if (appearance === "year") return String(value.year);
-  if (appearance === "month")
-    return `${value.year}/${String(value.month).padStart(2, "0")}`;
+  if (appearance === "month") return `${value.year}/${String(value.month).padStart(2, "0")}`;
   return value.toString();
 }
 
@@ -298,7 +258,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Le calendrier affiche une grille de dates permettant la consultation et la sélection de jours, semaines ou périodes. Il sert de base aux sélecteurs de dates et aux vues de planification." },
+      description: {
+        component:
+          "Le calendrier affiche une grille de dates permettant la consultation et la sélection de jours, semaines ou périodes. Il sert de base aux sélecteurs de dates et aux vues de planification.",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -345,8 +308,7 @@ const meta = {
     },
     isRange: {
       control: "boolean",
-      description:
-        "Active la sélection de plage (range) au lieu d'une sélection unique.",
+      description: "Active la sélection de plage (range) au lieu d'une sélection unique.",
       table: { defaultValue: { summary: "false" } },
     },
     isDisabled: {
@@ -486,12 +448,10 @@ export const TimeSlots: Story = {
   name: "Time — créneaux",
   args: { appearance: "time" },
   parameters: { controls: { disable: true } },
-  render: () => (
-    <Calendar appearance="time" value={new Time(14, 30)} step={15} />
-  ),
+  render: () => <Calendar appearance="time" value={new Time(14, 30)} step={15} />,
   play: async () => {
     const liste = document.body.querySelector<HTMLElement>(
-      "[role=\"listbox\"][aria-label=\"Sélecteur d'heure\"]",
+      '[role="listbox"][aria-label="Sélecteur d\'heure"]'
     );
     await expect(liste).not.toBeNull();
 

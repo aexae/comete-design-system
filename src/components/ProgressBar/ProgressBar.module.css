@@ -26,7 +26,9 @@
 .fill {
   height: 100%;
   border-radius: var(--radius-round);
-  transition: width 200ms ease-out, background-color 200ms ease-out;
+  transition:
+    width 200ms ease-out,
+    background-color 200ms ease-out;
 }
 
 /* Apparences */

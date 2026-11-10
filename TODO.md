@@ -2,6 +2,62 @@
 
 ## Fiabilité / qualité
 
+- **Stories Storybook : libellés de variantes (2026-11-09)**
+  Helper `Labeled` / `LabeledRow` / `Legend` (`stories/_labeled.tsx`) généralisé et
+  légendes homogénéisées (12 px, `--text-subtle`, sous l'instance). Restes :
+  - **Valeurs non brutes** : `Tag` AllColors (« Purple », « Blue Grey » pour
+    `accentPurple`, `accentBlueGrey`), `Select` AllStates, `Heading`/`Hero` Align et
+    `CalendarCell` (libellés français) : jugés auto-descriptifs, pas relabellisés.
+  - **`Banner` AllAppearances** en layout `fullscreen` : le libellé est collé au bord
+    gauche du viewport, pas de gouttière.
+  - **Fonds sombres des variantes `inverted`** : `Icon` garde
+    `--background-brand-bold-default`, `Logo` garde `--background-default-inverted`,
+    `Badge` cutout utilise `--background-neutral-bold-default`. Trois tokens pour un même
+    rôle « tuile sombre de démo » : unifier si l'on veut une homogénéité stricte.
+  - **`Tag` FullMatrix** : l'en-tête de shape a perdu sa hiérarchie (même style que
+    l'en-tête d'appearance).
+  - **`clip-path` en attribut JSX** : corrigé dans les sources de `comete-icons`
+    (générateur + 20 icônes) et `comete-illustrations` (générateur + 2 illustrations),
+    non commité ni publié. Reste : livrer les deux paquets (tag → CI) puis bumper le DS
+    et le Storybook. Côté icônes, le dossier local `svg/` contient des SVG bruts non
+    optimisés : `pnpm generate` seul produit des couleurs hardcodées, toujours passer par
+    `pnpm pipeline` (sync → optimize → generate → build).
+  - **Fragilités hors périmètre** : `ScrollArea.stories.tsx` utilise `React.ReactNode`
+    sans import de `React` ; `ProgressIndicator` WithNavigationButtons appelle
+    `useState` dans un `render` anonyme (règle des hooks respectée par chance).
+  - **`comete-illustrations` : `pnpm lint` (biome) échoue** sur le formatage de
+    `.claude/settings.local.json` (préexistant, hors de la correction clip-path).
+
+- **`Button` link / link-subtle en texte pur + couleur link (2026-11-09)**
+  Faiblesses relevées après le passage de `link` à `--text-link-*` et le retrait
+  des fonds hover/press sur `link` / `link-subtle` :
+  - **Accessibilité** : `link` par défaut (#0076d8) sous le seuil AA sur les fonds
+    `comete-subtlest` / `information-subtlest` (3,9:1), cf. la note « Lien sur fond
+    comete-subtlest » plus bas. Un bouton `link` posé sur ces surfaces est concerné.
+  - **Couleur d'icône de `link` par défaut** : `resolveIconColor` renvoie encore
+    `default` (icône sombre) alors que le texte est maintenant bleu link. Pas de
+    régression interne (aucun bouton `link` interne n'a d'icône), mais mismatch
+    possible côté consommateur. Correctif propre = couleur d'icône `link` dédiée
+    dans `@aexae/comete-icons` (repo séparé, création de token à approuver), ou
+    mapper `link`+`default` sur `information` en attendant (approximation).
+  - **Feedback des liens sémantiques** : hover/press sans fond, feedback via
+    épaississement du soulignement uniquement (pas de token de texte survolé par
+    couleur sémantique). À valider visuellement en Storybook.
+  - **État `selected` de `link-subtle`** : conserve volontairement une puce de fond
+    (`background-selected-subtlest-*`), car la consigne ne visait que hover/press.
+    À rouvrir si un texte pur est voulu aussi en `selected`.
+  - **Contraste des couleurs `subtle` / `subtlest` sans fond** : depuis le retrait
+    du fond au repos (apparence `contained`), le texte `--text-subtlest` repose
+    sur le fond de page. À vérifier sur fonds clairs et sombres (seuil AA 4,5:1) ;
+    `subtlest` est volontairement peu contrasté et peut passer sous le seuil hors
+    contexte bouton-icône. Usage à cadrer dans les guidelines (réservé IconButton).
+  - ~~**Pilote tokens Figma `Button-test`** : variables `button/link/*/background/*`
+    à retirer, `button/link/default/text/*` à pointer vers `text/link/*`~~ fait
+    (2026-11-09) : 4 variables de fond `link` supprimées, `link/default/text/{default,
+hovered}` repointées vers `text/link/{default,hovered}`, ajout de
+    `button/link/default/text/pressed` -> `text/link/pressed`, spécimens
+    comete/critical hover+press vidés de leur fond. Validé en capture (clair/sombre).
+
 - **Storybook GitHub Pages : chunks supprimés à chaque déploiement** (2026-10-23)
   `deploy-pages` remplace tout l'artefact à chaque push sur `main` : les anciens assets
   hashés disparaissent. Un onglet ouvert (ou un `iframe.html` en cache, max-age=600)
@@ -31,11 +87,8 @@
 ## Environnement
 
 - ~~**`NPM_AUTH_TOKEN` du shell sans accès à `@aexae/comete-logos`**~~ fait (2026-10-21) :
-  `~/.zshrc` exporte `$(gh auth token)`, ancien PAT retiré des `.env` et de `~/.npmrc`.
-  **Reste : révoquer l'ancien PAT classic sur GitHub** (scopes `repo` + `write:packages`,
-  sans expiration, toujours valide).
-  `pnpm install` renvoie 403 sur `comete-logos@0.13.1` avec le token exporté dans le shell,
-  alors que `gh auth token` y a accès. Mettre à jour la variable exportée.
+  `~/.zshrc` exporte `$(gh auth token)`, ancien PAT retiré des `.env` et de `~/.npmrc`,
+  puis révoqué sur GitHub (2026-10-23).
 
 - **`node_modules` désynchronisé du lockfile** (2026-10-21)
   Tokens 0.13.2 installés alors que le lockfile demandait 0.17.0. Les tests tournaient

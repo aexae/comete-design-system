@@ -16,9 +16,7 @@ describe("DatePicker", () => {
 
   describe("editable mode (default)", () => {
     it("should render date segments", () => {
-      const { container } = render(
-        <DatePicker aria-label="Date" />,
-      );
+      const { container } = render(<DatePicker aria-label="Date" />);
       expect(container.querySelector(".dateInput")).toBeInTheDocument();
     });
 
@@ -28,37 +26,27 @@ describe("DatePicker", () => {
     });
 
     it("should apply datePicker class on root", () => {
-      const { container } = render(
-        <DatePicker aria-label="Date" />,
-      );
+      const { container } = render(<DatePicker aria-label="Date" />);
       expect(container.firstElementChild).toHaveClass("datePicker");
     });
 
     it("should apply bordered InputContainer by default", () => {
-      const { container } = render(
-        <DatePicker aria-label="Date" />,
-      );
+      const { container } = render(<DatePicker aria-label="Date" />);
       expect(container.querySelector(".inputContainer")).toHaveClass("bordered");
     });
 
     it("should apply subtle class on InputContainer", () => {
-      const { container } = render(
-        <DatePicker aria-label="Date" appearance="subtle" />,
-      );
+      const { container } = render(<DatePicker aria-label="Date" appearance="subtle" />);
       expect(container.querySelector(".inputContainer")).toHaveClass("subtle");
     });
 
     it("should set data-disabled", () => {
-      const { container } = render(
-        <DatePicker aria-label="Date" isDisabled />,
-      );
+      const { container } = render(<DatePicker aria-label="Date" isDisabled />);
       expect(container.querySelector("[data-disabled]")).toBeInTheDocument();
     });
 
     it("should set data-invalid", () => {
-      const { container } = render(
-        <DatePicker aria-label="Date" isInvalid />,
-      );
+      const { container } = render(<DatePicker aria-label="Date" isInvalid />);
       expect(container.querySelector("[data-invalid]")).toBeInTheDocument();
     });
 
@@ -101,7 +89,7 @@ describe("DatePicker", () => {
           aria-label="Date"
           defaultValue={new CalendarDate(2026, 10, 12)}
           onChange={onChange}
-        />,
+        />
       );
       await userEvent.click(screen.getByRole("button", { name: "Ouvrir le calendrier" }));
       const dialog = screen.getByRole("dialog");
@@ -117,7 +105,7 @@ describe("DatePicker", () => {
           aria-label="Date"
           defaultValue={new CalendarDate(2026, 10, 12)}
           onChange={onChange}
-        />,
+        />
       );
       await userEvent.click(screen.getByRole("button", { name: "Effacer" }));
       expect(onChange).toHaveBeenCalledWith(null);
@@ -125,9 +113,7 @@ describe("DatePicker", () => {
     });
 
     it("should append custom className", () => {
-      const { container } = render(
-        <DatePicker aria-label="Date" className="custom" />,
-      );
+      const { container } = render(<DatePicker aria-label="Date" className="custom" />);
       expect(container.firstElementChild).toHaveClass("custom");
     });
   });
@@ -155,28 +141,24 @@ describe("DatePicker", () => {
 
     it("should render borderless InputContainer even with subtle appearance", () => {
       const { container } = render(
-        <DatePicker aria-label="Date" isEditable={false} appearance="subtle" />,
+        <DatePicker aria-label="Date" isEditable={false} appearance="subtle" />
       );
       expect(container.querySelector(".inputContainer")).toHaveClass("borderless");
     });
 
     it("should set data-disabled when isDisabled", () => {
-      const { container } = render(
-        <DatePicker aria-label="Date" isEditable={false} isDisabled />,
-      );
+      const { container } = render(<DatePicker aria-label="Date" isEditable={false} isDisabled />);
       expect(container.firstElementChild).toHaveAttribute("data-disabled");
     });
 
     it("should set data-invalid when isInvalid", () => {
-      const { container } = render(
-        <DatePicker aria-label="Date" isEditable={false} isInvalid />,
-      );
+      const { container } = render(<DatePicker aria-label="Date" isEditable={false} isInvalid />);
       expect(container.firstElementChild).toHaveAttribute("data-invalid", "true");
     });
 
     it("should append custom className", () => {
       const { container } = render(
-        <DatePicker aria-label="Date" isEditable={false} className="custom" />,
+        <DatePicker aria-label="Date" isEditable={false} className="custom" />
       );
       expect(container.firstElementChild).toHaveClass("custom");
     });
@@ -184,13 +166,9 @@ describe("DatePicker", () => {
     it("should open calendar when date button is clicked", async () => {
       const user = userEvent.setup();
       const date = new CalendarDate(2026, 4, 3);
-      render(
-        <DatePicker aria-label="Date" isEditable={false} value={date} />,
-      );
+      render(<DatePicker aria-label="Date" isEditable={false} value={date} />);
       const buttons = screen.getAllByRole("button");
-      const dateButton = buttons.find(
-        (b) => !b.getAttribute("aria-label")?.includes("Jour"),
-      );
+      const dateButton = buttons.find((b) => !b.getAttribute("aria-label")?.includes("Jour"));
       expect(dateButton).toBeDefined();
       await user.click(dateButton!);
       expect(screen.getByRole("dialog")).toBeInTheDocument();
@@ -200,9 +178,7 @@ describe("DatePicker", () => {
       const user = userEvent.setup();
       const onChange = vi.fn();
       const date = new CalendarDate(2026, 4, 3);
-      render(
-        <DatePicker aria-label="Date" isEditable={false} value={date} onChange={onChange} />,
-      );
+      render(<DatePicker aria-label="Date" isEditable={false} value={date} onChange={onChange} />);
       await user.click(screen.getByLabelText("Jour précédent"));
       expect(onChange).toHaveBeenCalledTimes(1);
       const newDate = onChange.mock.calls[0]![0] as CalendarDate;
@@ -215,9 +191,7 @@ describe("DatePicker", () => {
       const user = userEvent.setup();
       const onChange = vi.fn();
       const date = new CalendarDate(2026, 4, 3);
-      render(
-        <DatePicker aria-label="Date" isEditable={false} value={date} onChange={onChange} />,
-      );
+      render(<DatePicker aria-label="Date" isEditable={false} value={date} onChange={onChange} />);
       await user.click(screen.getByLabelText("Jour suivant"));
       expect(onChange).toHaveBeenCalledTimes(1);
       const newDate = onChange.mock.calls[0]![0] as CalendarDate;
@@ -228,9 +202,7 @@ describe("DatePicker", () => {
 
     it("should disable buttons when isDisabled", () => {
       const date = new CalendarDate(2026, 4, 3);
-      render(
-        <DatePicker aria-label="Date" isEditable={false} value={date} isDisabled />,
-      );
+      render(<DatePicker aria-label="Date" isEditable={false} value={date} isDisabled />);
       expect(screen.getByLabelText("Jour précédent")).toBeDisabled();
       expect(screen.getByLabelText("Jour suivant")).toBeDisabled();
     });
@@ -249,11 +221,7 @@ describe("DatePicker", () => {
       const start = new CalendarDate(2026, 7, 8);
       const end = new CalendarDate(2026, 7, 5);
       const { container } = render(
-        <DatePicker
-          aria-label="Date range"
-          isRange
-          value={{ start, end }}
-        />,
+        <DatePicker aria-label="Date range" isRange value={{ start, end }} />
       );
       const wrapper = container.querySelector("[data-invalid]");
       expect(wrapper).not.toBeNull();
@@ -263,11 +231,7 @@ describe("DatePicker", () => {
       const start = new CalendarDate(2026, 7, 5);
       const end = new CalendarDate(2026, 7, 8);
       const { container } = render(
-        <DatePicker
-          aria-label="Date range"
-          isRange
-          value={{ start, end }}
-        />,
+        <DatePicker aria-label="Date range" isRange value={{ start, end }} />
       );
       const wrapper = container.querySelector("[data-invalid]");
       expect(wrapper).toBeNull();
@@ -276,11 +240,7 @@ describe("DatePicker", () => {
     it("should not mark range as invalid when start equals end", () => {
       const date = new CalendarDate(2026, 7, 8);
       const { container } = render(
-        <DatePicker
-          aria-label="Date range"
-          isRange
-          value={{ start: date, end: date }}
-        />,
+        <DatePicker aria-label="Date range" isRange value={{ start: date, end: date }} />
       );
       const wrapper = container.querySelector("[data-invalid]");
       expect(wrapper).toBeNull();

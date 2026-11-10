@@ -9,14 +9,13 @@ import { useEffect, useState } from "react";
 import { Button, Snackbar } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
+import { Labeled } from "./_labeled";
 
 // -----------------------------------------------------------------------
 // Figma links
 
-const FIGMA_FILE =
-  "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
-const figmaUrl = (nodeId: string) =>
-  `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
 // Helpers de présentation (positionnement ancré, façon MUI anchorOrigin)
@@ -46,7 +45,10 @@ const meta = {
   tags: ["autodocs"],
   parameters: {
     docs: {
-      description: { component: "Les snackbars affichent un message bref et temporaire en bas de l'écran pour confirmer une action ou signaler un événement. Ils disparaissent automatiquement et peuvent proposer une action corrective comme « Annuler »." },
+      description: {
+        component:
+          "Les snackbars affichent un message bref et temporaire en bas de l'écran pour confirmer une action ou signaler un événement. Ils disparaissent automatiquement et peuvent proposer une action corrective comme « Annuler ».",
+      },
       page: () => (
         <DocsTabsPage
           guidelines={
@@ -69,8 +71,8 @@ const meta = {
                 example: (
                   <div style={{ maxWidth: 340 }}>
                     <Snackbar appearance="warning">
-                      Votre session va bientôt expirer. Enregistrez votre travail
-                      et reconnectez-vous pour éviter toute perte de données.
+                      Votre session va bientôt expirer. Enregistrez votre travail et
+                      reconnectez-vous pour éviter toute perte de données.
                     </Snackbar>
                   </div>
                 ),
@@ -85,11 +87,11 @@ const meta = {
                 "Une confirmation bloquante nécessitant une décision → ModalDialog.",
               ]}
               best={[
-                "`role=\"alert\"` pour les messages critiques/urgents ; `status` (défaut) sinon.",
+                '`role="alert"` pour les messages critiques/urgents ; `status` (défaut) sinon.',
                 "Une action courte au maximum + fermeture ; l'auto-hide est géré côté application.",
               ]}
               accessibility={[
-                "`role=\"alert\"` pour l'urgent, `status` (défaut) sinon — annoncé sans voler le focus.",
+                '`role="alert"` pour l\'urgent, `status` (défaut) sinon — annoncé sans voler le focus.',
                 "Durée d'auto-hide suffisante pour lire ; une seule action, accessible au clavier.",
               ]}
             />
@@ -265,15 +267,25 @@ export const Appearances: Story = {
       style={{
         display: "flex",
         flexDirection: "column",
-        gap: 12,
+        gap: 16,
         maxWidth: 440,
       }}
     >
-      <Snackbar appearance="information">Information message.</Snackbar>
-      <Snackbar appearance="success">Sauvegarde effectuée avec succès.</Snackbar>
-      <Snackbar appearance="warning">Mise à jour programmée ce soir.</Snackbar>
-      <Snackbar appearance="critical">Impossible de se connecter.</Snackbar>
-      <Snackbar appearance="discovery">Nouvelle fonctionnalité disponible.</Snackbar>
+      <Labeled align="stretch" label="information">
+        <Snackbar appearance="information">Information message.</Snackbar>
+      </Labeled>
+      <Labeled align="stretch" label="success">
+        <Snackbar appearance="success">Sauvegarde effectuée avec succès.</Snackbar>
+      </Labeled>
+      <Labeled align="stretch" label="warning">
+        <Snackbar appearance="warning">Mise à jour programmée ce soir.</Snackbar>
+      </Labeled>
+      <Labeled align="stretch" label="critical">
+        <Snackbar appearance="critical">Impossible de se connecter.</Snackbar>
+      </Labeled>
+      <Labeled align="stretch" label="discovery">
+        <Snackbar appearance="discovery">Nouvelle fonctionnalité disponible.</Snackbar>
+      </Labeled>
     </div>
   ),
 };

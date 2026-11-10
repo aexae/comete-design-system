@@ -32,7 +32,11 @@ describe("Hero", () => {
   // -------------------------------------------------------------------
 
   it("should override element with as", () => {
-    render(<Hero size="xxlarge" as="div">Hero</Hero>);
+    render(
+      <Hero size="xxlarge" as="div">
+        Hero
+      </Hero>
+    );
     expect(screen.getByText("Hero").tagName).toBe("DIV");
   });
 
@@ -60,7 +64,11 @@ describe("Hero", () => {
   });
 
   it("should apply color-inverted", () => {
-    render(<Hero size="large" color="inverted">Hero</Hero>);
+    render(
+      <Hero size="large" color="inverted">
+        Hero
+      </Hero>
+    );
     expect(screen.getByText("Hero").className).toContain("color-inverted");
   });
 
@@ -74,7 +82,11 @@ describe("Hero", () => {
   });
 
   it("should apply align-center", () => {
-    render(<Hero size="large" align="center">Hero</Hero>);
+    render(
+      <Hero size="large" align="center">
+        Hero
+      </Hero>
+    );
     expect(screen.getByText("Hero").className).toContain("align-center");
   });
 
@@ -83,7 +95,11 @@ describe("Hero", () => {
   // -------------------------------------------------------------------
 
   it("should apply italic class when italic", () => {
-    render(<Hero size="large" italic>Hero</Hero>);
+    render(
+      <Hero size="large" italic>
+        Hero
+      </Hero>
+    );
     expect(screen.getByText("Hero").className).toContain("italic");
   });
 
@@ -92,7 +108,11 @@ describe("Hero", () => {
   // -------------------------------------------------------------------
 
   it("should apply truncate class and WebkitLineClamp when maxLines is set", () => {
-    render(<Hero size="large" maxLines={2}>Hero</Hero>);
+    render(
+      <Hero size="large" maxLines={2}>
+        Hero
+      </Hero>
+    );
     const el = screen.getByText("Hero");
     expect(el.className).toContain("truncate");
     expect(el.style.webkitLineClamp).toBe("2");
@@ -103,14 +123,22 @@ describe("Hero", () => {
   // -------------------------------------------------------------------
 
   it("should merge custom className", () => {
-    render(<Hero size="large" className="custom">Hero</Hero>);
+    render(
+      <Hero size="large" className="custom">
+        Hero
+      </Hero>
+    );
     const el = screen.getByText("Hero");
     expect(el.className).toContain("custom");
     expect(el.className).toContain("hero-large");
   });
 
   it("should forward id attribute", () => {
-    render(<Hero size="medium" id="hero">Hero</Hero>);
+    render(
+      <Hero size="medium" id="hero">
+        Hero
+      </Hero>
+    );
     expect(screen.getByText("Hero").id).toBe("hero");
   });
 });

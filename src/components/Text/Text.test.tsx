@@ -52,7 +52,11 @@ describe("Text", () => {
   });
 
   it("should combine size and weight", () => {
-    render(<Text size="large" weight="bold">LargeBold</Text>);
+    render(
+      <Text size="large" weight="bold">
+        LargeBold
+      </Text>
+    );
     expect(screen.getByText("LargeBold").className).toContain("text-large-bold");
   });
 
@@ -175,9 +179,18 @@ describe("Text", () => {
 
   it("should combine all props", () => {
     render(
-      <Text size="large" weight="bold" color="brand" align="center" underline italic as="span" className="extra">
+      <Text
+        size="large"
+        weight="bold"
+        color="brand"
+        align="center"
+        underline
+        italic
+        as="span"
+        className="extra"
+      >
         Combined
-      </Text>,
+      </Text>
     );
     const el = screen.getByText("Combined");
     expect(el.tagName).toBe("SPAN");
