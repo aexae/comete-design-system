@@ -195,13 +195,18 @@ function downloadBlob(blob: Blob, filename: string): void {
   URL.revokeObjectURL(url);
 }
 
-async function downloadPng(
+/**
+ * Rastérise l'icône affichée en PNG.
+ *
+ * Isolé du téléchargement parce que le presse-papiers en a besoin aussi :
+ * `ClipboardItem` veut un `Blob`, pas un fichier déjà posé sur le disque.
+ */
+async function buildPngBlob(
   container: HTMLElement,
-  filename: string,
   targetHeight = 256,
-): Promise<void> {
+): Promise<Blob | null> {
   const svgEl = buildExportSvg(container);
-  if (!svgEl) return;
+  if (!svgEl) return null;
 
   const vbParts = (svgEl.getAttribute("viewBox") ?? "").split(" ").map(Number);
   const vbW = vbParts[2] ?? 1;
@@ -229,9 +234,20 @@ async function downloadPng(
   if (ctx) ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
   URL.revokeObjectURL(url);
 
-  canvas.toBlob((pngBlob) => {
-    if (pngBlob) downloadBlob(pngBlob, filename);
-  }, "image/png");
+  return await new Promise<Blob | null>((resolve) => {
+    canvas.toBlob((pngBlob) => {
+      resolve(pngBlob);
+    }, "image/png");
+  });
+}
+
+async function downloadPng(
+  container: HTMLElement,
+  filename: string,
+  targetHeight = 256,
+): Promise<void> {
+  const blob = await buildPngBlob(container, targetHeight);
+  if (blob) downloadBlob(blob, filename);
 }
 
 // ----------------------------------------------------------------------
@@ -523,19 +539,25 @@ function IconDetailPanel({
 }: IconDetailPanelProps): ReactElement {
   const previewRef = useRef<HTMLButtonElement>(null);
   const [panelVariant, setPanelVariant] = useState<IconVariant>("outlined");
+  const [panelColor, setPanelColor] = useState<IconColor>("default");
   const [panelSize, setPanelSize] = useState(PANEL_SIZE_DEFAULT);
   const [codeCopied, setCodeCopied] = useState(false);
   const [svgCopied, setSvgCopied] = useState(false);
+  const [pngCopied, setPngCopied] = useState(false);
   const codeCopyTimerRef = useRef<number | null>(null);
   const svgCopyTimerRef = useRef<number | null>(null);
+  const pngCopyTimerRef = useRef<number | null>(null);
 
-  // Reset variant + size + feedback à chaque ouverture sur une nouvelle icône.
+  // Reset variant + couleur + taille + feedback à chaque ouverture sur une
+  // nouvelle icône.
   useEffect(() => {
     if (isOpen) {
       setPanelVariant("outlined");
+      setPanelColor("default");
       setPanelSize(PANEL_SIZE_DEFAULT);
       setCodeCopied(false);
       setSvgCopied(false);
+      setPngCopied(false);
     }
   }, [isOpen, name]);
 
@@ -546,6 +568,9 @@ function IconDetailPanel({
       }
       if (svgCopyTimerRef.current !== null) {
         window.clearTimeout(svgCopyTimerRef.current);
+      }
+      if (pngCopyTimerRef.current !== null) {
+        window.clearTimeout(pngCopyTimerRef.current);
       }
     },
     [],
@@ -565,11 +590,14 @@ function IconDetailPanel({
     }, 1500);
   };
 
-  // Code d'import — inclut `appearance` si différent du défaut (outlined).
-  const importCode =
-    panelVariant === "outlined"
-      ? `<Icon icon="${name}" />`
-      : `<Icon icon="${name}" appearance="${panelVariant}" />`;
+  // Code d'import — n'écrit que ce qui s'écarte des valeurs par défaut, pour
+  // que le snippet reste collable tel quel sans bruit.
+  const importCode = [
+    `<Icon icon="${name}"`,
+    panelVariant === "outlined" ? "" : ` appearance="${panelVariant}"`,
+    panelColor === "default" ? "" : ` color="${panelColor}"`,
+    " />",
+  ].join("");
 
   const handleCopyCode = (): void => {
     void navigator.clipboard.writeText(importCode);
@@ -582,15 +610,48 @@ function IconDetailPanel({
     }, 1500);
   };
 
+  // Nom de fichier des exports — la couleur n'y figure que si elle s'écarte du
+  // défaut, sinon deux teintes de la même icône écraseraient le même fichier.
+  const exportBase =
+    panelColor === "default"
+      ? `${name}-${panelVariant}`
+      : `${name}-${panelVariant}-${panelColor}`;
+
+  /**
+   * Copie l'icône en PNG dans le presse-papiers.
+   *
+   * `ClipboardItem` n'existe pas partout (Firefox ne l'expose que derrière un
+   * réglage) : sans lui, on retombe sur le téléchargement plutôt que d'avaler
+   * le clic en silence.
+   */
+  const handleCopyPng = async (): Promise<void> => {
+    if (!previewRef.current) return;
+    const blob = await buildPngBlob(previewRef.current);
+    if (!blob) return;
+
+    if (typeof ClipboardItem === "undefined" || !navigator.clipboard?.write) {
+      downloadBlob(blob, `${exportBase}.png`);
+      return;
+    }
+    await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+    setPngCopied(true);
+    if (pngCopyTimerRef.current !== null) {
+      window.clearTimeout(pngCopyTimerRef.current);
+    }
+    pngCopyTimerRef.current = window.setTimeout(() => {
+      setPngCopied(false);
+    }, 1500);
+  };
+
   const handleDownloadSvg = (): void => {
     if (!previewRef.current) return;
     const blob = buildSvgBlob(previewRef.current);
-    if (blob) downloadBlob(blob, `${name}-${panelVariant}.svg`);
+    if (blob) downloadBlob(blob, `${exportBase}.svg`);
   };
 
   const handleDownloadPng = (): void => {
     if (!previewRef.current) return;
-    void downloadPng(previewRef.current, `${name}-${panelVariant}.png`);
+    void downloadPng(previewRef.current, `${exportBase}.png`);
   };
 
   const sectionLabel: CSSProperties = {
@@ -654,7 +715,11 @@ function IconDetailPanel({
               }
             }}
           >
-            <Component variant={panelVariant} size={panelSize} />
+            <Component
+              variant={panelVariant}
+              color={panelColor}
+              size={panelSize}
+            />
             {/* Feedback de copie en overlay (sans déplacer la preview) */}
             {svgCopied && (
               <span
@@ -696,6 +761,19 @@ function IconDetailPanel({
             />
           </div>
 
+          {/* Couleur — la teinte choisie se propage à la preview ET aux
+              vignettes de variants, et part dans les exports : `buildExportSvg`
+              fige les styles calculés, donc le SVG et le PNG sortent déjà
+              peints. */}
+          <Select
+            label="Couleur"
+            items={COLORS.map((c) => ({ value: c, label: c }))}
+            value={panelColor}
+            onChange={(v) => {
+              if (v !== null) setPanelColor(v as IconColor);
+            }}
+          />
+
           {/* 3 variants cliquables */}
           <div>
             <div style={sectionLabel}>Variants — clique pour changer</div>
@@ -733,7 +811,7 @@ function IconDetailPanel({
                       transition: "background 0.15s, border-color 0.15s",
                     }}
                   >
-                    <Component variant={v} size={32} />
+                    <Component variant={v} color={panelColor} size={32} />
                     <span
                       style={{
                         fontSize: 10,
@@ -796,14 +874,33 @@ function IconDetailPanel({
               </span>
             </button>
           </div>
+
+          {/* Téléchargement — secondaire : le pied du panneau est réservé à la
+              copie, qui est le geste courant. */}
+          <div>
+            <div style={sectionLabel}>Télécharger</div>
+            <div style={{ display: "flex", gap: 8 }}>
+              <Button appearance="outlined" isFullWidth onPress={handleDownloadSvg}>
+                SVG
+              </Button>
+              <Button appearance="outlined" isFullWidth onPress={handleDownloadPng}>
+                PNG
+              </Button>
+            </div>
+          </div>
         </div>
       </DrawerBody>
       <DrawerFooter>
-        <Button appearance="outlined" isFullWidth onPress={handleDownloadSvg}>
-          Télécharger SVG
+        <Button appearance="outlined" isFullWidth onPress={handleCopySvg}>
+          {svgCopied ? "✓ SVG copié" : "Copier le SVG"}
         </Button>
-        <Button isFullWidth onPress={handleDownloadPng}>
-          Télécharger PNG
+        <Button
+          isFullWidth
+          onPress={() => {
+            void handleCopyPng();
+          }}
+        >
+          {pngCopied ? "✓ PNG copié" : "Copier le PNG"}
         </Button>
       </DrawerFooter>
     </Drawer>
