@@ -488,7 +488,7 @@ export const Base: Story = {
                   onQueryChange={search.setQuery}
                   onClose={search.close}
                 />
-                <Page.Bar title="Tableau de bord" />
+                <Page.Bar title="Accueil" />
                 <Page.Toolbar
                   search={
                     <SearchField

@@ -337,7 +337,7 @@ export const BleedDesktop: Story = {
 
       <Page globalActions={null} style={{ flex: 1, minHeight: 0 }}>
         <Page.Bar
-          title="Tableau de bord"
+          title="Accueil"
           trailing={
             <Stack direction="row" gap="100" align="center">
               <PageTrailingActions density="compact" />
