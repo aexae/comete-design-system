@@ -1,7 +1,7 @@
 // Coquille applicative partagée par les stories SideNav.
 // Reproduit le template réel de l'app : SideNav permanente pleine hauteur (marque
 // Pro Sécurité + slot de navigation + footer comète link) à gauche, et la Page
-// (Page.Bar "Tableau de bord" + contenu de Layout/Page) à droite. Fichier NON indexé par Storybook (pas
+// (Page.Bar "Accueil" + contenu de Layout/Page) à droite. Fichier NON indexé par Storybook (pas
 // de suffixe .stories).
 import { cloneElement, isValidElement, useState, type ReactNode } from "react";
 import { SideNav, Page, Logo, type SideNavMode } from "@aexae/comete-design-system/components";
@@ -25,7 +25,7 @@ export const APP_SPACE_LABEL = "Espace manager";
 export function AppNav() {
   return (
     <SideNav.Section>
-      <SideNav.Item label="Tableau de bord" iconBefore="Dashboard" isSelected href="/" />
+      <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="/" />
       <SideNav.Item label="Agents" iconBefore="Group" href="/agents" />
       <SideNav.Item label="Sites" iconBefore="Site" href="/sites" />
       <SideNav.Item label="Pointages" iconBefore="Clockings" href="/pointages" />
@@ -146,7 +146,7 @@ export interface AppShellProps {
   header?: ReactNode;
   /** Pied de nav personnalisé (remplace le `SideNav.Footer` par défaut). */
   footer?: ReactNode;
-  /** Titre de la `Page.Bar`. @default "Tableau de bord" */
+  /** Titre de la `Page.Bar`. @default "Accueil" */
   title?: string;
   /**
    * Hauteur du gabarit. @default "100vh"
@@ -171,7 +171,7 @@ export function AppShell({
   logo = <Logo entity="cafe" format="icon" />,
   header,
   footer,
-  title = "Tableau de bord",
+  title = "Accueil",
   height = "100vh",
 }: AppShellProps) {
   const [current, setCurrent] = useState<SideNavMode>(mode);

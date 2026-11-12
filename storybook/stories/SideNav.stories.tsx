@@ -94,7 +94,7 @@ export const Default: Story = {
       await expect(canvas.getByRole("button", { name: "Réduire la navigation" })).toHaveFocus();
       // …puis le premier item.
       await userEvent.tab();
-      const accueil = canvas.getByRole("link", { name: "Tableau de bord" });
+      const accueil = canvas.getByRole("link", { name: "Accueil" });
       await expect(accueil).toHaveFocus();
       // Tab suivant → item suivant (déplacement clavier entre items).
       await userEvent.tab();
@@ -170,7 +170,7 @@ function MobileWebDemo() {
     <>
       <Page globalActions={null} style={{ height: "100vh", overflowY: "auto" }}>
         <Page.Bar
-          title="Tableau de bord"
+          title="Accueil"
           leading={
             <Button
               appearance="subtle"
@@ -278,7 +278,7 @@ export const MobileWebInteractions: Story = {
 
     await step("fermé au départ, contenu visible", async () => {
       await expect(drawer()).toBeNull();
-      await expect(canvas.getByRole("heading", { name: "Tableau de bord" })).toBeVisible();
+      await expect(canvas.getByRole("heading", { name: "Accueil" })).toBeVisible();
     });
 
     await step("le hamburger ouvre la nav dans un Drawer, par-dessus le contenu", async () => {
@@ -368,7 +368,7 @@ export const Scrollable: Story = {
       nav={
         <>
           <SideNav.Section>
-            <SideNav.Item label="Tableau de bord" iconBefore="Dashboard" isSelected href="/" />
+            <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="/" />
             <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
             <SideNav.Item label="Sites" iconBefore="Site" href="/sites" />
             <SideNav.Item label="Pointages" iconBefore="Clockings" href="/pointages" />
@@ -407,7 +407,7 @@ export const Scrollable: Story = {
     const last = links[links.length - 1];
     first.focus();
     await expect(first).toHaveFocus();
-    await expect(first).toHaveTextContent("Tableau de bord");
+    await expect(first).toHaveTextContent("Accueil");
     last.focus();
     await expect(last).toHaveFocus();
     await expect(last).toHaveTextContent("Modèles");

@@ -397,7 +397,7 @@ function Schema(): ReactElement {
                 description="Espace manager"
               />
               <SideNav.Section>
-                <SideNav.Item label="Tableau de bord" iconBefore="Dashboard" href="#" />
+                <SideNav.Item label="Accueil" iconBefore="Home" href="#" />
                 <SideNav.Item label="Agents" iconBefore="Group" isSelected href="#" />
                 <SideNav.Item label="Sites" iconBefore="Site" href="#" />
                 <SideNav.Item label="Pointages" iconBefore="Clockings" href="#" />

@@ -67,8 +67,8 @@ const meta = {
     isDisabled: { control: "boolean" },
   },
   args: {
-    label: "Tableau de bord",
-    iconBefore: "Dashboard",
+    label: "Accueil",
+    iconBefore: "Home",
     isSelected: false,
     isDisabled: false,
   },
@@ -81,7 +81,7 @@ type Story = StoryObj<SideNavItemProps>;
 export const Default: Story = {
   parameters: {
     docs: {
-      source: { code: `<SideNav.Item label="Tableau de bord" iconBefore="Dashboard" href="/" />` },
+      source: { code: `<SideNav.Item label="Accueil" iconBefore="Home" href="/" />` },
     },
   },
 };
@@ -92,7 +92,7 @@ export const Selected: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<SideNav.Item label="Tableau de bord" iconBefore="Dashboard" isSelected href="/" />`,
+        code: `<SideNav.Item label="Accueil" iconBefore="Home" isSelected href="/" />`,
       },
     },
   },
