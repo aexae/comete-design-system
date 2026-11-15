@@ -59,5 +59,7 @@ export interface LegendProps {
  *  lignes / colonnes d'une grille de variantes, quand l'instance ne peut pas
  *  être enveloppée. */
 export function Legend({ children, style }: LegendProps): ReactElement {
-  return <span style={{ fontSize: 12, color: "var(--text-subtle)", ...style }}>{children}</span>;
+  return (
+    <span style={{ fontSize: 12, color: "var(--text-subtle-default)", ...style }}>{children}</span>
+  );
 }

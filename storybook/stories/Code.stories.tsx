@@ -85,7 +85,7 @@ export const InlineWithText: Story = {
         fontFamily: "var(--font-family-primary)",
         fontSize: "var(--font-size-ui-xs)",
         lineHeight: "var(--line-height-ui-xs)",
-        color: "var(--text-default)",
+        color: "var(--text-default-default)",
         margin: 0,
       }}
     >

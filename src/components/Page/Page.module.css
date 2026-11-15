@@ -5,11 +5,10 @@
    Spec Figma : node 4559:6656 (❖ Page header).
 
    Layout global :
-   - `--page-gutter` — gouttière de contenu (Page.Body), 12px fixe, héritée
-     par tous les descendants : Bleed isFull la compense, les stories
-     l'utilisent pour aligner du contenu sur le Body.
-   - `--page-header-gutter` — gouttière de la Bar et de la Toolbar, responsive
-     (24 / 16 / 8 selon le viewport).
+   - `--page-gutter` — gouttière unique partagée par Bar, Toolbar et Body,
+     responsive : 12px sous desktop (mobile + tablette), 24px à partir de
+     1200px. Héritée par tous les descendants : Bleed isFull la compense, les
+     stories l'utilisent pour aligner du contenu sur le Body.
    - Body utilise `overflow-x: clip` (pas `hidden`) pour que
      `overflow-y: auto` ne force pas `overflow-x: auto` par la spec.
      Les margins négatives de Bleed restent donc visibles.
@@ -17,7 +16,6 @@
 
 .page {
   --page-gutter: var(--space150);
-  --page-header-gutter: var(--space300);
   display: flex;
   flex-direction: column;
   min-height: 100%;
@@ -30,15 +28,9 @@
   container: page / inline-size;
 }
 
-@media (min-width: 600px) and (max-width: 1199px) {
+@media (min-width: 1200px) {
   .page {
-    --page-header-gutter: var(--space200);
-  }
-}
-
-@media (max-width: 599px) {
-  .page {
-    --page-header-gutter: var(--space100);
+    --page-gutter: var(--space300);
   }
 }
 
@@ -67,7 +59,7 @@
   align-items: center;
   gap: var(--space100);
   padding-block: var(--space200);
-  padding-inline: var(--page-header-gutter);
+  padding-inline: var(--page-gutter);
   flex-shrink: 0;
 
   /* Métriques de la variante compacte — SOURCE UNIQUE, consommée à la fois par
@@ -91,7 +83,7 @@
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-ui-xxl);
   letter-spacing: var(--letter-spacing-negative-extra-tight);
-  color: var(--text-default);
+  color: var(--text-default-default);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -168,7 +160,7 @@
   flex-wrap: nowrap;
   gap: var(--space100);
   padding-block: var(--space100);
-  padding-inline: var(--page-header-gutter);
+  padding-inline: var(--page-gutter);
   flex-shrink: 0;
 }
 

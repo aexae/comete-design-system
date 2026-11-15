@@ -54,7 +54,7 @@ span.cell {
   font-size: var(--font-size-ui-xs);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xs);
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
   pointer-events: none;
   user-select: none;
 }
@@ -105,7 +105,7 @@ button.cell:active:not([data-disabled]) {
    ========================================================================== */
 
 .cell[data-today] .cellText {
-  color: var(--text-information);
+  color: var(--text-information-default);
   font-weight: var(--font-weight-semibold);
 }
 
@@ -119,7 +119,7 @@ button.cell:active:not([data-disabled]) {
 }
 
 .cell[data-selected]:not([data-selection-start]):not([data-selection-end]) .cellText {
-  color: var(--text-information);
+  color: var(--text-information-default);
 }
 
 /* ==========================================================================
@@ -165,7 +165,7 @@ button.cell:active:not([data-disabled]) {
 }
 
 .cell[data-range-part] .cellText {
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 /* ==========================================================================

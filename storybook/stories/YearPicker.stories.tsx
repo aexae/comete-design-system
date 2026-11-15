@@ -133,7 +133,7 @@ function SingleRender({ args }: { args: SingleYearPickerProps }) {
         style={{
           fontFamily: "var(--font-family-primary)",
           fontSize: "var(--font-size-ui-xs)",
-          color: "var(--text-subtlest)",
+          color: "var(--text-subtlest-default)",
         }}
       >
         Sélection : {year}
@@ -175,7 +175,7 @@ function RangeRender({ args }: { args: RangeYearPickerProps }) {
         style={{
           fontFamily: "var(--font-family-primary)",
           fontSize: "var(--font-size-ui-xs)",
-          color: "var(--text-subtlest)",
+          color: "var(--text-subtlest-default)",
         }}
       >
         Sélection : {startYear} → {endYear}

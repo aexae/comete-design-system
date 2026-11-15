@@ -52,7 +52,7 @@
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-default);
+  color: var(--text-default-default);
   padding: 0;
 }
 
@@ -62,7 +62,7 @@
 }
 
 .weekInput::placeholder {
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
 }
 
 /* Bouton calendrier (mode saisie) */
@@ -96,7 +96,7 @@
 
 .root[data-invalid]:not([data-disabled]) .weekButton,
 .root[data-invalid]:not([data-disabled]) .weekInput {
-  color: var(--text-critical);
+  color: var(--text-critical-default);
 }
 
 /* ==========================================================================
@@ -124,7 +124,7 @@
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-default);
+  color: var(--text-default-default);
   user-select: none;
   flex-shrink: 0;
 }

@@ -22,11 +22,11 @@
   background: transparent;
   font: inherit;
   letter-spacing: inherit;
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 .input::placeholder {
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
 }
 
 /* `type="search"` : Chromium / Safari ajoutent leur propre croix d'effacement
@@ -53,7 +53,7 @@
    gérée par InputContainer). AriaTextField pose `data-invalid` automatiquement.
    Quand le champ est aussi désactivé, on garde la couleur disabled (priorité). */
 .textField[data-invalid]:not([data-disabled]) .input {
-  color: var(--text-critical);
+  color: var(--text-critical-default);
 }
 
 /* ==========================================================================

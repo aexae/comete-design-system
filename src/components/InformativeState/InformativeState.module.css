@@ -66,7 +66,7 @@
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-ui-m);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 /* ------------------------------------------------------------------ */
@@ -79,7 +79,7 @@
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
 }
 
 /* ------------------------------------------------------------------ */

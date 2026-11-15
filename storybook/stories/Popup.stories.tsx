@@ -63,7 +63,7 @@ const meta = {
                         margin: 0,
                         fontFamily: "var(--font-family-primary)",
                         fontSize: "var(--font-size-ui-xs)",
-                        color: "var(--text-default)",
+                        color: "var(--text-default-default)",
                       }}
                     >
                       Contenu flottant court, près du déclencheur.
@@ -80,7 +80,7 @@ const meta = {
                         margin: 0,
                         fontFamily: "var(--font-family-primary)",
                         fontSize: "var(--font-size-ui-xs)",
-                        color: "var(--text-default)",
+                        color: "var(--text-default-default)",
                       }}
                     >
                       Une liste d&apos;actions ou un dialogue interactif n&apos;y a pas sa place.
@@ -131,7 +131,7 @@ export const Default: Story = {
           margin: 0,
           fontFamily: "var(--font-family-primary)",
           fontSize: "var(--font-size-ui-xs)",
-          color: "var(--text-default)",
+          color: "var(--text-default-default)",
         }}
       >
         Contenu du popup

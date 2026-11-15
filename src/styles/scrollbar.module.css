@@ -145,7 +145,7 @@
 }
 
 [data-theme="dark"] .themed::-webkit-scrollbar-thumb:hover {
-  background-color: var(--text-subtle);
+  background-color: var(--text-subtle-default);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -154,7 +154,7 @@
   }
 
   :root:not([data-theme="light"]) .themed::-webkit-scrollbar-thumb:hover {
-    background-color: var(--text-subtle);
+    background-color: var(--text-subtle-default);
   }
 }
 

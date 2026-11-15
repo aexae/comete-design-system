@@ -1472,7 +1472,7 @@ function ResponsiveDocSection(): ReactNode {
     fontFamily: "var(--font-family-primary)",
     fontSize: "var(--font-size-ui-xs)",
     lineHeight: "var(--line-height-ui-m)",
-    color: "var(--text-default)",
+    color: "var(--text-default-default)",
     textAlign: "start" as const,
     verticalAlign: "top" as const,
   };
@@ -1487,7 +1487,7 @@ function ResponsiveDocSection(): ReactNode {
           fontFamily: "var(--font-family-primary)",
           fontSize: "var(--font-size-ui-s)",
           fontWeight: "var(--font-weight-semibold)",
-          color: "var(--text-default)",
+          color: "var(--text-default-default)",
         }}
       >
         <span
@@ -1495,7 +1495,7 @@ function ResponsiveDocSection(): ReactNode {
             width: 8,
             height: 8,
             borderRadius: "50%",
-            background: "var(--text-information)",
+            background: "var(--text-information-default)",
             display: "inline-block",
           }}
         />
@@ -1507,7 +1507,7 @@ function ResponsiveDocSection(): ReactNode {
           fontFamily: "var(--font-family-primary)",
           fontSize: "var(--font-size-ui-xs)",
           lineHeight: "var(--line-height-ui-m)",
-          color: "var(--text-subtle)",
+          color: "var(--text-subtle-default)",
         }}
       >
         La dégradation est pilotée par <strong>container queries</strong> (la largeur du conteneur
@@ -1607,7 +1607,7 @@ function RowClickDoctrineSection(): ReactNode {
     fontFamily: "var(--font-family-primary)",
     fontSize: "var(--font-size-ui-xs)",
     lineHeight: "var(--line-height-ui-m)",
-    color: "var(--text-default)",
+    color: "var(--text-default-default)",
     textAlign: "start" as const,
     verticalAlign: "top" as const,
   };
@@ -1627,7 +1627,7 @@ function RowClickDoctrineSection(): ReactNode {
           fontFamily: "var(--font-family-primary)",
           fontSize: "var(--font-size-ui-s)",
           fontWeight: "var(--font-weight-semibold)",
-          color: "var(--text-default)",
+          color: "var(--text-default-default)",
         }}
       >
         <span
@@ -1635,7 +1635,7 @@ function RowClickDoctrineSection(): ReactNode {
             width: 8,
             height: 8,
             borderRadius: "50%",
-            background: "var(--text-information)",
+            background: "var(--text-information-default)",
             display: "inline-block",
           }}
         />
@@ -1647,7 +1647,7 @@ function RowClickDoctrineSection(): ReactNode {
           fontFamily: "var(--font-family-primary)",
           fontSize: "var(--font-size-ui-xs)",
           lineHeight: "var(--line-height-ui-m)",
-          color: "var(--text-subtle)",
+          color: "var(--text-subtle-default)",
         }}
       >
         Critère :{" "}
@@ -1694,7 +1694,7 @@ function RowClickDoctrineSection(): ReactNode {
           fontFamily: "var(--font-family-primary)",
           fontSize: "var(--font-size-ui-xs)",
           lineHeight: "var(--line-height-ui-m)",
-          color: "var(--text-subtle)",
+          color: "var(--text-subtle-default)",
         }}
       >
         <li>La modale n&apos;est pas un mode de consultation — réservée aux actions courtes.</li>

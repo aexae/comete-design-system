@@ -258,14 +258,16 @@ function LoadingFlowDemo() {
           <span key={key} style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <span
               style={{
-                color: step === key ? "var(--text-selected)" : "var(--text-subtle)",
+                color: step === key ? "var(--text-selected)" : "var(--text-subtle-default)",
                 fontWeight:
                   step === key ? "var(--font-weight-semibold)" : "var(--font-weight-regular)",
               }}
             >
               {label}
             </span>
-            {i < FLOW_STEPS.length - 1 && <span style={{ color: "var(--text-subtlest)" }}>→</span>}
+            {i < FLOW_STEPS.length - 1 && (
+              <span style={{ color: "var(--text-subtlest-default)" }}>→</span>
+            )}
           </span>
         ))}
       </div>

@@ -259,7 +259,7 @@ export const NonLinear: Story = {
               <Step key={label} label={label} isCompleted={completed.has(i)} />
             ))}
           </Stepper>
-          <p style={{ margin: 0, color: "var(--text-subtle)" }}>
+          <p style={{ margin: 0, color: "var(--text-subtle-default)" }}>
             Étape active : <strong>{steps[step]}</strong> ({step + 1} / 4) — clique sur
             n&apos;importe quelle étape pour y sauter, sans que les précédentes soient
             auto-validées.
@@ -329,7 +329,7 @@ export const LinearClickable: Story = {
             <Step label="Paiement" />
             <Step label="Confirmation" />
           </Stepper>
-          <p style={{ marginTop: 16, color: "var(--text-subtle)" }}>
+          <p style={{ marginTop: 16, color: "var(--text-subtle-default)" }}>
             Toutes les étapes &lt; {step + 1} sont auto-complétées. Clique sur une étape précédente
             pour y revenir.
           </p>

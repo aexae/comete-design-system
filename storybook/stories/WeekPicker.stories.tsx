@@ -160,7 +160,7 @@ function SingleRender({ args }: { args: SingleWeekPickerProps }) {
         style={{
           fontFamily: "var(--font-family-primary)",
           fontSize: "var(--font-size-ui-xs)",
-          color: "var(--text-subtlest)",
+          color: "var(--text-subtlest-default)",
         }}
       >
         Sélection : S{week} / {year}
@@ -214,7 +214,7 @@ function RangeRender({ args }: { args: RangeWeekPickerProps }) {
         style={{
           fontFamily: "var(--font-family-primary)",
           fontSize: "var(--font-size-ui-xs)",
-          color: "var(--text-subtlest)",
+          color: "var(--text-subtlest-default)",
         }}
       >
         Sélection : S{startWeek}/{startYear} → S{endWeek}/{endYear}

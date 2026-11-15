@@ -24,7 +24,7 @@
   /* 4px = (32 − 24) / 2, exactement la débordement du halo 32×32 sur l'indicateur 24×24.
      Garantit que le halo touche pile le bord du label sans le couvrir. */
   column-gap: var(--space050);
-  color: var(--text-default);
+  color: var(--text-default-default);
   cursor: pointer;
   user-select: none;
 }
@@ -188,7 +188,7 @@
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 .checkbox[data-disabled] .label {
@@ -200,7 +200,7 @@
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-critical);
+  color: var(--text-critical-default);
 }
 
 .checkbox[data-disabled] .required {
@@ -211,7 +211,7 @@
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xxs);
   line-height: var(--line-height-ui-xxs);
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
 }
 
 .checkbox[data-disabled] .description {

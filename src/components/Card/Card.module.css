@@ -33,9 +33,9 @@
   border: none;
   box-shadow: var(--elevation-xsmall);
   color: var(--text-inverted);
-  --text-default: var(--text-inverted);
-  --text-subtle: var(--text-inverted);
-  --text-subtlest: var(--text-inverted);
+  --text-default-default: var(--text-inverted);
+  --text-subtle-default: var(--text-inverted);
+  --text-subtlest-default: var(--text-inverted);
   --icon-default: var(--icon-inverted);
   --icon-subtle: var(--icon-inverted);
   --icon-subtlest: var(--icon-inverted);
@@ -89,9 +89,9 @@
 .bold.color-warning {
   background-color: var(--background-warning-bold-default);
   color: var(--text-on-warning);
-  --text-default: var(--text-on-warning);
-  --text-subtle: var(--text-on-warning);
-  --text-subtlest: var(--text-on-warning);
+  --text-default-default: var(--text-on-warning);
+  --text-subtle-default: var(--text-on-warning);
+  --text-subtlest-default: var(--text-on-warning);
   --icon-default: var(--icon-on-warning);
   --icon-subtle: var(--icon-on-warning);
   --icon-subtlest: var(--icon-on-warning);
@@ -436,9 +436,9 @@
 
 .disabled {
   pointer-events: none;
-  --text-default: var(--text-disabled);
-  --text-subtle: var(--text-disabled);
-  --text-subtlest: var(--text-disabled);
+  --text-default-default: var(--text-disabled);
+  --text-subtle-default: var(--text-disabled);
+  --text-subtlest-default: var(--text-disabled);
   --icon-default: var(--icon-disabled);
   --icon-subtle: var(--icon-disabled);
   --icon-subtlest: var(--icon-disabled);

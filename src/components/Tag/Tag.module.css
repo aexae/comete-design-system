@@ -189,7 +189,7 @@
 
 .subtle.neutral {
   background: var(--background-neutral-subtler-default);
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 .subtle.neutral.interactive:hover {
   background: var(--background-neutral-subtler-hovered);
@@ -200,7 +200,7 @@
 
 .subtle.comete {
   background: var(--background-comete-subtlest-default);
-  color: var(--text-comete);
+  color: var(--text-comete-default);
 }
 .subtle.comete.interactive:hover {
   background: var(--background-comete-subtlest-hovered);
@@ -211,7 +211,7 @@
 
 .subtle.success {
   background: var(--background-success-subtlest-default);
-  color: var(--text-success);
+  color: var(--text-success-default);
 }
 .subtle.success.interactive:hover {
   background: var(--background-success-subtlest-hovered);
@@ -222,7 +222,7 @@
 
 .subtle.warning {
   background: var(--background-warning-subtlest-default);
-  color: var(--text-warning);
+  color: var(--text-warning-default);
 }
 .subtle.warning.interactive:hover {
   background: var(--background-warning-subtlest-hovered);
@@ -233,7 +233,7 @@
 
 .subtle.critical {
   background: var(--background-critical-subtlest-default);
-  color: var(--text-critical);
+  color: var(--text-critical-default);
 }
 .subtle.critical.interactive:hover {
   background: var(--background-critical-subtlest-hovered);
@@ -244,7 +244,7 @@
 
 .subtle.information {
   background: var(--background-information-subtlest-default);
-  color: var(--text-information);
+  color: var(--text-information-default);
 }
 .subtle.information.interactive:hover {
   background: var(--background-information-subtlest-hovered);
@@ -255,7 +255,7 @@
 
 .subtle.accentPurple {
   background: var(--background-accent-purple-subtlest-default);
-  color: var(--text-accent-purple);
+  color: var(--text-accent-purple-default);
 }
 .subtle.accentPurple.interactive:hover {
   background: var(--background-accent-purple-subtlest-hovered);
@@ -266,7 +266,7 @@
 
 .subtle.accentTeal {
   background: var(--background-accent-teal-subtlest-default);
-  color: var(--text-accent-teal);
+  color: var(--text-accent-teal-default);
 }
 .subtle.accentTeal.interactive:hover {
   background: var(--background-accent-teal-subtlest-hovered);
@@ -277,7 +277,7 @@
 
 .subtle.accentTurquoise {
   background: var(--background-accent-turquoise-subtlest-default);
-  color: var(--text-accent-turquoise);
+  color: var(--text-accent-turquoise-default);
 }
 .subtle.accentTurquoise.interactive:hover {
   background: var(--background-accent-turquoise-subtlest-hovered);
@@ -288,7 +288,7 @@
 
 .subtle.accentMagenta {
   background: var(--background-accent-magenta-subtlest-default);
-  color: var(--text-accent-magenta);
+  color: var(--text-accent-magenta-default);
 }
 .subtle.accentMagenta.interactive:hover {
   background: var(--background-accent-magenta-subtlest-hovered);
@@ -299,7 +299,7 @@
 
 .subtle.accentBlueGrey {
   background: var(--background-accent-blue-grey-subtlest-default);
-  color: var(--text-accent-blue-grey);
+  color: var(--text-accent-blue-grey-default);
 }
 .subtle.accentBlueGrey.interactive:hover {
   background: var(--background-accent-blue-grey-subtlest-hovered);
@@ -315,7 +315,7 @@
 .outlined.neutral {
   background: transparent;
   border-color: var(--border-default);
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 .outlined.neutral.interactive:hover {
   background: var(--background-neutral-subtlest-hovered);
@@ -327,7 +327,7 @@
 .outlined.comete {
   background: transparent;
   border-color: var(--border-comete-bold);
-  color: var(--text-comete);
+  color: var(--text-comete-default);
 }
 .outlined.comete.interactive:hover {
   background: var(--background-comete-subtlest-hovered);
@@ -339,7 +339,7 @@
 .outlined.success {
   background: transparent;
   border-color: var(--border-success-bold);
-  color: var(--text-success);
+  color: var(--text-success-default);
 }
 .outlined.success.interactive:hover {
   background: var(--background-success-subtlest-hovered);
@@ -351,7 +351,7 @@
 .outlined.warning {
   background: transparent;
   border-color: var(--border-warning-bold);
-  color: var(--text-warning);
+  color: var(--text-warning-default);
 }
 .outlined.warning.interactive:hover {
   background: var(--background-warning-subtlest-hovered);
@@ -363,7 +363,7 @@
 .outlined.critical {
   background: transparent;
   border-color: var(--border-critical-bold);
-  color: var(--text-critical);
+  color: var(--text-critical-default);
 }
 .outlined.critical.interactive:hover {
   background: var(--background-critical-subtlest-hovered);
@@ -375,7 +375,7 @@
 .outlined.information {
   background: transparent;
   border-color: var(--border-information-bold);
-  color: var(--text-information);
+  color: var(--text-information-default);
 }
 .outlined.information.interactive:hover {
   background: var(--background-information-subtlest-hovered);
@@ -387,7 +387,7 @@
 .outlined.accentPurple {
   background: transparent;
   border-color: var(--border-accent-purple-bold);
-  color: var(--text-accent-purple);
+  color: var(--text-accent-purple-default);
 }
 .outlined.accentPurple.interactive:hover {
   background: var(--background-accent-purple-subtlest-hovered);
@@ -399,7 +399,7 @@
 .outlined.accentTeal {
   background: transparent;
   border-color: var(--border-accent-teal-bold);
-  color: var(--text-accent-teal);
+  color: var(--text-accent-teal-default);
 }
 .outlined.accentTeal.interactive:hover {
   background: var(--background-accent-teal-subtlest-hovered);
@@ -411,7 +411,7 @@
 .outlined.accentTurquoise {
   background: transparent;
   border-color: var(--border-accent-turquoise-bold);
-  color: var(--text-accent-turquoise);
+  color: var(--text-accent-turquoise-default);
 }
 .outlined.accentTurquoise.interactive:hover {
   background: var(--background-accent-turquoise-subtlest-hovered);
@@ -423,7 +423,7 @@
 .outlined.accentMagenta {
   background: transparent;
   border-color: var(--border-accent-magenta-bold);
-  color: var(--text-accent-magenta);
+  color: var(--text-accent-magenta-default);
 }
 .outlined.accentMagenta.interactive:hover {
   background: var(--background-accent-magenta-subtlest-hovered);
@@ -435,7 +435,7 @@
 .outlined.accentBlueGrey {
   background: transparent;
   border-color: var(--border-accent-blue-grey-bold);
-  color: var(--text-accent-blue-grey);
+  color: var(--text-accent-blue-grey-default);
 }
 .outlined.accentBlueGrey.interactive:hover {
   background: var(--background-accent-blue-grey-subtlest-hovered);

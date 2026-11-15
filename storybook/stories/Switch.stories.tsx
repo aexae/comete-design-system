@@ -124,7 +124,7 @@ export const Controlled: Story = {
         <Switch isChecked={enabled} onChange={setEnabled}>
           Notifications {enabled ? "activées" : "désactivées"}
         </Switch>
-        <span style={{ fontSize: 12, color: "var(--text-subtle)" }}>
+        <span style={{ fontSize: 12, color: "var(--text-subtle-default)" }}>
           État courant : {String(enabled)}
         </span>
       </div>

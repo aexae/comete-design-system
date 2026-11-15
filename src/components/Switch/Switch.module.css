@@ -16,7 +16,7 @@
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-s);
   line-height: var(--line-height-ui-s);
-  color: var(--text-default);
+  color: var(--text-default-default);
   cursor: pointer;
   user-select: none;
 }

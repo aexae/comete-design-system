@@ -12,7 +12,7 @@
   border-collapse: collapse;
   width: 100%;
   font-family: var(--font-family-primary);
-  color: var(--text-default);
+  color: var(--text-default-default);
   /* Cache le double-border du header quand `border-collapse: collapse` :
      le bord bas du `<thead>` et le bord haut du premier `<tbody>` fusionnent. */
   border-spacing: 0;
@@ -155,7 +155,7 @@
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-default);
+  color: var(--text-default-default);
   vertical-align: middle;
   text-align: left;
   /* Hauteur cible 40px (Figma) obtenue via padding + font-size natif. */
@@ -204,7 +204,7 @@
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-ui-xxs);
   letter-spacing: var(--letter-spacing-normal);
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
   text-align: left;
   vertical-align: middle;
   /* Hauteur cible 30px (Figma) via padding + font-size. */
@@ -226,7 +226,7 @@
 }
 
 .headerCell[data-sortable]:hover {
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 /* Focus visible sur un header triable — anneau focused inset (pas d'outline
@@ -328,7 +328,7 @@
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-xs);
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
   border-top: var(--size025) solid var(--border-subtle);
 }
 
@@ -417,7 +417,7 @@
   flex-grow: 1;
   min-width: 0;
   font-size: var(--font-size-ui-xs);
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 .selectionBarActions {

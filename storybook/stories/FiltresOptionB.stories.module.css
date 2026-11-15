@@ -75,7 +75,7 @@ section[role="dialog"][aria-label="Filtres"] .scroll.scroll::-webkit-scrollbar {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-s);
   line-height: var(--line-height-ui-s);
-  color: var(--text-default);
+  color: var(--text-default-default);
   white-space: nowrap;
 }
 
@@ -89,7 +89,7 @@ section[role="dialog"][aria-label="Filtres"] .scroll.scroll::-webkit-scrollbar {
   align-items: center;
   gap: var(--space100);
   min-width: 0;
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
 }
 .facetValue {
   min-width: 0;
@@ -97,7 +97,7 @@ section[role="dialog"][aria-label="Filtres"] .scroll.scroll::-webkit-scrollbar {
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: var(--font-size-ui-s);
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
 }
 
 /* Ligne d'option (vue détail). Le compteur de résultats ne se tronque JAMAIS
@@ -114,7 +114,7 @@ section[role="dialog"][aria-label="Filtres"] .scroll.scroll::-webkit-scrollbar {
 .optionCount {
   flex: none;
   font-size: var(--font-size-ui-xs);
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
   font-variant-numeric: tabular-nums;
 }
 

@@ -208,7 +208,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       .filter(Boolean)
       .join(" ");
 
-    const iconColor = resolveIconColor(appearance, color);
+    // L'état sélectionné unifie toutes les apparences/couleurs (puce de fond
+    // pleine) : l'icône suit la couleur `selected` plutôt que celle de l'apparence.
+    const iconColor = isSelected ? "selected" : resolveIconColor(appearance, color);
 
     return (
       <AriaButton

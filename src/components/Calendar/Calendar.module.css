@@ -39,7 +39,7 @@
   font-size: var(--font-size-ui-xs);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-ui-xs);
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 /* Bouton heading interactif — drill-up vers le niveau supérieur.
@@ -48,7 +48,7 @@
 .headingButton {
   flex: 1;
   gap: var(--space025);
-  color: var(--text-default);
+  color: var(--text-default-default);
   padding: var(--space025) var(--space050);
 }
 
@@ -108,7 +108,7 @@
   font-size: var(--font-size-ui-xxs);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-ui-xs);
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
   user-select: none;
 }
 

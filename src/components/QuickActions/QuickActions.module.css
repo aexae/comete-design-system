@@ -86,7 +86,7 @@
   font-size: var(--font-size-ui-s);
   line-height: var(--line-height-ui-s);
   font-weight: var(--font-weight-regular);
-  color: var(--text-default);
+  color: var(--text-default-default);
   text-align: start;
   cursor: pointer;
   outline: none;

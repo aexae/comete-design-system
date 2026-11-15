@@ -40,7 +40,7 @@ const meta = {
                             margin: 0,
                             fontFamily: "var(--font-family-primary)",
                             fontSize: "var(--font-size-ui-xs)",
-                            color: "var(--text-default)",
+                            color: "var(--text-default-default)",
                           }}
                         >
                           Complément d&apos;information court et ciblé.
@@ -65,7 +65,7 @@ const meta = {
                             margin: 0,
                             fontFamily: "var(--font-family-primary)",
                             fontSize: "var(--font-size-ui-xs)",
-                            color: "var(--text-default)",
+                            color: "var(--text-default-default)",
                           }}
                         >
                           Un formulaire long ou une liste d&apos;actions n&apos;a pas sa place ici.
@@ -123,7 +123,7 @@ export const Default: Story = {
               fontFamily: "var(--font-family-primary)",
               fontSize: "var(--font-size-ui-xs)",
               lineHeight: "var(--line-height-ui-xs)",
-              color: "var(--text-default)",
+              color: "var(--text-default-default)",
             }}
           >
             Contenu du popover
@@ -145,7 +145,7 @@ export const RichContent: Story = {
           <div
             style={{
               fontFamily: "var(--font-family-primary)",
-              color: "var(--text-default)",
+              color: "var(--text-default-default)",
             }}
           >
             <p
@@ -163,7 +163,7 @@ export const RichContent: Story = {
                 margin: "8px 0 0",
                 fontSize: "var(--font-size-ui-xs)",
                 lineHeight: "var(--line-height-ui-xs)",
-                color: "var(--text-subtle)",
+                color: "var(--text-subtle-default)",
               }}
             >
               Description détaillée du contenu affiché dans le popover.

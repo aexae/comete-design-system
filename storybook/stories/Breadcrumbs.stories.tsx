@@ -160,7 +160,7 @@ export const WithMenu: Story = {
             fontFamily: "var(--font-family-primary)",
             fontSize: "var(--font-size-ui-xs)",
             lineHeight: "var(--line-height-ui-xs)",
-            color: "var(--text-subtlest)",
+            color: "var(--text-subtlest-default)",
           }}
         >
           /
@@ -177,7 +177,7 @@ export const WithMenu: Story = {
               fontWeight: "var(--font-weight-regular)",
               lineHeight: "var(--line-height-ui-xs)",
               letterSpacing: "normal",
-              color: "var(--text-subtle)",
+              color: "var(--text-subtle-default)",
               background: "transparent",
               border: "none",
               padding: 0,

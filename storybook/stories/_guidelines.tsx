@@ -114,12 +114,12 @@ function isBoundary(ch: string): boolean {
 // tokens qui résolvent dans les deux thèmes (surface-default, neutral-subtlest,
 // selected-subtlest, border-subtle, et les --text-* qui, eux, sont complets).
 const LINK_STYLE = {
-  color: "var(--text-information)",
+  color: "var(--text-information-default)",
   textUnderlineOffset: 2,
 } as const;
 
 const PILL_STYLE = {
-  color: "var(--text-information)",
+  color: "var(--text-information-default)",
   background: "var(--background-selected-subtlest-default)",
   border: "1px solid var(--border-subtle)",
   borderRadius: "var(--radius150)",
@@ -182,7 +182,7 @@ function CodeChip({ children }: { children: ReactNode }): ReactElement {
         fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
         fontSize: "0.85em",
         background: "var(--background-neutral-subtler-default)",
-        color: "var(--text-default)",
+        color: "var(--text-default-default)",
         border: "1px solid var(--border-subtle)",
         borderRadius: "var(--radius150)",
         padding: "0.05em 0.4em",
@@ -258,7 +258,7 @@ function GuidelineList({
               fontFamily: "var(--font-family-primary)",
               fontSize: "var(--font-size-ui-xs)",
               lineHeight: "var(--line-height-ui-m)",
-              color: "var(--text-default)",
+              color: "var(--text-default-default)",
             }}
           >
             {renderInline(text)}
@@ -340,7 +340,7 @@ export function SectionHeading({
         fontSize: "var(--font-size-ui-s)",
         fontWeight: "var(--font-weight-semibold)",
         letterSpacing: "var(--letter-spacing-negative-tight)",
-        color: "var(--text-default)",
+        color: "var(--text-default-default)",
       }}
     >
       <Dot color={dot} />
@@ -372,7 +372,7 @@ function BulletList({ items }: { items: string[] }): ReactElement {
             fontSize: "var(--font-size-ui-xs)",
             lineHeight: "var(--line-height-ui-m)",
             letterSpacing: "var(--letter-spacing-negative-tight)",
-            color: "var(--text-default)",
+            color: "var(--text-default-default)",
           }}
         >
           {renderInline(text)}
@@ -408,7 +408,7 @@ function AltRow({ item }: { item: string }): ReactElement {
     fontFamily: "var(--font-family-primary)",
     fontSize: "var(--font-size-ui-xs)",
     lineHeight: "var(--line-height-ui-m)",
-    color: "var(--text-default)",
+    color: "var(--text-default-default)",
   } as const;
 
   const idx = item.indexOf("→");
@@ -436,7 +436,7 @@ function AltRow({ item }: { item: string }): ReactElement {
           minWidth: 0,
         }}
       >
-        <span style={{ color: "var(--text-subtlest)", flex: "none" }}>→</span>
+        <span style={{ color: "var(--text-subtlest-default)", flex: "none" }}>→</span>
         <span style={textStyle}>{linkify(target, true)}</span>
       </span>
     </Card>
@@ -454,7 +454,7 @@ function DoDontCard({
   caption: string;
 }): ReactElement {
   const isDo = kind === "do";
-  const titleColor = isDo ? "var(--text-success)" : "var(--text-critical)";
+  const titleColor = isDo ? "var(--text-success-default)" : "var(--text-critical-default)";
   return (
     // `Card` du DS plutôt qu'un cadre redessiné : la couleur sémantique porte
     // la bordure entière, au lieu d'un filet haut rapporté à la main.
@@ -507,7 +507,7 @@ function DoDontCard({
           fontFamily: "var(--font-family-primary)",
           fontSize: "var(--font-size-ui-xs)",
           lineHeight: "var(--line-height-ui-m)",
-          color: "var(--text-subtle)",
+          color: "var(--text-subtle-default)",
         }}
       >
         {renderInline(caption)}
@@ -566,18 +566,18 @@ export function GuidelinesFlat({
       ) : null}
 
       <section>
-        <SectionHeading dot="var(--text-success)">Quand l&apos;utiliser</SectionHeading>
+        <SectionHeading dot="var(--text-success-default)">Quand l&apos;utiliser</SectionHeading>
         <BulletList items={when} />
       </section>
 
       <section>
-        <SectionHeading dot="var(--text-information)">Plutôt utiliser</SectionHeading>
+        <SectionHeading dot="var(--text-information-default)">Plutôt utiliser</SectionHeading>
         <p
           style={{
             margin: "var(--space150) 0 var(--space100)",
             fontFamily: "var(--font-family-primary)",
             fontSize: "var(--font-size-ui-xs)",
-            color: "var(--text-subtle)",
+            color: "var(--text-subtle-default)",
           }}
         >
           Dans ces cas, un autre composant est plus adapté :
@@ -597,7 +597,7 @@ export function GuidelinesFlat({
 
       {best ? (
         <section>
-          <SectionHeading dot="var(--text-warning)">Bonnes pratiques</SectionHeading>
+          <SectionHeading dot="var(--text-warning-default)">Bonnes pratiques</SectionHeading>
           <BulletList items={best} />
         </section>
       ) : null}

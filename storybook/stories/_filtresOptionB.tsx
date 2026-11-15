@@ -914,7 +914,7 @@ function OptionControls({
               style={{
                 marginLeft: "auto",
                 fontSize: 12,
-                color: "var(--text-subtlest)",
+                color: "var(--text-subtlest-default)",
                 fontVariantNumeric: "tabular-nums",
               }}
             >
@@ -1218,7 +1218,7 @@ export function FiltresPanel({
                         border: 0,
                         borderRadius: "var(--radius100)",
                         background: active ? "var(--background-brand-subtlest-default)" : "none",
-                        color: active ? "var(--text-brand)" : "var(--text-default)",
+                        color: active ? "var(--text-brand-default)" : "var(--text-default-default)",
                         fontSize: 13.5,
                         fontWeight: active ? 600 : 500,
                         textAlign: "left",
@@ -1246,7 +1246,7 @@ export function FiltresPanel({
                     style={{
                       margin: "0 0 var(--space100)",
                       fontSize: 12,
-                      color: "var(--text-subtlest)",
+                      color: "var(--text-subtlest-default)",
                     }}
                   >
                     {searchHits.length} résultat{searchHits.length > 1 ? "s" : ""} pour «{" "}
@@ -1275,14 +1275,14 @@ export function FiltresPanel({
                           onChange={() => toggleMulti(key, value)}
                           label={value}
                         />
-                        <span style={{ fontSize: 11.5, color: "var(--text-subtlest)" }}>
+                        <span style={{ fontSize: 11.5, color: "var(--text-subtlest-default)" }}>
                           {facetLabel}
                         </span>
                         <span
                           style={{
                             marginLeft: "auto",
                             fontSize: 12,
-                            color: "var(--text-subtlest)",
+                            color: "var(--text-subtlest-default)",
                             fontVariantNumeric: "tabular-nums",
                           }}
                         >
@@ -1325,7 +1325,7 @@ export function FiltresPanel({
                       padding: "0 var(--space075)",
                       fontSize: 13.5,
                       fontWeight: 600,
-                      color: "var(--text-default)",
+                      color: "var(--text-default-default)",
                     }}
                   >
                     <Icon icon="Bookmark" appearance="filled" size={18} />
@@ -1592,7 +1592,7 @@ export function FiltresSheet({
                   style={{
                     flex: "none",
                     fontSize: "var(--font-size-ui-xs)",
-                    color: "var(--text-subtlest)",
+                    color: "var(--text-subtlest-default)",
                     fontVariantNumeric: "tabular-nums",
                   }}
                 >
@@ -1606,7 +1606,7 @@ export function FiltresSheet({
               style={{
                 padding: "var(--space200) 0",
                 textAlign: "center",
-                color: "var(--text-subtlest)",
+                color: "var(--text-subtlest-default)",
                 fontSize: 13,
               }}
             >
@@ -1641,7 +1641,7 @@ export function FiltresSheet({
     fontFamily: "var(--font-family-primary)",
     fontSize: "var(--font-size-ui-s)",
     lineHeight: "var(--line-height-ui-s)",
-    color: "var(--text-default)",
+    color: "var(--text-default-default)",
     whiteSpace: "nowrap",
   } as const;
   const facetTrailingStyle = {
@@ -1651,7 +1651,7 @@ export function FiltresSheet({
     alignItems: "center",
     gap: "var(--space100)",
     minWidth: 0,
-    color: "var(--text-subtlest)",
+    color: "var(--text-subtlest-default)",
   } as const;
   const facetValueStyle = {
     minWidth: 0,
@@ -1659,7 +1659,7 @@ export function FiltresSheet({
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
     fontSize: "var(--font-size-ui-s)",
-    color: "var(--text-subtlest)",
+    color: "var(--text-subtlest-default)",
   } as const;
   // `textTransform: none` en inline bat le `.head` du DS (capitales) sans classe.
   const sectionTitleStyle = { textTransform: "none" } as const;
@@ -1738,7 +1738,7 @@ export function FiltresSheet({
               style={{
                 padding: "var(--space300) 0",
                 textAlign: "center",
-                color: "var(--text-subtlest)",
+                color: "var(--text-subtlest-default)",
                 fontSize: 13,
               }}
             >
@@ -1800,7 +1800,7 @@ export function FiltresSheet({
                 margin: 0,
                 fontSize: "var(--font-size-ui-xxs)",
                 lineHeight: "var(--line-height-ui-xxs)",
-                color: "var(--text-subtlest)",
+                color: "var(--text-subtlest-default)",
               }}
             >
               Vous les retrouverez ensuite dans vos filtres enregistrés, et vous les réappliquerez
@@ -2136,7 +2136,7 @@ export function ActiveFilterTags({
           padding: "0 var(--space075) 0 var(--space150)",
           borderRadius: "var(--radius-round)",
           background: "var(--background-brand-subtlest-default)",
-          color: "var(--text-brand)",
+          color: "var(--text-brand-default)",
           fontSize: 12.5,
           fontWeight: 400,
         }}
@@ -2203,7 +2203,7 @@ export function ActiveFilterTags({
             borderRadius: "var(--radius-round)",
             border: 0,
             background: "var(--background-brand-subtlest-default)",
-            color: "var(--text-brand)",
+            color: "var(--text-brand-default)",
             fontSize: 12.5,
             fontWeight: 500,
             cursor: "pointer",

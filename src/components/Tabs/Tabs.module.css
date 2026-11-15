@@ -60,21 +60,21 @@
   letter-spacing: var(--letter-spacing-negative-tight);
   text-align: center;
   white-space: nowrap;
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
 
   /* Hovered — unselected */
   [data-hovered]:not([data-selected]) & {
-    color: var(--text-subtle);
+    color: var(--text-subtle-default);
   }
 
   /* Pressed — unselected */
   [data-pressed]:not([data-selected]) & {
-    color: var(--text-default);
+    color: var(--text-default-default);
   }
 
   /* Selected */
   [data-selected] & {
-    color: var(--text-information);
+    color: var(--text-information-default);
   }
 
   /* Disabled */

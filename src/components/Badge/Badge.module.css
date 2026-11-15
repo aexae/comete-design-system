@@ -69,7 +69,7 @@
 }
 .neutral.medium {
   background-color: var(--background-neutral-subtler-default);
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 .neutral.low {
   background-color: var(--background-neutral-bold-default);
@@ -82,7 +82,7 @@
 }
 .information.medium {
   background-color: var(--background-information-subtlest-default);
-  color: var(--text-information);
+  color: var(--text-information-default);
 }
 .information.low {
   background-color: var(--background-information-bold-default);
@@ -92,7 +92,7 @@
 /* NOTE: CSS Modules expose le nom de classe tel quel via styles["information-inverted"] */
 .information-inverted.high {
   background-color: var(--background-default-default);
-  color: var(--text-information);
+  color: var(--text-information-default);
 }
 .information-inverted.medium {
   background-color: var(--background-default-default);
@@ -109,7 +109,7 @@
 }
 .critical.medium {
   background-color: var(--background-critical-subtlest-default);
-  color: var(--text-critical);
+  color: var(--text-critical-default);
 }
 .critical.low {
   background-color: var(--background-critical-bold-default);
@@ -122,7 +122,7 @@
 }
 .success.medium {
   background-color: var(--background-success-subtlest-default);
-  color: var(--text-success);
+  color: var(--text-success-default);
 }
 .success.low {
   background-color: var(--background-success-bold-default);
@@ -148,7 +148,7 @@
 }
 .accentPurple.medium {
   background-color: var(--background-accent-purple-subtlest-default);
-  color: var(--text-accent-purple);
+  color: var(--text-accent-purple-default);
 }
 .accentPurple.low {
   background-color: var(--background-accent-purple-bold-default);
@@ -161,7 +161,7 @@
 }
 .accentTeal.medium {
   background-color: var(--background-accent-teal-subtlest-default);
-  color: var(--text-accent-teal);
+  color: var(--text-accent-teal-default);
 }
 .accentTeal.low {
   background-color: var(--background-accent-teal-bold-default);
@@ -174,7 +174,7 @@
 }
 .accentTurquoise.medium {
   background-color: var(--background-accent-turquoise-subtlest-default);
-  color: var(--text-accent-turquoise);
+  color: var(--text-accent-turquoise-default);
 }
 .accentTurquoise.low {
   background-color: var(--background-accent-turquoise-bold-default);
@@ -187,7 +187,7 @@
 }
 .accentMagenta.medium {
   background-color: var(--background-accent-magenta-subtlest-default);
-  color: var(--text-accent-magenta);
+  color: var(--text-accent-magenta-default);
 }
 .accentMagenta.low {
   background-color: var(--background-accent-magenta-bold-default);
@@ -200,7 +200,7 @@
 }
 .accentBlueGrey.medium {
   background-color: var(--background-accent-blue-grey-subtlest-default);
-  color: var(--text-accent-blue-grey);
+  color: var(--text-accent-blue-grey-default);
 }
 .accentBlueGrey.low {
   background-color: var(--background-accent-blue-grey-bold-default);

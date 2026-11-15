@@ -59,6 +59,6 @@
   font-size: var(--font-size-ui-xxxs);
   line-height: var(--line-height-ui-xxs);
   letter-spacing: var(--letter-spacing-normal);
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
   white-space: nowrap;
 }
