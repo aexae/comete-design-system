@@ -2,6 +2,15 @@
 
 ## Fiabilité / qualité
 
+- **Figma ❖ Button rebuild : variantes manquantes vs le code (2026-11-15)**
+  Le code permet icon-only désactivé / en chargement / sélectionné, et compact / touch
+  dans tous les états, mais le set `19940:889` n'a icon-only qu'en `default/hover/pressed/
+focus` et compact/touch qu'en `state=default`. La migration a dû replier 4 instances
+  (état ramené à `default`) : `3280:34163`, `3280:32985` (compact + focus), `4238:5965`,
+  `4254:21496` (disabled). Piste : ajouter ces variantes au rebuild puis repointer ces 4
+  instances. Par ailleurs, `❖ _Button (deprecated)` (`213:725`) n'a plus aucune instance :
+  candidat à l'archivage ou à la suppression (non fait, à décider).
+
 - ~~**Figma ❖ Button rebuild : link focus à souligner**~~ fait côté Axel (2026-11-15)
   `appearance=link, state=focus` (iconOnly=false) est maintenant `Body/M/Medium
 Underline`, aligné sur le code (underline en hover/pressed/focus).

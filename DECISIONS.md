@@ -2,6 +2,33 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-15 — Figma : migration des 568 instances Button deprecated → rebuild
+
+**Contexte** : après la livraison alpha.176, bascule de toutes les instances du set
+`❖ _Button (deprecated)` (`213:725`, 630 variants) vers `❖ Button (rebuild)`
+(`19940:889`, 1050 variants). Inventaire par `getInstancesAsync` : 568 instances (et non
+~1150), dont 322 imbriquées dans d'autres composants maîtres (pickers, PageHeader,
+TopNavigation...).
+
+**Décisions de mapping** (Axel) : l'ancienne `appearance` combinée se scinde en
+`appearance` + `color` (`neutral` → `default`) ; `state` + `isDisabled/isLoading/isSelected`
+fusionnent dans `state` (priorité disabled > loading > selected, jamais combinés en
+pratique) ; `spacing` → `density` avec **`none` → `compact`** ; l'unique `accent` est
+**déduit du fill réel** de chaque instance : les 2 seules instances accent sont violettes
+(`#5e4db2`, `#d1d4f4`) → `accent-purple`. Label, `iconBefore/After` et swaps d'icône sont
+relus avant `swapComponent` puis réappliqués sur les nouveaux IDs de propriété.
+
+**Repli** : le rebuild n'a ni icon-only `disabled/loading/selected`, ni `compact/touch`
+hors `state=default`. Règle appliquée : garder la densité, ramener l'état à `default`.
+4 instances concernées (toutes icon-only `subtle`) : `3280:34163`, `3280:32985`
+(compact + focus), `4238:5965`, `4254:21496` (disabled). À repointer si ces variantes
+sont ajoutées au rebuild (cf. TODO).
+
+**Exécution** : pilote de 12 instances, relecture structurelle (composant maître dans le
+rebuild, labels réels conservés), puis passage idempotent sur les 556 restantes. Résultat :
+568/568, 0 erreur, 552 exactes + 4 replis, 0 instance restante sur l'ancien set. L'ancien
+set n'a pas été supprimé (décision à prendre, cf. TODO).
+
 ## 2026-11-15 — Livraison tokens 0.20.0 (alpha.176) + correctif Card
 
 **Contexte** : livraison de la migration `@aexae/comete-design-tokens` 0.20.0
