@@ -2,14 +2,19 @@
 
 ## Fiabilité / qualité
 
-- **Figma ❖ Button rebuild : variantes manquantes vs le code (2026-11-15)**
-  Le code permet icon-only désactivé / en chargement / sélectionné, et compact / touch
-  dans tous les états, mais le set `19940:889` n'a icon-only qu'en `default/hover/pressed/
-focus` et compact/touch qu'en `state=default`. La migration a dû replier 4 instances
-  (état ramené à `default`) : `3280:34163`, `3280:32985` (compact + focus), `4238:5965`,
-  `4254:21496` (disabled). Piste : ajouter ces variantes au rebuild puis repointer ces 4
-  instances. Par ailleurs, `❖ _Button (deprecated)` (`213:725`) n'a plus aucune instance :
-  candidat à l'archivage ou à la suppression (non fait, à décider).
+- ~~**Figma ❖ Button rebuild : variantes manquantes vs le code**~~ fait (2026-11-16) :
+  symétrie complète (2940 variants), les 4 instances repliées sont repointées, ancien set
+  `213:725` supprimé (détaché, disparaîtra à la prochaine publication de la bibliothèque).
+  Restes :
+  - **Tokens `--control-icon-*`** (20 / 24 / 24) vs Figma rebuild (16 / 20 / 24) : à aligner
+    dans comete-design-tokens (approbation requise), sinon compact affiche 20 et default 24.
+  - **Correctif `.icon` (width/height via `--button-icon-size`)** validé mais non commité sur
+    `main` : à livrer (branche + PR).
+  - Dans les variantes **texte** compact, les instances d'icône (masquées) restent à 20 px
+    (préexistant) alors que les icon-only compact sont à 16 : à harmoniser si l'on veut
+    des icônes 16 dans les boutons compact avec libellé.
+  - Spinner `loading` mis à l'échelle 12 / 14 / 16 par densité (choix d'implémentation, à
+    valider visuellement).
 
 - ~~**Figma ❖ Button rebuild : link focus à souligner**~~ fait côté Axel (2026-11-15)
   `appearance=link, state=focus` (iconOnly=false) est maintenant `Body/M/Medium

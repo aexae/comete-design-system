@@ -29,6 +29,45 @@ rebuild, labels réels conservés), puis passage idempotent sur les 556 restante
 568/568, 0 erreur, 552 exactes + 4 replis, 0 instance restante sur l'ancien set. L'ancien
 set n'a pas été supprimé (décision à prendre, cf. TODO).
 
+## 2026-11-16 — Figma ❖ Button rebuild : symétrie complète avec le code (2940 variants), repointage, suppression de l'ancien set, icône par densité
+
+**Contexte** : suite de la migration (voir ci-dessous), Axel a demandé de combler le trou du
+rebuild, de supprimer l'ancien set et a signalé que l'icône ne suivait pas la densité en code.
+
+**Décisions** :
+
+- **Symétrie complète** (choix Axel parmi 3 périmètres) : le set `19940:889` couvre désormais
+  5 appearances × 14 couleurs × 3 densités × 7 états × 2 iconOnly = **2940 variants** (+1890).
+  Génération en 27 lots de 70 par clonage : états icon-only (disabled/loading/selected) clonés
+  depuis l'état texte puis convertis en carré 32 (icône visible sauf loading, label masqué,
+  `icon/selected` déjà porté par le vecteur) ; densités compact/touch clonées depuis l'état en
+  density default puis géométrie appliquée (texte : pad 0/4 et 8/16, rayons 4/8, hauteurs 24/48,
+  largeur hug ; icon-only : 24/48, icônes 16/24, rayons 4/8). Spinner `loading` mis à l'échelle
+  12 / 14 / 16. Un lot de 210 a échoué (limite d'exécution), d'où 70 par appel.
+- **Grille à 42 colonnes** (appearance-major en lignes inchangée) : `false` default 40..1000
+  (pas 160), compact 1220..1940 (120), touch 2140..3100 (160) ; `true` default 3300..3780 (80),
+  compact 3940..4324 (64), touch 4484..5060 (96). Existant déplacé en x uniquement. Set 5148 ×
+  4412, bandeau de colonnes reconstruit (50 libellés : iconOnly, density, état).
+- **Repointage** des 4 instances repliées lors de la migration vers leurs variantes exactes
+  (`3280:34163`, `3280:32985` → compact/focus icon-only ; `4238:5965`, `4254:21496` → disabled
+  icon-only). Plus aucun repli.
+- **Suppression de `❖ _Button (deprecated)` `213:725`** (0 instance re-vérifié) : `remove()`
+  l'a détaché de sa page (plus aucun COMPONENT_SET sur la page) mais le nœud reste résolvable,
+  `parent: null` : comportement Figma pour un composant publié, il disparaîtra à la prochaine
+  publication de la bibliothèque.
+- **Icône par densité (code)** : ce n'était ni une copie périmée ni une régression 0.20.0 :
+  depuis alpha.175, `.icon` déclarait `--button-icon-size` par densité sans jamais la consommer
+  (ni `width` ni `height`, le svg à 100 % retombait sur `size=24` de l'Icon). Correctif : `.icon
+{ width/height: var(--button-icon-size) }` (validé build, 1353 tests, lint, Prettier,
+  Storybook lint/tsc + 606 tests). Non commité, sur `main`. Point ouvert : les tokens
+  `--control-icon-*` valent 20 / 24 / 24 alors que le Figma rebuild est à 16 / 20 / 24 (repo
+  tokens, décision Axel).
+- **pnpm v11** : rafraîchir la copie `file:` du DS pour Storybook exige `rm -rf node_modules
+storybook/node_modules && pnpm install` (supprimer la seule entrée du store ne suffit plus).
+
+**Validation** : 2940 clés uniques, 0 manquante, 0 collision (x,y), 70 par combinaison, 42
+colonnes, capture du frame annoté.
+
 ## 2026-11-15 — Livraison tokens 0.20.0 (alpha.176) + correctif Card
 
 **Contexte** : livraison de la migration `@aexae/comete-design-tokens` 0.20.0
