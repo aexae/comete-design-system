@@ -132,7 +132,7 @@
   font-size: var(--font-size-ui-xs);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-ui-s);
-  color: var(--text-default);
+  color: var(--text-default-default);
   letter-spacing: var(--letter-spacing-negative-tight);
   white-space: nowrap;
   overflow: hidden;
@@ -143,7 +143,7 @@
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xxs);
   line-height: var(--line-height-ui-xxs);
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -225,7 +225,7 @@
   font-size: var(--font-size-ui-xs);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xs);
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
   letter-spacing: var(--letter-spacing-negative-tight);
   white-space: nowrap;
   overflow: hidden;
@@ -269,7 +269,7 @@
   font-size: var(--sidenav-section-heading-size, var(--font-size-ui-xxs));
   font-weight: var(--font-weight-bold);
   line-height: var(--sidenav-section-heading-line, var(--line-height-ui-xxs));
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
   text-transform: uppercase;
   letter-spacing: var(--letter-spacing-normal);
   white-space: nowrap;
@@ -401,14 +401,14 @@
   font-size: var(--font-size-ui-xs);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-ui-s);
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 .emptyDescription {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xxs);
   line-height: var(--line-height-ui-xs);
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
 }
 
 .emptyAction {

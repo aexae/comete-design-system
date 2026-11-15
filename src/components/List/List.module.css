@@ -129,7 +129,7 @@
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-ui-xxs);
   letter-spacing: var(--letter-spacing-normal);
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
   text-transform: uppercase;
   user-select: none;
 }
@@ -173,7 +173,7 @@
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-s);
   line-height: var(--line-height-ui-s);
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 /* Item avec une action secondaire : réserve de la place à droite pour que
@@ -396,7 +396,7 @@
   font-weight: var(--font-weight-medium);
   letter-spacing: var(--letter-spacing-normal);
   text-transform: uppercase;
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -416,7 +416,7 @@
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-xs);
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

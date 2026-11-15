@@ -164,7 +164,7 @@
 
 [data-theme="dark"] .thumb:hover,
 [data-theme="dark"] .thumb:active {
-  background: var(--text-subtle);
+  background: var(--text-subtle-default);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -174,7 +174,7 @@
 
   :root:not([data-theme="light"]) .thumb:hover,
   :root:not([data-theme="light"]) .thumb:active {
-    background: var(--text-subtle);
+    background: var(--text-subtle-default);
   }
 }
 

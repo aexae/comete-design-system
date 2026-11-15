@@ -106,7 +106,7 @@ export const GridLayout: Story = {
                         style={{
                           fontFamily: "var(--font-family-primary)",
                           fontSize: "var(--font-size-ui-xs)",
-                          color: "var(--text-default)",
+                          color: "var(--text-default-default)",
                         }}
                       >
                         Agent {i + 1}
@@ -115,7 +115,7 @@ export const GridLayout: Story = {
                         style={{
                           fontFamily: "var(--font-family-primary)",
                           fontSize: "var(--font-size-ui-xxs)",
-                          color: "var(--text-subtlest)",
+                          color: "var(--text-subtlest-default)",
                         }}
                       >
                         Description courte
@@ -188,7 +188,7 @@ export const SidebarLayout: Story = {
                     style={{
                       fontFamily: "var(--font-family-primary)",
                       fontSize: "var(--font-size-ui-xs)",
-                      color: "var(--text-subtlest)",
+                      color: "var(--text-subtlest-default)",
                     }}
                   >
                     Contenu principal (planning, documents, historique…)
@@ -235,7 +235,7 @@ export const FullWidth: Story = {
                   style={{
                     fontFamily: "var(--font-family-primary)",
                     fontSize: "var(--font-size-ui-xs)",
-                    color: "var(--text-subtlest)",
+                    color: "var(--text-subtlest-default)",
                   }}
                 >
                   Tableau de données en pleine largeur

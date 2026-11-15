@@ -363,7 +363,7 @@ const css = {
   page: {
     padding: 32,
     fontFamily: "var(--font-family-primary, system-ui, sans-serif)",
-    color: "var(--text-default)",
+    color: "var(--text-default-default)",
     background: "var(--background-default-default)",
     minHeight: "100vh",
     maxWidth: 900,
@@ -382,19 +382,19 @@ const css = {
     fontWeight: 700,
     letterSpacing: "0.08em",
     textTransform: "uppercase" as const,
-    color: "var(--text-subtlest)",
+    color: "var(--text-subtlest-default)",
     marginBottom: 8,
   },
   groupTitle: {
     fontSize: 22,
     fontWeight: 600,
-    color: "var(--text-default)",
+    color: "var(--text-default-default)",
     margin: "0 0 8px",
   },
   groupDesc: {
     fontSize: 14,
     lineHeight: "20px",
-    color: "var(--text-subtle)",
+    color: "var(--text-subtle-default)",
     margin: "0 0 16px",
     maxWidth: 620,
   },
@@ -408,7 +408,7 @@ const css = {
   guidanceItem: {
     fontSize: 13,
     lineHeight: "18px",
-    color: "var(--text-subtle)",
+    color: "var(--text-subtle-default)",
   },
   styleRow: {
     display: "grid",
@@ -426,12 +426,12 @@ const css = {
   styleName: {
     fontSize: 13,
     fontWeight: 600,
-    color: "var(--text-default)",
+    color: "var(--text-default-default)",
   },
   styleTag: {
     fontSize: 11,
     fontFamily: "monospace",
-    color: "var(--text-subtlest)",
+    color: "var(--text-subtlest-default)",
     background: "var(--background-neutral-subtler-default)",
     borderRadius: 4,
     padding: "1px 5px",
@@ -441,12 +441,12 @@ const css = {
   tokenPill: {
     fontSize: 10,
     fontFamily: "monospace",
-    color: "var(--text-subtle)",
+    color: "var(--text-subtle-default)",
     lineHeight: 1.4,
   },
   usageText: {
     fontSize: 11,
-    color: "var(--text-subtlest)",
+    color: "var(--text-subtlest-default)",
     fontStyle: "italic",
     marginTop: 4,
   },
@@ -490,7 +490,7 @@ function StyleRow({
     fontFamily: style.fontFamilyToken
       ? `var(${style.fontFamilyToken}, monospace)`
       : "var(--font-family-primary, system-ui, sans-serif)",
-    color: "var(--text-default)",
+    color: "var(--text-default-default)",
     margin: 0,
     wordBreak: "break-word" as const,
   };
@@ -532,7 +532,7 @@ function StyleRow({
           style={{
             margin: "8px 0 0",
             fontSize: 11,
-            color: "var(--text-subtlest)",
+            color: "var(--text-subtlest-default)",
             fontFamily: "monospace",
           }}
         >
@@ -614,7 +614,7 @@ function FontFamilySection(): ReactElement {
                 margin: "0 0 4px",
                 fontSize: 11,
                 fontWeight: 600,
-                color: "var(--text-subtlest)",
+                color: "var(--text-subtlest-default)",
                 textTransform: "uppercase",
                 letterSpacing: "0.07em",
               }}
@@ -630,7 +630,7 @@ function FontFamilySection(): ReactElement {
                     ? "var(--font-family-code, monospace)"
                     : "var(--font-family-primary, system-ui)",
                 fontWeight: 500,
-                color: "var(--text-default)",
+                color: "var(--text-default-default)",
                 lineHeight: 1.3,
               }}
             >
@@ -640,7 +640,7 @@ function FontFamilySection(): ReactElement {
               style={{
                 fontSize: 11,
                 fontFamily: "monospace",
-                color: "var(--text-subtle)",
+                color: "var(--text-subtle-default)",
                 background: "var(--background-neutral-subtler-default)",
                 padding: "2px 6px",
                 borderRadius: 4,
@@ -648,7 +648,7 @@ function FontFamilySection(): ReactElement {
             >
               var({f.token})
             </code>
-            <p style={{ margin: "8px 0 0", fontSize: 12, color: "var(--text-subtlest)" }}>
+            <p style={{ margin: "8px 0 0", fontSize: 12, color: "var(--text-subtlest-default)" }}>
               {f.usage}
             </p>
           </div>
@@ -668,7 +668,7 @@ function FontFamilySection(): ReactElement {
             margin: "0 0 16px",
             fontSize: 12,
             fontWeight: 600,
-            color: "var(--text-subtlest)",
+            color: "var(--text-subtlest-default)",
             textTransform: "uppercase",
             letterSpacing: "0.07em",
           }}
@@ -684,18 +684,22 @@ function FontFamilySection(): ReactElement {
                   fontSize: 22,
                   fontWeight: Number(w.value),
                   fontFamily: "var(--font-family-primary, system-ui)",
-                  color: "var(--text-default)",
+                  color: "var(--text-default-default)",
                   lineHeight: 1.2,
                 }}
               >
                 {w.label}
               </p>
               <code
-                style={{ fontSize: 10, fontFamily: "monospace", color: "var(--text-subtlest)" }}
+                style={{
+                  fontSize: 10,
+                  fontFamily: "monospace",
+                  color: "var(--text-subtlest-default)",
+                }}
               >
                 var({w.token})
               </code>
-              <span style={{ fontSize: 11, color: "var(--text-subtle)" }}>
+              <span style={{ fontSize: 11, color: "var(--text-subtle-default)" }}>
                 font-weight: {w.value}
               </span>
             </div>
@@ -737,7 +741,7 @@ function TypeTabButton({
         border: "none",
         borderBottom: active ? "2px solid var(--border-focused)" : "2px solid transparent",
         background: "transparent",
-        color: active ? "var(--text-selected)" : "var(--text-subtle)",
+        color: active ? "var(--text-selected)" : "var(--text-subtle-default)",
         fontWeight: active ? 600 : 400,
         fontSize: 13,
         cursor: "pointer",
@@ -801,7 +805,7 @@ function TypographyPage(): ReactElement {
             fontSize: 36,
             fontWeight: 700,
             letterSpacing: "-0.5px",
-            color: "var(--text-default)",
+            color: "var(--text-default-default)",
           }}
         >
           Typographie
@@ -811,7 +815,7 @@ function TypographyPage(): ReactElement {
             margin: "0 0 24px",
             fontSize: 16,
             lineHeight: "24px",
-            color: "var(--text-subtle)",
+            color: "var(--text-subtle-default)",
             maxWidth: 600,
           }}
         >

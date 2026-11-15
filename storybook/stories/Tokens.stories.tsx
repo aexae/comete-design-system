@@ -236,7 +236,7 @@ const S = {
     display: "flex",
     fontFamily: "var(--font-family-primary, system-ui, sans-serif)",
     fontSize: 13,
-    color: "var(--text-default)",
+    color: "var(--text-default-default)",
     minHeight: "100%",
     background: "var(--background-surface-default)",
   } satisfies CSSProperties,
@@ -279,7 +279,7 @@ const S = {
     fontSize: 11,
     fontWeight: 600,
     textTransform: "capitalize" as const,
-    color: "var(--text-subtle)",
+    color: "var(--text-subtle-default)",
     borderLeft: "2px solid var(--border-default)",
     paddingLeft: 8,
   } satisfies CSSProperties,
@@ -308,7 +308,7 @@ function Tab({
         border: "none",
         borderBottom: active ? "2px solid var(--border-focused)" : "2px solid transparent",
         background: "transparent",
-        color: active ? "var(--text-selected)" : "var(--text-subtle)",
+        color: active ? "var(--text-selected)" : "var(--text-subtle-default)",
         fontWeight: active ? 600 : 400,
         fontSize: 13,
         cursor: "pointer",
@@ -327,7 +327,7 @@ function Tab({
             padding: "1px 5px",
             borderRadius: 4,
             background: "var(--background-warning-subtlest-default)",
-            color: "var(--text-warning)",
+            color: "var(--text-warning-default)",
             fontWeight: 600,
           }}
         >
@@ -362,7 +362,7 @@ function NavLink({
         border: "none",
         borderLeft: active ? "2px solid var(--border-focused)" : "2px solid transparent",
         background: active ? "var(--background-selected-subtlest-default)" : "transparent",
-        color: active ? "var(--text-selected)" : "var(--text-subtle)",
+        color: active ? "var(--text-selected)" : "var(--text-subtle-default)",
         fontWeight: active ? 600 : 400,
         fontSize: 13,
         cursor: "pointer",
@@ -372,7 +372,9 @@ function NavLink({
       }}
     >
       {label}
-      <span style={{ fontSize: 11, color: "var(--text-subtlest)", fontWeight: 400 }}>{count}</span>
+      <span style={{ fontSize: 11, color: "var(--text-subtlest-default)", fontWeight: 400 }}>
+        {count}
+      </span>
     </button>
   );
 }
@@ -412,7 +414,7 @@ function ColorFormatToggle({
               background: active
                 ? "var(--background-selected-subtlest-default)"
                 : "var(--background-default-default)",
-              color: active ? "var(--text-selected)" : "var(--text-subtle)",
+              color: active ? "var(--text-selected)" : "var(--text-subtle-default)",
               fontSize: 12,
               fontWeight: active ? 600 : 400,
               fontFamily: "inherit",
@@ -496,7 +498,7 @@ function TokenRow({
             alignItems: "center",
             justifyContent: "center",
             fontSize: 9,
-            color: "var(--text-subtlest)",
+            color: "var(--text-subtlest-default)",
             flexShrink: 0,
           }}
         >
@@ -513,7 +515,7 @@ function TokenRow({
           style={{
             ...btn,
             fontSize: 12,
-            color: isCopiedVar ? "var(--text-selected)" : "var(--text-default)",
+            color: isCopiedVar ? "var(--text-selected)" : "var(--text-default-default)",
             overflow: "hidden",
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
@@ -530,7 +532,7 @@ function TokenRow({
           style={{
             ...btn,
             fontSize: 11,
-            color: isCopiedValue ? "var(--text-selected)" : "var(--text-subtlest)",
+            color: isCopiedValue ? "var(--text-selected)" : "var(--text-subtlest-default)",
           }}
         >
           {isCopiedValue ? "✓ copié" : displayValue}
@@ -543,7 +545,7 @@ function TokenRow({
             padding: "1px 5px",
             borderRadius: 4,
             background: "var(--background-brand-subtlest-default)",
-            color: "var(--text-brand)",
+            color: "var(--text-brand-default)",
             whiteSpace: "nowrap",
             flexShrink: 0,
           }}
@@ -606,7 +608,7 @@ function ColorSwatch({
           cursor: "pointer",
           fontSize: 10,
           fontFamily: "monospace",
-          color: isCopiedVar ? "var(--text-selected)" : "var(--text-subtlest)",
+          color: isCopiedVar ? "var(--text-selected)" : "var(--text-subtlest-default)",
         }}
       >
         {isCopiedVar ? "✓ var" : shade}
@@ -622,7 +624,7 @@ function ColorSwatch({
           cursor: "pointer",
           fontSize: 9,
           fontFamily: "monospace",
-          color: isCopiedValue ? "var(--text-selected)" : "var(--text-subtlest)",
+          color: isCopiedValue ? "var(--text-selected)" : "var(--text-subtlest-default)",
         }}
       >
         {isCopiedValue ? "✓ copié" : displayValue}
@@ -735,7 +737,7 @@ function AllTokensTab(): ReactElement {
             fontWeight: 700,
             textTransform: "uppercase",
             letterSpacing: "0.07em",
-            color: "var(--text-subtlest)",
+            color: "var(--text-subtlest-default)",
             margin: "0 0 8px 12px",
           }}
         >
@@ -759,7 +761,7 @@ function AllTokensTab(): ReactElement {
             fontWeight: 700,
             textTransform: "uppercase",
             letterSpacing: "0.07em",
-            color: "var(--text-subtlest)",
+            color: "var(--text-subtlest-default)",
             margin: "20px 0 8px 12px",
           }}
         >
@@ -796,13 +798,13 @@ function AllTokensTab(): ReactElement {
               border: "1px solid var(--border-default)",
               borderRadius: 6,
               background: "var(--background-default-default)",
-              color: "var(--text-default)",
+              color: "var(--text-default-default)",
               fontSize: 13,
               fontFamily: "inherit",
             }}
           />
           <ColorFormatToggle value={colorFormat} onChange={setColorFormat} />
-          <span style={{ fontSize: 12, color: "var(--text-subtlest)" }}>
+          <span style={{ fontSize: 12, color: "var(--text-subtlest-default)" }}>
             Cliquer sur le nom pour copier{" "}
             <code
               style={{
@@ -829,7 +831,7 @@ function AllTokensTab(): ReactElement {
               border: "1px solid var(--border-warning-bold)",
               borderRadius: 8,
               marginBottom: 20,
-              color: "var(--text-warning)",
+              color: "var(--text-warning-default)",
               fontSize: 13,
             }}
           >
@@ -844,7 +846,7 @@ function AllTokensTab(): ReactElement {
         )}
 
         {activeTokens.length === 0 && (
-          <p style={{ color: "var(--text-subtlest)", padding: "24px 0" }}>
+          <p style={{ color: "var(--text-subtlest-default)", padding: "24px 0" }}>
             Aucun token pour cette recherche.
           </p>
         )}
@@ -942,7 +944,7 @@ function CodeBlock({ children }: { children: string }): ReactElement {
           fontSize: 13,
           lineHeight: 1.6,
           fontFamily: "var(--font-family-code, 'SF Mono', monospace)",
-          color: "var(--text-default)",
+          color: "var(--text-default-default)",
           margin: 0,
         }}
       >
@@ -960,7 +962,7 @@ function CodeBlock({ children }: { children: string }): ReactElement {
           border: "1px solid var(--border-default)",
           borderRadius: 4,
           background: "var(--background-default-default)",
-          color: copied ? "var(--text-selected)" : "var(--text-subtlest)",
+          color: copied ? "var(--text-selected)" : "var(--text-subtlest-default)",
           fontSize: 11,
           cursor: "pointer",
           fontFamily: "inherit",
@@ -976,7 +978,12 @@ function Section({ title, children }: { title: string; children: ReactNode }): R
   return (
     <div style={{ marginBottom: 32 }}>
       <h3
-        style={{ fontSize: 16, fontWeight: 600, color: "var(--text-default)", margin: "0 0 12px" }}
+        style={{
+          fontSize: 16,
+          fontWeight: 600,
+          color: "var(--text-default-default)",
+          margin: "0 0 12px",
+        }}
       >
         {title}
       </h3>
@@ -990,7 +997,7 @@ function CodeTab(): ReactElement {
     <div style={{ maxWidth: 720, padding: 24 }}>
       <Section title="Installation">
         <CodeBlock>{`pnpm add @aexae/comete-design-tokens`}</CodeBlock>
-        <p style={{ fontSize: 13, color: "var(--text-subtle)", lineHeight: 1.6 }}>
+        <p style={{ fontSize: 13, color: "var(--text-subtle-default)", lineHeight: 1.6 }}>
           Les tokens sont distribués sous forme de CSS custom properties. Importez le fichier CSS à
           la racine de votre application.
         </p>
@@ -998,21 +1005,35 @@ function CodeTab(): ReactElement {
       </Section>
 
       <Section title="Utilisation en CSS Modules">
-        <p style={{ fontSize: 13, color: "var(--text-subtle)", lineHeight: 1.6, marginBottom: 12 }}>
+        <p
+          style={{
+            fontSize: 13,
+            color: "var(--text-subtle-default)",
+            lineHeight: 1.6,
+            marginBottom: 12,
+          }}
+        >
           Référencez directement les custom properties dans vos fichiers <code>.module.css</code>.
         </p>
         <CodeBlock>{`.card {
   background-color: var(--background-surface-elevation-raise-default);
   border: 1px solid var(--border-default);
   border-radius: var(--radius050);
-  color: var(--text-default);
+  color: var(--text-default-default);
   padding: var(--space200);
   box-shadow: var(--elevation-small);
 }`}</CodeBlock>
       </Section>
 
       <Section title="Utilisation inline (style)">
-        <p style={{ fontSize: 13, color: "var(--text-subtle)", lineHeight: 1.6, marginBottom: 12 }}>
+        <p
+          style={{
+            fontSize: 13,
+            color: "var(--text-subtle-default)",
+            lineHeight: 1.6,
+            marginBottom: 12,
+          }}
+        >
           Les tokens fonctionnent aussi dans les attributs <code>style</code> JSX.
         </p>
         <CodeBlock>{`<div
@@ -1028,7 +1049,14 @@ function CodeTab(): ReactElement {
       </Section>
 
       <Section title="Thème light / dark">
-        <p style={{ fontSize: 13, color: "var(--text-subtle)", lineHeight: 1.6, marginBottom: 12 }}>
+        <p
+          style={{
+            fontSize: 13,
+            color: "var(--text-subtle-default)",
+            lineHeight: 1.6,
+            marginBottom: 12,
+          }}
+        >
           Les tokens thématiques changent automatiquement de valeur selon l&apos;attribut{" "}
           <code>data-theme</code> sur <code>&lt;html&gt;</code>. Utilisez le{" "}
           <code>ThemeProvider</code> du DS pour gérer le basculement.
@@ -1038,7 +1066,7 @@ function CodeTab(): ReactElement {
 <ThemeProvider mode="dark">
   <App />
 </ThemeProvider>`}</CodeBlock>
-        <p style={{ fontSize: 13, color: "var(--text-subtle)", lineHeight: 1.6 }}>
+        <p style={{ fontSize: 13, color: "var(--text-subtle-default)", lineHeight: 1.6 }}>
           Les <strong>tokens thématiques</strong> (background, text, border, icon…) s&apos;adaptent
           automatiquement. Les <strong>tokens primitifs</strong> (couleurs hex, tailles, radius…)
           restent identiques quel que soit le thème.
@@ -1046,7 +1074,14 @@ function CodeTab(): ReactElement {
       </Section>
 
       <Section title="Conventions de nommage">
-        <p style={{ fontSize: 13, color: "var(--text-subtle)", lineHeight: 1.6, marginBottom: 12 }}>
+        <p
+          style={{
+            fontSize: 13,
+            color: "var(--text-subtle-default)",
+            lineHeight: 1.6,
+            marginBottom: 12,
+          }}
+        >
           Les tokens suivent un schéma hiérarchique :
         </p>
         <CodeBlock>{`--{catégorie}-{rôle}-{variante}-{état}
@@ -1087,7 +1122,7 @@ function ExampleCard({ title, children }: { title: string; children: ReactNode }
           borderTop: "1px solid var(--border-default)",
           fontSize: 12,
           fontWeight: 600,
-          color: "var(--text-subtle)",
+          color: "var(--text-subtle-default)",
         }}
       >
         {title}
@@ -1099,7 +1134,14 @@ function ExampleCard({ title, children }: { title: string; children: ReactNode }
 function ExamplesTab(): ReactElement {
   return (
     <div style={{ maxWidth: 720, padding: 24 }}>
-      <p style={{ fontSize: 13, color: "var(--text-subtle)", lineHeight: 1.6, marginBottom: 24 }}>
+      <p
+        style={{
+          fontSize: 13,
+          color: "var(--text-subtle-default)",
+          lineHeight: 1.6,
+          marginBottom: 24,
+        }}
+      >
         Exemples visuels montrant les tokens en contexte. Basculez le thème (icône soleil/lune dans
         la toolbar Storybook) pour voir l&apos;adaptation.
       </p>
@@ -1121,7 +1163,7 @@ function ExamplesTab(): ReactElement {
                 border: "1px solid var(--border-default)",
                 fontSize: 11,
                 fontFamily: "monospace",
-                color: "var(--text-subtle)",
+                color: "var(--text-subtle-default)",
               }}
             >
               {label}
@@ -1132,13 +1174,13 @@ function ExamplesTab(): ReactElement {
 
       <ExampleCard title="Text hierarchy">
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <span style={{ color: "var(--text-default)", fontSize: 16, fontWeight: 600 }}>
+          <span style={{ color: "var(--text-default-default)", fontSize: 16, fontWeight: 600 }}>
             text-default — Titre principal
           </span>
-          <span style={{ color: "var(--text-subtle)", fontSize: 14 }}>
+          <span style={{ color: "var(--text-subtle-default)", fontSize: 14 }}>
             text-subtle — Texte secondaire
           </span>
-          <span style={{ color: "var(--text-subtlest)", fontSize: 13 }}>
+          <span style={{ color: "var(--text-subtlest-default)", fontSize: 13 }}>
             text-subtlest — Texte tertiaire, placeholders
           </span>
           <span style={{ color: "var(--text-disabled)", fontSize: 13 }}>
@@ -1187,7 +1229,7 @@ function ExamplesTab(): ReactElement {
                 alignItems: "center",
                 justifyContent: "center",
                 fontSize: 10,
-                color: "var(--text-subtlest)",
+                color: "var(--text-subtlest-default)",
                 fontFamily: "monospace",
               }}
             >
@@ -1217,7 +1259,7 @@ function ExamplesTab(): ReactElement {
                 alignItems: "center",
                 justifyContent: "center",
                 fontSize: 10,
-                color: "var(--text-subtlest)",
+                color: "var(--text-subtlest-default)",
                 fontFamily: "monospace",
               }}
             >
@@ -1236,7 +1278,7 @@ function ExamplesTab(): ReactElement {
                   width: 56,
                   fontSize: 10,
                   fontFamily: "monospace",
-                  color: "var(--text-subtlest)",
+                  color: "var(--text-subtlest-default)",
                   textAlign: "right",
                 }}
               >
@@ -1284,14 +1326,14 @@ function ChangelogEntry({
             padding: "1px 6px",
             borderRadius: 4,
             background: "var(--background-brand-subtlest-default)",
-            color: "var(--text-brand)",
+            color: "var(--text-brand-default)",
           }}
         >
           {version}
         </span>
-        <span style={{ fontWeight: 600, color: "var(--text-default)" }}>{title}</span>
+        <span style={{ fontWeight: 600, color: "var(--text-default-default)" }}>{title}</span>
       </div>
-      <p style={{ margin: 0, color: "var(--text-subtle)" }}>{children}</p>
+      <p style={{ margin: 0, color: "var(--text-subtle-default)" }}>{children}</p>
     </div>
   );
 }
@@ -1303,11 +1345,11 @@ function ChangelogTab(): ReactElement {
         maxWidth: 720,
         padding: 24,
         fontSize: 13,
-        color: "var(--text-subtle)",
+        color: "var(--text-subtle-default)",
         lineHeight: 1.8,
       }}
     >
-      <p style={{ color: "var(--text-subtlest)", marginBottom: 24 }}>
+      <p style={{ color: "var(--text-subtlest-default)", marginBottom: 24 }}>
         Historique des changements significatifs dans <code>@aexae/comete-design-tokens</code>.
       </p>
       <ChangelogEntry version="0.4.6" title="Renommage text-default, nouvelles palettes">

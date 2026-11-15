@@ -50,7 +50,9 @@ const LIGHT_MAP: Record<string, Stop> = {
   "border-brand-bold": 900,
   "border-brand-subtle": 200,
   "icon-brand": 800,
-  "text-brand": 900,
+  "text-brand-default": 700,
+  "text-brand-hovered": 800,
+  "text-brand-pressed": 900,
 };
 
 const DARK_MAP: Record<string, Stop> = {
@@ -66,7 +68,9 @@ const DARK_MAP: Record<string, Stop> = {
   "border-brand-bold": 100,
   "border-brand-subtle": 800,
   "icon-brand": 200,
-  "text-brand": 100,
+  "text-brand-default": 300,
+  "text-brand-hovered": 200,
+  "text-brand-pressed": 100,
 };
 
 export interface BrandTheme {

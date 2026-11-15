@@ -75,6 +75,6 @@
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-s);
   font-weight: var(--font-weight-regular);
-  color: var(--text-default);
+  color: var(--text-default-default);
   white-space: nowrap;
 }

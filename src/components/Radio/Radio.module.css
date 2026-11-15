@@ -24,7 +24,7 @@
   /* Halo strictement contenu dans l'indicateur 24×24 → pas de débordement,
      `column-gap` garde un écart visuel propre avec le label. */
   column-gap: var(--space050);
-  color: var(--text-default);
+  color: var(--text-default-default);
   cursor: pointer;
   user-select: none;
 }
@@ -217,7 +217,7 @@
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 .radio[data-disabled] .label {
@@ -228,7 +228,7 @@
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xxs);
   line-height: var(--line-height-ui-xxs);
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
 }
 
 .radio[data-disabled] .description {

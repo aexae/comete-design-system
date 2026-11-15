@@ -676,7 +676,7 @@ function Kbd({ children }: { children: ReactNode }): ReactElement {
         fontFamily: "var(--font-family-code)",
         fontSize: "var(--font-size-ui-xxxs)",
         lineHeight: "var(--line-height-ui-xxxs)",
-        color: "var(--text-subtlest)",
+        color: "var(--text-subtlest-default)",
         border: "1px solid var(--border-subtle)",
         borderRadius: "var(--radius050)",
         padding: "0 var(--space050)",
@@ -725,7 +725,7 @@ function PaletteFooter({
         width: "100%",
         fontFamily: "var(--font-family-primary)",
         fontSize: "var(--font-size-ui-xxs)",
-        color: "var(--text-subtlest)",
+        color: "var(--text-subtlest-default)",
       }}
     >
       {isTouch ? null : (

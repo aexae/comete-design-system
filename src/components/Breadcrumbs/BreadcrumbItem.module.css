@@ -19,7 +19,7 @@
   font-size: var(--font-size-ui-xs); /* 14px */
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xs); /* 20px */
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
   user-select: none;
 }
 
@@ -38,7 +38,7 @@
   font-size: var(--font-size-ui-xs); /* 14px */
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xs); /* 20px */
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
   text-decoration: none;
   outline: none;
   /* Button reset — nécessaire quand BreadcrumbItem est rendu comme <button> via onClick */
@@ -57,7 +57,7 @@ button.link:hover {
 /* Page courante : non cliquable, couleur --text-default (poids regular conservé) */
 .current {
   cursor: default;
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 /* Icônes avant / après -------------------------------------------------- */

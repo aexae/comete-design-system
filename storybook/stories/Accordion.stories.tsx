@@ -252,7 +252,7 @@ export const Controlled: Story = {
     const [value, setValue] = useState<string[]>(["accessible"]);
     return (
       <div style={{ ...WRAP, display: "flex", flexDirection: "column", gap: 12 }}>
-        <span style={{ fontSize: 12, color: "var(--text-subtle)" }}>
+        <span style={{ fontSize: 12, color: "var(--text-subtle-default)" }}>
           Ouverts : {value.join(", ") || "(aucun)"}
         </span>
         <Accordion multiple value={value} onValueChange={setValue}>

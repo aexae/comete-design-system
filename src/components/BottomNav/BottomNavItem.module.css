@@ -107,7 +107,7 @@
   font-size: var(--font-size-ui-xxxs);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xxs);
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

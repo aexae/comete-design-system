@@ -95,7 +95,7 @@ const barFiller = Array.from({ length: 24 }, (_, i) => (
       margin: "0 0 var(--space200)",
       fontFamily: "var(--font-family-primary)",
       fontSize: "var(--font-size-ui-s)",
-      color: "var(--text-default)",
+      color: "var(--text-default-default)",
     }}
   >
     Ligne de contenu {i + 1}
@@ -171,15 +171,20 @@ export const Compact: Story = {
  * Le nom accessible reste complet par construction (le `<h1>` contient tout le texte), mais
  * aucun attribut `title` n'est posé : un utilisateur voyant ne peut pas lire la fin du titre.
  */
+// REASON: le titre doit déborder la boîte du <h1> quelle que soit la largeur de la
+// Bar et la métrique de police du navigateur de test (en CI, Chromium rendait un
+// titre de ~100 caractères à 1030 px, soit exactement la largeur de la boîte, et
+// l'assertion scrollWidth > clientWidth tombait en cas limite). Une longueur très
+// supérieure à toute largeur de Bar rend le débordement non ambigu.
+const LONG_TITLE =
+  "Un titre de page extrêmement long qui doit être tronqué avec une ellipse quand l'espace disponible n'est pas suffisant, et qui continue encore bien au-delà de la largeur de n'importe quelle barre de page afin que le débordement soit garanti quelle que soit la taille de la fenêtre et la métrique de la police";
+
 export const LongTitle: Story = {
   name: "Long title",
   render: () => (
     <ScrollFrame>
       <Page globalActions={<PageGlobalActions />} style={{ height: "100%" }}>
-        <Page.Bar
-          size="compact"
-          title="Un titre de page extrêmement long qui doit être tronqué avec une ellipse quand l'espace disponible n'est pas suffisant"
-        />
+        <Page.Bar size="compact" title={LONG_TITLE} />
         <Page.Body>{barFiller}</Page.Body>
       </Page>
     </ScrollFrame>

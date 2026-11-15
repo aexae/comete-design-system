@@ -37,7 +37,7 @@
   font-size: var(--font-size-ui-xs);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xs);
-  color: var(--text-default);
+  color: var(--text-default-default);
   border-radius: var(--radius050);
 }
 

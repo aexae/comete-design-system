@@ -26,7 +26,7 @@ const BASE_TEXT: CSSProperties = {
   fontSize: "var(--font-size-ui-xs)",
   fontWeight: "var(--font-weight-regular)",
   lineHeight: "var(--line-height-ui-xs)",
-  color: "var(--text-subtle)",
+  color: "var(--text-subtle-default)",
   pointerEvents: "none",
   userSelect: "none",
 };
@@ -63,7 +63,7 @@ function CellPreview({
   day = 15,
   background = "transparent",
   borderRadius = "var(--radius0375)",
-  color = "var(--text-subtle)",
+  color = "var(--text-subtle-default)",
   fontWeight = "var(--font-weight-regular)",
   opacity,
   cursor = "pointer",
@@ -162,7 +162,7 @@ export const AllStates: StoryObj = {
 
       <CellPreview
         label="Aujourd'hui"
-        color="var(--text-information)"
+        color="var(--text-information-default)"
         fontWeight="var(--font-weight-semibold)"
         todayIndicator
       />
@@ -170,7 +170,7 @@ export const AllStates: StoryObj = {
       <CellPreview
         label="Sélectionné"
         background="var(--background-comete-subtlest-default)"
-        color="var(--text-information)"
+        color="var(--text-information-default)"
       />
 
       <CellPreview
@@ -184,7 +184,7 @@ export const AllStates: StoryObj = {
         label="Plage — milieu"
         background="var(--background-comete-subtlest-hovered)"
         borderRadius="0"
-        color="var(--text-default)"
+        color="var(--text-default-default)"
       />
 
       <CellPreview

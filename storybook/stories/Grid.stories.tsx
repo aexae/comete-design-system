@@ -79,7 +79,7 @@ function Cell({ children }: { children: React.ReactNode }) {
           textAlign: "center",
           fontFamily: "var(--font-family-primary)",
           fontSize: "var(--font-size-ui-sm)",
-          color: "var(--text-default)",
+          color: "var(--text-default-default)",
         }}
       >
         {children}

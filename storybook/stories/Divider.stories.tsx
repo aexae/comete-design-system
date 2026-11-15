@@ -100,7 +100,7 @@ export const BetweenContent: Story = {
         inlineSize: "240px",
         fontFamily: "var(--font-family-primary)",
         fontSize: "var(--font-size-ui-sm)",
-        color: "var(--text-default)",
+        color: "var(--text-default-default)",
       }}
     >
       <p style={{ margin: 0 }}>Première section</p>
@@ -121,7 +121,7 @@ export const BetweenInline: Story = {
         blockSize: "24px",
         fontFamily: "var(--font-family-primary)",
         fontSize: "var(--font-size-ui-sm)",
-        color: "var(--text-default)",
+        color: "var(--text-default-default)",
       }}
     >
       <span>Élément A</span>

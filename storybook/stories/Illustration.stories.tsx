@@ -169,7 +169,7 @@ function IllustrationCard({
       <span
         style={{
           fontSize: 11,
-          color: isCopied ? "var(--text-selected)" : "var(--text-subtlest)",
+          color: isCopied ? "var(--text-selected)" : "var(--text-subtlest-default)",
           textAlign: "center",
           lineHeight: 1.3,
           width: "100%",
@@ -214,7 +214,7 @@ function IllustrationExplorer(): ReactElement {
     fontSize: 11,
     fontWeight: 600,
     marginBottom: 4,
-    color: "var(--text-subtlest)",
+    color: "var(--text-subtlest-default)",
     textTransform: "uppercase",
     letterSpacing: "0.05em",
   };
@@ -224,7 +224,7 @@ function IllustrationExplorer(): ReactElement {
     border: "1px solid var(--border-default)",
     borderRadius: 6,
     background: "var(--background-default-default)",
-    color: "var(--text-default)",
+    color: "var(--text-default-default)",
     fontSize: 13,
   };
 
@@ -282,8 +282,8 @@ function IllustrationExplorer(): ReactElement {
       </div>
 
       {/* Compteur */}
-      <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-subtlest)" }}>
-        <strong style={{ color: "var(--text-default)" }}>{filtered.length}</strong>
+      <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-subtlest-default)" }}>
+        <strong style={{ color: "var(--text-default-default)" }}>{filtered.length}</strong>
         {" / "}
         {ILLUSTRATION_ENTRIES.length} illustrations
         {search !== "" && ` — "${search}"`}
@@ -292,7 +292,7 @@ function IllustrationExplorer(): ReactElement {
 
       {/* Grille */}
       {filtered.length === 0 ? (
-        <p style={{ textAlign: "center", padding: 48, color: "var(--text-subtlest)" }}>
+        <p style={{ textAlign: "center", padding: 48, color: "var(--text-subtlest-default)" }}>
           Aucune illustration pour &ldquo;{search}&rdquo;
         </p>
       ) : (

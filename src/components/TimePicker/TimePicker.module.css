@@ -25,7 +25,7 @@
   /* Typo alignée sur le `.timeDisplay` (mode non-éditable) pour que les deux
      modes affichent l'heure avec la même graisse et le même spacing. */
   font-weight: var(--font-weight-medium);
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 .timePicker[data-disabled] .timeInput {
@@ -48,7 +48,7 @@
 }
 
 .segment[data-placeholder] {
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
 }
 
 .segment[data-focused] {
@@ -57,7 +57,7 @@
 }
 
 .segment[data-type="literal"] {
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
   padding-inline: 0;
 }
 
@@ -75,7 +75,7 @@
    segment focused garde le fond bleu + texte inversé. `:not([data-disabled])`
    sur le picker garantit que disabled prime sur invalid. */
 .timePicker[data-invalid]:not([data-disabled]) .segment:not([data-focused]) {
-  color: var(--text-critical);
+  color: var(--text-critical-default);
 }
 
 /* ==========================================================================
@@ -105,7 +105,7 @@
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 /* Invalid (mode non-éditable) — texte en critical pour signaler l'erreur.
@@ -113,7 +113,7 @@
    deux états sont actifs (disabled prime sur invalid).
    Spécificité (0,3,1) — bat le hover (0,3,0). */
 .timePicker[data-invalid]:not([data-disabled]) .timeDisplay {
-  color: var(--text-critical);
+  color: var(--text-critical-default);
 }
 
 /* Disabled (mode non-éditable) — texte en text-disabled.

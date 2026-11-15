@@ -331,7 +331,7 @@
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-ui-m);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 .closeButton {
@@ -366,7 +366,7 @@
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-s);
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 .footer {

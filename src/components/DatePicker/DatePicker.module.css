@@ -45,7 +45,7 @@
   align-items: center;
   flex: 1 1 0%;
   min-width: 0;
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 .datePicker[data-disabled] .dateInput {
@@ -56,7 +56,7 @@
 .rangeSeparator {
   flex-shrink: 0;
   padding: 0 var(--space050);
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
   user-select: none;
 }
 
@@ -76,7 +76,7 @@
 }
 
 .segment[data-placeholder] {
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
   text-transform: uppercase;
 }
 
@@ -86,7 +86,7 @@
 }
 
 .segment[data-type="literal"] {
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
   padding-inline: 0;
 }
 
@@ -146,7 +146,7 @@
 
 .datePicker[data-invalid]:not([data-disabled]) .dateButton,
 .datePicker[data-invalid]:not([data-disabled]) .segment:not([data-focused]) {
-  color: var(--text-critical);
+  color: var(--text-critical-default);
 }
 
 /* ==========================================================================

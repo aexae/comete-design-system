@@ -135,7 +135,7 @@
   letter-spacing: var(--letter-spacing-negative-tight);
   text-align: center;
   white-space: nowrap;
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 /* Selected label */

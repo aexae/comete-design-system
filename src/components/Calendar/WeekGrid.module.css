@@ -27,7 +27,7 @@
   font-size: var(--font-size-ui-xxs);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-ui-xs);
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
   user-select: none;
 }
 
@@ -97,7 +97,7 @@
 
 .weekRow[data-state="selected"] .weekDayText,
 .weekRow[data-state="selected"] .weekNumberCell {
-  color: var(--text-information);
+  color: var(--text-information-default);
   font-weight: var(--font-weight-medium);
 }
 
@@ -129,7 +129,7 @@
 
 .weekRow[data-state="range-part"] .weekDayText,
 .weekRow[data-state="range-part"] .weekNumberCell {
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 /* Supprime le border-radius adjacent pour une continuité visuelle */
@@ -155,7 +155,7 @@
   font-size: var(--font-size-ui-xxs);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xs);
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
   user-select: none;
   pointer-events: none;
 }
@@ -173,7 +173,7 @@
 }
 
 .weekRow[data-current-week]:not([data-state]) .weekNumberCell {
-  color: var(--text-information);
+  color: var(--text-information-default);
   font-weight: var(--font-weight-semibold);
 }
 
@@ -225,13 +225,13 @@
   font-size: var(--font-size-ui-xs);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xs);
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
   pointer-events: none;
 }
 
 /* Aujourd'hui */
 .weekDayCell[data-today] .weekDayText {
-  color: var(--text-information);
+  color: var(--text-information-default);
   font-weight: var(--font-weight-semibold);
 }
 
@@ -264,7 +264,7 @@
 /* Semaine en cours sélectionnée : seul le background de la ligne change.
    Le texte, l'indicateur vertical et le divider conservent leur style "semaine en cours". */
 .weekRow[data-state="selected"][data-current-week] .weekNumberCell {
-  color: var(--text-information);
+  color: var(--text-information-default);
   font-weight: var(--font-weight-semibold);
 }
 
@@ -273,7 +273,7 @@
 }
 
 .weekRow[data-state="selected"][data-current-week] .weekDayCell[data-today] .weekDayText {
-  color: var(--text-information);
+  color: var(--text-information-default);
 }
 
 .weekRow[data-state="selected"][data-current-week] .todayIndicator {

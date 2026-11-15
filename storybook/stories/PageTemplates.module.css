@@ -178,7 +178,7 @@
   justify-content: center;
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
 }
 
 /* ---- Table row ---- */
@@ -189,13 +189,13 @@
   border-bottom: 1px solid var(--border-default);
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
-  color: var(--text-default);
+  color: var(--text-default-default);
   min-width: 0;
 }
 
 .tableRow[data-header] {
   font-weight: 600;
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
 }
 
 .tableRow:not([data-header]) {

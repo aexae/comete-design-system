@@ -9,13 +9,13 @@
  * --------------------------------------------------------------------- */
 
 .color-default {
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 .color-subtle {
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
 }
 .color-subtlest {
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
 }
 .color-disabled {
   color: var(--text-disabled);
@@ -24,37 +24,37 @@
   color: var(--text-inverted);
 }
 .color-comete {
-  color: var(--text-comete);
+  color: var(--text-comete-default);
 }
 .color-brand {
-  color: var(--text-brand);
+  color: var(--text-brand-default);
 }
 .color-accentPurple {
-  color: var(--text-accent-purple);
+  color: var(--text-accent-purple-default);
 }
 .color-accentTeal {
-  color: var(--text-accent-teal);
+  color: var(--text-accent-teal-default);
 }
 .color-accentTurquoise {
-  color: var(--text-accent-turquoise);
+  color: var(--text-accent-turquoise-default);
 }
 .color-accentMagenta {
-  color: var(--text-accent-magenta);
+  color: var(--text-accent-magenta-default);
 }
 .color-accentBlueGrey {
-  color: var(--text-accent-blue-grey);
+  color: var(--text-accent-blue-grey-default);
 }
 .color-success {
-  color: var(--text-success);
+  color: var(--text-success-default);
 }
 .color-information {
-  color: var(--text-information);
+  color: var(--text-information-default);
 }
 .color-warning {
-  color: var(--text-warning);
+  color: var(--text-warning-default);
 }
 .color-critical {
-  color: var(--text-critical);
+  color: var(--text-critical-default);
 }
 .color-link {
   color: var(--text-link-default);

@@ -37,7 +37,7 @@ function LeadingTrailingDoc() {
         gap: "var(--space150)",
       }}
     >
-      <SectionHeading dot="var(--text-information)">Placement du contenu</SectionHeading>
+      <SectionHeading dot="var(--text-information-default)">Placement du contenu</SectionHeading>
       <SectionMessage
         appearance="information"
         title="Le leading porte l'identité de la ligne. Le trailing porte l'attribution et l'état."

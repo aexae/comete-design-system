@@ -85,18 +85,18 @@
   font-size: var(--font-size-ui-s);
   font-weight: var(--font-weight-regular);
   line-height: 1;
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
 
   transition: color 160ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Item sélectionné — taille identique, contraste via couleur uniquement */
 .drumItem[data-selected] {
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 .drumItem:hover:not(:disabled):not([data-selected]) {
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 .drumItem:disabled {
@@ -116,7 +116,7 @@
   font-size: var(--font-size-ui-s);
   font-weight: var(--font-weight-regular);
   line-height: 1;
-  color: var(--text-default);
+  color: var(--text-default-default);
   user-select: none;
   pointer-events: none;
   z-index: 1;

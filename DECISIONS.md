@@ -2,6 +2,208 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-15 — Livraison tokens 0.20.0 (alpha.176) + correctif Card
+
+**Contexte** : livraison de la migration `@aexae/comete-design-tokens` 0.20.0
+(branche `tokens-0.20.0`, PR, rebasée sur `origin/main` qui avait avancé de 2
+commits — #351 Icon Explorer, #352 sidenav). Conflit résolu sur
+`Icon.stories.tsx` (version Icon Explorer conservée + renommage des tokens texte).
+
+**Décision / correctif** : au contrôle anti-régression (scan src + storybook des
+tokens texte obsolètes), `Card.module.css` s'est révélé **oublié** par la
+migration : ses surcharges locales `--text-default/subtle/subtlest` (variantes
+`bold`/`warning`/désactivée) redéfinissaient l'**ancien** nom, devenu mort en
+0.20.0 (`--text-<nom>-default` vaut un hex littéral, ne lit pas `--text-<nom>` ;
+les composants texte descendants lisent le nom suffixé). Non détecté par le
+garde-fou `cssTokens.test.ts` (une déclaration locale reste « valide »). Corrigé :
+surcharges renommées en `--text-<nom>-default`. Les surcharges `--icon-*` restent
+(tokens icônes non restructurés). Validé : build + 1353 tests + lint + format +
+Storybook (lint/tsc) verts.
+
+**CI (après push)** : un seul échec, le test de story `PageBar` « Long title » en Chromium (`scrollWidth > clientWidth` faux, 1030 = 1030) : le titre de ~100 caractères tombait exactement à la largeur de la boîte en CI, non reproductible en local (606 tests verts). Cas limite déjà marginal, probablement basculé par la gouttière de Bar unifiée (16 → 12 px sous 1200 px, +8 px de boîte). Décision : conserver le contrat (ellipsis, débordement réel, nom accessible) et rendre le débordement non ambigu avec un titre très supérieur à toute largeur de Bar (constante `LONG_TITLE`, commentaire REASON).
+
+## 2026-11-15 — Figma ❖ Button rebuild : uniformisation, redistribution et _Variant labels
+
+**Contexte** : suite à l'ajout des 140 variants `iconOnly` compact/touch (voir
+entrée ci-dessous), trois finitions demandées par Axel sur le set `19940:889`.
+
+**Décisions** :
+
+- **Uniformisation des labels icon-only** : les labels (masqués) des variantes
+  `iconOnly=true` de type `link` / `link-subtle` portaient encore `Underline` /
+  `Underline Subtle`. Passés en `Body/M/Medium` comme les autres icon-only (168
+  labels), via la procédure sûre détacher→styler→relier (cf.
+  [[feedback_figma_linked_text_prop_bug]]) avec garde-fou anti-propagation sur
+  labels témoins. Au passage, les clones compact/touch (contained/outlined/subtle
+  inclus) ont été reliés à la propriété `✏️ label` qu'ils avaient perdue : tous
+  les labels icon-only sont désormais uniformes (Medium + liés).
+- **Redistribution** : les 140 nouveaux variants, posés en bloc brut à droite,
+  ont été rangés dans la grille du set en 2 colonnes propres (compact puis touch),
+  juste après les colonnes icon-only par état. Set resserré de 2907 à 2148 de
+  large (contenu de x=40 à x=2108).
+  - **Correctif (2026-11-15, 2e passe)** : la grille du set est **appearance-major**
+    (5 groupes contained → outlined → subtle → link → link-subtle, 14 couleurs
+    chacun, gouttière de +32 px entre groupes), et non color-major. La 1re
+    redistribution avait placé compact/touch en color-major → décalage avec les
+    lignes. Chaque variante compact (x=1982) / touch (x=2060) a été réalignée sur
+    le `y` de la variante icon-only `default` (x=1640) de **même couleur +
+    appearance** (lookup direct, robuste aux gouttières). Vérifié : 70/70 compact
+    et 70/70 touch alignés sur la référence. Les labels verticaux et le wrapper
+    « Button + Labels » (façon Tag) ont été repris côté Axel entre-temps.
+- **\_Variant labels** (format « axes résumés » choisi par Axel) : ajout de deux
+  bandeaux façon `Figma parts / _Variant labels` (style Noto Sans Mono gris
+  `text/subtlest`), détachés pour s'aligner sur la grille irrégulière. Bandeau
+  colonnes inséré en flux au-dessus du set (en-têtes `iconOnly=false/true`,
+  sous-groupes `états` / `densités`, nom de chaque colonne) ; bandeau lignes en
+  enfant absolu à droite du set (14 couleurs centrées sur chaque groupe de 5
+  lignes + légende des 5 appearances).
+
+**Validation** : captures (vue d'ensemble + frame annoté), lecture des positions
+(colonnes alignées, 14 labels couleur espacés de 300 px), témoins de style
+inchangés (aucune propagation).
+
+## 2026-11-15 — Figma ❖ Button rebuild : density compact/touch pour iconOnly
+
+**Contexte** : le set `19940:889` n'avait les variants `iconOnly=true` qu'en
+`density=default` (280), compact et touch manquaient (contrairement à
+`iconOnly=false` qui a default/compact/touch). Axel a élargi le frame du set
+(largeur 2602) pour accueillir les nouveaux à droite.
+
+**Décision** : ajout de 140 variants (`iconOnly=true`, `state=default`,
+5 apparences × 14 couleurs × {compact, touch}), même périmètre que
+`iconOnly=false` (compact/touch uniquement en state=default). Générés par clonage
+du variant default correspondant puis redimensionnement, pour préserver les
+propriétés de composant et la propriété de label liée (pas de `combineAsVariants`,
+cf. [[feedback_figma_linked_text_prop_bug]]). Géométrie demandée par Axel :
+compact 24×24 / icône 16, default 32×32 / icône 20 (inchangé), touch 48×48 /
+icône 24, radius rond (999) hérité de la source. Placés en bloc à droite
+(startX 1960, pas 64, 10 colonnes), set final 1050 variants, aucun doublon.
+
+**Validation** : matrice symétrique (true: 280/70/70), géométrie et scale du
+vecteur vérifiés, rendu conforme à la source en capture.
+
+## 2026-11-10 — Button link : soulignement hover/pressed/focus (pas au repos)
+
+**Contexte** : Axel veut que l'apparence `link` ne soit pas soulignée au repos,
+seulement au survol, à l'appui et au focus clavier. Recheck Figma (❖ Button
+rebuild `19940:889`) : `link` au repos = style `Body/M/Medium` (aucun
+soulignement), hover et pressed = `Body/M/Medium Underline`. Le focus Figma est
+encore `Body/M/Medium` (non souligné), à aligner (voir TODO).
+
+**Décision (code)** : `.link` passe à `text-decoration: none` au repos. Le
+soulignement plein (thickness 12 %, offset 16 %) n'apparaît qu'en
+`[data-hovered]`, `[data-pressed]` et `[data-focus-visible]`, exclusion de
+`[data-selected]` (sinon la règle hover primerait le `text-decoration: none` de
+l'état selected). `link-subtle` inchangé (pointillé partout sauf selected).
+
+**Validation** : `pnpm build` + 1353 tests + `pnpm lint` verts.
+
+## 2026-11-10 — Page : gouttière unique responsive (Bar = Toolbar = Body)
+
+**Contexte** : Axel a relu les variables de composant dans Figma, réorganisé les
+groupes (couleurs dans « color », spacing et radius sortis de « size ») et unifié
+les gouttières du ❖ Page. La géométrie Figma relue (toutes variantes) applique la
+même gouttière horizontale à Bar, Toolbar et Body : 12 px sous desktop (mobile 402
+et tablette 744), 24 px à desktop (1728). Le code gardait un modèle scindé
+(`--page-gutter` 12 px fixe pour le Body, `--page-header-gutter` responsive 24/16/8
+pour Bar et Toolbar), d'où des écarts à chaque breakpoint.
+
+**Décision** : fusionner en une gouttière unique `--page-gutter`, responsive
+(12 px par défaut, 24 px en `min-width: 1200px`), appliquée à `.bar`, `.toolbar` et
+`.body`. Suppression de `--page-header-gutter` et de ses deux media queries. Le
+padding vertical de la Bar (8 px sous desktop via `.bar` compact, 16 px à desktop)
+était déjà conforme, inchangé. Description du ❖ Page dans Figma réalignée sur la
+géométrie réelle (nœud local `18862:6708`).
+
+**Validation** : `pnpm build` + 1353 tests + `pnpm lint` verts. BottomNav relu au
+passage : spacing code (item 8/0, radius 12, content gap 2, icône 24, badge pill)
+déjà conforme à Figma, aucune modif hors renommage de tokens 0.20.0.
+
+## 2026-11-10 — Button (code + rebuild Figma) : icônes contained inverted, selected unifié
+
+**Contexte** : revue d'Axel sur le rebuild. Deux demandes : (1) icônes des
+boutons `contained` en inverted sauf warning ; (2) boutons `selected` tous
+identiques, sans soulignement ni bordure.
+
+**Code (DS)** :
+
+- `resolveIconColor` déjà conforme (inverted pour comete/success/critical/
+  information, `on-warning` pour warning, sombre pour default/subtle/subtlest).
+- `selected` unifié : règle unique `.button[data-selected]` (fond plein,
+  `border-color: transparent`, `text-decoration: none`) ; icône en couleur
+  `selected` (TSX). Voir entrée BREAKING ci-dessous.
+
+**Rebuild Figma** (COMPONENT_SET `19940:889`, 910 variants) :
+
+- Icônes : 120 contained pleins → `icon/inverted`, 70 selected → `icon/selected`,
+  contained warning → `icon/on-warning`, et les **720 autres → couleur d'icône
+  sémantique de leur variante** (`icon/<color>` : success → `icon/success`, comete →
+  `icon/comete`, accent-* → `icon/accent/*`, default/subtle/subtlest idem) pour
+  outlined/subtle/link/link-subtle et contained default/subtle/subtlest. Mécanisme :
+  l'instance Icon doit être rendue `visible` temporairement pour accéder au
+  vecteur et lier son fill ; le binding booléen `iconBefore` est préservé.
+- Décoration de texte : état final **uniforme** `Body/M/Medium` (sans trait) sur
+  les 910 labels. **C'est exactement la convention du bouton d'origine** (`213:725`) :
+  là aussi tous les labels, `link`/`link-subtle` compris, sont en `Body/M/Medium`
+  sans trait — le soulignement de link/link-subtle est géré **uniquement par le CSS**,
+  jamais dans le master Figma. Le pointillé que le rebuild affichait partout était
+  donc un bug du rebuild, désormais retiré.
+- **Défaut structurel du rebuild (calque label sur-lié)** : contrairement au bouton
+  d'origine (`213:725`) qui tient des styles de label **différents par variant**
+  (link = `Body/M/Medium Underline`, link-subtle = `…Underline Subtle`, subtle /
+  contained = `Body/M/Medium`), le rebuild **ne peut pas** : le set a été assemblé via
+  `combineAsVariants` sur des **clones**, ce qui a sur-lié le calque `✏️ {label}` par
+  **identité interne** (pas par nom). Il se comporte comme un seul calque partagé :
+  toute écriture de style/décoration se propage à tous les variants et **écrase même
+  une surcharge explicite** (vérifié) ; renommer le calque ne détache pas. Les
+  **icônes**, elles, tiennent par variant (override sur un nœud imbriqué dans
+  l'instance Icon, pas sur le calque matché).
+- **Vraie cause (identifiée par Axel)** : bug Figma connu — changer un style de texte
+  se propage entre variants partageant une **propriété de texte liée** (le binding
+  `characters` du label), spécialement après des éditions via le plugin/MCP. Ce
+  n'était PAS le clonage. (Forums Figma : « Text style changes propagate across
+  component variants sharing a linked text property following Figma MCP edits ».)
+- **Résolu sur le set existant** (`19940:889`, pas de recréation). Méthode : **détacher
+  la propriété `characters`** de chaque label (`componentPropertyReferences = {}`,
+  910 labels), puis assigner les styles par variant (link → `Body/M/Medium Underline`,
+  link-subtle → `…Underline Subtle`, reste + tous selected → `Body/M/Medium`). Une fois
+  détachés, les styles **coexistent** et tiennent. Vérifié : décoration correcte par
+  variant, **tokens de couleur préservés** (fills label + fond toujours liés aux
+  `button/*`), arrangement/iconButtons/propriétés intacts. La tentative de recréation
+  par clone+`combineAsVariants` a été **abandonnée** (cassait l'arrangement et les
+  iconButtons). Reste : Axel vérifie, puis **recréer la propriété `label`** (TEXT) et
+  la réassigner aux labels.
+
+## 2026-11-10 — Button consomme la couche de tokens de composants + restructuration texte (BREAKING)
+
+**Contexte** : réintroduction d'une couche de tokens de composants (voir
+comete-design-tokens). Tokens 0.20.0 publiés avec la couche `button/*` et la
+restructuration des tokens texte en groupes `default/hovered/pressed`.
+
+**Décisions / changements** :
+
+- Bump `@aexae/comete-design-tokens` ^0.19.0 → ^0.20.0 (root + storybook).
+- Renommage de ~215 références `--text-<x>` → `--text-<x>-default` dans tout le DS
+  et le storybook (comete/success/critical/warning/information/subtle/subtlest/
+  default/brand/accent-*). Cassant pour les consommateurs.
+- `BrandProvider` génère `--text-brand-default/-hovered/-pressed`.
+- `Button.module.css` consomme `--button-*` (apparence × couleur × partie × état) et
+  `--button-size-*` (dimensions). `link-subtle` devient per-couleur (comme `link`),
+  avec couleur hover/press + soulignement pointillé.
+- `--text-warning` → orange, `--text-brand` default → comete.blue.700 (mirror Figma).
+- **État `selected` unifié** : une seule règle `.button[data-selected]` (puce de
+  fond pleine, `border-color: transparent`, `text-decoration: none`) pour toutes
+  les apparences et couleurs. Supprime le soulignement conservé sur link /
+  link-subtle et la bordure des outlined. L'icône passe en couleur `selected`
+  (TSX) pour un rendu identique partout.
+- **Icônes `contained`** : confirmé `inverted` pour les fonds pleins (comete,
+  success, critical, information), `on-warning` pour warning (fond clair). Les
+  contained default/subtle/subtlest gardent une icône sombre (fond clair/absent).
+
+**Validation** : `pnpm build`, 1353 tests, lint OK ; storybook lint + tsc OK.
+**Statut** : NON commité (clone partagé, sur main). Livraison DS en attente
+d'instruction (branche + PR). Les tokens 0.20.0 sont déjà publiés.
+
 ## 2026-11-09 — Page : Body à 12px fixe, Bar alignée sur la Toolbar
 
 **Contexte** : demande d'Axel : « paddingX de PageBar à 24px, paddingX du

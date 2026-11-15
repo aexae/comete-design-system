@@ -163,7 +163,7 @@ function NavigateOverflowDemo() {
         size="large"
         onItemPress={(item) => setLastClicked(item.name ?? item.key ?? "")}
       />
-      <p style={{ margin: 0, fontSize: 12, color: "var(--text-subtle)" }}>
+      <p style={{ margin: 0, fontSize: 12, color: "var(--text-subtle-default)" }}>
         Dernier clic : {lastClicked ?? "aucun"}
       </p>
     </div>
@@ -190,7 +190,7 @@ function SelectDemo() {
         selectedKeys={selected}
         onSelectionChange={setSelected}
       />
-      <p style={{ margin: 0, fontSize: 12, color: "var(--text-subtle)" }}>
+      <p style={{ margin: 0, fontSize: 12, color: "var(--text-subtle-default)" }}>
         Sélection : {selected.length > 0 ? selected.join(", ") : "aucune"}
       </p>
     </div>
@@ -215,7 +215,7 @@ function SelectOverflowDemo() {
         selectedKeys={selected}
         onSelectionChange={setSelected}
       />
-      <p style={{ margin: 0, fontSize: 12, color: "var(--text-subtle)" }}>
+      <p style={{ margin: 0, fontSize: 12, color: "var(--text-subtle-default)" }}>
         Sélection : {selected.length > 0 ? selected.join(", ") : "aucune"}
       </p>
     </div>

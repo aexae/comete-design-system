@@ -104,7 +104,7 @@
   font-size: var(--font-size-ui-xs);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-s);
-  color: var(--text-default);
+  color: var(--text-default-default);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -125,7 +125,7 @@
   font-size: var(--font-size-ui-xxs);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xxs);
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -174,7 +174,7 @@
   flex-shrink: 0;
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xxs);
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
 
   [data-disabled] & {
     color: var(--text-disabled);
@@ -205,7 +205,7 @@
   font-size: var(--font-size-ui-xxs);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-ui-xxs);
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }

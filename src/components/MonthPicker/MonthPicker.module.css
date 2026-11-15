@@ -44,7 +44,7 @@
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-default);
+  color: var(--text-default-default);
   text-align: center;
   padding: 0;
 }
@@ -55,12 +55,12 @@
 }
 
 .monthInput::placeholder {
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
 }
 
 /* Séparateur "/" entre mois et année (mode saisie) */
 .separator {
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-xs);
@@ -87,7 +87,7 @@
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-default);
+  color: var(--text-default-default);
   text-align: center;
   padding: 0;
 }
@@ -98,7 +98,7 @@
 }
 
 .yearInput::placeholder {
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
 }
 
 /* Bouton calendrier (mode saisie) */
@@ -134,7 +134,7 @@
 .root[data-invalid]:not([data-disabled]) .monthInput,
 .root[data-invalid]:not([data-disabled]) .yearInput,
 .root[data-invalid]:not([data-disabled]) .rangeInput {
-  color: var(--text-critical);
+  color: var(--text-critical-default);
 }
 
 /* ==========================================================================
@@ -167,7 +167,7 @@
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-default);
+  color: var(--text-default-default);
   padding: 0;
 }
 
@@ -177,12 +177,12 @@
 }
 
 .rangeInput::placeholder {
-  color: var(--text-subtlest);
+  color: var(--text-subtlest-default);
 }
 
 /* Séparateur "→" entre début et fin (mode range) */
 .rangeSeparator {
-  color: var(--text-default);
+  color: var(--text-default-default);
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-xs);

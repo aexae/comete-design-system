@@ -134,7 +134,7 @@ function ControlledDemo() {
         <Checkbox value="b" label="Option B" />
         <Checkbox value="c" label="Option C" />
       </CheckboxGroup>
-      <p style={{ margin: 0, fontSize: 12, color: "var(--text-subtle)" }}>
+      <p style={{ margin: 0, fontSize: 12, color: "var(--text-subtle-default)" }}>
         Sélection : {value.length > 0 ? value.join(", ") : "aucune"}
       </p>
     </div>

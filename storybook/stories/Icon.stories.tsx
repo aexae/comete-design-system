@@ -276,7 +276,7 @@ function IconWithDownload(props: IconComponentProps): ReactElement {
     border: "1px solid var(--border-default)",
     borderRadius: 5,
     background: "var(--background-neutral-subtler-default)",
-    color: "var(--text-subtlest)",
+    color: "var(--text-subtlest-default)",
     cursor: "pointer",
     letterSpacing: "0.03em",
   };
@@ -470,10 +470,10 @@ function IconCard({
         style={{
           fontSize: 10,
           color: isCopied
-            ? "var(--text-success)"
+            ? "var(--text-success-default)"
             : isSelected
               ? "var(--text-selected)"
-              : "var(--text-subtlest)",
+              : "var(--text-subtlest-default)",
           textAlign: "center",
           lineHeight: 1.2,
           width: "100%",
@@ -644,7 +644,7 @@ function IconDetailPanel({
   const sectionLabel: CSSProperties = {
     fontSize: 11,
     fontWeight: 600,
-    color: "var(--text-subtlest)",
+    color: "var(--text-subtlest-default)",
     textTransform: "uppercase",
     letterSpacing: "0.05em",
     marginBottom: 8,
@@ -714,7 +714,7 @@ function IconDetailPanel({
                   right: 8,
                   fontSize: 11,
                   fontWeight: 600,
-                  color: "var(--text-success)",
+                  color: "var(--text-success-default)",
                   background: "var(--background-default-default)",
                   padding: "3px 8px",
                   borderRadius: 4,
@@ -798,7 +798,7 @@ function IconDetailPanel({
                     <span
                       style={{
                         fontSize: 10,
-                        color: isActive ? "var(--text-selected)" : "var(--text-subtlest)",
+                        color: isActive ? "var(--text-selected)" : "var(--text-subtlest-default)",
                         textTransform: "capitalize",
                         fontWeight: isActive ? 600 : 400,
                       }}
@@ -854,7 +854,7 @@ function IconDetailPanel({
                 cursor: "pointer",
                 fontFamily: "var(--font-family-monospace, ui-monospace, monospace)",
                 fontSize: 12,
-                color: "var(--text-default)",
+                color: "var(--text-default-default)",
                 textAlign: "left",
                 transition: "background 0.15s",
               }}
@@ -863,7 +863,9 @@ function IconDetailPanel({
               <span
                 style={{
                   fontSize: 11,
-                  color: codeCopied ? "var(--text-success)" : "var(--text-subtlest)",
+                  color: codeCopied
+                    ? "var(--text-success-default)"
+                    : "var(--text-subtlest-default)",
                   fontWeight: 600,
                   fontFamily: "inherit",
                   flexShrink: 0,
@@ -954,7 +956,7 @@ function IconExplorer(): ReactElement {
     fontSize: 11,
     fontWeight: 600,
     marginBottom: 4,
-    color: "var(--text-subtlest)",
+    color: "var(--text-subtlest-default)",
     textTransform: "uppercase",
     letterSpacing: "0.05em",
   };
@@ -1027,8 +1029,8 @@ function IconExplorer(): ReactElement {
         </div>
 
         {/* Compteur */}
-        <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-subtlest)" }}>
-          <strong style={{ color: "var(--text-default)" }}>{filtered.length}</strong>
+        <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--text-subtlest-default)" }}>
+          <strong style={{ color: "var(--text-default-default)" }}>{filtered.length}</strong>
           {" / "}
           {ICON_ENTRIES.length} icônes
           {search !== "" && ` — "${search}"`}
@@ -1037,7 +1039,7 @@ function IconExplorer(): ReactElement {
 
         {/* Grille */}
         {filtered.length === 0 ? (
-          <p style={{ textAlign: "center", padding: 48, color: "var(--text-subtlest)" }}>
+          <p style={{ textAlign: "center", padding: 48, color: "var(--text-subtlest-default)" }}>
             Aucune icône pour &ldquo;{search}&rdquo;
           </p>
         ) : (

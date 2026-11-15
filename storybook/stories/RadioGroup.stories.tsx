@@ -138,7 +138,9 @@ function ControlledDemo() {
         <Radio value="b" label="Option B" />
         <Radio value="c" label="Option C" />
       </RadioGroup>
-      <p style={{ margin: 0, fontSize: 12, color: "var(--text-subtle)" }}>Valeur : {value}</p>
+      <p style={{ margin: 0, fontSize: 12, color: "var(--text-subtle-default)" }}>
+        Valeur : {value}
+      </p>
     </div>
   );
 }

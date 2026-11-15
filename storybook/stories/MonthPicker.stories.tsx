@@ -163,7 +163,7 @@ function SingleRender({ args }: { args: SingleMonthPickerProps }) {
         style={{
           fontFamily: "var(--font-family-primary)",
           fontSize: "var(--font-size-ui-xs)",
-          color: "var(--text-subtlest)",
+          color: "var(--text-subtlest-default)",
         }}
       >
         Sélection : {String(month).padStart(2, "0")}/{year}
@@ -218,7 +218,7 @@ function RangeRender({ args }: { args: RangeMonthPickerProps }) {
         style={{
           fontFamily: "var(--font-family-primary)",
           fontSize: "var(--font-size-ui-xs)",
-          color: "var(--text-subtlest)",
+          color: "var(--text-subtlest-default)",
         }}
       >
         Sélection : {String(startMonth).padStart(2, "0")}/{startYear} →{" "}

@@ -13,7 +13,7 @@
   flex-shrink: 0;
 
   background-color: var(--background-neutral-subtler-default);
-  color: var(--text-default);
+  color: var(--text-default-default);
   font-family: var(--font-family-primary);
   font-weight: var(--font-weight-medium);
 
@@ -64,7 +64,7 @@
 
 .neutral {
   background-color: var(--background-neutral-subtler-default);
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 
 .neutral[data-hovered]:not([data-disabled]) {
@@ -77,7 +77,7 @@
 
 .comete {
   background-color: var(--background-comete-subtlest-default);
-  color: var(--text-comete);
+  color: var(--text-comete-default);
 }
 
 .comete[data-hovered]:not([data-disabled]) {
@@ -90,7 +90,7 @@
 
 .accentPurple {
   background-color: var(--background-accent-purple-subtlest-default);
-  color: var(--text-accent-purple);
+  color: var(--text-accent-purple-default);
 }
 
 .accentPurple[data-hovered]:not([data-disabled]) {
@@ -103,7 +103,7 @@
 
 .accentTeal {
   background-color: var(--background-accent-teal-subtlest-default);
-  color: var(--text-accent-teal);
+  color: var(--text-accent-teal-default);
 }
 
 .accentTeal[data-hovered]:not([data-disabled]) {
@@ -116,7 +116,7 @@
 
 .accentTurquoise {
   background-color: var(--background-accent-turquoise-subtlest-default);
-  color: var(--text-accent-turquoise);
+  color: var(--text-accent-turquoise-default);
 }
 
 .accentTurquoise[data-hovered]:not([data-disabled]) {
@@ -129,7 +129,7 @@
 
 .accentMagenta {
   background-color: var(--background-accent-magenta-subtlest-default);
-  color: var(--text-accent-magenta);
+  color: var(--text-accent-magenta-default);
 }
 
 .accentMagenta[data-hovered]:not([data-disabled]) {
@@ -142,7 +142,7 @@
 
 .accentBlueGrey {
   background-color: var(--background-accent-blue-grey-subtlest-default);
-  color: var(--text-accent-blue-grey);
+  color: var(--text-accent-blue-grey-default);
 }
 
 .accentBlueGrey[data-hovered]:not([data-disabled]) {

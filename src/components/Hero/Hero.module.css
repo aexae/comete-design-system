@@ -9,7 +9,7 @@
  * --------------------------------------------------------------------- */
 
 .color-default {
-  color: var(--text-default);
+  color: var(--text-default-default);
 }
 .color-inverted {
   color: var(--text-inverted);

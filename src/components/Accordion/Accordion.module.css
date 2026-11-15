@@ -54,7 +54,7 @@
   font-size: var(--font-size-ui-s);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-s);
-  color: var(--text-default);
+  color: var(--text-default-default);
   outline: none;
   transition: background-color var(--duration-fast) var(--easing-default);
 }
@@ -126,6 +126,6 @@
   font-size: var(--font-size-ui-xs);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xs);
-  color: var(--text-subtle);
+  color: var(--text-subtle-default);
   background: var(--background-neutral-subtlest-default);
 }

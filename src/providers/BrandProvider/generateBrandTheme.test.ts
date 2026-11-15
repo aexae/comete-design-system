@@ -41,7 +41,9 @@ describe("generateBrandTheme", () => {
       "--border-brand-bold",
       "--border-brand-subtle",
       "--icon-brand",
-      "--text-brand",
+      "--text-brand-default",
+      "--text-brand-hovered",
+      "--text-brand-pressed",
     ];
     expect(Object.keys(theme.light).sort()).toEqual([...expectedKeys].sort());
     expect(Object.keys(theme.dark).sort()).toEqual([...expectedKeys].sort());

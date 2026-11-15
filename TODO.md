@@ -2,6 +2,29 @@
 
 ## Fiabilité / qualité
 
+- ~~**Figma ❖ Button rebuild : link focus à souligner**~~ fait côté Axel (2026-11-15)
+  `appearance=link, state=focus` (iconOnly=false) est maintenant `Body/M/Medium
+Underline`, aligné sur le code (underline en hover/pressed/focus).
+  ~~Reste mineur : `link, state=default, iconOnly=true` encore en style `Underline`~~
+  fait (2026-11-15) : tous les labels icon-only (masqués) uniformisés en
+  `Body/M/Medium`, y compris `link` / `link-subtle` et les clones compact/touch.
+  Tous reliés à la propriété `✏️ label` (les clones l'avaient perdue).
+
+- ~~**Page : gouttières code désynchronisées de Figma**~~ fait (2026-11-10)
+  Gouttière unifiée côté code : `--page-gutter` responsive (12 px par défaut,
+  24 px en `min-width: 1200px`) appliquée à `.bar`, `.toolbar` et `.body`,
+  `--page-header-gutter` supprimé. Description du ❖ Page dans Figma réalignée
+  sur la géométrie réelle (12/12/24). Build + 1353 tests + lint verts.
+
+- **Rebuild Button Figma : styles de label par variant (2026-11-10, en cours)**
+  Bug Figma : le style de texte se propageait entre variants partageant la propriété
+  liée `characters`. Fix appliqué sur `19940:889` : **détacher** `characters` des 910
+  labels puis assigner les styles par variant (link `Underline`, link-subtle
+  `Underline Subtle`, reste + selected `Body/M/Medium`). Coexistence OK, tokens de
+  couleur préservés. **Reste** : Axel vérifie, puis **recréer la propriété `label`
+  (TEXT) et la réassigner** aux 910 labels (actuellement le texte n'est plus éditable
+  via propriété). La migration des ~1150 instances cible toujours `19940:889`.
+
 - **Stories Storybook : libellés de variantes (2026-11-09)**
   Helper `Labeled` / `LabeledRow` / `Legend` (`stories/_labeled.tsx`) généralisé et
   légendes homogénéisées (12 px, `--text-subtle`, sous l'instance). Restes :

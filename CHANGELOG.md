@@ -9,6 +9,35 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Changements cassants (BREAKING)
+
+- **`@aexae/comete-design-tokens` 0.20.0** (peer + dev) : les tokens de texte
+  sémantiques et neutres sont restructurés en groupes `default/hovered/pressed`.
+  Les variables `--text-comete`, `--text-success`, `--text-critical`,
+  `--text-warning`, `--text-information`, `--text-subtle`, `--text-subtlest`,
+  `--text-default`, `--text-brand` et `--text-accent-*` deviennent
+  `--text-<nom>-default` (+ `-hovered` / `-pressed` selon les cas). Toutes les
+  références internes du DS ont été mises à jour. Les consommateurs utilisant ces
+  variables doivent ajouter le suffixe `-default`.
+- **`--text-warning`** passe du jaune (`yellow`) à l'orange (`orange`) et
+  **`--text-brand`** de `comete.blue.900` à `comete.blue.700` (alignement Figma).
+- **`BrandProvider`** génère désormais `--text-brand-default/-hovered/-pressed`
+  (au lieu de `--text-brand`).
+
+### Modifié
+
+- **`Button` consomme la couche de tokens de composants `--button-*`** (tokens
+  0.20.0). Chaque apparence × couleur × état référence `--button-<appearance>-<color>-<part>-<state>`
+  au lieu des tokens sémantiques directs. `link-subtle` devient **déclinable par
+  couleur** (comme `link`), avec feedback de couleur au survol/pression, en plus
+  du soulignement pointillé. Les dimensions (hauteur, padding, radius, gap, icône)
+  passent par `--button-size-*`. Aucun changement d'API du composant.
+- **`Card`** : les surcharges de couleur de texte des variantes `bold` (inversé),
+  `warning` et désactivée pointent désormais sur `--text-<nom>-default` (au lieu de
+  `--text-<nom>`), pour rester effectives avec les tokens 0.20.0 (les composants
+  texte descendants lisent le nom suffixé). Les surcharges d'icône restent
+  inchangées (les tokens `--icon-*` ne sont pas restructurés).
+
 ### Modifié (icônes)
 
 - **`@aexae/comete-icons` 0.11.1** et **`@aexae/comete-illustrations` 0.1.0-alpha.5** :
