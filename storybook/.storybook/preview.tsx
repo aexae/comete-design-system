@@ -118,6 +118,20 @@ const preview: Preview = {
       options: { ...COMETE_VIEWPORTS, ...INITIAL_VIEWPORTS },
     },
     layout: "centered",
+    // Ordre de la sidebar : l'accueil d'abord, puis les familles du plus fondamental au plus composé.
+    options: {
+      storySort: {
+        order: [
+          "Welcome",
+          "Foundation",
+          "Layout",
+          "Navigation",
+          "Components",
+          "Recipes",
+          "Templates",
+        ],
+      },
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,

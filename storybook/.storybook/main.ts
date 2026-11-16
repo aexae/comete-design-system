@@ -2,6 +2,7 @@
 import type { StorybookConfig } from "@storybook/react-vite";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
+import { welcomeReleases } from "./welcomeReleases";
 
 const config: StorybookConfig = {
   stories: ["../stories/**/*.stories.@(ts|tsx)"],
@@ -23,6 +24,7 @@ const config: StorybookConfig = {
     const __dirname = dirname(__filename);
 
     return mergeConfig(config, {
+      plugins: [welcomeReleases()],
       resolve: {
         alias: {
           "@": resolve(__dirname, "../../src"),
