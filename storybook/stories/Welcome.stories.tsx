@@ -31,6 +31,9 @@ import css from "./Welcome.stories.module.css";
 
 const REPO = "https://github.com/aexae";
 const DS_REPO = `${REPO}/comete-design-system`;
+/** Canal Teams « Marque et Charte Comète » : le point d'entrée des non-développeurs. */
+const TEAMS_CHANNEL =
+  "https://teams.microsoft.com/l/channel/19%3AS9DdPfCbIb8GvLhXOv-v_4bvaY2kAFy2kaohPw6v8Ho1%40thread.tacv2/Marque%20et%20Charte%20Com%C3%A8te?groupId=48d91ecf-f8d1-4494-9932-74e7016f6dd3&tenantId=a557c269-4546-4d0d-8c71-c648b78e708b&ngc=true&allowXTenantAccess=true";
 const FIGMA = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 
 /** Date ISO → « 09/11/2026 ». */
@@ -579,13 +582,6 @@ const PRINCIPLES = [
     target: "Recipes/Filtres",
   },
   {
-    title: "Dense, mais lisible",
-    over: "Afficher sur un même écran tout ce dont on a besoin pour travailler, bien hiérarchisé,",
-    under: "le cacher derrière des clics.",
-    proof: "Anatomy of a list screen",
-    target: "Templates/Anatomy of a list screen",
-  },
-  {
     title: "Une seule identité",
     over: "Le même bleu, la même police et les mêmes icônes dans les six logiciels",
     under: "une couleur par produit.",
@@ -600,7 +596,7 @@ function Principles({ index }: { index: Index | undefined }): ReactElement {
       <SectionHead title="Nos principes" lead="Ce qu'on choisit quand il faut trancher." />
       <Grid columns={{ mobile: 12, tablet: 12 }} gap="150">
         {PRINCIPLES.map((p, i) => (
-          <Grid.Col key={p.title} span={{ mobile: 12, tablet: 4 }}>
+          <Grid.Col key={p.title} span={{ mobile: 12, tablet: 6 }}>
             <Card appearance="outlined" className={css["fill"]}>
               <Stack gap="125" align="start" padding="300">
                 <Text size="small" weight="bold" className={css["principleNum"]}>
@@ -697,7 +693,8 @@ function Help(): ReactElement {
           Une question, un composant manquant, un logo introuvable ?
         </Text>
         <Text size="small" color="inverted" className={css["helpBody"]}>
-          Demandez aux référents du design system, ou ouvrez une issue sur le dépôt.
+          Écrivez-nous sur le canal Teams « Marque et Charte Comète », ou ouvrez une issue sur le
+          dépôt si vous êtes développeur.
         </Text>
       </Stack>
       <Cluster gap="200" align="center">
@@ -715,9 +712,19 @@ function Help(): ReactElement {
           </Stack>
         ))}
       </Cluster>
-      <Button appearance="contained" color="warning" onPress={external(`${DS_REPO}/issues/new`)}>
-        Ouvrir une issue
-      </Button>
+      <Cluster gap="100">
+        <Button
+          appearance="contained"
+          color="warning"
+          iconAfter="OpenInNew"
+          onPress={external(TEAMS_CHANNEL)}
+        >
+          Écrire sur Teams
+        </Button>
+        <Button appearance="contained" onPress={external(`${DS_REPO}/issues/new`)}>
+          Ouvrir une issue
+        </Button>
+      </Cluster>
     </div>
   );
 }
