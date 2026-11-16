@@ -1,0 +1,399 @@
+/* Welcome — page d'accueil du Storybook (maquette « Comete-Storybook v3 »). 100 % tokens.
+   La mise en page passe par Stack / Grid / Cluster du DS : ce fichier ne porte que ce que les
+   composants ne savent pas faire (hero animé, aperçus décoratifs). */
+
+.page {
+  min-height: 100vh;
+  padding: var(--space300);
+  /* Page gris très clair ; seule l'intro (.hero) porte le bleu de marque, les cartes sont blanches. */
+  background: var(--background-neutral-subtlest-default);
+  color: var(--text-default);
+  font-family: var(--font-family-primary);
+}
+
+/* ---- Hero ---- */
+
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  min-height: 440px;
+  /* Pleine largeur, collé en haut : on annule le padding de la page. */
+  margin: calc(var(--space300) * -1) calc(var(--space300) * -1) 0;
+  overflow: hidden;
+  /* Le bleu de marque s'éclaircit en thème sombre, le texte inversé suit. */
+  background: var(--background-brand-bold-default);
+  color: var(--text-inverted);
+}
+
+.heroText {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space250);
+  min-width: 0;
+  padding: var(--space600) 0 var(--space600) var(--space600);
+  animation: rise var(--duration-slower) var(--easing-entrance) both;
+}
+
+.page .heroTitle {
+  max-width: 18ch;
+  margin: var(--space100) 0 0;
+  font-size: var(--font-size-hero-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-negative-extra-tight);
+  line-height: var(--line-height-hero-xs);
+  text-wrap: balance;
+}
+
+/* L'accent hérite de la taille du titre : « tous les logiciels Comète. » est aussi grand que le
+   début de la phrase, seule la couleur change. */
+.heroAccent {
+  color: var(--comete-yellow-300);
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+.heroLead {
+  max-width: 50ch;
+  margin: 0;
+  color: var(--text-subtle-inverted);
+}
+
+.heroQuote {
+  max-width: 48ch;
+  margin: auto 0 0;
+  padding-top: var(--space200);
+  border-top: 1px solid var(--border-inverted);
+}
+
+.heroArt {
+  position: relative;
+  min-height: 320px;
+}
+
+.orbit,
+.orbitInner {
+  position: absolute;
+  border-radius: 50%;
+  animation: orbit 60s linear infinite;
+}
+
+.orbit {
+  top: 50%;
+  right: calc(var(--space600) * -2);
+  width: 520px;
+  height: 520px;
+  margin-top: -260px;
+  border: 1px solid var(--border-inverted);
+  opacity: 0.4;
+}
+
+.orbitDot {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: var(--space125);
+  height: var(--space125);
+  border-radius: 50%;
+  background: var(--comete-yellow-400);
+}
+
+.orbitInner {
+  top: 50%;
+  right: calc(var(--space250) * -1);
+  width: 340px;
+  height: 340px;
+  margin-top: -170px;
+  border: 1px dashed var(--border-inverted);
+  opacity: 0.5;
+  animation-direction: reverse;
+  animation-duration: 90s;
+}
+
+.glow {
+  position: absolute;
+  top: 50%;
+  right: var(--space400);
+  width: 240px;
+  height: 240px;
+  margin-top: -120px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, var(--comete-yellow-300), transparent 65%);
+  opacity: 0.22;
+}
+
+.heroIcon {
+  position: absolute;
+  top: 50%;
+  right: var(--space800);
+  margin-top: -60px;
+  animation: float 7s ease-in-out infinite;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-6deg);
+  }
+
+  50% {
+    transform: translateY(-14px) rotate(2deg);
+  }
+}
+
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroText,
+  .orbit,
+  .orbitInner,
+  .heroIcon {
+    animation: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .page .heroTitle {
+    font-size: var(--font-size-ui-xxl);
+    line-height: var(--line-height-ui-xxl);
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroText {
+    padding: var(--space400);
+  }
+
+  .heroArt {
+    display: none;
+  }
+}
+
+/* ---- Cartes de contenu ---- */
+
+.contentNum {
+  color: var(--text-brand);
+  font-variant-numeric: tabular-nums;
+}
+
+.mono {
+  font-family: var(--font-family-code);
+}
+
+.eyebrow {
+  letter-spacing: var(--letter-spacing-positive-extra-wide);
+  text-transform: uppercase;
+}
+
+/* ---- Profils (« Par où commencer ? ») ---- */
+
+.profile {
+  align-items: center;
+}
+
+.visual {
+  height: 260px;
+  overflow: hidden;
+  border-radius: var(--radius200);
+  box-shadow: var(--elevation-xsmall);
+}
+
+.swatchBoard {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: 1fr 1fr;
+  height: 100%;
+}
+
+.swatch,
+.swatchLight {
+  display: flex;
+  align-items: flex-end;
+  padding: var(--space150);
+  color: var(--text-inverted);
+  font-size: var(--font-size-ui-xxs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.swatchLight {
+  color: var(--text-default);
+}
+
+.typeCell,
+.sampleCell {
+  display: flex;
+  grid-column: span 2;
+  padding: var(--space200) var(--space250);
+}
+
+.typeCell {
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--background-neutral-subtlest-default);
+}
+
+.typeAa {
+  color: var(--text-brand);
+  font-size: var(--font-size-hero-m);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-negative-extra-tight);
+  line-height: 1;
+}
+
+.sampleCell {
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space100);
+  background: var(--background-neutral-subtler-default);
+}
+
+.resourceBoard {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  height: 100%;
+  background: var(--background-neutral-subtlest-default);
+}
+
+.resourceLogos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space200);
+  border-right: 1px solid var(--border-subtle);
+}
+
+.logoTile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space800);
+  height: var(--space800);
+  border-radius: var(--radius200);
+  background: var(--background-brand-bold-default);
+}
+
+.resourceIcons {
+  display: grid;
+  grid-template-columns: repeat(4, var(--space400));
+  gap: var(--space150);
+  align-content: center;
+  justify-content: center;
+  color: var(--icon-brand);
+}
+
+/* ---- Personas ---- */
+
+.personaIconDark,
+.personaIconYellow {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--space600);
+  height: var(--space600);
+  border-radius: var(--radius100);
+}
+
+.personaIconDark {
+  background: var(--background-brand-bold-default);
+  color: var(--comete-yellow-300);
+}
+
+.personaIconYellow {
+  background: var(--comete-yellow-400);
+  color: var(--comete-yellow-950);
+}
+
+/* ---- Aide ---- */
+
+.help {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space300);
+  padding: var(--space300);
+  border-radius: var(--radius200);
+  background: var(--background-brand-bold-default);
+  color: var(--text-inverted);
+}
+
+.helpBody {
+  color: var(--text-subtle-inverted);
+}
+
+/* Les cartes d'une même rangée prennent la hauteur de la plus haute, avec le rayon et l'ombre de
+   la maquette ; celles qui s'ouvrent se soulèvent au survol. */
+.page .fill,
+.page .fillStatus {
+  height: 100%;
+  border-radius: var(--radius150);
+  background: var(--background-surface-default);
+  box-shadow: var(--elevation-xsmall);
+  transition:
+    transform var(--duration-slow) var(--easing-default),
+    box-shadow var(--duration-slow) var(--easing-default);
+}
+
+.page .fill[data-interactive]:hover {
+  box-shadow: var(--elevation-medium);
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page .fill,
+  .page .fillStatus,
+  .page .fill[data-interactive]:hover {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---- Développeurs : commande + cartes À faire / À éviter ---- */
+
+.installBlock {
+  width: 100%;
+}
+
+.install {
+  padding: var(--space150) var(--space200);
+  overflow-x: auto;
+}
+
+.tokenSwatch {
+  flex: none;
+  width: var(--space400);
+  height: var(--space400);
+  border-radius: var(--radius075);
+}
+
+.page .principleNum {
+  color: var(--comete-yellow-700);
+  font-family: var(--font-family-code);
+}
+
+/* En thème sombre le fond devient clair : le jaune du titre y perd son contraste. */
+:global([data-theme="dark"]) .heroAccent {
+  color: var(--text-brand);
+}
