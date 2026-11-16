@@ -22,7 +22,6 @@ import {
   Text,
 } from "@aexae/comete-design-system/components";
 import type { IconName } from "@aexae/comete-design-system/components";
-import { useTheme } from "@aexae/comete-design-system/hooks";
 import releases from "virtual:welcome-releases";
 import pkg from "../../package.json";
 import css from "./Welcome.stories.module.css";
@@ -142,10 +141,24 @@ function SectionHead({
   );
 }
 
+/** Thème actif, lu sur <html data-theme> : la story n'est pas toujours sous un ThemeProvider. */
+function useIsDark(): boolean {
+  const read = (): boolean => document.documentElement.dataset["theme"] === "dark";
+  const [dark, setDark] = useState(read);
+  useEffect(() => {
+    const observer = new MutationObserver(() => setDark(read()));
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+    return () => observer.disconnect();
+  }, []);
+  return dark;
+}
+
 function Hero(): ReactElement {
-  // Le fond de page est le bleu de marque : en thème sombre il s'éclaircit, le logo suit.
-  const { mode } = useTheme();
-  const logoAppearance = mode === "dark" ? "brand" : "inverted";
+  // L'intro est sur le bleu de marque : en thème sombre il s'éclaircit, le logo suit.
+  const logoAppearance = useIsDark() ? "brand" : "inverted";
   return (
     <header className={css["hero"]}>
       <div className={css["heroText"]}>
