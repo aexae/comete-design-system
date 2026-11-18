@@ -3,6 +3,7 @@ import { Button as AriaButton, type ButtonProps as AriaButtonProps } from "react
 import { forwardRef } from "react";
 import type { IconColor, IconName } from "@aexae/comete-icons";
 import { Icon } from "../Icon/index.js";
+import { Spinner } from "../Spinner/index.js";
 import { useInputContext } from "../../contexts/InputContext.js";
 import { useDensity, type Density } from "../../contexts/DensityContext.js";
 import styles from "./Button.module.css";
@@ -15,9 +16,9 @@ export type ButtonColor =
 export type ButtonShape = "round" | "square";
 /**
  * Densité — dimension + padding + radius, échelle partagée avec les champs.
- * - `compact` — hauteur 24 px, radius 4 px, padding 0/4, icône 20 px (desktop dense)
- * - `default` — hauteur 32 px, radius 6 px, padding 4/8, icône 24 px (desktop standard)
- * - `touch`   — hauteur 48 px, radius 8 px, padding 8/12, icône 24 px (mobile / cible tactile)
+ * - `compact` — hauteur 24 px, radius 4 px, padding 0/4, icône 16 px, Body/S (desktop dense)
+ * - `default` — hauteur 32 px, radius 6 px, padding 4/8, icône 24 px, Body/M (desktop standard)
+ * - `touch`   — hauteur 48 px, radius 8 px, padding 8/16, icône 32 px, Body/L (mobile / cible tactile)
  *
  * @see {@link Density} et `DensityProvider` pour régler la densité globalement.
  */
@@ -43,7 +44,10 @@ export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"
   iconBefore?: IconName;
   /** Icon name displayed after the label. Color is automatically resolved from appearance + color. */
   iconAfter?: IconName;
-  /** Affiche un spinner et désactive les interactions. @default false */
+  /**
+   * Affiche un spinner et bloque l'appui (état « pending » React Aria). Le bouton
+   * garde sa couleur et reste focusable. @default false
+   */
   isLoading?: boolean;
   /** État sélectionné/actif — applique un style visuel persistant. @default false */
   isSelected?: boolean;
@@ -217,28 +221,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         className={classNames}
         style={style}
-        isDisabled={isLoading || effectiveDisabled}
+        // isPending (et non isDisabled) : appui et survol bloqués, focus conservé,
+        // attente annoncée, mais pas d'aspect désactivé (Figma : couleur pleine).
+        isDisabled={effectiveDisabled}
+        isPending={isLoading}
         data-selected={isSelected || undefined}
         {...ariaProps}
       >
         {isLoading ? (
-          <span className={styles.spinner} aria-label="Chargement">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <circle
-                cx="12"
-                cy="12"
-                r="9"
-                stroke="currentColor"
-                strokeOpacity="0.25"
-                strokeWidth="3"
-              />
-              <path
-                d="M21 12a9 9 0 00-9-9"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeLinecap="round"
-              />
-            </svg>
+          <span className={styles.spinner}>
+            <Spinner size="fill" />
           </span>
         ) : (
           <>

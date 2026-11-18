@@ -12,6 +12,7 @@ import { Icon } from "../Icon/Icon.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
 import type { Density } from "../../contexts/DensityContext.js";
+import { Spinner } from "../Spinner/index.js";
 import styles from "./TextField.module.css";
 
 // -----------------------------------------------------------------------
@@ -44,20 +45,6 @@ export interface TextFieldProps extends Omit<
   className?: string;
   /** Styles inline additionnels. */
   style?: React.CSSProperties;
-}
-
-// -----------------------------------------------------------------------
-// Spinner inline — pas d'icône spinner dans comete-icons
-
-function Spinner() {
-  return (
-    <span className={styles.spinner} role="status" aria-label="Chargement">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-        <circle cx="8" cy="8" r="6" stroke="currentColor" strokeOpacity="0.25" strokeWidth="2" />
-        <path d="M14 8a6 6 0 00-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      </svg>
-    </span>
-  );
 }
 
 // -----------------------------------------------------------------------
@@ -140,7 +127,7 @@ export function TextField({
         >
           {elemBefore && <span className={styles.elemBefore}>{elemBefore}</span>}
           <AriaInput ref={inputRef} className={styles.input} placeholder={placeholder} />
-          {isLoading && <Spinner />}
+          {isLoading && <Spinner size="small" className={styles.spinner} />}
           {isClearable && hasValue && !isDisabled && (
             <AriaButton
               className={styles.clearButton}

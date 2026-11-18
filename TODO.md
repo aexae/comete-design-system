@@ -6,13 +6,33 @@
   `control/padding-x/touch` à 16 px pour tous les contrôles, Button aliasé (tokens 0.22.0).
   Effet de bord : les champs touch gagnent 4 px de padding horizontal, à valider à l'œil.
 
-- **Spinner : pas de composant `Spinner` dans le code** (2026-11-18)
-  Figma utilise le ❖ Spinner (arc seul) dans les 420 variantes loading du Button. Le
-  code dessine son propre SVG dans `Button`, `TextField` et `Select` (piste à 25 % et
-  arc), donc un rendu différent. Piste : créer `Spinner` dans le DS sur le modèle Figma
-  et le réutiliser dans ces trois composants. Le ❖ Spinner Figma lie encore sa taille à
-  des variables `DEPRECATED-spinner/*`, et ses tailles (8 / 16 / 24 / 48 / 96) n'ont pas
-  de 20 px : le Button lie la taille de l'instance à `button/size/*/icon`.
+- ~~**Spinner : pas de composant `Spinner` dans le code**~~ fait (2026-11-18), non livré.
+  Restes :
+  - **Livraison en deux temps** : tokens 0.23.0 à publier avant le DS. En local, le CSS
+    des tokens est copié à la main dans `node_modules` (écrasé par tout `pnpm install`).
+  - **`DEPRECATED-spinner/*`** encore présentes dans Figma : auditer leurs usages hors
+    ❖ Spinner puis les supprimer.
+  - **`--spinner-color-default`** n'est consommé que par Figma : en code, `inherit` prend
+    `currentColor`. À garder tant que Figma en a besoin (pas de `currentColor` en Figma).
+  - **Comète : poids et fil principal.** Tracé animé d'environ 29 Ko par instance
+    dans le DOM : à surveiller dans une liste. Animation SMIL sur le fil principal :
+    peut saccader si la page est très chargée. Figma aligné le 2026-11-18 (4 poses
+    clés, variantes `appearance=comete`).
+  - **Apparence `comete` (jaune) : contraste insuffisant sur fond clair.**
+    `#f8bf01` sur blanc ≈ 1,7:1, sous le seuil de 3:1 des composants graphiques
+    (WCAG 1.4.11). À réserver aux fonds foncés ou aux usages où un libellé annonce
+    déjà le chargement. Tokens `--spinner-color-comete-{light,dark}` et variables
+    Figma `spinner/color/comete/*` créés (approuvés le 2026-11-18).
+  - **Le ❖ Spinner Figma n'a pas de taille 32 px** : l'instance du Button touch est
+    redimensionnée par variable.
+  - **Champs `TextField` / `Select`** : spinner fixe à 16 px quelle que soit la densité.
+    À aligner sur `--control-icon-*` si voulu.
+
+- **Button : contrôles visuels à faire** (2026-11-18)
+  Icônes à 24 px en default et 32 px en touch, labels Body/S et Body/L : vérifier les
+  icon-only (icône 24 dans 32, 32 dans 48) et le compact en Body/S (12 px, lisibilité).
+  Les styles `Body/M/Medium Underline` (lh 18) et `Body/M/Medium` (lh 20) divergent :
+  les nouveaux styles S et L suivent le Medium de leur taille.
 
 - ~~**Figma ❖ Button rebuild : link focus à souligner**~~ fait côté Axel (2026-11-15)
   `appearance=link, state=focus` (iconOnly=false) est maintenant `Body/M/Medium

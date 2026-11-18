@@ -9,6 +9,30 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Ajouté
+
+- **`Spinner`** : indicateur de chargement indéterminé en forme de comète (tête
+  ronde et queue pleine effilée, rythme accélération, étirement, pause).
+  `size` xsmall / small / medium / large / xlarge (8 / 16 / 24 / 48 / 96 px, tokens
+  `--spinner-size-*`) et `fill` (taille du conteneur). `appearance` inherit
+  (`currentColor`), inverted (`--spinner-color-inverted`) ou comete (dégradé jaune
+  du logo). Région `status` avec `aria-label` (« Chargement »), option
+  `decorative`. En `prefers-reduced-motion`, comète figée tournant lentement.
+
+### Modifié
+
+- **`Button`, `TextField`, `Select`** : le spinner de chargement est désormais le
+  composant `Spinner` (comète). Rendu visuel modifié.
+- **`Button` : `isLoading` garde la couleur du bouton.** L'état passe par `isPending`
+  de React Aria au lieu de `isDisabled` : appui et survol bloqués, focus conservé,
+  attente annoncée, sans l'opacité « désactivé » (aligné sur Figma). `data-disabled`
+  n'est plus posé en chargement, `data-pending` l'est.
+- **`Button` : typographie par densité.** Compact en Body/S/Medium (12/16), default en
+  Body/M/Medium (14/20), touch en Body/L/Medium (16/24).
+- **`@aexae/comete-design-tokens` 0.23.0** (peer + dev) : icônes des contrôles à
+  **16 / 24 / 32 px** (compact / default / touch) au lieu de 16 / 20 / 24, et tokens
+  de composant `--spinner-size-*` / `--spinner-color-*` (dont `--spinner-color-comete-*`).
+
 ### Changements cassants (BREAKING)
 
 - **`@aexae/comete-design-tokens` 0.20.0** (peer + dev) : les tokens de texte

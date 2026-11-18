@@ -4,7 +4,6 @@ declare const styles: {
   readonly "elemBefore": string;
   readonly "input": string;
   readonly "spinner": string;
-  readonly "spinner-rotate": string;
   readonly "textField": string;
 };
 export = styles;

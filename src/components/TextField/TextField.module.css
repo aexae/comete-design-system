@@ -131,23 +131,7 @@
    Spinner
    ========================================================================== */
 
+/* Taille, dessin et rotation : composant Spinner. Seule la couleur est propre au champ. */
 .spinner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: var(--size200);
-  height: var(--size200);
   color: var(--icon-subtle);
-  animation: spinner-rotate 800ms linear infinite;
-}
-
-@keyframes spinner-rotate {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
 }

@@ -1,0 +1,105 @@
+/* ==========================================================================
+   Spinner — Comète Design System
+   L'animation (rotation et queue) est portée par SMIL dans Spinner.tsx, sur une
+   seule horloge. Le CSS ne fait tourner que la comète figée du mouvement réduit.
+   Tailles et couleurs : tokens de composant --spinner-*.
+   ========================================================================== */
+
+.spinner {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+/* Comète figée : affichée seulement en mouvement réduit. */
+.cometStatic {
+  display: none;
+}
+
+.spinner > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ==========================================================================
+   Tailles
+   ========================================================================== */
+
+.xsmall {
+  width: var(--spinner-size-xsmall);
+  height: var(--spinner-size-xsmall);
+}
+
+.small {
+  width: var(--spinner-size-small);
+  height: var(--spinner-size-small);
+}
+
+.medium {
+  width: var(--spinner-size-medium);
+  height: var(--spinner-size-medium);
+}
+
+.large {
+  width: var(--spinner-size-large);
+  height: var(--spinner-size-large);
+}
+
+.xlarge {
+  width: var(--spinner-size-xlarge);
+  height: var(--spinner-size-xlarge);
+}
+
+.fill {
+  width: 100%;
+  height: 100%;
+}
+
+/* ==========================================================================
+   Apparences — "inherit" ne pose aucune couleur (currentColor du parent)
+   ========================================================================== */
+
+.inverted {
+  color: var(--spinner-color-inverted);
+}
+
+/* "comete" : dégradé du logo, appliqué par le TSX (fill: url(#…)). */
+.gradientLight {
+  stop-color: var(--spinner-color-comete-light);
+}
+
+.gradientDark {
+  stop-color: var(--spinner-color-comete-dark);
+}
+
+/* ==========================================================================
+   Animation
+   ========================================================================== */
+
+@keyframes spinner-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mouvement réduit : comète figée, rotation lente et régulière plutôt qu'un arrêt,
+   l'attente doit rester perceptible. */
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    /* REASON: boucle de 3 s, aucun token de durée ne couvre une animation continue
+       (--duration-* plafonne à 500 ms). */
+    animation: spinner-rotate 3000ms var(--easing-linear) infinite;
+  }
+
+  .comet {
+    display: none;
+  }
+
+  .cometStatic {
+    display: inline;
+  }
+}

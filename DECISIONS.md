@@ -2,6 +2,57 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-18 — Button en chargement : `isPending` plutôt que `isDisabled`
+
+**Décision** : `isLoading` passe `isPending` à React Aria (1.17) au lieu de `isDisabled`.
+Le bouton garde sa couleur, reste focusable, bloque l'appui et le survol.
+
+**Contexte / raison** : remarqué par Axel dans la story Spinner › In Button (bouton
+comete bleu pâle au lieu de blue600). `isDisabled` posait `data-disabled`, donc
+l'opacité désactivée, alors que Figma dessine l'état loading en couleur pleine.
+Effet de bord pour les consommateurs : `data-disabled` n'est plus présent en
+chargement (sélecteurs CSS ou tests qui s'y fiaient).
+
+## 2026-11-18 — Composant Spinner, tokens spinner, typo et icônes du Button par densité
+
+**Décisions** (demandes d'Axel) :
+
+- **`Spinner`** créé dans le DS sur le dessin du ❖ Spinner Figma (3499:129936). Il
+  remplace les trois SVG locaux de `Button`, `TextField` et `Select`. Taille `fill` ajoutée
+  côté code (absente de Figma) pour que le Button le dimensionne à sa taille d'icône. Le
+  ❖ Spinner Figma n'a pas de taille 32 px : l'instance du Button lie sa taille à
+  `button/size/*/icon`.
+- **Tokens de composant spinner** en remplacement des `DEPRECATED-spinner/*` :
+  `spinner/size/{xsmall,small,medium,large,xlarge}` (size100 / 200 / 300 / 600 / 1200) et
+  `spinner/color/{default,inverted}` (icon/default, icon/inverted). Créés dans la
+  collection Figma `component` et dans `tokens/component/spinner/tokens.json`. ❖ Spinner
+  et l'animation sont rebranchés dessus. Les variables `DEPRECATED-spinner/*` restent
+  (usages éventuels hors Spinner non audités).
+- **Labels du Button** : Body/S/Medium en compact, Body/L/Medium en touch (Body/M en
+  default), dans le code et sur les 1960 variantes compact et touch. Les styles
+  « Underline » et « Underline Subtle » des liens n'existaient qu'en M : quatre styles
+  créés sur le même modèle (`Body/{S,L}/Medium Underline`, `… Underline Subtle`).
+- **Icônes des contrôles 16 / 24 / 32 px** (avant : 16 / 20 / 24), jugé plus harmonieux.
+  `control/icon/default` → size300, `control/icon/touch` → size400 (Figma et tokens).
+
+- **Spinner en comète** (code seulement, en itération avec Axel, Figma ensuite) :
+  inspiré de loading-ui « Comet spinner », dont la queue est faite de 5 `box-shadow`
+  disjointes. Redessiné en SVG en une seule forme pleine, en écho au logo : enveloppe
+  d'un cercle qui glisse sur l'orbite en rétrécissant jusqu'à une pointe effilée (pas
+  de col entre tête et queue). Rythme repris de la référence (rotation `ease`, queue
+  0 → 84° à 38 % → 0, `ease` entre étapes) sur 85 % d'un cycle de 2 s, puis pause de
+  la tête en haut. Rotation (`animateTransform`) et contour (`animate d`, 54 images)
+  en SMIL sur une seule horloge, compatible Safari. Le modèle « traînée » (queue liée
+  à la vitesse) a été essayé puis écarté au profit du rythme de la référence.
+  Apparence `comete` : dégradé linéaire du logo dans le repère de la comète, via les
+  tokens `--spinner-color-comete-{light,dark}` (alias de `--logo-comete-gradient-*`,
+  créés avec accord d'Axel, aussi dans Figma). Tête dessinée en vrai `<circle>` : le
+  contour animé, polygonal pour SMIL, rendait une tête facettée pendant la pause.
+  Mouvement réduit : comète figée tournée en CSS.
+
+**Contexte** : l'icône de 32 px remplit exactement la hauteur utile du touch (48 − 2 × 8)
+et celle de 24 px celle du default (32 − 2 × 4). Le spinner suit la même taille.
+
 ## 2026-11-18 — Spinner du Button aligné sur les tailles d'icône
 
 **Décision** : le spinner `isLoading` prend `--button-icon-size` (16 / 20 / 24 px selon la
