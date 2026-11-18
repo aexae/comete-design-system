@@ -175,6 +175,51 @@ describe("Button", () => {
     });
   });
 
+  describe("prop isLoading", () => {
+    it("should be pending without looking disabled when loading", () => {
+      render(<Button isLoading>Label</Button>);
+      const button = screen.getByRole("button");
+      expect(button).toHaveAttribute("data-pending");
+      expect(button).not.toHaveAttribute("data-disabled");
+    });
+
+    it("should not call onPress when loading", async () => {
+      const handlePress = vi.fn();
+      render(
+        <Button isLoading onPress={handlePress}>
+          Label
+        </Button>
+      );
+      await userEvent.click(screen.getByRole("button"));
+      expect(handlePress).not.toHaveBeenCalled();
+    });
+
+    it("should not call onPress from the keyboard when loading", async () => {
+      const handlePress = vi.fn();
+      render(
+        <Button isLoading onPress={handlePress}>
+          Label
+        </Button>
+      );
+      await userEvent.tab();
+      await userEvent.keyboard("{Enter}");
+      await userEvent.keyboard(" ");
+      expect(handlePress).not.toHaveBeenCalled();
+    });
+
+    it("should stay focusable when loading", async () => {
+      render(<Button isLoading>Label</Button>);
+      await userEvent.tab();
+      expect(screen.getByRole("button")).toHaveFocus();
+    });
+
+    it("should replace the content with a spinner when loading", () => {
+      render(<Button isLoading>Label</Button>);
+      expect(screen.getByRole("status")).toBeInTheDocument();
+      expect(screen.queryByText("Label")).not.toBeInTheDocument();
+    });
+  });
+
   describe("ref forwarding", () => {
     it("should forward ref to the underlying button element", () => {
       const ref = { current: null as HTMLButtonElement | null };

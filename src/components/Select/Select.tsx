@@ -27,6 +27,7 @@ import type { Density } from "../../contexts/DensityContext.js";
 import { Field, type FieldMessageType } from "../Field/Field.js";
 import { Popover } from "../Popover/Popover.js";
 import scrollbarStyles from "../../styles/scrollbar.module.css";
+import { Spinner } from "../Spinner/index.js";
 import styles from "./Select.module.css";
 
 // -----------------------------------------------------------------------
@@ -107,20 +108,6 @@ function isGroup(item: SelectOption | SelectGroup): item is SelectGroup {
 
 function flattenOptions(items: SelectItems): SelectOption[] {
   return items.flatMap((item) => (isGroup(item) ? item.options : [item]));
-}
-
-// -----------------------------------------------------------------------
-// Spinner (identique au TextField)
-
-function Spinner(): ReactElement {
-  return (
-    <span className={styles.spinner} role="status" aria-label="Chargement">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-        <circle cx="8" cy="8" r="6" stroke="currentColor" strokeOpacity="0.25" strokeWidth="2" />
-        <path d="M14 8a6 6 0 00-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      </svg>
-    </span>
-  );
 }
 
 // -----------------------------------------------------------------------
@@ -250,7 +237,7 @@ export function Select({
                     }
                   </AriaSelectValue>
                 </AriaButton>
-                {isLoading && <Spinner />}
+                {isLoading && <Spinner size="small" className={styles.spinner} />}
                 {isClearable && hasValue && !disabled && (
                   <span
                     role="button"

@@ -11,7 +11,6 @@ declare const styles: {
   readonly "optionLabel": string;
   readonly "select": string;
   readonly "spinner": string;
-  readonly "spinner-rotate": string;
   readonly "stateItem": string;
   readonly "triggerButton": string;
   readonly "value": string;

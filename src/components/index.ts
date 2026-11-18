@@ -47,6 +47,7 @@ export * from "./ScrollArea";
 export * from "./Select";
 export * from "./Skeleton";
 export * from "./Snackbar";
+export * from "./Spinner";
 export * from "./Spotlight";
 export * from "./Stack";
 export * from "./Stepper";
