@@ -2,6 +2,34 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-18 — Button : icônes 16 / 20 / 24, audit Figma des corrections manuelles, livraison alpha.177
+
+**Décisions** :
+
+- **Tailles d'icône 16 / 20 / 24 px** (compact / default / touch), demandé par Axel. Tokens
+  `control.icon.*` modifiés dans comete-design-tokens (publié en **0.21.0**, tag `v0.21.0`), et
+  variables Figma `control/icon/compact` → `size200`, `control/icon/default` → `size250`.
+- **Livraison alpha.177** (PR #356, squash, tag `v1.0.0-alpha.177`, publish vert) : correctif
+  `.icon` (consomme `--button-icon-size`) + bump tokens 0.21.0 (root + Storybook).
+- **Audit Figma après les corrections manuelles d'Axel**, complété sur les 2940 variantes :
+  - hauteur liée à `button/size/<densité>/height` (manquait sur les états non `default` en
+    compact et touch, soit 840 variantes), largeur et hauteur liées pour toutes les icon-only ;
+  - gap lié à la variable de sa densité (les icon-only compact et touch pointaient `default`) ;
+  - booléens `iconBefore` / `iconAfter` reliés sur toutes les variantes texte (manquaient sur
+    six couleurs en default et sur les états non `default` en compact et touch). Sur les
+    icon-only, seul le swap reste relié : le booléen `iconAfter` qui y traînait (120 variantes)
+    est retiré, une icon-only n'affiche qu'une icône ;
+  - instances d'icône liées à `button/size/<densité>/icon` partout (aucune ne l'était) ;
+  - colonnes touch texte réalignées sur la colonne icon-only touch corrigée par Axel (six
+    colonnes à +12 px, plus une variante isolée `link/information` à +32 px).
+    Vérification finale : 0 écart, 0 superposition, une seule ordonnée par densité et par ligne.
+- **Méthode** : environ 1 s par variante (la liaison de taille d'icône domine). Lots de 60 à 80
+  avec garde de temps à 100 s, quatre appels en parallèle, puis balayage des restes. Un lot sans
+  garde (980, puis 245) est annulé en bloc par Figma.
+
+**Faiblesses relevées** : voir TODO (spinner non tokenisé, padding touch 16 vs 12, Chromatic en
+attente de quota).
+
 ## 2026-11-15 — Figma : migration des 568 instances Button deprecated → rebuild
 
 **Contexte** : après la livraison alpha.176, bascule de toutes les instances du set

@@ -6,15 +6,18 @@
   symétrie complète (2940 variants), les 4 instances repliées sont repointées, ancien set
   `213:725` supprimé (détaché, disparaîtra à la prochaine publication de la bibliothèque).
   Restes :
-  - **Tokens `--control-icon-*`** (20 / 24 / 24) vs Figma rebuild (16 / 20 / 24) : à aligner
-    dans comete-design-tokens (approbation requise), sinon compact affiche 20 et default 24.
-  - **Correctif `.icon` (width/height via `--button-icon-size`)** validé mais non commité sur
-    `main` : à livrer (branche + PR).
-  - Dans les variantes **texte** compact, les instances d'icône (masquées) restent à 20 px
-    (préexistant) alors que les icon-only compact sont à 16 : à harmoniser si l'on veut
-    des icônes 16 dans les boutons compact avec libellé.
-  - Spinner `loading` mis à l'échelle 12 / 14 / 16 par densité (choix d'implémentation, à
-    valider visuellement).
+  - ~~Tokens `--control-icon-*` 20 / 24 / 24~~ fait (2026-11-18) : tokens 0.21.0 à 16 / 20 / 24,
+    variables Figma `control/icon/*` réalignées.
+  - ~~Correctif `.icon`~~ livré en alpha.177 (PR #356).
+  - ~~Icônes des variantes texte compact à 20 px~~ fait (2026-11-18) : toutes les icônes
+    liées à `button/size/<densité>/icon` (16 / 20 / 24).
+  - Spinner `loading` mis à l'échelle 12 / 14 / 16 par densité, non lié à une variable
+    (aucun token de taille de spinner) : à valider visuellement.
+  - **Variables Figma du Button sans pendant `compact` pour `padding-y`** (0 en dur, cohérent
+    avec la hauteur 24 liée) et `button/spacing/touch/padding-x` = 16 alors que
+    `control/padding-x/touch` = 12 : vérifier lequel fait foi et aligner code + Figma.
+  - **Chromatic « UI Tests » reste en attente** sur chaque PR (quota du plan dépassé) : la
+    régression visuelle n'est plus contrôlée, à rétablir ou retirer des checks.
 
 - ~~**Figma ❖ Button rebuild : link focus à souligner**~~ fait côté Axel (2026-11-15)
   `appearance=link, state=focus` (iconOnly=false) est maintenant `Body/M/Medium
