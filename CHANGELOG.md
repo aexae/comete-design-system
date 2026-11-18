@@ -24,6 +24,17 @@ entre versions alpha.
 - **`BrandProvider`** génère désormais `--text-brand-default/-hovered/-pressed`
   (au lieu de `--text-brand`).
 
+### Corrigé
+
+- **`Button` : la taille de l'icône suit enfin la densité.** Depuis alpha.175, les
+  classes de densité posaient `--button-icon-size` sans que le conteneur `.icon` la
+  consomme : le SVG retombait sur la taille par défaut de l'`Icon` (24 px) à toutes
+  les densités. Le conteneur prend désormais `width/height: var(--button-icon-size)`.
+- **`@aexae/comete-design-tokens` 0.21.0** (peer + dev) : icônes des contrôles
+  alignées sur Figma, **16 px en compact, 20 px en default, 24 px en touch** (au lieu
+  de 20 / 24 / 24). Seul le `Button` consomme ces tokens. Rendu visuel modifié : les
+  icônes des boutons compact et default sont plus petites de 4 px.
+
 ### Modifié
 
 - **`Button` consomme la couche de tokens de composants `--button-*`** (tokens
