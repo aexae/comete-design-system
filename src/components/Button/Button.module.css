@@ -620,11 +620,16 @@
    Icon slots
    ========================================================================== */
 
+/* REASON: la taille de l'icône suit la densité via --button-icon-size (posée par
+   les classes de densité et par .inline). Sans width/height ici, le svg à 100 %
+   retombait sur le `size` par défaut de l'Icon (24 px) à toutes les densités. */
 .icon {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  width: var(--button-icon-size);
+  height: var(--button-icon-size);
 }
 
 .icon > svg {
