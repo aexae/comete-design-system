@@ -2,6 +2,29 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-18 — Spinner du Button aligné sur les tailles d'icône
+
+**Décision** : le spinner `isLoading` prend `--button-icon-size` (16 / 20 / 24 px selon la
+densité) au lieu d'un svg fixe de 24 px. Dans Figma, les 420 spinners du `❖ Button
+(rebuild)` sont liés à `button/size/*/icon` (ils faisaient 12 / 14 / 16 px).
+
+**Contexte / raison** : demande d'Axel. Code et Figma divergeaient, et aucune des deux
+tailles ne suivait un token.
+
+Puis, à la demande d'Axel, les 420 calques de spinner sont remplacés par des instances du
+❖ Spinner Figma (3499:129941), taille liée à `button/size/*/icon` et couleur de l'arc liée
+à la variable de texte de chaque variante.
+
+## 2026-11-18 — Padding horizontal touch : retour dans l'échelle `control`
+
+**Décision** : `control/padding-x/touch` passe à `space200` (16 px) pour tous les
+contrôles, et `button/spacing/touch/padding-x` en redevient l'alias (Figma par Axel,
+tokens 0.22.0, DS alpha.178). Remplace l'exception du 2026-10-21.
+
+**Contexte / raison** : la couche `control` n'a d'intérêt que si tous les contrôles la
+consomment. La règle padding X ≥ 2 × padding Y reste respectée (16 contre 8). Les champs
+touch passent de 12 à 16 px.
+
 ## 2026-11-15 — Livraison tokens 0.20.0 (alpha.176) + correctif Card
 
 **Contexte** : livraison de la migration `@aexae/comete-design-tokens` 0.20.0
