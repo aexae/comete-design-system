@@ -268,6 +268,24 @@ export const Compact: Story = {
   args: { density: "compact", color: "comete", children: "Compact" },
 };
 
+export const Touch: Story = {
+  args: { density: "touch", color: "comete", children: "Cible tactile" },
+};
+
+export const TouchViaProvider: Story = {
+  name: "Touch via DensityProvider",
+  render: () => (
+    <DensityProvider density="touch">
+      <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+        <Button color="comete">Hérite touch</Button>
+        <Button appearance="outlined">Hérite touch</Button>
+        {/* override local : repasse en compact malgré le provider */}
+        <Button density="compact">Override compact</Button>
+      </div>
+    </DensityProvider>
+  ),
+};
+
 export const Inline: Story = {
   args: { isInline: true, appearance: "link-subtle", children: "Inline" },
 };
@@ -288,6 +306,11 @@ export const Disabled: Story = {
 /** Bouton en état sélectionné — style visuel persistant (ex : toggle actif) */
 export const Selected: Story = {
   args: { isSelected: true, color: "comete", children: "Sélectionné" },
+};
+
+/** Bouton en état loading (spinner remplace le contenu) */
+export const Loading: Story = {
+  args: { isLoading: true, color: "comete", children: "Enregistrer" },
 };
 
 // ----------------------------------------------------------------------
@@ -406,11 +429,6 @@ export const IconOnlyAllDensities: Story = {
   ),
 };
 
-/** Bouton en état loading (spinner remplace le contenu) */
-export const Loading: Story = {
-  args: { isLoading: true, color: "comete", children: "Enregistrer" },
-};
-
 // ----------------------------------------------------------------------
 
 /** All contained color variants side by side */
@@ -482,23 +500,5 @@ export const AllDensities: Story = {
         Touch · 48
       </Button>
     </div>
-  ),
-};
-
-export const Touch: Story = {
-  args: { density: "touch", color: "comete", children: "Cible tactile" },
-};
-
-export const TouchViaProvider: Story = {
-  name: "Touch via DensityProvider",
-  render: () => (
-    <DensityProvider density="touch">
-      <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-        <Button color="comete">Hérite touch</Button>
-        <Button appearance="outlined">Hérite touch</Button>
-        {/* override local : repasse en compact malgré le provider */}
-        <Button density="compact">Override compact</Button>
-      </div>
-    </DensityProvider>
   ),
 };
