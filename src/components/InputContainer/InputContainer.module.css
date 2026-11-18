@@ -112,7 +112,7 @@
   border-radius: var(--control-radius-default, var(--radius075));
 }
 .densityTouch.bordered {
-  padding: var(--space100) var(--control-padding-x-touch, var(--space150));
-  --container-padding-end: var(--control-padding-x-touch, var(--space150));
+  padding: var(--space100) var(--control-padding-x-touch, var(--space200));
+  --container-padding-end: var(--control-padding-x-touch, var(--space200));
   border-radius: var(--control-radius-touch, var(--radius100));
 }

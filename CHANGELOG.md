@@ -34,6 +34,12 @@ entre versions alpha.
   alignées sur Figma, **16 px en compact, 20 px en default, 24 px en touch** (au lieu
   de 20 / 24 / 24). Seul le `Button` consomme ces tokens. Rendu visuel modifié : les
   icônes des boutons compact et default sont plus petites de 4 px.
+- **`Button` : le spinner `isLoading` suit la densité** (16 / 20 / 24 px via
+  `--button-icon-size`) au lieu d'un SVG fixe de 24 px.
+- **`@aexae/comete-design-tokens` 0.22.0** (peer + dev) : `--control-padding-x-touch`
+  passe de 12 à 16 px et `--button-size-touch-padding-x` redevient son alias. Rendu du
+  `Button` inchangé. Les champs touch (`InputContainer` : `TextField`, `Select`, etc.)
+  gagnent 4 px de padding horizontal.
 
 ### Modifié
 

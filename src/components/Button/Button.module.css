@@ -137,11 +137,20 @@
   width: 100%;
 }
 
+/* Le spinner prend la taille d'icône de la densité (16 / 20 / 24). */
 .spinner {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  width: var(--button-icon-size);
+  height: var(--button-icon-size);
   animation: button-spinner-rotate 800ms linear infinite;
+}
+
+.spinner > svg {
+  width: 100%;
+  height: 100%;
 }
 
 @keyframes button-spinner-rotate {

@@ -2,6 +2,18 @@
 
 ## Fiabilité / qualité
 
+- ~~**Button touch : padding-x hors de `control/padding-x/touch`**~~ fait (2026-11-18) :
+  `control/padding-x/touch` à 16 px pour tous les contrôles, Button aliasé (tokens 0.22.0).
+  Effet de bord : les champs touch gagnent 4 px de padding horizontal, à valider à l'œil.
+
+- **Spinner : pas de composant `Spinner` dans le code** (2026-11-18)
+  Figma utilise le ❖ Spinner (arc seul) dans les 420 variantes loading du Button. Le
+  code dessine son propre SVG dans `Button`, `TextField` et `Select` (piste à 25 % et
+  arc), donc un rendu différent. Piste : créer `Spinner` dans le DS sur le modèle Figma
+  et le réutiliser dans ces trois composants. Le ❖ Spinner Figma lie encore sa taille à
+  des variables `DEPRECATED-spinner/*`, et ses tailles (8 / 16 / 24 / 48 / 96) n'ont pas
+  de 20 px : le Button lie la taille de l'instance à `button/size/*/icon`.
+
 - ~~**Figma ❖ Button rebuild : link focus à souligner**~~ fait côté Axel (2026-11-15)
   `appearance=link, state=focus` (iconOnly=false) est maintenant `Body/M/Medium
 Underline`, aligné sur le code (underline en hover/pressed/focus).
