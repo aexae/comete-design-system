@@ -1548,7 +1548,9 @@ export const ListeDeSection: Story = {
     await expect(canvas.queryByRole("tab", { name: /Contacts/ })).toBeNull();
 
     // Onglets conservés (droite) : Vacations / Consignes / Main courante.
-    await expect(canvas.getByRole("tab", { name: /Vacations du jour/ })).toBeInTheDocument();
+    // REASON: React Aria remplit la collection des Tabs après le premier rendu :
+    // attendre le premier onglet (vu vide sous Chromatic Chrome 149).
+    await expect(await canvas.findByRole("tab", { name: /Vacations du jour/ })).toBeInTheDocument();
     await expect(canvas.getByRole("tab", { name: /Consignes/ })).toBeInTheDocument();
     await expect(canvas.getByRole("tab", { name: /Main courante/ })).toBeInTheDocument();
 
