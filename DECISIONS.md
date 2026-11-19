@@ -74,6 +74,20 @@ risque. Validé par lint, `tsc`, Prettier et les 613 tests de stories en Chromiu
 fichier est en `bypassPermissions`, les outils MCP passent donc déjà sans confirmation :
 le retrait ne change aucun comportement.
 
+## 2026-11-19 — Tokens disabled sémantiques dépréciés, garde contre les nouveaux usages
+
+**Décision** (demande d'Axel) : `--background-disabled-default`, `--text-disabled`,
+`--border-disabled` et `--icon-disabled` sont dépréciés (tokens 0.24.1, variables Figma
+`DEPRECATED-…`). Le test `src/tokens/deprecatedDisabledTokens.test.ts` fige leurs 73
+usages restants dans 24 composants : tout nouvel usage fait échouer la CI, et chaque
+migration vers `--<composant>-opacity-disabled` retire son entrée. Liste vide = tokens
+supprimables.
+
+**Contexte / raison** : le disabled passe par l'opacité. À la migration, deux pièges :
+opacités imbriquées (0,38 × 0,38, soit environ 14 %) à éviter en ne posant l'opacité
+qu'à un niveau, et contraste qui dépend du fond (sans exigence WCAG pour un élément
+désactivé).
+
 ## 2026-11-19 — Tokens de composant nommés par catégorie, disabled en opacité, Avatar et AvatarGroup
 
 **Décisions** (demandes d'Axel) :
