@@ -245,6 +245,72 @@
   background-color: var(--button-color-contained-information-background-pressed);
 }
 
+.contained.brand {
+  background-color: var(--button-color-contained-brand-background-default);
+  color: var(--button-color-contained-brand-text-default);
+}
+.contained.brand:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-contained-brand-background-hovered);
+}
+.contained.brand:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-contained-brand-background-pressed);
+}
+
+.contained.accent-purple {
+  background-color: var(--button-color-contained-accent-purple-background-default);
+  color: var(--button-color-contained-accent-purple-text-default);
+}
+.contained.accent-purple:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-contained-accent-purple-background-hovered);
+}
+.contained.accent-purple:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-contained-accent-purple-background-pressed);
+}
+
+.contained.accent-teal {
+  background-color: var(--button-color-contained-accent-teal-background-default);
+  color: var(--button-color-contained-accent-teal-text-default);
+}
+.contained.accent-teal:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-contained-accent-teal-background-hovered);
+}
+.contained.accent-teal:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-contained-accent-teal-background-pressed);
+}
+
+.contained.accent-turquoise {
+  background-color: var(--button-color-contained-accent-turquoise-background-default);
+  color: var(--button-color-contained-accent-turquoise-text-default);
+}
+.contained.accent-turquoise:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-contained-accent-turquoise-background-hovered);
+}
+.contained.accent-turquoise:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-contained-accent-turquoise-background-pressed);
+}
+
+.contained.accent-magenta {
+  background-color: var(--button-color-contained-accent-magenta-background-default);
+  color: var(--button-color-contained-accent-magenta-text-default);
+}
+.contained.accent-magenta:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-contained-accent-magenta-background-hovered);
+}
+.contained.accent-magenta:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-contained-accent-magenta-background-pressed);
+}
+
+.contained.accent-blue-grey {
+  background-color: var(--button-color-contained-accent-blue-grey-background-default);
+  color: var(--button-color-contained-accent-blue-grey-text-default);
+}
+.contained.accent-blue-grey:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-contained-accent-blue-grey-background-hovered);
+}
+.contained.accent-blue-grey:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-contained-accent-blue-grey-background-pressed);
+}
+
 /* ==========================================================================
    Variant: outlined
    ========================================================================== */
@@ -341,6 +407,72 @@
   background-color: var(--button-color-outlined-information-background-pressed);
 }
 
+.outlined.brand {
+  border-color: var(--button-color-outlined-brand-border-default);
+  color: var(--button-color-outlined-brand-text-default);
+}
+.outlined.brand:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-outlined-brand-background-hovered);
+}
+.outlined.brand:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-outlined-brand-background-pressed);
+}
+
+.outlined.accent-purple {
+  border-color: var(--button-color-outlined-accent-purple-border-default);
+  color: var(--button-color-outlined-accent-purple-text-default);
+}
+.outlined.accent-purple:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-outlined-accent-purple-background-hovered);
+}
+.outlined.accent-purple:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-outlined-accent-purple-background-pressed);
+}
+
+.outlined.accent-teal {
+  border-color: var(--button-color-outlined-accent-teal-border-default);
+  color: var(--button-color-outlined-accent-teal-text-default);
+}
+.outlined.accent-teal:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-outlined-accent-teal-background-hovered);
+}
+.outlined.accent-teal:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-outlined-accent-teal-background-pressed);
+}
+
+.outlined.accent-turquoise {
+  border-color: var(--button-color-outlined-accent-turquoise-border-default);
+  color: var(--button-color-outlined-accent-turquoise-text-default);
+}
+.outlined.accent-turquoise:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-outlined-accent-turquoise-background-hovered);
+}
+.outlined.accent-turquoise:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-outlined-accent-turquoise-background-pressed);
+}
+
+.outlined.accent-magenta {
+  border-color: var(--button-color-outlined-accent-magenta-border-default);
+  color: var(--button-color-outlined-accent-magenta-text-default);
+}
+.outlined.accent-magenta:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-outlined-accent-magenta-background-hovered);
+}
+.outlined.accent-magenta:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-outlined-accent-magenta-background-pressed);
+}
+
+.outlined.accent-blue-grey {
+  border-color: var(--button-color-outlined-accent-blue-grey-border-default);
+  color: var(--button-color-outlined-accent-blue-grey-text-default);
+}
+.outlined.accent-blue-grey:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-outlined-accent-blue-grey-background-hovered);
+}
+.outlined.accent-blue-grey:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-outlined-accent-blue-grey-background-pressed);
+}
+
 /* ==========================================================================
    Variant: subtle (ghost — transparent, le fond apparaît au survol)
    ========================================================================== */
@@ -428,6 +560,66 @@
 }
 .subtle.information:not([data-disabled])[data-pressed] {
   background-color: var(--button-color-subtle-information-background-pressed);
+}
+
+.subtle.brand {
+  color: var(--button-color-subtle-brand-text-default);
+}
+.subtle.brand:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-subtle-brand-background-hovered);
+}
+.subtle.brand:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-subtle-brand-background-pressed);
+}
+
+.subtle.accent-purple {
+  color: var(--button-color-subtle-accent-purple-text-default);
+}
+.subtle.accent-purple:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-subtle-accent-purple-background-hovered);
+}
+.subtle.accent-purple:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-subtle-accent-purple-background-pressed);
+}
+
+.subtle.accent-teal {
+  color: var(--button-color-subtle-accent-teal-text-default);
+}
+.subtle.accent-teal:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-subtle-accent-teal-background-hovered);
+}
+.subtle.accent-teal:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-subtle-accent-teal-background-pressed);
+}
+
+.subtle.accent-turquoise {
+  color: var(--button-color-subtle-accent-turquoise-text-default);
+}
+.subtle.accent-turquoise:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-subtle-accent-turquoise-background-hovered);
+}
+.subtle.accent-turquoise:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-subtle-accent-turquoise-background-pressed);
+}
+
+.subtle.accent-magenta {
+  color: var(--button-color-subtle-accent-magenta-text-default);
+}
+.subtle.accent-magenta:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-subtle-accent-magenta-background-hovered);
+}
+.subtle.accent-magenta:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-subtle-accent-magenta-background-pressed);
+}
+
+.subtle.accent-blue-grey {
+  color: var(--button-color-subtle-accent-blue-grey-text-default);
+}
+.subtle.accent-blue-grey:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-subtle-accent-blue-grey-background-hovered);
+}
+.subtle.accent-blue-grey:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-subtle-accent-blue-grey-background-pressed);
 }
 
 /* ==========================================================================
@@ -524,6 +716,66 @@
   color: var(--button-color-link-information-text-pressed);
 }
 
+.link.brand {
+  color: var(--button-color-link-brand-text-default);
+}
+.link.brand:not([data-disabled])[data-hovered] {
+  color: var(--button-color-link-brand-text-hovered);
+}
+.link.brand:not([data-disabled])[data-pressed] {
+  color: var(--button-color-link-brand-text-pressed);
+}
+
+.link.accent-purple {
+  color: var(--button-color-link-accent-purple-text-default);
+}
+.link.accent-purple:not([data-disabled])[data-hovered] {
+  color: var(--button-color-link-accent-purple-text-hovered);
+}
+.link.accent-purple:not([data-disabled])[data-pressed] {
+  color: var(--button-color-link-accent-purple-text-pressed);
+}
+
+.link.accent-teal {
+  color: var(--button-color-link-accent-teal-text-default);
+}
+.link.accent-teal:not([data-disabled])[data-hovered] {
+  color: var(--button-color-link-accent-teal-text-hovered);
+}
+.link.accent-teal:not([data-disabled])[data-pressed] {
+  color: var(--button-color-link-accent-teal-text-pressed);
+}
+
+.link.accent-turquoise {
+  color: var(--button-color-link-accent-turquoise-text-default);
+}
+.link.accent-turquoise:not([data-disabled])[data-hovered] {
+  color: var(--button-color-link-accent-turquoise-text-hovered);
+}
+.link.accent-turquoise:not([data-disabled])[data-pressed] {
+  color: var(--button-color-link-accent-turquoise-text-pressed);
+}
+
+.link.accent-magenta {
+  color: var(--button-color-link-accent-magenta-text-default);
+}
+.link.accent-magenta:not([data-disabled])[data-hovered] {
+  color: var(--button-color-link-accent-magenta-text-hovered);
+}
+.link.accent-magenta:not([data-disabled])[data-pressed] {
+  color: var(--button-color-link-accent-magenta-text-pressed);
+}
+
+.link.accent-blue-grey {
+  color: var(--button-color-link-accent-blue-grey-text-default);
+}
+.link.accent-blue-grey:not([data-disabled])[data-hovered] {
+  color: var(--button-color-link-accent-blue-grey-text-hovered);
+}
+.link.accent-blue-grey:not([data-disabled])[data-pressed] {
+  color: var(--button-color-link-accent-blue-grey-text-pressed);
+}
+
 /* ==========================================================================
    Variant: link-subtle (texte + soulignement pointillé, par couleur)
    ========================================================================== */
@@ -614,6 +866,66 @@
 }
 .link-subtle.information:not([data-disabled])[data-pressed] {
   color: var(--button-color-link-subtle-information-text-pressed);
+}
+
+.link-subtle.brand {
+  color: var(--button-color-link-subtle-brand-text-default);
+}
+.link-subtle.brand:not([data-disabled])[data-hovered] {
+  color: var(--button-color-link-subtle-brand-text-hovered);
+}
+.link-subtle.brand:not([data-disabled])[data-pressed] {
+  color: var(--button-color-link-subtle-brand-text-pressed);
+}
+
+.link-subtle.accent-purple {
+  color: var(--button-color-link-subtle-accent-purple-text-default);
+}
+.link-subtle.accent-purple:not([data-disabled])[data-hovered] {
+  color: var(--button-color-link-subtle-accent-purple-text-hovered);
+}
+.link-subtle.accent-purple:not([data-disabled])[data-pressed] {
+  color: var(--button-color-link-subtle-accent-purple-text-pressed);
+}
+
+.link-subtle.accent-teal {
+  color: var(--button-color-link-subtle-accent-teal-text-default);
+}
+.link-subtle.accent-teal:not([data-disabled])[data-hovered] {
+  color: var(--button-color-link-subtle-accent-teal-text-hovered);
+}
+.link-subtle.accent-teal:not([data-disabled])[data-pressed] {
+  color: var(--button-color-link-subtle-accent-teal-text-pressed);
+}
+
+.link-subtle.accent-turquoise {
+  color: var(--button-color-link-subtle-accent-turquoise-text-default);
+}
+.link-subtle.accent-turquoise:not([data-disabled])[data-hovered] {
+  color: var(--button-color-link-subtle-accent-turquoise-text-hovered);
+}
+.link-subtle.accent-turquoise:not([data-disabled])[data-pressed] {
+  color: var(--button-color-link-subtle-accent-turquoise-text-pressed);
+}
+
+.link-subtle.accent-magenta {
+  color: var(--button-color-link-subtle-accent-magenta-text-default);
+}
+.link-subtle.accent-magenta:not([data-disabled])[data-hovered] {
+  color: var(--button-color-link-subtle-accent-magenta-text-hovered);
+}
+.link-subtle.accent-magenta:not([data-disabled])[data-pressed] {
+  color: var(--button-color-link-subtle-accent-magenta-text-pressed);
+}
+
+.link-subtle.accent-blue-grey {
+  color: var(--button-color-link-subtle-accent-blue-grey-text-default);
+}
+.link-subtle.accent-blue-grey:not([data-disabled])[data-hovered] {
+  color: var(--button-color-link-subtle-accent-blue-grey-text-hovered);
+}
+.link-subtle.accent-blue-grey:not([data-disabled])[data-pressed] {
+  color: var(--button-color-link-subtle-accent-blue-grey-text-pressed);
 }
 
 /* ==========================================================================

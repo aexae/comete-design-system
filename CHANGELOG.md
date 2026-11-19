@@ -18,6 +18,14 @@ entre versions alpha.
 
 ### Ajouté
 
+- **`Button` : couleurs `brand` et accent** (`accent-purple`, `accent-teal`,
+  `accent-turquoise`, `accent-magenta`, `accent-blue-grey`) sur les 5 apparences,
+  comme dans Figma. Tokens `--button-color-<apparence>-<couleur>-*`
+  (`@aexae/comete-design-tokens` 0.29.0). En `link` et `link-subtle`, le survol et
+  l'appui des accents utilisent `--text-accent-<famille>-hovered` / `-pressed`.
+  L'icône d'un bouton `comete` prend la couleur d'icône `comete` (et non plus
+  `brand`).
+
 - **Niveau `boldest` (navy) sur les familles `comete` et `brand`** (tokens 0.26.0) :
   `--background-{comete,brand}-boldest-{default,hovered,pressed}`,
   `--text-*-boldest`, `--border-*-boldest`, `--icon-*-boldest`, générés aussi par
