@@ -32,6 +32,9 @@ describe("generateBrandTheme", () => {
       "--background-brand-bold-default",
       "--background-brand-bold-hovered",
       "--background-brand-bold-pressed",
+      "--background-brand-boldest-default",
+      "--background-brand-boldest-hovered",
+      "--background-brand-boldest-pressed",
       "--background-brand-subtler-default",
       "--background-brand-subtler-hovered",
       "--background-brand-subtler-pressed",
@@ -39,11 +42,14 @@ describe("generateBrandTheme", () => {
       "--background-brand-subtlest-hovered",
       "--background-brand-subtlest-pressed",
       "--border-brand-bold",
+      "--border-brand-boldest",
       "--border-brand-subtle",
-      "--icon-brand",
+      "--icon-brand-default",
+      "--icon-brand-boldest",
       "--text-brand-default",
       "--text-brand-hovered",
       "--text-brand-pressed",
+      "--text-brand-boldest",
     ];
     expect(Object.keys(theme.light).sort()).toEqual([...expectedKeys].sort());
     expect(Object.keys(theme.dark).sort()).toEqual([...expectedKeys].sort());
@@ -64,9 +70,21 @@ describe("generateBrandTheme", () => {
   });
 
   it("should darken bold for a light seed so inverted text keeps contrast (École A)", () => {
-    // Un jaune très clair doit tout de même donner un fond bold sombre en thème clair.
+    // Un jaune très clair doit tout de même donner un fond bold assez sombre en thème
+    // clair (palier 700, miroir de comete.bold, texte inversé ≥ 4,5:1) et un boldest
+    // navy (palier 950).
     const { light } = generateBrandTheme("#ffd400");
-    expect(lightnessOf(light["--background-brand-bold-default"]!)).toBeLessThan(0.35);
+    expect(lightnessOf(light["--background-brand-bold-default"]!)).toBeLessThan(0.5);
+    expect(lightnessOf(light["--background-brand-boldest-default"]!)).toBeLessThan(0.3);
+  });
+
+  it("should keep boldest darker than bold in light theme and in dark theme", () => {
+    const theme = generateBrandTheme("#1e3661");
+    for (const mode of [theme.light, theme.dark]) {
+      expect(lightnessOf(mode["--background-brand-boldest-default"]!)).toBeLessThan(
+        lightnessOf(mode["--background-brand-bold-default"]!)
+      );
+    }
   });
 
   it("should invert lightness roles between light and dark themes", () => {

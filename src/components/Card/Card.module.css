@@ -65,7 +65,7 @@
   background-color: var(--background-comete-subtlest-default);
 }
 .bold.color-comete {
-  background-color: var(--background-comete-bold-default);
+  background-color: var(--background-comete-boldest-default);
 }
 
 /* ---- success ---- */
@@ -174,7 +174,7 @@
   background-color: var(--background-accent-blue-grey-bold-default);
 }
 
-/* ---- brand (charte client, défaut = navy Comète) ---- */
+/* ---- brand (charte client, miroir de comete, Comète par défaut) ---- */
 .outlined.color-brand {
   border-color: var(--border-brand-bold);
 }
@@ -182,7 +182,7 @@
   background-color: var(--background-brand-subtlest-default);
 }
 .bold.color-brand {
-  background-color: var(--background-brand-bold-default);
+  background-color: var(--background-brand-boldest-default);
 }
 
 /* ==========================================================================
@@ -307,7 +307,7 @@
   background-color: var(--background-neutral-bold-hovered);
 }
 .bold.color-comete[data-interactive]:not([data-dragging]):hover {
-  background-color: var(--background-comete-bold-hovered);
+  background-color: var(--background-comete-boldest-hovered);
 }
 .bold.color-success[data-interactive]:not([data-dragging]):hover {
   background-color: var(--background-success-bold-hovered);
@@ -337,7 +337,7 @@
   background-color: var(--background-accent-blue-grey-bold-hovered);
 }
 .bold.color-brand[data-interactive]:not([data-dragging]):hover {
-  background-color: var(--background-brand-bold-hovered);
+  background-color: var(--background-brand-boldest-hovered);
 }
 
 /* ---- Pressed ---- */
@@ -392,7 +392,7 @@
   background-color: var(--background-neutral-bold-pressed);
 }
 .bold.color-comete[data-interactive]:not([data-dragging]):active {
-  background-color: var(--background-comete-bold-pressed);
+  background-color: var(--background-comete-boldest-pressed);
 }
 .bold.color-success[data-interactive]:not([data-dragging]):active {
   background-color: var(--background-success-bold-pressed);
@@ -422,7 +422,7 @@
   background-color: var(--background-accent-blue-grey-bold-pressed);
 }
 .bold.color-brand[data-interactive]:not([data-dragging]):active {
-  background-color: var(--background-brand-bold-pressed);
+  background-color: var(--background-brand-boldest-pressed);
 }
 
 /* Focus visible — géré par le composant FocusRing */

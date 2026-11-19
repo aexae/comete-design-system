@@ -9,7 +9,19 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Changements cassants (BREAKING)
+
+- **Tokens 0.26.0 : `--icon-brand` devient `--icon-brand-default`, `--icon-comete`
+  devient `--icon-comete-default`** (groupes `icon.{brand,comete}.{default,boldest}`).
+  `BrandProvider` émet les nouveaux noms. Les consommateurs qui lisaient `--icon-brand`
+  doivent migrer.
+
 ### Ajouté
+
+- **Niveau `boldest` (navy) sur les familles `comete` et `brand`** (tokens 0.26.0) :
+  `--background-{comete,brand}-boldest-{default,hovered,pressed}`,
+  `--text-*-boldest`, `--border-*-boldest`, `--icon-*-boldest`, générés aussi par
+  `BrandProvider`. Surface navy non interactive `--background-surface-comete`.
 
 - **`Spinner`** : indicateur de chargement indéterminé en forme de comète (tête
   ronde et queue pleine effilée, rythme accélération, étirement, pause).
@@ -21,6 +33,15 @@ entre versions alpha.
 
 ### Modifié
 
+- **`brand` est un miroir exact de `comete`** (tokens 0.26.0) : sans `BrandProvider`,
+  un composant rendu en `brand` rend comme en `comete`. Le fond `bold` de `brand` passe
+  du navy au bleu action (`comete-blue-700`) et `text-brand-default` de 700 à 900. La
+  table de paliers de `BrandProvider` suit (bold 700 / 800 / 900, text 900 / 800 / 700).
+- **`Card` `bold` en `comete` ou `brand` : fond navy** (`*-boldest-*`, états compris)
+  au lieu du bleu action. Règle : jamais de navy sur un contrôle, le bleu action pour les
+  appels à l'action. Figma était déjà en navy.
+- **Storybook** : page Welcome et story SideNavHeader sur `--background-surface-comete`
+  au lieu de `--background-brand-bold-default`.
 - **Outillage : Vite 8, tsup 9, TypeScript 6, Vitest 5, Storybook 10.6.7.** L'API, les
   exports et les feuilles CSS du paquet sont inchangés. Dans `dist/`, les modules
   internes des CSS Modules s'appellent désormais `X.module.js` (avant
