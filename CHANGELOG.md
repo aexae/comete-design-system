@@ -64,6 +64,9 @@ entre versions alpha.
 
 ### Changements cassants (BREAKING)
 
+- **`--text-accent-<famille>-inverted` supprimés** (`@aexae/comete-design-tokens`
+  0.25.0, purple, teal, turquoise, magenta, blue-grey). Aucun composant du DS ne les
+  lisait. En échange, `--text-accent-<famille>-hovered` et `-pressed` sont ajoutés.
 - **Tokens de composant du `Button` renommés** (`@aexae/comete-design-tokens` 0.24.0) :
   `--button-<apparence>-<couleur>-*` devient `--button-color-<apparence>-<couleur>-*`
   (`default` devient `neutral`), `--button-selected-*` et `--button-focus-border`
