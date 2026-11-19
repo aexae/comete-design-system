@@ -2,6 +2,78 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-19 — Majeures de la racine : Vite 8, tsup 9, jsdom 31, TypeScript 6
+
+**Décisions** (demande d'Axel) :
+
+- `vite` 7 → 8, `@vitejs/plugin-react` 4 → 6, `tsup` 8 → 9, `jsdom` 29 → 31,
+  `@testing-library/jest-dom` 6 → 7, `typescript` 5.9 → 6.0.
+- `scripts/plainify-css.mjs` et `scripts/smoke-dist.mjs` acceptent les deux noms de
+  chunk de locals (`X.module.css.js` et `X.module.js`). `plainify-css` échoue désormais
+  si des feuilles sont renommées sans qu'aucun import soit réécrit.
+- Quatre assertions `toHaveStyle` (FocusRing, ScrollArea) lisent le style inline.
+- `storybook/virtual-modules.d.ts` déclare `@aexae/comete-design-tokens/css`.
+- TypeScript reste en 6.0 : la 7 est refusée par `typescript-eslint`.
+- Correctif du peer tokens (`>=0.17.0`) préparé dans `comete-icons` et `comete-logos`,
+  non commité, non publié.
+
+**Contexte / raison** : Vite 8 passe à Rolldown, qui nomme autrement les chunks des CSS
+Modules. Sans adaptation, le build sortait un dist dont chaque composant importait une
+feuille `X.module.css` renommée entre-temps : paquet non stylé, et `smoke-dist` ne
+trouvait plus rien à contrôler. Validé par build, `publint`, lint, Prettier, `tsc`,
+tests unitaires et 613 tests de stories. CSS et exports du dist comparés à l'ancien :
+identiques.
+
+## 2026-11-19 — Paquets Comète en `latest`, Vitest 5 et majeures du Storybook
+
+**Décisions** (demande d'Axel) :
+
+- `@aexae/comete-design-tokens`, `comete-icons` et `comete-logos` passent en `latest`
+  dans les `devDependencies` racine et dans `storybook/package.json`. Le lockfile fige
+  toujours la version installée : la montée se fait par `pnpm update -r "@aexae/*"`.
+- Les `peerDependencies` publiées du DS gardent une plage explicite (`^0.23.0` pour les
+  tokens) : c'est ce que lisent les applications consommatrices, `latest` n'y a pas de
+  sens.
+- `comete-illustrations` reste épinglé : le paquet n'a pas de dist-tag `latest`.
+- `tools/powerbi-kit` reste sur logos 0.12.4 et tokens ^0.13.0 (voir `TODO.md`).
+- `vitest` 4 → 5 à la racine et dans Storybook, avec `@vitest/browser*` 5. Ajout de
+  `src/vitest-jest-dom.d.ts` pour retyper les matchers jest-dom.
+- Storybook : `chromatic` 15 → 18, `@storybook/addon-designs` 11 → 12,
+  `@types/node` 25 → 26.
+- `eslint` reste en 9 : la 10 fait planter `eslint-plugin-react`.
+
+**Contexte / raison** : Axel ne cible jamais une autre version que la dernière pour les
+paquets Comète. Validé par build, lint, Prettier, `tsc` et tests (1379 / 1380 unitaires,
+613 stories). Le test restant, `cssTokens.test.ts`, attend la publication des tokens 0.24.0.
+
+## 2026-11-19 — Storybook 10.6.7 et messages de démarrage
+
+**Décisions** (demande d'Axel : mettre à jour Storybook et corriger le message au lancement) :
+
+- `storybook`, `@storybook/addon-a11y|docs|vitest`, `@storybook/react-vite` et
+  `eslint-plugin-storybook` passent de 10.5.8 à 10.6.7. `@storybook/addon-mcp` passe de
+  0.7.0 à 10.6.7 : l'addon est désormais versionné avec Storybook.
+- `.storybook/main.ts` importe `./welcomeReleases.ts` avec son extension, et
+  `storybook/tsconfig.json` active `allowImportingTsExtensions`. Storybook avertissait
+  au démarrage d'un import sans extension.
+- `.storybook/vitest.setup.ts` ne fait plus `setProjectAnnotations` : l'addon vitest
+  applique les annotations seul depuis 10.3 et le signalait à chaque lancement des tests.
+- `**/.claude` ajouté à `.prettierignore` : les réglages locaux de Claude Code faisaient
+  échouer `pnpm format:check` en local.
+
+**Contexte / raison** : périmètre limité à Storybook pour garder une mise à jour sans
+risque. Validé par lint, `tsc`, Prettier et les 613 tests de stories en Chromium.
+
+## 2026-11-19 — Réglages Claude Code du Storybook : retrait de la règle `mcp__*`
+
+**Décision** (choix d'Axel) : suppression de `"mcp__*"` dans `permissions.allow` de
+`storybook/.claude/settings.local.json`, sans la remplacer par des règles par serveur.
+
+**Contexte / raison** : Claude Code refuse un joker sur le nom de serveur en `allow`
+(seul `mcp__<serveur>__*` est accepté) et ignorait la règle avec un avertissement. Le
+fichier est en `bypassPermissions`, les outils MCP passent donc déjà sans confirmation :
+le retrait ne change aucun comportement.
+
 ## 2026-11-19 — Tokens de composant nommés par catégorie, disabled en opacité, Avatar et AvatarGroup
 
 **Décisions** (demandes d'Axel) :

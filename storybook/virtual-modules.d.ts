@@ -9,3 +9,8 @@ declare module "virtual:welcome-releases" {
   }[];
   export default releases;
 }
+
+// Feuille de tokens importée en side-effect (preview, setup des tests). Le paquet ne
+// livre pas de types pour cette entrée CSS, et TypeScript 6 vérifie par défaut que les
+// imports side-effect se résolvent (`noUncheckedSideEffectImports`).
+declare module "@aexae/comete-design-tokens/css";

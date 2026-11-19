@@ -28,8 +28,8 @@
   Restes :
   - **Livraison en deux temps** : tokens 0.23.0 à publier avant le DS. En local, le CSS
     des tokens est copié à la main dans `node_modules` (écrasé par tout `pnpm install`).
-  - **`DEPRECATED-spinner/*`** encore présentes dans Figma : auditer leurs usages hors
-    ❖ Spinner puis les supprimer.
+  - ~~**`DEPRECATED-spinner/*`** encore présentes dans Figma~~ supprimées (2026-11-18),
+    aucun usage dans le fichier.
   - **`--spinner-color-default`** n'est consommé que par Figma : en code, `inherit` prend
     `currentColor`. À garder tant que Figma en a besoin (pas de `currentColor` en Figma).
   - **Comète : poids et fil principal.** Tracé animé d'environ 29 Ko par instance
@@ -167,6 +167,73 @@ hovered}` repointées vers `text/link/{default,hovered}`, ajout de
   Tokens 0.13.2 installés alors que le lockfile demandait 0.17.0. Les tests tournaient
   contre une vieille version des tokens. Piste : `pnpm install --frozen-lockfile` en
   pré-test local, ou un check de version dans `test.setup.ts`.
+
+- **`storybook/.claude/settings.local.json` : `bypassPermissions` + `Bash(*)`** (2026-11-19)
+  Dans le dossier `storybook/`, Claude Code exécute toute commande sans confirmation
+  (`git push`, `git tag`, `rm -rf`…). Seuls `pnpm publish` et `npm publish` restent en
+  `ask`. Pistes : repasser en mode par défaut avec une liste `allow` ciblée, ou ajouter en
+  `ask` / `deny` les commandes à risque (`git push*`, `git tag*`, `rm -rf*`,
+  `gh pr merge*`). Fichier local ignoré par git (`**/.claude/`), donc propre à ce poste.
+
+- **ESLint 10 bloqué par `eslint-plugin-react`** (2026-11-19)
+  Essai fait : avec `eslint` 10.15.0, le lint plante (`contextOrFilename.getFilename is
+not a function` dans `eslint-plugin-react` 7.37.5, sa dernière version).
+  `eslint-plugin-jsx-a11y` 6.10.2 ne déclare pas non plus ESLint 10. On reste en 9.39,
+  signalée « no longer supported » à l'installation. À retenter quand les deux plugins
+  publient une version compatible, ou en remplaçant `eslint-plugin-react` par
+  `@eslint-react/eslint-plugin`.
+
+- **Peer `@aexae/comete-design-tokens` trop étroit dans icons et logos** (2026-11-19)
+  `comete-icons@0.11.1` et `comete-logos@0.15.0` déclarent `^0.17.0`, qui en 0.x ne
+  couvre que 0.17.x. D'où l'avertissement `pnpm peers check` avec les tokens 0.23.0.
+  Le correctif est dans ces deux dépôts (peer en `>=0.17.0`) et demande une publication
+  de chacun. Rien à faire côté DS.
+
+- **`tools/powerbi-kit` figé sur logos 0.12.4 et tokens ^0.13.0** (2026-11-19)
+  Essai de passage en `latest` annulé : logos 0.15.0 a renommé l'apparence `inverse` en
+  `inverted`, `tsc` échoue dans `src/logos.ts`. Le kit lit aussi les classes CSS internes
+  des logos et les noms de tokens : une migration demande de revérifier les sorties
+  (`pnpm verify`, PNG, thème). Tant qu'il reste figé, le second avertissement de peers
+  (tokens 0.13.2) persiste.
+
+- **`src/vitest-jest-dom.d.ts` : rustine de typage à retirer** (2026-11-19)
+  `@testing-library/jest-dom` (6.9 comme 7.0) n'est pas typé pour Vitest 5. Le fichier
+  rebranche les matchers DOM sur `Matchers<R, T>`. À supprimer dès que jest-dom suit.
+
+- **Node local 25 hors plage supportée par Vitest 5** (2026-11-19)
+  Vitest 5 annonce `^22.12 || ^24 || >=26`. Tout tourne en 25.8.1 et la CI est en 22,
+  mais le poste local est sur une version impaire non LTS. Piste : passer en Node 24.
+
+- **TypeScript 7 bloqué, on s'arrête en 6.0** (2026-11-19)
+  `typescript-eslint` 8.73 exige `<6.1.0`. TypeScript 7 (réécriture native) demande
+  aussi de vérifier `tsup` (bundle des `.d.ts`) et `typed-css-modules`. À retenter
+  quand `typescript-eslint` l'annonce.
+
+- **Dist produit par Vite 8 (Rolldown) : écarts à surveiller** (2026-11-19)
+  CSS et exports publics identiques à ceux de Vite 7 (comparaison fichier à fichier),
+  `publint` vert. Trois écarts : les chunks de locals s'appellent `X.module.js` (avant
+  `X.module.css.js`), le JS pèse environ 13 % de plus (commentaires JSDoc conservés,
+  `minify: false`), et les 4 barrels d'entrée n'ont plus de sourcemap. Non testé dans
+  une application consommatrice : à valider sur une alpha avant diffusion large.
+  Piste poids : retirer les commentaires à la sortie (`output.comments` de Rolldown).
+
+- **Node local 25 hors plage de `tsup` 9 et `jsdom` 31** (2026-11-19)
+  Comme Vitest 5, ils annoncent `^22 || ^24 || >=26`. Tout tourne en 25.8.1, la CI est
+  en 22. Raison de plus pour passer le poste en Node 24.
+
+- **`@testing-library/jest-dom` 8 disponible** (2026-11-19)
+  Installé en 7.0.1 (la 8.0.0 est trop récente pour `minimumReleaseAge`). À essayer :
+  elle pourrait rendre `src/vitest-jest-dom.d.ts` inutile.
+
+- **`toHaveStyle` peu fiable sous jsdom 31 pour les tokens** (2026-11-19)
+  `getComputedStyle` résout désormais les `var()` (token absent en test = `0px`) et
+  convertit les `rem`. Quatre assertions (FocusRing, ScrollArea) lisent maintenant le
+  style inline. Règle pour les prochains tests : `element.style.x` pour une valeur
+  posée en inline, jamais `toHaveStyle` avec un `var()`.
+
+- **Chromatic 18 non éprouvé sur un vrai build** (2026-11-19)
+  La CLI s'installe et répond (`--version`), mais aucun envoi n'a été fait en local.
+  Surveiller le premier run du workflow `chromatic.yml`.
 
 ## Emails (relevé sur le modèle « RFE point d'étape », 2026-10-21)
 

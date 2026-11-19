@@ -9,10 +9,13 @@
 import { globSync, readFileSync } from "node:fs";
 import { basename } from "node:path";
 
-const files = globSync("dist/**/*.module.css.js");
+// Chunk des locals : `X.module.css.js` (Vite ≤ 7, Rollup) ou `X.module.js` (Vite 8, Rolldown).
+const files = globSync("dist/**/*.module{.css,}.js");
 
 if (files.length === 0) {
-  console.error("[smoke-dist] Aucun *.module.css.js dans dist — build absent ou cassé.");
+  console.error(
+    "[smoke-dist] Aucun chunk de locals (*.module.js) dans dist — build absent ou cassé."
+  );
   process.exit(1);
 }
 
@@ -30,8 +33,8 @@ for (const sheet of moduleSheets) {
 }
 
 for (const jsPath of files) {
-  // La feuille associée au chunk `X.module.css.js` est désormais `X.css` (plainify-css).
-  const cssPath = jsPath.replace(/\.module\.css\.js$/, ".css");
+  // La feuille associée au chunk de locals est `X.css` (plainify-css).
+  const cssPath = jsPath.replace(/\.module(\.css)?\.js$/, ".css");
   const js = readFileSync(jsPath, "utf8");
   let css = "";
   try {
