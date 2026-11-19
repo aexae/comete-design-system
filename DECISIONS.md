@@ -423,6 +423,18 @@ restructuration des tokens texte en groupes `default/hovered/pressed`.
 **Statut** : NON commité (clone partagé, sur main). Livraison DS en attente
 d'instruction (branche + PR). Les tokens 0.20.0 sont déjà publiés.
 
+## 2026-11-19 — Button contained subtle / subtlest : fond au repos tokenisé
+
+**Décision** (Axel, sur capture Storybook) : `contained` `subtle` et `subtlest` consomment
+`--button-color-contained-{subtle,subtlest}-background-default` (tokens 0.28.0, alias de
+`background.neutral.subtler.default`). Remplace la décision du 2026-11-09 « sans fond au
+repos ».
+
+**Contexte / raison** : cette décision n'avait jamais été effective. Faute de règle
+`background-color`, le `<button>` héritait du gris `ButtonFace` du navigateur, donc le
+rendu avait bien un fond, hors tokens. On tokenise le rendu observé. Les motifs fantômes
+restent portés par l'apparence `subtle` (fond `transparent` au repos).
+
 ## 2026-11-19 — Couleurs de marque : navy jamais interactif, brand miroir de comete, boldest
 
 **Contexte** : phase 0 du chantier « descriptions des tokens ». En décrivant `brand` et
