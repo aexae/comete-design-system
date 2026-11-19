@@ -33,6 +33,9 @@ entre versions alpha.
 
 ### Modifié
 
+- **`BottomNav.Action` sur `--background-comete-bold-default`** au lieu de
+  `--background-brand-bold-default` : c'est un contrôle, il ne suit pas la charte client
+  (ADR 0001). Tokens 0.27.0 : `--logo-comete-default` blanc en thème sombre.
 - **`brand` est un miroir exact de `comete`** (tokens 0.26.0) : sans `BrandProvider`,
   un composant rendu en `brand` rend comme en `comete`. Le fond `bold` de `brand` passe
   du navy au bleu action (`comete-blue-700`) et `text-brand-default` de 700 à 900. La

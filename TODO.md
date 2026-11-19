@@ -3,13 +3,11 @@
 ## Fiabilité / qualité
 
 - **Couleurs de marque après tokens 0.26.0 (2026-11-19)**
-  - **`BottomNav.Action` consomme `--background-brand-bold-default`** (charte client)
-    alors que c'est un contrôle : l'ADR 0001 réserve `brand` aux surfaces ambiantes et
-    la règle « bleu action pour les CTA » vise `comete.bold`. Depuis 0.26.0 il rend en
-    bleu action (plus en navy). Passer sur `--background-comete-bold-*`.
-  - **Figma ≠ repo sur les valeurs `comete`** : Figma `background/comete/bold` = 600 /
-    700 / 800 (clair), repo et planche de marque (« Bleu action #2467D1 ») = 700 / 800 / 900. `brand` a été aligné sur `comete` dans chaque outil, donc les deux outils
-    divergent encore entre eux. Détail dans `comete-design-tokens/TODO.md`.
+  - ~~`BottomNav.Action` sur `brand-bold`~~ fait (alpha.186) :
+    `--background-comete-bold-default`. Reste : le FAB n'a pas d'état hovered /
+    pressed en CSS (fond fixe), à ajouter avec `--background-comete-bold-hovered/pressed`.
+  - ~~Figma ≠ repo sur les valeurs `comete`~~ fait (tokens 0.27.0) : Figma réaligné sur
+    le code, `border/brand` sans suffixe déprécié dans Figma.
   - **Or (`comete.yellow`)** : la page Welcome consomme des primitives brutes
     (`--comete-yellow-300/400/700/950`) faute de rôle sémantique d'accent. À migrer
     quand le rôle existera (lot C).

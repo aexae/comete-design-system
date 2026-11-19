@@ -17,7 +17,8 @@
   border: none;
   display: grid;
   place-items: center;
-  background-color: var(--background-brand-bold-default);
+  /* Contrôle : bleu action fixe (comete), jamais la charte client (ADR 0001). */
+  background-color: var(--background-comete-bold-default);
   cursor: pointer;
   outline: none;
   -webkit-tap-highlight-color: transparent;
