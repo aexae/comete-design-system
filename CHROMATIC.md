@@ -137,6 +137,18 @@ cd ..
 pnpm build-storybook
 ```
 
+### Token du projet en local
+
+Le token n'est jamais écrit dans `storybook/chromatic.config.json` (fichier commité).
+La CI le lit dans le secret `CHROMATIC_PROJECT_TOKEN`. En local, renseigner la même
+clé dans `.env` (ignoré par git), puis l'exporter avant de lancer la CLI, qui lit
+automatiquement `CHROMATIC_PROJECT_TOKEN` :
+
+```bash
+set -a && source .env && set +a
+cd storybook && pnpm chromatic
+```
+
 ### Options utiles
 
 ```bash

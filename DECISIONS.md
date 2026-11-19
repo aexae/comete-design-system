@@ -2,6 +2,18 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-19 — Chromatic : token hors du dépôt, projet sur le compte aexae
+
+**Décisions** (demande d'Axel) :
+
+- `projectToken` retiré de `storybook/chromatic.config.json`. La CI utilise le secret
+  `CHROMATIC_PROJECT_TOKEN`, le local la même clé dans `.env` (ignoré par git).
+- Les tests visuels passent du projet `Naxit/comete-design-system` (compte perso) au
+  projet `comete-design-system` du compte Chromatic `aexae`.
+
+**Raison** : le token était en clair dans un fichier commité, et le projet consommait le
+quota du compte personnel.
+
 ## 2026-11-19 — Majeures de la racine : Vite 8, tsup 9, jsdom 31, TypeScript 6
 
 **Décisions** (demande d'Axel) :
