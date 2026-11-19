@@ -55,6 +55,13 @@ entre versions alpha.
   **16 / 24 / 32 px** (compact / default / touch) au lieu de 16 / 20 / 24, et tokens
   de composant `--spinner-size-*` / `--spinner-color-*` (dont `--spinner-color-comete-*`).
 
+### Déprécié
+
+- **Tokens disabled sémantiques** (`@aexae/comete-design-tokens` 0.24.1) :
+  `--background-disabled-default`, `--text-disabled`, `--border-disabled` et
+  `--icon-disabled`. Le disabled passe par l'opacité (`--<composant>-opacity-disabled`).
+  Ils seront supprimés quand les composants du DS auront migré.
+
 ### Changements cassants (BREAKING)
 
 - **Tokens de composant du `Button` renommés** (`@aexae/comete-design-tokens` 0.24.0) :

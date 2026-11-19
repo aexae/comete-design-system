@@ -4,8 +4,9 @@
 
 - **Button et Avatar : tokens restructurés, Figma rebuild et migrations faits (2026-11-19).**
   Restes :
-  - **Disabled en opacité pour les 22 autres composants** (couleurs `*-disabled`
-    aujourd'hui), un par un.
+  - **Disabled en opacité pour les 24 autres composants** (73 usages des tokens
+    `*-disabled`, dépréciés depuis tokens 0.24.1), un par un. Liste figée dans
+    `src/tokens/deprecatedDisabledTokens.test.ts`. Éviter l'opacité imbriquée.
   - **Anneau de l'AvatarGroup** : défaut code `--background-surface-default` (suit le
     thème), Figma en #FFFFFF brut (faux en thème sombre, à surcharger par instance).
   - **Variables obsolètes restantes** dans le ❖ Avatar : `DEPRECATED-badge/*` (badges)
@@ -167,6 +168,13 @@ hovered}` repointées vers `text/link/{default,hovered}`, ajout de
   Tokens 0.13.2 installés alors que le lockfile demandait 0.17.0. Les tests tournaient
   contre une vieille version des tokens. Piste : `pnpm install --frozen-lockfile` en
   pré-test local, ou un check de version dans `test.setup.ts`.
+
+- **CI : `playwright install --with-deps` dépend des miroirs Ubuntu** (2026-11-19)
+  Le job « Lint, Test & Build » a échoué deux fois de suite sur la PR #360 (miroirs
+  `azure.archive.ubuntu.com` et `security.ubuntu.com` en 503 ou injoignables) avant de
+  passer au troisième essai. Pistes : exécuter le job dans l'image Docker officielle de
+  Playwright (navigateurs et dépendances système préinstallés), ou mettre en cache
+  `~/.cache/ms-playwright` et n'installer les dépendances système qu'en cas d'échec.
 
 - **`storybook/.claude/settings.local.json` : `bypassPermissions` + `Bash(*)`** (2026-11-19)
   Dans le dossier `storybook/`, Claude Code exécute toute commande sans confirmation
