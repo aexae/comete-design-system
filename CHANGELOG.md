@@ -21,6 +21,10 @@ entre versions alpha.
 
 ### Modifié
 
+- **Outillage : Vite 8, tsup 9, TypeScript 6, Vitest 5, Storybook 10.6.7.** L'API, les
+  exports et les feuilles CSS du paquet sont inchangés. Dans `dist/`, les modules
+  internes des CSS Modules s'appellent désormais `X.module.js` (avant
+  `X.module.css.js`) : sans effet tant que l'on importe par les points d'entrée publics.
 - **`@aexae/comete-design-tokens` 0.24.0** (peer + dev) : tokens de composant nommés
   par catégorie, `--avatar-*`, `--avatar-group-*`, `--autosave-indicator-*`.
 - **`Avatar` : tokens de composant.** Tailles, taille d'icône, coin, opacité désactivée

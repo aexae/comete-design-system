@@ -2,7 +2,7 @@
 import type { StorybookConfig } from "@storybook/react-vite";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
-import { welcomeReleases } from "./welcomeReleases";
+import { welcomeReleases } from "./welcomeReleases.ts";
 
 const config: StorybookConfig = {
   stories: ["../stories/**/*.stories.@(ts|tsx)"],

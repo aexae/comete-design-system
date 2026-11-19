@@ -4,6 +4,7 @@
     "moduleResolution": "bundler",
     "types": ["node", "vite/client"],
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "noUncheckedIndexedAccess": false,

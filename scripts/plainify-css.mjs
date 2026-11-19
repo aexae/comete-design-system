@@ -10,8 +10,10 @@
 // DOM → composant NON stylé. En livrant ces feuilles en `.css` plein, aucun
 // consommateur ne les re-traite : ce sont des règles globales déjà scopées.
 //
-// On ne renomme QUE l'asset CSS (+ sa map) et l'import injecté. Le chunk JS
-// `X.module.css.js` garde son nom : c'est du `.js`, jamais interprété comme CSS.
+// On ne renomme QUE l'asset CSS (+ sa map) et l'import injecté. Le chunk JS des
+// locals garde son nom : c'est du `.js`, jamais interprété comme CSS. Ce chunk
+// s'appelle `X.module.css.js` jusqu'à Vite 7 (Rollup) et `X.module.js` depuis
+// Vite 8 (Rolldown) : les deux formes sont prises en charge.
 import { globSync, readFileSync, writeFileSync, renameSync } from "node:fs";
 import { basename } from "node:path";
 
@@ -36,13 +38,22 @@ for (const cssPath of globSync("dist/**/*.module.css{,.map}")) {
 // 2) Réécrire l'import side-effect injecté : import "./X.module.css" → "./X.css"
 //    (cible uniquement les specifiers d'import relatifs se terminant par .module.css,
 //     donc jamais "./X.module.css.js" qui est le chunk JS.)
-for (const jsPath of globSync("dist/**/*.module.css.js")) {
+for (const jsPath of globSync("dist/**/*.module{.css,}.js")) {
   const src = readFileSync(jsPath, "utf8");
   const out = src.replace(/(import\s*['"]\.\/[^'"]+?)\.module\.css(['"])/g, "$1.css$2");
   if (out !== src) {
     writeFileSync(jsPath, out);
     rewritten++;
   }
+}
+
+// Garde : une feuille renommée sans import réécrit = import cassé dans le dist
+// (le chunk JS pointerait encore sur `X.module.css`, qui n'existe plus).
+if (renamed > 0 && rewritten === 0) {
+  console.error(
+    "[plainify-css] Feuilles renommées mais aucun import réécrit : le nom des chunks de locals a changé ?"
+  );
+  process.exit(1);
 }
 
 console.log(

@@ -173,10 +173,11 @@ describe("ScrollArea", () => {
         Contenu
       </ScrollArea>
     );
-    expect(container.firstChild).toHaveStyle({
-      maxHeight: "320px",
-      maxWidth: "40rem",
-    });
+    // REASON: style inline et non `toHaveStyle`, car le style calculé de jsdom
+    // convertit désormais les `rem` en pixels.
+    const racine = container.firstChild as HTMLElement;
+    expect(racine.style.maxHeight).toBe("320px");
+    expect(racine.style.maxWidth).toBe("40rem");
   });
 
   it("should not be focusable by default", () => {

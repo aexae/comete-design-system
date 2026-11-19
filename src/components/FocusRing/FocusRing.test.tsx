@@ -26,18 +26,20 @@ describe("FocusRing", () => {
     expect(container.querySelector("span")).toHaveClass("inside");
   });
 
+  // REASON: on lit le style inline plutôt que `toHaveStyle` : depuis jsdom 30,
+  // `getComputedStyle` résout les `var()` et un token non défini en test donne `0px`.
   it("should apply border-radius token from borderRadius prop (number)", () => {
     const { container } = render(<FocusRing borderRadius={4} />);
-    expect(container.querySelector("span")).toHaveStyle({ borderRadius: "var(--radius050)" });
+    expect(container.querySelector("span")?.style.borderRadius).toBe("var(--radius050)");
   });
 
   it("should apply border-radius round token when borderRadius is round", () => {
     const { container } = render(<FocusRing borderRadius="round" />);
-    expect(container.querySelector("span")).toHaveStyle({ borderRadius: "var(--radius-round)" });
+    expect(container.querySelector("span")?.style.borderRadius).toBe("var(--radius-round)");
   });
 
   it("should default to borderRadius token --radius025", () => {
     const { container } = render(<FocusRing />);
-    expect(container.querySelector("span")).toHaveStyle({ borderRadius: "var(--radius025)" });
+    expect(container.querySelector("span")?.style.borderRadius).toBe("var(--radius025)");
   });
 });
