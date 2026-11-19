@@ -2,6 +2,13 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-19 — Button brand et accent, polices Noto Sans et Noto Sans Mono
+
+**Décisions** (Axel) :
+
+- Le code et Figma doivent être synchronisés : le Button reçoit `brand` et les 5 accents, déjà présents dans le set Figma (alpha.188). `outlined` et `subtle` gardent un texte fixe au survol pour toutes les couleurs.
+- Seules Noto Sans et Noto Sans Mono subsistent (tokens 0.29.0). Storybook charge ces deux familles au lieu de Poppins. Tout usage d'un token de police dans le DS ajoute la famille générique en repli (`monospace`, `sans-serif`).
+
 ## 2026-11-19 — Chromatic : token hors du dépôt, projet sur le compte aexae
 
 **Décisions** (demande d'Axel) :

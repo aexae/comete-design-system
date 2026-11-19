@@ -2,6 +2,25 @@
 
 ## Fiabilité / qualité
 
+- **Polices : chargement à la charge des applications** (2026-11-19)
+  Les tokens 0.29.0 ne gardent que Noto Sans (`--font-family-primary`) et Noto Sans
+  Mono (`--font-family-code`), sans famille générique de repli. Le DS ne charge
+  aucune police : Storybook les charge depuis Google Fonts (avant, il chargeait
+  Poppins alors que le token pointait sur Noto Sans, donc le rendu dépendait des
+  polices installées sur le poste). Chaque application doit charger les deux
+  familles, sinon le navigateur retombe sur sa police par défaut. `Code` ajoute
+  `monospace` en repli. Pistes : documenter le chargement dans le README, ou
+  embarquer les polices (`@fontsource`) dans le paquet. Google Fonts envoie l'IP
+  du visiteur à Google (point RGPD à valider pour les applications).
+
+- **comete-icons : couleurs `brand` et `comete` cassées** (2026-11-19)
+  `icons.css` lit `--icon-brand` et `--icon-comete`, mais les tokens s'appellent
+  `--icon-brand-default` et `--icon-comete-default` depuis leur restructuration.
+  La déclaration est invalide et l'icône hérite de la couleur du texte parent. Le
+  rendu est juste par accident dans le Button (texte de la même famille), faux
+  ailleurs. Corriger le générateur de `comete-icons` puis publier. Le dépôt avait
+  des modifications non commitées d'une autre session le 19/11, non touché.
+
 - **Couleurs de marque après tokens 0.26.0 (2026-11-19)**
   - ~~`BottomNav.Action` sur `brand-bold`~~ fait (alpha.186) :
     `--background-comete-bold-default`. Reste : le FAB n'a pas d'état hovered /

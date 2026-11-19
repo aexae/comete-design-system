@@ -41,6 +41,13 @@ entre versions alpha.
 
 ### Modifié
 
+- **Polices : Noto Sans et Noto Sans Mono uniquement** (`@aexae/comete-design-tokens`
+  0.29.0). `--font-family-code` passe de la pile monospace système à Noto Sans Mono.
+  Les tokens `--font-family-{poppins,outfit,satoshi,space-grotesk,urbanist}` sont
+  supprimés (aucun usage dans le DS). `Code` ajoute `monospace` en repli. Storybook
+  charge Noto Sans et Noto Sans Mono au lieu de Poppins. Les applications doivent
+  charger ces deux familles.
+
 - **`Button` `contained` `subtle` / `subtlest` : fond au repos tokenisé**
   (`--button-color-contained-{subtle,subtlest}-background-default`, tokens 0.28.0, même
   gris que `neutral`). Sans règle, le `<button>` affichait le gris par défaut du

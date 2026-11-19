@@ -198,7 +198,7 @@
 }
 
 .mono {
-  font-family: var(--font-family-code);
+  font-family: var(--font-family-code), monospace;
 }
 
 .eyebrow {
@@ -390,7 +390,7 @@
 
 .page .principleNum {
   color: var(--comete-yellow-700);
-  font-family: var(--font-family-code);
+  font-family: var(--font-family-code), monospace;
 }
 
 /* En thème sombre le fond devient clair : le jaune du titre y perd son contraste. */

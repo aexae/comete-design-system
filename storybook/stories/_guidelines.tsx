@@ -179,7 +179,7 @@ function CodeChip({ children }: { children: ReactNode }): ReactElement {
   return (
     <code
       style={{
-        fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+        fontFamily: "var(--font-family-code), monospace",
         fontSize: "0.85em",
         background: "var(--background-neutral-subtler-default)",
         color: "var(--text-default-default)",

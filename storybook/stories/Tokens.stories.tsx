@@ -454,7 +454,7 @@ function TokenRow({
     border: "none",
     padding: 0,
     cursor: "pointer",
-    fontFamily: "monospace",
+    fontFamily: "var(--font-family-code), monospace",
     textAlign: "left",
     color: "inherit",
   };
@@ -607,7 +607,7 @@ function ColorSwatch({
           padding: 0,
           cursor: "pointer",
           fontSize: 10,
-          fontFamily: "monospace",
+          fontFamily: "var(--font-family-code), monospace",
           color: isCopiedVar ? "var(--text-selected)" : "var(--text-subtlest-default)",
         }}
       >
@@ -623,7 +623,7 @@ function ColorSwatch({
           padding: 0,
           cursor: "pointer",
           fontSize: 9,
-          fontFamily: "monospace",
+          fontFamily: "var(--font-family-code), monospace",
           color: isCopiedValue ? "var(--text-selected)" : "var(--text-subtlest-default)",
         }}
       >
@@ -943,7 +943,7 @@ function CodeBlock({ children }: { children: string }): ReactElement {
           overflow: "auto",
           fontSize: 13,
           lineHeight: 1.6,
-          fontFamily: "var(--font-family-code, 'SF Mono', monospace)",
+          fontFamily: "var(--font-family-code), monospace",
           color: "var(--text-default-default)",
           margin: 0,
         }}
@@ -1162,7 +1162,7 @@ function ExamplesTab(): ReactElement {
                 background: `var(${token})`,
                 border: "1px solid var(--border-default)",
                 fontSize: 11,
-                fontFamily: "monospace",
+                fontFamily: "var(--font-family-code), monospace",
                 color: "var(--text-subtle-default)",
               }}
             >
@@ -1230,7 +1230,7 @@ function ExamplesTab(): ReactElement {
                 justifyContent: "center",
                 fontSize: 10,
                 color: "var(--text-subtlest-default)",
-                fontFamily: "monospace",
+                fontFamily: "var(--font-family-code), monospace",
               }}
             >
               {level}
@@ -1260,7 +1260,7 @@ function ExamplesTab(): ReactElement {
                 justifyContent: "center",
                 fontSize: 10,
                 color: "var(--text-subtlest-default)",
-                fontFamily: "monospace",
+                fontFamily: "var(--font-family-code), monospace",
               }}
             >
               {label}
@@ -1277,7 +1277,7 @@ function ExamplesTab(): ReactElement {
                 style={{
                   width: 56,
                   fontSize: 10,
-                  fontFamily: "monospace",
+                  fontFamily: "var(--font-family-code), monospace",
                   color: "var(--text-subtlest-default)",
                   textAlign: "right",
                 }}
@@ -1322,7 +1322,7 @@ function ChangelogEntry({
           style={{
             fontSize: 12,
             fontWeight: 600,
-            fontFamily: "monospace",
+            fontFamily: "var(--font-family-code), monospace",
             padding: "1px 6px",
             borderRadius: 4,
             background: "var(--background-brand-subtlest-default)",

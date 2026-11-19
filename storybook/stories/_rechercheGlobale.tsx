@@ -673,7 +673,7 @@ function Kbd({ children }: { children: ReactNode }): ReactElement {
   return (
     <span
       style={{
-        fontFamily: "var(--font-family-code)",
+        fontFamily: "var(--font-family-code), monospace",
         fontSize: "var(--font-size-ui-xxxs)",
         lineHeight: "var(--line-height-ui-xxxs)",
         color: "var(--text-subtlest-default)",

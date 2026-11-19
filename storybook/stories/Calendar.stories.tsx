@@ -141,7 +141,7 @@ function WeekControlledInner({
         value={range}
         onChange={setRange}
       />
-      <p style={{ fontFamily: "monospace", fontSize: 13 }}>
+      <p style={{ fontFamily: "var(--font-family-code), monospace", fontSize: 13 }}>
         {range.start.toString()} → {range.end.toString()}
       </p>
     </div>
@@ -190,7 +190,9 @@ function RangeControlledInner({
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Calendar {...calProps} />
-      <p style={{ fontFamily: "monospace", fontSize: 13 }}>{formatRange(appearance, range)}</p>
+      <p style={{ fontFamily: "var(--font-family-code), monospace", fontSize: 13 }}>
+        {formatRange(appearance, range)}
+      </p>
     </div>
   );
 }
@@ -227,7 +229,7 @@ function SingleControlledInner({
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Calendar {...calProps} />
-      <p style={{ fontFamily: "monospace", fontSize: 13 }}>
+      <p style={{ fontFamily: "var(--font-family-code), monospace", fontSize: 13 }}>
         Sélectionné : {formatSingle(appearance, value)}
       </p>
     </div>

@@ -33,6 +33,6 @@ export const customTheme = create({
   inputBorderRadius: 6,
 
   // Typography
-  fontBase: '"Poppins", "Inter", sans-serif',
-  fontCode: '"Fira Code", "Consolas", monospace',
+  fontBase: '"Noto Sans", sans-serif',
+  fontCode: '"Noto Sans Mono", monospace',
 });

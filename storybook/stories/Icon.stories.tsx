@@ -852,7 +852,7 @@ function IconDetailPanel({
                   ? "var(--background-success-subtlest-default)"
                   : "var(--background-surface-elevation-sunken-default)",
                 cursor: "pointer",
-                fontFamily: "var(--font-family-monospace, ui-monospace, monospace)",
+                fontFamily: "var(--font-family-code), monospace",
                 fontSize: 12,
                 color: "var(--text-default-default)",
                 textAlign: "left",
