@@ -282,6 +282,13 @@ not a function` dans `eslint-plugin-react` 7.37.5, sa dernière version).
   Le compte `aexae` étant aussi en Free, le quota sera de nouveau atteint sans plan
   payant ni TurboSnap.
 
+- **Chromatic : synchro GitHub portée par un compte personnel**
+  La synchro GitHub d'un projet Chromatic utilise le token OAuth d'un collaborateur.
+  Celui du projet `aexae` appartenait à `developpeurcomete` (compte Gmail générique
+  partagé), désormais invalide. Le remplacer par un token nominatif garde la même
+  fragilité (départ de la personne = synchro cassée). Identifier un compte de service
+  GitHub de l'organisation, et ne plus utiliser de compte Gmail partagé.
+
 - **Sécurité : token Chromatic en clair dans le dépôt**
   `storybook/chromatic.config.json` contient `projectToken` en dur (commité depuis le
   19/03/2026), doublon du secret CI. Le retirer du fichier, régénérer le token dans
