@@ -5,7 +5,8 @@
    ========================================================================== */
 
 .code {
-  font-family: var(--font-family-code);
+  /* Repli générique : le token ne nomme que Noto Sans Mono, sans famille de secours. */
+  font-family: var(--font-family-code), monospace;
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-normal);

@@ -5,5 +5,5 @@
 body {
   background-color: var(--background-surface-default) !important;
   color: var(--text-default-default) !important;
-  font-family: var(--font-family-primary, "Poppins", sans-serif);
+  font-family: var(--font-family-primary, "Noto Sans"), sans-serif;
 }

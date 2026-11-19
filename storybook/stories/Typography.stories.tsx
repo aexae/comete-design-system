@@ -310,7 +310,7 @@ const TYPE_GROUPS: TypeGroup[] = [
     id: "code",
     label: "Code",
     description:
-      "Texte monospace pour les extraits de code, valeurs techniques, identifiants et chemins de fichiers. Pile monospace système (SF Mono sur Apple, Consolas sur Windows, etc.).",
+      "Texte monospace pour les extraits de code, valeurs techniques, identifiants et chemins de fichiers. Police Noto Sans Mono.",
     guidance: [
       "Toujours afficher les valeurs de code dans un contexte à fond contrasté (surface sunken).",
       "Ne pas appliquer d'italic — la lisibilité du code nécessite un style droit.",
@@ -430,7 +430,7 @@ const css = {
   },
   styleTag: {
     fontSize: 11,
-    fontFamily: "monospace",
+    fontFamily: "var(--font-family-code), monospace",
     color: "var(--text-subtlest-default)",
     background: "var(--background-neutral-subtler-default)",
     borderRadius: 4,
@@ -440,7 +440,7 @@ const css = {
   },
   tokenPill: {
     fontSize: 10,
-    fontFamily: "monospace",
+    fontFamily: "var(--font-family-code), monospace",
     color: "var(--text-subtle-default)",
     lineHeight: 1.4,
   },
@@ -488,8 +488,8 @@ function StyleRow({
       ? `var(${style.letterSpacingToken}, ${style.letterSpacing ?? "0"})`
       : undefined,
     fontFamily: style.fontFamilyToken
-      ? `var(${style.fontFamilyToken}, monospace)`
-      : "var(--font-family-primary, system-ui, sans-serif)",
+      ? `var(${style.fontFamilyToken}), monospace`
+      : "var(--font-family-primary), sans-serif",
     color: "var(--text-default-default)",
     margin: 0,
     wordBreak: "break-word" as const,
@@ -533,7 +533,7 @@ function StyleRow({
             margin: "8px 0 0",
             fontSize: 11,
             color: "var(--text-subtlest-default)",
-            fontFamily: "monospace",
+            fontFamily: "var(--font-family-code), monospace",
           }}
         >
           {style.fontSize} / {style.lineHeight} /{" "}
@@ -558,14 +558,14 @@ function FontFamilySection(): ReactElement {
   const families = [
     {
       token: "--font-family-primary",
-      resolved: "var(--font-family-poppins)",
+      resolved: "var(--font-family-noto-sans)",
       role: "Police principale",
       usage: "Tous les textes d'interface : titres, corps, libellés.",
       sample: "Aa Bb Cc — 0123456789",
     },
     {
       token: "--font-family-code",
-      resolved: "monospace système (SF Mono, Consolas, …)",
+      resolved: "var(--font-family-noto-sans-mono)",
       role: "Police monospace",
       usage: "Code, valeurs techniques, identifiants.",
       sample: "const x = 42; // → {}[]",
@@ -585,9 +585,9 @@ function FontFamilySection(): ReactElement {
         <p style={css.groupLabel}>Fondation</p>
         <h2 style={css.groupTitle}>Polices et graisses</h2>
         <p style={css.groupDesc}>
-          Comète utilise <strong>Poppins</strong> comme police principale et une{" "}
-          <strong>pile monospace système</strong> pour le code. Les quatre niveaux de graisse
-          permettent de créer une hiérarchie claire sans multiplier les familles.
+          Comète utilise <strong>Noto Sans</strong> comme police principale et{" "}
+          <strong>Noto Sans Mono</strong> pour le code. Les quatre niveaux de graisse permettent de
+          créer une hiérarchie claire sans multiplier les familles.
         </p>
       </div>
 
@@ -627,7 +627,7 @@ function FontFamilySection(): ReactElement {
                 fontSize: 28,
                 fontFamily:
                   f.token === "--font-family-code"
-                    ? "var(--font-family-code, monospace)"
+                    ? "var(--font-family-code), monospace"
                     : "var(--font-family-primary, system-ui)",
                 fontWeight: 500,
                 color: "var(--text-default-default)",
@@ -639,7 +639,7 @@ function FontFamilySection(): ReactElement {
             <code
               style={{
                 fontSize: 11,
-                fontFamily: "monospace",
+                fontFamily: "var(--font-family-code), monospace",
                 color: "var(--text-subtle-default)",
                 background: "var(--background-neutral-subtler-default)",
                 padding: "2px 6px",
@@ -693,7 +693,7 @@ function FontFamilySection(): ReactElement {
               <code
                 style={{
                   fontSize: 10,
-                  fontFamily: "monospace",
+                  fontFamily: "var(--font-family-code), monospace",
                   color: "var(--text-subtlest-default)",
                 }}
               >
