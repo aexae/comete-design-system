@@ -285,9 +285,11 @@ not a function` dans `eslint-plugin-react` 7.37.5, sa dernière version).
 - **Chromatic : synchro GitHub portée par un compte personnel**
   La synchro GitHub d'un projet Chromatic utilise le token OAuth d'un collaborateur.
   Celui du projet `aexae` appartenait à `developpeurcomete` (compte Gmail générique
-  partagé), désormais invalide. Le remplacer par un token nominatif garde la même
-  fragilité (départ de la personne = synchro cassée). Identifier un compte de service
-  GitHub de l'organisation, et ne plus utiliser de compte Gmail partagé.
+  partagé), désormais invalide. `developpeurcomete` n'apparaît plus dans les
+  collaborateurs du compte `aexae`. Le compte Chromatic `aexae` est synchronisé par
+  `CometeAdminGit` (Admin, token valide). Action : se connecter à Chromatic avec
+  `CometeAdminGit` et faire « Replace with your token » sur le projet, plutôt qu'un
+  token nominatif (départ de la personne = synchro cassée).
 
 - **Sécurité : token Chromatic en clair dans le dépôt**
   `storybook/chromatic.config.json` contient `projectToken` en dur (commité depuis le
