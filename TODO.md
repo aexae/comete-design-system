@@ -239,9 +239,13 @@ not a function` dans `eslint-plugin-react` 7.37.5, sa dernière version).
   style inline. Règle pour les prochains tests : `element.style.x` pour une valeur
   posée en inline, jamais `toHaveStyle` avec un `var()`.
 
-- **Chromatic 18 non éprouvé sur un vrai build** (2026-11-19)
-  La CLI s'installe et répond (`--version`), mais aucun envoi n'a été fait en local.
-  Surveiller le premier run du workflow `chromatic.yml`.
+- **Chromatic : quota du plan atteint** (2026-11-19)
+  Chromatic 18 fonctionne en CI (« Visual tests » et « Storybook Publish » verts, PR
+  #363). Mais le statut « UI Tests » reste en attente avec « Update your plan to resume
+  testing » : le quota de snapshots du plan est épuisé, la comparaison visuelle ne
+  tourne plus. Régressions visuelles non détectées tant que le plan n'est pas relevé
+  ou le quota renouvelé. Piste : TurboSnap (`onlyChanged`) pour réduire la
+  consommation.
 
 ## Emails (relevé sur le modèle « RFE point d'étape », 2026-10-21)
 
