@@ -33,7 +33,9 @@
   posée par la classe de couleur ou la sélection) au lieu de rester `icon-default`.
   Taille d'icône portée par le CSS. Une seule lettre en xsmall et small, sauf pour un
   compteur `+N`, affiché en entier. L'état selected n'affiche plus l'anneau de focus,
-  réservé au focus clavier : il se lit au fond `--avatar-color-selected-*`.
+  réservé au focus clavier : il se lit au fond `--avatar-color-selected-*`. Exception
+  (demande d'Axel) : sur une photo chargée, qui cache ce fond, l'anneau de focus marque
+  la sélection (code et Figma).
 - **Toute propriété tokenisable pointe sur un token** (code et Figma). Si le token
   manque, on s'arrête et on demande l'accord avant de le créer.
 - **Figma** : nouveau ❖ Avatar (20406:6274, 630 variantes : `size` × `color` ×

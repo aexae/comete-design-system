@@ -142,8 +142,8 @@ describe("Avatar", () => {
   });
 
   describe("état selected", () => {
-    // Le selected se lit au fond (`--avatar-color-selected-*`), jamais à
-    // l'anneau de focus, réservé au focus clavier.
+    // Le selected se lit au fond (`--avatar-color-selected-*`). Exception :
+    // une photo chargée cache ce fond, l'anneau de focus marque alors la sélection.
     it("should not render FocusRing when isSelected in display mode", () => {
       const { container } = render(<Avatar isSelected initials="AB" />);
       expect(container.querySelector(".ring")).not.toBeInTheDocument();
@@ -154,9 +154,23 @@ describe("Avatar", () => {
       expect(container.querySelector(".ring")).not.toBeInTheDocument();
     });
 
-    it("should not render FocusRing when isSelected with a loaded photo", () => {
+    it("should render FocusRing when isSelected with a loaded photo in display mode", () => {
       const { container } = render(<Avatar isSelected src="/photo.jpg" />);
       fireEvent.load(container.querySelector("img")!);
+      expect(container.querySelector(".ring")).toBeInTheDocument();
+    });
+
+    it("should render FocusRing when isSelected with a loaded photo in interactive mode", () => {
+      const { container } = render(
+        <Avatar onPress={() => undefined} isSelected src="/photo.jpg" />
+      );
+      fireEvent.load(container.querySelector("img")!);
+      expect(container.querySelector(".ring")).toBeInTheDocument();
+    });
+
+    it("should not render FocusRing when isSelected while the photo is loading", () => {
+      // Le placeholder (initiales ou icône) porte encore le fond selected.
+      const { container } = render(<Avatar isSelected src="/photo.jpg" initials="AB" />);
       expect(container.querySelector(".ring")).not.toBeInTheDocument();
     });
 

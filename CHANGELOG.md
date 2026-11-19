@@ -31,8 +31,8 @@ entre versions alpha.
 - **`Avatar` : une seule lettre en `small`** (comme en `xsmall`). Un compteur `+N`
   reste affiché en entier.
 - **`Avatar` : `isSelected` sans anneau de focus.** La sélection se lit au fond
-  (`--avatar-color-selected-*`), l'anneau reste réservé au focus clavier. Une photo
-  sélectionnée n'a donc plus de marque visible.
+  (`--avatar-color-selected-*`), l'anneau reste réservé au focus clavier. Exception :
+  une photo chargée cache ce fond, l'anneau de focus marque alors la sélection.
 - **`AvatarGroup`** : épaisseur de l'anneau (`--avatar-group-border-width-*`) et
   chevauchement (`--avatar-group-spacing-overlap-*`) passent par des tokens, au lieu de
   marges inline calculées en TSX. Un `Avatar` hors groupe avec `borderColor` n'a plus

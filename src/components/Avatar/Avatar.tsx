@@ -179,6 +179,10 @@ export function Avatar({
     content = defaultIcon;
   }
 
+  // Exception : une photo chargée cache le fond `selected`, la sélection se lit
+  // alors à l'anneau de focus. Sinon l'anneau reste réservé au focus clavier.
+  const showSelectedRing = isSelected && Boolean(src) && imageLoaded;
+
   // Accessible label for the container (only needed when there's no <img> with alt)
   const ariaLabel = src ? undefined : (alt ?? initials);
 
@@ -204,7 +208,9 @@ export function Avatar({
         {({ isFocusVisible }) => (
           <>
             {content}
-            {isFocusVisible && <FocusRing borderRadius={focusRadius} position="inside" />}
+            {(isFocusVisible || showSelectedRing) && (
+              <FocusRing borderRadius={focusRadius} position="inside" />
+            )}
           </>
         )}
       </AriaButton>
@@ -221,6 +227,7 @@ export function Avatar({
         aria-label={ariaLabel}
       >
         {content}
+        {showSelectedRing && <FocusRing borderRadius={focusRadius} position="inside" />}
       </div>
     );
   }
