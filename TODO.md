@@ -169,6 +169,15 @@ hovered}` repointées vers `text/link/{default,hovered}`, ajout de
   contre une vieille version des tokens. Piste : `pnpm install --frozen-lockfile` en
   pré-test local, ou un check de version dans `test.setup.ts`.
 
+- **Storybook 11 : à évaluer à la sortie stable** (2026-11-19)
+  La page « What's new » annonce Storybook 11 en bêta, sortie stable prévue en décembre 2026.
+  Intérêts pour ce dépôt : skills officiels pour agents (`component-docs`, `write-stories`,
+  `test-stories`, `ui-review`) utilisables sans Storybook lancé, CLI `storybook tools`,
+  docgen React via `react-component-meta`, stories typées en CSF 4 (codemod, CSF 3 conservé).
+  Ne pas passer à la bêta : version majeure avec changements cassants, alors que la 10.6.7
+  vient d'être stabilisée. À la sortie stable, vérifier la compatibilité de
+  `@storybook/addon-designs`, de Chromatic et des 613 tests de stories.
+
 - **CI : `playwright install --with-deps` dépend des miroirs Ubuntu** (2026-11-19)
   Le job « Lint, Test & Build » a échoué deux fois de suite sur la PR #360 (miroirs
   `azure.archive.ubuntu.com` et `security.ubuntu.com` en 503 ou injoignables) avant de
