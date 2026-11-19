@@ -1,7 +1,9 @@
 // Tests unitaires du composant AvatarGroup
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { readFileSync } from "node:fs";
 import { describe, expect, it, vi } from "vitest";
+import { declarationValue, ruleBody } from "../../tokens/cssTokens.testUtils";
 import { AvatarGroup } from "./AvatarGroup";
 
 const ITEMS = [
@@ -130,11 +132,28 @@ describe("AvatarGroup", () => {
   });
 
   describe("stacking", () => {
-    it("should apply negative margin to non-first items", () => {
-      const { container } = render(<AvatarGroup items={ITEMS} size="medium" />);
-      const items = container.querySelectorAll(".item");
-      expect(items[0]).toHaveStyle({ marginLeft: "0" });
-      expect(items[1]).toHaveStyle({ marginLeft: "-8px" });
+    it("should apply the size class carrying the overlap token", () => {
+      const { container } = render(<AvatarGroup items={ITEMS} size="large" />);
+      expect(container.firstElementChild).toHaveClass("group", "large");
+    });
+
+    // REASON: jsdom ne calcule pas les var() ; on vérifie le CSS Module, qui
+    // relie chaque taille à son token de chevauchement (marge négative).
+    it.each(["xsmall", "small", "medium", "large", "xlarge", "xxlarge", "xxxlarge"])(
+      "should map .%s to its overlap token",
+      (size) => {
+        const css = readFileSync("src/components/AvatarGroup/AvatarGroup.module.css", "utf8");
+        expect(declarationValue(ruleBody(css, `.${size}`), "--avatar-group-overlap")).toBe(
+          `var(--avatar-group-spacing-overlap-${size})`
+        );
+      }
+    );
+
+    it("should overlap every avatar but the first", () => {
+      const css = readFileSync("src/components/AvatarGroup/AvatarGroup.module.css", "utf8");
+      expect(declarationValue(ruleBody(css, ".group > * + *"), "margin-left")).toBe(
+        "var(--avatar-group-overlap)"
+      );
     });
 
     it("should apply descending z-index to items", () => {

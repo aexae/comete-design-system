@@ -12,11 +12,12 @@
   overflow: hidden;
   flex-shrink: 0;
 
-  background-color: var(--background-neutral-subtler-default);
-  color: var(--text-default-default);
+  background-color: var(--avatar-color-neutral-background-default);
+  color: var(--avatar-color-neutral-text);
   font-family: var(--font-family-primary);
   font-weight: var(--font-weight-medium);
 
+  border-radius: var(--avatar-radius);
   user-select: none;
   cursor: default;
 
@@ -33,19 +34,19 @@
 /* Selected ----------------------------------------------------------------- */
 
 .avatar[data-selected] {
-  color: var(--text-selected);
-  background-color: var(--background-selected-subtlest-default);
+  color: var(--avatar-color-selected-text);
+  background-color: var(--avatar-color-selected-background);
 }
 
 /* Interactive states (button mode) ---------------------------------------- */
 
 .avatar[data-hovered]:not([data-disabled]) {
-  background-color: var(--background-neutral-subtler-hovered);
+  background-color: var(--avatar-color-neutral-background-hovered);
   cursor: pointer;
 }
 
 .avatar[data-pressed]:not([data-disabled]) {
-  background-color: var(--background-neutral-subtler-pressed);
+  background-color: var(--avatar-color-neutral-background-pressed);
 }
 
 /* ==========================================================================
@@ -63,107 +64,115 @@
    ========================================================================== */
 
 .neutral {
-  background-color: var(--background-neutral-subtler-default);
-  color: var(--text-default-default);
+  background-color: var(--avatar-color-neutral-background-default);
+  color: var(--avatar-color-neutral-text);
+  --avatar-icon-color: var(--avatar-color-neutral-icon);
 }
 
 .neutral[data-hovered]:not([data-disabled]) {
-  background-color: var(--background-neutral-subtler-hovered);
+  background-color: var(--avatar-color-neutral-background-hovered);
 }
 
 .neutral[data-pressed]:not([data-disabled]) {
-  background-color: var(--background-neutral-subtler-pressed);
+  background-color: var(--avatar-color-neutral-background-pressed);
 }
 
 .comete {
-  background-color: var(--background-comete-subtlest-default);
-  color: var(--text-comete-default);
+  background-color: var(--avatar-color-comete-background-default);
+  color: var(--avatar-color-comete-text);
+  --avatar-icon-color: var(--avatar-color-comete-icon);
 }
 
 .comete[data-hovered]:not([data-disabled]) {
-  background-color: var(--background-comete-subtlest-hovered);
+  background-color: var(--avatar-color-comete-background-hovered);
 }
 
 .comete[data-pressed]:not([data-disabled]) {
-  background-color: var(--background-comete-subtlest-pressed);
+  background-color: var(--avatar-color-comete-background-pressed);
 }
 
 .accentPurple {
-  background-color: var(--background-accent-purple-subtlest-default);
-  color: var(--text-accent-purple-default);
+  background-color: var(--avatar-color-accent-purple-background-default);
+  color: var(--avatar-color-accent-purple-text);
+  --avatar-icon-color: var(--avatar-color-accent-purple-icon);
 }
 
 .accentPurple[data-hovered]:not([data-disabled]) {
-  background-color: var(--background-accent-purple-subtlest-hovered);
+  background-color: var(--avatar-color-accent-purple-background-hovered);
 }
 
 .accentPurple[data-pressed]:not([data-disabled]) {
-  background-color: var(--background-accent-purple-subtlest-pressed);
+  background-color: var(--avatar-color-accent-purple-background-pressed);
 }
 
 .accentTeal {
-  background-color: var(--background-accent-teal-subtlest-default);
-  color: var(--text-accent-teal-default);
+  background-color: var(--avatar-color-accent-teal-background-default);
+  color: var(--avatar-color-accent-teal-text);
+  --avatar-icon-color: var(--avatar-color-accent-teal-icon);
 }
 
 .accentTeal[data-hovered]:not([data-disabled]) {
-  background-color: var(--background-accent-teal-subtlest-hovered);
+  background-color: var(--avatar-color-accent-teal-background-hovered);
 }
 
 .accentTeal[data-pressed]:not([data-disabled]) {
-  background-color: var(--background-accent-teal-subtlest-pressed);
+  background-color: var(--avatar-color-accent-teal-background-pressed);
 }
 
 .accentTurquoise {
-  background-color: var(--background-accent-turquoise-subtlest-default);
-  color: var(--text-accent-turquoise-default);
+  background-color: var(--avatar-color-accent-turquoise-background-default);
+  color: var(--avatar-color-accent-turquoise-text);
+  --avatar-icon-color: var(--avatar-color-accent-turquoise-icon);
 }
 
 .accentTurquoise[data-hovered]:not([data-disabled]) {
-  background-color: var(--background-accent-turquoise-subtlest-hovered);
+  background-color: var(--avatar-color-accent-turquoise-background-hovered);
 }
 
 .accentTurquoise[data-pressed]:not([data-disabled]) {
-  background-color: var(--background-accent-turquoise-subtlest-pressed);
+  background-color: var(--avatar-color-accent-turquoise-background-pressed);
 }
 
 .accentMagenta {
-  background-color: var(--background-accent-magenta-subtlest-default);
-  color: var(--text-accent-magenta-default);
+  background-color: var(--avatar-color-accent-magenta-background-default);
+  color: var(--avatar-color-accent-magenta-text);
+  --avatar-icon-color: var(--avatar-color-accent-magenta-icon);
 }
 
 .accentMagenta[data-hovered]:not([data-disabled]) {
-  background-color: var(--background-accent-magenta-subtlest-hovered);
+  background-color: var(--avatar-color-accent-magenta-background-hovered);
 }
 
 .accentMagenta[data-pressed]:not([data-disabled]) {
-  background-color: var(--background-accent-magenta-subtlest-pressed);
+  background-color: var(--avatar-color-accent-magenta-background-pressed);
 }
 
 .accentBlueGrey {
-  background-color: var(--background-accent-blue-grey-subtlest-default);
-  color: var(--text-accent-blue-grey-default);
+  background-color: var(--avatar-color-accent-blue-grey-background-default);
+  color: var(--avatar-color-accent-blue-grey-text);
+  --avatar-icon-color: var(--avatar-color-accent-blue-grey-icon);
 }
 
 .accentBlueGrey[data-hovered]:not([data-disabled]) {
-  background-color: var(--background-accent-blue-grey-subtlest-hovered);
+  background-color: var(--avatar-color-accent-blue-grey-background-hovered);
 }
 
 .accentBlueGrey[data-pressed]:not([data-disabled]) {
-  background-color: var(--background-accent-blue-grey-subtlest-pressed);
+  background-color: var(--avatar-color-accent-blue-grey-background-pressed);
 }
 
 /* `isSelected` l'emporte sur la couleur : un avatar sélectionné reste
    sélectionné. Déclaré APRÈS les couleurs, à spécificité supérieure. */
 .avatar[data-selected][data-selected] {
-  background-color: var(--background-selected-subtlest-default);
-  color: var(--text-selected);
+  background-color: var(--avatar-color-selected-background);
+  color: var(--avatar-color-selected-text);
+  --avatar-icon-color: var(--avatar-color-selected-icon);
 }
 
 /* Disabled ----------------------------------------------------------------- */
 
 .avatar[data-disabled] {
-  opacity: var(--opacity-disabled);
+  opacity: var(--avatar-opacity-disabled);
   cursor: not-allowed;
 }
 
@@ -172,74 +181,52 @@
    ========================================================================== */
 
 .xsmall {
-  --avatar-border-width: var(--size0125);
-  width: var(--size200);
-  height: var(--size200);
-  border-radius: var(--radius025);
+  width: var(--avatar-size-xsmall-container);
+  height: var(--avatar-size-xsmall-container);
+  --avatar-icon-size: var(--avatar-size-xsmall-icon);
   font-size: var(--font-size-ui-xxxs);
 }
 
 .small {
-  --avatar-border-width: var(--size0125);
-  width: var(--size300);
-  height: var(--size300);
-  border-radius: var(--radius0375);
+  width: var(--avatar-size-small-container);
+  height: var(--avatar-size-small-container);
+  --avatar-icon-size: var(--avatar-size-small-icon);
   font-size: var(--font-size-ui-xxs);
 }
 
 .medium {
-  --avatar-border-width: var(--size025);
-  width: var(--size400);
-  height: var(--size400);
-  border-radius: var(--radius050);
+  width: var(--avatar-size-medium-container);
+  height: var(--avatar-size-medium-container);
+  --avatar-icon-size: var(--avatar-size-medium-icon);
   font-size: var(--font-size-ui-xs);
 }
 
 .large {
-  --avatar-border-width: var(--size025);
-  width: var(--size500);
-  height: var(--size500);
-  border-radius: var(--radius075);
+  width: var(--avatar-size-large-container);
+  height: var(--avatar-size-large-container);
+  --avatar-icon-size: var(--avatar-size-large-icon);
   font-size: var(--font-size-ui-s);
 }
 
 .xlarge {
-  --avatar-border-width: var(--size025);
-  width: var(--size800);
-  height: var(--size800);
-  border-radius: var(--radius100);
+  width: var(--avatar-size-xlarge-container);
+  height: var(--avatar-size-xlarge-container);
+  --avatar-icon-size: var(--avatar-size-xlarge-icon);
   font-size: var(--font-size-ui-m);
 }
 
 .xxlarge {
-  --avatar-border-width: var(--size0375);
-  width: var(--size1200);
-  height: var(--size1200);
-  border-radius: var(--radius125);
+  width: var(--avatar-size-xxlarge-container);
+  height: var(--avatar-size-xxlarge-container);
+  --avatar-icon-size: var(--avatar-size-xxlarge-icon);
   font-size: var(--font-size-ui-xl);
 }
 
 .xxxlarge {
-  --avatar-border-width: var(--size050);
-  width: var(--size1600);
-  height: var(--size1600);
-  border-radius: var(--radius150);
+  width: var(--avatar-size-xxxlarge-container);
+  height: var(--avatar-size-xxxlarge-container);
+  --avatar-icon-size: var(--avatar-size-xxxlarge-icon);
   font-size: var(--font-size-ui-xxl);
-}
-
-/* ==========================================================================
-   Appearance: rounded
-   Override border-radius after size declarations (same specificity, later wins)
-   ========================================================================== */
-
-.rounded.xsmall,
-.rounded.small,
-.rounded.medium,
-.rounded.large,
-.rounded.xlarge,
-.rounded.xxlarge,
-.rounded.xxxlarge {
-  border-radius: var(--radius-round);
 }
 
 /* ==========================================================================
@@ -278,9 +265,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50%;
-  height: 50%;
+  width: var(--avatar-icon-size);
+  height: var(--avatar-icon-size);
   pointer-events: none;
+}
+
+/* L'Icon pose sa couleur par la classe `comete-icon--default` : la couleur de
+   l'avatar (--avatar-icon-color, posée par la classe de couleur ou la sélection)
+   la remplace. Spécificité (0,2,0) contre (0,1,0) pour la classe de l'Icon. */
+.iconSlot :global(.comete-icon--default) {
+  color: var(--avatar-icon-color);
+}
+
+/* L'Icon pose la taille de son svg en attributs : le slot dimensionné par
+   --avatar-icon-size fait foi. */
+.iconSlot > *,
+.iconSlot svg {
+  width: 100%;
+  height: 100%;
 }
 
 /* ==========================================================================

@@ -68,7 +68,8 @@ export interface AvatarProps {
   onPress?: AriaButtonProps["onPress"];
   /**
    * Border colour applied as a box-shadow ring around the avatar.
-   * Used by `AvatarGroup` to match the container background.
+   * Used by `AvatarGroup` to match the container background. L'épaisseur vient
+   * de l'`AvatarGroup` (`--avatar-group-border-width-*`) : hors groupe, pas d'anneau.
    * When omitted no ring is rendered.
    */
   borderColor?: string;
@@ -79,17 +80,6 @@ export interface AvatarProps {
 }
 
 // ----------------------------------------------------------------------
-
-/** Maps each avatar size to the icon size in pixels (matching size tokens). */
-const SIZE_ICON_MAP: Record<AvatarSize, number> = {
-  xsmall: 10, // --size125
-  small: 14, // --size175
-  medium: 16, // --size200
-  large: 20, // --size250
-  xlarge: 32, // --size400
-  xxlarge: 48, // --size600
-  xxxlarge: 64, // --size800
-};
 
 // ----------------------------------------------------------------------
 
@@ -133,7 +123,7 @@ export function Avatar({
     setImageLoaded(false);
   }, [src]);
 
-  const classNames = [styles.avatar, styles.rounded, styles[size], styles[color], className]
+  const classNames = [styles.avatar, styles[size], styles[color], className]
     .filter(Boolean)
     .join(" ");
 
@@ -144,12 +134,16 @@ export function Avatar({
   // --- Content resolution ---
   // Default fallback is always the Person icon (or custom icon prop).
   // Photo loading: initials (if available) or icon while image loads.
-  // XS avatars display a single letter.
-  const maxInitialsChars = size === "xsmall" ? 1 : 2;
+  // xsmall et small n'affichent qu'une lettre. Un compteur « +N » (débordement
+  // de l'AvatarGroup) n'est pas des initiales : il s'affiche en entier.
+  const maxInitialsChars = size === "xsmall" || size === "small" ? 1 : 2;
+  const initialsText = initials?.startsWith("+")
+    ? initials
+    : initials?.slice(0, maxInitialsChars).toUpperCase();
 
   const defaultIcon = (
     <span className={styles.iconSlot}>
-      <Icon icon={icon ?? "Person"} appearance="filled" size={SIZE_ICON_MAP[size]} />
+      <Icon icon={icon ?? "Person"} appearance="filled" />
     </span>
   );
 
@@ -157,7 +151,7 @@ export function Avatar({
   if (src) {
     const placeholder = initials ? (
       <span className={styles.initials} aria-hidden="true">
-        {initials.slice(0, maxInitialsChars).toUpperCase()}
+        {initialsText}
       </span>
     ) : (
       defaultIcon
@@ -178,14 +172,12 @@ export function Avatar({
   } else if (initials) {
     content = (
       <span className={styles.initials} aria-hidden="true">
-        {initials.slice(0, maxInitialsChars).toUpperCase()}
+        {initialsText}
       </span>
     );
   } else {
     content = defaultIcon;
   }
-
-  const showSelectedRing = isSelected;
 
   // Accessible label for the container (only needed when there's no <img> with alt)
   const ariaLabel = src ? undefined : (alt ?? initials);
@@ -212,9 +204,7 @@ export function Avatar({
         {({ isFocusVisible }) => (
           <>
             {content}
-            {(isFocusVisible || showSelectedRing) && (
-              <FocusRing borderRadius={focusRadius} position="inside" />
-            )}
+            {isFocusVisible && <FocusRing borderRadius={focusRadius} position="inside" />}
           </>
         )}
       </AriaButton>
@@ -231,7 +221,6 @@ export function Avatar({
         aria-label={ariaLabel}
       >
         {content}
-        {showSelectedRing && <FocusRing borderRadius={focusRadius} position="inside" />}
       </div>
     );
   }

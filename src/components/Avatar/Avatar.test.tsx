@@ -1,7 +1,9 @@
 // Tests unitaires du composant Avatar
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { readFileSync } from "node:fs";
 import { describe, expect, it, vi } from "vitest";
+import { declarationValue, ruleBody } from "../../tokens/cssTokens.testUtils";
 import { Avatar } from "./Avatar";
 
 // NOTE: Vitest transforme les CSS Modules en proxy identité ({ avatar: "avatar", ... })
@@ -22,9 +24,9 @@ describe("Avatar", () => {
   });
 
   describe("classes CSS par défaut", () => {
-    it("should apply default rounded and size classes when no props given", () => {
+    it("should apply default size class when no props given", () => {
       const { container } = render(<Avatar />);
-      expect(container.firstElementChild).toHaveClass("avatar", "rounded", "medium");
+      expect(container.firstElementChild).toHaveClass("avatar", "medium");
     });
   });
 
@@ -91,9 +93,22 @@ describe("Avatar", () => {
       expect(container.querySelector(`.initials`)).toHaveTextContent("AB");
     });
 
-    it("should truncate initials to 1 character when size is xsmall", () => {
-      const { container } = render(<Avatar initials="abc" size="xsmall" />);
-      expect(container.querySelector(`.initials`)).toHaveTextContent("A");
+    it.each([["xsmall"], ["small"]] as const)(
+      "should truncate initials to 1 character when size is %s",
+      (size) => {
+        const { container } = render(<Avatar initials="abc" size={size} />);
+        expect(container.querySelector(`.initials`)).toHaveTextContent(/^A$/);
+      }
+    );
+
+    it("should keep a +N overflow counter whole even at small sizes", () => {
+      const { container } = render(<Avatar initials="+12" size="small" />);
+      expect(container.querySelector(`.initials`)).toHaveTextContent("+12");
+    });
+
+    it("should keep 2 characters from medium upwards", () => {
+      const { container } = render(<Avatar initials="abc" size="medium" />);
+      expect(container.querySelector(`.initials`)).toHaveTextContent("AB");
     });
 
     it("should set aria-label to initials on the container when no src", () => {
@@ -126,28 +141,28 @@ describe("Avatar", () => {
     });
   });
 
-  describe("selected ring (photo only)", () => {
-    it("should render FocusRing when isSelected with loaded photo in display mode", () => {
+  describe("état selected", () => {
+    // Le selected se lit au fond (`--avatar-color-selected-*`), jamais à
+    // l'anneau de focus, réservé au focus clavier.
+    it("should not render FocusRing when isSelected in display mode", () => {
+      const { container } = render(<Avatar isSelected initials="AB" />);
+      expect(container.querySelector(".ring")).not.toBeInTheDocument();
+    });
+
+    it("should not render FocusRing when isSelected in interactive mode", () => {
+      const { container } = render(<Avatar onPress={() => undefined} isSelected initials="AB" />);
+      expect(container.querySelector(".ring")).not.toBeInTheDocument();
+    });
+
+    it("should not render FocusRing when isSelected with a loaded photo", () => {
       const { container } = render(<Avatar isSelected src="/photo.jpg" />);
       fireEvent.load(container.querySelector("img")!);
-      expect(container.querySelector(".ring")).toBeInTheDocument();
+      expect(container.querySelector(".ring")).not.toBeInTheDocument();
     });
 
-    it("should render FocusRing when isSelected with initials", () => {
-      const { container } = render(<Avatar isSelected initials="AB" />);
-      expect(container.querySelector(".ring")).toBeInTheDocument();
-    });
-
-    it("should render FocusRing when isSelected with loaded photo in interactive mode", () => {
-      const { container } = render(
-        <Avatar onPress={() => undefined} isSelected src="/photo.jpg" />
-      );
-      fireEvent.load(container.querySelector("img")!);
-      expect(container.querySelector(".ring")).toBeInTheDocument();
-    });
-
-    it("should render FocusRing when isSelected with initials in interactive mode", () => {
-      const { container } = render(<Avatar onPress={() => undefined} isSelected initials="AB" />);
+    it("should render FocusRing on keyboard focus", async () => {
+      const { container } = render(<Avatar onPress={() => undefined} initials="AB" />);
+      await userEvent.tab();
       expect(container.querySelector(".ring")).toBeInTheDocument();
     });
   });
@@ -255,6 +270,30 @@ describe("Avatar", () => {
       const bouton = screen.getByRole("button");
       expect(bouton).toHaveClass("accentMagenta");
       expect(bouton).toHaveAttribute("data-selected");
+    });
+
+    // REASON: jsdom ne calcule pas les var() ; on vérifie le CSS Module, qui
+    // relie chaque couleur (et la sélection) à son token d'icône.
+    it.each([
+      [".neutral", "neutral"],
+      [".comete", "comete"],
+      [".accentPurple", "accent-purple"],
+      [".accentBlueGrey", "accent-blue-grey"],
+      [".avatar[data-selected][data-selected]", "selected"],
+    ] as const)("should map %s to the %s icon token", (selector, token) => {
+      const css = readFileSync("src/components/Avatar/Avatar.module.css", "utf8");
+      expect(declarationValue(ruleBody(css, selector), "--avatar-icon-color")).toBe(
+        `var(--avatar-color-${token}-icon)`
+      );
+    });
+
+    it("should let the avatar colour override the default icon colour", () => {
+      const { container } = render(<Avatar color="comete" />);
+      expect(container.querySelector(".iconSlot svg")).toHaveClass("comete-icon--default");
+      const css = readFileSync("src/components/Avatar/Avatar.module.css", "utf8");
+      expect(
+        declarationValue(ruleBody(css, ".iconSlot :global(.comete-icon--default)"), "color")
+      ).toBe("var(--avatar-icon-color)");
     });
   });
 
