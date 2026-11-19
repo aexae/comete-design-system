@@ -166,8 +166,10 @@
   background-color: var(--button-color-contained-neutral-background-pressed);
 }
 
-/* subtle / subtlest — ghost : pas de fond au repos (rôle IconButton). */
+/* subtle / subtlest : même fond que neutral au repos (tokens 0.28.0), seul le
+   texte diffère. Sans règle, le <button> affichait le gris par défaut du navigateur. */
 .contained.color-subtle {
+  background-color: var(--button-color-contained-subtle-background-default);
   color: var(--button-color-contained-subtle-text-default);
 }
 .contained.color-subtle:not([data-disabled])[data-hovered] {
@@ -178,6 +180,7 @@
 }
 
 .contained.color-subtlest {
+  background-color: var(--button-color-contained-subtlest-background-default);
   color: var(--button-color-contained-subtlest-text-default);
 }
 .contained.color-subtlest:not([data-disabled])[data-hovered] {

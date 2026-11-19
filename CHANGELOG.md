@@ -33,6 +33,10 @@ entre versions alpha.
 
 ### Modifié
 
+- **`Button` `contained` `subtle` / `subtlest` : fond au repos tokenisé**
+  (`--button-color-contained-{subtle,subtlest}-background-default`, tokens 0.28.0, même
+  gris que `neutral`). Sans règle, le `<button>` affichait le gris par défaut du
+  navigateur : le rendu ne change pas, il passe par un token.
 - **`BottomNav.Action` sur `--background-comete-bold-default`** au lieu de
   `--background-brand-bold-default` : c'est un contrôle, il ne suit pas la charte client
   (ADR 0001). Tokens 0.27.0 : `--logo-comete-default` blanc en thème sombre.
