@@ -133,7 +133,7 @@ const meta: Meta<AvatarProps> = {
     },
     design: {
       type: "figma",
-      url: figmaUrl("2745:15527"),
+      url: figmaUrl("20406:6274"),
     },
   },
 };
@@ -147,7 +147,7 @@ type Story = StoryObj<AvatarProps>;
 export const WithInitials: Story = {
   args: { initials: "AB", size: "xlarge" },
   parameters: {
-    design: { type: "figma", url: figmaUrl("2745:15477") },
+    design: { type: "figma", url: figmaUrl("20405:683") },
   },
 };
 
@@ -158,14 +158,14 @@ export const WithPhoto: Story = {
     size: "xlarge",
   },
   parameters: {
-    design: { type: "figma", url: figmaUrl("2745:16083") },
+    design: { type: "figma", url: figmaUrl("20406:5920") },
   },
 };
 
 export const WithIcon: Story = {
   args: { icon: "Person" as unknown as undefined, size: "xlarge" },
   parameters: {
-    design: { type: "figma", url: figmaUrl("2739:5312") },
+    design: { type: "figma", url: figmaUrl("20406:3265") },
   },
 };
 
@@ -174,10 +174,12 @@ export const WithIcon: Story = {
 
 export const Selected: Story = {
   args: { isSelected: true, size: "xlarge" },
+  parameters: { design: { type: "figma", url: figmaUrl("20406:871") } },
 };
 
 export const Disabled: Story = {
   args: { isDisabled: true, size: "xlarge" },
+  parameters: { design: { type: "figma", url: figmaUrl("20406:934") } },
 };
 
 // ----------------------------------------------------------------------
@@ -202,7 +204,7 @@ export const Interactive: Story = {
 export const WithNotification: Story = {
   args: { initials: "AB", size: "xlarge", notification: 3 },
   parameters: {
-    design: { type: "figma", url: figmaUrl("2726:20433") },
+    design: { type: "figma", url: figmaUrl("20406:6274") },
   },
 };
 
@@ -214,7 +216,7 @@ export const WithPresence: Story = {
     presence: true,
   },
   parameters: {
-    design: { type: "figma", url: figmaUrl("2726:20433") },
+    design: { type: "figma", url: figmaUrl("20406:6274") },
   },
 };
 
@@ -319,7 +321,10 @@ const COULEURS = [
  * Sur une photo la couleur ne se voit pas : l'image couvre le fond.
  */
 export const Couleurs: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+    design: { type: "figma", url: figmaUrl("20406:997") },
+  },
   render: () => (
     <LabeledRow gap={16}>
       {COULEURS.map(({ color, initials }) => (

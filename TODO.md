@@ -2,6 +2,27 @@
 
 ## Fiabilité / qualité
 
+- **Button et Avatar : tokens restructurés, Figma rebuild et migrations faits (2026-11-19).**
+  Restes :
+  - **Disabled en opacité pour les 22 autres composants** (couleurs `*-disabled`
+    aujourd'hui), un par un.
+  - **Avatar photo sélectionné sans marque visible** : sans anneau de focus, le fond
+    `selected` est caché par la photo (code et Figma). À trancher : surcouche, anneau
+    dédié à la sélection, ou pas de sélection sur photo.
+  - **Anneau de l'AvatarGroup** : défaut code `--background-surface-default` (suit le
+    thème), Figma en #FFFFFF brut (faux en thème sombre, à surcharger par instance).
+  - **Variables obsolètes restantes** dans le ❖ Avatar : `DEPRECATED-badge/*` (badges)
+    et `DEPRECATED-focus-ring/*` (focus ring).
+  - **Guidance ❖ Avatar** : le tableau mentionne encore les apparences round / square.
+  - **Table Figma** : les avatars de la colonne User sont des avatars small redimensionnés
+    à 14 px (surcharge héritée de l'ancien set).
+  - **Rendus changés pour les consommateurs** : icône d'avatar colorée, une lettre en
+    small, link-subtle neutral plus foncé au repos, selected sans anneau.
+- **AutosaveIndicator absent du DS.** Le composant existe dans Figma (default / success /
+  critical, desktop et mobile) et ses tokens `--autosave-indicator-*` existent, mais pas
+  de composant React. À créer si les produits en ont besoin (un `Switch` documente déjà
+  un usage d'enregistrement automatique).
+
 - ~~**Button touch : padding-x hors de `control/padding-x/touch`**~~ fait (2026-11-18) :
   `control/padding-x/touch` à 16 px pour tous les contrôles, Button aliasé (tokens 0.22.0).
   Effet de bord : les champs touch gagnent 4 px de padding horizontal, à valider à l'œil.

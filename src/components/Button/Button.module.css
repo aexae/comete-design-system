@@ -1,7 +1,9 @@
 /* ==========================================================================
    Button — Comète Design System
    Consomme la couche de tokens de composants `--button-*`
-   (@aexae/comete-design-tokens >= 0.20.0), qui aliase le sémantique.
+   (@aexae/comete-design-tokens >= 0.24.0), qui aliase le sémantique :
+   `--button-color-*`, `--button-size-*`, `--button-spacing-*`,
+   `--button-radius-*` et `--button-opacity-disabled`.
    Aucune valeur hardcodée.
    ========================================================================== */
 
@@ -10,7 +12,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--button-size-default-gap);
+  gap: var(--button-spacing-default-gap);
 
   /* Shape */
   border-radius: var(--radius0375);
@@ -39,28 +41,29 @@
 
 /* Focus visible --------------------------------------------------------- */
 .button[data-focus-visible] {
-  outline: 2px solid var(--button-focus-border);
+  outline: 2px solid var(--button-color-focus-border);
   outline-offset: 2px;
 }
 
 /* Disabled -------------------------------------------------------------- */
 .button[data-disabled] {
   cursor: not-allowed;
-  opacity: var(--opacity-disabled);
+  opacity: var(--button-opacity-disabled);
 }
 
 /* ==========================================================================
    Densité — hauteur, padding, radius, icône, gap via les tokens de composant
-   `--button-size-*`. --button-icon-size est consommée par .icon.
+   `--button-size-*`, `--button-spacing-*` et `--button-radius-*`.
+   --button-icon-size est consommée par .icon.
    ========================================================================== */
 
 /* Compact — padding Y nul (pas de token padding-y en compact) */
 .densityCompact {
   --button-icon-size: var(--button-size-compact-icon);
   min-height: var(--button-size-compact-height);
-  padding: 0 var(--button-size-compact-padding-x);
-  border-radius: var(--button-size-compact-radius);
-  gap: var(--button-size-compact-gap);
+  padding: 0 var(--button-spacing-compact-padding-x);
+  border-radius: var(--button-radius-compact);
+  gap: var(--button-spacing-compact-gap);
   /* Body/S/Medium */
   font-size: var(--font-size-ui-xxs);
   line-height: var(--line-height-ui-xxs);
@@ -70,9 +73,9 @@
 .densityDefault {
   --button-icon-size: var(--button-size-default-icon);
   min-height: var(--button-size-default-height);
-  padding: var(--button-size-default-padding-y) var(--button-size-default-padding-x);
-  border-radius: var(--button-size-default-radius);
-  gap: var(--button-size-default-gap);
+  padding: var(--button-spacing-default-padding-y) var(--button-spacing-default-padding-x);
+  border-radius: var(--button-radius-default);
+  gap: var(--button-spacing-default-gap);
   /* Body/M/Medium */
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-s);
@@ -82,9 +85,9 @@
 .densityTouch {
   --button-icon-size: var(--button-size-touch-icon);
   min-height: var(--button-size-touch-height);
-  padding: var(--button-size-touch-padding-y) var(--button-size-touch-padding-x);
-  border-radius: var(--button-size-touch-radius);
-  gap: var(--button-size-touch-gap);
+  padding: var(--button-spacing-touch-padding-y) var(--button-spacing-touch-padding-x);
+  border-radius: var(--button-radius-touch);
+  gap: var(--button-spacing-touch-gap);
   /* Body/L/Medium */
   font-size: var(--font-size-ui-s);
   line-height: var(--line-height-ui-m);
@@ -119,13 +122,13 @@
 
 /* shape="square" : l'icon-only reprend le radius de sa densité. */
 .densityCompact.shapeSquare.iconOnly {
-  border-radius: var(--button-size-compact-radius);
+  border-radius: var(--button-radius-compact);
 }
 .densityDefault.shapeSquare.iconOnly {
-  border-radius: var(--button-size-default-radius);
+  border-radius: var(--button-radius-default);
 }
 .densityTouch.shapeSquare.iconOnly {
-  border-radius: var(--button-size-touch-radius);
+  border-radius: var(--button-radius-touch);
 }
 .inline.shapeSquare.iconOnly {
   border-radius: var(--radius0375);
@@ -153,90 +156,90 @@
    ========================================================================== */
 
 .contained.default {
-  background-color: var(--button-contained-default-background-default);
-  color: var(--button-contained-default-text-default);
+  background-color: var(--button-color-contained-neutral-background-default);
+  color: var(--button-color-contained-neutral-text-default);
 }
 .contained.default:not([data-disabled])[data-hovered] {
-  background-color: var(--button-contained-default-background-hovered);
+  background-color: var(--button-color-contained-neutral-background-hovered);
 }
 .contained.default:not([data-disabled])[data-pressed] {
-  background-color: var(--button-contained-default-background-pressed);
+  background-color: var(--button-color-contained-neutral-background-pressed);
 }
 
 /* subtle / subtlest — ghost : pas de fond au repos (rôle IconButton). */
 .contained.color-subtle {
-  color: var(--button-contained-subtle-text-default);
+  color: var(--button-color-contained-subtle-text-default);
 }
 .contained.color-subtle:not([data-disabled])[data-hovered] {
-  background-color: var(--button-contained-subtle-background-hovered);
+  background-color: var(--button-color-contained-subtle-background-hovered);
 }
 .contained.color-subtle:not([data-disabled])[data-pressed] {
-  background-color: var(--button-contained-subtle-background-pressed);
+  background-color: var(--button-color-contained-subtle-background-pressed);
 }
 
 .contained.color-subtlest {
-  color: var(--button-contained-subtlest-text-default);
+  color: var(--button-color-contained-subtlest-text-default);
 }
 .contained.color-subtlest:not([data-disabled])[data-hovered] {
-  background-color: var(--button-contained-subtlest-background-hovered);
+  background-color: var(--button-color-contained-subtlest-background-hovered);
 }
 .contained.color-subtlest:not([data-disabled])[data-pressed] {
-  background-color: var(--button-contained-subtlest-background-pressed);
+  background-color: var(--button-color-contained-subtlest-background-pressed);
 }
 
 .contained.comete {
-  background-color: var(--button-contained-comete-background-default);
-  color: var(--button-contained-comete-text-default);
+  background-color: var(--button-color-contained-comete-background-default);
+  color: var(--button-color-contained-comete-text-default);
 }
 .contained.comete:not([data-disabled])[data-hovered] {
-  background-color: var(--button-contained-comete-background-hovered);
+  background-color: var(--button-color-contained-comete-background-hovered);
 }
 .contained.comete:not([data-disabled])[data-pressed] {
-  background-color: var(--button-contained-comete-background-pressed);
+  background-color: var(--button-color-contained-comete-background-pressed);
 }
 
 .contained.success {
-  background-color: var(--button-contained-success-background-default);
-  color: var(--button-contained-success-text-default);
+  background-color: var(--button-color-contained-success-background-default);
+  color: var(--button-color-contained-success-text-default);
 }
 .contained.success:not([data-disabled])[data-hovered] {
-  background-color: var(--button-contained-success-background-hovered);
+  background-color: var(--button-color-contained-success-background-hovered);
 }
 .contained.success:not([data-disabled])[data-pressed] {
-  background-color: var(--button-contained-success-background-pressed);
+  background-color: var(--button-color-contained-success-background-pressed);
 }
 
 .contained.critical {
-  background-color: var(--button-contained-critical-background-default);
-  color: var(--button-contained-critical-text-default);
+  background-color: var(--button-color-contained-critical-background-default);
+  color: var(--button-color-contained-critical-text-default);
 }
 .contained.critical:not([data-disabled])[data-hovered] {
-  background-color: var(--button-contained-critical-background-hovered);
+  background-color: var(--button-color-contained-critical-background-hovered);
 }
 .contained.critical:not([data-disabled])[data-pressed] {
-  background-color: var(--button-contained-critical-background-pressed);
+  background-color: var(--button-color-contained-critical-background-pressed);
 }
 
 .contained.warning {
-  background-color: var(--button-contained-warning-background-default);
-  color: var(--button-contained-warning-text-default);
+  background-color: var(--button-color-contained-warning-background-default);
+  color: var(--button-color-contained-warning-text-default);
 }
 .contained.warning:not([data-disabled])[data-hovered] {
-  background-color: var(--button-contained-warning-background-hovered);
+  background-color: var(--button-color-contained-warning-background-hovered);
 }
 .contained.warning:not([data-disabled])[data-pressed] {
-  background-color: var(--button-contained-warning-background-pressed);
+  background-color: var(--button-color-contained-warning-background-pressed);
 }
 
 .contained.information {
-  background-color: var(--button-contained-information-background-default);
-  color: var(--button-contained-information-text-default);
+  background-color: var(--button-color-contained-information-background-default);
+  color: var(--button-color-contained-information-text-default);
 }
 .contained.information:not([data-disabled])[data-hovered] {
-  background-color: var(--button-contained-information-background-hovered);
+  background-color: var(--button-color-contained-information-background-hovered);
 }
 .contained.information:not([data-disabled])[data-pressed] {
-  background-color: var(--button-contained-information-background-pressed);
+  background-color: var(--button-color-contained-information-background-pressed);
 }
 
 /* ==========================================================================
@@ -248,91 +251,91 @@
 }
 
 .outlined.default {
-  border-color: var(--button-outlined-default-border-default);
-  color: var(--button-outlined-default-text-default);
+  border-color: var(--button-color-outlined-neutral-border-default);
+  color: var(--button-color-outlined-neutral-text-default);
 }
 .outlined.default:not([data-disabled])[data-hovered] {
-  background-color: var(--button-outlined-default-background-hovered);
+  background-color: var(--button-color-outlined-neutral-background-hovered);
 }
 .outlined.default:not([data-disabled])[data-pressed] {
-  background-color: var(--button-outlined-default-background-pressed);
+  background-color: var(--button-color-outlined-neutral-background-pressed);
 }
 
 .outlined.color-subtle {
-  border-color: var(--button-outlined-subtle-border-default);
-  color: var(--button-outlined-subtle-text-default);
+  border-color: var(--button-color-outlined-subtle-border-default);
+  color: var(--button-color-outlined-subtle-text-default);
 }
 .outlined.color-subtle:not([data-disabled])[data-hovered] {
-  background-color: var(--button-outlined-subtle-background-hovered);
+  background-color: var(--button-color-outlined-subtle-background-hovered);
 }
 .outlined.color-subtle:not([data-disabled])[data-pressed] {
-  background-color: var(--button-outlined-subtle-background-pressed);
+  background-color: var(--button-color-outlined-subtle-background-pressed);
 }
 
 .outlined.color-subtlest {
-  border-color: var(--button-outlined-subtlest-border-default);
-  color: var(--button-outlined-subtlest-text-default);
+  border-color: var(--button-color-outlined-subtlest-border-default);
+  color: var(--button-color-outlined-subtlest-text-default);
 }
 .outlined.color-subtlest:not([data-disabled])[data-hovered] {
-  background-color: var(--button-outlined-subtlest-background-hovered);
+  background-color: var(--button-color-outlined-subtlest-background-hovered);
 }
 .outlined.color-subtlest:not([data-disabled])[data-pressed] {
-  background-color: var(--button-outlined-subtlest-background-pressed);
+  background-color: var(--button-color-outlined-subtlest-background-pressed);
 }
 
 .outlined.comete {
-  border-color: var(--button-outlined-comete-border-default);
-  color: var(--button-outlined-comete-text-default);
+  border-color: var(--button-color-outlined-comete-border-default);
+  color: var(--button-color-outlined-comete-text-default);
 }
 .outlined.comete:not([data-disabled])[data-hovered] {
-  background-color: var(--button-outlined-comete-background-hovered);
+  background-color: var(--button-color-outlined-comete-background-hovered);
 }
 .outlined.comete:not([data-disabled])[data-pressed] {
-  background-color: var(--button-outlined-comete-background-pressed);
+  background-color: var(--button-color-outlined-comete-background-pressed);
 }
 
 .outlined.success {
-  border-color: var(--button-outlined-success-border-default);
-  color: var(--button-outlined-success-text-default);
+  border-color: var(--button-color-outlined-success-border-default);
+  color: var(--button-color-outlined-success-text-default);
 }
 .outlined.success:not([data-disabled])[data-hovered] {
-  background-color: var(--button-outlined-success-background-hovered);
+  background-color: var(--button-color-outlined-success-background-hovered);
 }
 .outlined.success:not([data-disabled])[data-pressed] {
-  background-color: var(--button-outlined-success-background-pressed);
+  background-color: var(--button-color-outlined-success-background-pressed);
 }
 
 .outlined.critical {
-  border-color: var(--button-outlined-critical-border-default);
-  color: var(--button-outlined-critical-text-default);
+  border-color: var(--button-color-outlined-critical-border-default);
+  color: var(--button-color-outlined-critical-text-default);
 }
 .outlined.critical:not([data-disabled])[data-hovered] {
-  background-color: var(--button-outlined-critical-background-hovered);
+  background-color: var(--button-color-outlined-critical-background-hovered);
 }
 .outlined.critical:not([data-disabled])[data-pressed] {
-  background-color: var(--button-outlined-critical-background-pressed);
+  background-color: var(--button-color-outlined-critical-background-pressed);
 }
 
 .outlined.warning {
-  border-color: var(--button-outlined-warning-border-default);
-  color: var(--button-outlined-warning-text-default);
+  border-color: var(--button-color-outlined-warning-border-default);
+  color: var(--button-color-outlined-warning-text-default);
 }
 .outlined.warning:not([data-disabled])[data-hovered] {
-  background-color: var(--button-outlined-warning-background-hovered);
+  background-color: var(--button-color-outlined-warning-background-hovered);
 }
 .outlined.warning:not([data-disabled])[data-pressed] {
-  background-color: var(--button-outlined-warning-background-pressed);
+  background-color: var(--button-color-outlined-warning-background-pressed);
 }
 
 .outlined.information {
-  border-color: var(--button-outlined-information-border-default);
-  color: var(--button-outlined-information-text-default);
+  border-color: var(--button-color-outlined-information-border-default);
+  color: var(--button-color-outlined-information-text-default);
 }
 .outlined.information:not([data-disabled])[data-hovered] {
-  background-color: var(--button-outlined-information-background-hovered);
+  background-color: var(--button-color-outlined-information-background-hovered);
 }
 .outlined.information:not([data-disabled])[data-pressed] {
-  background-color: var(--button-outlined-information-background-pressed);
+  background-color: var(--button-color-outlined-information-background-pressed);
 }
 
 /* ==========================================================================
@@ -345,83 +348,83 @@
 }
 
 .subtle.default {
-  color: var(--button-subtle-default-text-default);
+  color: var(--button-color-subtle-neutral-text-default);
 }
 .subtle.default:not([data-disabled])[data-hovered] {
-  background-color: var(--button-subtle-default-background-hovered);
+  background-color: var(--button-color-subtle-neutral-background-hovered);
 }
 .subtle.default:not([data-disabled])[data-pressed] {
-  background-color: var(--button-subtle-default-background-pressed);
+  background-color: var(--button-color-subtle-neutral-background-pressed);
 }
 
 .subtle.color-subtle {
-  color: var(--button-subtle-subtle-text-default);
+  color: var(--button-color-subtle-subtle-text-default);
 }
 .subtle.color-subtle:not([data-disabled])[data-hovered] {
-  background-color: var(--button-subtle-subtle-background-hovered);
+  background-color: var(--button-color-subtle-subtle-background-hovered);
 }
 .subtle.color-subtle:not([data-disabled])[data-pressed] {
-  background-color: var(--button-subtle-subtle-background-pressed);
+  background-color: var(--button-color-subtle-subtle-background-pressed);
 }
 
 .subtle.color-subtlest {
-  color: var(--button-subtle-subtlest-text-default);
+  color: var(--button-color-subtle-subtlest-text-default);
 }
 .subtle.color-subtlest:not([data-disabled])[data-hovered] {
-  background-color: var(--button-subtle-subtlest-background-hovered);
+  background-color: var(--button-color-subtle-subtlest-background-hovered);
 }
 .subtle.color-subtlest:not([data-disabled])[data-pressed] {
-  background-color: var(--button-subtle-subtlest-background-pressed);
+  background-color: var(--button-color-subtle-subtlest-background-pressed);
 }
 
 .subtle.comete {
-  color: var(--button-subtle-comete-text-default);
+  color: var(--button-color-subtle-comete-text-default);
 }
 .subtle.comete:not([data-disabled])[data-hovered] {
-  background-color: var(--button-subtle-comete-background-hovered);
+  background-color: var(--button-color-subtle-comete-background-hovered);
 }
 .subtle.comete:not([data-disabled])[data-pressed] {
-  background-color: var(--button-subtle-comete-background-pressed);
+  background-color: var(--button-color-subtle-comete-background-pressed);
 }
 
 .subtle.success {
-  color: var(--button-subtle-success-text-default);
+  color: var(--button-color-subtle-success-text-default);
 }
 .subtle.success:not([data-disabled])[data-hovered] {
-  background-color: var(--button-subtle-success-background-hovered);
+  background-color: var(--button-color-subtle-success-background-hovered);
 }
 .subtle.success:not([data-disabled])[data-pressed] {
-  background-color: var(--button-subtle-success-background-pressed);
+  background-color: var(--button-color-subtle-success-background-pressed);
 }
 
 .subtle.critical {
-  color: var(--button-subtle-critical-text-default);
+  color: var(--button-color-subtle-critical-text-default);
 }
 .subtle.critical:not([data-disabled])[data-hovered] {
-  background-color: var(--button-subtle-critical-background-hovered);
+  background-color: var(--button-color-subtle-critical-background-hovered);
 }
 .subtle.critical:not([data-disabled])[data-pressed] {
-  background-color: var(--button-subtle-critical-background-pressed);
+  background-color: var(--button-color-subtle-critical-background-pressed);
 }
 
 .subtle.warning {
-  color: var(--button-subtle-warning-text-default);
+  color: var(--button-color-subtle-warning-text-default);
 }
 .subtle.warning:not([data-disabled])[data-hovered] {
-  background-color: var(--button-subtle-warning-background-hovered);
+  background-color: var(--button-color-subtle-warning-background-hovered);
 }
 .subtle.warning:not([data-disabled])[data-pressed] {
-  background-color: var(--button-subtle-warning-background-pressed);
+  background-color: var(--button-color-subtle-warning-background-pressed);
 }
 
 .subtle.information {
-  color: var(--button-subtle-information-text-default);
+  color: var(--button-color-subtle-information-text-default);
 }
 .subtle.information:not([data-disabled])[data-hovered] {
-  background-color: var(--button-subtle-information-background-hovered);
+  background-color: var(--button-color-subtle-information-background-hovered);
 }
 .subtle.information:not([data-disabled])[data-pressed] {
-  background-color: var(--button-subtle-information-background-pressed);
+  background-color: var(--button-color-subtle-information-background-pressed);
 }
 
 /* ==========================================================================
@@ -445,77 +448,77 @@
 }
 
 .link.default {
-  color: var(--button-link-default-text-default);
+  color: var(--button-color-link-neutral-text-default);
 }
 .link.default:not([data-disabled])[data-hovered] {
-  color: var(--button-link-default-text-hovered);
+  color: var(--button-color-link-neutral-text-hovered);
 }
 .link.default:not([data-disabled])[data-pressed] {
-  color: var(--button-link-default-text-pressed);
+  color: var(--button-color-link-neutral-text-pressed);
 }
 
 .link.color-subtle {
-  color: var(--button-link-subtle-text-default);
+  color: var(--button-color-link-subtle-text-default);
 }
 .link.color-subtle:not([data-disabled])[data-hovered] {
-  color: var(--button-link-subtle-text-hovered);
+  color: var(--button-color-link-subtle-text-hovered);
 }
 
 .link.color-subtlest {
-  color: var(--button-link-subtlest-text-default);
+  color: var(--button-color-link-subtlest-text-default);
 }
 .link.color-subtlest:not([data-disabled])[data-hovered] {
-  color: var(--button-link-subtlest-text-hovered);
+  color: var(--button-color-link-subtlest-text-hovered);
 }
 
 .link.comete {
-  color: var(--button-link-comete-text-default);
+  color: var(--button-color-link-comete-text-default);
 }
 .link.comete:not([data-disabled])[data-hovered] {
-  color: var(--button-link-comete-text-hovered);
+  color: var(--button-color-link-comete-text-hovered);
 }
 .link.comete:not([data-disabled])[data-pressed] {
-  color: var(--button-link-comete-text-pressed);
+  color: var(--button-color-link-comete-text-pressed);
 }
 
 .link.success {
-  color: var(--button-link-success-text-default);
+  color: var(--button-color-link-success-text-default);
 }
 .link.success:not([data-disabled])[data-hovered] {
-  color: var(--button-link-success-text-hovered);
+  color: var(--button-color-link-success-text-hovered);
 }
 .link.success:not([data-disabled])[data-pressed] {
-  color: var(--button-link-success-text-pressed);
+  color: var(--button-color-link-success-text-pressed);
 }
 
 .link.critical {
-  color: var(--button-link-critical-text-default);
+  color: var(--button-color-link-critical-text-default);
 }
 .link.critical:not([data-disabled])[data-hovered] {
-  color: var(--button-link-critical-text-hovered);
+  color: var(--button-color-link-critical-text-hovered);
 }
 .link.critical:not([data-disabled])[data-pressed] {
-  color: var(--button-link-critical-text-pressed);
+  color: var(--button-color-link-critical-text-pressed);
 }
 
 .link.warning {
-  color: var(--button-link-warning-text-default);
+  color: var(--button-color-link-warning-text-default);
 }
 .link.warning:not([data-disabled])[data-hovered] {
-  color: var(--button-link-warning-text-hovered);
+  color: var(--button-color-link-warning-text-hovered);
 }
 .link.warning:not([data-disabled])[data-pressed] {
-  color: var(--button-link-warning-text-pressed);
+  color: var(--button-color-link-warning-text-pressed);
 }
 
 .link.information {
-  color: var(--button-link-information-text-default);
+  color: var(--button-color-link-information-text-default);
 }
 .link.information:not([data-disabled])[data-hovered] {
-  color: var(--button-link-information-text-hovered);
+  color: var(--button-color-link-information-text-hovered);
 }
 .link.information:not([data-disabled])[data-pressed] {
-  color: var(--button-link-information-text-pressed);
+  color: var(--button-color-link-information-text-pressed);
 }
 
 /* ==========================================================================
@@ -531,83 +534,83 @@
 }
 
 .link-subtle.default {
-  color: var(--button-link-subtle-default-text-default);
+  color: var(--button-color-link-subtle-neutral-text-default);
 }
 .link-subtle.default:not([data-disabled])[data-hovered] {
-  color: var(--button-link-subtle-default-text-hovered);
+  color: var(--button-color-link-subtle-neutral-text-hovered);
 }
 .link-subtle.default:not([data-disabled])[data-pressed] {
-  color: var(--button-link-subtle-default-text-pressed);
+  color: var(--button-color-link-subtle-neutral-text-pressed);
 }
 
 .link-subtle.color-subtle {
-  color: var(--button-link-subtle-subtle-text-default);
+  color: var(--button-color-link-subtle-subtle-text-default);
 }
 .link-subtle.color-subtle:not([data-disabled])[data-hovered] {
-  color: var(--button-link-subtle-subtle-text-hovered);
+  color: var(--button-color-link-subtle-subtle-text-hovered);
 }
 .link-subtle.color-subtle:not([data-disabled])[data-pressed] {
-  color: var(--button-link-subtle-subtle-text-pressed);
+  color: var(--button-color-link-subtle-subtle-text-pressed);
 }
 
 .link-subtle.color-subtlest {
-  color: var(--button-link-subtle-subtlest-text-default);
+  color: var(--button-color-link-subtle-subtlest-text-default);
 }
 .link-subtle.color-subtlest:not([data-disabled])[data-hovered] {
-  color: var(--button-link-subtle-subtlest-text-hovered);
+  color: var(--button-color-link-subtle-subtlest-text-hovered);
 }
 .link-subtle.color-subtlest:not([data-disabled])[data-pressed] {
-  color: var(--button-link-subtle-subtlest-text-pressed);
+  color: var(--button-color-link-subtle-subtlest-text-pressed);
 }
 
 .link-subtle.comete {
-  color: var(--button-link-subtle-comete-text-default);
+  color: var(--button-color-link-subtle-comete-text-default);
 }
 .link-subtle.comete:not([data-disabled])[data-hovered] {
-  color: var(--button-link-subtle-comete-text-hovered);
+  color: var(--button-color-link-subtle-comete-text-hovered);
 }
 .link-subtle.comete:not([data-disabled])[data-pressed] {
-  color: var(--button-link-subtle-comete-text-pressed);
+  color: var(--button-color-link-subtle-comete-text-pressed);
 }
 
 .link-subtle.success {
-  color: var(--button-link-subtle-success-text-default);
+  color: var(--button-color-link-subtle-success-text-default);
 }
 .link-subtle.success:not([data-disabled])[data-hovered] {
-  color: var(--button-link-subtle-success-text-hovered);
+  color: var(--button-color-link-subtle-success-text-hovered);
 }
 .link-subtle.success:not([data-disabled])[data-pressed] {
-  color: var(--button-link-subtle-success-text-pressed);
+  color: var(--button-color-link-subtle-success-text-pressed);
 }
 
 .link-subtle.critical {
-  color: var(--button-link-subtle-critical-text-default);
+  color: var(--button-color-link-subtle-critical-text-default);
 }
 .link-subtle.critical:not([data-disabled])[data-hovered] {
-  color: var(--button-link-subtle-critical-text-hovered);
+  color: var(--button-color-link-subtle-critical-text-hovered);
 }
 .link-subtle.critical:not([data-disabled])[data-pressed] {
-  color: var(--button-link-subtle-critical-text-pressed);
+  color: var(--button-color-link-subtle-critical-text-pressed);
 }
 
 .link-subtle.warning {
-  color: var(--button-link-subtle-warning-text-default);
+  color: var(--button-color-link-subtle-warning-text-default);
 }
 .link-subtle.warning:not([data-disabled])[data-hovered] {
-  color: var(--button-link-subtle-warning-text-hovered);
+  color: var(--button-color-link-subtle-warning-text-hovered);
 }
 .link-subtle.warning:not([data-disabled])[data-pressed] {
-  color: var(--button-link-subtle-warning-text-pressed);
+  color: var(--button-color-link-subtle-warning-text-pressed);
 }
 
 .link-subtle.information {
-  color: var(--button-link-subtle-information-text-default);
+  color: var(--button-color-link-subtle-information-text-default);
 }
 .link-subtle.information:not([data-disabled])[data-hovered] {
-  color: var(--button-link-subtle-information-text-hovered);
+  color: var(--button-color-link-subtle-information-text-hovered);
 }
 .link-subtle.information:not([data-disabled])[data-pressed] {
-  color: var(--button-link-subtle-information-text-pressed);
+  color: var(--button-color-link-subtle-information-text-pressed);
 }
 
 /* ==========================================================================
@@ -640,20 +643,20 @@
    ========================================================================== */
 
 .button[data-selected] {
-  background-color: var(--button-selected-background-default);
-  color: var(--button-selected-text-default);
+  background-color: var(--button-color-selected-background-default);
+  color: var(--button-color-selected-text-default);
   border-color: transparent;
   text-decoration: none;
 }
 
 /* Selected hover/pressed — identique quelle que soit l'apparence/couleur. */
 .button[data-selected]:not([data-disabled])[data-hovered] {
-  background-color: var(--button-selected-background-hovered);
-  color: var(--button-selected-text-default);
+  background-color: var(--button-color-selected-background-hovered);
+  color: var(--button-color-selected-text-default);
 }
 .button[data-selected]:not([data-disabled])[data-pressed] {
-  background-color: var(--button-selected-background-pressed);
-  color: var(--button-selected-text-default);
+  background-color: var(--button-color-selected-background-pressed);
+  color: var(--button-color-selected-text-default);
 }
 
 /* ==========================================================================
@@ -669,6 +672,6 @@
     min-width: var(--button-size-default-height);
   }
   .collapsible.shapeSquare {
-    border-radius: var(--button-size-default-radius);
+    border-radius: var(--button-radius-default);
   }
 }

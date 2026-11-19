@@ -13,6 +13,42 @@
   line-height: 0;
 }
 
+/* Par taille : chevauchement (marge négative) et épaisseur de l'anneau de
+   séparation, lue par l'Avatar (box-shadow de couleur `borderColor`) via
+   --avatar-border-width. */
+.xsmall {
+  --avatar-group-overlap: var(--avatar-group-spacing-overlap-xsmall);
+  --avatar-border-width: var(--avatar-group-border-width-xsmall);
+}
+.small {
+  --avatar-group-overlap: var(--avatar-group-spacing-overlap-small);
+  --avatar-border-width: var(--avatar-group-border-width-small);
+}
+.medium {
+  --avatar-group-overlap: var(--avatar-group-spacing-overlap-medium);
+  --avatar-border-width: var(--avatar-group-border-width-medium);
+}
+.large {
+  --avatar-group-overlap: var(--avatar-group-spacing-overlap-large);
+  --avatar-border-width: var(--avatar-group-border-width-large);
+}
+.xlarge {
+  --avatar-group-overlap: var(--avatar-group-spacing-overlap-xlarge);
+  --avatar-border-width: var(--avatar-group-border-width-xlarge);
+}
+.xxlarge {
+  --avatar-group-overlap: var(--avatar-group-spacing-overlap-xxlarge);
+  --avatar-border-width: var(--avatar-group-border-width-xxlarge);
+}
+.xxxlarge {
+  --avatar-group-overlap: var(--avatar-group-spacing-overlap-xxxlarge);
+  --avatar-border-width: var(--avatar-group-border-width-xxxlarge);
+}
+
+.group > * + * {
+  margin-left: var(--avatar-group-overlap);
+}
+
 /* Hover only on interactive avatars (navigate / select) */
 .interactive {
   transition: transform var(--duration-fast) var(--easing-default);

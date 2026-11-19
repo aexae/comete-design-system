@@ -21,6 +21,24 @@ entre versions alpha.
 
 ### Modifié
 
+- **`@aexae/comete-design-tokens` 0.24.0** (peer + dev) : tokens de composant nommés
+  par catégorie, `--avatar-*`, `--avatar-group-*`, `--autosave-indicator-*`.
+- **`Avatar` : tokens de composant.** Tailles, taille d'icône, coin, opacité désactivée
+  et couleurs passent par `--avatar-*`.
+- **`Avatar` : l'icône suit la couleur.** Avec `color` ou `isSelected`, l'icône par
+  défaut prend la couleur de l'avatar au lieu de rester grise. La classe CSS `rounded`,
+  sans effet depuis le retrait de l'apparence carrée, n'est plus posée.
+- **`Avatar` : une seule lettre en `small`** (comme en `xsmall`). Un compteur `+N`
+  reste affiché en entier.
+- **`Avatar` : `isSelected` sans anneau de focus.** La sélection se lit au fond
+  (`--avatar-color-selected-*`), l'anneau reste réservé au focus clavier. Une photo
+  sélectionnée n'a donc plus de marque visible.
+- **`AvatarGroup`** : épaisseur de l'anneau (`--avatar-group-border-width-*`) et
+  chevauchement (`--avatar-group-spacing-overlap-*`) passent par des tokens, au lieu de
+  marges inline calculées en TSX. Un `Avatar` hors groupe avec `borderColor` n'a plus
+  d'anneau.
+- **`Button` : link-subtle neutral** au repos et à l'appui en `text-default` (survol
+  `text-subtle`), aligné sur Figma. Opacité désactivée via `--button-opacity-disabled`.
 - **`Button`, `TextField`, `Select`** : le spinner de chargement est désormais le
   composant `Spinner` (comète). Rendu visuel modifié.
 - **`Button` : `isLoading` garde la couleur du bouton.** L'état passe par `isPending`
@@ -35,6 +53,13 @@ entre versions alpha.
 
 ### Changements cassants (BREAKING)
 
+- **Tokens de composant du `Button` renommés** (`@aexae/comete-design-tokens` 0.24.0) :
+  `--button-<apparence>-<couleur>-*` devient `--button-color-<apparence>-<couleur>-*`
+  (`default` devient `neutral`), `--button-selected-*` et `--button-focus-border`
+  passent sous `--button-color-*`, `--button-size-<densité>-{padding-x,padding-y,gap}`
+  devient `--button-spacing-<densité>-*` et `--button-size-<densité>-radius` devient
+  `--button-radius-<densité>`. Les consommateurs qui lisent ces variables doivent
+  suivre les nouveaux noms.
 - **`@aexae/comete-design-tokens` 0.20.0** (peer + dev) : les tokens de texte
   sémantiques et neutres sont restructurés en groupes `default/hovered/pressed`.
   Les variables `--text-comete`, `--text-success`, `--text-critical`,

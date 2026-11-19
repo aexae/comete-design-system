@@ -2,6 +2,51 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-19 — Tokens de composant nommés par catégorie, disabled en opacité, Avatar et AvatarGroup
+
+**Décisions** (demandes d'Axel) :
+
+- **Nommage `<composant>/<catégorie>/…`** (`color`, `size`, `spacing`, `radius`,
+  `opacity`, `border-width`), aligné sur Figma. Button :
+  `--button-contained-default-*` devient `--button-color-contained-neutral-*`,
+  `--button-size-<densité>-{padding-x,padding-y,gap}` devient
+  `--button-spacing-<densité>-*`, `--button-size-<densité>-radius` devient
+  `--button-radius-<densité>`. `default` devient `neutral` pour toutes les apparences.
+  Avatar : `--avatar-color-<couleur>-{background-*,text,icon}`,
+  `--avatar-size-<taille>-{container,icon}`, `--avatar-radius`.
+  AutosaveIndicator : `--autosave-indicator-color-*`, `--autosave-indicator-spacing-gap`.
+- **link-subtle neutral aligné sur Figma** : repos et appui en `text-default`, survol
+  en `text-subtle-hovered` (le code utilisait `text-subtle` aux trois états).
+- **Disabled = opacité (option A)** : `--button-opacity-disabled` et
+  `--avatar-opacity-disabled` aliasent `--opacity-disabled`. Dans Figma, la collection
+  `base/opacity` passe en pourcentage (38) : Figma lit l'opacité en 0-100, le code en
+  fraction (0,38). Les 22 composants sur les couleurs `*-disabled` seront migrés un
+  par un après la livraison du Button et de l'Avatar.
+- **AvatarGroup** : l'épaisseur de l'anneau (`--avatar-group-border-width-*`) et le
+  chevauchement (`--avatar-group-spacing-overlap-*`, marge négative de 25 % du
+  diamètre) sont des tokens, posés par taille sur le groupe. L'anneau prend la couleur
+  du fond du conteneur via `borderColor` : pas de token de couleur (un token de fond
+  sur une bordure serait incohérent), blanc brut #FFFFFF dans Figma. Hors groupe, un
+  `borderColor` ne dessine plus d'anneau.
+- **Avatar** : un seul `--avatar-radius` (rond, l'apparence carrée a disparu du code
+  en avril 2026, #65). L'icône suit la couleur de l'avatar (`--avatar-icon-color`,
+  posée par la classe de couleur ou la sélection) au lieu de rester `icon-default`.
+  Taille d'icône portée par le CSS. Une seule lettre en xsmall et small, sauf pour un
+  compteur `+N`, affiché en entier. L'état selected n'affiche plus l'anneau de focus,
+  réservé au focus clavier : il se lit au fond `--avatar-color-selected-*`.
+- **Toute propriété tokenisable pointe sur un token** (code et Figma). Si le token
+  manque, on s'arrête et on demande l'accord avant de le créer.
+- **Figma** : nouveau ❖ Avatar (20406:6274, 630 variantes : `size` × `color` ×
+  `state` × `content`), nouvelle page ❖ AvatarGroup (set 20414:31920, 7 tailles,
+  avatars exposés, propriété `overflow`). Les instances de l'ancien Avatar et de
+  l'ancien Button sont migrées, l'ancien set Avatar est supprimé.
+- **Livraison autonome** : Claude peut livrer seul un travail terminé et validé, sans
+  attendre « livre » (branche + PR conservées sur le DS).
+
+**Contexte / raison** : `button/color/…` ou `button/spacing/…` identifie la nature d'un
+token dès son nom. L'opacité garde la teinte du composant désactivé sans multiplier
+les tokens de couleur.
+
 ## 2026-11-18 — Button en chargement : `isPending` plutôt que `isDisabled`
 
 **Décision** : `isLoading` passe `isPending` à React Aria (1.17) au lieu de `isDisabled`.

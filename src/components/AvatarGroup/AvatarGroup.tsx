@@ -33,7 +33,8 @@ export interface AvatarGroupProps {
   size?: AvatarSize;
   /**
    * Border colour for the ring that visually separates stacked avatars.
-   * Should match the background behind the group.
+   * Doit reprendre le fond du conteneur du groupe (l'anneau « découpe »
+   * les avatars) : passer le token de fond de ce conteneur.
    * @default "var(--background-surface-default)"
    */
   borderColor?: string;
@@ -64,19 +65,6 @@ export interface AvatarGroupItem {
   /** Initials fallback. */
   initials?: string;
 }
-
-// ----------------------------------------------------------------------
-
-/** Overlap per avatar size — ~25 % of avatar diameter. */
-const SIZE_OVERLAP: Record<AvatarSize, number> = {
-  xsmall: 4,
-  small: 6,
-  medium: 8,
-  large: 10,
-  xlarge: 16,
-  xxlarge: 24,
-  xxxlarge: 32,
-};
 
 // ----------------------------------------------------------------------
 
@@ -112,7 +100,6 @@ export function AvatarGroup({
   style,
 }: AvatarGroupProps): React.ReactElement {
   const overflowCount = overflowItems?.length ?? 0;
-  const overlapPx = SIZE_OVERLAP[size];
   const total = items.length + (overflowCount > 0 ? 1 : 0);
   const isInteractive = mode !== "display";
 
@@ -143,7 +130,7 @@ export function AvatarGroup({
 
   return (
     <div
-      className={[styles.group, className].filter(Boolean).join(" ")}
+      className={[styles.group, styles[size], className].filter(Boolean).join(" ")}
       role="group"
       aria-label={ariaLabel}
       style={style}
@@ -156,10 +143,7 @@ export function AvatarGroup({
             className={[styles.item, isInteractive ? styles.interactive : ""]
               .filter(Boolean)
               .join(" ")}
-            style={{
-              marginLeft: i === 0 ? 0 : -overlapPx,
-              zIndex: total - i,
-            }}
+            style={{ zIndex: total - i }}
           >
             <Avatar
               src={item.src}
@@ -180,7 +164,7 @@ export function AvatarGroup({
         );
       })}
       {overflowCount > 0 && (
-        <div className={styles.overflow} style={{ marginLeft: -overlapPx }}>
+        <div className={styles.overflow}>
           <MenuTrigger>
             <AriaButton className={styles.overflowTrigger}>
               <Avatar

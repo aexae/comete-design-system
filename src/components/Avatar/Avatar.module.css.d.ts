@@ -16,7 +16,6 @@ declare const styles: {
   readonly "photo": string;
   readonly "photoLoading": string;
   readonly "presenceSlot": string;
-  readonly "rounded": string;
   readonly "small": string;
   readonly "xlarge": string;
   readonly "xsmall": string;

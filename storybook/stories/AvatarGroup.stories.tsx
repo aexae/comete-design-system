@@ -113,7 +113,7 @@ const meta: Meta<AvatarGroupProps> = {
     },
     design: {
       type: "figma",
-      url: figmaUrl("2726:20433"),
+      url: figmaUrl("20414:31920"),
     },
   },
 };

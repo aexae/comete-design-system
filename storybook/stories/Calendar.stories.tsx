@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CalendarDate, Time } from "@internationalized/date";
 import type { DateValue, RangeValue } from "react-aria-components";
 import { Calendar, type CalendarAppearance } from "@aexae/comete-design-system/components";
-import { expect } from "storybook/test";
+import { expect, waitFor } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 
@@ -467,9 +467,13 @@ export const TimeSlots: Story = {
     // Le créneau sélectionné est amené dans la vue au montage.
     const selection = liste!.querySelector<HTMLElement>('[aria-selected="true"]');
     await expect(selection).not.toBeNull();
-    const sr = selection!.getBoundingClientRect();
-    const vr = viewport!.getBoundingClientRect();
-    await expect(sr.top).toBeGreaterThanOrEqual(vr.top - 1);
-    await expect(sr.bottom).toBeLessThanOrEqual(vr.bottom + 1);
+    // REASON: le centrage se fait après le montage : attendre qu'il ait eu lieu
+    // (vu avant le défilement sous Chromatic Chrome 149).
+    await waitFor(async () => {
+      const sr = selection!.getBoundingClientRect();
+      const vr = viewport!.getBoundingClientRect();
+      await expect(sr.top).toBeGreaterThanOrEqual(vr.top - 1);
+      await expect(sr.bottom).toBeLessThanOrEqual(vr.bottom + 1);
+    });
   },
 };
