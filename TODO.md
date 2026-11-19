@@ -269,6 +269,34 @@ not a function` dans `eslint-plugin-react` 7.37.5, sa dernière version).
   ou le quota renouvelé. Piste : TurboSnap (`onlyChanged`) pour réduire la
   consommation.
 
+- **Chromatic : projet rattaché au compte perso Naxit** (2026-11-19)
+  Le projet (appId `69bb5bbd483eecaff6adc69c`) a été créé le 19/03/2026 sous le compte
+  Chromatic personnel. Le token (`CHROMATIC_PROJECT_TOKEN` et `storybook/chromatic.config.json`)
+  désigne ce projet, donc la facturation et le quota sont ceux du compte perso (cause
+  probable du quota épuisé ci-dessus). Constaté dans Chromatic : le compte `aexae`
+  existe (plan Free 5 000 snapshots/mois, 0 utilisé) avec un ancien projet
+  `comete-design-system` (appId `685bae95c4baf249a1369566`, 2 builds) dont le lien GitHub
+  est cassé (token du compte `developpeurcomete` expiré). Aucune option de transfert
+  libre-service dans Manage › Configure. Action : basculer la CI sur le projet `aexae`
+  (secret + config), relier le dépôt à ce projet, puis supprimer ou délier le projet Naxit.
+  Le compte `aexae` étant aussi en Free, le quota sera de nouveau atteint sans plan
+  payant ni TurboSnap.
+
+- **Chromatic : synchro GitHub portée par un compte personnel**
+  La synchro GitHub d'un projet Chromatic utilise le token OAuth d'un collaborateur.
+  Celui du projet `aexae` appartenait à `developpeurcomete` (compte Gmail générique
+  partagé), désormais invalide. `developpeurcomete` n'apparaît plus dans les
+  collaborateurs du compte `aexae`. Le compte Chromatic `aexae` est synchronisé par
+  `CometeAdminGit` (Admin, token valide). Action : se connecter à Chromatic avec
+  `CometeAdminGit` et faire « Replace with your token » sur le projet, plutôt qu'un
+  token nominatif (départ de la personne = synchro cassée).
+
+- **Sécurité : token Chromatic en clair dans le dépôt**
+  `storybook/chromatic.config.json` contient `projectToken` en dur (commité depuis le
+  19/03/2026), doublon du secret CI. Le retirer du fichier, régénérer le token dans
+  Chromatic (il reste dans l'historique git) et passer par `CHROMATIC_PROJECT_TOKEN`
+  en local aussi.
+
 ## Emails (relevé sur le modèle « RFE point d'étape », 2026-10-21)
 
 Motifs utilisés dans les emails clients sans équivalent dans le DS. Le modèle
