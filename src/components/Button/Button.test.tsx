@@ -59,9 +59,62 @@ describe("Button", () => {
       ["critical"],
       ["warning"],
       ["information"],
+      ["brand"],
+      ["accent-purple"],
+      ["accent-teal"],
+      ["accent-turquoise"],
+      ["accent-magenta"],
+      ["accent-blue-grey"],
     ] as const)("should apply class %s when color=%s", (color) => {
       render(<Button color={color}>Label</Button>);
       expect(screen.getByRole("button")).toHaveClass(color);
+    });
+
+    // REASON: Figma propose ces 14 couleurs sur les 5 apparences, le CSS doit
+    // couvrir chaque combinaison (sinon le bouton s'affiche sans couleur).
+    it.each(["contained", "outlined", "subtle", "link", "link-subtle"])(
+      "should style every color when appearance=%s",
+      (appearance) => {
+        const css = readFileSync("src/components/Button/Button.module.css", "utf8");
+        const colors = [
+          "default",
+          "color-subtle",
+          "color-subtlest",
+          "comete",
+          "success",
+          "critical",
+          "warning",
+          "information",
+          "brand",
+          "accent-purple",
+          "accent-teal",
+          "accent-turquoise",
+          "accent-magenta",
+          "accent-blue-grey",
+        ];
+        const missing = colors.filter((color) => !css.includes(`.${appearance}.${color} {`));
+        expect(missing).toEqual([]);
+      }
+    );
+  });
+
+  describe("couleur des icônes", () => {
+    it.each([
+      ["contained", "brand", "inverted"],
+      ["contained", "accent-teal", "inverted"],
+      ["contained", "warning", "on-warning"],
+      ["outlined", "brand", "brand"],
+      ["outlined", "comete", "comete"],
+      ["subtle", "accent-purple", "accentPurple"],
+      ["link", "accent-blue-grey", "accentBlueGrey"],
+      ["link-subtle", "accent-magenta", "subtle"],
+    ] as const)("should color the icon %s/%s with %s", (appearance, color, iconColor) => {
+      const { container } = render(
+        <Button appearance={appearance} color={color} iconBefore="Add">
+          Label
+        </Button>
+      );
+      expect(container.querySelector("svg")).toHaveClass(`comete-icon--${iconColor}`);
     });
   });
 

@@ -12,7 +12,20 @@ import styles from "./Button.module.css";
 
 export type ButtonAppearance = "contained" | "outlined" | "subtle" | "link" | "link-subtle";
 export type ButtonColor =
-  "default" | "subtle" | "subtlest" | "comete" | "success" | "critical" | "warning" | "information";
+  | "default"
+  | "subtle"
+  | "subtlest"
+  | "comete"
+  | "success"
+  | "critical"
+  | "warning"
+  | "information"
+  | "brand"
+  | "accent-purple"
+  | "accent-teal"
+  | "accent-turquoise"
+  | "accent-magenta"
+  | "accent-blue-grey";
 export type ButtonShape = "round" | "square";
 /**
  * Densité — dimension + padding + radius, échelle partagée avec les champs.
@@ -81,8 +94,9 @@ export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"
 
 /**
  * Resolves the icon color token appropriate for a given button appearance + color.
- * Mirrors the Button CSS: bold backgrounds (contained.comete, .success, .critical,
- * .information) use inverted text; all other combinations use semantic colors.
+ * Mirrors the Button CSS: bold backgrounds (contained comete, success, critical,
+ * information, brand et accents) use inverted text; all other combinations use
+ * semantic colors.
  *
  * @param appearance - Button visual appearance
  * @param color      - Button color scheme
@@ -95,9 +109,8 @@ function resolveIconColor(appearance: ButtonAppearance, color: ButtonColor): Ico
     if (color === "subtle" || color === "subtlest") return color;
     // NOTE: warning bold background is light/yellow — needs dark icons, not white
     if (color === "warning") return "on-warning";
-    // comete, success, critical, information render bold backgrounds with inverted (white) text
-    const invertedColors: readonly ButtonColor[] = ["comete", "success", "critical", "information"];
-    return invertedColors.includes(color) ? "inverted" : "default";
+    // Every other color except default renders a bold background with inverted text
+    return color === "default" ? "default" : "inverted";
   }
 
   // outlined, subtle, link: icon follows the semantic color of the button text
@@ -105,12 +118,17 @@ function resolveIconColor(appearance: ButtonAppearance, color: ButtonColor): Ico
     default: "default",
     subtle: "subtle",
     subtlest: "subtlest",
-    // Button color "comete" → IconColor "brand" (le package d'icônes conserve le nom "brand")
-    comete: "brand",
+    comete: "comete",
     success: "success",
     critical: "critical",
     warning: "warning",
     information: "information",
+    brand: "brand",
+    "accent-purple": "accentPurple",
+    "accent-teal": "accentTeal",
+    "accent-turquoise": "accentTurquoise",
+    "accent-magenta": "accentMagenta",
+    "accent-blue-grey": "accentBlueGrey",
   };
   return semanticColorMap[color];
 }
@@ -178,6 +196,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       critical: styles.critical,
       warning: styles.warning,
       information: styles.information,
+      brand: styles.brand,
+      "accent-purple": styles["accent-purple"],
+      "accent-teal": styles["accent-teal"],
+      "accent-turquoise": styles["accent-turquoise"],
+      "accent-magenta": styles["accent-magenta"],
+      "accent-blue-grey": styles["accent-blue-grey"],
     };
     const colorClass = colorClassMap[color];
 

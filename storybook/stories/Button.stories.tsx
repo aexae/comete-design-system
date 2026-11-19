@@ -1,5 +1,5 @@
 import { Button, DensityProvider } from "@aexae/comete-design-system";
-import type { ButtonProps } from "@aexae/comete-design-system";
+import type { ButtonColor, ButtonProps } from "@aexae/comete-design-system";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, userEvent, within } from "storybook/test";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
@@ -16,6 +16,23 @@ const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":"
 
 // ----------------------------------------------------------------------
 
+const BUTTON_COLORS = [
+  "default",
+  "subtle",
+  "subtlest",
+  "comete",
+  "success",
+  "critical",
+  "warning",
+  "information",
+  "brand",
+  "accent-purple",
+  "accent-teal",
+  "accent-turquoise",
+  "accent-magenta",
+  "accent-blue-grey",
+] as const satisfies readonly ButtonColor[];
+
 const meta: Meta<ButtonProps> = {
   title: "Components/Button",
   component: Button,
@@ -27,16 +44,7 @@ const meta: Meta<ButtonProps> = {
     },
     color: {
       control: "select",
-      options: [
-        "default",
-        "subtle",
-        "subtlest",
-        "comete",
-        "success",
-        "critical",
-        "warning",
-        "information",
-      ],
+      options: BUTTON_COLORS,
     },
     density: {
       control: "select",
@@ -197,6 +205,51 @@ export const Information: Story = {
       url: figmaUrl("2420:46791"),
     },
   },
+};
+
+/** Couleur de la marque cliente (`BrandProvider`). Sans provider, rend comme `comete`. */
+export const Brand: Story = {
+  args: { color: "brand", children: "Enregistrer" },
+  parameters: {
+    design: {
+      type: "figma",
+      url: figmaUrl("19960:193"),
+    },
+  },
+};
+
+const ACCENT_COLORS = [
+  "accent-purple",
+  "accent-teal",
+  "accent-turquoise",
+  "accent-magenta",
+  "accent-blue-grey",
+] as const satisfies readonly ButtonColor[];
+
+/** Les 5 couleurs d'accent sur les 5 apparences. */
+export const AccentColors: Story = {
+  name: "Accent colors",
+  parameters: {
+    design: {
+      type: "figma",
+      url: figmaUrl("19960:222"),
+    },
+  },
+  render: () => (
+    <div style={{ display: "grid", gap: "var(--space200)" }}>
+      {(["contained", "outlined", "subtle", "link", "link-subtle"] as const).map((appearance) => (
+        <LabeledRow key={appearance}>
+          {ACCENT_COLORS.map((color) => (
+            <Labeled key={color} label={`${appearance} · ${color}`}>
+              <Button appearance={appearance} color={color} iconBefore="Add">
+                Ajouter
+              </Button>
+            </Labeled>
+          ))}
+        </LabeledRow>
+      ))}
+    </div>
+  ),
 };
 
 // ----------------------------------------------------------------------
@@ -372,18 +425,7 @@ export const IconOnlyAllColors: Story = {
   name: "Icon only — All colors",
   render: (args) => (
     <LabeledRow>
-      {(
-        [
-          "default",
-          "subtle",
-          "subtlest",
-          "comete",
-          "success",
-          "critical",
-          "warning",
-          "information",
-        ] as const
-      ).map((color) => (
+      {BUTTON_COLORS.map((color) => (
         <Labeled key={color} label={color}>
           <Button color={color} appearance={args.appearance} iconBefore="Add" aria-label={color} />
         </Labeled>

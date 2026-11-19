@@ -1,4 +1,10 @@
 declare const styles: {
+  readonly "accent-blue-grey": string;
+  readonly "accent-magenta": string;
+  readonly "accent-purple": string;
+  readonly "accent-teal": string;
+  readonly "accent-turquoise": string;
+  readonly "brand": string;
   readonly "button": string;
   readonly "collapsible": string;
   readonly "collapsibleLabel": string;
