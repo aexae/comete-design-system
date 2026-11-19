@@ -3,7 +3,8 @@
 //
 // Principe : la teinte (H) et la chroma (C) viennent du client ; la luminosité (L)
 // de chaque palier est **fixée par le DS** (normalisée par rôle), avec clamp de gamut.
-// Le contraste des fonds `bold` avec le texte inversé est ainsi garanti par construction.
+// Le contraste des fonds `bold` (palier 700, texte inversé 5,3:1) et `boldest` (palier 950,
+// navy, 12:1) avec le texte inversé est ainsi garanti par construction.
 
 import { hexToRgb, oklchToHex, rgbToOklch } from "./oklch.js";
 
@@ -35,12 +36,17 @@ function buildScale(seedHex: string): Record<Stop, string> {
   return scale;
 }
 
-// Mapping token → palier, en miroir de la structure du bleu Comète.
+// Mapping token → palier, miroir rôle pour rôle de la famille `comete-*` des tokens
+// (tokens/theme/light.json et dark.json) : un composant rendu en `brand` sans
+// BrandProvider doit rendre comme en `comete`. Tenir les deux en phase.
 // Suffixe de custom property → palier de la rampe.
 const LIGHT_MAP: Record<string, Stop> = {
-  "background-brand-bold-default": 950,
-  "background-brand-bold-hovered": 900,
-  "background-brand-bold-pressed": 800,
+  "background-brand-bold-default": 700,
+  "background-brand-bold-hovered": 800,
+  "background-brand-bold-pressed": 900,
+  "background-brand-boldest-default": 950,
+  "background-brand-boldest-hovered": 900,
+  "background-brand-boldest-pressed": 800,
   "background-brand-subtler-default": 200,
   "background-brand-subtler-hovered": 300,
   "background-brand-subtler-pressed": 400,
@@ -48,17 +54,23 @@ const LIGHT_MAP: Record<string, Stop> = {
   "background-brand-subtlest-hovered": 200,
   "background-brand-subtlest-pressed": 300,
   "border-brand-bold": 900,
+  "border-brand-boldest": 950,
   "border-brand-subtle": 200,
-  "icon-brand": 800,
-  "text-brand-default": 700,
+  "icon-brand-default": 800,
+  "icon-brand-boldest": 950,
+  "text-brand-default": 900,
   "text-brand-hovered": 800,
-  "text-brand-pressed": 900,
+  "text-brand-pressed": 700,
+  "text-brand-boldest": 950,
 };
 
 const DARK_MAP: Record<string, Stop> = {
   "background-brand-bold-default": 50,
   "background-brand-bold-hovered": 100,
   "background-brand-bold-pressed": 200,
+  "background-brand-boldest-default": 950,
+  "background-brand-boldest-hovered": 900,
+  "background-brand-boldest-pressed": 800,
   "background-brand-subtler-default": 800,
   "background-brand-subtler-hovered": 700,
   "background-brand-subtler-pressed": 600,
@@ -66,11 +78,14 @@ const DARK_MAP: Record<string, Stop> = {
   "background-brand-subtlest-hovered": 900,
   "background-brand-subtlest-pressed": 800,
   "border-brand-bold": 100,
+  "border-brand-boldest": 50,
   "border-brand-subtle": 800,
-  "icon-brand": 200,
-  "text-brand-default": 300,
+  "icon-brand-default": 200,
+  "icon-brand-boldest": 50,
+  "text-brand-default": 100,
   "text-brand-hovered": 200,
-  "text-brand-pressed": 100,
+  "text-brand-pressed": 300,
+  "text-brand-boldest": 50,
 };
 
 export interface BrandTheme {

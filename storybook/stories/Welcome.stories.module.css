@@ -22,7 +22,7 @@
   margin: calc(var(--space300) * -1) calc(var(--space300) * -1) 0;
   overflow: hidden;
   /* Le bleu de marque s'éclaircit en thème sombre, le texte inversé suit. */
-  background: var(--background-brand-bold-default);
+  background: var(--background-surface-comete);
   color: var(--text-inverted);
 }
 
@@ -291,7 +291,7 @@
   width: var(--space800);
   height: var(--space800);
   border-radius: var(--radius200);
-  background: var(--background-brand-bold-default);
+  background: var(--background-surface-comete);
 }
 
 .resourceIcons {
@@ -300,7 +300,7 @@
   gap: var(--space150);
   align-content: center;
   justify-content: center;
-  color: var(--icon-brand);
+  color: var(--icon-brand-default);
 }
 
 /* ---- Personas ---- */
@@ -317,7 +317,7 @@
 }
 
 .personaIconDark {
-  background: var(--background-brand-bold-default);
+  background: var(--background-surface-comete);
   color: var(--comete-yellow-300);
 }
 
@@ -335,7 +335,7 @@
   gap: var(--space300);
   padding: var(--space300);
   border-radius: var(--radius200);
-  background: var(--background-brand-bold-default);
+  background: var(--background-surface-comete);
   color: var(--text-inverted);
 }
 

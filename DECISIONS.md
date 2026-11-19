@@ -411,6 +411,31 @@ restructuration des tokens texte en groupes `default/hovered/pressed`.
 **Statut** : NON commité (clone partagé, sur main). Livraison DS en attente
 d'instruction (branche + PR). Les tokens 0.20.0 sont déjà publiés.
 
+## 2026-11-19 — Couleurs de marque : navy jamais interactif, brand miroir de comete, boldest
+
+**Contexte** : phase 0 du chantier « descriptions des tokens ». En décrivant `brand` et
+`comete`, cinq rôles divergeaient (dérive historique, commits tokens `8b9449d` puis
+`25f9198`). Question d'Axel sur la pratique courante primaire / secondaire de marque.
+
+**Décisions** (Axel) :
+
+- **Navy = identité, jamais sur une surface interactive. Bleu action = CTA et
+  contrôles.** Pratique standard des design systems (identité séparée de l'affordance).
+- **`brand` est un miroir rôle pour rôle de `comete`**, mêmes valeurs par défaut :
+  choisir `brand` dans les contrôles Storybook rend comme `comete` sans `BrandProvider`.
+  Renommage `brand-comete` / `brand-client` écarté (terme standard, `comete` ne varie
+  jamais, `client-*` retiré en 0.13.0, coût cassant élevé sans gain).
+- **Niveau `boldest`** ajouté sur `background`, `text`, `border`, `icon` des deux
+  familles (navy 950). `Card bold comete / brand` passe en navy (Figma l'était déjà).
+  `icon.{comete,brand}` deviennent des groupes (cassant, précédent `text` 0.20.0).
+- **Accent de marque pour l'or** (`comete.yellow`) : rôle sémantique à créer, périmètre
+  fermé (fond décoratif, filet, icône, pas de texte), interdit dans les composants de
+  statut. Lot C du chantier, pas encore fait.
+- **Gabarit de description** validé : rôle en une phrase, quand l'utiliser, quand ne pas
+  l'utiliser, couple de contraste, nom marque. Familles à la main, états dérivés.
+  `$description` seul, français, validation en PR. Inauguré sur les tokens `boldest`.
+- **Dossier tokens `base/brand` → `base/comete`** (Axel l'a renommé dans Figma).
+
 ## 2026-11-09 — Page : Body à 12px fixe, Bar alignée sur la Toolbar
 
 **Contexte** : demande d'Axel : « paddingX de PageBar à 24px, paddingX du
