@@ -19,6 +19,7 @@ declare const styles: {
   readonly "headerToggle": string;
   readonly "iconAfter": string;
   readonly "iconBefore": string;
+  readonly "indicator": string;
   readonly "item": string;
   readonly "itemContent": string;
   readonly "itemDisabled": string;

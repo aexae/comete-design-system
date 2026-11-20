@@ -1,5 +1,13 @@
 # TODO
 
+## Navs, Banner, Button link (2026-11-20)
+
+- **Easing de la pastille glissante** : elle utilise `--easing-default` (cubic-bezier(0.2, 0, 0.38, 0.9)). Un ease-out fort (cubic-bezier(0.23, 1, 0.32, 1)), plus nerveux au départ, serait plus proche des références. Il faudrait un token `easing.emphasized` (arbitrage Axel).
+- **BottomNav, item ouvert (`isOpen`)** : garde sa pastille statique, la pastille glissante ne suit que `isSelected`. Si un item est à la fois ouvert et non sélectionné, deux pastilles coexistent (comportement antérieur conservé).
+- **Snackbar `discovery`** : le Banner a fusionné `discovery` dans `announcement`. La Snackbar garde `discovery` (violet). Vérifier si elle doit suivre (Statut.stories documente l'écart).
+- **`--text-link-default`** : plus lu par le Button, encore lu par `Text` (lien dans un paragraphe). À confirmer.
+- **SideNav `:has()`** : les fonds survolé et appuyé de l'item sélectionné passent par `:has()` sur la pastille. Navigateurs sans `:has()` (avant 2023) : fond par défaut au survol, sans casse.
+
 ## Icon : couleur `on-comete` et liste du control (2026-11-20)
 
 - ~~**comete-icons** : `IconColor` n'a pas de valeur `on-comete`~~ : FAIT, `on-dark-surface` en

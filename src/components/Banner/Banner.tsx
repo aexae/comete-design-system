@@ -8,8 +8,7 @@ import styles from "./Banner.module.css";
 // Types publics
 
 /** Sévérité / nature du banner. */
-export type BannerAppearance =
-  "warning" | "critical" | "announcement" | "success" | "information" | "discovery";
+export type BannerAppearance = "warning" | "critical" | "announcement" | "success" | "information";
 
 // -----------------------------------------------------------------------
 // Mapping appearance → icône contextuelle (aligné sur SectionMessage)
@@ -17,10 +16,9 @@ export type BannerAppearance =
 const DEFAULT_ICONS: Record<BannerAppearance, IconName> = {
   warning: "Warning",
   critical: "Report",
-  announcement: "Campaign",
+  announcement: "New",
   success: "CheckCircle",
   information: "Info",
-  discovery: "New",
 };
 
 export interface BannerProps {
@@ -46,15 +44,14 @@ export interface BannerProps {
  * ```tsx
  * <Banner appearance="warning">Mise à jour programmée ce soir à 22h.</Banner>
  * <Banner appearance="critical">Impossible de se connecter au service.</Banner>
- * <Banner appearance="announcement">Nouvelle fonctionnalité disponible.</Banner>
+ * <Banner appearance="announcement">Nouveau : export PDF des plannings.</Banner>
  * <Banner appearance="success">Sauvegarde effectuée avec succès.</Banner>
  * <Banner appearance="information">Maintenance prévue la semaine prochaine.</Banner>
- * <Banner appearance="discovery">Nouveau : export PDF des plannings.</Banner>
  * ```
  *
  * @param appearance - Nature : "warning" (jaune), "critical" (rouge), "announcement"
- *                     (neutre sombre), "success" (vert), "information" (bleu),
- *                     "discovery" (violet, nouveautés et mises à jour majeures). L'icône
+ *                     (violet, nouveautés et mises à jour majeures), "success" (vert),
+ *                     "information" (bleu). L'icône
  *                     est résolue automatiquement selon l'apparence.
  * @param children   - Contenu du message
  */

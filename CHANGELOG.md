@@ -11,6 +11,28 @@ entre versions alpha.
 
 ### Changements cassants (BREAKING)
 
+- **Banner** (tokens 0.35.0) : l'apparence `discovery` est retirée, fusionnée dans
+  `announcement` qui avait le même rôle. `announcement` passe du fond neutre sombre au violet
+  accent (`background.accent.purple.bold`) et prend l'icône `New`. Remplacer
+  `appearance="discovery"` par `appearance="announcement"`.
+
+### Ajouté (alpha.195)
+
+- **SideNav et BottomNav** : pastille de sélection glissante. Au changement d'item sélectionné,
+  une pastille unique glisse vers le nouvel item (`--duration-normal`, `--easing-default`), sans
+  transition sur un simple redimensionnement, coupée sous `prefers-reduced-motion`. Hook interne
+  `useSlidingIndicator` (mesure, `MutationObserver`, `ResizeObserver`). Sans mesure possible
+  (rendu serveur, jsdom), chaque item peint son fond comme avant. SideNav : la pastille porte
+  aussi les fonds survolé et appuyé de l'item sélectionné. Story SideNav Default cliquable.
+
+### Modifié (alpha.195)
+
+- **Button `link`** : souligné dès le repos, comme Figma (ni disabled ni selected ne le sont).
+  `link` neutre en couleur de texte courant (`text.default.*`, tokens 0.35.0). `link` subtle et
+  subtlest : `hovered` corrigés et `pressed` ajoutés.
+- **SideNav** : transition de fond des items sur les tokens de mouvement (était `100ms ease`).
+- Tokens `^0.35.0`.
+
 - **Tokens 0.34.0** : la famille `--background-surface-*` devient `--surface-*`, aplatie
   (`--surface-default`, `--surface-sunken-*`, `--surface-raise-*`, `--surface-overlay-*`,
   `--surface-mask-*`, `--surface-comete`). `--background-surface-critical` supprimé (doublon de

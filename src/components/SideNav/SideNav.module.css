@@ -78,7 +78,57 @@
    réservée — le fond s'arrête avant l'ascenseur — obtenue cette fois sans
    voler de place au contenu. */
 .bodyContent {
+  position: relative;
   padding-inline-end: var(--side-nav-spacing-gutter);
+}
+
+/* Pastille de sélection unique (voir useSlidingIndicator) : elle glisse d'un
+   item à l'autre au changement de sélection et porte les états survolé et
+   appuyé de l'item sélectionné. Tant qu'elle n'est pas mesurée (premier rendu
+   serveur, jsdom), l'item sélectionné peint son propre fond. */
+.indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--side-nav-color-item-selected-background-default);
+  border-radius: var(--side-nav-radius-item);
+  opacity: 0;
+  pointer-events: none;
+  transition: background-color var(--duration-fast) var(--easing-default);
+}
+
+.indicator[data-visible] {
+  opacity: 1;
+}
+
+.indicator[data-animated] {
+  transition:
+    transform var(--duration-normal) var(--easing-default),
+    width var(--duration-normal) var(--easing-default),
+    height var(--duration-normal) var(--easing-default),
+    background-color var(--duration-fast) var(--easing-default);
+}
+
+.bodyContent:has(.itemSelected:hover) > .indicator {
+  background: var(--side-nav-color-item-selected-background-hovered);
+}
+
+.bodyContent:has(.itemSelected:active) > .indicator {
+  background: var(--side-nav-color-item-selected-background-pressed);
+}
+
+/* La pastille a pris le relais : l'item sélectionné ne peint plus de fond. */
+.bodyContent[data-side-nav-indicator] .itemSelected,
+.bodyContent[data-side-nav-indicator] .itemSelected:hover,
+.bodyContent[data-side-nav-indicator] .itemSelected:active {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .indicator,
+  .indicator[data-animated] {
+    transition: none;
+  }
 }
 /* ------------------------------------------------------------------ */
 /* Header                                                              */
@@ -172,7 +222,7 @@
   text-align: start;
   box-sizing: border-box;
   overflow: hidden;
-  transition: background-color 100ms ease;
+  transition: background-color var(--duration-fast) var(--easing-default);
 }
 
 .item:hover {
@@ -226,6 +276,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: color var(--duration-normal) var(--easing-default);
 }
 
 .itemSelected .itemTitle {
@@ -497,4 +548,12 @@
 /* Pied de marque : sans retrait horizontal (le libellé n'existe qu'en déployé). */
 .sideNav[data-mode="rail"] .footer {
   padding-inline: 0;
+}
+
+/* Mouvement réduit : ni fondu de fond ni fondu de couleur sur les items. */
+@media (prefers-reduced-motion: reduce) {
+  .item,
+  .itemTitle {
+    transition: none;
+  }
 }

@@ -18,17 +18,35 @@ export function AppFooterBrand() {
 /** Sous-titre de l'en-tête : l'espace de l'app (ici manager), jamais un titre de section. */
 export const APP_SPACE_LABEL = "Espace manager";
 
+/** Items de l'espace manager : libellé, icône, chemin. */
+const APP_NAV_ITEMS = [
+  { label: "Accueil", icon: "Home", href: "/" },
+  { label: "Agents", icon: "Group", href: "/agents" },
+  { label: "Sites", icon: "Site", href: "/sites" },
+  { label: "Pointages", icon: "Clockings", href: "/pointages" },
+] as const;
+
 /**
  * Navigation réelle de l'espace manager (cf. `navConfig` de la webapp) : tableau de bord,
  * agents, sites, pointages. Le nom de l'espace se lit dans l'en-tête (`APP_SPACE_LABEL`). La MCE n'y figure pas : c'est un autre produit.
+ *
+ * Cliquer un item le sélectionne (la pastille glisse) sans quitter la story : les
+ * liens pointent sur une ancre locale.
  */
 export function AppNav() {
+  const [selected, setSelected] = useState<string>(APP_NAV_ITEMS[0].href);
   return (
     <SideNav.Section>
-      <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="/" />
-      <SideNav.Item label="Agents" iconBefore="Group" href="/agents" />
-      <SideNav.Item label="Sites" iconBefore="Site" href="/sites" />
-      <SideNav.Item label="Pointages" iconBefore="Clockings" href="/pointages" />
+      {APP_NAV_ITEMS.map((item) => (
+        <SideNav.Item
+          key={item.href}
+          label={item.label}
+          iconBefore={item.icon}
+          href={`#${item.href}`}
+          isSelected={selected === item.href}
+          onClick={() => setSelected(item.href)}
+        />
+      ))}
     </SideNav.Section>
   );
 }

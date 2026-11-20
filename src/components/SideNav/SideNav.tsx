@@ -7,6 +7,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactElement,
   type ReactNode,
@@ -18,6 +19,7 @@ import { ScrollArea } from "../ScrollArea/ScrollArea.js";
 import { Button } from "../Button/index.js";
 import { Divider } from "../Divider/index.js";
 import { Skeleton } from "../Skeleton/index.js";
+import { useSlidingIndicator } from "../../hooks/useSlidingIndicator.js";
 import styles from "./SideNav.module.css";
 
 // `process` n'est pas typé ici (le DS build avec `types: []`, sans @types/node).
@@ -654,6 +656,9 @@ export function SideNav({
   "aria-label": ariaLabel = "Navigation principale",
 }: SideNavProps): ReactElement {
   const { mode } = useContext(SideNavContext);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  // Pastille de sélection unique : elle glisse vers l'item choisi.
+  const indicator = useSlidingIndicator(bodyRef, '[aria-current="page"]');
 
   // Header et Footer restent épinglés en haut/bas ; tout le reste (sections +
   // items) est regroupé dans un corps qui défile (overflow-y: auto). On
@@ -684,7 +689,20 @@ export function SideNav({
         <ScrollArea visibility="auto" hasOverflowShadows className={styles.body}>
           {/* Rend à droite la gouttière que la zone a reprise : les items
               gardent leur largeur, le pouce longe le bord du panneau. */}
-          <div className={styles.bodyContent}>{body}</div>
+          <div
+            ref={bodyRef}
+            className={styles.bodyContent}
+            data-side-nav-indicator={indicator.isActive || undefined}
+          >
+            <span
+              aria-hidden
+              className={styles.indicator}
+              data-visible={indicator.isActive || undefined}
+              data-animated={indicator.isAnimated || undefined}
+              style={indicator.style}
+            />
+            {body}
+          </div>
         </ScrollArea>
         {footer}
       </nav>
