@@ -94,8 +94,14 @@ export function Snackbar({
   className,
   style,
 }: SnackbarProps): ReactElement {
-  // Fond warning clair → contenu sombre ; tous les autres fonds bold → inversé.
-  const iconColor = appearance === "warning" ? "on-warning" : "inverted";
+  // Fond warning clair → contenu sombre fixe. Fond critical (red 600 dans les deux
+  // thèmes) → blanc fixe. Les autres fonds bold suivent le thème → inversé.
+  const iconColor =
+    appearance === "warning"
+      ? "on-light-surface"
+      : appearance === "critical"
+        ? "on-dark-surface"
+        : "inverted";
 
   return (
     <div

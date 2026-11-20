@@ -105,7 +105,7 @@
 /* — critical — */
 .critical.high {
   background-color: var(--background-critical-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-on-dark-surface);
 }
 .critical.medium {
   background-color: var(--background-critical-subtlest-default);
@@ -131,11 +131,11 @@
 /* — warning (fond clair/jaune : texte toujours sombre pour le contraste) — */
 .warning.high {
   background-color: var(--background-warning-bold-default);
-  color: var(--text-on-warning);
+  color: var(--text-on-light-surface);
 }
 .warning.medium {
   background-color: var(--background-warning-subtlest-default);
-  color: var(--text-on-warning);
+  color: var(--text-on-light-surface);
 }
 .warning.low {
   background-color: var(--background-warning-bold-default);

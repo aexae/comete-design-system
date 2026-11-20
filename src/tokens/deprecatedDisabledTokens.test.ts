@@ -30,7 +30,6 @@ const REMAINING_USAGES: Record<string, number> = {
   "src/components/MonthPicker/MonthPicker.module.css": 5,
   "src/components/Radio/Radio.module.css": 3,
   "src/components/Select/Select.module.css": 3,
-  "src/components/SideNav/SideNav.module.css": 2,
   "src/components/Stepper/Stepper.module.css": 3,
   "src/components/Switch/Switch.module.css": 3,
   "src/components/Table/TablePager.module.css": 1,

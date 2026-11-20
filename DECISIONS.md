@@ -2,6 +2,23 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-20 — on-light-surface / on-dark-surface, critical bold, disabled en opacité
+
+**Décisions** (Axel) :
+
+- `on-warning` devient `on-light-surface` et `on-comete` devient `on-dark-surface` (texte,
+  icône, couleur d'Icon). Le nom décrit la surface fixe, plus une famille de couleur.
+- `background.critical.bold` vaut red 600 dans les deux thèmes : tout texte ou icône posé
+  dessus utilise `on-dark-surface` (blanc fixe), pas `inverted` (encre en sombre).
+- Banner : apparence `discovery` (accent purple, icône `New`), message en medium, token de
+  taille d'icône.
+- SideNav et BottomNav : le disabled suit le standard opacité, sans couleur dédiée. Plus
+  aucun usage de `--text-disabled` / `--icon-disabled` dans ces composants.
+- Valeurs brutes portées par les tokens de composant (240, 72, 160 px) quand l'échelle n'a
+  pas le cran.
+- Règle permanente : aucun nouvel usage d'un élément déprécié (token, variable Figma,
+  composant), même via un alias. Arbitrage d'Axel si besoin.
+
 ## 2026-11-20 — `icon.on-comete` sur Card bold comete / brand, voiles
 
 **Décision** (Axel) : création de `icon.on-comete` dans les tokens (0.32.0), blanc fixe dans les

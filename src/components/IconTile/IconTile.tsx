@@ -60,7 +60,7 @@ const ICON_COLOR_MAP: Record<IconTileAppearance, string> = {
   brand: "brand",
   information: "information",
   success: "success",
-  warning: "on-warning",
+  warning: "on-light-surface",
   critical: "critical",
   accentPurple: "accentPurple",
   accentTeal: "accentTeal",

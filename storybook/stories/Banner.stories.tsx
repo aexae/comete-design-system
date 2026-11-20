@@ -76,6 +76,7 @@ const meta = {
         "announcement",
         "success",
         "information",
+        "discovery",
       ] satisfies BannerAppearance[],
     },
     children: { control: "text" },
@@ -112,11 +113,19 @@ export const Announcement: Story = {
 };
 
 export const Success: Story = {
+  parameters: { design: { type: "figma", url: figmaUrl("20735-6917") } },
   args: { appearance: "success", children: LOREM },
 };
 
 export const Information: Story = {
+  parameters: { design: { type: "figma", url: figmaUrl("20735-6923") } },
   args: { appearance: "information", children: LOREM },
+};
+
+/** Nouveautés et mises à jour majeures (accent purple). */
+export const Discovery: Story = {
+  parameters: { design: { type: "figma", url: figmaUrl("20735-6929") } },
+  args: { appearance: "discovery", children: LOREM },
 };
 
 export const AllAppearances: Story = {
@@ -124,13 +133,13 @@ export const AllAppearances: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("4559-5335") } },
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      {(["warning", "critical", "announcement", "success", "information"] as const).map(
-        (appearance) => (
-          <Labeled key={appearance} label={appearance} align="stretch">
-            <Banner appearance={appearance}>{LOREM}</Banner>
-          </Labeled>
-        )
-      )}
+      {(
+        ["warning", "critical", "announcement", "success", "information", "discovery"] as const
+      ).map((appearance) => (
+        <Labeled key={appearance} label={appearance} align="stretch">
+          <Banner appearance={appearance}>{LOREM}</Banner>
+        </Labeled>
+      ))}
     </div>
   ),
 };

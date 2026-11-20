@@ -121,6 +121,13 @@ describe("SideNav", () => {
     expect(button).toHaveAttribute("aria-disabled", "true");
   });
 
+  it("should dim a disabled item with the opacity token only", () => {
+    const css = readFileSync("src/components/SideNav/SideNav.module.css", "utf8");
+    const rule = css.match(/\.itemDisabled \{([^}]*)\}/)?.[1] ?? "";
+    expect(rule).toContain("opacity: var(--side-nav-opacity-disabled)");
+    expect(css).not.toContain("--text-disabled");
+  });
+
   it("should not call onClick when disabled", async () => {
     const onClick = vi.fn();
     const user = userEvent.setup();

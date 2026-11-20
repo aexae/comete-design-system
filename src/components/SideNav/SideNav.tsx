@@ -273,7 +273,7 @@ export function SideNavItem({
     }
   }, [isRail, iconBefore, label]);
 
-  const iconColor = isDisabled ? "disabled" : isSelected ? "selected" : "subtle";
+  const iconColor = isSelected ? "selected" : "subtle";
   const iconAppearance = isSelected ? "filled" : "outlined";
 
   const classNames = [

@@ -25,7 +25,7 @@
   min-width: 0; /* empêche le débordement en flex */
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs); /* 14px */
-  font-weight: var(--font-weight-regular); /* 400 */
+  font-weight: var(--font-weight-medium); /* 500 */
   line-height: var(--line-height-ui-xs); /* 20px */
 }
 
@@ -36,8 +36,13 @@
   flex-shrink: 0;
 }
 
-/* L'Icon pose sa couleur par sa classe `comete-icon--<couleur>` (on-warning ou
-   inverted, gardée comme repli) : le token d'icône du bandeau, posé par la
+.iconSlot :global(svg) {
+  width: var(--banner-size-icon); /* 24px */
+  height: var(--banner-size-icon);
+}
+
+/* L'Icon pose sa couleur par sa classe `comete-icon--<couleur>` (on-light-surface,
+   on-dark-surface ou inverted, gardée comme repli) : le token d'icône du bandeau, posé par la
    classe d'apparence, la remplace. Spécificité (0,2,0) contre (0,1,0). */
 .iconSlot :global([class*="comete-icon--"]) {
   color: var(--banner-icon-color);
@@ -54,7 +59,7 @@
   --banner-icon-color: var(--banner-color-warning-icon);
 }
 
-/* critical : fond rouge, texte inversé (blanc) */
+/* critical : fond rouge fixe (red 600 dans les deux thèmes), texte blanc fixe */
 .critical {
   background-color: var(--banner-color-critical-background);
   color: var(--banner-color-critical-text);
@@ -80,4 +85,11 @@
   background-color: var(--banner-color-information-background);
   color: var(--banner-color-information-text);
   --banner-icon-color: var(--banner-color-information-icon);
+}
+
+/* discovery : fond violet (accent purple), nouveautés et mises à jour majeures */
+.discovery {
+  background-color: var(--banner-color-discovery-background);
+  color: var(--banner-color-discovery-text);
+  --banner-icon-color: var(--banner-color-discovery-icon);
 }

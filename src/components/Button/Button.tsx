@@ -108,7 +108,9 @@ function resolveIconColor(appearance: ButtonAppearance, color: ButtonColor): Ico
   if (appearance === "contained") {
     if (color === "subtle" || color === "subtlest") return color;
     // NOTE: warning bold background is light/yellow — needs dark icons, not white
-    if (color === "warning") return "on-warning";
+    if (color === "warning") return "on-light-surface";
+    // critical bold stays red 600 in both themes — needs fixed white icons
+    if (color === "critical") return "on-dark-surface";
     // Every other color except default renders a bold background with inverted text
     return color === "default" ? "default" : "inverted";
   }

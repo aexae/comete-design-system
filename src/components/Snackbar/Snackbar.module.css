@@ -108,13 +108,13 @@
 /* warning : fond jaune (clair), contenu sombre pour le contraste */
 .warning {
   background-color: var(--background-warning-bold-default);
-  color: var(--text-on-warning);
+  color: var(--text-on-light-surface);
 }
 
-/* critical : fond rouge, contenu inversé (blanc) */
+/* critical : fond rouge fixe (red 600 dans les deux thèmes), contenu blanc fixe */
 .critical {
   background-color: var(--background-critical-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-on-dark-surface);
 }
 
 /* discovery : fond violet (accent purple), contenu inversé (blanc) */

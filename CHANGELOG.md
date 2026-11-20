@@ -9,6 +9,33 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Changements cassants (BREAKING)
+
+- **Tokens 0.33.0 et comete-icons 0.13.0** : `--text-on-warning` / `--icon-on-warning`
+  deviennent `--text-on-light-surface` / `--icon-on-light-surface`, `--text-on-comete` /
+  `--icon-on-comete` deviennent `--text-on-dark-surface` / `--icon-on-dark-surface`.
+  Couleur d'icône `color="on-warning"` remplacée par `color="on-light-surface"`, nouvelle
+  couleur `on-dark-surface`. Peer dependency `@aexae/comete-icons` `^0.13.0`.
+
+### Ajouté
+
+- **Banner `appearance="discovery"`** (fond accent purple, icône `New`) pour annoncer des
+  nouveautés ou des mises à jour majeures.
+
+### Modifié
+
+- **Fond critical bold en sombre** : red 600 (tokens 0.33.0, aligné sur Figma). Les textes et
+  icônes posés dessus passent en blanc fixe (`on-dark-surface`) : Button contained critical,
+  Tag bold critical, Badge critical high, Snackbar critical, Card bold critical, Banner critical.
+- **Banner** : message en font-weight medium, taille de l'icône par `--banner-size-icon`.
+- **SideNav** : item de 32 px (padding vertical 4 px), item désactivé en opacité seule
+  (`--side-nav-opacity-disabled`, couleurs inchangées), opacité de la marque du pied à 0,5,
+  largeur et hauteur d'en-tête par tokens (`--side-nav-size-width`,
+  `--side-nav-size-header-min-height`).
+- **BottomNav** : item désactivé en opacité seule (plus de couleurs dépréciées).
+- **PageToolbar** : largeurs du champ de recherche par tokens
+  (`--page-toolbar-size-search-min-width`, `--page-toolbar-size-search-max-width`).
+
 ### Ajouté
 
 - **Tokens 0.32.0 : `--icon-on-comete`**, icône blanche fixe dans les deux thèmes, pendant de

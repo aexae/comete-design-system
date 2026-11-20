@@ -11,9 +11,7 @@
 
 .container {
   position: relative;
-  /* REASON: 240px n'a pas de token d'échelle (Size3200 = 256px). Valeur brute
-     en attente d'une décision (cf. TODO de comete-design-tokens). */
-  width: 240px;
+  width: var(--side-nav-size-width); /* 240px */
   height: 100%;
   flex-shrink: 0;
   transition: width var(--duration-normal) var(--easing-default);
@@ -89,7 +87,7 @@
   display: flex;
   align-items: center;
   gap: var(--side-nav-spacing-header-gap);
-  min-height: 72px;
+  min-height: var(--side-nav-size-header-min-height); /* 72px */
   padding: var(--side-nav-spacing-header-padding-top) var(--side-nav-spacing-inset)
     var(--side-nav-spacing-header-padding-bottom);
   flex-shrink: 0;
@@ -198,10 +196,10 @@
   background: var(--side-nav-color-item-selected-background-pressed);
 }
 
-/* Disabled */
+/* Disabled : standard opacité, les couleurs restent celles de l'item. */
 .itemDisabled {
-  color: var(--text-disabled);
   cursor: not-allowed;
+  opacity: var(--side-nav-opacity-disabled);
 }
 
 .itemDisabled:hover,
@@ -232,10 +230,6 @@
 
 .itemSelected .itemTitle {
   color: var(--side-nav-color-item-selected-text);
-}
-
-.itemDisabled .itemTitle {
-  color: var(--text-disabled);
 }
 
 /* ------------------------------------------------------------------ */
@@ -309,7 +303,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.55;
+  opacity: var(--side-nav-opacity-footer-brand); /* 0.5 */
 }
 
 .footerBrand > *,
@@ -353,7 +347,7 @@
   display: flex;
   align-items: center;
   gap: var(--side-nav-spacing-header-gap);
-  min-height: 72px;
+  min-height: var(--side-nav-size-header-min-height); /* 72px */
   padding: var(--side-nav-spacing-header-padding-top) var(--side-nav-spacing-inset)
     var(--side-nav-spacing-header-padding-bottom);
 }
