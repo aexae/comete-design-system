@@ -9,6 +9,22 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Ajouté
+
+- **Tokens 0.30.1 : `--text-on-comete`**, texte blanc fixe dans les deux thèmes pour les
+  surfaces navy fixes (`--background-surface-comete`, `--background-*-boldest-*`).
+  `Card` `bold` en `comete` ou `brand` l'utilise (texte et overrides `--text-*`), ainsi que
+  la page Welcome. `--text-inverted` suit le thème et tombait à 1,2:1 sur navy en sombre.
+
+### Modifié
+
+- **Tokens 0.30.1 : `--icon-bold`** aligné sur Figma (`cool-grey-950` en clair,
+  `cool-grey-50` en sombre). La poignée du Switch redevient visible en thème sombre.
+  Tokens `--text-subtlest-inverted` et `--logo-comete-subtlest` retirés (autre chantier).
+- **comete-icons 0.12.0** : couleurs `brand` et `comete` des icônes réparées (lisaient
+  `--icon-brand` et `--icon-comete`, renommés en 0.26.0), ajout de `brandBoldest` et
+  `cometeBoldest`.
+
 ### Changements cassants (BREAKING)
 
 - **Tokens 0.26.0 : `--icon-brand` devient `--icon-brand-default`, `--icon-comete`

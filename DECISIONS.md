@@ -2,6 +2,15 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-20 — text.on-comete pour les surfaces navy fixes, icon.bold aligné sur Figma
+
+**Décision** (Axel, suite aux faiblesses du lot A des descriptions) : nouveau token
+`text.on-comete` (blanc fixe, modèle de `text.on-warning`) pour tout texte posé sur
+`surface.comete` ou `*.boldest`, qui sont navy dans les deux thèmes. `Card bold comete /
+brand` et la page Welcome l'adoptent. `icon.bold` suit Figma (950 clair, 50 sombre).
+Les icônes de `Card bold comete` restent en `icon.inverted` : un `icon.on-comete` serait
+le pendant logique, à créer si validé.
+
 ## 2026-11-19 — Button brand et accent, polices Noto Sans et Noto Sans Mono
 
 **Décisions** (Axel) :
