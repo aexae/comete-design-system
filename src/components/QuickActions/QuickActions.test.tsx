@@ -167,7 +167,7 @@ describe("QuickActions — règle de couleur (ADR 0002)", () => {
       expect(r.body).not.toMatch(/critical|comete|brand|success|warning|information|accent/);
     }
     const base = rules.find((r) => r.sel === ".row");
-    expect(base?.body).toMatch(/background-color:\s*var\(--background-surface-default\)/);
+    expect(base?.body).toMatch(/background-color:\s*var\(--surface-default\)/);
   });
 
   it("should map each of the five semantic tones onto its IconTile appearance", () => {

@@ -332,7 +332,7 @@ const frame = (dashed = false): React.CSSProperties => ({
   border: `1px ${dashed ? "dashed" : "solid"} var(--border-default)`,
   borderRadius: "var(--radius-100)",
   padding: "var(--space150)",
-  background: "var(--background-surface-default)",
+  background: "var(--surface-default)",
 });
 
 /** « À faire » / « À éviter » à plat : pas de boîte, l'icône et la couleur du titre portent le verdict. */

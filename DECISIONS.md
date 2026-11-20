@@ -2,6 +2,17 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-20 — `--surface-*` hors de `background`, Checkbox et Switch sur `background.default`
+
+**Décisions** (Axel, tokens 0.34.0) :
+
+- **Doctrine surface vs background** validée : surface = ce sur quoi on pose du contenu (profondeur, sans sens) ; background = ce qu'un composant peint pour dire quelque chose (emphase, statut, marque). La famille `background.surface.*` sort de `background` et devient `surface.*`, aplatie (plus de niveau `elevation`, qui désigne déjà les ombres). Le DS migre ses 36 fichiers consommateurs sans changement visuel.
+- **Checkbox et Switch** : le fond non coché de la case et le pouce du Switch passent de `--surface-default` à `--background-default-default`, comme leurs variables Figma (`DEPRECATED-input/color/background/default` et `button` du Switch). Un contrôle n'est pas une surface. Seul le thème sombre change (cool-grey 950 au lieu de 900).
+- **Badge et AvatarGroup gardent `--surface-default`** pour l'anneau de découpe et la bordure de chevauchement : ils imitent la surface sous l'élément, c'est bien une surface.
+- **Cadre « Dark background » de la page Spinner (Figma)** : relié par Axel à `surface/default` en mode sombre, conforme à la doctrine (c'est la page en thème sombre, le spinner y est posé).
+
+**Contexte / raison** : voir DECISIONS du repo tokens (0.34.0). Les DS de référence séparent tous couches et remplissages ; la séparation devient lisible dans le nom.
+
 ## 2026-11-20 — on-light-surface / on-dark-surface, critical bold, disabled en opacité
 
 **Décisions** (Axel) :

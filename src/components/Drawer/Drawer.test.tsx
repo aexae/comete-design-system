@@ -493,10 +493,10 @@ describe("Drawer — zone défilante", () => {
   });
 
   it("should repaint the overflow masks in the panel colour", () => {
-    // Sans ce jeton les masques tirent vers `--background-surface-default`,
+    // Sans ce jeton les masques tirent vers `--surface-default`,
     // qui n'est pas la couleur du panneau — ils jureraient sur le tiroir.
     expect(css).toMatch(
-      /\.body\s*\{[^}]*--scroll-shadow-surface:\s*var\(--background-surface-elevation-overlay-default\)/
+      /\.body\s*\{[^}]*--scroll-shadow-surface:\s*var\(--surface-overlay-default\)/
     );
   });
 

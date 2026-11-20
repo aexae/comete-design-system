@@ -245,7 +245,7 @@ function IllustrationExplorer(): ReactElement {
           flexWrap: "wrap",
           marginBottom: 20,
           padding: 16,
-          background: "var(--background-surface-elevation-sunken-default)",
+          background: "var(--surface-sunken-default)",
           borderRadius: 12,
           border: "1px solid var(--border-default)",
         }}

@@ -76,8 +76,8 @@
    ========================================================================== */
 
 .dialog {
-  --badge-cutout-color: var(--background-surface-elevation-overlay-default);
-  background-color: var(--background-surface-elevation-overlay-default);
+  --badge-cutout-color: var(--surface-overlay-default);
+  background-color: var(--surface-overlay-default);
   border-radius: var(--radius050);
   box-shadow: var(--elevation-xlarge);
   overflow: hidden;
@@ -195,8 +195,8 @@
 
   /* Les masques des ombres de débordement reprennent la couleur de la surface
      qui les porte. Sans ce jeton ils tireraient vers
-     `--background-surface-default`, qui n'est pas la couleur du dialog. */
-  --scroll-shadow-surface: var(--background-surface-elevation-overlay-default);
+     `--surface-default`, qui n'est pas la couleur du dialog. */
+  --scroll-shadow-surface: var(--surface-overlay-default);
 }
 
 /* Le retrait et la typographie vivent sur le CONTENU, pas sur la zone : posés

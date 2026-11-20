@@ -262,7 +262,7 @@ export const Axe: Story = {
                 padding: "var(--space150) var(--space200)",
                 borderRadius: "var(--radius200)",
                 border: "1px solid var(--border-subtle)",
-                background: "var(--background-surface-default)",
+                background: "var(--surface-default)",
               }}
             >
               <span style={{ flex: "none", minWidth: 120 }}>
@@ -602,7 +602,7 @@ export const Emphase: Story = {
                 padding: "var(--space100) var(--space200)",
                 borderRadius: "var(--radius200)",
                 border: "1px solid var(--border-subtle)",
-                background: "var(--background-surface-default)",
+                background: "var(--surface-default)",
               }}
             >
               <span style={{ flex: "none", minWidth: 130 }}>

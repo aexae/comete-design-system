@@ -164,7 +164,7 @@
   left: 0;
   z-index: 1;
   margin-top: var(--space050);
-  background-color: var(--background-surface-elevation-raise-default);
+  background-color: var(--surface-raise-default);
   border-radius: var(--radius0375);
   box-shadow: var(--elevation-large);
   outline: none;

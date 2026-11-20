@@ -249,10 +249,10 @@ describe("ModalDialog — zone défilante", () => {
   });
 
   it("should repaint the overflow masks in the dialog colour", () => {
-    // Sans ce jeton les masques tirent vers `--background-surface-default`,
+    // Sans ce jeton les masques tirent vers `--surface-default`,
     // qui n'est pas la couleur du dialog — ils jureraient sur la modale.
     expect(css).toMatch(
-      /\.body\s*\{[^}]*--scroll-shadow-surface:\s*var\(--background-surface-elevation-overlay-default\)/
+      /\.body\s*\{[^}]*--scroll-shadow-surface:\s*var\(--surface-overlay-default\)/
     );
   });
 

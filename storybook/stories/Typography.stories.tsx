@@ -515,7 +515,7 @@ function StyleRow({
           <pre
             style={{
               ...textStyle,
-              background: "var(--background-surface-elevation-sunken-default)",
+              background: "var(--surface-sunken-default)",
               border: "1px solid var(--border-subtle)",
               borderRadius: 8,
               padding: "12px 16px",

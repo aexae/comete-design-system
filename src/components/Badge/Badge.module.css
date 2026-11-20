@@ -54,7 +54,7 @@
      définit. Chaque surface (Card, Popup, etc.) le positionne sur son propre
      background pour que l'anneau se fonde visuellement dans le fond.
      Fallback = fond de page courant (adaptatif light/dark). */
-  box-shadow: 0 0 0 var(--size025) var(--badge-cutout-color, var(--background-surface-default));
+  box-shadow: 0 0 0 var(--size025) var(--badge-cutout-color, var(--surface-default));
 }
 
 /* ==========================================================================

@@ -101,7 +101,7 @@
   width: 16px;
   height: 16px;
   border-radius: var(--radius300);
-  background-color: var(--background-surface-default);
+  background-color: var(--background-default-default);
   color: var(--icon-subtle);
   transition:
     left var(--duration-fast) var(--easing-default),

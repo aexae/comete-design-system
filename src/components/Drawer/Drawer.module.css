@@ -62,12 +62,12 @@
    ========================================================================== */
 
 .drawer {
-  --badge-cutout-color: var(--background-surface-elevation-overlay-default);
+  --badge-cutout-color: var(--surface-overlay-default);
   /* Depth inset & shade — set by the component for stacked drawers */
   --_depth-inset: 0px;
   --_depth-shade: 0;
   position: fixed;
-  background-color: var(--background-surface-elevation-overlay-default);
+  background-color: var(--surface-overlay-default);
   box-shadow: var(--elevation-xlarge);
   outline: none;
   display: flex;
@@ -353,8 +353,8 @@
 
   /* Les masques des ombres de débordement reprennent la couleur de la surface
      qui les porte. Sans ce jeton ils tireraient vers
-     `--background-surface-default`, qui n'est pas la couleur du panneau. */
-  --scroll-shadow-surface: var(--background-surface-elevation-overlay-default);
+     `--surface-default`, qui n'est pas la couleur du panneau. */
+  --scroll-shadow-surface: var(--surface-overlay-default);
 }
 
 /* Le retrait et la typographie vivent sur le CONTENU, pas sur la zone : posés
