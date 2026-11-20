@@ -2,12 +2,17 @@
 
 ## Icon : couleur `on-comete` et liste du control (2026-11-20)
 
-- **comete-icons** : `IconColor` n'a pas de valeur `on-comete` (ni classe CSS). Le DS passe par
-  l'override `--icon-default` dans Card ; ajouter la couleur dans comete-icons pour un usage direct
-  `<Icon color="on-comete" />` sur toute surface navy fixe.
-- **Storybook Icon** : la constante `COLORS` est recopiée à la main depuis le type `IconColor` ;
-  elle a manqué trois couleurs après comete-icons 0.12.0. Faire exporter la liste par
-  comete-icons (ou la dériver du CSS du paquet) pour supprimer la double saisie.
+- ~~**comete-icons** : `IconColor` n'a pas de valeur `on-comete`~~ : FAIT, `on-dark-surface` en
+  comete-icons 0.13.0. Card garde l'override `--icon-default` pour couvrir toutes les icônes enfants.
+- ~~**Storybook Icon** : la constante `COLORS` est recopiée à la main~~ : FAIT, `ICON_COLORS`
+  exporté par comete-icons 0.14.0 et consommé par la story.
+
+## Surface vs background : reliquats (2026-11-20)
+
+- **`--background-default-*`** : nom trompeur depuis la doctrine (c'est le remplissage des champs
+  et contrôles). Renommage `background.field.*` à trancher côté tokens ; le DS suivra.
+- **Autres contrôles à auditer** : tout `--surface-*` consommé par un composant qui n'est pas un
+  contenant (InputContainer en hovered utilise `--surface-sunken-hovered` : champ ou surface ?).
 
 ## Tokens de composant Banner, Page, SideNav, BottomNav (2026-11-20)
 

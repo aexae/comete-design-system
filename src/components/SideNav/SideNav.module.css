@@ -62,7 +62,7 @@
    ils lui réservent 8px et repoussent le pouce vers l'intérieur.
 
    Pas de `--scroll-shadow-surface` : la nav est posée sur
-   `--background-surface-default`, qui est déjà le défaut de la recette. */
+   `--surface-default`, qui est déjà le défaut de la recette. */
 .body {
   flex: 1 1 auto;
 

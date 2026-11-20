@@ -22,7 +22,7 @@
   margin: calc(var(--space300) * -1) calc(var(--space300) * -1) 0;
   overflow: hidden;
   /* Surface navy fixe dans les deux thèmes : texte blanc fixe. */
-  background: var(--background-surface-comete);
+  background: var(--surface-comete);
   color: var(--text-on-dark-surface);
 }
 
@@ -291,7 +291,7 @@
   width: var(--space800);
   height: var(--space800);
   border-radius: var(--radius200);
-  background: var(--background-surface-comete);
+  background: var(--surface-comete);
 }
 
 .resourceIcons {
@@ -317,7 +317,7 @@
 }
 
 .personaIconDark {
-  background: var(--background-surface-comete);
+  background: var(--surface-comete);
   color: var(--comete-yellow-300);
 }
 
@@ -335,7 +335,7 @@
   gap: var(--space300);
   padding: var(--space300);
   border-radius: var(--radius200);
-  background: var(--background-surface-comete);
+  background: var(--surface-comete);
   color: var(--text-on-dark-surface);
 }
 
@@ -349,7 +349,7 @@
 .page .fillStatus {
   height: 100%;
   border-radius: var(--radius150);
-  background: var(--background-surface-default);
+  background: var(--surface-default);
   box-shadow: var(--elevation-xsmall);
   transition:
     transform var(--duration-slow) var(--easing-default),

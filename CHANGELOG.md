@@ -11,6 +11,20 @@ entre versions alpha.
 
 ### Changements cassants (BREAKING)
 
+- **Tokens 0.34.0** : la famille `--background-surface-*` devient `--surface-*`, aplatie
+  (`--surface-default`, `--surface-sunken-*`, `--surface-raise-*`, `--surface-overlay-*`,
+  `--surface-mask-*`, `--surface-comete`). `--background-surface-critical` supprimé (doublon de
+  `--surface-overlay-critical`). Les 36 fichiers consommateurs (composants, stories, preview)
+  sont migrés. Doctrine surface vs background dans le README des tokens.
+
+### Modifié
+
+- **Checkbox** (fond non coché) et **Switch** (pouce) : `--background-default-default` au lieu
+  de `--surface-default`, comme dans Figma (un contrôle peint un remplissage, il n'est pas une
+  surface). Visible uniquement en thème sombre (cool-grey 950 au lieu de 900).
+- **Storybook Icon** : la liste des couleurs du control vient de `ICON_COLORS` exporté par
+  comete-icons 0.14.0, plus de liste recopiée. Peer dependency `@aexae/comete-icons` `^0.14.0`.
+
 - **Tokens 0.33.0 et comete-icons 0.13.0** : `--text-on-warning` / `--icon-on-warning`
   deviennent `--text-on-light-surface` / `--icon-on-light-surface`, `--text-on-comete` /
   `--icon-on-comete` deviennent `--text-on-dark-surface` / `--icon-on-dark-surface`.

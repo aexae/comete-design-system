@@ -35,7 +35,7 @@ export interface AvatarGroupProps {
    * Border colour for the ring that visually separates stacked avatars.
    * Doit reprendre le fond du conteneur du groupe (l'anneau « découpe »
    * les avatars) : passer le token de fond de ce conteneur.
-   * @default "var(--background-surface-default)"
+   * @default "var(--surface-default)"
    */
   borderColor?: string;
   /**
@@ -92,7 +92,7 @@ export function AvatarGroup({
   selectedKeys,
   onSelectionChange,
   size = "medium",
-  borderColor = "var(--background-surface-default)",
+  borderColor = "var(--surface-default)",
   mode = "display",
   onItemPress,
   "aria-label": ariaLabel = "Avatar group",

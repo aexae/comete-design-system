@@ -116,7 +116,7 @@
    LE JETON CHANGE SELON LE THÈME, et ce n'est pas un confort : aucun jeton
    neutre ne donne à la fois un gris assez clair sur blanc et assez contrasté
    sur #374043. On prend donc le plus clair qui tienne 3:1 dans CHAQUE thème.
-   Mesuré contre `--background-surface-default` :
+   Mesuré contre `--surface-default` :
 
                     THEME CLAIR (#ffffff)        THEME SOMBRE (#374043)
      au repos --icon-subtlest #6f8488 3,94:1   --icon-subtle #8d9fa3 3,85:1
@@ -272,16 +272,10 @@
   --_scroll-shadow-ink: color-mix(in srgb, var(--border-default) 65%, transparent);
 
   background:
-    linear-gradient(
-        var(--scroll-shadow-surface, var(--background-surface-default)) 30%,
-        transparent
-      )
-      center top,
-    linear-gradient(
-        transparent,
-        var(--scroll-shadow-surface, var(--background-surface-default)) 70%
-      )
-      center bottom,
+    linear-gradient(var(--scroll-shadow-surface, var(--surface-default)) 30%, transparent) center
+      top,
+    linear-gradient(transparent, var(--scroll-shadow-surface, var(--surface-default)) 70%) center
+      bottom,
     radial-gradient(farthest-side at 50% 0, var(--_scroll-shadow-ink), transparent) center top,
     radial-gradient(farthest-side at 50% 100%, var(--_scroll-shadow-ink), transparent) center bottom;
   background-repeat: no-repeat;
@@ -294,19 +288,11 @@
 }
 
 [data-theme="dark"] .shadows {
-  --_scroll-shadow-ink: color-mix(
-    in srgb,
-    var(--background-surface-elevation-sunken-default) 65%,
-    transparent
-  );
+  --_scroll-shadow-ink: color-mix(in srgb, var(--surface-sunken-default) 65%, transparent);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .shadows {
-    --_scroll-shadow-ink: color-mix(
-      in srgb,
-      var(--background-surface-elevation-sunken-default) 65%,
-      transparent
-    );
+    --_scroll-shadow-ink: color-mix(in srgb, var(--surface-sunken-default) 65%, transparent);
   }
 }

@@ -238,7 +238,7 @@ const S = {
     fontSize: 13,
     color: "var(--text-default-default)",
     minHeight: "100%",
-    background: "var(--background-surface-default)",
+    background: "var(--surface-default)",
   } satisfies CSSProperties,
   sidebar: {
     position: "sticky" as const,
@@ -258,7 +258,7 @@ const S = {
     flexWrap: "wrap" as const,
     marginBottom: 20,
     padding: "12px 16px",
-    background: "var(--background-surface-elevation-sunken-default)",
+    background: "var(--surface-sunken-default)",
     borderRadius: 10,
     border: "1px solid var(--border-default)",
   } satisfies CSSProperties,
@@ -936,7 +936,7 @@ function CodeBlock({ children }: { children: string }): ReactElement {
     <div style={{ position: "relative", marginBottom: 16 }}>
       <pre
         style={{
-          background: "var(--background-surface-elevation-sunken-default)",
+          background: "var(--surface-sunken-default)",
           border: "1px solid var(--border-default)",
           borderRadius: 8,
           padding: "16px 48px 16px 16px",
@@ -1016,7 +1016,7 @@ function CodeTab(): ReactElement {
           Référencez directement les custom properties dans vos fichiers <code>.module.css</code>.
         </p>
         <CodeBlock>{`.card {
-  background-color: var(--background-surface-elevation-raise-default);
+  background-color: var(--surface-raise-default);
   border: 1px solid var(--border-default);
   border-radius: var(--radius050);
   color: var(--text-default-default);
@@ -1114,11 +1114,11 @@ function ExampleCard({ title, children }: { title: string; children: ReactNode }
         marginBottom: 24,
       }}
     >
-      <div style={{ padding: 24, background: "var(--background-surface-default)" }}>{children}</div>
+      <div style={{ padding: 24, background: "var(--surface-default)" }}>{children}</div>
       <div
         style={{
           padding: "8px 16px",
-          background: "var(--background-surface-elevation-sunken-default)",
+          background: "var(--surface-sunken-default)",
           borderTop: "1px solid var(--border-default)",
           fontSize: 12,
           fontWeight: 600,
@@ -1149,9 +1149,9 @@ function ExamplesTab(): ReactElement {
       <ExampleCard title="Background surfaces">
         <div style={{ display: "flex", gap: 12 }}>
           {[
-            ["surface-default", "--background-surface-default"],
-            ["surface-raise", "--background-surface-elevation-raise-default"],
-            ["surface-sunken", "--background-surface-elevation-sunken-default"],
+            ["surface-default", "--surface-default"],
+            ["surface-raise", "--surface-raise-default"],
+            ["surface-sunken", "--surface-sunken-default"],
           ].map(([label, token]) => (
             <div
               key={token}
@@ -1223,7 +1223,7 @@ function ExamplesTab(): ReactElement {
                 width: 64,
                 height: 64,
                 borderRadius: 8,
-                background: "var(--background-surface-elevation-raise-default)",
+                background: "var(--surface-raise-default)",
                 boxShadow: `var(--elevation-${level})`,
                 display: "flex",
                 alignItems: "center",
@@ -1389,7 +1389,7 @@ function TokenExplorer(): ReactElement {
             position: "sticky",
             top: 0,
             zIndex: 10,
-            background: "var(--background-surface-default)",
+            background: "var(--surface-default)",
             paddingLeft: 24,
           }}
         >

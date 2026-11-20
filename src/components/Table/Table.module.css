@@ -85,7 +85,7 @@
   position: sticky;
   top: 0;
   z-index: 1;
-  background: var(--background-surface-default);
+  background: var(--surface-default);
 }
 
 /* --------------------------------------------------------------------------
@@ -363,7 +363,7 @@
      et garder les coins arrondis. */
   border-radius: var(--radius200);
   overflow: hidden;
-  background: var(--background-surface-default);
+  background: var(--surface-default);
 }
 
 .viewHeader {

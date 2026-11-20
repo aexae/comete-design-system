@@ -42,32 +42,8 @@ const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":"
 
 const VARIANTS: IconVariant[] = ["outlined", "filled", "duotone"];
 
-const COLORS: IconColor[] = [
-  "accentBlueGrey",
-  "accentMagenta",
-  "accentPurple",
-  "accentTeal",
-  "accentTurquoise",
-  "bold",
-  "brand",
-  "brandBoldest",
-  "comete",
-  "cometeBoldest",
-  "critical",
-  "day",
-  "default",
-  "disabled",
-  "information",
-  "inverted",
-  "night",
-  "on-dark-surface",
-  "on-light-surface",
-  "selected",
-  "subtle",
-  "subtlest",
-  "success",
-  "warning",
-];
+// REASON: la liste vient du paquet (comete-icons 0.14.0), plus de double saisie.
+const COLORS: IconColor[] = [...Icons.ICON_COLORS];
 
 // ----------------------------------------------------------------------
 
@@ -683,7 +659,7 @@ function IconDetailPanel({
               minHeight: 160,
               background: svgCopied
                 ? "var(--background-success-subtlest-default)"
-                : "var(--background-surface-elevation-sunken-default)",
+                : "var(--surface-sunken-default)",
               border: `1.5px solid ${svgCopied ? "var(--border-success)" : "transparent"}`,
               borderRadius: 8,
               cursor: "pointer",
@@ -698,8 +674,7 @@ function IconDetailPanel({
             }}
             onMouseLeave={(e) => {
               if (!svgCopied) {
-                e.currentTarget.style.background =
-                  "var(--background-surface-elevation-sunken-default)";
+                e.currentTarget.style.background = "var(--surface-sunken-default)";
               }
             }}
           >
@@ -790,7 +765,7 @@ function IconDetailPanel({
                       padding: 12,
                       background: isActive
                         ? "var(--background-selected-subtlest-default)"
-                        : "var(--background-surface-elevation-sunken-default)",
+                        : "var(--surface-sunken-default)",
                       border: `1.5px solid ${isActive ? "var(--border-focus)" : "transparent"}`,
                       borderRadius: 6,
                       cursor: "pointer",
@@ -854,7 +829,7 @@ function IconDetailPanel({
                 borderRadius: 6,
                 background: codeCopied
                   ? "var(--background-success-subtlest-default)"
-                  : "var(--background-surface-elevation-sunken-default)",
+                  : "var(--surface-sunken-default)",
                 cursor: "pointer",
                 fontFamily: "var(--font-family-code), monospace",
                 fontSize: 12,
@@ -983,7 +958,7 @@ function IconExplorer(): ReactElement {
             flexWrap: "wrap",
             marginBottom: 20,
             padding: 16,
-            background: "var(--background-surface-elevation-sunken-default)",
+            background: "var(--surface-sunken-default)",
             borderRadius: 8,
             border: "1px solid var(--border-default)",
           }}

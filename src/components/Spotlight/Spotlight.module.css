@@ -63,7 +63,7 @@
 
 .dialog {
   position: fixed;
-  background-color: var(--background-surface-elevation-overlay-default);
+  background-color: var(--surface-overlay-default);
   border-radius: var(--radius0375);
   box-shadow: var(--elevation-large);
   max-width: calc(100vw - var(--space200));

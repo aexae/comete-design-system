@@ -236,7 +236,7 @@ function Contents({ index }: { index: Index | undefined }): ReactElement {
 }
 
 const SWATCHES: { token: string; label: string; light?: boolean }[] = [
-  { token: "--background-surface-comete", label: "Bleu Comète" },
+  { token: "--surface-comete", label: "Bleu Comète" },
   { token: "--comete-yellow-400", label: "Jaune comète", light: true },
   { token: "--background-comete-bold-default", label: "Bleu action" },
   { token: "--background-neutral-subtler-default", label: "Gris clair", light: true },

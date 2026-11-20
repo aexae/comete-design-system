@@ -15,7 +15,7 @@
   margin: 0 auto;
   border-radius: var(--radius200);
   overflow: hidden;
-  background-color: var(--background-surface-elevation-sunken-default);
+  background-color: var(--surface-sunken-default);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -54,5 +54,5 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  background-color: var(--background-surface-elevation-sunken-default);
+  background-color: var(--surface-sunken-default);
 }

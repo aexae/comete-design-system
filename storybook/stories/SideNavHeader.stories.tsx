@@ -100,7 +100,7 @@ export const CustomLogo: Story = {
           width: 32,
           height: 32,
           borderRadius: 4,
-          background: "var(--background-surface-comete)",
+          background: "var(--surface-comete)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",

@@ -115,7 +115,7 @@ function Bande() {
             width: 160,
             padding: "var(--space200)",
             borderRadius: "var(--radius050)",
-            background: "var(--background-surface-elevation-sunken-default)",
+            background: "var(--surface-sunken-default)",
           }}
         >
           <Text size="small">Secteur {i + 1}</Text>

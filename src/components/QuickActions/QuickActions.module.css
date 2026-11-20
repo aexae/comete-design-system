@@ -80,7 +80,7 @@
   padding: var(--space100) var(--space300) var(--space100) var(--space100);
   border: 0;
   border-radius: var(--radius-round);
-  background-color: var(--background-surface-default);
+  background-color: var(--surface-default);
   box-shadow: var(--elevation-medium);
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-s);

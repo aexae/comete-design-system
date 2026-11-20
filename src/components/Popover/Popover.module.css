@@ -9,8 +9,8 @@
    redéfinir d'ascenseur ni d'`overflow` ici — un `overflow` posé sur cette
    boîte créerait un second défileur imbriqué dans le premier. */
 .popover {
-  --badge-cutout-color: var(--background-surface-elevation-raise-default);
-  background-color: var(--background-surface-elevation-raise-default);
+  --badge-cutout-color: var(--surface-raise-default);
+  background-color: var(--surface-raise-default);
   border-radius: var(--radius0375);
   box-shadow: var(--elevation-large);
   min-width: 240px;
@@ -53,7 +53,7 @@
    popover est posé sur la surface « raise », pas sur la surface par défaut. */
 .scroll {
   flex: 1 1 auto;
-  --scroll-shadow-surface: var(--background-surface-elevation-raise-default);
+  --scroll-shadow-surface: var(--surface-raise-default);
 }
 
 /* Match trigger width — le popover prend la largeur de son trigger */
