@@ -53,11 +53,12 @@ export function BottomNavItem({
   onClick,
 }: BottomNavItemProps): ReactElement {
   // Source icon: apparence au repos (fermé)
-  const sourceColor: IconColor = isDisabled ? "disabled" : isSelected ? "selected" : "subtlest";
+  // Disabled : standard opacité (porté par le CSS), les couleurs ne changent pas.
+  const sourceColor: IconColor = isSelected ? "selected" : "subtlest";
   const sourceAppearance: IconAppearance = isSelected ? "filled" : "outlined";
 
   // Close icon: apparence quand le popup est ouvert
-  const closeColor: IconColor = isDisabled ? "disabled" : "selected";
+  const closeColor: IconColor = "selected";
 
   const handlePress: AriaButtonProps["onPress"] = onClick
     ? () => {

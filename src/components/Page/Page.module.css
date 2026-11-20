@@ -169,8 +169,8 @@
    borné 160–240px : il se comprime jusqu'à 160px (le placeholder « Rechercher »
    reste lisible) quand la place manque, et ne dépasse jamais 240px. Reste sur
    la même ligne que les actions à toutes les largeurs — pas de passage en
-   rangée séparée. Largeurs structurelles en px (comme la SideNav à 240px) —
-   l'échelle de tokens n'a pas ces crans. */
+   rangée séparée. Largeurs portées par les tokens de composant
+   page-toolbar.size.search.* (valeurs brutes, l'échelle n'a pas ces crans). */
 .toolbarSearch {
   display: flex;
   align-items: center;
@@ -179,8 +179,8 @@
 
 .toolbarSearch > * {
   flex: 1 1 auto;
-  min-width: 160px;
-  max-width: 240px;
+  min-width: var(--page-toolbar-size-search-min-width); /* 160px */
+  max-width: var(--page-toolbar-size-search-max-width); /* 240px */
 }
 
 /* Slot `filters` — le bouton « Filtres » (panneau) vit sur la ligne de la

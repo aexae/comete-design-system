@@ -102,7 +102,8 @@ describe("Button", () => {
     it.each([
       ["contained", "brand", "inverted"],
       ["contained", "accent-teal", "inverted"],
-      ["contained", "warning", "on-warning"],
+      ["contained", "warning", "on-light-surface"],
+      ["contained", "critical", "on-dark-surface"],
       ["outlined", "brand", "brand"],
       ["outlined", "comete", "comete"],
       ["subtle", "accent-purple", "accentPurple"],

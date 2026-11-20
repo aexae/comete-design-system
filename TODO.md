@@ -11,14 +11,17 @@
 
 ## Tokens de composant Banner, Page, SideNav, BottomNav (2026-11-20)
 
-- **Écarts Figma / code à trancher** : détail dans `comete-design-tokens/TODO.md`. Côté DS,
-  plusieurs valeurs restent en dur faute de token : largeur 240 px et en-tête 72 px du
-  SideNav, opacité 0,55 de la marque du pied, transition `100ms ease`, largeurs 160 et
-  240 px de la recherche de PageToolbar, taille d'icône 24 px du Banner (prop TSX).
+- **Écarts Figma / code à trancher** : détail dans `comete-design-tokens/TODO.md` (fond et
+  bordure du SideNav, ligne de description, titre de section, logo, fond de la barre
+  compacte de PageBar). Reste en dur : la transition `100ms ease` du SideNav.
 - **Surcharge de couleur d'icône par classe interne** : Banner et BottomNav colorent l'icône
-  via `:global(.comete-icon--*)`, comme l'Avatar. Fragile si comete-icons renomme ses classes.
-- **Disabled du BottomNavItem et du SideNav** : opacité plus couleurs dépréciées. Passer à
-  l'opacité seule (change le rendu du SideNav).
+  via `:global(.comete-icon--*)` ou `:global(svg)`, comme l'Avatar. Fragile si comete-icons
+  renomme ses classes.
+- **Fonds bold qui suivent le thème** (success, information, discovery, announcement) : texte
+  en `text.inverted`, encre foncée en sombre. Lisibilité à vérifier fond par fond, comme
+  pour critical.
+- **Icon `color="disabled"`** lit `--icon-disabled` (déprécié) : l'Icon le pose encore dans un
+  InputContainer désactivé. À migrer vers l'opacité avec les champs.
 
 ## Fiabilité / qualité
 

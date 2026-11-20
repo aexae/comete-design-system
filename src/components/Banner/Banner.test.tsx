@@ -54,7 +54,7 @@ describe("Banner", () => {
     expect(screen.getByRole("alert").className).not.toContain("warning");
   });
 
-  it.each(["success", "information", "announcement"] as const)(
+  it.each(["success", "information", "announcement", "discovery"] as const)(
     "should apply the %s class for that appearance",
     (appearance) => {
       render(<Banner appearance={appearance}>Message</Banner>);
@@ -84,7 +84,7 @@ describe("Banner", () => {
 
   // Tokens de composant --------------------------------------------------
 
-  it.each(["warning", "critical", "announcement", "success", "information"] as const)(
+  it.each(["warning", "critical", "announcement", "success", "information", "discovery"] as const)(
     "should read the banner component tokens for appearance='%s'",
     (appearance) => {
       const css = readFileSync("src/components/Banner/Banner.module.css", "utf8");
@@ -94,4 +94,16 @@ describe("Banner", () => {
       expect(rule).toContain(`var(--banner-color-${appearance}-icon)`);
     }
   );
+
+  it("should size the icon with the banner icon token", () => {
+    const css = readFileSync("src/components/Banner/Banner.module.css", "utf8");
+    expect(css).toContain("width: var(--banner-size-icon)");
+    expect(css).toContain("height: var(--banner-size-icon)");
+  });
+
+  it("should render the content in medium weight", () => {
+    const css = readFileSync("src/components/Banner/Banner.module.css", "utf8");
+    const rule = css.match(/\.content \{([^}]*)\}/)?.[1] ?? "";
+    expect(rule).toContain("var(--font-weight-medium)");
+  });
 });

@@ -154,13 +154,8 @@
   opacity: var(--bottom-nav-opacity-disabled);
 }
 
-.item[data-disabled] .label {
-  color: var(--bottom-nav-color-item-label-disabled);
-}
-
 /* ==========================================================================
-   Couleurs d'icône — l'Icon pose sa couleur par sa classe (subtlest, selected,
-   disabled) : les tokens du composant la remplacent. Spécificité (0,2,0)
+   Couleurs d'icône — l'Icon pose sa couleur par sa classe (subtlest, selected) : les tokens du composant la remplacent. Spécificité (0,2,0)
    contre (0,1,0) pour la classe de l'Icon.
    ========================================================================== */
 
@@ -170,8 +165,4 @@
 
 .iconWrapper :global(.comete-icon--selected) {
   color: var(--bottom-nav-color-item-icon-selected);
-}
-
-.iconWrapper :global(.comete-icon--disabled) {
-  color: var(--bottom-nav-color-item-icon-disabled);
 }

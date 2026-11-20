@@ -8,7 +8,8 @@ import styles from "./Banner.module.css";
 // Types publics
 
 /** Sévérité / nature du banner. */
-export type BannerAppearance = "warning" | "critical" | "announcement" | "success" | "information";
+export type BannerAppearance =
+  "warning" | "critical" | "announcement" | "success" | "information" | "discovery";
 
 // -----------------------------------------------------------------------
 // Mapping appearance → icône contextuelle (aligné sur SectionMessage)
@@ -19,6 +20,7 @@ const DEFAULT_ICONS: Record<BannerAppearance, IconName> = {
   announcement: "Campaign",
   success: "CheckCircle",
   information: "Info",
+  discovery: "New",
 };
 
 export interface BannerProps {
@@ -47,10 +49,12 @@ export interface BannerProps {
  * <Banner appearance="announcement">Nouvelle fonctionnalité disponible.</Banner>
  * <Banner appearance="success">Sauvegarde effectuée avec succès.</Banner>
  * <Banner appearance="information">Maintenance prévue la semaine prochaine.</Banner>
+ * <Banner appearance="discovery">Nouveau : export PDF des plannings.</Banner>
  * ```
  *
  * @param appearance - Nature : "warning" (jaune), "critical" (rouge), "announcement"
- *                     (neutre sombre), "success" (vert), "information" (bleu). L'icône
+ *                     (neutre sombre), "success" (vert), "information" (bleu),
+ *                     "discovery" (violet, nouveautés et mises à jour majeures). L'icône
  *                     est résolue automatiquement selon l'apparence.
  * @param children   - Contenu du message
  */
@@ -67,8 +71,15 @@ export function Banner({ appearance, children, className, style }: BannerProps):
           size={24}
           appearance="filled"
           // Repli si le token --banner-color-<appearance>-icon manque : warning a un
-          // fond clair (icône sombre), tous les autres fonds bold ont une icône inversée
-          color={appearance === "warning" ? "on-warning" : "inverted"}
+          // fond clair fixe (icône sombre), critical un fond rouge fixe (icône
+          // blanche), les autres fonds bold suivent le thème (icône inversée)
+          color={
+            appearance === "warning"
+              ? "on-light-surface"
+              : appearance === "critical"
+                ? "on-dark-surface"
+                : "inverted"
+          }
         />
       </span>
       <div className={styles.content}>{children}</div>
