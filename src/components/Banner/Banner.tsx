@@ -61,13 +61,16 @@ export function Banner({ appearance, children, className, style }: BannerProps):
       role="alert"
       style={style}
     >
-      <Icon
-        icon={DEFAULT_ICONS[appearance]}
-        size={24}
-        appearance="filled"
-        // warning a un fond clair (texte sombre) ; tous les autres fonds bold → icône inversée
-        color={appearance === "warning" ? "on-warning" : "inverted"}
-      />
+      <span className={styles.iconSlot}>
+        <Icon
+          icon={DEFAULT_ICONS[appearance]}
+          size={24}
+          appearance="filled"
+          // Repli si le token --banner-color-<appearance>-icon manque : warning a un
+          // fond clair (icône sombre), tous les autres fonds bold ont une icône inversée
+          color={appearance === "warning" ? "on-warning" : "inverted"}
+        />
+      </span>
       <div className={styles.content}>{children}</div>
     </div>
   );

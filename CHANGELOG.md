@@ -9,6 +9,15 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Modifié
+
+- **Tokens 0.31.0 : tokens de composant** pour `Banner` (`--banner-*`), `Page`
+  (`--page-*`, `--page-bar-*`, `--page-toolbar-*`), `SideNav` (`--side-nav-*`) et
+  `BottomNav` (`--bottom-nav-*`). Leurs CSS lisent désormais ces tokens au lieu des tokens
+  sémantiques, rendu inchangé. Les propriétés locales `--bar-compact-*` et `--sidenav-*`
+  et les valeurs en dur du bouton d'action du BottomNav disparaissent. L'icône du `Banner`
+  est enveloppée dans un `span` pour recevoir sa couleur par token (comme l'Avatar).
+
 ### Ajouté
 
 - **Tokens 0.30.1 : `--text-on-comete`**, texte blanc fixe dans les deux thèmes pour les

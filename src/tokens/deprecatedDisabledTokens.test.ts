@@ -17,7 +17,6 @@ const DEPRECATED_TOKENS = [
 const REMAINING_USAGES: Record<string, number> = {
   "src/components/Accordion/Accordion.module.css": 2,
   "src/components/Badge/Badge.module.css": 2,
-  "src/components/BottomNav/BottomNavItem.module.css": 1,
   "src/components/Calendar/CalendarCell.module.css": 2,
   "src/components/Calendar/TimeCalendar.module.css": 1,
   "src/components/Calendar/TimeDrumPicker.module.css": 2,

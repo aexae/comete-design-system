@@ -1,4 +1,5 @@
 // Tests unitaires pour le composant Banner
+import { readFileSync } from "node:fs";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { Banner } from "./Banner";
@@ -75,4 +76,22 @@ describe("Banner", () => {
     // L'icône Warning est un SVG rendu par @aexae/comete-icons
     expect(container.querySelector("svg")).toBeInTheDocument();
   });
+
+  it("should wrap the icon in an iconSlot", () => {
+    const { container } = render(<Banner appearance="critical">Message</Banner>);
+    expect(container.querySelector(".iconSlot svg")).toBeInTheDocument();
+  });
+
+  // Tokens de composant --------------------------------------------------
+
+  it.each(["warning", "critical", "announcement", "success", "information"] as const)(
+    "should read the banner component tokens for appearance='%s'",
+    (appearance) => {
+      const css = readFileSync("src/components/Banner/Banner.module.css", "utf8");
+      const rule = css.match(new RegExp(`\\.${appearance} \\{([^}]*)\\}`))?.[1] ?? "";
+      expect(rule).toContain(`var(--banner-color-${appearance}-background)`);
+      expect(rule).toContain(`var(--banner-color-${appearance}-text)`);
+      expect(rule).toContain(`var(--banner-color-${appearance}-icon)`);
+    }
+  );
 });

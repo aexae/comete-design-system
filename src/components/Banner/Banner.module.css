@@ -9,8 +9,8 @@
 .banner {
   display: flex;
   align-items: center;
-  gap: var(--space150); /* 12px */
-  padding: var(--space150); /* 12px */
+  gap: var(--banner-spacing-gap); /* 12px */
+  padding: var(--banner-spacing-padding); /* 12px */
   width: 100%;
   box-sizing: border-box;
 }
@@ -29,36 +29,55 @@
   line-height: var(--line-height-ui-xs); /* 20px */
 }
 
+/* Emplacement de l'icône contextuelle */
+
+.iconSlot {
+  display: flex;
+  flex-shrink: 0;
+}
+
+/* L'Icon pose sa couleur par sa classe `comete-icon--<couleur>` (on-warning ou
+   inverted, gardée comme repli) : le token d'icône du bandeau, posé par la
+   classe d'apparence, la remplace. Spécificité (0,2,0) contre (0,1,0). */
+.iconSlot :global([class*="comete-icon--"]) {
+  color: var(--banner-icon-color);
+}
+
 /* ==========================================================================
    Apparences — définissent le fond et la couleur héritée par les enfants
    ========================================================================== */
 
 /* warning : fond jaune, texte toujours sombre (contraste sur jaune) */
 .warning {
-  background-color: var(--background-warning-bold-default);
-  color: var(--text-on-warning);
+  background-color: var(--banner-color-warning-background);
+  color: var(--banner-color-warning-text);
+  --banner-icon-color: var(--banner-color-warning-icon);
 }
 
 /* critical : fond rouge, texte inversé (blanc) */
 .critical {
-  background-color: var(--background-critical-bold-default);
-  color: var(--text-inverted);
+  background-color: var(--banner-color-critical-background);
+  color: var(--banner-color-critical-text);
+  --banner-icon-color: var(--banner-color-critical-icon);
 }
 
 /* announcement : fond neutre sombre, texte inversé (blanc) */
 .announcement {
-  background-color: var(--background-neutral-bold-default);
-  color: var(--text-inverted);
+  background-color: var(--banner-color-announcement-background);
+  color: var(--banner-color-announcement-text);
+  --banner-icon-color: var(--banner-color-announcement-icon);
 }
 
 /* success : fond vert, texte inversé (blanc) */
 .success {
-  background-color: var(--background-success-bold-default);
-  color: var(--text-inverted);
+  background-color: var(--banner-color-success-background);
+  color: var(--banner-color-success-text);
+  --banner-icon-color: var(--banner-color-success-icon);
 }
 
 /* information : fond bleu, texte inversé (blanc) */
 .information {
-  background-color: var(--background-information-bold-default);
-  color: var(--text-inverted);
+  background-color: var(--banner-color-information-background);
+  color: var(--banner-color-information-text);
+  --banner-icon-color: var(--banner-color-information-icon);
 }

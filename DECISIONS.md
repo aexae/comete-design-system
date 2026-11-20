@@ -2,6 +2,16 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-20 — Tokens de composant Banner, Page, SideNav, BottomNav
+
+**Décision** (demande d'Axel) : ces composants lisent leurs tokens de composant (tokens
+0.31.0) au lieu des tokens sémantiques, avec des valeurs reprises du code (rendu
+inchangé). Les écarts avec Figma (SideNav, BottomNav, PageBar, Banner) ne sont pas
+tranchés : ils sont listés dans le TODO du dépôt tokens. Le disabled du BottomNavItem
+passe par `--bottom-nav-color-item-*-disabled`, qui aliasent encore `text.disabled` et
+`icon.disabled` (dépréciés) : la référence de `deprecatedDisabledTokens.test.ts` perd son
+entrée BottomNavItem, la dette est suivie côté tokens.
+
 ## 2026-11-20 — text.on-comete pour les surfaces navy fixes, icon.bold aligné sur Figma
 
 **Décision** (Axel, suite aux faiblesses du lot A des descriptions) : nouveau token
