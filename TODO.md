@@ -17,8 +17,7 @@
 
 ## Surface vs background : reliquats (2026-11-20)
 
-- **`--background-default-*`** : nom trompeur depuis la doctrine (c'est le remplissage des champs
-  et contrôles). Renommage `background.field.*` à trancher côté tokens ; le DS suivra.
+- ~~**`--background-default-*`** : nom trompeur depuis la doctrine~~ : FAIT, `--background-field-default` et `--surface-inverted` (tokens 0.36.0, alpha.196).
 - **Autres contrôles à auditer** : tout `--surface-*` consommé par un composant qui n'est pas un
   contenant (InputContainer en hovered utilise `--surface-sunken-hovered` : champ ou surface ?).
 

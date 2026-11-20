@@ -364,7 +364,7 @@ const css = {
     padding: 32,
     fontFamily: "var(--font-family-primary, system-ui, sans-serif)",
     color: "var(--text-default-default)",
-    background: "var(--background-default-default)",
+    background: "var(--background-field-default)",
     minHeight: "100vh",
     maxWidth: 900,
     margin: "0 auto",
@@ -834,7 +834,7 @@ function TypographyPage(): ReactElement {
           position: "sticky",
           top: 0,
           zIndex: 10,
-          background: "var(--background-default-default)",
+          background: "var(--background-field-default)",
         }}
       >
         {(Object.keys(TAB_LABELS) as TypeTab[]).map((id) => (

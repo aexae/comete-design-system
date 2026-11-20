@@ -121,7 +121,7 @@ export const Comete: Story = {
     <LabeledRow gap={24} align="center">
       {(
         [
-          ["fond clair", "var(--background-default-default)"],
+          ["fond clair", "var(--background-field-default)"],
           ["fond foncé", "var(--background-neutral-bold-default)"],
         ] as const
       ).map(([label, background]) => (

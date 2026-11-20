@@ -91,15 +91,15 @@
 /* — information-inverted (fond blanc, texte information) — */
 /* NOTE: CSS Modules expose le nom de classe tel quel via styles["information-inverted"] */
 .information-inverted.high {
-  background-color: var(--background-default-default);
+  background-color: var(--background-field-default);
   color: var(--text-information-default);
 }
 .information-inverted.medium {
-  background-color: var(--background-default-default);
+  background-color: var(--background-field-default);
   color: var(--text-selected);
 }
 .information-inverted.low {
-  background-color: var(--background-default-default);
+  background-color: var(--background-field-default);
 }
 
 /* — critical — */

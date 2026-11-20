@@ -90,7 +90,7 @@ function FiltresOptionB({ role, initial }: { role?: Role; initial?: Filters }): 
         padding: "var(--space400)",
         fontFamily: "var(--font-family-primary)",
         color: "var(--text-default-default)",
-        background: "var(--background-default)",
+        background: "var(--surface-default)",
         minHeight: "100vh",
         boxSizing: "border-box",
       }}
@@ -158,7 +158,7 @@ function FiltresOptionBMobile({ initial }: { initial?: Filters }): ReactElement 
         display: "flex",
         flexDirection: "column",
         minHeight: "100dvh",
-        background: "var(--background-default)",
+        background: "var(--surface-default)",
         color: "var(--text-default-default)",
         fontFamily: "var(--font-family-primary)",
         boxSizing: "border-box",

@@ -413,7 +413,7 @@ function ColorFormatToggle({
               borderLeft: i === 0 ? "none" : "1px solid var(--border-default)",
               background: active
                 ? "var(--background-selected-subtlest-default)"
-                : "var(--background-default-default)",
+                : "var(--background-field-default)",
               color: active ? "var(--text-selected)" : "var(--text-subtle-default)",
               fontSize: 12,
               fontWeight: active ? 600 : 400,
@@ -797,7 +797,7 @@ function AllTokensTab(): ReactElement {
               padding: "6px 10px",
               border: "1px solid var(--border-default)",
               borderRadius: 6,
-              background: "var(--background-default-default)",
+              background: "var(--background-field-default)",
               color: "var(--text-default-default)",
               fontSize: 13,
               fontFamily: "inherit",
@@ -961,7 +961,7 @@ function CodeBlock({ children }: { children: string }): ReactElement {
           padding: "4px 8px",
           border: "1px solid var(--border-default)",
           borderRadius: 4,
-          background: "var(--background-default-default)",
+          background: "var(--background-field-default)",
           color: copied ? "var(--text-selected)" : "var(--text-subtlest-default)",
           fontSize: 11,
           cursor: "pointer",

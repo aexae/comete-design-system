@@ -694,7 +694,7 @@ function IconDetailPanel({
                   fontSize: 11,
                   fontWeight: 600,
                   color: "var(--text-success-default)",
-                  background: "var(--background-default-default)",
+                  background: "var(--background-field-default)",
                   padding: "3px 8px",
                   borderRadius: 4,
                   border: "1px solid var(--border-success)",
