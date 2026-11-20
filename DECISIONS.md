@@ -2,6 +2,23 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-20 — `icon.on-comete` sur Card bold comete / brand, voiles
+
+**Décision** (Axel) : création de `icon.on-comete` dans les tokens (0.32.0), blanc fixe dans les
+deux thèmes, modèle de `icon.on-warning`. `Card` `bold` en `comete` ou `brand` le pose sur
+`--icon-default`, `--icon-subtle` et `--icon-subtlest`, comme le texte en `text.on-comete`.
+
+**Raison** : les icônes de ces cartes restaient en `icon.inverted`, qui suit le thème et devient
+encre en sombre, illisible sur le navy fixe.
+
+**Voiles** (tokens 0.32.0, détail dans `comete-design-tokens/DECISIONS.md`) : `blanket` seul
+voile plein écran, `background.surface.mask.{default,hovered,pressed}` voile local en grey-alpha,
+`interaction.*` et `background.alpha.default` supprimés. Aucun changement de code DS, rien ne les
+consommait.
+
+**Storybook Icon** : la liste des couleurs du control est maintenue à la main et doit rester
+identique au type `IconColor` de comete-icons, triée. Elle avait pris du retard sur 0.12.0.
+
 ## 2026-11-20 — Tokens de composant Banner, Page, SideNav, BottomNav
 
 **Décision** (demande d'Axel) : ces composants lisent leurs tokens de composant (tokens

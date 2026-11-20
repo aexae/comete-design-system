@@ -1,5 +1,14 @@
 # TODO
 
+## Icon : couleur `on-comete` et liste du control (2026-11-20)
+
+- **comete-icons** : `IconColor` n'a pas de valeur `on-comete` (ni classe CSS). Le DS passe par
+  l'override `--icon-default` dans Card ; ajouter la couleur dans comete-icons pour un usage direct
+  `<Icon color="on-comete" />` sur toute surface navy fixe.
+- **Storybook Icon** : la constante `COLORS` est recopiée à la main depuis le type `IconColor` ;
+  elle a manqué trois couleurs après comete-icons 0.12.0. Faire exporter la liste par
+  comete-icons (ou la dériver du CSS du paquet) pour supprimer la double saisie.
+
 ## Tokens de composant Banner, Page, SideNav, BottomNav (2026-11-20)
 
 - **Écarts Figma / code à trancher** : détail dans `comete-design-tokens/TODO.md`. Côté DS,
