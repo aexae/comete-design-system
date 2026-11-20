@@ -10,43 +10,40 @@
 /* Container — flex child ; porte la largeur en flux (240px déployé, 80px en rail). */
 
 .container {
-  /* Largeur du rail : 80px (maquette Figma « ❖ Side navigation »). Items de 64px
-     (8px de gouttière de chaque côté), icône 24px + libellé court dessous. */
-  --sidenav-rail-width: 80px;
-
   position: relative;
+  /* REASON: 240px n'a pas de token d'échelle (Size3200 = 256px). Valeur brute
+     en attente d'une décision (cf. TODO de comete-design-tokens). */
   width: 240px;
   height: 100%;
   flex-shrink: 0;
   transition: width var(--duration-normal) var(--easing-default);
 }
 
-/* Rail : largeur fixe de 80px. Le contenu principal occupe le reste. Le rail ne
-   s'agrandit JAMAIS au survol (aucun peek en rail). */
+/* Rail : largeur fixe de 80px (maquette Figma « ❖ Side navigation »). Items de
+   64px (8px de gouttière de chaque côté), icône 24px + libellé court dessous.
+   Le contenu principal occupe le reste. Le rail ne s'agrandit JAMAIS au survol
+   (aucun peek en rail). */
 .container[data-mode="rail"] {
-  width: var(--sidenav-rail-width);
+  width: var(--side-nav-size-rail-width);
 }
 
 /* ------------------------------------------------------------------ */
 /* SideNav — toujours en flux (pousse le contenu).                      */
 
+/* Tokens de composant `--side-nav-*` (comete-design-tokens). Deux retraits
+   horizontaux : la gouttière de la nav (`spacing-gutter`, 8px), que la zone
+   défilante reprend à droite pour y loger son pouce (voir `.body`), et le
+   retrait COMMUN (`spacing-inset`, 12px) de l'en-tête, des items, séparateurs,
+   titres de section et pied, qui partagent ainsi le MÊME bord gauche (20px
+   depuis le bord de la nav). */
 .sideNav {
-  /* Retrait horizontal COMMUN (en plus de la gouttière de 8px de la nav) : en-tête,
-     items, séparateurs, titres de section et pied partagent ainsi le MÊME bord
-     gauche (20px depuis le bord de la nav) — avant : 16 / 20 / 24px. */
-  --sidenav-inset: var(--space150);
-
-  /* La gouttière de la nav elle-même, nommée parce que la zone défilante doit
-     la reprendre à droite pour y loger son pouce — voir `.body`. */
-  --sidenav-gutter: var(--space100);
-
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 0 var(--sidenav-gutter);
-  background: var(--background-surface-default);
-  border-right: 1px solid var(--border-subtle);
+  padding: 0 var(--side-nav-spacing-gutter);
+  background: var(--side-nav-color-surface-background);
+  border-right: var(--side-nav-border-width-surface) solid var(--side-nav-color-surface-border);
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -74,7 +71,7 @@
   /* La zone déborde dans la gouttière droite de la nav. Son pouce flotte à
      SON bord : sans ce débord il flotterait 8px en dedans, visiblement
      détaché du bord du panneau. */
-  margin-inline-end: calc(-1 * var(--sidenav-gutter));
+  margin-inline-end: calc(-1 * var(--side-nav-spacing-gutter));
 }
 
 /* ...et le contenu rend ces 8px, pour que les items gardent EXACTEMENT leur
@@ -83,7 +80,7 @@
    réservée — le fond s'arrête avant l'ascenseur — obtenue cette fois sans
    voler de place au contenu. */
 .bodyContent {
-  padding-inline-end: var(--sidenav-gutter);
+  padding-inline-end: var(--side-nav-spacing-gutter);
 }
 /* ------------------------------------------------------------------ */
 /* Header                                                              */
@@ -91,9 +88,10 @@
 .header {
   display: flex;
   align-items: center;
-  gap: var(--space150);
+  gap: var(--side-nav-spacing-header-gap);
   min-height: 72px;
-  padding: var(--space300) var(--sidenav-inset) var(--space100);
+  padding: var(--side-nav-spacing-header-padding-top) var(--side-nav-spacing-inset)
+    var(--side-nav-spacing-header-padding-bottom);
   flex-shrink: 0;
 }
 
@@ -104,7 +102,7 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  max-height: var(--size500);
+  max-height: var(--side-nav-size-header-logo);
   /* Cap de largeur du slot : un logo large (wordmark) ne doit jamais évincer
      le headerContent hors de la nav (le slot est en flex-shrink: 0). */
   max-width: 60%;
@@ -114,7 +112,7 @@
 .headerLogo > *,
 .headerLogo img,
 .headerLogo svg {
-  max-height: var(--size500);
+  max-height: var(--side-nav-size-header-logo);
   max-width: 100%;
   width: auto;
   object-fit: contain;
@@ -132,7 +130,7 @@
   font-size: var(--font-size-ui-xs);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-ui-s);
-  color: var(--text-default-default);
+  color: var(--side-nav-color-header-title);
   letter-spacing: var(--letter-spacing-negative-tight);
   white-space: nowrap;
   overflow: hidden;
@@ -143,7 +141,7 @@
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xxs);
   line-height: var(--line-height-ui-xxs);
-  color: var(--text-subtlest-default);
+  color: var(--side-nav-color-header-subtitle);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -163,11 +161,11 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: var(--space150);
-  padding: var(--space075) var(--sidenav-inset);
-  height: calc(var(--size300) + 2 * var(--space075));
+  gap: var(--side-nav-spacing-item-gap);
+  padding: var(--side-nav-spacing-item-padding-y) var(--side-nav-spacing-inset);
+  height: calc(var(--side-nav-size-item-icon) + 2 * var(--side-nav-spacing-item-padding-y));
   border: none;
-  border-radius: var(--radius0375);
+  border-radius: var(--side-nav-radius-item);
   background: transparent;
   cursor: pointer;
   text-decoration: none;
@@ -180,24 +178,24 @@
 }
 
 .item:hover {
-  background: var(--background-neutral-subtlest-hovered);
+  background: var(--side-nav-color-item-background-hovered);
 }
 
 .item:active {
-  background: var(--background-neutral-subtlest-pressed);
+  background: var(--side-nav-color-item-background-pressed);
 }
 
 /* Selected */
 .itemSelected {
-  background: var(--background-selected-subtlest-default);
+  background: var(--side-nav-color-item-selected-background-default);
 }
 
 .itemSelected:hover {
-  background: var(--background-selected-subtlest-hovered);
+  background: var(--side-nav-color-item-selected-background-hovered);
 }
 
 .itemSelected:active {
-  background: var(--background-selected-subtlest-pressed);
+  background: var(--side-nav-color-item-selected-background-pressed);
 }
 
 /* Disabled */
@@ -208,7 +206,7 @@
 
 .itemDisabled:hover,
 .itemDisabled:active {
-  background: var(--background-surface-default);
+  background: var(--side-nav-color-surface-background);
 }
 
 /* ------------------------------------------------------------------ */
@@ -225,7 +223,7 @@
   font-size: var(--font-size-ui-xs);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xs);
-  color: var(--text-subtle-default);
+  color: var(--side-nav-color-item-text);
   letter-spacing: var(--letter-spacing-negative-tight);
   white-space: nowrap;
   overflow: hidden;
@@ -233,7 +231,7 @@
 }
 
 .itemSelected .itemTitle {
-  color: var(--text-selected);
+  color: var(--side-nav-color-item-selected-text);
 }
 
 .itemDisabled .itemTitle {
@@ -257,7 +255,8 @@
 }
 
 .sectionHeading {
-  padding: var(--space200) var(--sidenav-inset) var(--space025);
+  padding: var(--side-nav-spacing-section-title-padding-top) var(--side-nav-spacing-inset)
+    var(--side-nav-spacing-section-title-padding-bottom);
   font-family: var(--font-family-primary);
   /* Taille pilotable par le consommateur via --sidenav-section-heading-size
      (défaut --font-size-ui-xxs) — même procédé que --menu-popover-width ou
@@ -269,7 +268,7 @@
   font-size: var(--sidenav-section-heading-size, var(--font-size-ui-xxs));
   font-weight: var(--font-weight-bold);
   line-height: var(--sidenav-section-heading-line, var(--line-height-ui-xxs));
-  color: var(--text-subtle-default);
+  color: var(--side-nav-color-section-title);
   text-transform: uppercase;
   letter-spacing: var(--letter-spacing-normal);
   white-space: nowrap;
@@ -281,11 +280,11 @@
 /* Divider                                                             */
 
 .divider {
-  height: 2px;
-  margin: var(--space075) var(--sidenav-inset);
-  background: var(--border-subtle);
+  height: var(--side-nav-border-width-divider);
+  margin: var(--side-nav-spacing-divider-margin-y) var(--side-nav-spacing-inset);
+  background: var(--side-nav-color-divider);
   border: none;
-  border-radius: 1px;
+  border-radius: var(--side-nav-radius-divider);
 }
 
 /* ------------------------------------------------------------------ */
@@ -298,7 +297,7 @@
 .footer {
   display: flex;
   flex-direction: column;
-  padding: var(--space200) var(--sidenav-inset);
+  padding: var(--side-nav-spacing-footer-padding-y) var(--side-nav-spacing-inset);
   margin-top: auto;
   flex-shrink: 0;
 }
@@ -316,7 +315,7 @@
 .footerBrand > *,
 .footerBrand img,
 .footerBrand svg {
-  max-height: var(--size300);
+  max-height: var(--side-nav-size-footer-brand);
   width: auto;
   object-fit: contain;
 }
@@ -329,38 +328,40 @@
 .skeletonItem {
   display: flex;
   align-items: center;
-  gap: var(--space150);
-  padding: var(--space075) var(--sidenav-inset);
-  height: calc(var(--size300) + 2 * var(--space075));
+  gap: var(--side-nav-spacing-item-gap);
+  padding: var(--side-nav-spacing-item-padding-y) var(--side-nav-spacing-inset);
+  height: calc(var(--side-nav-size-item-icon) + 2 * var(--side-nav-spacing-item-padding-y));
   box-sizing: border-box;
 }
 
 .skeletonItemContent {
   display: flex;
   flex-direction: column;
-  gap: var(--space075);
+  gap: var(--side-nav-spacing-skeleton-gap);
   flex: 1;
   min-width: 0;
 }
 
 /* Placeholder de titre de section — aligné sur `.sectionHeading`. */
 .skeletonSectionTitle {
-  padding: var(--space200) var(--sidenav-inset) var(--space025);
+  padding: var(--side-nav-spacing-section-title-padding-top) var(--side-nav-spacing-inset)
+    var(--side-nav-spacing-section-title-padding-bottom);
 }
 
 /* Placeholder d'en-tête — aligné sur `.header`. */
 .skeletonHeader {
   display: flex;
   align-items: center;
-  gap: var(--space150);
+  gap: var(--side-nav-spacing-header-gap);
   min-height: 72px;
-  padding: var(--space300) var(--sidenav-inset) var(--space100);
+  padding: var(--side-nav-spacing-header-padding-top) var(--side-nav-spacing-inset)
+    var(--side-nav-spacing-header-padding-bottom);
 }
 
 .skeletonHeaderContent {
   display: flex;
   flex-direction: column;
-  gap: var(--space075);
+  gap: var(--side-nav-spacing-skeleton-gap);
   flex: 1;
   min-width: 0;
 }
@@ -374,25 +375,25 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: var(--space150);
-  padding: var(--space400) var(--space200);
+  gap: var(--side-nav-spacing-empty-gap);
+  padding: var(--side-nav-spacing-empty-padding-y) var(--side-nav-spacing-empty-padding-x);
   margin: auto 0;
 }
 
 .emptyIcon {
   display: grid;
   place-items: center;
-  width: var(--size500);
-  height: var(--size500);
+  width: var(--side-nav-size-empty-icon);
+  height: var(--side-nav-size-empty-icon);
   flex-shrink: 0;
-  border-radius: var(--radius-round);
-  background: var(--background-neutral-subtlest-default);
+  border-radius: var(--side-nav-radius-empty-icon);
+  background: var(--side-nav-color-empty-icon-background);
 }
 
 .emptyText {
   display: flex;
   flex-direction: column;
-  gap: var(--space050);
+  gap: var(--side-nav-spacing-empty-text-gap);
   min-width: 0;
 }
 
@@ -401,18 +402,18 @@
   font-size: var(--font-size-ui-xs);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-ui-s);
-  color: var(--text-default-default);
+  color: var(--side-nav-color-empty-title);
 }
 
 .emptyDescription {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xxs);
   line-height: var(--line-height-ui-xs);
-  color: var(--text-subtlest-default);
+  color: var(--side-nav-color-empty-description);
 }
 
 .emptyAction {
-  margin-top: var(--space100);
+  margin-top: var(--side-nav-spacing-empty-action);
 }
 
 /* ------------------------------------------------------------------ */
@@ -451,10 +452,10 @@
 .sideNav[data-mode="rail"] .item {
   flex-direction: column;
   justify-content: center;
-  gap: var(--space025);
+  gap: var(--side-nav-spacing-rail-item-gap);
   height: auto;
-  min-height: var(--size400);
-  padding: var(--space075) var(--space050);
+  min-height: var(--side-nav-size-rail-item-min-height);
+  padding: var(--side-nav-spacing-item-padding-y) var(--side-nav-spacing-rail-padding-x);
   text-align: center;
 }
 
@@ -489,7 +490,7 @@
    à 8px), c'est la prop `shortTitle` de `SideNav.Section` qu'il faut — on
    raccourcit le mot plutôt que de le rapetisser. */
 .sideNav[data-mode="rail"] .sectionHeading {
-  padding-inline: var(--space050);
+  padding-inline: var(--side-nav-spacing-rail-padding-x);
   font-size: var(--sidenav-section-heading-size, var(--font-size-ui-xxxs));
   line-height: var(--sidenav-section-heading-line, var(--line-height-ui-xxxs));
 }

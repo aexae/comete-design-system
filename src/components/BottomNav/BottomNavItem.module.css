@@ -12,17 +12,17 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  padding: var(--space100) 0;
+  padding: var(--bottom-nav-spacing-item-padding-y) 0;
   background: none;
   border: none;
   cursor: pointer;
   outline: none;
   -webkit-tap-highlight-color: transparent;
-  border-radius: var(--radius150);
+  border-radius: var(--bottom-nav-radius-item);
 }
 
 /* États sélectionné et ouvert (aria-expanded) : pastille de fond sur la zone
-   contenu + texte et icône en bleu (--text-selected). Voir plus bas. */
+   contenu + texte et icône en bleu (tokens selected). Voir plus bas. */
 
 /* Zone contenu : icône + label */
 
@@ -33,10 +33,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: start;
-  gap: var(--space025);
+  gap: var(--bottom-nav-spacing-item-gap);
   /* Pas de padding horizontal : le label dispose de toute la largeur de la
      cellule (comme dans Figma), pour éviter de tronquer des libellés courants. */
-  padding: var(--space100) 0;
+  padding: var(--bottom-nav-spacing-item-content-padding-y) 0;
   flex-grow: 1;
 }
 
@@ -44,8 +44,8 @@
 
 .iconWrapper {
   position: relative;
-  width: var(--size300);
-  height: var(--size300);
+  width: var(--bottom-nav-size-item-icon);
+  height: var(--bottom-nav-size-item-icon);
   flex-shrink: 0;
 }
 
@@ -91,9 +91,9 @@
 
 .badge {
   position: absolute;
-  top: calc(-1 * var(--space075));
-  left: var(--space150);
-  --badge-cutout-color: var(--background-surface-default);
+  top: calc(-1 * var(--bottom-nav-spacing-item-badge-offset-top));
+  left: var(--bottom-nav-spacing-item-badge-offset-start);
+  --badge-cutout-color: var(--bottom-nav-color-background);
 }
 
 /* ==========================================================================
@@ -107,7 +107,7 @@
   font-size: var(--font-size-ui-xxxs);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xxs);
-  color: var(--text-subtlest-default);
+  color: var(--bottom-nav-color-item-label-default);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -122,19 +122,19 @@
 
 .item[data-selected] .content,
 .item[aria-expanded="true"] .content {
-  background-color: var(--background-selected-subtlest-default);
-  border-radius: var(--radius-round);
+  background-color: var(--bottom-nav-color-item-background-selected);
+  border-radius: var(--bottom-nav-radius-item-selected);
 }
 
 /* Le badge chevauche la pastille : sa découpe prend la couleur de la pastille. */
 .item[data-selected] .badge,
 .item[aria-expanded="true"] .badge {
-  --badge-cutout-color: var(--background-selected-subtlest-default);
+  --badge-cutout-color: var(--bottom-nav-color-item-background-selected);
 }
 
 .item[data-selected] .label,
 .item[aria-expanded="true"] .label {
-  color: var(--text-selected);
+  color: var(--bottom-nav-color-item-label-selected);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -151,9 +151,27 @@
 
 .item[data-disabled] {
   cursor: not-allowed;
-  opacity: var(--opacity-disabled);
+  opacity: var(--bottom-nav-opacity-disabled);
 }
 
 .item[data-disabled] .label {
-  color: var(--text-disabled);
+  color: var(--bottom-nav-color-item-label-disabled);
+}
+
+/* ==========================================================================
+   Couleurs d'icône — l'Icon pose sa couleur par sa classe (subtlest, selected,
+   disabled) : les tokens du composant la remplacent. Spécificité (0,2,0)
+   contre (0,1,0) pour la classe de l'Icon.
+   ========================================================================== */
+
+.iconWrapper :global(.comete-icon--subtlest) {
+  color: var(--bottom-nav-color-item-icon-default);
+}
+
+.iconWrapper :global(.comete-icon--selected) {
+  color: var(--bottom-nav-color-item-icon-selected);
+}
+
+.iconWrapper :global(.comete-icon--disabled) {
+  color: var(--bottom-nav-color-item-icon-disabled);
 }

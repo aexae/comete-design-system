@@ -1,13 +1,14 @@
 /* ==========================================================================
    Page — Comète Design System
    Gabarit de page : container flex vertical + sous-sections Bar /
-   Toolbar / Body. Tokens uniquement, aucune valeur hardcodée.
+   Toolbar / Body. Tokens de composant `--page-*`, `--page-bar-*` et
+   `--page-toolbar-*` (comete-design-tokens), aucune valeur hardcodée.
    Spec Figma : node 4559:6656 (❖ Page header).
 
    Layout global :
    - `--page-gutter` — gouttière unique partagée par Bar, Toolbar et Body,
-     responsive : 12px sous desktop (mobile + tablette), 24px à partir de
-     1200px. Héritée par tous les descendants : Bleed isFull la compense, les
+     responsive : `--page-spacing-gutter-mobile` (12px) sous 1200px,
+     `--page-spacing-gutter-laptop` (24px) à partir de 1200px. Héritée par tous les descendants : Bleed isFull la compense, les
      stories l'utilisent pour aligner du contenu sur le Body.
    - Body utilise `overflow-x: clip` (pas `hidden`) pour que
      `overflow-y: auto` ne force pas `overflow-x: auto` par la spec.
@@ -15,7 +16,7 @@
    ========================================================================== */
 
 .page {
-  --page-gutter: var(--space150);
+  --page-gutter: var(--page-spacing-gutter-mobile);
   display: flex;
   flex-direction: column;
   min-height: 100%;
@@ -30,7 +31,7 @@
 
 @media (min-width: 1200px) {
   .page {
-    --page-gutter: var(--space300);
+    --page-gutter: var(--page-spacing-gutter-laptop);
   }
 }
 
@@ -45,7 +46,7 @@
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: var(--space100);
+  gap: var(--page-bar-spacing-trailing-gap);
 }
 
 /* ==========================================================================
@@ -57,17 +58,17 @@
 .bar {
   display: flex;
   align-items: center;
-  gap: var(--space100);
-  padding-block: var(--space200);
+  gap: var(--page-bar-spacing-gap);
+  padding-block: var(--page-bar-spacing-large-padding-y);
   padding-inline: var(--page-gutter);
   flex-shrink: 0;
 
   /* Métriques de la variante compacte — SOURCE UNIQUE, consommée à la fois par
      la variante responsive (@container < 768px) et par le modificateur forcé
      `.bar.compact`, pour éviter toute dérive entre les deux. */
-  --bar-compact-min-height: calc(var(--size600) + var(--space100));
-  --bar-compact-pad-block: var(--space100);
-  --bar-compact-pad-top: calc(var(--space100) + env(safe-area-inset-top));
+  --bar-compact-min-height: var(--page-bar-size-compact-min-height);
+  --bar-compact-pad-block: var(--page-bar-spacing-compact-padding-y);
+  --bar-compact-pad-top: calc(var(--page-bar-spacing-compact-padding-y) + env(safe-area-inset-top));
   --bar-compact-title-size: var(--font-size-ui-m);
   --bar-compact-title-line: var(--line-height-ui-m);
   --bar-compact-title-tracking: var(--letter-spacing-negative-tight);
@@ -83,12 +84,12 @@
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-ui-xxl);
   letter-spacing: var(--letter-spacing-negative-extra-tight);
-  color: var(--text-default-default);
+  color: var(--page-bar-color-title);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   /* Évite le clip des jambages (g, y, p…) par overflow: hidden */
-  padding-block: var(--space025);
+  padding-block: var(--page-bar-spacing-title-padding-y);
 }
 
 /* Compact — variante épinglée. Déclarations partagées par le défaut
@@ -103,8 +104,8 @@
     padding-block: var(--bar-compact-pad-block);
     /* safe-area top (encoche iOS) en plus du padding compact */
     padding-top: var(--bar-compact-pad-top);
-    background-color: var(--background-surface-default);
-    border-bottom: 1px solid var(--border-subtle);
+    background-color: var(--page-bar-color-compact-background);
+    border-bottom: var(--page-bar-border-width-compact) solid var(--page-bar-color-compact-border);
   }
 
   .bar:not(.large) .barTitle {
@@ -121,8 +122,8 @@
   min-height: var(--bar-compact-min-height);
   padding-block: var(--bar-compact-pad-block);
   padding-top: var(--bar-compact-pad-top);
-  background-color: var(--background-surface-default);
-  border-bottom: 1px solid var(--border-subtle);
+  background-color: var(--page-bar-color-compact-background);
+  border-bottom: var(--page-bar-border-width-compact) solid var(--page-bar-color-compact-border);
 }
 
 .bar.compact .barTitle {
@@ -135,8 +136,8 @@
 .bar.large {
   position: static;
   min-height: auto;
-  padding-block: var(--space200);
-  padding-top: var(--space200);
+  padding-block: var(--page-bar-spacing-large-padding-y);
+  padding-top: var(--page-bar-spacing-large-padding-y);
   background-color: transparent;
   border-bottom: 0;
 }
@@ -158,8 +159,8 @@
      place manque, c'est la recherche qui se comprime (jusqu'à son plancher de
      160px), pas la mise en page qui se casse. */
   flex-wrap: nowrap;
-  gap: var(--space100);
-  padding-block: var(--space100);
+  gap: var(--page-toolbar-spacing-gap);
+  padding-block: var(--page-toolbar-spacing-padding-y);
   padding-inline: var(--page-gutter);
   flex-shrink: 0;
 }
@@ -188,7 +189,7 @@
 .toolbarFilters {
   display: flex;
   align-items: center;
-  gap: var(--space100);
+  gap: var(--page-toolbar-spacing-group-gap);
   flex: 0 0 auto;
 }
 
@@ -198,7 +199,7 @@
 .toolbarStart {
   display: flex;
   align-items: center;
-  gap: var(--space100);
+  gap: var(--page-toolbar-spacing-group-gap);
   flex: 0 0 auto;
 }
 
@@ -208,7 +209,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: var(--space100);
+  gap: var(--page-toolbar-spacing-group-gap);
   margin-left: auto;
   min-width: 0;
   flex-shrink: 0;
@@ -233,7 +234,7 @@
      là — et sur un contenu qui ne défile pas il ne produisait qu'une
      bande morte au ras de la fenêtre. L'espacement de fin de contenu,
      quand il en faut un, appartient au contenu lui-même. */
-  padding-block-start: var(--space100);
+  padding-block-start: var(--page-spacing-body-padding-top);
   padding-inline: var(--page-gutter);
 }
 
@@ -245,12 +246,12 @@
   align-items: center;
   justify-content: center;
   min-height: 100%;
-  padding-block: var(--space600);
+  padding-block: var(--page-spacing-state-padding-y);
 }
 
 /* Squelette de contenu générique : quelques blocs empilés. */
 .bodySkeleton {
   display: flex;
   flex-direction: column;
-  gap: var(--space300);
+  gap: var(--page-spacing-skeleton-gap);
 }

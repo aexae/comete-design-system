@@ -1,7 +1,6 @@
 /* ==========================================================================
    BottomNavAction — bouton d'action central (FAB) surélevé + anneau (cradle)
-   Couleurs / rayon via tokens. Les dimensions du FAB (56px) et son
-   dépassement n'ont pas de token dédié.
+   Couleurs, rayon, dimensions et dépassement via les tokens bottom-nav.
    ========================================================================== */
 
 /* Bouton rond, centré horizontalement, surélevé (dépasse de 14px au-dessus
@@ -9,16 +8,16 @@
 .action {
   position: absolute;
   left: 50%;
-  top: -14px;
+  top: calc(-1 * var(--bottom-nav-size-action-offset));
   transform: translateX(-50%);
-  width: 56px;
-  height: 56px;
-  border-radius: var(--radius-round);
+  width: var(--bottom-nav-size-action-container);
+  height: var(--bottom-nav-size-action-container);
+  border-radius: var(--bottom-nav-radius-action);
   border: none;
   display: grid;
   place-items: center;
   /* Contrôle : bleu action fixe (comete), jamais la charte client (ADR 0001). */
-  background-color: var(--background-comete-bold-default);
+  background-color: var(--bottom-nav-color-action-background);
   cursor: pointer;
   outline: none;
   -webkit-tap-highlight-color: transparent;
@@ -32,12 +31,18 @@
 .actionCradle {
   position: absolute;
   left: 50%;
-  top: -20px;
+  top: calc(
+    -1 * (var(--bottom-nav-size-action-offset) + var(--bottom-nav-size-action-cradle-ring))
+  );
   transform: translateX(-50%);
-  width: 68px;
-  height: 68px;
-  border-radius: var(--radius-round);
-  background-color: var(--background-default-default);
+  width: calc(
+    var(--bottom-nav-size-action-container) + 2 * var(--bottom-nav-size-action-cradle-ring)
+  );
+  height: calc(
+    var(--bottom-nav-size-action-container) + 2 * var(--bottom-nav-size-action-cradle-ring)
+  );
+  border-radius: var(--bottom-nav-radius-action);
+  background-color: var(--bottom-nav-color-action-cradle);
   z-index: 1;
   pointer-events: none;
 }
@@ -57,6 +62,18 @@
   display: grid;
   place-items: center;
   transition: transform var(--duration-normal) var(--easing-default);
+}
+
+/* L'Icon pose la couleur inverted par sa classe : le token du composant la
+   remplace. Spécificité (0,2,0) contre (0,1,0) pour la classe de l'Icon. Le svg
+   est dimensionné par le token (l'Icon pose sa taille en attributs). */
+.actionIcon :global(.comete-icon--inverted) {
+  color: var(--bottom-nav-color-action-icon);
+}
+
+.actionIcon svg {
+  width: var(--bottom-nav-size-action-icon);
+  height: var(--bottom-nav-size-action-icon);
 }
 
 .action[aria-expanded="true"] .actionIcon {

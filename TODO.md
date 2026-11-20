@@ -1,5 +1,16 @@
 # TODO
 
+## Tokens de composant Banner, Page, SideNav, BottomNav (2026-11-20)
+
+- **Écarts Figma / code à trancher** : détail dans `comete-design-tokens/TODO.md`. Côté DS,
+  plusieurs valeurs restent en dur faute de token : largeur 240 px et en-tête 72 px du
+  SideNav, opacité 0,55 de la marque du pied, transition `100ms ease`, largeurs 160 et
+  240 px de la recherche de PageToolbar, taille d'icône 24 px du Banner (prop TSX).
+- **Surcharge de couleur d'icône par classe interne** : Banner et BottomNav colorent l'icône
+  via `:global(.comete-icon--*)`, comme l'Avatar. Fragile si comete-icons renomme ses classes.
+- **Disabled du BottomNavItem et du SideNav** : opacité plus couleurs dépréciées. Passer à
+  l'opacité seule (change le rendu du SideNav).
+
 ## Fiabilité / qualité
 
 - **Polices : chargement à la charge des applications** (2026-11-19)

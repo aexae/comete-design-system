@@ -237,9 +237,11 @@ describe("BottomNavItem — état ouvert (CSS)", () => {
   it("should give the open item the same pill and blue label as the selected item", () => {
     for (const state of [/data-selected/, /aria-expanded="true"/]) {
       const content = bodies(new RegExp(state.source + String.raw`\]\s*\.content`)).join("");
-      expect(content).toMatch(/background-color:\s*var\(--background-selected-subtlest-default\)/);
+      expect(content).toMatch(
+        /background-color:\s*var\(--bottom-nav-color-item-background-selected\)/
+      );
       const label = bodies(new RegExp(state.source + String.raw`\]\s*\.label`)).join("");
-      expect(label).toMatch(/color:\s*var\(--text-selected\)/);
+      expect(label).toMatch(/color:\s*var\(--bottom-nav-color-item-label-selected\)/);
     }
   });
 

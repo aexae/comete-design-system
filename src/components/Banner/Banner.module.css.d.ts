@@ -3,6 +3,7 @@ declare const styles: {
   readonly "banner": string;
   readonly "content": string;
   readonly "critical": string;
+  readonly "iconSlot": string;
   readonly "information": string;
   readonly "success": string;
   readonly "warning": string;
