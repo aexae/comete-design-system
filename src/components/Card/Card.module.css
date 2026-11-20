@@ -185,14 +185,17 @@
   background-color: var(--background-brand-boldest-default);
 }
 
-/* Navy fixe dans les deux thèmes : texte blanc fixe (text.on-comete), pas text.inverted
-   qui suit le thème. Les icônes restent en icon.inverted faute de icon.on-comete. */
+/* Navy fixe dans les deux thèmes : texte et icônes blancs fixes (text.on-comete,
+   icon.on-comete), pas text.inverted / icon.inverted qui suivent le thème. */
 .bold.color-comete,
 .bold.color-brand {
   color: var(--text-on-comete);
   --text-default-default: var(--text-on-comete);
   --text-subtle-default: var(--text-on-comete);
   --text-subtlest-default: var(--text-on-comete);
+  --icon-default: var(--icon-on-comete);
+  --icon-subtle: var(--icon-on-comete);
+  --icon-subtlest: var(--icon-on-comete);
 }
 
 /* ==========================================================================

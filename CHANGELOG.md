@@ -9,6 +9,23 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Ajouté
+
+- **Tokens 0.32.0 : `--icon-on-comete`**, icône blanche fixe dans les deux thèmes, pendant de
+  `--text-on-comete`. `Card` `bold` en `comete` ou `brand` l'applique à ses icônes (overrides
+  `--icon-default`, `--icon-subtle`, `--icon-subtlest`), qui restaient en `--icon-inverted` et
+  devenaient sombres sur navy en thème sombre.
+
+### Modifié
+
+- **Tokens 0.32.0 : voiles ramenés à deux rôles.** `--blanket-default` reste le voile plein
+  écran des couches modales ; `--background-surface-mask-{default,hovered,pressed}` devient le
+  voile local (chargement, média survolé ou pressé), en primitives grey-alpha.
+  `--interaction-*` et `--background-alpha-default` sont retirés (aucun consommateur dans le DS).
+  `--background-surface-mask` est renommé `--background-surface-mask-default` (non consommé ici).
+- **Storybook Icon** : le control `color` liste les 23 couleurs de `IconColor` triées par ordre
+  alphabétique ; `brandBoldest`, `comete` et `cometeBoldest` (comete-icons 0.12.0) manquaient.
+
 ### Modifié
 
 - **Tokens 0.31.0 : tokens de composant** pour `Banner` (`--banner-*`), `Page`
