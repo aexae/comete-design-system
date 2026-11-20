@@ -13,13 +13,9 @@
   embarquer les polices (`@fontsource`) dans le paquet. Google Fonts envoie l'IP
   du visiteur à Google (point RGPD à valider pour les applications).
 
-- **comete-icons : couleurs `brand` et `comete` cassées** (2026-11-19)
-  `icons.css` lit `--icon-brand` et `--icon-comete`, mais les tokens s'appellent
-  `--icon-brand-default` et `--icon-comete-default` depuis leur restructuration.
-  La déclaration est invalide et l'icône hérite de la couleur du texte parent. Le
-  rendu est juste par accident dans le Button (texte de la même famille), faux
-  ailleurs. Corriger le générateur de `comete-icons` puis publier. Le dépôt avait
-  des modifications non commitées d'une autre session le 19/11, non touché.
+- ~~**comete-icons : couleurs `brand` et `comete` cassées** (2026-11-19)~~ corrigé dans
+  comete-icons 0.12.0 (`--icon-brand-default`, `--icon-comete-default`, ajout de
+  `brandBoldest` et `cometeBoldest`), consommé par le DS depuis alpha.190.
 
 - **Couleurs de marque après tokens 0.26.0 (2026-11-19)**
   - ~~`BottomNav.Action` sur `brand-bold`~~ fait (alpha.186) :

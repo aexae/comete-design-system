@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@aexae/comete-design-system": "file:..",
-    "@aexae/comete-icons": "latest",
     "@aexae/comete-logos": "latest",
     "react": "^19.2.4",
     "react-aria-components": "^1.16.0",
@@ -25,6 +24,7 @@
   },
   "devDependencies": {
     "@aexae/comete-design-tokens": "latest",
+    "@aexae/comete-icons": "0.12.0",
     "@chromatic-com/storybook": "^5.3.0",
     "@eslint/js": "^9.39.4",
     "@mdx-js/react": "^3.1.1",
