@@ -66,7 +66,7 @@
   --banner-icon-color: var(--banner-color-critical-icon);
 }
 
-/* announcement : fond neutre sombre, texte inversé (blanc) */
+/* announcement : fond violet (accent purple), nouveautés et mises à jour majeures */
 .announcement {
   background-color: var(--banner-color-announcement-background);
   color: var(--banner-color-announcement-text);
@@ -85,11 +85,4 @@
   background-color: var(--banner-color-information-background);
   color: var(--banner-color-information-text);
   --banner-icon-color: var(--banner-color-information-icon);
-}
-
-/* discovery : fond violet (accent purple), nouveautés et mises à jour majeures */
-.discovery {
-  background-color: var(--banner-color-discovery-background);
-  color: var(--banner-color-discovery-text);
-  --banner-icon-color: var(--banner-color-discovery-icon);
 }

@@ -2,6 +2,16 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-20 — Button link souligné au repos, Banner announcement violet, pastille glissante des navs
+
+**Décisions** (Axel, tokens 0.35.0) :
+
+- **Button `link`** : souligné au repos (Axel a remis l'underline en default dans Figma). Couleur neutre = texte courant (`text.default.*`). `link` subtle et subtlest reçoivent leurs états `pressed` (variables créées par Axel dans Figma). Figma : compact et touch alignés sur default (soulignés au repos), code syntax des deux `pressed` corrigée.
+- **Banner** : `announcement` et `discovery` avaient le même rôle. `discovery` est renommé `announcement` (violet accent, icône `New`) et l'ancien announcement noir est supprimé, dans Figma et dans le code. Figma : textes de toutes les variantes liés à leur token `banner/color/<apparence>/text` (critical était lié à `text/inverted`, sombre en thème sombre sur le rouge), stickers complétés par success et information.
+- **SideNav et BottomNav, transition de sélection** : une pastille unique glisse vers l'item sélectionné, modèle des onglets « sliding highlight » (Vercel, Linear) et de l'indicateur actif Material 3. Durée 200 ms (`--duration-normal`), plage recommandée pour un indicateur d'onglets (150 à 300 ms), sur `--easing-default`. Le glissement n'a lieu qu'au changement de sélection : un redimensionnement (bascule rail) replace la pastille sans transition pour qu'elle colle à l'item. `prefers-reduced-motion` coupe tout.
+
+**Contexte / raison** : report des corrections Figma d'Axel, et demande d'une transition « smooth et rapide ». Une courbe plus marquée (ease-out fort `cubic-bezier(0.23, 1, 0.32, 1)`) demanderait un nouveau token d'easing : proposé à Axel, non créé sans son accord.
+
 ## 2026-11-20 — `--surface-*` hors de `background`, Checkbox et Switch sur `background.default`
 
 **Décisions** (Axel, tokens 0.34.0) :

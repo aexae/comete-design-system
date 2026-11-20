@@ -623,10 +623,11 @@
 }
 
 /* ==========================================================================
-   Variant: link (texte sans soulignement au repos, par couleur)
-   Pas de fond. Soulignement plein au survol, à l'appui et au focus clavier
-   (Body/M/Medium au repos, Body/M/Medium Underline en hover/pressed/focus).
-   Feedback : couleur + apparition du soulignement.
+   Variant: link (texte souligné, par couleur)
+   Pas de fond. Soulignement plein dès le repos, comme Figma (Body/M/Medium
+   Underline en default, hover, pressed, focus et loading). Ni disabled ni
+   selected ne sont soulignés (Body/M/Medium).
+   Feedback : couleur.
    ========================================================================== */
 
 .link {
@@ -634,9 +635,7 @@
   border-color: transparent;
   text-decoration: none;
 }
-.link:not([data-disabled]):not([data-selected])[data-hovered],
-.link:not([data-disabled]):not([data-selected])[data-pressed],
-.link:not([data-disabled]):not([data-selected])[data-focus-visible] {
+.link:not([data-disabled]):not([data-selected]) {
   text-decoration: underline;
   text-decoration-thickness: 12%;
   text-underline-offset: 16%;
@@ -658,12 +657,18 @@
 .link.color-subtle:not([data-disabled])[data-hovered] {
   color: var(--button-color-link-subtle-text-hovered);
 }
+.link.color-subtle:not([data-disabled])[data-pressed] {
+  color: var(--button-color-link-subtle-text-pressed);
+}
 
 .link.color-subtlest {
   color: var(--button-color-link-subtlest-text-default);
 }
 .link.color-subtlest:not([data-disabled])[data-hovered] {
   color: var(--button-color-link-subtlest-text-hovered);
+}
+.link.color-subtlest:not([data-disabled])[data-pressed] {
+  color: var(--button-color-link-subtlest-text-pressed);
 }
 
 .link.comete {

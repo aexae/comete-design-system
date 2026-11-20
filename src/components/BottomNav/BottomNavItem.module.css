@@ -126,6 +126,12 @@
   border-radius: var(--bottom-nav-radius-item-selected);
 }
 
+/* La pastille glissante de la BottomNav a pris le relais : l'item sélectionné
+   ne peint plus la sienne. L'item ouvert (aria-expanded) garde la sienne. */
+[data-bottom-nav-indicator] .item[data-selected]:not([aria-expanded="true"]) .content {
+  background-color: transparent;
+}
+
 /* Le badge chevauche la pastille : sa découpe prend la couleur de la pastille. */
 .item[data-selected] .badge,
 .item[aria-expanded="true"] .badge {

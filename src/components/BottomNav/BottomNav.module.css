@@ -22,3 +22,33 @@
 .spacer {
   flex: 1 1 0;
 }
+
+/* Pastille de sélection unique (voir useSlidingIndicator) : elle glisse d'un
+   item à l'autre au changement de sélection. Tant qu'elle n'est pas mesurée
+   (premier rendu serveur, jsdom), chaque item peint sa propre pastille. */
+.indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--bottom-nav-color-item-background-selected);
+  border-radius: var(--bottom-nav-radius-item-selected);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.indicator[data-visible] {
+  opacity: 1;
+}
+
+.indicator[data-animated] {
+  transition:
+    transform var(--duration-normal) var(--easing-default),
+    width var(--duration-normal) var(--easing-default),
+    height var(--duration-normal) var(--easing-default);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .indicator[data-animated] {
+    transition: none;
+  }
+}
