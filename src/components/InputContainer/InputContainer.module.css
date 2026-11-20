@@ -27,7 +27,7 @@
    ========================================================================== */
 
 .bordered {
-  background-color: var(--background-default-default);
+  background-color: var(--background-field-default);
   border: 2px solid var(--border-default);
   border-radius: var(--radius050);
   padding: var(--space100);

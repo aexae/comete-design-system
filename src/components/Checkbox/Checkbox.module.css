@@ -78,7 +78,7 @@
 /* Inner mark (tick / dash) — couleur du fond parent, même pattern que
    borderColor dans AvatarGroup ou --radio-surface dans Radio. */
 .innerMark {
-  fill: var(--checkbox-surface, var(--background-default-default));
+  fill: var(--checkbox-surface, var(--background-field-default));
 }
 
 /* Checked / Indeterminate — information */

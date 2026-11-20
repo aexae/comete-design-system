@@ -139,7 +139,7 @@ function LogoWithDownload({
     padding: "3px 10px",
     border: "1px solid var(--border-default)",
     borderRadius: 5,
-    background: "var(--background-default-default)",
+    background: "var(--background-field-default)",
     color: "var(--text-subtlest-default)",
     cursor: "pointer",
     letterSpacing: "0.03em",
@@ -202,7 +202,7 @@ export const Inverted: Story = {
     (Story) => (
       <div
         style={{
-          background: "var(--background-default-inverted)",
+          background: "var(--surface-inverted)",
           padding: 24,
           borderRadius: 8,
           border: "1px solid var(--border-default)",
@@ -238,8 +238,7 @@ export const TaglineAlignColumn: Story = {
                     style={{
                       padding: 16,
                       borderRadius: 8,
-                      background:
-                        a === "inverted" ? "var(--background-default-inverted)" : undefined,
+                      background: a === "inverted" ? "var(--surface-inverted)" : undefined,
                     }}
                   >
                     <Logo
@@ -277,7 +276,7 @@ export const AllProducts: Story = {
                   style={{
                     padding: "8px 12px",
                     borderRadius: 8,
-                    background: a === "inverted" ? "var(--background-default-inverted)" : undefined,
+                    background: a === "inverted" ? "var(--surface-inverted)" : undefined,
                   }}
                 >
                   <Logo entity={p} appearance={a} taglineAlign="inline" size={32} />
@@ -537,7 +536,7 @@ function LogoCard({
     borderRadius: 10,
     border: `1.5px solid ${isCopied ? "var(--border-focused)" : "transparent"}`,
     background: isInverted
-      ? "var(--background-default-inverted)"
+      ? "var(--surface-inverted)"
       : isCopied
         ? "var(--background-selected-subtlest-default)"
         : "transparent",
@@ -568,7 +567,7 @@ function LogoCard({
     padding: "2px 7px",
     border: "1px solid var(--border-default)",
     borderRadius: 4,
-    background: "var(--background-default-default)",
+    background: "var(--background-field-default)",
     color: "var(--text-subtlest-default)",
     cursor: "pointer",
     letterSpacing: "0.03em",
@@ -675,7 +674,7 @@ function LogoExplorer(): ReactElement {
     padding: "5px 10px",
     border: "1px solid var(--border-default)",
     borderRadius: 6,
-    background: "var(--background-default-default)",
+    background: "var(--background-field-default)",
     color: "var(--text-default-default)",
     fontSize: 13,
   };
@@ -684,7 +683,7 @@ function LogoExplorer(): ReactElement {
     ...controlStyle,
     background: active
       ? "var(--background-selected-subtlest-default)"
-      : "var(--background-default-default)",
+      : "var(--background-field-default)",
     borderColor: active ? "var(--border-focused)" : "var(--border-default)",
     color: active ? "var(--text-selected)" : "var(--text-default-default)",
     fontWeight: active ? 600 : 400,
@@ -828,8 +827,7 @@ function LogoExplorer(): ReactElement {
             gridTemplateColumns: "minmax(120px, 1fr) minmax(120px, 1fr)",
             gap: 8,
             padding: appearance === "inverted" ? 16 : 0,
-            background:
-              appearance === "inverted" ? "var(--background-default-inverted)" : "transparent",
+            background: appearance === "inverted" ? "var(--surface-inverted)" : "transparent",
             borderRadius: appearance === "inverted" ? 12 : 0,
           }}
         >

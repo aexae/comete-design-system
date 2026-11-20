@@ -11,6 +11,14 @@ entre versions alpha.
 
 ### Changements cassants (BREAKING)
 
+- **Tokens 0.36.0** : `--background-default-default` devient `--background-field-default`
+  (remplissage des champs et contrôles : InputContainer, Checkbox, Switch, Badge) et
+  `--background-default-inverted` devient `--surface-inverted` (stories Logo). La story
+  FiltresOptionB référençait `--background-default`, token inexistant, corrigé en
+  `--surface-default`.
+
+### Changements cassants (BREAKING)
+
 - **Banner** (tokens 0.35.0) : l'apparence `discovery` est retirée, fusionnée dans
   `announcement` qui avait le même rôle. `announcement` passe du fond neutre sombre au violet
   accent (`background.accent.purple.bold`) et prend l'icône `New`. Remplacer

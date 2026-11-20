@@ -12,6 +12,10 @@
 
 **Contexte / raison** : report des corrections Figma d'Axel, et demande d'une transition « smooth et rapide ». Une courbe plus marquée (ease-out fort `cubic-bezier(0.23, 1, 0.32, 1)`) demanderait un nouveau token d'easing : proposé à Axel, non créé sans son accord.
 
+## 2026-11-20 — `--background-field-default` et `--surface-inverted` (tokens 0.36.0)
+
+**Décision** (Axel) : `background.default` est renommé `background.field` côté tokens, parce que depuis la doctrine surface vs background « fond par défaut » se confondait avec `surface.default`. Le DS suit : InputContainer, Checkbox, Switch et Badge consomment `--background-field-default` (remplissage des champs et contrôles). `--background-default-inverted` devient `--surface-inverted` (surface opposée au thème, stories Logo). Aucun changement visuel.
+
 ## 2026-11-20 — `--surface-*` hors de `background`, Checkbox et Switch sur `background.default`
 
 **Décisions** (Axel, tokens 0.34.0) :

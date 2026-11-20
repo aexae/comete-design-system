@@ -223,7 +223,7 @@ function IllustrationExplorer(): ReactElement {
     padding: "5px 10px",
     border: "1px solid var(--border-default)",
     borderRadius: 6,
-    background: "var(--background-default-default)",
+    background: "var(--background-field-default)",
     color: "var(--text-default-default)",
     fontSize: 13,
   };
