@@ -1,6 +1,6 @@
 // Helper de story partagé — recette « Recherche globale ». PAS un export du DS
 // (rien dans src/components/, rien dans l'index public) : données, logique et
-// composants d'UI réutilisés par la story `Recipes/Recherche globale` ET les
+// composants d'UI réutilisés par la story `Patterns/Recherche globale` ET les
 // stories `Layout/Page/*`, pour une barre strictement identique partout.
 //
 // Flux retenu : la loupe de la `Page.Bar` ouvre un `ModalDialog` qui porte le

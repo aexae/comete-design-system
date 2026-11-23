@@ -93,7 +93,7 @@ export const Default: Story = {
     // Toolbar « recette Filtres » (option B) : recherche + bouton « Filtres »
     // (slot `filters`, popover deux volets) + « Filtres enregistrés » + actions,
     // et les tags des critères actifs sous la barre. Composant partagé
-    // `_filtresOptionB`, identique à Recipes/Filtres et Page/Toolbar.
+    // `_filtresOptionB`, identique à Patterns/Filtres et Page/Toolbar.
     const [f, setF] = useState<Filters>(emptyFilters);
     const { views, save, remove } = useSavedViews();
     return (
