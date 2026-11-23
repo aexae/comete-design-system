@@ -251,7 +251,7 @@
   grid-column: span 2;
   flex-direction: column;
   justify-content: space-between;
-  background: var(--background-surface-default);
+  background: var(--surface-default);
 }
 
 .typeAa {
@@ -267,14 +267,14 @@
   flex-direction: column;
   justify-content: center;
   gap: var(--space100);
-  background: var(--background-surface-default);
+  background: var(--surface-default);
 }
 
 .resourceBoard {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   height: 100%;
-  background: var(--background-surface-default);
+  background: var(--surface-default);
 }
 
 .resourceLogos {
@@ -325,9 +325,9 @@
 
 .personaIconYellow {
   /* Jaune d'avertissement et son icône dédiée : le contraste est garanti dans les deux thèmes. */
-  --icon-default: var(--icon-on-warning);
+  --icon-default: var(--icon-on-light-surface);
   background: var(--background-warning-bold-default);
-  color: var(--icon-on-warning);
+  color: var(--icon-on-light-surface);
 }
 
 /* ---- Aide ---- */

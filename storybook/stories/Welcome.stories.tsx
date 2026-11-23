@@ -236,7 +236,7 @@ const SWATCHES: { token: string; label: string; text: string; outlined?: boolean
   { token: "--background-brand-bold-default", label: "bold", text: "--text-inverted" },
   { token: "--border-brand-bold", label: "border", text: "--text-inverted" },
   {
-    token: "--background-surface-default",
+    token: "--surface-default",
     label: "text",
     text: "--text-brand-default",
     outlined: true,
