@@ -511,6 +511,16 @@ function matchExcept(a: Agent, f: Filters, skip: MultiKey, applySousTraitants: b
   return MULTI_KEYS.every((k) => k === skip || !f[k].length || f[k].includes(a[k]));
 }
 
+// ⚠️ POINT UX À MESURER À L'USAGE — « cul-de-sac des options à 0 ».
+// Les options dont le compte vivant tombe à 0 sont désactivées (`n === 0 && !checked`,
+// voir les volets). C'est arithmétiquement correct — ces valeurs ne ramèneraient
+// aucun agent dans le périmètre courant — mais avec de VRAIES données un filtre
+// très sélectif (ex. une agence précise) peut faire passer presque toute une
+// facette à 0 : l'utilisateur voit alors une liste quasi entièrement grisée et
+// peut croire l'app cassée. À surveiller : si ce cas est fréquent, envisager un
+// signal explicite (« aucune valeur compatible avec vos filtres ») plutôt qu'une
+// simple désactivation silencieuse. Ne pas « corriger » à l'aveugle : à trancher
+// sur données réelles.
 export const optionCount = (
   f: Filters,
   key: MultiKey,
@@ -1095,6 +1105,7 @@ export function FiltresPanel({
   const visibleMultiKeys = MULTI_KEYS.filter((k) => visibleFacets.some((d) => d.key === k));
 
   const total = totalActive(filters);
+  const resultCount = filteredAgents(filters, dataset.agents, dataset.applySousTraitants).length;
   const isCurrentSaved = total > 0 && views.some((v) => sameFilters(v.filters, filters));
   const curDef = visibleFacets.find((d) => d.key === cat) ?? visibleFacets[0];
   const q = query.trim().toLowerCase();
@@ -1391,7 +1402,8 @@ export function FiltresPanel({
                   </span>
                 ) : (
                   <Button
-                    appearance="link"
+                    appearance="subtle"
+                    color="comete"
                     className={textActionClassName}
                     onPress={() => setSavingName("")}
                     isDisabled={total === 0}
@@ -1409,11 +1421,21 @@ export function FiltresPanel({
                   </Button>
                 )}
                 <div style={{ flex: 1 }} />
-                <Button appearance="subtle" onPress={clearAll} isDisabled={total === 0}>
-                  Réinitialiser
+                <Button
+                  appearance="subtle"
+                  color="comete"
+                  onPress={clearAll}
+                  isDisabled={total === 0}
+                >
+                  Tout effacer
                 </Button>
-                <Button appearance="contained" color="comete" onPress={() => setOpen(false)}>
-                  Voir les résultats
+                {/* Filtrage en DIRECT : la table est déjà filtrée derrière. Ce
+                    bouton ne fait que FERMER le panneau → apparence SECONDAIRE +
+                    libellé informatif (nombre de résultats). Jamais une « porte
+                    d'application » (contained primaire), qui annoncerait à tort
+                    une validation obligatoire. */}
+                <Button appearance="outlined" onPress={() => setOpen(false)}>
+                  Voir {resultCount} agent{resultCount > 1 ? "s" : ""}
                 </Button>
               </>
             ) : (
@@ -1776,13 +1798,14 @@ export function FiltresSheet({
         </strong>
         {!showViews && savingName === null ? (
           <Button
-            appearance="link"
+            appearance="subtle"
+            color="comete"
             density="touch"
             className={textActionClassName}
             onPress={clearAll}
             isDisabled={total === 0}
           >
-            Réinitialiser
+            Tout effacer
           </Button>
         ) : null}
       </DrawerHeader>
@@ -1980,9 +2003,11 @@ export function FiltresSheet({
                 Donner un nom à ces filtres
               </Button>
             ) : null}
+            {/* Filtrage en DIRECT : la liste est déjà filtrée. Ce bouton ne fait
+                que FERMER la feuille → secondaire + libellé informatif, pas une
+                porte d'application (contained primaire). */}
             <Button
-              appearance="contained"
-              color="comete"
+              appearance="outlined"
               density="touch"
               onPress={() => onOpenChange(false)}
               style={{ width: "100%" }}
@@ -2115,7 +2140,8 @@ export function useFiltresPanelControl(): {
 
 // -----------------------------------------------------------------------
 // ActiveFilterTags — tags des filtres actifs, groupés par catégorie, sous la
-// barre. `textActionClassName` = « Réinitialiser » (bouton texte discret).
+// barre. Retour à la ligne + bascule « +N ↔ Réduire » au-delà de MAX_CHIPS.
+// `textActionClassName` = « Tout effacer » (bouton texte discret).
 
 export function ActiveFilterTags({
   filters,
@@ -2145,8 +2171,8 @@ export function ActiveFilterTags({
   }));
 
   const MAX_CHIPS = 4;
-  // Nombre de chips masqués au repli (indépendant de l'état déplié, pour que le
-  // contrôle de bascule reste rendu une fois déplié → repli possible).
+  // Nombre de chips masqués au repli (indépendant de l'état déplié, pour que la
+  // bascule reste rendue une fois dépliée → repli possible).
   const overflowCount = Math.max(0, groups.length - MAX_CHIPS);
   const visibleGroups = chipsExpanded ? groups : groups.slice(0, MAX_CHIPS);
 
@@ -2278,8 +2304,8 @@ export function ActiveFilterTags({
           {chipsExpanded ? "Réduire" : `+${overflowCount}`}
         </button>
       )}
-      <Button appearance="link" className={textActionClassName} onPress={clearAll}>
-        Réinitialiser
+      <Button appearance="subtle" color="comete" className={textActionClassName} onPress={clearAll}>
+        Tout effacer
       </Button>
     </div>
   );
@@ -2331,10 +2357,11 @@ export function AgentsList({ results }: { results: Agent[] }): ReactElement {
 
 // -----------------------------------------------------------------------
 // ResultsTable — tableau des agents filtrés, RESPONSIVE (pattern DS Table → List).
-// Colonnes de confort (Diplôme, Contrat) masquées sous `lg`, de contexte
-// (Société/Agence, Secteur) sous `md` ; identité (Agent) et donnée clé
-// (Disponibilité) jamais masquées. Sous ~600px (`sm`), repli en liste compacte
-// (`AgentsList`) au lieu de laisser le tableau déborder en scroll horizontal.
+// Seules les colonnes de CONFORT (Diplôme, Contrat) se masquent, sous `lg` : le
+// tableau descend à 4 colonnes (Agent, Société/Agence, Secteur, Disponibilité)
+// mais JAMAIS en-dessous — on évite ainsi l'état « 2 colonnes + moitié vide ».
+// La recette bascule en liste compacte (`AgentsList`) avant d'arriver là ; le
+// repli interne ci-dessous (`sm`) sert aux usages hors recette.
 
 export function ResultsTable({
   filters,
@@ -2356,8 +2383,8 @@ export function ResultsTable({
           <TableHead>
             <TableRow>
               <TableHeaderCell>Agent</TableHeaderCell>
-              <TableHeaderCell hideBelow="md">Société / Agence</TableHeaderCell>
-              <TableHeaderCell hideBelow="md">Secteur</TableHeaderCell>
+              <TableHeaderCell>Société / Agence</TableHeaderCell>
+              <TableHeaderCell>Secteur</TableHeaderCell>
               <TableHeaderCell hideBelow="lg">Diplôme</TableHeaderCell>
               <TableHeaderCell hideBelow="lg">Contrat</TableHeaderCell>
               <TableHeaderCell>Disponibilité</TableHeaderCell>
@@ -2370,15 +2397,15 @@ export function ResultsTable({
             noResultsDescription="Ajustez ou réinitialisez les filtres pour élargir la recherche."
             noResultsAction={
               <Button appearance="outlined" onPress={() => undefined}>
-                Réinitialiser les filtres
+                Tout effacer
               </Button>
             }
           >
             {results.map((a) => (
               <TableRow key={a.nom}>
                 <TableCell>{a.nom}</TableCell>
-                <TableCell hideBelow="md">{a.societe}</TableCell>
-                <TableCell hideBelow="md">{a.secteur}</TableCell>
+                <TableCell>{a.societe}</TableCell>
+                <TableCell>{a.secteur}</TableCell>
                 <TableCell hideBelow="lg">{a.diplome}</TableCell>
                 <TableCell hideBelow="lg">{a.contrat}</TableCell>
                 <TableCell>

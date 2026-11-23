@@ -258,11 +258,11 @@ export const None: Story = {
 };
 
 /**
- * **Toolbar — Filtres appliqués** : plusieurs critères déjà posés. Le badge du
- * bouton **« Filtres »** (slot `filters`) reflète leur nombre, et les **tags
- * actifs** sous la barre les rappellent — groupés par catégorie, surplus sous
- * « +N », « Réinitialiser » pour tout vider. Même popup (recette option B) que
- * `Patterns/Filtres`.
+ * **Toolbar — Filtres appliqués** : plusieurs critères déjà posés. Le bouton
+ * **« Filtres »** (slot `filters`) passe en accent comète (outlined) + badge
+ * compteur quand des filtres sont actifs, et les **tags actifs** sous la barre
+ * les rappellent — groupés par catégorie, surplus sous « +N », « Tout effacer »
+ * pour tout vider. Même popup (recette option B) que `Patterns/Filtres`.
  */
 export const WithActiveFilters: Story = {
   name: "With active filters",
