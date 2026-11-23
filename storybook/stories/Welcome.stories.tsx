@@ -165,20 +165,38 @@ function SectionHead({
   );
 }
 
+/**
+ * Logo de l'intro, posé sur la surface navy fixe (identique dans les deux thèmes) : `inverted` est
+ * clair en thème clair mais devient foncé en sombre, `brand` l'inverse. On affiche donc l'un ou
+ * l'autre selon `data-theme`, en CSS, pour garder un logo clair sur le navy.
+ */
+function HeroLogo(props: Omit<ComponentProps<typeof Logo>, "appearance">): ReactElement {
+  return (
+    <>
+      <span className={css["logoOnLight"]}>
+        <Logo {...props} appearance="inverted" />
+      </span>
+      <span className={css["logoOnDark"]}>
+        <Logo {...props} appearance="brand" />
+      </span>
+    </>
+  );
+}
+
 function Hero(): ReactElement {
   return (
     <header className={css["hero"]}>
       <div className={css["heroText"]}>
-        <Logo appearance="inverted" size={44} aria-label="Comète" />
-        <Heading size="xxlarge" color="inverted" as="h1" className={css["heroTitle"]}>
+        <HeroLogo size={44} aria-label="Comète" />
+        <Heading size="xxlarge" as="h1" className={css["heroTitle"]}>
           Une seule identité pour{" "}
           <span className={css["heroAccent"]}>tous les logiciels Comète.</span>
         </Heading>
-        <Text size="large" color="inverted" className={css["heroLead"]}>
+        <Text size="large" className={css["heroLead"]}>
           Logos, couleurs, typographie, icônes et composants : la source unique pour concevoir et
           développer chaque logiciel de la marque.
         </Text>
-        <Text size="medium" color="inverted" italic className={css["heroQuote"]}>
+        <Text size="medium" italic className={css["heroQuote"]}>
           «&nbsp;Le logiciel Comète s&rsquo;adapte à votre fonctionnement, et non
           l&rsquo;inverse.&nbsp;»
         </Text>
@@ -190,7 +208,7 @@ function Hero(): ReactElement {
         <span className={css["orbitInner"]} />
         <span className={css["glow"]} />
         <span className={css["heroIcon"]}>
-          <Logo appearance="inverted" format="icon" size={120} />
+          <HeroLogo format="icon" size={120} />
         </span>
       </div>
     </header>
@@ -727,10 +745,10 @@ function Help(): ReactElement {
   return (
     <div className={css["help"]}>
       <Stack gap="050" grow>
-        <Text weight="bold" color="inverted">
+        <Text weight="bold" className={css["helpText"]}>
           Une question, un composant manquant, un logo introuvable ?
         </Text>
-        <Text size="small" color="inverted" className={css["helpBody"]}>
+        <Text size="small" className={css["helpBody"]}>
           Écrivez-nous sur le canal Teams « Marque et Charte Comète », ou ouvrez une issue sur le
           dépôt si vous êtes développeur.
         </Text>
@@ -740,10 +758,10 @@ function Help(): ReactElement {
           <Stack key={name} direction="row" gap="100" align="center">
             <Avatar size="medium" initials={name.slice(0, 1)} color="comete" />
             <Stack gap="0">
-              <Text size="small" weight="medium" color="inverted">
+              <Text size="small" weight="medium" className={css["helpText"]}>
                 {name}
               </Text>
-              <Text size="small" color="inverted" className={css["helpBody"]}>
+              <Text size="small" className={css["helpBody"]}>
                 Référent design system
               </Text>
             </Stack>
