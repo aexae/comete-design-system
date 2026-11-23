@@ -39,6 +39,7 @@
 }
 
 .page .heroTitle {
+  color: var(--text-on-dark-surface);
   max-width: 18ch;
   margin: var(--space100) 0 0;
   font-size: var(--font-size-hero-xs);
@@ -56,13 +57,15 @@
   letter-spacing: inherit;
 }
 
-.heroLead {
+.page .heroLead {
   max-width: 50ch;
   margin: 0;
-  color: var(--text-subtle-inverted);
+  color: var(--text-on-dark-surface);
+  opacity: 0.8;
 }
 
-.heroQuote {
+.page .heroQuote {
+  color: var(--text-on-dark-surface);
   max-width: 48ch;
   margin: auto 0 0;
   padding-top: var(--space200);
@@ -343,8 +346,13 @@
   color: var(--text-on-dark-surface);
 }
 
-.helpBody {
-  color: var(--text-subtle-inverted);
+.page .helpText {
+  color: var(--text-on-dark-surface);
+}
+
+.page .helpBody {
+  color: var(--text-on-dark-surface);
+  opacity: 0.8;
 }
 
 /* Les cartes d'une même rangée prennent la hauteur de la plus haute, avec le rayon et l'ombre de
@@ -394,4 +402,22 @@
 
 .page .principleNum {
   font-family: var(--font-family-code), monospace;
+}
+
+/* ---- Logo de l'intro : clair sur le navy fixe, quel que soit le thème ---- */
+
+.logoOnLight {
+  display: inline-flex;
+}
+
+.logoOnDark {
+  display: none;
+}
+
+:global([data-theme="dark"]) .logoOnLight {
+  display: none;
+}
+
+:global([data-theme="dark"]) .logoOnDark {
+  display: inline-flex;
 }
