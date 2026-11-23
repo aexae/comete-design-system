@@ -121,13 +121,15 @@ const preview: Preview = {
     // Ordre de la sidebar : l'accueil d'abord, puis les familles du plus fondamental au plus composé.
     options: {
       storySort: {
+        // Littéral obligatoire (Storybook lit `storySort` statiquement) : garder synchronisé avec
+        // `storyOrder.ts`, qui sert à ordonner les cartes de la page d'accueil.
         order: [
           "Welcome",
           "Foundation",
+          "Patterns",
           "Layout",
           "Navigation",
           "Components",
-          "Recipes",
           "Templates",
         ],
       },

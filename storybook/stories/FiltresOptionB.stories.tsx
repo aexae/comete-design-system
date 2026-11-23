@@ -12,23 +12,12 @@
 // SecondaryAction). La logique (comptes vivants, mini-recherche, vues
 // enregistrées) vient du DCLogic de la maquette.
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactElement } from "react";
 import { within, screen, userEvent, waitFor, expect } from "storybook/test";
 import { MINIMAL_VIEWPORTS } from "storybook/viewport";
 import css from "./FiltresOptionB.stories.module.css";
-import {
-  Button,
-  Badge,
-  Tag,
-  SearchField,
-  Avatar,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  ListItemTrailing,
-} from "@aexae/comete-design-system/components";
+import { Button, Badge, SearchField } from "@aexae/comete-design-system/components";
 import {
   FiltresPanel,
   FiltresSheet,
@@ -36,12 +25,12 @@ import {
   ActiveFilterTags,
   useFiltresPanelControl,
   ResultsTable,
+  AgentsList,
+  useBelowWidth,
   useSavedViews,
   initialFilters,
   filteredAgents,
   totalActive,
-  DISPO_TAG,
-  initialsOf,
   AGENTS,
   facetsForRole,
   effectiveFilters,
@@ -81,8 +70,18 @@ function FiltresOptionB({ role, initial }: { role?: Role; initial?: Filters }): 
   const canSaveViews = role !== "partenaire";
   // Le corps d'un tag actif rouvre le panneau sur sa facette.
   const panel = useFiltresPanelControl();
+  // Sous 768px, la recette adopte la forme mobile — MÊME écran, aucun saut de
+  // layout : la recherche remplit la ligne, le bouton Filtres se replie en icône
+  // + feuille (`collapseLabel`), et les affordances desktop se masquent (le menu
+  // « Filtres enregistrés » vit dans la feuille ; les critères actifs sont portés
+  // par le badge du bouton, pas par la rangée de tags). Le tableau se replie en
+  // liste (`ResultsTable`). `container-type` sur la racine : le repli du bouton
+  // Filtres s'évalue sur la largeur du conteneur (comme ce seuil).
+  const rootRef = useRef<HTMLDivElement>(null);
+  const narrow = useBelowWidth(rootRef, 768);
   return (
     <div
+      ref={rootRef}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -93,11 +92,18 @@ function FiltresOptionB({ role, initial }: { role?: Role; initial?: Filters }): 
         background: "var(--surface-default)",
         minHeight: "100vh",
         boxSizing: "border-box",
+        containerType: "inline-size",
       }}
     >
-      {/* Toolbar : recherche + Filtres à gauche ; Recherches (action) à droite. */}
+      {/* Toolbar : recherche + Filtres ; « Filtres enregistrés » à droite (desktop). */}
       <div style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
-        <div style={{ width: 260, flex: "none" }}>
+        <div
+          style={{
+            flex: narrow ? "1 1 auto" : "none",
+            width: narrow ? "auto" : 260,
+            minWidth: 0,
+          }}
+        >
           <SearchField
             aria-label="Rechercher un agent"
             placeholder="Rechercher un agent"
@@ -113,12 +119,13 @@ function FiltresOptionB({ role, initial }: { role?: Role; initial?: Filters }): 
           role={role}
           dataset={dataset}
           canSaveViews={canSaveViews}
+          collapseLabel
           scrollClassName={css["scroll"]}
           textActionClassName={css["textAction"]}
           {...panel.panelProps}
         />
-        <div style={{ flex: 1 }} />
-        {canSaveViews ? (
+        {!narrow && <div style={{ flex: 1 }} />}
+        {!narrow && canSaveViews ? (
           <SavedSearchesMenu
             views={views}
             current={f}
@@ -128,12 +135,14 @@ function FiltresOptionB({ role, initial }: { role?: Role; initial?: Filters }): 
         ) : null}
       </div>
 
-      <ActiveFilterTags
-        filters={f}
-        onChange={setF}
-        textActionClassName={css["textAction"]}
-        onOpenFacet={panel.openFacet}
-      />
+      {!narrow && (
+        <ActiveFilterTags
+          filters={f}
+          onChange={setF}
+          textActionClassName={css["textAction"]}
+          onOpenFacet={panel.openFacet}
+        />
+      )}
 
       <ResultsTable filters={f} dataset={dataset} />
     </div>
@@ -186,7 +195,8 @@ function FiltresOptionBMobile({ initial }: { initial?: Filters }): ReactElement 
           />
         </div>
         <Button
-          appearance={total > 0 ? "contained" : "outlined"}
+          appearance="outlined"
+          color={total > 0 ? "comete" : undefined}
           iconBefore="Tune"
           aria-label={
             total > 0
@@ -197,9 +207,7 @@ function FiltresOptionBMobile({ initial }: { initial?: Filters }): ReactElement 
           aria-expanded={filterOpen}
           onPress={() => setFilterOpen(true)}
         >
-          {total > 0 && (
-            <Badge label={String(total)} appearance="information-inverted" importance="high" />
-          )}
+          {total > 0 && <Badge label={String(total)} appearance="information" importance="high" />}
         </Button>
       </div>
 
@@ -207,39 +215,10 @@ function FiltresOptionBMobile({ initial }: { initial?: Filters }): ReactElement 
           badge du bouton Filtres et la feuille (drill-down). La rangée « FILTRES :
           … » est une affordance desktop uniquement. */}
 
-      {/* Liste des agents. */}
+      {/* Liste des agents — MÊME liste compacte que le repli téléphone du
+          tableau desktop (ResultsTable → AgentsList). Source unique. */}
       <div style={{ flex: 1, overflowY: "auto" }}>
-        {results.length === 0 ? (
-          <p
-            style={{
-              padding: "var(--space400) var(--space200)",
-              textAlign: "center",
-              color: "var(--text-subtlest-default)",
-              fontSize: 13,
-            }}
-          >
-            Aucun agent ne correspond.
-          </p>
-        ) : (
-          <List isBordered aria-label="Liste des agents">
-            {results.map((a) => (
-              <ListItem key={a.nom}>
-                <ListItemAvatar>
-                  <Avatar initials={initialsOf(a.nom)} alt={a.nom} />
-                </ListItemAvatar>
-                <ListItemText primary={a.nom} secondary={`${a.societe} · ${a.diplome}`} />
-                <ListItemTrailing>
-                  <Tag
-                    label={DISPO_TAG[a.dispo].label}
-                    color={DISPO_TAG[a.dispo].color}
-                    appearance="subtle"
-                    shape="rounded"
-                  />
-                </ListItemTrailing>
-              </ListItem>
-            ))}
-          </List>
-        )}
+        <AgentsList results={results} />
       </div>
 
       {/* Feuille de filtres — MÊME source que FiltresPanel compact (FiltresSheet).
@@ -275,7 +254,7 @@ const VIEWPORTS = {
 };
 
 const meta = {
-  title: "Recipes/Filtres",
+  title: "Patterns/Filtres",
   parameters: {
     layout: "fullscreen",
     viewport: { options: VIEWPORTS },

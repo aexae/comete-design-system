@@ -26,7 +26,7 @@ function Gutters({ children }: { children: ReactNode }) {
 const onOpenHit = fn();
 
 const meta = {
-  title: "Recipes/Recherche globale",
+  title: "Patterns/Recherche globale",
   component: Page,
   tags: ["autodocs"],
   parameters: {

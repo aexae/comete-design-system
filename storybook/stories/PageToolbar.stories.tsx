@@ -84,7 +84,7 @@ type Story = StoryObj<typeof Page>;
  * popover deux volets) + actions, **tout sur une seule ligne**. Le bouton vit
  * dans le slot `filters` de `Page.Toolbar` ; les tags des critères actifs se
  * posent sous la barre. La popup est **strictement identique** à la story
- * `Recipes/Filtres` (composant partagé `_filtresOptionB`). Sous le breakpoint
+ * `Patterns/Filtres` (composant partagé `_filtresOptionB`). Sous le breakpoint
  * du conteneur, l'action primaire se réduit en icône seule et « Exporter » se
  * masque.
  */
@@ -92,7 +92,7 @@ export const Full: Story = {
   render: function FullToolbar() {
     // La recette « Filtres » (option B) vit DANS la barre : bouton « Filtres »
     // dans le slot `filters`, recherche + actions sur la même ligne. Tags des
-    // critères actifs sous la barre. Popup partagée avec Recipes/Filtres.
+    // critères actifs sous la barre. Popup partagée avec Patterns/Filtres.
     const [f, setF] = useState<Filters>(emptyFilters);
     const { views, save, remove } = useSavedViews();
     return (
@@ -114,6 +114,7 @@ export const Full: Story = {
                 onChange={setF}
                 views={views}
                 onSaveView={(name) => save(name, f)}
+                collapseLabel
                 scrollClassName={filtresCss["scroll"]}
                 textActionClassName={filtresCss["textAction"]}
               />
@@ -161,7 +162,7 @@ export const Full: Story = {
  * **Toolbar — Recherche + filtres (sans actions)** : recherche et **bouton
  * « Filtres »** (recette option B, popover deux volets) dans le slot `filters`,
  * sans actions à droite. Pour les pages de listing en consultation (main
- * courante, logs…). La popup est la même que la story `Recipes/Filtres`.
+ * courante, logs…). La popup est la même que la story `Patterns/Filtres`.
  */
 export const SearchOnly: Story = {
   name: "Search only",
@@ -187,6 +188,7 @@ export const SearchOnly: Story = {
                 onChange={setF}
                 views={views}
                 onSaveView={(name) => save(name, f)}
+                collapseLabel
                 scrollClassName={filtresCss["scroll"]}
                 textActionClassName={filtresCss["textAction"]}
               />
@@ -260,7 +262,7 @@ export const None: Story = {
  * bouton **« Filtres »** (slot `filters`) reflète leur nombre, et les **tags
  * actifs** sous la barre les rappellent — groupés par catégorie, surplus sous
  * « +N », « Réinitialiser » pour tout vider. Même popup (recette option B) que
- * `Recipes/Filtres`.
+ * `Patterns/Filtres`.
  */
 export const WithActiveFilters: Story = {
   name: "With active filters",
@@ -286,6 +288,7 @@ export const WithActiveFilters: Story = {
                 onChange={setF}
                 views={views}
                 onSaveView={(name) => save(name, f)}
+                collapseLabel
                 scrollClassName={filtresCss["scroll"]}
                 textActionClassName={filtresCss["textAction"]}
               />

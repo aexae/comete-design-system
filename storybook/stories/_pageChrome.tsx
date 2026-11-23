@@ -139,7 +139,7 @@ export function AccountMenu({ initials = "AC" }: { initials?: string }): ReactEl
  * choisie et fréquente, la notification est subie. Elle a remplacé l'ancien
  * bouton « Réglages » — les préférences sont une destination de navigation,
  * pas une action de barre, et la recherche globale sait y mener (voir la
- * recette `Recipes/Recherche globale`).
+ * recette `Patterns/Recherche globale`).
  *
  * Les trois répondent. Dans les stories de mise en page, le clic sur la loupe
  * est une simple trace ; le parcours complet vit dans la recette, qui en porte

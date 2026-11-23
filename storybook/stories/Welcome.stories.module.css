@@ -7,7 +7,7 @@
   padding: var(--space300);
   /* Page gris très clair ; seule l'intro (.hero) porte le bleu de marque, les cartes sont blanches. */
   background: var(--background-neutral-subtlest-default);
-  color: var(--text-default);
+  color: var(--text-default-default);
   font-family: var(--font-family-primary);
 }
 
@@ -51,7 +51,7 @@
 /* L'accent hérite de la taille du titre : « tous les logiciels Comète. » est aussi grand que le
    début de la phrase, seule la couleur change. */
 .heroAccent {
-  color: var(--comete-yellow-300);
+  color: var(--background-warning-bold-default);
   font: inherit;
   letter-spacing: inherit;
 }
@@ -82,11 +82,10 @@
 }
 
 .orbit {
-  top: 50%;
-  right: calc(var(--space600) * -2);
+  inset: 0;
   width: 520px;
   height: 520px;
-  margin-top: -260px;
+  margin: auto;
   border: 1px solid var(--border-inverted);
   opacity: 0.4;
 }
@@ -98,15 +97,14 @@
   width: var(--space125);
   height: var(--space125);
   border-radius: 50%;
-  background: var(--comete-yellow-400);
+  background: var(--background-warning-bold-default);
 }
 
 .orbitInner {
-  top: 50%;
-  right: calc(var(--space250) * -1);
+  inset: 0;
   width: 340px;
   height: 340px;
-  margin-top: -170px;
+  margin: auto;
   border: 1px dashed var(--border-inverted);
   opacity: 0.5;
   animation-direction: reverse;
@@ -115,21 +113,25 @@
 
 .glow {
   position: absolute;
-  top: 50%;
-  right: var(--space400);
+  inset: 0;
   width: 240px;
   height: 240px;
-  margin-top: -120px;
+  margin: auto;
   border-radius: 50%;
-  background: radial-gradient(circle at 40% 40%, var(--comete-yellow-300), transparent 65%);
+  background: radial-gradient(
+    circle at 40% 40%,
+    var(--background-warning-bold-default),
+    transparent 65%
+  );
   opacity: 0.22;
 }
 
 .heroIcon {
   position: absolute;
-  top: 50%;
-  right: var(--space800);
-  margin-top: -60px;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   animation: float 7s ease-in-out infinite;
 }
 
@@ -193,7 +195,7 @@
 /* ---- Cartes de contenu ---- */
 
 .contentNum {
-  color: var(--text-brand);
+  color: var(--text-brand-default);
   font-variant-numeric: tabular-nums;
 }
 
@@ -215,46 +217,45 @@
 .visual {
   height: 260px;
   overflow: hidden;
+  border: 1px solid var(--border-bold);
   border-radius: var(--radius200);
   box-shadow: var(--elevation-xsmall);
 }
 
 .swatchBoard {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   grid-template-rows: 1fr 1fr;
   height: 100%;
 }
 
-.swatch,
-.swatchLight {
+.swatch {
   display: flex;
   align-items: flex-end;
   padding: var(--space150);
-  color: var(--text-inverted);
   font-size: var(--font-size-ui-xxs);
   font-weight: var(--font-weight-semibold);
 }
 
-.swatchLight {
-  color: var(--text-default);
+.swatchOutlined {
+  box-shadow: inset 1px 0 0 var(--border-subtle);
 }
 
 .typeCell,
 .sampleCell {
   display: flex;
-  grid-column: span 2;
   padding: var(--space200) var(--space250);
 }
 
 .typeCell {
+  grid-column: span 2;
   flex-direction: column;
   justify-content: space-between;
-  background: var(--background-neutral-subtlest-default);
+  background: var(--background-surface-default);
 }
 
 .typeAa {
-  color: var(--text-brand);
+  color: var(--text-brand-default);
   font-size: var(--font-size-hero-m);
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--letter-spacing-negative-extra-tight);
@@ -262,17 +263,18 @@
 }
 
 .sampleCell {
+  grid-column: span 3;
   flex-direction: column;
   justify-content: center;
   gap: var(--space100);
-  background: var(--background-neutral-subtler-default);
+  background: var(--background-surface-default);
 }
 
 .resourceBoard {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   height: 100%;
-  background: var(--background-neutral-subtlest-default);
+  background: var(--background-surface-default);
 }
 
 .resourceLogos {
@@ -322,8 +324,10 @@
 }
 
 .personaIconYellow {
-  background: var(--comete-yellow-400);
-  color: var(--comete-yellow-950);
+  /* Jaune d'avertissement et son icône dédiée : le contraste est garanti dans les deux thèmes. */
+  --icon-default: var(--icon-on-warning);
+  background: var(--background-warning-bold-default);
+  color: var(--icon-on-warning);
 }
 
 /* ---- Aide ---- */
@@ -378,7 +382,7 @@
 
 .install {
   padding: var(--space150) var(--space200);
-  overflow-x: auto;
+  overflow-wrap: anywhere;
 }
 
 .tokenSwatch {
@@ -389,11 +393,5 @@
 }
 
 .page .principleNum {
-  color: var(--comete-yellow-700);
   font-family: var(--font-family-code), monospace;
-}
-
-/* En thème sombre le fond devient clair : le jaune du titre y perd son contraste. */
-:global([data-theme="dark"]) .heroAccent {
-  color: var(--text-brand);
 }

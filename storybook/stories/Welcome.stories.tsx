@@ -3,7 +3,7 @@
 // DS. Aucune donnée du dépôt n'est écrite en dur : version, compteurs, liens (index.json) et
 // dernières versions (historique git, via `virtual:welcome-releases`).
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useEffect, useState, type ReactElement, type ReactNode } from "react";
+import { useEffect, useState, type ComponentProps, type ReactElement, type ReactNode } from "react";
 import { addons } from "storybook/preview-api";
 import { SELECT_STORY } from "storybook/internal/core-events";
 import {
@@ -24,6 +24,7 @@ import {
 import type { IconName } from "@aexae/comete-design-system/components";
 import releases from "virtual:welcome-releases";
 import pkg from "../../package.json";
+import { FAMILY_ORDER } from "../.storybook/storyOrder";
 import css from "./Welcome.stories.module.css";
 
 // -----------------------------------------------------------------------
@@ -48,12 +49,20 @@ interface IndexEntry {
   type: "story" | "docs";
 }
 
+interface Family {
+  name: string;
+  /** Nombre d'éléments de la famille. */
+  count: number;
+  /** Quelques noms d'éléments (ordre alphabétique), pour donner un aperçu du contenu. */
+  sample: string[];
+}
+
 interface Index {
-  /** Nombre d'éléments par famille (Foundation, Layout, Components…). */
-  counts: Record<string, number>;
+  /** Familles de premier niveau, dans l'ordre de la sidebar (hors Welcome). */
+  families: Family[];
   /** Première page (alphabétique) d'une ou plusieurs familles, ex. Foundation → Couleur. */
   firstOf: (...families: string[]) => IndexEntry | undefined;
-  /** Page d'un titre complet, ex. « Recipes/Filtres » (docs de préférence). */
+  /** Page d'un titre complet, ex. « Patterns/Filtres » (docs de préférence). */
   entryOf: (title: string) => IndexEntry | undefined;
 }
 
@@ -69,8 +78,20 @@ function buildIndex(entries: IndexEntry[]): Index {
     set.add(name ?? family);
     members.set(family, set);
   }
+  const rank = (name: string): number => {
+    const i = (FAMILY_ORDER as readonly string[]).indexOf(name);
+    return i === -1 ? FAMILY_ORDER.length : i;
+  };
+  const families = [...members]
+    .filter(([name]) => name !== "Welcome")
+    .sort(([a], [b]) => rank(a) - rank(b) || a.localeCompare(b, "fr"))
+    .map(([name, set]) => ({
+      name,
+      count: set.size,
+      sample: [...set].sort((a, b) => a.localeCompare(b, "fr")).slice(0, 3),
+    }));
   return {
-    counts: Object.fromEntries([...members].map(([family, set]) => [family, set.size])),
+    families,
     entryOf: (title) => best.get(title),
     firstOf: (...families) => {
       for (const family of families) {
@@ -144,28 +165,11 @@ function SectionHead({
   );
 }
 
-/** Thème actif, lu sur <html data-theme> : la story n'est pas toujours sous un ThemeProvider. */
-function useIsDark(): boolean {
-  const read = (): boolean => document.documentElement.dataset["theme"] === "dark";
-  const [dark, setDark] = useState(read);
-  useEffect(() => {
-    const observer = new MutationObserver(() => setDark(read()));
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["data-theme"],
-    });
-    return () => observer.disconnect();
-  }, []);
-  return dark;
-}
-
 function Hero(): ReactElement {
-  // L'intro est sur le bleu de marque : en thème sombre il s'éclaircit, le logo suit.
-  const logoAppearance = useIsDark() ? "brand" : "inverted";
   return (
     <header className={css["hero"]}>
       <div className={css["heroText"]}>
-        <Logo appearance={logoAppearance} size={44} aria-label="Comète" />
+        <Logo appearance="inverted" size={44} aria-label="Comète" />
         <Heading size="xxlarge" color="inverted" as="h1" className={css["heroTitle"]}>
           Une seule identité pour{" "}
           <span className={css["heroAccent"]}>tous les logiciels Comète.</span>
@@ -186,7 +190,7 @@ function Hero(): ReactElement {
         <span className={css["orbitInner"]} />
         <span className={css["glow"]} />
         <span className={css["heroIcon"]}>
-          <Logo appearance={logoAppearance} format="icon" size={120} />
+          <Logo appearance="inverted" format="icon" size={120} />
         </span>
       </div>
     </header>
@@ -194,38 +198,25 @@ function Hero(): ReactElement {
 }
 
 function Contents({ index }: { index: Index | undefined }): ReactElement {
-  const count = (...families: string[]): string =>
-    index ? String(families.reduce((n, f) => n + (index.counts[f] ?? 0), 0)) : "·";
-  const cards: { families: string[]; label: string; body: string }[] = [
-    {
-      families: ["Foundation"],
-      label: "Foundations",
-      body: "Couleur, statut, tokens, typographie",
-    },
-    { families: ["Components"], label: "Composants", body: "Chacun avec ses guidelines" },
-    { families: ["Layout"], label: "Layout", body: "Primitives de mise en page" },
-    {
-      families: ["Recipes", "Templates"],
-      label: "Patterns",
-      body: "Recettes et gabarits d'écrans",
-    },
-  ];
+  // Une carte par famille de la sidebar : nom, nombre et aperçu viennent de l'index Storybook.
+  const families = index?.families ?? [];
   return (
     <Grid columns={{ mobile: 12, tablet: 12 }} gap="150">
-      {cards.map((c) => (
-        <Grid.Col key={c.label} span={{ mobile: 12, tablet: 6, desktop: 3 }}>
+      {families.map((f) => (
+        <Grid.Col key={f.name} span={{ mobile: 12, tablet: 6, desktop: 4 }}>
           <Card
             appearance="outlined"
             className={css["fill"]}
-            onPress={() => open(index?.firstOf(...c.families))}
+            onPress={() => open(index?.firstOf(f.name))}
           >
             <Stack gap="025" padding="250">
               <Heading size="large" as="div" className={css["contentNum"]}>
-                {count(...c.families)}
+                {f.count}
               </Heading>
-              <Text weight="medium">{c.label} →</Text>
+              <Text weight="medium">{f.name} →</Text>
               <Text size="small" color="subtle">
-                {c.body}
+                {f.sample.join(", ")}
+                {f.count > f.sample.length ? "…" : ""}
               </Text>
             </Stack>
           </Card>
@@ -235,11 +226,21 @@ function Contents({ index }: { index: Index | undefined }): ReactElement {
   );
 }
 
-const SWATCHES: { token: string; label: string; light?: boolean }[] = [
-  { token: "--surface-comete", label: "Bleu Comète" },
-  { token: "--comete-yellow-400", label: "Jaune comète", light: true },
-  { token: "--background-comete-bold-default", label: "Bleu action" },
-  { token: "--background-neutral-subtler-default", label: "Gris clair", light: true },
+const SWATCHES: { token: string; label: string; text: string; outlined?: boolean }[] = [
+  {
+    token: "--background-brand-subtlest-default",
+    label: "subtlest",
+    text: "--text-default-default",
+  },
+  { token: "--background-brand-subtler-default", label: "subtler", text: "--text-default-default" },
+  { token: "--background-brand-bold-default", label: "bold", text: "--text-inverted" },
+  { token: "--border-brand-bold", label: "border", text: "--text-inverted" },
+  {
+    token: "--background-surface-default",
+    label: "text",
+    text: "--text-brand-default",
+    outlined: true,
+  },
 ];
 
 const RESOURCE_ICONS: IconName[] = [
@@ -257,14 +258,25 @@ const RESOURCE_ICONS: IconName[] = [
   "Star",
 ];
 
-/** Valeur résolue d'un token CSS, lue sur <html> : le « valeur en dur » de l'exemple est calculée. */
+/** Valeur résolue d'un token CSS, relue quand le thème (`data-theme` sur <html>) change. */
 function useTokenValue(token: string): string {
   const [value, setValue] = useState("");
   useEffect(() => {
-    setValue(getComputedStyle(document.documentElement).getPropertyValue(token).trim());
+    const read = (): void =>
+      setValue(getComputedStyle(document.documentElement).getPropertyValue(token).trim());
+    read();
+    const observer = new MutationObserver(read);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+    return () => observer.disconnect();
   }, [token]);
   return value;
 }
+
+/** La valeur « en dur » de l'exemple À éviter : celle du thème clair, figée. */
+const HARDCODED = "#2467d1";
 
 const DEMO_TOKEN = "--background-comete-bold-default";
 
@@ -289,13 +301,13 @@ function DoDontCard({ good }: { good: boolean }): ReactElement {
           <span
             className={css["tokenSwatch"]}
             // « À faire » suit le token ; « À éviter » fige la valeur résolue (valeur en dur).
-            style={{ background: good ? `var(${DEMO_TOKEN})` : value }}
+            style={{ background: good ? `var(${DEMO_TOKEN})` : HARDCODED }}
           />
           <Stack gap="0" grow>
-            <Text size="xsmall" className={css["mono"]}>
-              {good ? DEMO_TOKEN : value}
+            <Text size="small" className={css["mono"]}>
+              {good ? DEMO_TOKEN : HARDCODED}
             </Text>
-            <Text size="xsmall" color="subtle" className={css["mono"]}>
+            <Text size="small" color="subtlest" className={css["mono"]}>
               {good ? value : "valeur en dur"}
             </Text>
           </Stack>
@@ -410,8 +422,8 @@ function Profiles({ index }: { index: Index | undefined }): ReactElement {
             {SWATCHES.map((s) => (
               <span
                 key={s.label}
-                className={s.light ? css["swatchLight"] : css["swatch"]}
-                style={{ background: `var(${s.token})` }}
+                className={s.outlined ? `${css["swatch"]} ${css["swatchOutlined"]}` : css["swatch"]}
+                style={{ background: `var(${s.token})`, color: `var(${s.text})` }}
               >
                 {s.label}
               </span>
@@ -438,12 +450,12 @@ function Profiles({ index }: { index: Index | undefined }): ReactElement {
         body="Chaque page de composant contient ses guidelines d'usage et ses props, et, quand ils existent, ses exemples À faire / À éviter et ses tests d'interaction."
         extra={
           <Stack gap="075" className={css["installBlock"]}>
-            <Text size="xsmall" weight="bold" color="subtle" className={css["eyebrow"]}>
+            <Text size="small" weight="bold" color="subtle" className={css["eyebrow"]}>
               Installer
             </Text>
             <Card appearance="subtle">
               <div className={css["install"]}>
-                <Text size="small" className={css["mono"]} noWrap>
+                <Text size="small" className={css["mono"]}>
                   {`pnpm add ${pkg.name} @aexae/comete-design-tokens @aexae/comete-icons`}
                 </Text>
               </div>
@@ -498,6 +510,12 @@ function Profiles({ index }: { index: Index | undefined }): ReactElement {
   );
 }
 
+/** Logiciel d'une persona, affiché par son logo. */
+interface AppLogo {
+  entity: ComponentProps<typeof Logo>["entity"];
+  label: string;
+}
+
 const PERSONAS = [
   {
     where: "Au bureau",
@@ -512,7 +530,10 @@ const PERSONAS = [
       "Contrôle de gestion",
       "Direction",
     ],
-    apps: "Comète, Comète BI",
+    apps: [
+      { entity: "comete-software", label: "Comète" },
+      { entity: "bi", label: "Comète BI" },
+    ] as AppLogo[],
   },
   {
     where: "Sur le terrain",
@@ -521,7 +542,11 @@ const PERSONAS = [
     dark: false,
     body: "Consulter un planning, pointer, signaler un événement, échanger avec la société de sécurité, souvent depuis un mobile.",
     roles: ["Agents", "Managers", "Clients des clients", "Sous-traitants", "Candidats"],
-    apps: "Comète Link, On Time, MCE",
+    apps: [
+      { entity: "link", label: "Comète Link" },
+      { entity: "ontime", label: "On Time" },
+      { entity: "mce", label: "MCE" },
+    ] as AppLogo[],
   },
 ];
 
@@ -542,7 +567,7 @@ function Personas(): ReactElement {
                     <Icon icon={p.icon} size={24} color={p.dark ? "inverted" : "default"} />
                   </span>
                   <Stack gap="0">
-                    <Text size="xsmall" weight="bold" color="subtle" className={css["eyebrow"]}>
+                    <Text size="small" weight="bold" color="subtle" className={css["eyebrow"]}>
                       {p.where}
                     </Text>
                     <Heading size="small" as="h3">
@@ -558,12 +583,20 @@ function Personas(): ReactElement {
                     <Tag key={r} label={r} color="neutral" appearance="subtle" />
                   ))}
                 </Cluster>
-                <Text size="xsmall" color="subtle">
-                  Logiciels :{" "}
-                  <Text as="span" size="xsmall" weight="bold">
-                    {p.apps}
+                <Stack direction="row" gap="100" align="center">
+                  <Text size="small" color="subtlest">
+                    Logiciels
                   </Text>
-                </Text>
+                  {p.apps.map((a) => (
+                    <Logo
+                      key={a.label}
+                      entity={a.entity}
+                      format="icon"
+                      size={16}
+                      aria-label={a.label}
+                    />
+                  ))}
+                </Stack>
               </Stack>
             </Card>
           </Grid.Col>
@@ -579,7 +612,7 @@ const PRINCIPLES = [
     over: "Des composants paramétrables qui suivent les règles de chaque client",
     under: "un parcours unique imposé à tous.",
     proof: "Filtres",
-    target: "Recipes/Filtres",
+    target: "Patterns/Filtres",
   },
   {
     title: "Une seule identité",
@@ -599,7 +632,12 @@ function Principles({ index }: { index: Index | undefined }): ReactElement {
           <Grid.Col key={p.title} span={{ mobile: 12, tablet: 6 }}>
             <Card appearance="outlined" className={css["fill"]}>
               <Stack gap="125" align="start" padding="300">
-                <Text size="small" weight="bold" className={css["principleNum"]}>
+                <Text
+                  size="small"
+                  weight="bold"
+                  color="accentPurple"
+                  className={css["principleNum"]}
+                >
                   {String(i + 1).padStart(2, "0")}
                 </Text>
                 <Heading size="small" as="h3">
@@ -705,7 +743,7 @@ function Help(): ReactElement {
               <Text size="small" weight="medium" color="inverted">
                 {name}
               </Text>
-              <Text size="xsmall" color="inverted" className={css["helpBody"]}>
+              <Text size="small" color="inverted" className={css["helpBody"]}>
                 Référent design system
               </Text>
             </Stack>
@@ -745,8 +783,8 @@ function WelcomePage(): ReactElement {
           <Releases />
           <Help />
         </Stack>
-        <Text size="xsmall" color="subtle">
-          <Text as="span" size="xsmall" weight="bold">
+        <Text size="small" color="subtlest">
+          <Text as="span" size="small" weight="bold">
             Comète
           </Text>{" "}
           · gestion pour la sécurité privée · Design System · v{pkg.version}

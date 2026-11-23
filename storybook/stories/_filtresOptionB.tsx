@@ -12,6 +12,7 @@ import { parseDate, Time } from "@internationalized/date";
 import {
   Button,
   Badge,
+  Avatar,
   Tag,
   type TagStatusColor,
   SearchField,
@@ -43,8 +44,11 @@ import {
   DrawerFooter,
   List,
   ListHead,
+  ListItem,
   ListItemButton,
   ListItemText,
+  ListItemAvatar,
+  ListItemTrailing,
   ListItemSecondaryAction,
 } from "@aexae/comete-design-system/components";
 
@@ -978,6 +982,30 @@ function useTriggerCollapsed(ref: React.RefObject<HTMLElement | null>, enabled: 
   return collapsed;
 }
 
+/**
+ * Vrai quand la largeur de l'élément mesuré passe sous `threshold` px
+ * (ResizeObserver sur l'élément lui-même, pas le viewport). Sert au repli
+ * Table → liste compacte de `ResultsTable` (cf. décision d'audit : sous ~600px,
+ * le repli téléphone par défaut est la liste, jamais les cartes).
+ */
+export function useBelowWidth(
+  ref: React.RefObject<HTMLElement | null>,
+  threshold: number
+): boolean {
+  const [below, setBelow] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof ResizeObserver === "undefined") return undefined;
+    const ro = new ResizeObserver((entries) => {
+      const w = entries[0]?.contentRect.width ?? 0;
+      if (w > 0) setBelow(w < threshold);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [ref, threshold]);
+  return below;
+}
+
 // -----------------------------------------------------------------------
 // FiltresPanel — bouton « Filtres » + panneau. Desktop (bouton large) : popover
 // à deux volets. Compact (bouton réduit en icône seule) : feuille (bottom sheet)
@@ -1088,11 +1116,20 @@ export function FiltresPanel({
     total > 0
       ? `Filtres, ${total} critère${total > 1 ? "s" : ""} actif${total > 1 ? "s" : ""}`
       : "Filtres";
+  // L'apparence encode le RÔLE (secondaire → `outlined`), jamais l'état : le
+  // bouton reste `outlined` partout (desktop, replié, mobile) — « Filtres » n'est
+  // pas l'action principale de l'écran (c'est « Nouvel agent »). L'état ACTIF est
+  // un simple signal : accent comète (bordure + libellé, via `color="comete"` sur
+  // outlined) + badge compteur. Jamais de remplissage, qui le promouvrait au rang
+  // d'action principale.
+  const active = total > 0;
+  const iconOnly = !!collapseLabel && collapsed;
   // `managed` = chemin feuille : c'est nous qui ouvrons (onPress) ; en popover
   // c'est le DialogTrigger de Popup qui gère le press.
   const triggerBtn = (managed: boolean): ReactElement => (
     <Button
       appearance="outlined"
+      {...(active ? { color: "comete" as const } : {})}
       iconBefore="Tune"
       {...(collapseLabel ? { collapseLabel: true, shape: "square" as const } : {})}
       aria-label={label}
@@ -1107,8 +1144,10 @@ export function FiltresPanel({
       Filtres
       {/* Le badge vit dans le même `span` que le libellé (le `gap` du Button ne
           s'y applique pas) : sans marge il colle au texte. `Badge` n'a pas de
-          prop `style` → enveloppe dédiée, --space100 entre libellé et badge. */}
-      {total > 0 && (
+          prop `style` → enveloppe dédiée, --space100 entre libellé et badge.
+          Masqué en icône seule (le libellé — donc ce badge — disparaît avec
+          `collapseLabel`) : il réapparaît en overlay sur l'icône. */}
+      {!iconOnly && active && (
         <span style={{ display: "inline-flex", marginLeft: "var(--space100)" }}>
           <Badge label={String(total)} appearance="information" importance="high" />
         </span>
@@ -1120,7 +1159,26 @@ export function FiltresPanel({
   if (collapseLabel && collapsed) {
     return (
       <span ref={rootRef} style={{ display: "inline-flex" }}>
-        {triggerBtn(true)}
+        <span style={{ position: "relative", display: "inline-flex" }}>
+          {triggerBtn(true)}
+          {/* Icône seule : le libellé « Filtres [N] » est masqué → le compteur
+              revient en badge overlay sur le coin du bouton pour signaler les
+              filtres actifs même replié. `aria-hidden` : le total est déjà porté
+              par l'`aria-label` du bouton (pas de double annonce). */}
+          {total > 0 && (
+            <span
+              aria-hidden
+              style={{
+                position: "absolute",
+                top: "calc(-1 * var(--space050))",
+                insetInlineEnd: "calc(-1 * var(--space050))",
+                pointerEvents: "none",
+              }}
+            >
+              <Badge label={String(total)} appearance="information" importance="high" />
+            </span>
+          )}
+        </span>
         <FiltresSheet
           filters={filters}
           onChange={onChange}
@@ -2087,8 +2145,10 @@ export function ActiveFilterTags({
   }));
 
   const MAX_CHIPS = 4;
+  // Nombre de chips masqués au repli (indépendant de l'état déplié, pour que le
+  // contrôle de bascule reste rendu une fois déplié → repli possible).
+  const overflowCount = Math.max(0, groups.length - MAX_CHIPS);
   const visibleGroups = chipsExpanded ? groups : groups.slice(0, MAX_CHIPS);
-  const hiddenCount = groups.length - visibleGroups.length;
 
   const renderChip = (g: ActiveGroup): ReactElement => {
     // Format DOCUMENTÉ du tag : la FACETTE est toujours nommée, suivie de sa valeur (1 valeur) ou
@@ -2190,11 +2250,16 @@ export function ActiveFilterTags({
       }}
     >
       {visibleGroups.map(renderChip)}
-      {hiddenCount > 0 && (
+      {overflowCount > 0 && (
         <button
           type="button"
-          onClick={() => setChipsExpanded(true)}
-          aria-label={`Afficher ${hiddenCount} filtre${hiddenCount > 1 ? "s" : ""} de plus`}
+          onClick={() => setChipsExpanded((v) => !v)}
+          aria-expanded={chipsExpanded}
+          aria-label={
+            chipsExpanded
+              ? "Réduire la liste des filtres actifs"
+              : `Afficher ${overflowCount} filtre${overflowCount > 1 ? "s" : ""} de plus`
+          }
           style={{
             display: "inline-flex",
             alignItems: "center",
@@ -2210,7 +2275,7 @@ export function ActiveFilterTags({
             whiteSpace: "nowrap",
           }}
         >
-          +{hiddenCount}
+          {chipsExpanded ? "Réduire" : `+${overflowCount}`}
         </button>
       )}
       <Button appearance="link" className={textActionClassName} onPress={clearAll}>
@@ -2221,7 +2286,55 @@ export function ActiveFilterTags({
 }
 
 // -----------------------------------------------------------------------
-// ResultsTable — tableau des agents filtrés.
+// AgentsList — liste compacte d'agents : repli téléphone du tableau (sous
+// ~600px) ET liste de la recette mobile. MÊME liste partout. Décision d'audit
+// (Table.stories « Table to cards ») : sous ~600px, le repli par défaut est la
+// liste compacte, jamais les cartes (une liste de N agents en cartes serait
+// inexploitable).
+
+export function AgentsList({ results }: { results: Agent[] }): ReactElement {
+  if (results.length === 0) {
+    return (
+      <p
+        style={{
+          padding: "var(--space400) var(--space200)",
+          textAlign: "center",
+          color: "var(--text-subtlest-default)",
+          fontSize: 13,
+        }}
+      >
+        Aucun agent ne correspond.
+      </p>
+    );
+  }
+  return (
+    <List aria-label="Liste des agents">
+      {results.map((a) => (
+        <ListItem key={a.nom}>
+          <ListItemAvatar>
+            <Avatar initials={initialsOf(a.nom)} alt={a.nom} />
+          </ListItemAvatar>
+          <ListItemText primary={a.nom} secondary={`${a.societe} · ${a.diplome}`} />
+          <ListItemTrailing>
+            <Tag
+              label={DISPO_TAG[a.dispo].label}
+              color={DISPO_TAG[a.dispo].color}
+              appearance="subtle"
+              shape="rounded"
+            />
+          </ListItemTrailing>
+        </ListItem>
+      ))}
+    </List>
+  );
+}
+
+// -----------------------------------------------------------------------
+// ResultsTable — tableau des agents filtrés, RESPONSIVE (pattern DS Table → List).
+// Colonnes de confort (Diplôme, Contrat) masquées sous `lg`, de contexte
+// (Société/Agence, Secteur) sous `md` ; identité (Agent) et donnée clé
+// (Disponibilité) jamais masquées. Sous ~600px (`sm`), repli en liste compacte
+// (`AgentsList`) au lieu de laisser le tableau déborder en scroll horizontal.
 
 export function ResultsTable({
   filters,
@@ -2230,49 +2343,58 @@ export function ResultsTable({
   filters: Filters;
   dataset?: FiltresDataset;
 }): ReactElement {
+  const ref = useRef<HTMLDivElement>(null);
+  // 600 = BREAKPOINTS.sm (seuil de repli téléphone).
+  const narrow = useBelowWidth(ref, 600);
   const results = filteredAgents(filters, dataset.agents, dataset.applySousTraitants);
   return (
-    <Table aria-label="Agents">
-      <TableHead>
-        <TableRow>
-          <TableHeaderCell>Agent</TableHeaderCell>
-          <TableHeaderCell>Société / Agence</TableHeaderCell>
-          <TableHeaderCell>Secteur</TableHeaderCell>
-          <TableHeaderCell>Diplôme</TableHeaderCell>
-          <TableHeaderCell>Contrat</TableHeaderCell>
-          <TableHeaderCell>Disponibilité</TableHeaderCell>
-        </TableRow>
-      </TableHead>
-      <TableBody
-        columnCount={6}
-        isNoResults={results.length === 0}
-        noResultsTitle="Aucun agent ne correspond"
-        noResultsDescription="Ajustez ou réinitialisez les filtres pour élargir la recherche."
-        noResultsAction={
-          <Button appearance="outlined" onPress={() => undefined}>
-            Réinitialiser les filtres
-          </Button>
-        }
-      >
-        {results.map((a) => (
-          <TableRow key={a.nom}>
-            <TableCell>{a.nom}</TableCell>
-            <TableCell>{a.societe}</TableCell>
-            <TableCell>{a.secteur}</TableCell>
-            <TableCell>{a.diplome}</TableCell>
-            <TableCell>{a.contrat}</TableCell>
-            <TableCell>
-              <Tag
-                label={DISPO_TAG[a.dispo].label}
-                color={DISPO_TAG[a.dispo].color}
-                appearance="subtle"
-                shape="rounded"
-              />
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <div ref={ref}>
+      {narrow ? (
+        <AgentsList results={results} />
+      ) : (
+        <Table responsive aria-label="Agents">
+          <TableHead>
+            <TableRow>
+              <TableHeaderCell>Agent</TableHeaderCell>
+              <TableHeaderCell hideBelow="md">Société / Agence</TableHeaderCell>
+              <TableHeaderCell hideBelow="md">Secteur</TableHeaderCell>
+              <TableHeaderCell hideBelow="lg">Diplôme</TableHeaderCell>
+              <TableHeaderCell hideBelow="lg">Contrat</TableHeaderCell>
+              <TableHeaderCell>Disponibilité</TableHeaderCell>
+            </TableRow>
+          </TableHead>
+          <TableBody
+            columnCount={6}
+            isNoResults={results.length === 0}
+            noResultsTitle="Aucun agent ne correspond"
+            noResultsDescription="Ajustez ou réinitialisez les filtres pour élargir la recherche."
+            noResultsAction={
+              <Button appearance="outlined" onPress={() => undefined}>
+                Réinitialiser les filtres
+              </Button>
+            }
+          >
+            {results.map((a) => (
+              <TableRow key={a.nom}>
+                <TableCell>{a.nom}</TableCell>
+                <TableCell hideBelow="md">{a.societe}</TableCell>
+                <TableCell hideBelow="md">{a.secteur}</TableCell>
+                <TableCell hideBelow="lg">{a.diplome}</TableCell>
+                <TableCell hideBelow="lg">{a.contrat}</TableCell>
+                <TableCell>
+                  <Tag
+                    label={DISPO_TAG[a.dispo].label}
+                    color={DISPO_TAG[a.dispo].color}
+                    appearance="subtle"
+                    shape="rounded"
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+    </div>
   );
 }
 
