@@ -72,79 +72,97 @@ function FiltresOptionB({ role, initial }: { role?: Role; initial?: Filters }): 
   const panel = useFiltresPanelControl();
   // Sous 768px, la recette adopte la forme mobile — MÊME écran, aucun saut de
   // layout : la recherche remplit la ligne, le bouton Filtres se replie en icône
-  // + feuille (`collapseLabel`), et les affordances desktop se masquent (le menu
-  // « Filtres enregistrés » vit dans la feuille ; les critères actifs sont portés
-  // par le badge du bouton, pas par la rangée de tags). Le tableau se replie en
-  // liste (`ResultsTable`). `container-type` sur la racine : le repli du bouton
-  // Filtres s'évalue sur la largeur du conteneur (comme ce seuil).
+  // + feuille (`collapseLabel`), les affordances desktop se masquent (« Filtres
+  // enregistrés » vit dans la feuille ; les critères actifs sont portés par le
+  // badge du bouton, pas par la rangée de tags) et le corps passe en liste. La
+  // densité (padding) s'aligne sur la mobile pour un rendu identique.
+  // `container-type` sur la racine : le repli du bouton Filtres s'évalue sur la
+  // largeur du conteneur (même seuil que `narrow`).
   const rootRef = useRef<HTMLDivElement>(null);
   const narrow = useBelowWidth(rootRef, 768);
+  const results = useMemo(
+    () => filteredAgents(f, dataset.agents, dataset.applySousTraitants),
+    [f, dataset]
+  );
+  const pad = narrow ? "var(--space200)" : "var(--space400)";
   return (
     <div
       ref={rootRef}
       style={{
         display: "flex",
         flexDirection: "column",
-        gap: "var(--space300)",
-        padding: "var(--space400)",
+        height: "100dvh",
         fontFamily: "var(--font-family-primary)",
         color: "var(--text-default-default)",
         background: "var(--surface-default)",
-        minHeight: "100vh",
         boxSizing: "border-box",
         containerType: "inline-size",
       }}
     >
-      {/* Toolbar : recherche + Filtres ; « Filtres enregistrés » à droite (desktop). */}
-      <div style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
-        <div
-          style={{
-            flex: narrow ? "1 1 auto" : "none",
-            width: narrow ? "auto" : 260,
-            minWidth: 0,
-          }}
-        >
-          <SearchField
-            aria-label="Rechercher un agent"
-            placeholder="Rechercher un agent"
-            value={f.nameQuery}
-            onChange={(v) => setF({ ...f, nameQuery: v })}
-          />
-        </div>
-        <FiltresPanel
-          filters={f}
-          onChange={setF}
-          views={views}
-          onSaveView={(name) => save(name, f)}
-          role={role}
-          dataset={dataset}
-          canSaveViews={canSaveViews}
-          collapseLabel
-          scrollClassName={css["scroll"]}
-          textActionClassName={css["textAction"]}
-          {...panel.panelProps}
-        />
-        {!narrow && <div style={{ flex: 1 }} />}
-        {!narrow && canSaveViews ? (
-          <SavedSearchesMenu
+      {/* Barre : recherche + Filtres (+ tags actifs en desktop). HORS de la zone
+          de scroll → elle reste fixe en haut quand le contenu défile. */}
+      <div
+        style={{
+          flex: "none",
+          display: "flex",
+          flexDirection: "column",
+          gap: "var(--space200)",
+          padding: `${pad} ${pad} var(--space200)`,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space100)" }}>
+          <div
+            style={{
+              flex: narrow ? "1 1 auto" : "none",
+              width: narrow ? "auto" : 260,
+              minWidth: 0,
+            }}
+          >
+            <SearchField
+              aria-label="Rechercher un agent"
+              placeholder={narrow ? "Rechercher" : "Rechercher un agent"}
+              value={f.nameQuery}
+              onChange={(v) => setF({ ...f, nameQuery: v })}
+            />
+          </div>
+          <FiltresPanel
+            filters={f}
+            onChange={setF}
             views={views}
-            current={f}
-            onApply={(v) => setF(v.filters)}
-            onDelete={remove}
+            onSaveView={(name) => save(name, f)}
+            role={role}
+            dataset={dataset}
+            canSaveViews={canSaveViews}
+            collapseLabel
+            scrollClassName={css["scroll"]}
+            textActionClassName={css["textAction"]}
+            {...panel.panelProps}
           />
-        ) : null}
+          {!narrow && <div style={{ flex: 1 }} />}
+          {!narrow && canSaveViews ? (
+            <SavedSearchesMenu
+              views={views}
+              current={f}
+              onApply={(v) => setF(v.filters)}
+              onDelete={remove}
+            />
+          ) : null}
+        </div>
+
+        {!narrow && (
+          <ActiveFilterTags
+            filters={f}
+            onChange={setF}
+            textActionClassName={css["textAction"]}
+            onOpenFacet={panel.openFacet}
+          />
+        )}
       </div>
 
-      {!narrow && (
-        <ActiveFilterTags
-          filters={f}
-          onChange={setF}
-          textActionClassName={css["textAction"]}
-          onOpenFacet={panel.openFacet}
-        />
-      )}
-
-      <ResultsTable filters={f} dataset={dataset} />
+      {/* Zone défilante : SEUL le contenu défile, la barre ci-dessus reste fixe. */}
+      <div style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: `0 ${pad} ${pad}` }}>
+        {narrow ? <AgentsList results={results} /> : <ResultsTable filters={f} dataset={dataset} />}
+      </div>
     </div>
   );
 }
@@ -385,7 +403,7 @@ export const DesktopInteractions: Story = {
           "true"
         );
         await expect(dialog.getByRole("checkbox", { name: "Industrie" })).toBeChecked();
-        await userEvent.click(dialog.getByRole("button", { name: "Voir les résultats" }));
+        await userEvent.click(dialog.getByRole("button", { name: /^Voir \d+ agents?$/ }));
         await waitFor(() =>
           expect(canvas.getByRole("button", { name: /Filtres,/ })).toHaveAttribute(
             "aria-expanded",
@@ -461,7 +479,7 @@ export const DesktopPartenaireInteractions: Story = {
       async () => {
         // Les critères hérités du manager (société, secteurs, contrat) sont neutralisés,
         // le diplôme « SSIAP 2 » reste : on remet à zéro pour voir tout le périmètre.
-        await userEvent.click(canvas.getByRole("button", { name: "Réinitialiser" }));
+        await userEvent.click(canvas.getByRole("button", { name: "Tout effacer" }));
         await waitFor(() => expect(rows().length).toBeGreaterThan(0));
         const texts = rows().map((r) => r.textContent ?? "");
         await expect(texts.every((t) => t.includes("Sous-traitant Vigilis"))).toBe(true);
