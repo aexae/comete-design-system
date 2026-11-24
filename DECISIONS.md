@@ -2,6 +2,17 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-24 — Storybook 10.6.8, ESLint 10 et `glob` forcé en 13
+
+**Décisions** :
+
+- **Storybook** 10.6.7 vers 10.6.8 (tous les paquets `@storybook/*`, `eslint-plugin-storybook`) et `@chromatic-com/storybook` 5.6.0.
+- **ESLint** 9 vers 10 (`eslint` 10.15.0, `@eslint/js` 10.0.1), racine et Storybook. ESLint 9 est déclaré non supporté par ses mainteneurs. `eslint-plugin-react` et `eslint-plugin-jsx-a11y` n'ayant pas de version compatible, ils sont enveloppés par `fixupPluginRules` (`@eslint/compat`), couche de compatibilité officielle d'ESLint, plutôt que remplacés.
+- **`glob`** : `overrides` `typed-css-modules>glob` en `^13.0.6` dans `pnpm-workspace.yaml`. `typed-css-modules` 0.9.1 est la dernière version et tire `glob` 10, déprécié. La version 13 était déjà dans l'arbre, il n'en reste qu'une.
+- **Spotlight** : initialisation `= null` de `footerContent` retirée, signalée par la nouvelle règle `no-useless-assignment` (toutes les branches affectent la variable). Aucun changement de comportement, pas de bump de version.
+
+**Contexte / raison** : `pnpm install` affichait `deprecated eslint@9.39.5` et `deprecated subdependencies: glob@10.5.0`. Les autres montées majeures disponibles (TypeScript 7, jest-dom 8) sont laissées de côté et listées dans `TODO.md`.
+
 ## 2026-11-24 — Figma : page « ◆ Exemples de pages »
 
 **Décision** (demande d'Axel) : un exemple par device (desktop, tablette, mobile), chacun

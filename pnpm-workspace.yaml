@@ -11,3 +11,8 @@ minimumReleaseAgeExclude:
   - "@aexae/comete-icons"
   - "@aexae/comete-logos"
   - "@aexae/comete-illustrations"
+
+# REASON: typed-css-modules 0.9.1 (dernière version) épingle glob ^10, branche dépréciée
+# et non maintenue. On force la version déjà présente dans l'arbre (rimraf, Storybook).
+overrides:
+  "typed-css-modules>glob": "^13.0.6"

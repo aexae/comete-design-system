@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import { fixupPluginRules } from "@eslint/compat";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 import reactPlugin from "eslint-plugin-react";
@@ -25,9 +26,12 @@ export default tseslint.config(
     files: ["stories/**/*.{ts,tsx}", ".storybook/**/*.{ts,tsx}"],
     extends: tseslint.configs.recommendedTypeChecked,
     plugins: {
-      react: reactPlugin,
+      // REASON: eslint-plugin-react 7.37.5 et eslint-plugin-jsx-a11y 6.10.2 ne déclarent pas
+      // ESLint 10 et appellent des API de contexte supprimées (context.getFilename…).
+      // fixupPluginRules les rétablit. À retirer quand les deux plugins supporteront ESLint 10.
+      react: fixupPluginRules(reactPlugin),
       "react-hooks": reactHooksPlugin,
-      "jsx-a11y": jsxA11yPlugin,
+      "jsx-a11y": fixupPluginRules(jsxA11yPlugin),
     },
     settings: {
       react: { version: "detect" },

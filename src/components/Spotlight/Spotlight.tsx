@@ -370,7 +370,7 @@ export function Spotlight({
       : null;
 
   // Footer rendering
-  let footerContent: ReactNode = null;
+  let footerContent: ReactNode;
   if (footer) {
     footerContent = footer;
   } else if (actions) {
