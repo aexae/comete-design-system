@@ -420,7 +420,7 @@ function IconCard({
         alignItems: "center",
         gap: 8,
         padding: "16px 8px",
-        border: `1.5px solid ${isSelected ? "var(--border-focus)" : "transparent"}`,
+        border: `1.5px solid ${isSelected ? "var(--border-selected)" : "transparent"}`,
         borderRadius: 8,
         background: isCopied
           ? "var(--background-success-subtlest-default)"
@@ -660,7 +660,7 @@ function IconDetailPanel({
               background: svgCopied
                 ? "var(--background-success-subtlest-default)"
                 : "var(--surface-sunken-default)",
-              border: `1.5px solid ${svgCopied ? "var(--border-success)" : "transparent"}`,
+              border: `1.5px solid ${svgCopied ? "var(--border-success-bold)" : "transparent"}`,
               borderRadius: 8,
               cursor: "pointer",
               transition: "background 0.15s, border-color 0.15s",
@@ -697,7 +697,7 @@ function IconDetailPanel({
                   background: "var(--background-field-default)",
                   padding: "3px 8px",
                   borderRadius: 4,
-                  border: "1px solid var(--border-success)",
+                  border: "1px solid var(--border-success-bold)",
                 }}
               >
                 ✓ Copié
@@ -766,7 +766,7 @@ function IconDetailPanel({
                       background: isActive
                         ? "var(--background-selected-subtlest-default)"
                         : "var(--surface-sunken-default)",
-                      border: `1.5px solid ${isActive ? "var(--border-focus)" : "transparent"}`,
+                      border: `1.5px solid ${isActive ? "var(--border-selected)" : "transparent"}`,
                       borderRadius: 6,
                       cursor: "pointer",
                       fontFamily: "inherit",

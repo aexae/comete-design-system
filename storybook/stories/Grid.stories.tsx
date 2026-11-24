@@ -78,7 +78,7 @@ function Cell({ children }: { children: React.ReactNode }) {
           padding: "var(--space200)",
           textAlign: "center",
           fontFamily: "var(--font-family-primary)",
-          fontSize: "var(--font-size-ui-sm)",
+          fontSize: "var(--font-size-ui-s)",
           color: "var(--text-default-default)",
         }}
       >

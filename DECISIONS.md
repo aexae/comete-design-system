@@ -2,6 +2,25 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-24 — Welcome : boldest, IconTile, aide en Card, logo officiel
+
+**Décisions** (demande d'Axel) :
+
+- `boldest` ajouté aux nuanciers brand de la Welcome et de Foundation/Couleur (texte en
+  `--text-on-dark-surface`).
+- Pastilles d'icône des personas : `IconTile` (`comete`, `warning`, `small`, 32 px) au lieu de styles
+  maison.
+- Bloc d'aide : `Card appearance="bold" color="comete"` au lieu d'un `div` maison.
+- « Récupérer une ressource » : la tuile navy maison autour du logo (héritée de la maquette Claude
+  Design, absente de comete-logos, cassée en sombre) est remplacée par `<Logo format="icon" />`.
+
+- Bouton « Écrire sur Teams » en `color="comete"` (plus `warning`, couleur d'état), avatars du
+  bloc d'aide en `neutral` (lisibles sur le navy en sombre).
+- Nouveau token `--border-on-dark-surface` (tokens 0.39.0) pour les filets du hero sur le navy
+  fixe.
+
+**Raison** : n'utiliser que les composants et tokens du DS dans les stories.
+
 ## 2026-11-24 — BottomNav en réduction / agrandissement, easing emphasized, Snackbar announcement, liens inline
 
 **Décisions** (Axel, tokens 0.37.0) :

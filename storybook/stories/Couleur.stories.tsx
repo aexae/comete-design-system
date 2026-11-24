@@ -169,9 +169,16 @@ export const Philosophie: Story = {
           <Swatch token="--background-brand-subtlest-default" label="subtlest" />
           <Swatch token="--background-brand-subtler-default" label="subtler" />
           <Swatch token="--background-brand-bold-default" label="bold" />
+          <Swatch token="--background-brand-boldest-default" label="boldest" />
           <Swatch token="--border-brand-bold" label="border" />
-          <Swatch token="--text-brand" label="text" />
+          <Swatch token="--text-brand-default" label="text" />
         </Stack>
+        <Text size="small" color="subtle">
+          <code>boldest</code> est le palier le plus sombre (navy Comète par défaut, miroir de{" "}
+          <code>comete-boldest</code>) : surfaces d&apos;identité ambiantes uniquement (ex.{" "}
+          <code>Card appearance=&quot;bold&quot;</code>), jamais un contrôle. Texte posé dessus en{" "}
+          <code>text.on-dark-surface</code>.
+        </Text>
       </Section>
     </Stack>
   ),

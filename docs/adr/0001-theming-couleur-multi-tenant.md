@@ -98,3 +98,21 @@ client, l'ensemble de la famille `brand-*` et l'injecte au runtime.
   télescopage sens/identité et multiplie les cas d'échec de contraste.
 - **Générateur de palette type Tailwind (rampe HSL)** : perceptuellement inégal et
   non _contrast-aware_ ; OKLCH + L normalisée par rôle est retenu.
+
+## Addendum (2026-11-24) : palier `boldest` et tokens `on-dark-surface`
+
+Cet ADR date d'avant les tokens 0.26.0. Deux points ont évolué depuis, le reste tient.
+
+- **Palier `boldest`** (tokens 0.26.0, DS alpha.185) : `brand-*` gagne un palier `boldest`
+  (background `default` / `hovered` / `pressed`, border, icon, text), miroir de `comete-boldest`.
+  Le BrandProvider le génère sur le palier 950 de la rampe (le plus sombre), **dans les deux
+  thèmes** : c'est une surface sombre fixe, navy Comète par défaut. Usage : surfaces d'identité
+  ambiantes uniquement (`Card appearance="bold"` en `comete` ou `brand`), jamais un contrôle.
+  Le mapping de la section « Génération » (point 4) s'entend donc bold / boldest / subtler /
+  subtlest.
+- **Texte sur `boldest`** : le point 3 (« aucun token on-color nécessaire ») reste vrai pour
+  `bold`, qui bascule avec le thème, mais pas pour `boldest`. Sa luminosité est fixe alors que
+  `--text-inverted` devient foncé en thème sombre. Le texte, les icônes et les bordures posés
+  sur `boldest` utilisent donc les tokens fixes `--text-on-dark-surface`,
+  `--icon-on-dark-surface` et `--border-on-dark-surface` (tokens 0.39.0). Card applique ces
+  tokens à ses variantes `bold` `comete` et `brand`.
