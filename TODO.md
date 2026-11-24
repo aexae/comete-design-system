@@ -446,9 +446,9 @@ de référence est dans SharePoint › 7-Communication › `_Marque & Charte Com
     contournement reste le redémarrage.
   - Retards restants, non traités ici car hors demande et à risque : `typescript` 7 (bloqué
     par `typescript-eslint`, peer `<6.1.0`), `react-aria-components` 1.17 vers 1.22,
-    `playwright` 1.60 vers 1.65 (épinglé, à aligner avec l'image CI), `@testing-library/jest-dom`
-    8. Renovate est configuré mais ces retards s'accumulent : vérifier qu'il tourne bien sur
-    le dépôt.
+    `playwright` 1.60 vers 1.65 (épinglé, à aligner avec l'image CI) et la version 8 de
+    `@testing-library/jest-dom`. Renovate est configuré mais ces retards s'accumulent :
+    vérifier qu'il tourne bien sur le dépôt.
   - `@aexae/comete-logos` est en `latest` (racine et Storybook) : installation non
     reproductible hors lockfile, et `logos` 0.15.0 attend `tokens` ^0.17 alors que le DS est
     en 0.37 (peer non satisfait). Épingler une version et réaligner le peer côté `comete-logos`.
