@@ -25,8 +25,7 @@ export type TextColor =
   | "success"
   | "information"
   | "warning"
-  | "critical"
-  | "link";
+  | "critical";
 export type TextAlign = "start" | "center" | "end";
 export type TextAs = "p" | "span" | "strong" | "em" | "label" | "div";
 
@@ -35,7 +34,12 @@ export interface TextProps {
   size?: TextSize;
   /** Graisse. @default "regular" */
   weight?: TextWeight;
-  /** Couleur du texte. @default "default" */
+  /**
+   * Couleur du texte. @default "default"
+   *
+   * Pas de couleur « lien » : un lien dans un paragraphe est un vrai lien,
+   * `<Button appearance="link" isInline>` (noir souligné, survol et focus gérés).
+   */
   color?: TextColor;
   /** Alignement du texte. */
   align?: TextAlign;

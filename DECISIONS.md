@@ -2,6 +2,16 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-24 — BottomNav en réduction / agrandissement, easing emphasized, Snackbar announcement, liens inline
+
+**Décisions** (Axel, tokens 0.37.0) :
+
+- **BottomNav** : pas de glissement. La pastille de l'item quitté se réduit et disparaît pendant que celle de l'item choisi s'agrandit depuis son centre (échelle 0,6 à 1 et fondu), en 100 ms (`--duration-fast`) sur `--easing-emphasized`. Modèle de l'indicateur actif de la barre de navigation Material 3. Sur une barre basse l'œil suit le doigt, une forme qui traverse l'écran n'apporte rien. Plus de mesure JavaScript : un pseudo-élément par item.
+- **`easing.emphasized`** = `cubic-bezier(0.23, 1, 0.32, 1)` (validé par Axel) : ease-out franc, réservé aux indicateurs de sélection. Utilisé par la BottomNav et la pastille glissante de la SideNav.
+- **Snackbar** : `discovery` devient `announcement`, comme le Banner. Un seul nom pour la nouveauté sur les deux composants (ADR 0002, points 1 et 2 tranchés). Figma : variante renommée, fond et texte liés aux tokens de thème (`background/accent/purple/bold/default`, `text/inverted`, `icon/inverted`) au lieu des variables DEPRECATED-snackbar discovery, icône `New`.
+- **Liens dans un paragraphe** : ce sont des `Button appearance="link" isInline`, noirs soulignés. La couleur `link` de `Text` est retirée (elle colorait du texte sans en faire un lien, et en bleu). Les liens des guidelines Storybook suivent le même style.
+- **Storybook** : les liens `/…` des stories sont neutralisés au niveau du document (après les handlers React) pour qu'un clic sur un item de nav sélectionne sans quitter la story.
+
 ## 2026-11-20 — Button link souligné au repos, Banner announcement violet, pastille glissante des navs
 
 **Décisions** (Axel, tokens 0.35.0) :

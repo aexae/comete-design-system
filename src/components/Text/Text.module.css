@@ -56,9 +56,6 @@
 .color-critical {
   color: var(--text-critical-default);
 }
-.color-link {
-  color: var(--text-link-default);
-}
 
 /* -----------------------------------------------------------------------
  * Align

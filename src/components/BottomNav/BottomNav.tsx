@@ -1,8 +1,7 @@
 // BottomNav — barre de navigation fixe en bas d'écran (mobile)
-import { Children, isValidElement, useRef } from "react";
+import { Children, isValidElement } from "react";
 import type { ReactElement, ReactNode } from "react";
 import { BottomNavAction } from "./BottomNavAction.js";
-import { useSlidingIndicator } from "../../hooks/useSlidingIndicator.js";
 import styles from "./BottomNav.module.css";
 
 // `process` n'est pas typé ici (le DS build avec `types: []`, sans @types/node).
@@ -66,9 +65,6 @@ export function BottomNav({
   style,
   "aria-label": ariaLabel = "Navigation principale",
 }: BottomNavProps): ReactElement {
-  const navRef = useRef<HTMLElement>(null);
-  // Pastille de sélection unique : elle glisse vers l'item choisi.
-  const indicator = useSlidingIndicator(navRef, '[aria-current="page"] [data-bottom-nav-pill]');
   const all = Children.toArray(children);
   const action = all.find((child) => isValidElement(child) && child.type === BottomNavAction);
   const items = all.filter((child) => !(isValidElement(child) && child.type === BottomNavAction));
@@ -100,19 +96,10 @@ export function BottomNav({
 
   return (
     <nav
-      ref={navRef}
       aria-label={ariaLabel}
       className={[styles.nav, className].filter(Boolean).join(" ")}
       style={style}
-      data-bottom-nav-indicator={indicator.isActive || undefined}
     >
-      <span
-        aria-hidden
-        className={styles.indicator}
-        data-visible={indicator.isActive || undefined}
-        data-animated={indicator.isAnimated || undefined}
-        style={indicator.style}
-      />
       {content}
     </nav>
   );

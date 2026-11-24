@@ -388,9 +388,9 @@ export const ProgressionVsCycleDeVie: Story = {
  * l&apos;endroit où la distinction est **typée** aujourd&apos;hui
  * (`TagStatusColor` / `TagCategoryColor`).
  *
- * Trois écarts restent **non tranchés** — `Banner` expose `announcement`,
- * `Snackbar` expose `discovery`, et le mode `auto` de `ProgressBar` code sa
- * propre sémantique. Voir la section « Points laissés ouverts » de l&apos;ADR.
+ * `Banner` et `Snackbar` partagent en plus `announcement` (violet), un sens
+ * hors de l&apos;axe des statuts : la nouveauté. Voir la section « Points
+ * laissés ouverts » de l&apos;ADR.
  */
 export const UnAxePlusieursComposants: Story = {
   name: "One axis, several components",

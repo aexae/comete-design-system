@@ -93,7 +93,6 @@ const meta = {
         "information",
         "warning",
         "critical",
-        "link",
       ],
     },
     align: {
@@ -184,7 +183,6 @@ const COLOR_OPTIONS = [
   "information",
   "warning",
   "critical",
-  "link",
 ] as const;
 
 export const Colors: Story = {

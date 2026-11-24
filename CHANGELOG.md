@@ -9,6 +9,25 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Changements cassants (BREAKING, alpha.197)
+
+- **Snackbar** : l'apparence `discovery` devient `announcement` (même violet, icône `New` au lieu
+  de `Help`), comme le Banner. Remplacer `appearance="discovery"` par
+  `appearance="announcement"`.
+- **Text** : la couleur `link` est retirée. Un lien dans un paragraphe est un vrai lien,
+  `<Button appearance="link" isInline>` (texte courant souligné). `--text-link-default` n'est plus
+  lu par aucun composant.
+
+### Modifié (alpha.197)
+
+- **BottomNav** : la pastille ne glisse plus d'un item à l'autre. Elle se résorbe sur l'item quitté
+  et s'agrandit sur l'item choisi (échelle 0,6 à 1 et fondu, `--duration-fast` soit 100 ms,
+  `--easing-emphasized`). Pseudo-élément par item, plus de mesure JavaScript.
+- **SideNav** : la pastille glissante passe sur `--easing-emphasized` (tokens 0.37.0).
+- **Storybook** : les liens `/…` des stories ne quittent plus la story (neutralisés dans
+  `preview.tsx`). Story SideNav « Scroll » cliquable. Les liens des guidelines suivent le style
+  des liens (texte courant souligné) au lieu du bleu information.
+
 ### Changements cassants (BREAKING)
 
 - **Tokens 0.36.0** : `--background-default-default` devient `--background-field-default`

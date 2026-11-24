@@ -117,8 +117,8 @@
   color: var(--text-on-dark-surface);
 }
 
-/* discovery : fond violet (accent purple), contenu inversé (blanc) */
-.discovery {
+/* announcement : fond violet (accent purple), contenu inversé (blanc) */
+.announcement {
   background-color: var(--background-accent-purple-bold-default);
   color: var(--text-inverted);
 }

@@ -3,7 +3,7 @@
 // Pro Sécurité + slot de navigation + footer comète link) à gauche, et la Page
 // (Page.Bar "Accueil" + contenu de Layout/Page) à droite. Fichier NON indexé par Storybook (pas
 // de suffixe .stories).
-import { cloneElement, isValidElement, useState, type ReactNode } from "react";
+import { cloneElement, isValidElement, useState, type ComponentProps, type ReactNode } from "react";
 import { SideNav, Page, Logo, type SideNavMode } from "@aexae/comete-design-system/components";
 
 /** Pied de marque Link de la coquille : le composant bascule logo / icône selon le mode. */
@@ -26,29 +26,42 @@ const APP_NAV_ITEMS = [
   { label: "Pointages", icon: "Clockings", href: "/pointages" },
 ] as const;
 
+/** Item de navigation de démonstration : libellé, icône, chemin. */
+export interface DemoNavItem {
+  label: string;
+  icon: ComponentProps<typeof SideNav.Item>["iconBefore"];
+  href: string;
+}
+
 /**
- * Navigation réelle de l'espace manager (cf. `navConfig` de la webapp) : tableau de bord,
- * agents, sites, pointages. Le nom de l'espace se lit dans l'en-tête (`APP_SPACE_LABEL`). La MCE n'y figure pas : c'est un autre produit.
- *
- * Cliquer un item le sélectionne (la pastille glisse) sans quitter la story : les
- * liens pointent sur une ancre locale.
+ * Section de navigation SÉLECTIONNABLE : cliquer un item le sélectionne (la
+ * pastille glisse). Le chemin n'est pas suivi : `preview.tsx` neutralise les
+ * liens `/…` pour ne pas quitter la story.
  */
-export function AppNav() {
-  const [selected, setSelected] = useState<string>(APP_NAV_ITEMS[0].href);
+export function SelectableNavSection({ items }: { items: readonly DemoNavItem[] }) {
+  const [selected, setSelected] = useState(items[0]?.href);
   return (
     <SideNav.Section>
-      {APP_NAV_ITEMS.map((item) => (
+      {items.map((item) => (
         <SideNav.Item
           key={item.href}
           label={item.label}
           iconBefore={item.icon}
-          href={`#${item.href}`}
+          href={item.href}
           isSelected={selected === item.href}
           onClick={() => setSelected(item.href)}
         />
       ))}
     </SideNav.Section>
   );
+}
+
+/**
+ * Navigation réelle de l'espace manager (cf. `navConfig` de la webapp) : tableau de bord,
+ * agents, sites, pointages. Le nom de l'espace se lit dans l'en-tête (`APP_SPACE_LABEL`). La MCE n'y figure pas : c'est un autre produit.
+ */
+export function AppNav() {
+  return <SelectableNavSection items={APP_NAV_ITEMS} />;
 }
 
 /**

@@ -130,8 +130,8 @@ divergence décrite dans le Contexte, à l'échelle du design system cette fois.
 | `Badge`          | `appearance` | les 5 (+ `information-inverted`) | Aligné                              |
 | `IconTile`       | `appearance` | les 5                            | Aligné                              |
 | `SectionMessage` | `appearance` | 4 (pas de `neutral`) + accents   | Aligné ; accents à questionner      |
-| `Banner`         | `appearance` | 4 + `announcement`               | **À trancher**                      |
-| `Snackbar`       | `appearance` | 4 + `discovery`                  | **À trancher**                      |
+| `Banner`         | `appearance` | 4 + `announcement`               | Tranché (points 1 et 2)             |
+| `Snackbar`       | `appearance` | 4 + `announcement`               | Tranché (points 1 et 2)             |
 | `ProgressBar`    | `appearance` | 4 + `comete`, et un mode `auto`  | `auto` réaligné (voir point 3)      |
 | `Text`, `Icon`   | `color`      | les 5                            | Porteurs, pas décideurs             |
 
@@ -147,7 +147,7 @@ doctrine, il ne renomme pas huit unions.
 
 #### Points laissés ouverts — non tranchés ici
 
-Trois écarts sont constatés mais **délibérément non arbitrés** : ils touchent
+Trois écarts étaient constatés mais **délibérément non arbitrés** ici : ils touchent
 des API publiques et méritent leur propre décision.
 
 1. **`Banner.appearance = "announcement"`** — un sixième nom, hors axe. Est-ce
@@ -156,6 +156,13 @@ des API publiques et méritent leur propre décision.
 2. **`Snackbar.appearance = "discovery"`** — un septième nom, sur un composant
    voisin de `Banner` qui, lui, ne l'a pas. Deux composants proches, deux
    vocabulaires : la divergence de cet ADR en miniature.
+
+   _Tranché (points 1 et 2, novembre 2026)_ : un seul nom, `announcement`, sur
+   les deux composants. C'est un sens à part entière (nouveauté, annonce
+   produit), hors de l'axe des statuts, rendu en violet (accent purple bold).
+   `discovery` disparaît de `Banner` (alpha.195) puis de `Snackbar`
+   (alpha.197), et l'ancienne annonce noire du `Banner` est supprimée.
+
 3. **`ProgressBar.appearance = "auto"`** — code déjà une sémantique
    (`critical ≤ 20`, `warning 21–99`, `success 100`) qui contredit l'axe : une
    progression à 50 % est « ça avance, rien à faire » (`information`), pas

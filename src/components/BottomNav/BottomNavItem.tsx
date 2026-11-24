@@ -77,7 +77,7 @@ export function BottomNavItem({
     >
       {({ isFocusVisible }) => (
         <>
-          <span className={styles.content} data-bottom-nav-pill>
+          <span className={styles.content}>
             <span className={styles.iconWrapper}>
               <span className={styles.iconSource}>
                 <Icon icon={icon} size={24} appearance={sourceAppearance} color={sourceColor} />

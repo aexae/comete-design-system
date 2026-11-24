@@ -236,13 +236,21 @@ describe("BottomNavItem — état ouvert (CSS)", () => {
 
   it("should give the open item the same pill and blue label as the selected item", () => {
     for (const state of [/data-selected/, /aria-expanded="true"/]) {
-      const content = bodies(new RegExp(state.source + String.raw`\]\s*\.content`)).join("");
-      expect(content).toMatch(
-        /background-color:\s*var\(--bottom-nav-color-item-background-selected\)/
-      );
+      const pill = bodies(new RegExp(state.source + String.raw`\]\s*\.content::before`)).join("");
+      expect(pill).toMatch(/opacity:\s*1/);
+      expect(pill).toMatch(/transform:\s*scale\(1\)/);
       const label = bodies(new RegExp(state.source + String.raw`\]\s*\.label`)).join("");
       expect(label).toMatch(/color:\s*var\(--bottom-nav-color-item-label-selected\)/);
     }
+  });
+
+  it("should grow the pill in place, quickly, with motion tokens", () => {
+    const [pill] = bodies(/^\s*\.content::before\s*$/);
+    expect(pill).toMatch(/background-color:\s*var\(--bottom-nav-color-item-background-selected\)/);
+    expect(pill).toMatch(/opacity:\s*0/);
+    expect(pill).toMatch(/transform:\s*scale\(/);
+    expect(pill).toContain("transform var(--duration-fast) var(--easing-emphasized)");
+    expect(css).toMatch(/prefers-reduced-motion: reduce\)\s*\{[^}]*\.content::before/);
   });
 
   it("should not declare a transform transition on iconWrapper, iconSource or iconClose", () => {

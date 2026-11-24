@@ -2,10 +2,13 @@
 
 ## Navs, Banner, Button link (2026-11-20)
 
-- **Easing de la pastille glissante** : elle utilise `--easing-default` (cubic-bezier(0.2, 0, 0.38, 0.9)). Un ease-out fort (cubic-bezier(0.23, 1, 0.32, 1)), plus nerveux au départ, serait plus proche des références. Il faudrait un token `easing.emphasized` (arbitrage Axel).
-- **BottomNav, item ouvert (`isOpen`)** : garde sa pastille statique, la pastille glissante ne suit que `isSelected`. Si un item est à la fois ouvert et non sélectionné, deux pastilles coexistent (comportement antérieur conservé).
-- **Snackbar `discovery`** : le Banner a fusionné `discovery` dans `announcement`. La Snackbar garde `discovery` (violet). Vérifier si elle doit suivre (Statut.stories documente l'écart).
-- **`--text-link-default`** : plus lu par le Button, encore lu par `Text` (lien dans un paragraphe). À confirmer.
+- ~~**Easing de la pastille glissante**~~ : FAIT, `easing.emphasized` (tokens 0.37.0, alpha.197).
+- ~~**BottomNav, item ouvert (`isOpen`)**~~ : validé par Axel. La BottomNav n'a plus de pastille glissante (réduction / agrandissement par item, alpha.197).
+- ~~**Snackbar `discovery`**~~ : FAIT, `announcement` (alpha.197, Figma compris).
+- ~~**`--text-link-default`**~~ : FAIT, `Text color="link"` retiré (alpha.197).
+- **Tokens `text.link.*`** : plus lus par aucun composant du DS. À déprécier puis retirer dans comete-design-tokens et dans Figma (vérifier d'abord les apps consommatrices).
+- **Figma, variables `DEPRECATED-snackbar/color/discovery/*`** et `DEPRECATED-section-message/color/discovery/*` : plus liées à la Snackbar. Les autres variantes de la Snackbar restent liées à `DEPRECATED-snackbar/*` : à rebasculer vers les tokens de thème ou une couche `snackbar` propre.
+- **Storybook, neutralisation des liens** : `preview.tsx` annule tout clic sur un lien `href="/…"` dans le document Storybook. Une future story qui voudrait tester une vraie navigation devra intercepter elle-même.
 - **SideNav `:has()`** : les fonds survolé et appuyé de l'item sélectionné passent par `:has()` sur la pastille. Navigateurs sans `:has()` (avant 2023) : fond par défaut au survol, sans casse.
 
 ## Icon : couleur `on-comete` et liste du control (2026-11-20)

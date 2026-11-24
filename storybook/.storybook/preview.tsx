@@ -58,6 +58,21 @@ const withThemeProvider: Decorator = (Story) => {
 };
 
 // ----------------------------------------------------------------------
+// Les stories reproduisent les routes de l'app (`href="/agents"`). Suivies pour
+// de vrai, elles chargeraient la racine du serveur Storybook à la place de la
+// story : un clic sur un item de SideNav ou de BottomNav quitterait la page.
+// On les neutralise au niveau du document, donc APRÈS les handlers React (qui
+// sélectionnent l'item) et y compris dans les portals (Drawer). Les ancres des
+// pages Docs (`#…`) et les liens externes ne sont pas touchés.
+
+if (typeof document !== "undefined") {
+  document.addEventListener("click", (event) => {
+    const anchor = (event.target as Element | null)?.closest?.("a[href]");
+    if (anchor?.getAttribute("href")?.startsWith("/")) event.preventDefault();
+  });
+}
+
+// ----------------------------------------------------------------------
 
 const preview: Preview = {
   decorators: [withThemeProvider],

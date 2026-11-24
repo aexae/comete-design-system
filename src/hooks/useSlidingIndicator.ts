@@ -1,6 +1,6 @@
 // useSlidingIndicator — Comète Design System (interne)
-// Pastille de sélection unique qui glisse d'un item à l'autre (SideNav,
-// BottomNav). Le conteneur porte la pastille en position absolue ; le hook
+// Pastille de sélection unique qui glisse d'un item à l'autre (SideNav). La
+// BottomNav ne glisse pas : sa pastille s'agrandit sur place. Le conteneur porte la pastille en position absolue ; le hook
 // mesure l'item sélectionné et en donne la géométrie.
 //
 // Le glissement n'a lieu que quand la SÉLECTION change. Un simple
