@@ -8,7 +8,7 @@
 
 - `boldest` ajouté aux nuanciers brand de la Welcome et de Foundation/Couleur (texte en
   `--text-on-dark-surface`).
-- Pastilles d'icône des personas : `IconTile` (`comete`, `warning`, `large`) au lieu de styles
+- Pastilles d'icône des personas : `IconTile` (`comete`, `warning`, `small`, 32 px) au lieu de styles
   maison.
 - Bloc d'aide : `Card appearance="bold" color="comete"` au lieu d'un `div` maison.
 - « Récupérer une ressource » : la tuile navy maison autour du logo (héritée de la maquette Claude

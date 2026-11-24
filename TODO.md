@@ -37,7 +37,7 @@ Couleur `--text-brand`), bloc d'aide Welcome passé sur `Card bold comete`, past
 - **Composants src** : tokens `--*-disabled` dépréciés encore lus par Tabs, TimePicker,
   ToggleButtonGroup, Calendar, Radio, Card. CalendarCell.module.css:133 pose `--border-comete-bold`
   en fond.
-- **ADR 0001** : liste les paliers brand sans `boldest`. Ajouter un addendum plutôt que réécrire.
+- ~~**ADR 0001**~~ : FAIT, addendum `boldest` et `on-dark-surface`.
 
 ## Navs, Banner, Button link (2026-11-20)
 

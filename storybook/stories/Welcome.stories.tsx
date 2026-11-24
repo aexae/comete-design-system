@@ -586,7 +586,7 @@ function Personas(): ReactElement {
             <Card appearance="outlined" className={css["fill"]}>
               <Stack gap="150" padding="300">
                 <Stack direction="row" gap="150" align="center">
-                  <IconTile icon={p.icon} appearance={p.tile} size="large" />
+                  <IconTile icon={p.icon} appearance={p.tile} size="small" />
                   <Stack gap="0">
                     <Text size="small" weight="bold" color="subtle" className={css["eyebrow"]}>
                       {p.where}
