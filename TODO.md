@@ -7,13 +7,11 @@ Corrigé dans la PR « welcome boldest » : tokens inexistants (Icon `--border-f
 Couleur `--text-brand`), bloc d'aide Welcome passé sur `Card bold comete`, pastilles Personas sur
 `IconTile`, tuile d'appIcon maison retirée, opacités du hero tokenisées. Reste :
 
-- **Token manquant `--border-on-dark-surface`** : les filets du hero Welcome (citation, orbites)
-  utilisent `--border-inverted` sur `--surface-comete` fixe, quasi invisibles en sombre. À créer
-  dans comete-design-tokens (accord requis).
-- **Bouton « Écrire sur Teams »** : `Button color="warning"` est un type valide mais détourne une
-  couleur d'état pour un accent jaune de marque. À arbitrer (couleur dédiée ou autre bouton).
-- **Avatar `comete` sur `Card bold comete`** : en sombre, le fond de l'avatar se confond avec le
-  navy (bloc d'aide Welcome). Choisir une autre couleur d'avatar sur surface navy.
+- ~~**Token `--border-on-dark-surface`**~~ : FAIT (tokens 0.39.0), filets du hero Welcome dessus.
+  Manquent encore `--border-on-light-surface` et toute la famille `background` en
+  `on-*-surface`. Variable Figma `border/on-dark-surface` à créer.
+- ~~**Bouton « Écrire sur Teams »**~~ : FAIT, `color="comete"` (choix d'Axel).
+- ~~**Avatars du bloc d'aide**~~ : FAIT, `color="neutral"`.
 - **`.heroAccent`** (Welcome) : un token de fond (`--background-warning-bold-default`) sert de
   couleur de texte.
 - **Typography.stories** : valeurs de line-height recopiées à la main et fausses (H1 36 au lieu de

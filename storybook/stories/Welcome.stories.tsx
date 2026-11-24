@@ -759,7 +759,7 @@ function Help(): ReactElement {
         <Cluster gap="200" align="center">
           {["Axel", "Ruth"].map((name) => (
             <Stack key={name} direction="row" gap="100" align="center">
-              <Avatar size="medium" initials={name.slice(0, 1)} color="comete" />
+              <Avatar size="medium" initials={name.slice(0, 1)} color="neutral" />
               <Stack gap="0">
                 <Text size="small" weight="medium">
                   {name}
@@ -774,7 +774,7 @@ function Help(): ReactElement {
         <Cluster gap="100">
           <Button
             appearance="contained"
-            color="warning"
+            color="comete"
             iconAfter="OpenInNew"
             onPress={external(TEAMS_CHANNEL)}
           >

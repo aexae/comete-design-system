@@ -69,7 +69,7 @@
   max-width: 48ch;
   margin: auto 0 0;
   padding-top: var(--space200);
-  border-top: 1px solid var(--border-inverted);
+  border-top: 1px solid var(--border-on-dark-surface);
 }
 
 .heroArt {
@@ -89,7 +89,7 @@
   width: 520px;
   height: 520px;
   margin: auto;
-  border: 1px solid var(--border-inverted);
+  border: 1px solid var(--border-on-dark-surface);
   opacity: var(--opacity-50);
 }
 
@@ -108,7 +108,7 @@
   width: 340px;
   height: 340px;
   margin: auto;
-  border: 1px dashed var(--border-inverted);
+  border: 1px dashed var(--border-on-dark-surface);
   opacity: var(--opacity-50);
   animation-direction: reverse;
   animation-duration: 90s;

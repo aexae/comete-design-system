@@ -9,6 +9,13 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Modifié (alpha.198)
+
+- **Tokens 0.39.0** : nouveau `--border-on-dark-surface` (bordure blanche fixe sur le navy,
+  pendant de `--text-on-dark-surface`). Aucun composant ne change.
+- **Storybook** : palier `boldest` dans les nuanciers (Welcome, Foundation/Couleur), Welcome sur
+  `IconTile` et `Card bold comete`, tokens inexistants corrigés dans plusieurs stories.
+
 ### Changements cassants (BREAKING, alpha.197)
 
 - **Snackbar** : l'apparence `discovery` devient `announcement` (même violet, icône `New` au lieu
