@@ -1,5 +1,64 @@
 # TODO
 
+## Figma : écarts relevés en construisant « ◆ Exemples de pages » (2026-11-24)
+
+Page créée : écrans surface default (formulaire), sunken (tableau de bord), raise (panneau de
+détail) et overlay (modale), en instances du DS. Écarts des composants Figma rencontrés :
+
+- **Card** : variantes `neutral` / `outlined` alors que le code a `outlined` / `subtle` / `bold`
+  et `color`. `neutral` est liée à `DEPRECATED-card/color/background/neutral` → `surface/sunken`,
+  donc invisible sur une page sunken. Aucune élévation sur la variante par défaut. Le slot de
+  contenu est à hauteur fixe (72 px) : il faut le passer en hug à chaque instance.
+- **ModalDialog** : le booléen `isBlanketHidden` est inversé. À `true` (valeur par défaut), le
+  voile est affiché, à `false` il est masqué. Renommer la propriété (`showBlanket`) ou inverser
+  sa liaison. Pas d'étirement de la boîte au redimensionnement (largeur fixe, vérifié le
+  2026-11-24).
+- **Field** : le slot `{children}` accepte un TextField mais ignore un Select (swap sans effet
+  ni erreur). Le TextField imbriqué ne remplit pas la largeur du Field.
+- **Menu** : sans fond propre (la surface est portée par Popover), contenu d'exemple
+  (« Option », « Heading item ») à remplacer. À documenter ou à corriger.
+- **TextField** : l'état `filled` affiche une bordure bleue de focus. L'état rempli au repos est
+  `rest`, nom peu parlant à côté de `filled`.
+
+## Audit des stories : tokens et composants hors DS (2026-11-24)
+
+Corrigé dans la PR « welcome boldest » : tokens inexistants (Icon `--border-focus`,
+`--border-success`, Divider/Grid `--font-size-ui-sm`, GuidelinesAnatomieListe `--radius-100`,
+Couleur `--text-brand`), bloc d'aide Welcome passé sur `Card bold comete`, pastilles Personas sur
+`IconTile`, tuile d'appIcon maison retirée, opacités du hero tokenisées. Reste :
+
+- ~~**Token `--border-on-dark-surface`**~~ : FAIT (tokens 0.39.0), filets du hero Welcome dessus.
+  Manquent encore `--border-on-light-surface` et toute la famille `background` en
+  `on-*-surface`. Variable Figma `border/on-dark-surface` : FAITE (collection semantics).
+- ~~**Bouton « Écrire sur Teams »**~~ : FAIT, `color="comete"` (choix d'Axel).
+- ~~**Avatars du bloc d'aide**~~ : FAIT, `color="neutral"`.
+- **`.heroAccent`** (Welcome) : un token de fond (`--background-warning-bold-default`) sert de
+  couleur de texte.
+- **Typography.stories** : valeurs de line-height recopiées à la main et fausses (H1 36 au lieu de
+  40, H3 28 au lieu de 32, Body M 20 au lieu de 18). Lire la valeur calculée. La page n'utilise
+  aucun composant DS (onglets, encart, titres) et ~130 px en dur.
+- **Explorateurs Tokens, Logo, Illustration, Icon** : `<input type="search">`, `<button>` et
+  onglets maison au lieu de `SearchField`, `Button`, `Tabs`, `ToggleButtonGroup`, ~135 px en dur
+  dans Tokens.stories. `--text-disabled` (déprécié) affiché sans mention.
+- **Breadcrumbs.stories:170** : bouton custom `outline: none` sans FocusRing (pas de focus
+  clavier visible).
+- **CalendarCell.stories** : recopie les styles du composant (`CellPreview`) au lieu de
+  l'utiliser, a dérivé, et utilise `--icon-disabled` (déprécié).
+- **Divers** : Statut (Stack bordé → Card outlined), Table (h3 stylé, point d'état en token de
+  texte), Tag (points 8 px en dur), Stepper (`<button>` natif), `_guidelines` CodeChip → `Code`,
+  PageTemplates.module.css (`rgba(255,0,76,…)`), `_rechercheGlobale` (repli `#fff3b0` inutile),
+  démos sur fond sombre en px (Badge, Heading, Hero, Spinner, Text), échafaudages
+  `div style={{display:"flex", gap: 12}}` au lieu de Stack/Cluster dans une quinzaine de stories,
+  `<Icon size>` surchargé (~25 occurrences).
+- **`customTheme.ts`** (manager Storybook) : 4 hex absents des tokens (#22427c, #39558a, #7488ab,
+  #e9effa), le navy des tokens est #1e3661.
+- **`--page-gutter`** : custom property interne de Page utilisée dans 7 stories, API non
+  documentée.
+- **Composants src** : tokens `--*-disabled` dépréciés encore lus par Tabs, TimePicker,
+  ToggleButtonGroup, Calendar, Radio, Card. CalendarCell.module.css:133 pose `--border-comete-bold`
+  en fond.
+- ~~**ADR 0001**~~ : FAIT, addendum `boldest` et `on-dark-surface`.
+
 ## Navs, Banner, Button link (2026-11-20)
 
 - ~~**Easing de la pastille glissante**~~ : FAIT, `easing.emphasized` (tokens 0.37.0, alpha.197).
@@ -388,8 +447,8 @@ de référence est dans SharePoint › 7-Communication › `_Marque & Charte Com
   - Retards restants, non traités ici car hors demande et à risque : `typescript` 7 (bloqué
     par `typescript-eslint`, peer `<6.1.0`), `react-aria-components` 1.17 vers 1.22,
     `playwright` 1.60 vers 1.65 (épinglé, à aligner avec l'image CI), `@testing-library/jest-dom`
-    8, `@aexae/comete-design-tokens` 0.38.0. Renovate est configuré mais ces retards
-    s'accumulent : vérifier qu'il tourne bien sur le dépôt.
+    8. Renovate est configuré mais ces retards s'accumulent : vérifier qu'il tourne bien sur
+    le dépôt.
   - `@aexae/comete-logos` est en `latest` (racine et Storybook) : installation non
     reproductible hors lockfile, et `logos` 0.15.0 attend `tokens` ^0.17 alors que le DS est
     en 0.37 (peer non satisfait). Épingler une version et réaligner le peer côté `comete-logos`.

@@ -99,7 +99,7 @@ export const BetweenContent: Story = {
       style={{
         inlineSize: "240px",
         fontFamily: "var(--font-family-primary)",
-        fontSize: "var(--font-size-ui-sm)",
+        fontSize: "var(--font-size-ui-s)",
         color: "var(--text-default-default)",
       }}
     >
@@ -120,7 +120,7 @@ export const BetweenInline: Story = {
         alignItems: "center",
         blockSize: "24px",
         fontFamily: "var(--font-family-primary)",
-        fontSize: "var(--font-size-ui-sm)",
+        fontSize: "var(--font-size-ui-s)",
         color: "var(--text-default-default)",
       }}
     >
