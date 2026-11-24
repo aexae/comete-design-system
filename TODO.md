@@ -371,3 +371,31 @@ de référence est dans SharePoint › 7-Communication › `_Marque & Charte Com
   3,95:1), donc dans `SectionMessage information` et `Card subtle comete`. Dans l'email,
   contournement par `Text` default souligné. Piste : couleur de lien dédiée aux fonds
   subtlest, ou règle d'usage dans les guidelines de `Card` et `SectionMessage`.
+
+- **Outillage : suites de la montée Storybook 10.6.8 et ESLint 10 (24/11/2026)**
+  - `eslint-plugin-react` 7.37.5 et `eslint-plugin-jsx-a11y` 6.10.2 ne déclarent pas ESLint 10
+    (peer non satisfait, `pnpm peers check`). Ils tournent grâce à `fixupPluginRules`
+    (`@eslint/compat`) dans les deux `eslint.config.mjs`. À retirer dès qu'une version
+    compatible sort. Si `eslint-plugin-react` reste sans support, évaluer
+    `@eslint-react/eslint-plugin`.
+  - `typed-css-modules` 0.9.1 (dernière version, projet peu actif) épingle `glob` ^10,
+    déprécié avec failles publiées. Contourné par un `overrides` dans `pnpm-workspace.yaml`
+    (`glob` ^13). Outil de build uniquement, pas d'exposition à l'exécution. Piste : remplacer
+    `tcm` par un outil maintenu, ou retirer l'override quand `tcm` suit.
+  - Storybook 10.6.8 ne corrige pas la course de l'indexeur décrite ci-dessus (ses notes de
+    version ne couvrent que `preview-stats.json` et le préchargement des stories). Le
+    contournement reste le redémarrage.
+  - Retards restants, non traités ici car hors demande et à risque : `typescript` 7 (bloqué
+    par `typescript-eslint`, peer `<6.1.0`), `react-aria-components` 1.17 vers 1.22,
+    `playwright` 1.60 vers 1.65 (épinglé, à aligner avec l'image CI), `@testing-library/jest-dom`
+    8, `@aexae/comete-design-tokens` 0.38.0. Renovate est configuré mais ces retards
+    s'accumulent : vérifier qu'il tourne bien sur le dépôt.
+  - `@aexae/comete-logos` est en `latest` (racine et Storybook) : installation non
+    reproductible hors lockfile, et `logos` 0.15.0 attend `tokens` ^0.17 alors que le DS est
+    en 0.37 (peer non satisfait). Épingler une version et réaligner le peer côté `comete-logos`.
+  - `tools/powerbi-kit` reste sur `tokens` 0.13.2 et `logos` 0.12.4, incompatibles avec
+    `icons` 0.14.0 (peer `>=0.33.0`).
+  - Shell de Claude Code : la fonction `pnpm` (et `npx`) appelle `_with_npm_token`, absente
+    du snapshot. Les commandes échouent sauf à appeler `/opt/homebrew/bin/pnpm` avec
+    `NPM_AUTH_TOKEN` exporté. À corriger dans le profil zsh (définir la fonction avant les
+    alias, ou la rendre disponible en shell non interactif).
