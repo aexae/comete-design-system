@@ -108,14 +108,14 @@ function isBoundary(ch: string): boolean {
   return ch === "" || !/[A-Za-z0-9]/.test(ch);
 }
 
-// NOTE couleurs : plusieurs tokens de fond/bordure teintés (information-subtlest,
-// surface-elevation, border-information…) ET --text-link n'ont PAS de valeur en
-// thème dark dans @aexae/comete-design-tokens. On n'utilise donc ici que des
-// tokens qui résolvent dans les deux thèmes (surface-default, neutral-subtlest,
-// selected-subtlest, border-subtle, et les --text-* qui, eux, sont complets).
+// Un lien dans un paragraphe suit le style des liens du DS (Button
+// `appearance="link"`, couleur neutre) : texte par défaut, souligné, même
+// épaisseur et même décalage de soulignement.
 const LINK_STYLE = {
-  color: "var(--text-information-default)",
-  textUnderlineOffset: 2,
+  color: "var(--text-default-default)",
+  textDecoration: "underline",
+  textDecorationThickness: "12%",
+  textUnderlineOffset: "16%",
 } as const;
 
 const PILL_STYLE = {

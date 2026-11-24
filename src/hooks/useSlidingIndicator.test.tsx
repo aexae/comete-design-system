@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, render } from "@testing-library/react";
 import { readFileSync } from "node:fs";
-import { BottomNav, BottomNavItem } from "../components/BottomNav/index.js";
 import { SideNav } from "../components/SideNav/index.js";
 
 // jsdom ne met rien en page : chaque item reçoit une boîte factice, empilée
@@ -10,7 +9,7 @@ function mockLayout(): void {
   vi.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(function (this: Element) {
     const item = this.closest("button, a");
     const index = item?.parentElement ? [...item.parentElement.children].indexOf(item) : 0;
-    const isTarget = this.hasAttribute("aria-current") || this.hasAttribute("data-bottom-nav-pill");
+    const isTarget = this.hasAttribute("aria-current");
     const top = isTarget ? index * 40 : 0;
     return {
       x: 0,
@@ -68,25 +67,9 @@ describe("useSlidingIndicator", () => {
     expect(container.querySelector("[data-side-nav-indicator]")).toBeNull();
   });
 
-  it("should flag the BottomNav when its indicator takes over the selected pill", () => {
-    const { container } = render(
-      <BottomNav>
-        <BottomNavItem label="Accueil" icon="Home" />
-        <BottomNavItem label="Profil" icon="Person" isSelected />
-      </BottomNav>
-    );
-    expect(container.querySelector("nav")).toHaveAttribute("data-bottom-nav-indicator");
-    expect(container.querySelector(".indicator")).toHaveAttribute("data-visible");
-  });
-
   it("should animate only with motion tokens and honour reduced motion", () => {
-    for (const file of [
-      "src/components/SideNav/SideNav.module.css",
-      "src/components/BottomNav/BottomNav.module.css",
-    ]) {
-      const css = readFileSync(file, "utf8");
-      expect(css).toContain("transform var(--duration-normal) var(--easing-default)");
-      expect(css).toMatch(/prefers-reduced-motion: reduce\)\s*\{[^}]*\.indicator/);
-    }
+    const css = readFileSync("src/components/SideNav/SideNav.module.css", "utf8");
+    expect(css).toContain("transform var(--duration-normal) var(--easing-emphasized)");
+    expect(css).toMatch(/prefers-reduced-motion: reduce\)\s*\{[^}]*\.indicator/);
   });
 });

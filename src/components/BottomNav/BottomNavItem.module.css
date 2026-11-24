@@ -120,16 +120,29 @@
    vers Close (voir plus haut).
    ========================================================================== */
 
-.item[data-selected] .content,
-.item[aria-expanded="true"] .content {
+/* Pastille : pseudo-élément sous l'icône et le libellé (la zone contenu crée
+   son contexte d'empilement avec z-index 1). Au repos, elle est réduite et
+   transparente. À la sélection, elle s'agrandit depuis son centre ; l'item
+   quitté la voit se résorber en même temps. Rien ne glisse d'un item à l'autre :
+   sur une barre basse, l'œil suit le doigt, pas une forme qui traverse l'écran. */
+.content::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background-color: var(--bottom-nav-color-item-background-selected);
   border-radius: var(--bottom-nav-radius-item-selected);
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity var(--duration-fast) var(--easing-emphasized),
+    transform var(--duration-fast) var(--easing-emphasized);
 }
 
-/* La pastille glissante de la BottomNav a pris le relais : l'item sélectionné
-   ne peint plus la sienne. L'item ouvert (aria-expanded) garde la sienne. */
-[data-bottom-nav-indicator] .item[data-selected]:not([aria-expanded="true"]) .content {
-  background-color: transparent;
+.item[data-selected] .content::before,
+.item[aria-expanded="true"] .content::before {
+  opacity: 1;
+  transform: scale(1);
 }
 
 /* Le badge chevauche la pastille : sa découpe prend la couleur de la pastille. */
@@ -144,6 +157,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .content::before,
   .iconSource,
   .iconClose,
   .label {

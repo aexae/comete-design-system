@@ -5,7 +5,15 @@ import { within, userEvent, expect, waitFor } from "storybook/test";
 import { SideNav, Logo, Page, Button, Drawer } from "@aexae/comete-design-system/components";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
-import { AppShell, AppNav, DemoPageContent, SideNavOnly, AppFooterBrand } from "./_appShell";
+import {
+  AppShell,
+  AppNav,
+  DemoPageContent,
+  SideNavOnly,
+  AppFooterBrand,
+  SelectableNavSection,
+  type DemoNavItem,
+} from "./_appShell";
 
 const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
@@ -348,6 +356,34 @@ export const Empty: Story = {
   ),
 };
 
+const SCROLL_NAV_ITEMS: readonly DemoNavItem[] = [
+  { label: "Accueil", icon: "Home", href: "/" },
+  { label: "Agents", icon: "Agent", href: "/agents" },
+  { label: "Sites", icon: "Site", href: "/sites" },
+  { label: "Pointages", icon: "Clockings", href: "/pointages" },
+  { label: "Plannings", icon: "CalendarMonth", href: "/plannings" },
+  { label: "Vacations", icon: "EventAvailable", href: "/vacations" },
+  { label: "Équipes", icon: "Group", href: "/equipes" },
+  { label: "Secteurs", icon: "LocationOn", href: "/secteurs" },
+  { label: "Contrats", icon: "Description", href: "/contrats" },
+  { label: "Absences", icon: "EventBusy", href: "/absences" },
+  { label: "Remplacements", icon: "SwapVert", href: "/remplacements" },
+  { label: "Astreintes", icon: "Alarm", href: "/astreintes" },
+  { label: "Utilisateurs", icon: "Group", href: "/users" },
+  { label: "Droits", icon: "ManageAccounts", href: "/permissions" },
+  { label: "Licences", icon: "Key", href: "/licences" },
+  { label: "Facturation", icon: "Payments", href: "/billing" },
+  { label: "Intégrations", icon: "Extension", href: "/integrations" },
+  { label: "Journaux", icon: "Description", href: "/logs" },
+  { label: "Paramètres", icon: "Settings", href: "/settings" },
+  { label: "Import", icon: "UploadFile", href: "/import" },
+  { label: "Export", icon: "Download", href: "/export" },
+  { label: "Archives", icon: "Archive", href: "/archives" },
+  { label: "Audit", icon: "FolderManaged", href: "/audit" },
+  { label: "Notifications", icon: "Notifications", href: "/notifications" },
+  { label: "Modèles", icon: "Category", href: "/modeles" },
+];
+
 /**
  * **Défilement interne** — beaucoup d'entrées : seul le corps (sections +
  * items) défile, tandis que le header (marque) et le footer (comète link)
@@ -364,39 +400,7 @@ export const Scrollable: Story = {
     //
     // Hauteur portée par le GABARIT et non par un décorateur : sinon la nav garde sa
     // hauteur et se fait rogner, pied compris.
-    <AppShell
-      nav={
-        <>
-          <SideNav.Section>
-            <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="/" />
-            <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
-            <SideNav.Item label="Sites" iconBefore="Site" href="/sites" />
-            <SideNav.Item label="Pointages" iconBefore="Clockings" href="/pointages" />
-            <SideNav.Item label="Plannings" iconBefore="CalendarMonth" href="/plannings" />
-            <SideNav.Item label="Vacations" iconBefore="EventAvailable" href="/vacations" />
-            <SideNav.Item label="Équipes" iconBefore="Group" href="/equipes" />
-            <SideNav.Item label="Secteurs" iconBefore="LocationOn" href="/secteurs" />
-            <SideNav.Item label="Contrats" iconBefore="Description" href="/contrats" />
-            <SideNav.Item label="Absences" iconBefore="EventBusy" href="/absences" />
-            <SideNav.Item label="Remplacements" iconBefore="SwapVert" href="/remplacements" />
-            <SideNav.Item label="Astreintes" iconBefore="Alarm" href="/astreintes" />
-            <SideNav.Item label="Utilisateurs" iconBefore="Group" href="/users" />
-            <SideNav.Item label="Droits" iconBefore="ManageAccounts" href="/permissions" />
-            <SideNav.Item label="Licences" iconBefore="Key" href="/licences" />
-            <SideNav.Item label="Facturation" iconBefore="Payments" href="/billing" />
-            <SideNav.Item label="Intégrations" iconBefore="Extension" href="/integrations" />
-            <SideNav.Item label="Journaux" iconBefore="Description" href="/logs" />
-            <SideNav.Item label="Paramètres" iconBefore="Settings" href="/settings" />
-            <SideNav.Item label="Import" iconBefore="UploadFile" href="/import" />
-            <SideNav.Item label="Export" iconBefore="Download" href="/export" />
-            <SideNav.Item label="Archives" iconBefore="Archive" href="/archives" />
-            <SideNav.Item label="Audit" iconBefore="FolderManaged" href="/audit" />
-            <SideNav.Item label="Notifications" iconBefore="Notifications" href="/notifications" />
-            <SideNav.Item label="Modèles" iconBefore="Category" href="/modeles" />
-          </SideNav.Section>
-        </>
-      }
-    />
+    <AppShell nav={<SelectableNavSection items={SCROLL_NAV_ITEMS} />} />
   ),
   // Contenu long : le premier ET le dernier item restent focusables au clavier
   // (aucun item n'est piégé hors de l'ordre de tabulation par le défilement).

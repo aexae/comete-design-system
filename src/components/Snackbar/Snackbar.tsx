@@ -13,7 +13,8 @@ import styles from "./Snackbar.module.css";
 // Types publics
 
 /** Nature / sévérité de la snackbar — détermine le fond et l'icône. */
-export type SnackbarAppearance = "information" | "success" | "warning" | "critical" | "discovery";
+export type SnackbarAppearance =
+  "information" | "success" | "warning" | "critical" | "announcement";
 
 /** Bouton d'action optionnel affiché à droite du message. */
 export interface SnackbarAction {
@@ -59,7 +60,7 @@ const DEFAULT_ICONS: Record<SnackbarAppearance, IconName> = {
   success: "CheckCircle",
   warning: "Warning",
   critical: "Report",
-  discovery: "Help",
+  announcement: "New",
 };
 
 // -----------------------------------------------------------------------

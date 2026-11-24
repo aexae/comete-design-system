@@ -105,7 +105,7 @@ const meta = {
   argTypes: {
     appearance: {
       control: "select",
-      options: ["information", "success", "warning", "critical", "discovery"],
+      options: ["information", "success", "warning", "critical", "announcement"],
     },
     children: { control: "text" },
     // `role` est purement accessibilité (politesse aria-live status/alert) —
@@ -283,8 +283,8 @@ export const Appearances: Story = {
       <Labeled align="stretch" label="critical">
         <Snackbar appearance="critical">Impossible de se connecter.</Snackbar>
       </Labeled>
-      <Labeled align="stretch" label="discovery">
-        <Snackbar appearance="discovery">Nouvelle fonctionnalité disponible.</Snackbar>
+      <Labeled align="stretch" label="announcement">
+        <Snackbar appearance="announcement">Nouvelle fonctionnalité disponible.</Snackbar>
       </Labeled>
     </div>
   ),

@@ -103,9 +103,9 @@
 
 .indicator[data-animated] {
   transition:
-    transform var(--duration-normal) var(--easing-default),
-    width var(--duration-normal) var(--easing-default),
-    height var(--duration-normal) var(--easing-default),
+    transform var(--duration-normal) var(--easing-emphasized),
+    width var(--duration-normal) var(--easing-emphasized),
+    height var(--duration-normal) var(--easing-emphasized),
     background-color var(--duration-fast) var(--easing-default);
 }
 

@@ -14,7 +14,6 @@ declare const styles: {
   readonly "color-disabled": string;
   readonly "color-information": string;
   readonly "color-inverted": string;
-  readonly "color-link": string;
   readonly "color-subtle": string;
   readonly "color-subtlest": string;
   readonly "color-success": string;
