@@ -15,13 +15,14 @@ import {
   Grid,
   Heading,
   Icon,
+  IconTile,
   Logo,
   SectionMessage,
   Stack,
   Tag,
   Text,
 } from "@aexae/comete-design-system/components";
-import type { IconName } from "@aexae/comete-design-system/components";
+import type { IconName, IconTileAppearance } from "@aexae/comete-design-system/components";
 import releases from "virtual:welcome-releases";
 import pkg from "../../package.json";
 import { FAMILY_ORDER } from "../.storybook/storyOrder";
@@ -252,6 +253,12 @@ const SWATCHES: { token: string; label: string; text: string; outlined?: boolean
   },
   { token: "--background-brand-subtler-default", label: "subtler", text: "--text-default-default" },
   { token: "--background-brand-bold-default", label: "bold", text: "--text-inverted" },
+  // Surface d'identité navy (pas un contrôle) : texte prévu par le token, text.on-dark-surface.
+  {
+    token: "--background-brand-boldest-default",
+    label: "boldest",
+    text: "--text-on-dark-surface",
+  },
   { token: "--border-brand-bold", label: "border", text: "--text-inverted" },
   {
     token: "--surface-default",
@@ -512,9 +519,7 @@ function Profiles({ index }: { index: Index | undefined }): ReactElement {
           <div className={css["resourceBoard"]}>
             <div className={css["resourceLogos"]}>
               <Logo size={40} aria-label="" />
-              <span className={css["logoTile"]}>
-                <Logo appearance="inverted" format="icon" size={36} />
-              </span>
+              <Logo format="icon" size={48} />
             </div>
             <div className={css["resourceIcons"]}>
               {RESOURCE_ICONS.map((name) => (
@@ -539,7 +544,7 @@ const PERSONAS = [
     where: "Au bureau",
     title: "Ceux qui pilotent l'activité",
     icon: "Work" as IconName,
-    dark: true,
+    tile: "comete" as IconTileAppearance,
     body: "Plannings, devis, facturation, paie, conformité : beaucoup de données, un fort besoin de paramétrage, des écrans utilisés toute la journée.",
     roles: [
       "Exploitation & planning",
@@ -557,7 +562,7 @@ const PERSONAS = [
     where: "Sur le terrain",
     title: "Ceux qui exécutent et échangent",
     icon: "LocationOn" as IconName,
-    dark: false,
+    tile: "warning" as IconTileAppearance,
     body: "Consulter un planning, pointer, signaler un événement, échanger avec la société de sécurité, souvent depuis un mobile.",
     roles: ["Agents", "Managers", "Clients des clients", "Sous-traitants", "Candidats"],
     apps: [
@@ -581,9 +586,7 @@ function Personas(): ReactElement {
             <Card appearance="outlined" className={css["fill"]}>
               <Stack gap="150" padding="300">
                 <Stack direction="row" gap="150" align="center">
-                  <span className={p.dark ? css["personaIconDark"] : css["personaIconYellow"]}>
-                    <Icon icon={p.icon} size={24} color={p.dark ? "inverted" : "default"} />
-                  </span>
+                  <IconTile icon={p.icon} appearance={p.tile} size="large" />
                   <Stack gap="0">
                     <Text size="small" weight="bold" color="subtle" className={css["eyebrow"]}>
                       {p.where}
@@ -742,46 +745,47 @@ function Releases(): ReactElement {
 }
 
 function Help(): ReactElement {
+  // Card bold comète : navy fixe, textes et icônes en text.on-dark-surface dans les deux thèmes.
   return (
-    <div className={css["help"]}>
-      <Stack gap="050" grow>
-        <Text weight="bold" className={css["helpText"]}>
-          Une question, un composant manquant, un logo introuvable ?
-        </Text>
-        <Text size="small" className={css["helpBody"]}>
-          Écrivez-nous sur le canal Teams « Marque et Charte Comète », ou ouvrez une issue sur le
-          dépôt si vous êtes développeur.
-        </Text>
-      </Stack>
-      <Cluster gap="200" align="center">
-        {["Axel", "Ruth"].map((name) => (
-          <Stack key={name} direction="row" gap="100" align="center">
-            <Avatar size="medium" initials={name.slice(0, 1)} color="comete" />
-            <Stack gap="0">
-              <Text size="small" weight="medium" className={css["helpText"]}>
-                {name}
-              </Text>
-              <Text size="small" className={css["helpBody"]}>
-                Référent design system
-              </Text>
+    <Card appearance="bold" color="comete">
+      <Cluster gap="300" align="center" padding="300">
+        <Stack gap="050" grow>
+          <Text weight="bold">Une question, un composant manquant, un logo introuvable ?</Text>
+          <Text size="small" color="subtle">
+            Écrivez-nous sur le canal Teams « Marque et Charte Comète », ou ouvrez une issue sur le
+            dépôt si vous êtes développeur.
+          </Text>
+        </Stack>
+        <Cluster gap="200" align="center">
+          {["Axel", "Ruth"].map((name) => (
+            <Stack key={name} direction="row" gap="100" align="center">
+              <Avatar size="medium" initials={name.slice(0, 1)} color="comete" />
+              <Stack gap="0">
+                <Text size="small" weight="medium">
+                  {name}
+                </Text>
+                <Text size="small" color="subtle">
+                  Référent design system
+                </Text>
+              </Stack>
             </Stack>
-          </Stack>
-        ))}
+          ))}
+        </Cluster>
+        <Cluster gap="100">
+          <Button
+            appearance="contained"
+            color="warning"
+            iconAfter="OpenInNew"
+            onPress={external(TEAMS_CHANNEL)}
+          >
+            Écrire sur Teams
+          </Button>
+          <Button appearance="contained" onPress={external(`${DS_REPO}/issues/new`)}>
+            Ouvrir une issue
+          </Button>
+        </Cluster>
       </Cluster>
-      <Cluster gap="100">
-        <Button
-          appearance="contained"
-          color="warning"
-          iconAfter="OpenInNew"
-          onPress={external(TEAMS_CHANNEL)}
-        >
-          Écrire sur Teams
-        </Button>
-        <Button appearance="contained" onPress={external(`${DS_REPO}/issues/new`)}>
-          Ouvrir une issue
-        </Button>
-      </Cluster>
-    </div>
+    </Card>
   );
 }
 

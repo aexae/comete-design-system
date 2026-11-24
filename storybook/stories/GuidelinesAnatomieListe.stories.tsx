@@ -330,7 +330,7 @@ const Num = ({ n }: { n: string }): ReactElement => (
 /** Zone du schéma : filet + padding, tokens du DS uniquement. */
 const frame = (dashed = false): React.CSSProperties => ({
   border: `1px ${dashed ? "dashed" : "solid"} var(--border-default)`,
-  borderRadius: "var(--radius-100)",
+  borderRadius: "var(--radius100)",
   padding: "var(--space150)",
   background: "var(--surface-default)",
 });

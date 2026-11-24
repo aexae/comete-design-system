@@ -1,5 +1,46 @@
 # TODO
 
+## Audit des stories : tokens et composants hors DS (2026-11-24)
+
+Corrigé dans la PR « welcome boldest » : tokens inexistants (Icon `--border-focus`,
+`--border-success`, Divider/Grid `--font-size-ui-sm`, GuidelinesAnatomieListe `--radius-100`,
+Couleur `--text-brand`), bloc d'aide Welcome passé sur `Card bold comete`, pastilles Personas sur
+`IconTile`, tuile d'appIcon maison retirée, opacités du hero tokenisées. Reste :
+
+- **Token manquant `--border-on-dark-surface`** : les filets du hero Welcome (citation, orbites)
+  utilisent `--border-inverted` sur `--surface-comete` fixe, quasi invisibles en sombre. À créer
+  dans comete-design-tokens (accord requis).
+- **Bouton « Écrire sur Teams »** : `Button color="warning"` est un type valide mais détourne une
+  couleur d'état pour un accent jaune de marque. À arbitrer (couleur dédiée ou autre bouton).
+- **Avatar `comete` sur `Card bold comete`** : en sombre, le fond de l'avatar se confond avec le
+  navy (bloc d'aide Welcome). Choisir une autre couleur d'avatar sur surface navy.
+- **`.heroAccent`** (Welcome) : un token de fond (`--background-warning-bold-default`) sert de
+  couleur de texte.
+- **Typography.stories** : valeurs de line-height recopiées à la main et fausses (H1 36 au lieu de
+  40, H3 28 au lieu de 32, Body M 20 au lieu de 18). Lire la valeur calculée. La page n'utilise
+  aucun composant DS (onglets, encart, titres) et ~130 px en dur.
+- **Explorateurs Tokens, Logo, Illustration, Icon** : `<input type="search">`, `<button>` et
+  onglets maison au lieu de `SearchField`, `Button`, `Tabs`, `ToggleButtonGroup`, ~135 px en dur
+  dans Tokens.stories. `--text-disabled` (déprécié) affiché sans mention.
+- **Breadcrumbs.stories:170** : bouton custom `outline: none` sans FocusRing (pas de focus
+  clavier visible).
+- **CalendarCell.stories** : recopie les styles du composant (`CellPreview`) au lieu de
+  l'utiliser, a dérivé, et utilise `--icon-disabled` (déprécié).
+- **Divers** : Statut (Stack bordé → Card outlined), Table (h3 stylé, point d'état en token de
+  texte), Tag (points 8 px en dur), Stepper (`<button>` natif), `_guidelines` CodeChip → `Code`,
+  PageTemplates.module.css (`rgba(255,0,76,…)`), `_rechercheGlobale` (repli `#fff3b0` inutile),
+  démos sur fond sombre en px (Badge, Heading, Hero, Spinner, Text), échafaudages
+  `div style={{display:"flex", gap: 12}}` au lieu de Stack/Cluster dans une quinzaine de stories,
+  `<Icon size>` surchargé (~25 occurrences).
+- **`customTheme.ts`** (manager Storybook) : 4 hex absents des tokens (#22427c, #39558a, #7488ab,
+  #e9effa), le navy des tokens est #1e3661.
+- **`--page-gutter`** : custom property interne de Page utilisée dans 7 stories, API non
+  documentée.
+- **Composants src** : tokens `--*-disabled` dépréciés encore lus par Tabs, TimePicker,
+  ToggleButtonGroup, Calendar, Radio, Card. CalendarCell.module.css:133 pose `--border-comete-bold`
+  en fond.
+- **ADR 0001** : liste les paliers brand sans `boldest`. Ajouter un addendum plutôt que réécrire.
+
 ## Navs, Banner, Button link (2026-11-20)
 
 - ~~**Easing de la pastille glissante**~~ : FAIT, `easing.emphasized` (tokens 0.37.0, alpha.197).

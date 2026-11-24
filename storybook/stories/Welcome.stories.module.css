@@ -61,7 +61,7 @@
   max-width: 50ch;
   margin: 0;
   color: var(--text-on-dark-surface);
-  opacity: 0.8;
+  opacity: var(--opacity-75);
 }
 
 .page .heroQuote {
@@ -90,7 +90,7 @@
   height: 520px;
   margin: auto;
   border: 1px solid var(--border-inverted);
-  opacity: 0.4;
+  opacity: var(--opacity-50);
 }
 
 .orbitDot {
@@ -109,7 +109,7 @@
   height: 340px;
   margin: auto;
   border: 1px dashed var(--border-inverted);
-  opacity: 0.5;
+  opacity: var(--opacity-50);
   animation-direction: reverse;
   animation-duration: 90s;
 }
@@ -126,7 +126,7 @@
     var(--background-warning-bold-default),
     transparent 65%
   );
-  opacity: 0.22;
+  opacity: var(--opacity-25);
 }
 
 .heroIcon {
@@ -227,7 +227,7 @@
 
 .swatchBoard {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   grid-template-rows: 1fr 1fr;
   height: 100%;
 }
@@ -266,7 +266,7 @@
 }
 
 .sampleCell {
-  grid-column: span 3;
+  grid-column: span 4;
   flex-direction: column;
   justify-content: center;
   gap: var(--space100);
@@ -289,16 +289,6 @@
   border-right: 1px solid var(--border-subtle);
 }
 
-.logoTile {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--space800);
-  height: var(--space800);
-  border-radius: var(--radius200);
-  background: var(--surface-comete);
-}
-
 .resourceIcons {
   display: grid;
   grid-template-columns: repeat(4, var(--space400));
@@ -306,53 +296,6 @@
   align-content: center;
   justify-content: center;
   color: var(--icon-brand-default);
-}
-
-/* ---- Personas ---- */
-
-.personaIconDark,
-.personaIconYellow {
-  display: flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  width: var(--space600);
-  height: var(--space600);
-  border-radius: var(--radius100);
-}
-
-.personaIconDark {
-  background: var(--surface-comete);
-  color: var(--comete-yellow-300);
-}
-
-.personaIconYellow {
-  /* Jaune d'avertissement et son icône dédiée : le contraste est garanti dans les deux thèmes. */
-  --icon-default: var(--icon-on-light-surface);
-  background: var(--background-warning-bold-default);
-  color: var(--icon-on-light-surface);
-}
-
-/* ---- Aide ---- */
-
-.help {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space300);
-  padding: var(--space300);
-  border-radius: var(--radius200);
-  background: var(--surface-comete);
-  color: var(--text-on-dark-surface);
-}
-
-.page .helpText {
-  color: var(--text-on-dark-surface);
-}
-
-.page .helpBody {
-  color: var(--text-on-dark-surface);
-  opacity: 0.8;
 }
 
 /* Les cartes d'une même rangée prennent la hauteur de la plus haute, avec le rayon et l'ombre de
