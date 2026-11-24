@@ -2,6 +2,15 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-24 — Figma : page « ◆ Exemples de pages »
+
+**Décision** (demande d'Axel) : une page Figma montre quatre écrans construits en instances du DS,
+un par surface (default, sunken, raise, overlay), avec cards, boutons et champs. Les contenus de
+slot sont des composants locaux `Slot content / Exemples / *` (KPI, Mission, Résumé, Formulaire).
+
+**Raison** : voir comment les composants s'affichent selon la surface, et repérer les écarts
+Figma / code (consignés dans TODO.md).
+
 ## 2026-11-24 — Welcome : boldest, IconTile, aide en Card, logo officiel
 
 **Décisions** (demande d'Axel) :
