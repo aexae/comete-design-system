@@ -1,5 +1,24 @@
 # TODO
 
+## Figma : écarts relevés en construisant « ◆ Exemples de pages » (2026-11-24)
+
+Page créée : écrans surface default (formulaire), sunken (tableau de bord), raise (panneau de
+détail) et overlay (modale), en instances du DS. Écarts des composants Figma rencontrés :
+
+- **Card** : variantes `neutral` / `outlined` alors que le code a `outlined` / `subtle` / `bold`
+  et `color`. `neutral` est liée à `DEPRECATED-card/color/background/neutral` → `surface/sunken`,
+  donc invisible sur une page sunken. Aucune élévation sur la variante par défaut. Le slot de
+  contenu est à hauteur fixe (72 px) : il faut le passer en hug à chaque instance.
+- **ModalDialog** : le voile intégré (`isBlanketHidden`) ne s'affiche pas, et redimensionner
+  l'instance à la taille d'un écran étire la boîte (`medium` passe de 600 à 1 120 px).
+  Contournement sur la page : instance `Blanket` séparée.
+- **Field** : le slot `{children}` accepte un TextField mais ignore un Select (swap sans effet
+  ni erreur). Le TextField imbriqué ne remplit pas la largeur du Field.
+- **Menu** : sans fond propre (la surface est portée par Popover), contenu d'exemple
+  (« Option », « Heading item ») à remplacer. À documenter ou à corriger.
+- **TextField** : l'état `filled` affiche une bordure bleue de focus. L'état rempli au repos est
+  `rest`, nom peu parlant à côté de `filled`.
+
 ## Audit des stories : tokens et composants hors DS (2026-11-24)
 
 Corrigé dans la PR « welcome boldest » : tokens inexistants (Icon `--border-focus`,
@@ -9,7 +28,7 @@ Couleur `--text-brand`), bloc d'aide Welcome passé sur `Card bold comete`, past
 
 - ~~**Token `--border-on-dark-surface`**~~ : FAIT (tokens 0.39.0), filets du hero Welcome dessus.
   Manquent encore `--border-on-light-surface` et toute la famille `background` en
-  `on-*-surface`. Variable Figma `border/on-dark-surface` à créer.
+  `on-*-surface`. Variable Figma `border/on-dark-surface` : FAITE (collection semantics).
 - ~~**Bouton « Écrire sur Teams »**~~ : FAIT, `color="comete"` (choix d'Axel).
 - ~~**Avatars du bloc d'aide**~~ : FAIT, `color="neutral"`.
 - **`.heroAccent`** (Welcome) : un token de fond (`--background-warning-bold-default`) sert de
