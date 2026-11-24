@@ -9,9 +9,10 @@ détail) et overlay (modale), en instances du DS. Écarts des composants Figma r
   et `color`. `neutral` est liée à `DEPRECATED-card/color/background/neutral` → `surface/sunken`,
   donc invisible sur une page sunken. Aucune élévation sur la variante par défaut. Le slot de
   contenu est à hauteur fixe (72 px) : il faut le passer en hug à chaque instance.
-- **ModalDialog** : le voile intégré (`isBlanketHidden`) ne s'affiche pas, et redimensionner
-  l'instance à la taille d'un écran étire la boîte (`medium` passe de 600 à 1 120 px).
-  Contournement sur la page : instance `Blanket` séparée.
+- **ModalDialog** : le booléen `isBlanketHidden` est inversé. À `true` (valeur par défaut), le
+  voile est affiché, à `false` il est masqué. Renommer la propriété (`showBlanket`) ou inverser
+  sa liaison. Pas d'étirement de la boîte au redimensionnement (largeur fixe, vérifié le
+  2026-11-24).
 - **Field** : le slot `{children}` accepte un TextField mais ignore un Select (swap sans effet
   ni erreur). Le TextField imbriqué ne remplit pas la largeur du Field.
 - **Menu** : sans fond propre (la surface est portée par Popover), contenu d'exemple
