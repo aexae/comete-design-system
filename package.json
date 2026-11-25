@@ -59,7 +59,7 @@
     "@aexae/comete-design-tokens": "^0.41.0",
     "@aexae/comete-icons": "0.14.0",
     "@aexae/comete-illustrations": "0.1.0-alpha.5",
-    "@aexae/comete-logos": "0.15.0",
+    "@aexae/comete-logos": "0.15.1",
     "@eslint/compat": "^2.1.1",
     "@eslint/js": "^10.0.1",
     "@internationalized/date": "^3.12.4",

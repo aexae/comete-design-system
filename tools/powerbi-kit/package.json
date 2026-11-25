@@ -14,7 +14,7 @@
   "dependencies": {
     "@aexae/comete-design-tokens": "0.41.0",
     "@aexae/comete-icons": "0.14.0",
-    "@aexae/comete-logos": "0.15.0",
+    "@aexae/comete-logos": "0.15.1",
     "@resvg/resvg-js": "^2.6.2",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
