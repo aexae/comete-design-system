@@ -91,3 +91,25 @@ export function resolveVars(input: string, tokens: Map<string, string>, depth = 
   );
   return resolveVars(resolved, tokens, depth + 1);
 }
+
+/**
+ * Aplatit une couleur `rgba()` sur un fond opaque et renvoie un hex.
+ *
+ * Depuis les tokens 0.2x, les couleurs `disabled` sont exprimées en alpha
+ * (`rgba(9, 9, 11, 0.4)`). Power BI n'accepte que des hex opaques dans un thème
+ * et dans `SUBSTITUTE()` : on compose donc la couleur sur le fond de référence
+ * du thème (`--surface-default`). Une valeur déjà opaque est renvoyée telle quelle.
+ */
+export function flattenAlpha(value: string, backdropHex: string): string {
+  const match = /^rgba?\(\s*(\d+)[\s,]+(\d+)[\s,]+(\d+)(?:[\s,/]+([\d.]+%?))?\s*\)$/.exec(value);
+  const backdrop = /^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/.exec(backdropHex);
+  if (match === null || backdrop === null) return value;
+  const rawAlpha = match[4] ?? "1";
+  const alpha = rawAlpha.endsWith("%") ? Number(rawAlpha.slice(0, -1)) / 100 : Number(rawAlpha);
+  const channels = [1, 2, 3].map((i) => {
+    const front = Number(match[i]);
+    const back = parseInt(backdrop[i] ?? "00", 16);
+    return Math.round(front * alpha + back * (1 - alpha));
+  });
+  return `#${channels.map((c) => c.toString(16).padStart(2, "0")).join("")}`.toUpperCase();
+}

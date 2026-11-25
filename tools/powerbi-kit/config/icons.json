@@ -89,7 +89,7 @@
   "coloredSets": [
     {
       "dir": "main_menu",
-      "color": "icon-brand",
+      "color": "icon-brand-default",
       "variant": "outlined",
       "names": [
         "Home",

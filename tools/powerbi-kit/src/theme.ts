@@ -11,7 +11,7 @@
 // évoluent, et la variante sombre s'obtient en changeant de table de tokens.
 
 import { readFileSync } from "node:fs";
-import { resolveVars, type ThemeMode } from "./tokens.ts";
+import { flattenAlpha, resolveVars, type ThemeMode } from "./tokens.ts";
 import { fileURLToPath } from "node:url";
 
 const CONFIG_DIR = fileURLToPath(new URL("../config/", import.meta.url));
@@ -88,7 +88,11 @@ export function buildTheme(
     // Le mapping porte des couleurs et des dimensions. Une valeur en px
     // devient un nombre nu (le thème Power BI ne connaît pas les unités),
     // un hex reste une chaîne normalisée.
-    const resolved = resolveVars(raw, tokens);
+    // Les couleurs en alpha (tokens `disabled`) sont aplaties sur le fond du thème.
+    const resolved = flattenAlpha(
+      resolveVars(raw, tokens),
+      resolveVars(tokens.get("--surface-default") ?? "", tokens)
+    );
     const pixels = /^(-?\d+(?:\.\d+)?)px$/.exec(resolved);
     const value: Json =
       pixels !== null

@@ -1,5 +1,5 @@
 // Card — stories Storybook
-import React from "react";
+import type React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { CardDrag, CardAppearance, CardColor } from "@aexae/comete-design-system/components";
 import {

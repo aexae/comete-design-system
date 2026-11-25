@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from "react-aria-components";
 import { forwardRef } from "react";
 import type { IconColor, IconName } from "@aexae/comete-icons";

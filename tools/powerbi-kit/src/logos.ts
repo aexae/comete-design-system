@@ -13,11 +13,11 @@
 
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { logoRegistry, type LogoProps } from "@aexae/comete-logos";
+import { logoRegistry, type LogoAppearance, type LogoProps } from "@aexae/comete-logos";
 import { composeSvg } from "./compose.ts";
 import { resolveVars, type ThemeMode } from "./tokens.ts";
 
-export type LogoAppearance = "brand" | "neutral" | "inverse";
+export type { LogoAppearance };
 export type LogoFormat = "icon" | "logo";
 export type LogoTaglineAlign = "none" | "inline" | "column";
 export type LogoProduct = keyof typeof logoRegistry;
@@ -38,10 +38,10 @@ const APPEARANCE_VARS: Record<LogoAppearance, Record<string, string>> = {
     "--_logo-gradient-light": "var(--logo-comete-neutral)",
     "--_logo-gradient-dark": "var(--logo-comete-neutral)",
   },
-  inverse: {
+  inverted: {
     "--_logo-text": "var(--logo-comete-inverted)",
     "--_logo-icon": "var(--logo-comete-inverted)",
-    "--_logo-subtle": "var(--logo-comete-subtle)",
+    "--_logo-subtle": "var(--logo-comete-subtle-inverted)",
     "--_logo-gradient-light": "var(--logo-comete-gradient-light)",
     "--_logo-gradient-dark": "var(--logo-comete-gradient-dark)",
   },
@@ -49,13 +49,12 @@ const APPEARANCE_VARS: Record<LogoAppearance, Record<string, string>> = {
 
 /**
  * Corps d'icône visible selon l'apparence et le thème — table reprise des
- * commentaires de `logos.css`. `inverse` s'inverse en thème sombre pour rendre
- * un logo identique à `brand` en clair.
+ * commentaires de `logos.css` (logos 0.15) : seul `brand` suit le thème,
+ * `neutral` et `inverted` utilisent toujours le DarkBody.
  */
 function visibleBody(appearance: LogoAppearance, theme: ThemeMode): "light" | "dark" {
   if (appearance === "brand") return theme === "dark" ? "dark" : "light";
-  if (appearance === "inverse") return theme === "dark" ? "light" : "dark";
-  return "dark"; // neutral : toujours DarkBody
+  return "dark"; // neutral et inverted : toujours DarkBody
 }
 
 /** Retire le <svg> du corps masqué par le CSS pour l'apparence courante. */

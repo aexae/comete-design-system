@@ -17,20 +17,20 @@
       "taglineAlign": "none"
     },
     {
-      "product": "comete",
+      "product": "comete-software",
       "format": "logo",
       "taglineAlign": "none"
     },
     {
-      "product": "comete",
+      "product": "comete-company",
       "format": "logo",
       "taglineAlign": "column"
     },
     {
-      "product": "comete",
+      "product": "comete-software",
       "format": "icon",
       "taglineAlign": "none"
     }
   ],
-  "appearances": ["brand", "neutral", "inverse"]
+  "appearances": ["brand", "neutral", "inverted"]
 }

@@ -17,10 +17,10 @@
   },
   "dependencies": {
     "@aexae/comete-design-system": "file:..",
-    "@aexae/comete-logos": "latest",
-    "react": "^19.2.4",
-    "react-aria-components": "^1.16.0",
-    "react-dom": "^19.2.4"
+    "@aexae/comete-logos": "0.15.0",
+    "react": "^19.3.1",
+    "react-aria-components": "^1.22.1",
+    "react-dom": "^19.3.1"
   },
   "devDependencies": {
     "@aexae/comete-design-tokens": "0.41.0",
@@ -38,19 +38,19 @@
     "@types/node": "^26.6.6",
     "@vitest/browser": "^5.1.1",
     "@vitest/browser-playwright": "^5.1.1",
-    "chromatic": "^18.14.6",
+    "chromatic": "^18.15.2",
     "eslint": "^10.15.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-storybook": "^10.6.8",
-    "globals": "^17.4.0",
-    "playwright": "1.60.0",
-    "serve": "^14.2.6",
+    "globals": "^17.14.0",
+    "playwright": "1.65.1",
+    "serve": "^14.2.8",
     "storybook": "^10.6.8",
-    "typescript-eslint": "^8.57.1",
-    "vite": "^8.0.0",
+    "typescript-eslint": "^8.74.0",
+    "vite": "^8.3.8",
     "vitest": "^5.1.1"
   }
 }
