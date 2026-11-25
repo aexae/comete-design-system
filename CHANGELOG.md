@@ -9,6 +9,13 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Modifié (alpha.200)
+
+- **Tokens 0.41.0 : warning en orange**, comme dans Figma. Fonds (`bold`, `boldest`, `subtler`,
+  `subtlest`), `--border-warning-*`, `--icon-warning` et `--surface-overlay-warning` passent de
+  la palette `yellow` à `orange` aux mêmes paliers (le texte warning l'était déjà). Aucun nom
+  ne change, mais la teinte change dans Banner, Badge, Snackbar, Tag, Button, etc.
+
 ### Ajouté (alpha.199)
 
 - **Tokens 0.40.0** : `--background-{neutral,success,warning,critical,information}-boldest-*` et
