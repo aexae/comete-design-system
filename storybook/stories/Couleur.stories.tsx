@@ -48,6 +48,21 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
   );
 }
 
+const BOLDEST_FAMILIES = [
+  "comete",
+  "brand",
+  "neutral",
+  "success",
+  "warning",
+  "critical",
+  "information",
+  "accent-purple",
+  "accent-teal",
+  "accent-turquoise",
+  "accent-magenta",
+  "accent-blue-grey",
+] as const;
+
 function Swatch({ token, label }: { token: string; label: string }) {
   return (
     <Stack gap="050" align="center">
@@ -179,6 +194,21 @@ export const Philosophie: Story = {
           <code>Card appearance=&quot;bold&quot;</code>), jamais un contrôle. Texte posé dessus en{" "}
           <code>text.on-dark-surface</code>.
         </Text>
+      </Section>
+
+      <Section title="Palier boldest par famille">
+        <Text size="small" color="subtle">
+          Chaque famille a un fond <code>boldest</code> (palier 950, identique en clair et en
+          sombre) pour les surfaces qui restent foncées quel que soit le thème. Jamais un contrôle,
+          texte posé dessus en <code>text.on-dark-surface</code>. Seuls <code>comete</code> et{" "}
+          <code>brand</code> ont aussi des tokens <code>text</code>, <code>border</code> et{" "}
+          <code>icon</code> <code>boldest</code>.
+        </Text>
+        <Stack direction="row" gap="150" wrap>
+          {BOLDEST_FAMILIES.map((f) => (
+            <Swatch key={f} token={`--background-${f}-boldest-default`} label={f} />
+          ))}
+        </Stack>
       </Section>
     </Stack>
   ),

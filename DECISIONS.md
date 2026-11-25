@@ -2,6 +2,23 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-25 — `boldest` sur toutes les familles de fond (tokens 0.40.0)
+
+**Contexte** : question d'Axel sur le navy de `Card bold comete` (voulu, décision du 19/11) et
+demande de vérifier que `boldest` existait pour toutes les familles. Il n'existait que pour
+`comete` et `brand`.
+
+**Décisions** (Axel) :
+
+- **Créer `boldest` partout, fond seul** : `background.{neutral,success,warning,critical,
+information,accent.*}.boldest.{default,hovered,pressed}`. Pas de `text` / `border` / `icon`
+  `boldest` pour ces familles (évite de transformer `icon.success` etc. en groupes, cassant).
+- **Valeurs miroir de comete** : 950 / 900 / 800, identiques en clair et en sombre, texte en
+  `text.on-dark-surface` (13:1 à 16,8:1).
+- **Card navy actionnable** : consigné dans `TODO.md` pour arbitrage, pas de changement.
+- Variables Figma créées (collection `semantics`). Warning y suit `orange` faute de palette
+  `yellow` dans Figma, écart noté dans `TODO.md`.
+
 ## 2026-11-24 — Storybook 10.6.8, ESLint 10 et `glob` forcé en 13
 
 **Décisions** :
