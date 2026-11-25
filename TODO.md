@@ -320,7 +320,7 @@ hovered}` repointées vers `text/link/{default,hovered}`, ajout de
   docgen React via `react-component-meta`, stories typées en CSF 4 (codemod, CSF 3 conservé).
   Ne pas passer à la bêta : version majeure avec changements cassants, alors que la 10.6.7
   vient d'être stabilisée. À la sortie stable, vérifier la compatibilité de
-  `@storybook/addon-designs`, de Chromatic et des 613 tests de stories.
+  `@storybook/addon-designs` et des tests de stories.
 
 - **CI : `playwright install --with-deps` dépend des miroirs Ubuntu** (2026-11-19)
   Le job « Lint, Test & Build » a échoué deux fois de suite sur la PR #360 (miroirs
@@ -392,41 +392,18 @@ not a function` dans `eslint-plugin-react` 7.37.5, sa dernière version).
   style inline. Règle pour les prochains tests : `element.style.x` pour une valeur
   posée en inline, jamais `toHaveStyle` avec un `var()`.
 
-- **Chromatic : quota du plan atteint** (2026-11-19)
-  Chromatic 18 fonctionne en CI (« Visual tests » et « Storybook Publish » verts, PR
-  #363). Mais le statut « UI Tests » reste en attente avec « Update your plan to resume
-  testing » : le quota de snapshots du plan est épuisé, la comparaison visuelle ne
-  tourne plus. Régressions visuelles non détectées tant que le plan n'est pas relevé
-  ou le quota renouvelé. Piste : TurboSnap (`onlyChanged`) pour réduire la
-  consommation.
-
-- **Chromatic : projet rattaché au compte perso Naxit** (2026-11-19)
-  Le projet (appId `69bb5bbd483eecaff6adc69c`) a été créé le 19/03/2026 sous le compte
-  Chromatic personnel. Le token (`CHROMATIC_PROJECT_TOKEN` et `storybook/chromatic.config.json`)
-  désigne ce projet, donc la facturation et le quota sont ceux du compte perso (cause
-  probable du quota épuisé ci-dessus). Constaté dans Chromatic : le compte `aexae`
-  existe (plan Free 5 000 snapshots/mois, 0 utilisé) avec un ancien projet
-  `comete-design-system` (appId `685bae95c4baf249a1369566`, 2 builds) dont le lien GitHub
-  est cassé (token du compte `developpeurcomete` expiré). Aucune option de transfert
-  libre-service dans Manage › Configure. Action : basculer la CI sur le projet `aexae`
-  (secret + config), relier le dépôt à ce projet, puis supprimer ou délier le projet Naxit.
-  Le compte `aexae` étant aussi en Free, le quota sera de nouveau atteint sans plan
-  payant ni TurboSnap.
-
-- **Chromatic : synchro GitHub portée par un compte personnel**
-  La synchro GitHub d'un projet Chromatic utilise le token OAuth d'un collaborateur.
-  Celui du projet `aexae` appartenait à `developpeurcomete` (compte Gmail générique
-  partagé), désormais invalide. `developpeurcomete` n'apparaît plus dans les
-  collaborateurs du compte `aexae`. Le compte Chromatic `aexae` est synchronisé par
-  `CometeAdminGit` (Admin, token valide). Action : se connecter à Chromatic avec
-  `CometeAdminGit` et faire « Replace with your token » sur le projet, plutôt qu'un
-  token nominatif (départ de la personne = synchro cassée).
-
-- **Sécurité : token Chromatic en clair dans le dépôt**
-  `storybook/chromatic.config.json` contient `projectToken` en dur (commité depuis le
-  19/03/2026), doublon du secret CI. Le retirer du fichier, régénérer le token dans
-  Chromatic (il reste dans l'historique git) et passer par `CHROMATIC_PROJECT_TOKEN`
-  en local aussi.
+- **Chromatic retiré du dépôt (25/11/2026) : nettoyage restant hors dépôt**
+  Workflow, addon, dépendance, configuration et secret GitHub `CHROMATIC_PROJECT_TOKEN`
+  sont supprimés (voir `DECISIONS.md`). Reste à faire côté chromatic.com, par un admin :
+  - supprimer les deux projets (`aexae`, appId `685bae95…`, et l'ancien projet du compte
+    personnel, appId `69bb5bbd…`). Un token de projet a été commité en clair dans
+    `storybook/chromatic.config.json` à partir du 19/03/2026 et reste dans l'historique
+    git : seule la suppression du projet (ou la régénération du token) l'invalide.
+  - retirer la ligne `CHROMATIC_PROJECT_TOKEN` des `.env` locaux.
+  - conséquence assumée : plus aucune détection de régression purement visuelle. Les 615
+    play functions en Chromium ne couvrent que le comportement et quelques mesures. Piste
+    si le besoin revient : captures Playwright (`toHaveScreenshot`) sur un jeu réduit de
+    stories, sans service tiers ni quota.
 
 ## Emails (relevé sur le modèle « RFE point d'étape », 2026-10-21)
 
@@ -470,9 +447,6 @@ de référence est dans SharePoint › 7-Communication › `_Marque & Charte Com
     et le docgen de Storybook). À reprendre quand `typescript-eslint` l'annoncera.
   - Renovate est configuré mais les retards s'accumulaient (rattrapage manuel du 25/11/2026) :
     vérifier que l'application tourne bien sur le dépôt.
-  - `@aexae/comete-logos` 0.15.0 publié déclare encore le peer `tokens` `^0.17.0`, non
-    satisfait par 0.40 (avertissement `pnpm peers check`). Le correctif (`>=0.17.0`) est en
-    cours, non commité, dans le clone `comete-logos` : le publier puis bumper ici.
   - `.github/workflows/ci.yml` épingle `ubuntu-24.04` avec un commentaire qui cite
     Playwright 1.60. Avec Playwright 1.65.1, réévaluer `ubuntu-latest` et corriger le
     commentaire.

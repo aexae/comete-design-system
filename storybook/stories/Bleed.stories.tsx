@@ -198,7 +198,6 @@ export const BleedMobile: Story = {
   name: "Mobile (Page.Bar + BottomNav)",
   parameters: {
     layout: "centered",
-    chromatic: { viewports: [375] },
   },
   render: () => (
     <div
@@ -319,7 +318,6 @@ export const BleedDesktop: Story = {
   name: "Desktop (SideNav + Page)",
   parameters: {
     viewport: { defaultViewport: "responsive" },
-    chromatic: { viewports: [1440] },
   },
   render: () => (
     <div style={{ display: "flex", height: "100vh" }}>

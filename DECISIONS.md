@@ -2,6 +2,15 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-25 — Retrait de Chromatic, `comete-logos` 0.15.1
+
+**Décisions** (Axel) :
+
+- **Chromatic est retiré** : workflow `chromatic.yml`, addon `@chromatic-com/storybook`, dépendance `chromatic`, `storybook/chromatic.config.json`, `CHROMATIC.md`, paramètres `chromatic` des stories `Bleed` et secret GitHub `CHROMATIC_PROJECT_TOKEN`.
+- **`@aexae/comete-logos` 0.15.1** publié (peer `tokens` élargi à `>=0.17.0`) et adopté dans les trois workspaces. L'avertissement « unmet peer » disparaît.
+
+**Contexte / raison** : personne ne validait les écarts visuels, et le plan ne couvrait pas le volume envoyé (615 stories par build, jusqu'à 31 builds par jour). Le check « UI Tests » restait en attente sur toutes les PR, ce qui habituait à ignorer un check. Le comportement reste couvert par les play functions jouées en Chromium par la CI, et Storybook est publié par `deploy-storybook.yml`. Conséquence assumée : plus de détection des régressions purement visuelles (piste de remplacement dans `TODO.md`).
+
 ## 2026-11-25 — Rattrapage des dépendances, `comete-logos` épinglé, kit Power BI migré
 
 **Décisions** (demande d'Axel) :

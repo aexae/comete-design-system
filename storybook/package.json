@@ -12,12 +12,11 @@
     "format:check": "prettier --check . --ignore-path ../.prettierignore --ignore-path .gitignore",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "chromatic": "chromatic"
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@aexae/comete-design-system": "file:..",
-    "@aexae/comete-logos": "0.15.0",
+    "@aexae/comete-logos": "0.15.1",
     "react": "^19.3.1",
     "react-aria-components": "^1.22.1",
     "react-dom": "^19.3.1"
@@ -25,7 +24,6 @@
   "devDependencies": {
     "@aexae/comete-design-tokens": "0.41.0",
     "@aexae/comete-icons": "0.14.0",
-    "@chromatic-com/storybook": "^5.6.0",
     "@eslint/compat": "^2.1.1",
     "@eslint/js": "^10.0.1",
     "@mdx-js/react": "^3.1.1",
@@ -38,7 +36,6 @@
     "@types/node": "^26.6.6",
     "@vitest/browser": "^5.1.1",
     "@vitest/browser-playwright": "^5.1.1",
-    "chromatic": "^18.15.2",
     "eslint": "^10.15.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
