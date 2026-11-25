@@ -208,7 +208,7 @@ Sélectionner le bouton, volet **Format > Bouton > Style > Icône**, choisir
 - **En-tête de rapport, filigrane, fond** : Insérer > Image vers un SVG de
   \`logos/svg/\`, net à toute taille.
 - **Dans une table ou une carte** : \`logos.csv\`, comme les icônes.
-- Apparences : \`brand\` (fond clair), \`inverse\` (fond sombre), \`neutral\`
+- Apparences : \`brand\` (fond clair), \`inverted\` (fond sombre), \`neutral\`
   (monochrome). Le logo est un élément de marque : ne pas le recolorer,
   le déformer ni le recomposer.
 

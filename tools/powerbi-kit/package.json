@@ -12,18 +12,18 @@
     "verify": "tsx src/verify.ts"
   },
   "dependencies": {
-    "@aexae/comete-design-tokens": "^0.13.0",
-    "@aexae/comete-icons": "latest",
-    "@aexae/comete-logos": "0.12.4",
+    "@aexae/comete-design-tokens": "0.40.0",
+    "@aexae/comete-icons": "0.14.0",
+    "@aexae/comete-logos": "0.15.0",
     "@resvg/resvg-js": "^2.6.2",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   },
   "devDependencies": {
-    "@types/node": "^22.10.0",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "tsx": "^4.20.6",
-    "typescript": "^5.9.3"
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3"
   }
 }

@@ -468,17 +468,33 @@ de référence est dans SharePoint › 7-Communication › `_Marque & Charte Com
   - Storybook 10.6.8 ne corrige pas la course de l'indexeur décrite ci-dessus (ses notes de
     version ne couvrent que `preview-stats.json` et le préchargement des stories). Le
     contournement reste le redémarrage.
-  - Retards restants, non traités ici car hors demande et à risque : `typescript` 7 (bloqué
-    par `typescript-eslint`, peer `<6.1.0`), `react-aria-components` 1.17 vers 1.22,
-    `playwright` 1.60 vers 1.65 (épinglé, à aligner avec l'image CI) et la version 8 de
-    `@testing-library/jest-dom`. Renovate est configuré mais ces retards s'accumulent :
-    vérifier qu'il tourne bien sur le dépôt.
-  - `@aexae/comete-logos` est en `latest` (racine et Storybook) : installation non
-    reproductible hors lockfile, et `logos` 0.15.0 attend `tokens` ^0.17 alors que le DS est
-    en 0.37 (peer non satisfait). Épingler une version et réaligner le peer côté `comete-logos`.
-  - `tools/powerbi-kit` reste sur `tokens` 0.13.2 et `logos` 0.12.4, incompatibles avec
-    `icons` 0.14.0 (peer `>=0.33.0`).
-  - Shell de Claude Code : la fonction `pnpm` (et `npx`) appelle `_with_npm_token`, absente
-    du snapshot. Les commandes échouent sauf à appeler `/opt/homebrew/bin/pnpm` avec
-    `NPM_AUTH_TOKEN` exporté. À corriger dans le profil zsh (définir la fonction avant les
-    alias, ou la rendre disponible en shell non interactif).
+  - `typescript` 7 reste bloqué : `typescript-eslint` 8.74 exige `<6.1.0` (TypeScript 7 est
+    le portage natif, sans l'API JavaScript dont dépendent aussi `tsup`, `typed-css-modules`
+    et le docgen de Storybook). À reprendre quand `typescript-eslint` l'annoncera.
+  - Renovate est configuré mais les retards s'accumulaient (rattrapage manuel du 25/11/2026) :
+    vérifier que l'application tourne bien sur le dépôt.
+  - `@aexae/comete-logos` 0.15.0 publié déclare encore le peer `tokens` `^0.17.0`, non
+    satisfait par 0.40 (avertissement `pnpm peers check`). Le correctif (`>=0.17.0`) est en
+    cours, non commité, dans le clone `comete-logos` : le publier puis bumper ici.
+  - `.github/workflows/ci.yml` épingle `ubuntu-24.04` avec un commentaire qui cite
+    Playwright 1.60. Avec Playwright 1.65.1, réévaluer `ubuntu-latest` et corriger le
+    commentaire.
+  - Chromium 159 (Playwright 1.65) sérialise `flex-start` en `flow-start` dans
+    `getComputedStyle`. Les play functions ne doivent plus asserter sur ces mots-clés
+    (cas corrigé : `Table to list`, assertion géométrique).
+
+- **Kit Power BI : écarts de sortie après migration tokens 0.40 et logos 0.15 (25/11/2026)**
+  Le kit généré (`tools/powerbi-kit/dist`, non versionné) n'est plus identique à celui
+  livré au consultant. À valider avant toute nouvelle livraison :
+  - Thème clair : sélection du segment (`--background-brand-bold-default`) passe de
+    `#1E3661` à `#2467D1`, texte désactivé de `#DDDEE1` à `#9D9D9D`, fond désactivé de
+    `#F8F8F8` à `#E6E6E7`. Thème sombre : 19 valeurs changent.
+  - Les tokens `disabled` sont désormais en `rgba()`, que Power BI refuse. Le kit les
+    aplatit sur `--surface-default` (`flattenAlpha`), d'où des gris plus soutenus qu'avant.
+    Le contrôle « couleur hors tokens » les signale en avertissement, à juste titre.
+  - `colors.csv` : `brand` et `comete` deviennent `brand-default` et `comete-default`,
+    `on-warning` disparaît, `brand-boldest`, `comete-boldest`, `on-dark-surface` et
+    `on-light-surface` apparaissent. Une mesure DAX qui cherche `brand` par nom casse.
+  - Logos : les fichiers `comete-*` deviennent `comete-software-*` (logo et icône) et
+    `comete-company-logo-column-*` (avec signature), `*-inverse` devient `*-inverted`.
+    Les références d'images des rapports existants sont à mettre à jour.

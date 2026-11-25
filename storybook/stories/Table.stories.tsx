@@ -1425,9 +1425,18 @@ export const TableToList: Story = {
 
     // 3) Alignement : le trailing est calé en HAUT (`align-self: flex-start`),
     //    pas centré — il reste en regard de la 1re ligne du titre sur 2 lignes.
-    const trailing = list.querySelector('[class*="itemTrailing"]');
-    await expect(trailing).not.toBeNull();
-    await expect(getComputedStyle(trailing as Element).alignSelf).toBe("flex-start");
+    // REASON: assertion géométrique et non sur la valeur calculée. Chromium 159
+    // (Playwright 1.65) sérialise `flex-start` en `flow-start`. Sur l'item haut
+    // (titre sur 2 lignes), un trailing calé en haut a son centre AU-DESSUS du
+    // centre de l'item ; centré, les deux coïncideraient.
+    const tallRow = rows.find((r) => /Intrusion détectée/.test(r.textContent ?? ""));
+    const trailing = tallRow?.querySelector('[class*="itemTrailing"]');
+    await expect(trailing).toBeTruthy();
+    const centerOf = (el: Element) => {
+      const rect = el.getBoundingClientRect();
+      return rect.top + rect.height / 2;
+    };
+    await expect(centerOf(trailing as Element)).toBeLessThan(centerOf(tallRow as Element));
   },
 };
 

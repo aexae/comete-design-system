@@ -21,7 +21,7 @@ import {
   type LogoProduct,
   type LogoTaglineAlign,
 } from "./logos.ts";
-import { loadTokens } from "./tokens.ts";
+import { flattenAlpha, loadTokens, resolveVars } from "./tokens.ts";
 import { toDataUri, csvCell, POWERBI_URL_LIMIT, COLOR_PLACEHOLDER } from "./datauri.ts";
 import { annotateTheme, buildTheme, unmappedColors } from "./theme.ts";
 import { renderReadme } from "./readme.ts";
@@ -159,7 +159,10 @@ export async function build(): Promise<Report> {
 
   // ---- Couleurs sémantiques, pré-encodées pour SUBSTITUTE() ---------------
   const colorRows: string[][] = [];
-  for (const [token, value] of [...tokens].sort()) {
+  const backdrop = resolveVars(tokens.get("--surface-default") ?? "", tokens);
+  for (const [token, raw] of [...tokens].sort()) {
+    // Les couleurs en alpha (`--icon-disabled`) sont aplaties sur le fond du thème.
+    const value = flattenAlpha(raw, backdrop);
     if (!token.startsWith("--icon-") || !/^#[0-9a-fA-F]{6}$/.test(value)) continue;
     colorRows.push([
       token.replace("--icon-", ""),
@@ -175,9 +178,9 @@ export async function build(): Promise<Report> {
   for (const entry of logosConfig.entries) {
     for (const appearance of logosConfig.appearances) {
       // Les trois apparences se lisent depuis le thème clair, qui sert de
-      // référence : `brand` donne le logo foncé (fond clair), `inverse` le
+      // référence : `brand` donne le logo foncé (fond clair), `inverted` le
       // logo clair (fond sombre), `neutral` la version monochrome. Les rendre
-      // avec les tokens sombres inverserait une seconde fois `inverse` et
+      // avec les tokens sombres inverserait une seconde fois `inverted` et
       // produirait un wordmark foncé, invisible sur un fond sombre.
       const rendered = renderLogo({
         product: entry.product,
@@ -258,10 +261,10 @@ export async function build(): Promise<Report> {
   const semanticColors = [
     { label: "Positif, hausse", token: "--icon-success" },
     { label: "Négatif, baisse", token: "--icon-critical" },
-    { label: "Attention (texte lisible)", token: "--text-warning" },
+    { label: "Attention (texte lisible)", token: "--text-warning-default" },
     { label: "Information", token: "--icon-information" },
     { label: "Accent des tables et matrices", token: "--comete-blue-700" },
-    { label: "Texte secondaire", token: "--text-subtlest" },
+    { label: "Texte secondaire", token: "--text-subtlest-default" },
   ].map((e) => ({ ...e, token: e.token.slice(2), hex: resolveToken(e.token) }));
 
   // Règle N contre N-1 : l'année courante en bleu plein, le comparatif atténué

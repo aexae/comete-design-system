@@ -1,6 +1,6 @@
 // Checkbox — Comète Design System
 // Case à cocher accessible avec label et description optionnels.
-import React from "react";
+import type React from "react";
 import type { ReactElement } from "react";
 import {
   Checkbox as AriaCheckbox,
