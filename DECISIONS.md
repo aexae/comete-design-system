@@ -7,13 +7,21 @@
 **Décisions** (demande d'Axel) :
 
 - **Dépendances** montées à la dernière version dans les trois workspaces : `react` et `react-dom` 19.3.1, `react-aria-components` 1.22.1, `playwright` 1.65.1, `@testing-library/jest-dom` 8, `typescript-eslint` 8.74, `prettier` 3.10.1, `vite` 8.3.8, `globals`, `chromatic`, `@types/*`. **TypeScript 7 écarté** : `typescript-eslint` exige `<6.1.0`. Le kit Power BI passe de TypeScript 5.9 à 6.0.3 pour s'aligner.
-- **Paquets `@aexae/*` épinglés à l'identique partout** (racine, Storybook, kit Power BI) : `comete-logos` 0.15.0 (plus de `latest`), `comete-icons` 0.14.0, `comete-design-tokens` 0.40.0.
+- **Paquets `@aexae/*` épinglés à l'identique partout** (racine, Storybook, kit Power BI) : `comete-logos` 0.15.0 (plus de `latest`), `comete-icons` 0.14.0, `comete-design-tokens` 0.41.0.
 - **Kit Power BI** migré vers ces versions : tokens renommés (`--text-*-default`, `--background-field-default`, `--surface-*`, `--icon-brand-default`), entités `comete-software` et `comete-company`, apparence `inverted`. Les couleurs en `rgba()` (tokens `disabled`) sont aplaties sur `--surface-default`, Power BI n'acceptant que des hex opaques.
 - **Story `Table to list`** : l'assertion sur `align-self` devient géométrique (centre du trailing au-dessus du centre de l'item), Chromium 159 renvoyant `flow-start` pour `flex-start`.
 - **Imports** : quatre `import React` passés en `import type` (règle `consistent-type-imports` plus stricte). Aucun changement de comportement, pas de bump de version.
 - **Profil zsh** (hors dépôt) : le helper `_with_npm_token` est renommé `with_npm_token`, Claude Code excluant les fonctions préfixées `_` de son snapshot de shell.
 
 **Contexte / raison** : retards relevés lors de la montée Storybook de la veille. Le kit généré diffère de celui livré au consultant, écarts listés dans `TODO.md`.
+
+## 2026-11-25 — Warning en orange, suites de l'audit des tokens
+
+- **Warning aligné sur Figma** (Axel) : toute la famille passe en `orange` (tokens 0.41.0,
+  alpha.200). Figma n'a plus de palette `yellow` depuis le 20/11.
+- **Primitives et couleurs brutes** (Skeleton, ScrollArea, Drawer, TimeDrumPicker) : remplacées
+  composant par composant, pas de chantier dédié.
+- **Dimensions en dur** : consignées dans `TODO.md`, traitées plus tard.
 
 ## 2026-11-25 — `boldest` sur toutes les familles de fond (tokens 0.40.0)
 

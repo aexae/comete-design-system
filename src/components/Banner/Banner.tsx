@@ -49,7 +49,7 @@ export interface BannerProps {
  * <Banner appearance="information">Maintenance prévue la semaine prochaine.</Banner>
  * ```
  *
- * @param appearance - Nature : "warning" (jaune), "critical" (rouge), "announcement"
+ * @param appearance - Nature : "warning" (orange), "critical" (rouge), "announcement"
  *                     (violet, nouveautés et mises à jour majeures), "success" (vert),
  *                     "information" (bleu). L'icône
  *                     est résolue automatiquement selon l'apparence.

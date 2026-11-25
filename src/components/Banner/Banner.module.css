@@ -52,7 +52,7 @@
    Apparences — définissent le fond et la couleur héritée par les enfants
    ========================================================================== */
 
-/* warning : fond jaune, texte toujours sombre (contraste sur jaune) */
+/* warning : fond orange clair, texte toujours sombre (contraste) */
 .warning {
   background-color: var(--banner-color-warning-background);
   color: var(--banner-color-warning-text);

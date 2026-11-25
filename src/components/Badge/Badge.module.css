@@ -128,7 +128,7 @@
   background-color: var(--background-success-bold-default);
 }
 
-/* — warning (fond clair/jaune : texte toujours sombre pour le contraste) — */
+/* — warning (fond clair orange : texte toujours sombre pour le contraste) — */
 .warning.high {
   background-color: var(--background-warning-bold-default);
   color: var(--text-on-light-surface);
