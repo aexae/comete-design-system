@@ -9,6 +9,14 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Modifié (alpha.202)
+
+- **Button `inverted`** : anneau de focus dédié, `--button-color-focus-border-inverted`
+  (`border.focus-inverted`, tokens 0.43.0).
+- **Button `link-subtle`** : l'icône suit la couleur du bouton, comme le texte et comme Figma. Elle
+  était forcée en `subtle`.
+- **Guidelines du Button** : quand utiliser `color="inverted"` et quand l'éviter.
+
 ### Changements cassants (BREAKING, alpha.201)
 
 - **Tokens 0.42.0** : `--text-inverted` devient `--text-inverted-default` (avec `-hovered` et

@@ -111,7 +111,6 @@ export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"
 function resolveIconColor(appearance: ButtonAppearance, color: ButtonColor): IconColor {
   // inverted : surface inversée, icône inversée dans toutes les apparences.
   if (color === "inverted") return "inverted";
-  if (appearance === "link-subtle") return "subtle";
 
   if (appearance === "contained") {
     if (color === "subtle" || color === "subtlest") return color;
@@ -123,7 +122,8 @@ function resolveIconColor(appearance: ButtonAppearance, color: ButtonColor): Ico
     return color === "default" ? "default" : "inverted";
   }
 
-  // outlined, subtle, link: icon follows the semantic color of the button text
+  // outlined, subtle, link, link-subtle : l'icône suit la couleur sémantique du
+  // texte, comme dans Figma (le link-subtle ne force plus `subtle`).
   const semanticColorMap: Record<ButtonColor, IconColor> = {
     default: "default",
     subtle: "subtle",

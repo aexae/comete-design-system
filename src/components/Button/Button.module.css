@@ -44,6 +44,10 @@
   outline: 2px solid var(--button-color-focus-border);
   outline-offset: 2px;
 }
+/* inverted : anneau de focus lisible sur surface inversée. */
+.button.inverted[data-focus-visible] {
+  outline-color: var(--button-color-focus-border-inverted);
+}
 
 /* Disabled -------------------------------------------------------------- */
 .button[data-disabled] {

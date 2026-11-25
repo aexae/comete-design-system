@@ -2,6 +2,14 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-25 — Focus du Button inverted, icône du link-subtle, liaisons Figma du ❖ Button
+
+**Décisions** (Axel) :
+
+- **Anneau de focus du Button inverted** : `button.color.focus.border-inverted` = `border.focus-inverted` (tokens 0.43.0), en code et dans Figma.
+- **Icône du `link-subtle`** : elle suit la couleur du bouton, comme Figma. Le code la forçait en `subtle`, ce qui la désaccordait du texte.
+- **Figma** : toutes les propriétés du ❖ Button sont liées à la variable de leur variante (libellés des iconOnly, icônes masquées comprises, link pressed, fonds selected). Audit complet des 3150 variantes.
+
 ## 2026-11-25 — Button `inverted`
 
 **Décisions** (Axel, tokens 0.42.0) :
