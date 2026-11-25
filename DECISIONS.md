@@ -2,6 +2,14 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-25 — Warning en orange, suites de l'audit des tokens
+
+- **Warning aligné sur Figma** (Axel) : toute la famille passe en `orange` (tokens 0.41.0,
+  alpha.200). Figma n'a plus de palette `yellow` depuis le 20/11.
+- **Primitives et couleurs brutes** (Skeleton, ScrollArea, Drawer, TimeDrumPicker) : remplacées
+  composant par composant, pas de chantier dédié.
+- **Dimensions en dur** : consignées dans `TODO.md`, traitées plus tard.
+
 ## 2026-11-25 — `boldest` sur toutes les familles de fond (tokens 0.40.0)
 
 **Contexte** : question d'Axel sur le navy de `Card bold comete` (voulu, décision du 19/11) et

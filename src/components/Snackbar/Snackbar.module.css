@@ -105,7 +105,7 @@
   color: var(--text-inverted);
 }
 
-/* warning : fond jaune (clair), contenu sombre pour le contraste */
+/* warning : fond orange (clair), contenu sombre pour le contraste */
 .warning {
   background-color: var(--background-warning-bold-default);
   color: var(--text-on-light-surface);
