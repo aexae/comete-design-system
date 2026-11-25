@@ -141,7 +141,7 @@
 /* Selected label */
 [data-selected] .label {
   font-weight: var(--font-weight-medium);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 
 /* Disabled label */

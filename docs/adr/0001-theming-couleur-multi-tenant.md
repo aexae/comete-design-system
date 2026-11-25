@@ -61,7 +61,7 @@ client, l'ensemble de la famille `brand-*` et l'injecte au runtime.
    sombre, etc.), avec clamp de gamut sRGB.
 3. Conséquence clé sur l'**accessibilité** : comme `L` est normalisée par rôle, les
    fonds `bold` restent toujours suffisamment contrastés avec le texte inversé
-   existant (`--text-inverted`, qui bascule déjà par thème). **Aucun token on-color
+   existant (`--text-inverted-default`, qui bascule déjà par thème). **Aucun token on-color
    ni changement de composant n'est nécessaire.** Une charte client claire (ex. jaune
    vif) est assombrie pour le rôle `bold` tout en conservant sa teinte — compromis
    assumé au profit du contraste.
@@ -112,7 +112,7 @@ Cet ADR date d'avant les tokens 0.26.0. Deux points ont évolué depuis, le rest
   subtlest.
 - **Texte sur `boldest`** : le point 3 (« aucun token on-color nécessaire ») reste vrai pour
   `bold`, qui bascule avec le thème, mais pas pour `boldest`. Sa luminosité est fixe alors que
-  `--text-inverted` devient foncé en thème sombre. Le texte, les icônes et les bordures posés
+  `--text-inverted-default` devient foncé en thème sombre. Le texte, les icônes et les bordures posés
   sur `boldest` utilisent donc les tokens fixes `--text-on-dark-surface`,
   `--icon-on-dark-surface` et `--border-on-dark-surface` (tokens 0.39.0). Card applique ces
   tokens à ses variantes `bold` `comete` et `brand`.

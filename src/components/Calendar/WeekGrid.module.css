@@ -108,7 +108,7 @@
 
 .weekRow[data-state="range-start"] .weekDayText,
 .weekRow[data-state="range-start"] .weekNumberCell {
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 
 /* Fin de plage */
@@ -118,7 +118,7 @@
 
 .weekRow[data-state="range-end"] .weekDayText,
 .weekRow[data-state="range-end"] .weekNumberCell {
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 
 /* Milieu de plage */
@@ -197,7 +197,7 @@
 .weekRow[data-state="selected"] .weekDivider,
 .weekRow[data-state="range-start"] .weekDivider,
 .weekRow[data-state="range-end"] .weekDivider {
-  background-color: var(--text-inverted);
+  background-color: var(--text-inverted-default);
 }
 
 /* Semaine en cours — divider en border-focused, indépendamment de l'état
@@ -252,13 +252,13 @@
 .weekRow[data-state="selected"] .weekDayCell[data-today] .weekDayText,
 .weekRow[data-state="range-start"] .weekDayCell[data-today] .weekDayText,
 .weekRow[data-state="range-end"] .weekDayCell[data-today] .weekDayText {
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 
 .weekRow[data-state="selected"] .todayIndicator,
 .weekRow[data-state="range-start"] .todayIndicator,
 .weekRow[data-state="range-end"] .todayIndicator {
-  background-color: var(--text-inverted);
+  background-color: var(--text-inverted-default);
 }
 
 /* Semaine en cours sélectionnée : seul le background de la ligne change.
@@ -283,7 +283,7 @@
 /* Indicateur vertical — inversé uniquement pour range-start/end (fond bleu foncé) */
 .weekRow[data-state="range-start"][data-current-week] .weekNumberCell::before,
 .weekRow[data-state="range-end"][data-current-week] .weekNumberCell::before {
-  background-color: var(--text-inverted);
+  background-color: var(--text-inverted-default);
 }
 
 /* Hors du mois courant */

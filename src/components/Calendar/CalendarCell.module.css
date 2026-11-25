@@ -135,7 +135,7 @@ button.cell:active:not([data-disabled]) {
 }
 
 .cell[data-selection-start]:not([data-selection-end]) .cellText {
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 
 /* Plage — fin */
@@ -145,7 +145,7 @@ button.cell:active:not([data-disabled]) {
 }
 
 .cell[data-selection-end]:not([data-selection-start]) .cellText {
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 
 /* Plage — unique (start = end) */
@@ -155,7 +155,7 @@ button.cell:active:not([data-disabled]) {
 }
 
 .cell[data-selection-start][data-selection-end] .cellText {
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 
 /* Plage — milieu (selected, ni start ni end) — RangeCalendar uniquement */

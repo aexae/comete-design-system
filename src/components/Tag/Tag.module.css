@@ -64,7 +64,7 @@
 
 .bold.neutral {
   background: var(--background-neutral-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 .bold.neutral.interactive:hover {
   background: var(--background-neutral-bold-hovered);
@@ -75,7 +75,7 @@
 
 .bold.comete {
   background: var(--background-comete-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 .bold.comete.interactive:hover {
   background: var(--background-comete-bold-hovered);
@@ -86,7 +86,7 @@
 
 .bold.success {
   background: var(--background-success-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 .bold.success.interactive:hover {
   background: var(--background-success-bold-hovered);
@@ -119,7 +119,7 @@
 
 .bold.information {
   background: var(--background-information-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 .bold.information.interactive:hover {
   background: var(--background-information-bold-hovered);
@@ -130,7 +130,7 @@
 
 .bold.accentPurple {
   background: var(--background-accent-purple-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 .bold.accentPurple.interactive:hover {
   background: var(--background-accent-purple-bold-hovered);
@@ -141,7 +141,7 @@
 
 .bold.accentTeal {
   background: var(--background-accent-teal-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 .bold.accentTeal.interactive:hover {
   background: var(--background-accent-teal-bold-hovered);
@@ -152,7 +152,7 @@
 
 .bold.accentTurquoise {
   background: var(--background-accent-turquoise-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 .bold.accentTurquoise.interactive:hover {
   background: var(--background-accent-turquoise-bold-hovered);
@@ -163,7 +163,7 @@
 
 .bold.accentMagenta {
   background: var(--background-accent-magenta-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 .bold.accentMagenta.interactive:hover {
   background: var(--background-accent-magenta-bold-hovered);
@@ -174,7 +174,7 @@
 
 .bold.accentBlueGrey {
   background: var(--background-accent-blue-grey-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 .bold.accentBlueGrey.interactive:hover {
   background: var(--background-accent-blue-grey-bold-hovered);

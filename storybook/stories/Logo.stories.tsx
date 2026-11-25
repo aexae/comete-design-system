@@ -549,7 +549,7 @@ function LogoCard({
     color: isCopied
       ? "var(--text-selected)"
       : isInverted
-        ? "var(--text-inverted)"
+        ? "var(--text-inverted-default)"
         : "var(--text-subtlest-default)",
     textAlign: "center",
     lineHeight: 1.2,

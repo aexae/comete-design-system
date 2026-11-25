@@ -1039,7 +1039,7 @@ function CodeTab(): ReactElement {
         <CodeBlock>{`<div
   style={{
     background: "var(--background-brand-bold-default)",
-    color: "var(--text-inverted)",
+    color: "var(--text-inverted-default)",
     padding: "var(--space200)",
     borderRadius: "var(--radius100)",
   }}

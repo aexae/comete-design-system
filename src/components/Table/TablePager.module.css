@@ -58,7 +58,7 @@
 /* Page courante : pleine (comète), texte inversé. Déclarée après hover/pressed. */
 .button[aria-current="page"] {
   background-color: var(--background-comete-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
   cursor: default;
 }
 

@@ -65,12 +65,13 @@ describe("Button", () => {
       ["accent-turquoise"],
       ["accent-magenta"],
       ["accent-blue-grey"],
+      ["inverted"],
     ] as const)("should apply class %s when color=%s", (color) => {
       render(<Button color={color}>Label</Button>);
       expect(screen.getByRole("button")).toHaveClass(color);
     });
 
-    // REASON: Figma propose ces 14 couleurs sur les 5 apparences, le CSS doit
+    // REASON: Figma propose ces 15 couleurs sur les 5 apparences, le CSS doit
     // couvrir chaque combinaison (sinon le bouton s'affiche sans couleur).
     it.each(["contained", "outlined", "subtle", "link", "link-subtle"])(
       "should style every color when appearance=%s",
@@ -80,6 +81,7 @@ describe("Button", () => {
           "default",
           "color-subtle",
           "color-subtlest",
+          "inverted",
           "comete",
           "success",
           "critical",
@@ -108,6 +110,9 @@ describe("Button", () => {
       ["outlined", "comete", "comete"],
       ["subtle", "accent-purple", "accentPurple"],
       ["link", "accent-blue-grey", "accentBlueGrey"],
+      ["contained", "inverted", "inverted"],
+      ["outlined", "inverted", "inverted"],
+      ["link-subtle", "inverted", "inverted"],
       ["link-subtle", "accent-magenta", "subtle"],
     ] as const)("should color the icon %s/%s with %s", (appearance, color, iconColor) => {
       const { container } = render(
