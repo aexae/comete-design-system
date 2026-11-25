@@ -116,3 +116,9 @@ Cet ADR date d'avant les tokens 0.26.0. Deux points ont évolué depuis, le rest
   sur `boldest` utilisent donc les tokens fixes `--text-on-dark-surface`,
   `--icon-on-dark-surface` et `--border-on-dark-surface` (tokens 0.39.0). Card applique ces
   tokens à ses variantes `bold` `comete` et `brand`.
+- **`boldest` sur toutes les familles** (tokens 0.40.0, 2026-11-25) : neutral, success, warning,
+  critical, information et les cinq accents gagnent `background.{famille}.boldest.{default,
+hovered,pressed}` (palier 950, survol 900, pressé 800), fixe dans les deux thèmes comme
+  `comete-boldest`. Fond seul : pas de `text`, `border` ni `icon` `boldest` pour ces familles
+  (leurs tokens `icon` et `border.neutral` sont des feuilles, les transformer en groupes serait
+  cassant). Le texte posé dessus suit la même règle `on-dark-surface`.

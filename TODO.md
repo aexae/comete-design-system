@@ -1,5 +1,29 @@
 # TODO
 
+## Audit des usages de tokens dans le code (2026-11-25)
+
+Aucun `var(--…)` vers un token inexistant ni déprécié dans `src/` et `storybook/` (hors gabarits
+dynamiques `--space${n}` et fixtures de test). Écarts restants :
+
+- **Card bold `comete` / `brand` actionnable** : fond navy (`*-boldest-*`, survol et pressé
+  compris) alors que la décision du 19/11 dit « navy jamais sur une surface interactive ». À
+  arbitrer : garder l'exception ou passer en `*-bold-*` quand la carte est actionnable.
+- **Warning : code et Figma divergent** : `background.warning.bold` = `yellow.400` (#facc15) dans
+  le code, `orange/400` (#feb939) dans Figma, qui n'a pas de palette `yellow`. La variable Figma
+  `background/warning/boldest/*` suit donc `orange/950-800` (#441f06) alors que le code est en
+  `yellow.950-800` (#292410). Aligner les deux (importer la palette yellow dans Figma ou
+  repasser le code en orange).
+- **Primitives en direct** : `Skeleton` (`--black-8` / `--white-8` avec bascule de thème
+  manuelle, à remplacer par un token sémantique), `ScrollArea` (`--grey-solid-500`, écart
+  documenté en attendant la rampe de remplissage).
+- **Couleurs brutes** : `Drawer` (`rgb(0 0 0 / var(--_depth-shade))`), `TimeDrumPicker`
+  (`rgba(0, 0, 0, …)` dans un masque, acceptable si c'est de l'alpha de masque seulement).
+- **Dimensions en dur** dans les composants : `ModalDialog` (largeurs max 320 à 968 px,
+  `min-height: 48px`), `Menu` (320, 56, 36 px), `Calendar` (280, 240 px), `Card` (200 px),
+  épaisseurs de bordure et de focus en 1 ou 2 px partout (aucun token `border-width`
+  sémantique), points de rupture 600 / 768 / 1200 px en dur dans les `@media` (pas de token
+  utilisable en media query CSS).
+
 ## Figma : écarts relevés en construisant « ◆ Exemples de pages » (2026-11-24)
 
 Page créée : écrans surface default (formulaire), sunken (tableau de bord), raise (panneau de

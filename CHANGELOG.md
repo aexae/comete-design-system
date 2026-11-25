@@ -9,6 +9,14 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Ajouté (alpha.199)
+
+- **Tokens 0.40.0** : `--background-{neutral,success,warning,critical,information}-boldest-*` et
+  `--background-accent-{purple,teal,turquoise,magenta,blue-grey}-boldest-*` (`default`,
+  `hovered`, `pressed`), fond foncé fixe dans les deux thèmes, texte en
+  `--text-on-dark-surface`. Aucun composant ne change. Nuancier par famille dans
+  Foundation/Couleur.
+
 ### Modifié (alpha.198)
 
 - **Tokens 0.39.0** : nouveau `--border-on-dark-surface` (bordure blanche fixe sur le navy,
