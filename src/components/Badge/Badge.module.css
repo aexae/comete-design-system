@@ -65,7 +65,7 @@
 /* — neutral — */
 .neutral.high {
   background-color: var(--background-neutral-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 .neutral.medium {
   background-color: var(--background-neutral-subtler-default);
@@ -78,7 +78,7 @@
 /* — information — */
 .information.high {
   background-color: var(--background-information-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 .information.medium {
   background-color: var(--background-information-subtlest-default);
@@ -118,7 +118,7 @@
 /* — success — */
 .success.high {
   background-color: var(--background-success-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 .success.medium {
   background-color: var(--background-success-subtlest-default);
@@ -144,7 +144,7 @@
 /* — accentPurple — */
 .accentPurple.high {
   background-color: var(--background-accent-purple-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 .accentPurple.medium {
   background-color: var(--background-accent-purple-subtlest-default);
@@ -157,7 +157,7 @@
 /* — accentTeal — */
 .accentTeal.high {
   background-color: var(--background-accent-teal-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 .accentTeal.medium {
   background-color: var(--background-accent-teal-subtlest-default);
@@ -170,7 +170,7 @@
 /* — accentTurquoise — */
 .accentTurquoise.high {
   background-color: var(--background-accent-turquoise-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 .accentTurquoise.medium {
   background-color: var(--background-accent-turquoise-subtlest-default);
@@ -183,7 +183,7 @@
 /* — accentMagenta — */
 .accentMagenta.high {
   background-color: var(--background-accent-magenta-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 .accentMagenta.medium {
   background-color: var(--background-accent-magenta-subtlest-default);
@@ -196,7 +196,7 @@
 /* — accentBlueGrey — */
 .accentBlueGrey.high {
   background-color: var(--background-accent-blue-grey-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 .accentBlueGrey.medium {
   background-color: var(--background-accent-blue-grey-subtlest-default);

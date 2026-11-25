@@ -15,6 +15,7 @@ export type ButtonColor =
   | "default"
   | "subtle"
   | "subtlest"
+  | "inverted"
   | "comete"
   | "success"
   | "critical"
@@ -40,7 +41,12 @@ export type ButtonDensity = Density;
 export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"> {
   /** Visual appearance. @default "contained" */
   appearance?: ButtonAppearance;
-  /** Color scheme. @default "default" */
+  /**
+   * Color scheme. @default "default"
+   *
+   * `inverted` : bouton posé sur une surface inversée (`surface.inverted`), suit le thème
+   * (clair sur encre en thème clair, encre sur blanc en thème sombre).
+   */
   color?: ButtonColor;
   /**
    * Densité — dimension + padding + radius (échelle partagée avec les champs).
@@ -103,6 +109,8 @@ export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"
  * @returns The matching IconColor token
  */
 function resolveIconColor(appearance: ButtonAppearance, color: ButtonColor): IconColor {
+  // inverted : surface inversée, icône inversée dans toutes les apparences.
+  if (color === "inverted") return "inverted";
   if (appearance === "link-subtle") return "subtle";
 
   if (appearance === "contained") {
@@ -120,6 +128,7 @@ function resolveIconColor(appearance: ButtonAppearance, color: ButtonColor): Ico
     default: "default",
     subtle: "subtle",
     subtlest: "subtlest",
+    inverted: "inverted",
     comete: "comete",
     success: "success",
     critical: "critical",
@@ -193,6 +202,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       default: styles.default,
       subtle: styles["color-subtle"],
       subtlest: styles["color-subtlest"],
+      inverted: styles.inverted,
       comete: styles.comete,
       success: styles.success,
       critical: styles.critical,

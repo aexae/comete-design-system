@@ -9,6 +9,19 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Changements cassants (BREAKING, alpha.201)
+
+- **Tokens 0.42.0** : `--text-inverted` devient `--text-inverted-default` (avec `-hovered` et
+  `-pressed`). Les 43 usages du DS sont migrés, overrides locaux compris (Card). Les apps qui lisent
+  `--text-inverted` doivent passer à `--text-inverted-default`.
+
+### Ajouté (alpha.201)
+
+- **Button** : couleur `inverted` sur les cinq apparences (contained, outlined, subtle, link,
+  link-subtle), pour un bouton posé sur une surface inversée (`surface.inverted`). Suit le thème.
+  Fonds translucides `background.inverted.*`, texte et icône inversés, liens à états. Story
+  « Inverted ». Figma : 210 variantes `color=inverted` dans le ❖ Button.
+
 ### Modifié (alpha.200)
 
 - **Tokens 0.41.0 : warning en orange**, comme dans Figma. Fonds (`bold`, `boldest`, `subtler`,

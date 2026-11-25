@@ -32,10 +32,10 @@
 .bold {
   border: none;
   box-shadow: var(--elevation-xsmall);
-  color: var(--text-inverted);
-  --text-default-default: var(--text-inverted);
-  --text-subtle-default: var(--text-inverted);
-  --text-subtlest-default: var(--text-inverted);
+  color: var(--text-inverted-default);
+  --text-default-default: var(--text-inverted-default);
+  --text-subtle-default: var(--text-inverted-default);
+  --text-subtlest-default: var(--text-inverted-default);
   --icon-default: var(--icon-inverted);
   --icon-subtle: var(--icon-inverted);
   --icon-subtlest: var(--icon-inverted);

@@ -44,7 +44,7 @@ const meta: Meta<ButtonProps> = {
     },
     color: {
       control: "select",
-      options: BUTTON_COLORS,
+      options: [...BUTTON_COLORS, "inverted"],
     },
     density: {
       control: "select",
@@ -247,6 +247,46 @@ export const AccentColors: Story = {
             </Labeled>
           ))}
         </LabeledRow>
+      ))}
+    </div>
+  ),
+};
+
+/**
+ * `inverted` — pour un bouton posé sur une surface inversée (`surface.inverted`). Suit le
+ * thème : clair sur encre en thème clair, encre sur blanc en thème sombre. Fonds
+ * translucides (`background.inverted.*`), texte et icône inversés, liens à états
+ * (`text.inverted.hovered` / `pressed`).
+ */
+export const Inverted: Story = {
+  render: () => (
+    <div
+      style={{
+        display: "grid",
+        gap: "var(--space200)",
+        padding: "var(--space300)",
+        background: "var(--surface-inverted)",
+        borderRadius: "var(--radius050)",
+      }}
+    >
+      {(["contained", "outlined", "subtle", "link", "link-subtle"] as const).map((appearance) => (
+        <div
+          key={appearance}
+          style={{ display: "flex", gap: "var(--space200)", alignItems: "center" }}
+        >
+          <Button appearance={appearance} color="inverted" iconBefore="Add">
+            {appearance}
+          </Button>
+          <Button
+            appearance={appearance}
+            color="inverted"
+            iconBefore="Add"
+            aria-label={appearance}
+          />
+          <Button appearance={appearance} color="inverted" isDisabled>
+            disabled
+          </Button>
+        </div>
       ))}
     </div>
   ),

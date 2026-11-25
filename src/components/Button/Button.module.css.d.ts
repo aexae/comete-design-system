@@ -22,6 +22,7 @@ declare const styles: {
   readonly "iconOnly": string;
   readonly "information": string;
   readonly "inline": string;
+  readonly "inverted": string;
   readonly "link": string;
   readonly "link-subtle": string;
   readonly "loading": string;

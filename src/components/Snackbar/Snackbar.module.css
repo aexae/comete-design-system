@@ -96,13 +96,13 @@
 /* information : fond bleu, contenu inversé (blanc) */
 .information {
   background-color: var(--background-information-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 
 /* success : fond vert, contenu inversé (blanc) */
 .success {
   background-color: var(--background-success-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 
 /* warning : fond orange (clair), contenu sombre pour le contraste */
@@ -120,5 +120,5 @@
 /* announcement : fond violet (accent purple), contenu inversé (blanc) */
 .announcement {
   background-color: var(--background-accent-purple-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }

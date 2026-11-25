@@ -2,6 +2,14 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-25 — Button `inverted`
+
+**Décisions** (Axel, tokens 0.42.0) :
+
+- **Couleur `inverted`** dans chaque apparence du Button, pour une surface inversée (`surface.inverted`). Elle **suit le thème** (comme `text.inverted`), elle n'est pas fixe comme `on-dark-surface`.
+- **Tokens** (proposition B) : `text.inverted` devient `text.inverted.default` avec `hovered` et `pressed` (cassant), `background.inverted.subtler.*` (contained) et `background.inverted.subtlest.*` (survol et appui des outlined et subtle), translucides pour rester justes sur tout fond inversé. Bordure de l'outlined en `border.inverted`, icônes en `icon.inverted`.
+- **Figma** : variables sémantiques et `button/color/<apparence>/inverted/*` créées, `text/inverted` renommée `text/inverted/default` (les liaisons suivent). 210 variantes `color=inverted` clonées depuis `subtlest`, rangées sous `subtlest`, libellés ajoutés.
+
 ## 2026-11-25 — Retrait de Chromatic, `comete-logos` 0.15.1
 
 **Décisions** (Axel) :

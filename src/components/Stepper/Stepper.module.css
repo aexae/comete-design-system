@@ -183,12 +183,12 @@ button.stepContent:not(:disabled):hover .label:not([data-status="error"]) {
 
 .indicator[data-status="active"] {
   background-color: var(--background-comete-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 
 .indicator[data-status="completed"] {
   background-color: var(--background-comete-bold-default);
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 
 /* Status — error : on retire le cercle de fond ; l'icône Warning (filled,

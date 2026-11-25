@@ -21,7 +21,7 @@
   color: var(--text-disabled);
 }
 .color-inverted {
-  color: var(--text-inverted);
+  color: var(--text-inverted-default);
 }
 .color-comete {
   color: var(--text-comete-default);

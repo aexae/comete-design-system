@@ -190,6 +190,18 @@
   background-color: var(--button-color-contained-subtlest-background-pressed);
 }
 
+/* inverted : pour une surface inversée (surface.inverted), suit le thème. */
+.contained.inverted {
+  background-color: var(--button-color-contained-inverted-background-default);
+  color: var(--button-color-contained-inverted-text-default);
+}
+.contained.inverted:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-contained-inverted-background-hovered);
+}
+.contained.inverted:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-contained-inverted-background-pressed);
+}
+
 .contained.comete {
   background-color: var(--button-color-contained-comete-background-default);
   color: var(--button-color-contained-comete-text-default);
@@ -352,6 +364,18 @@
   background-color: var(--button-color-outlined-subtlest-background-pressed);
 }
 
+/* inverted : pour une surface inversée (surface.inverted), suit le thème. */
+.outlined.inverted {
+  border-color: var(--button-color-outlined-inverted-border-default);
+  color: var(--button-color-outlined-inverted-text-default);
+}
+.outlined.inverted:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-outlined-inverted-background-hovered);
+}
+.outlined.inverted:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-outlined-inverted-background-pressed);
+}
+
 .outlined.comete {
   border-color: var(--button-color-outlined-comete-border-default);
   color: var(--button-color-outlined-comete-text-default);
@@ -510,6 +534,17 @@
 }
 .subtle.color-subtlest:not([data-disabled])[data-pressed] {
   background-color: var(--button-color-subtle-subtlest-background-pressed);
+}
+
+/* inverted : pour une surface inversée (surface.inverted), suit le thème. */
+.subtle.inverted {
+  color: var(--button-color-subtle-inverted-text-default);
+}
+.subtle.inverted:not([data-disabled])[data-hovered] {
+  background-color: var(--button-color-subtle-inverted-background-hovered);
+}
+.subtle.inverted:not([data-disabled])[data-pressed] {
+  background-color: var(--button-color-subtle-inverted-background-pressed);
 }
 
 .subtle.comete {
@@ -671,6 +706,17 @@
   color: var(--button-color-link-subtlest-text-pressed);
 }
 
+/* inverted : pour une surface inversée (surface.inverted), suit le thème. */
+.link.inverted {
+  color: var(--button-color-link-inverted-text-default);
+}
+.link.inverted:not([data-disabled])[data-hovered] {
+  color: var(--button-color-link-inverted-text-hovered);
+}
+.link.inverted:not([data-disabled])[data-pressed] {
+  color: var(--button-color-link-inverted-text-pressed);
+}
+
 .link.comete {
   color: var(--button-color-link-comete-text-default);
 }
@@ -821,6 +867,17 @@
 }
 .link-subtle.color-subtlest:not([data-disabled])[data-pressed] {
   color: var(--button-color-link-subtle-subtlest-text-pressed);
+}
+
+/* inverted : pour une surface inversée (surface.inverted), suit le thème. */
+.link-subtle.inverted {
+  color: var(--button-color-link-subtle-inverted-text-default);
+}
+.link-subtle.inverted:not([data-disabled])[data-hovered] {
+  color: var(--button-color-link-subtle-inverted-text-hovered);
+}
+.link-subtle.inverted:not([data-disabled])[data-pressed] {
+  color: var(--button-color-link-subtle-inverted-text-pressed);
 }
 
 .link-subtle.comete {
