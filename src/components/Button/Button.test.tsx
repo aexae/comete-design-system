@@ -100,6 +100,13 @@ describe("Button", () => {
     );
   });
 
+  it("should use the inverted focus ring token for color=inverted", () => {
+    const css = readFileSync("src/components/Button/Button.module.css", "utf8");
+    expect(css).toMatch(
+      /\.button\.inverted\[data-focus-visible\]\s*\{\s*outline-color:\s*var\(--button-color-focus-border-inverted\);/
+    );
+  });
+
   describe("couleur des icônes", () => {
     it.each([
       ["contained", "brand", "inverted"],
@@ -113,7 +120,8 @@ describe("Button", () => {
       ["contained", "inverted", "inverted"],
       ["outlined", "inverted", "inverted"],
       ["link-subtle", "inverted", "inverted"],
-      ["link-subtle", "accent-magenta", "subtle"],
+      ["link-subtle", "accent-magenta", "accentMagenta"],
+      ["link-subtle", "default", "default"],
     ] as const)("should color the icon %s/%s with %s", (appearance, color, iconColor) => {
       const { container } = render(
         <Button appearance={appearance} color={color} iconBefore="Add">

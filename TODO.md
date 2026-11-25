@@ -2,10 +2,10 @@
 
 ## Button inverted (2026-11-25)
 
-- **Anneau de focus sur surface inversée** : le Button inverted garde `button.color.focus.border` (bleu de focus standard). `border.focus-inverted` existe et serait plus lisible sur encre. Il faudrait un token `button.color.focus.border-inverted` (arbitrage Axel), en code et dans Figma.
+- ~~**Anneau de focus sur surface inversée**~~ : FAIT, `button.color.focus.border-inverted` (tokens 0.43.0, alpha.202, Figma compris).
 - **État selected** d'un Button inverted : garde la pastille bleu clair standard (`button.color.selected.*`). À valider visuellement sur surface inversée.
-- **Figma, icônes du ❖ Button** : seules les variantes iconOnly et loading lient la couleur des vecteurs d'icône. Dans les variantes avec libellé, l'icône garde la couleur de son composant (écart préexistant, toutes couleurs confondues).
-- **Figma, libellé des variantes iconOnly** : lié à `button/color/contained/neutral/text/default` quelle que soit la couleur (préexistant, sans effet visible puisque le libellé est masqué).
+- ~~**Figma, liaisons du ❖ Button**~~ : FAIT (audit du 25/11 sur les 3150 variantes). Libellés iconOnly (888) et link subtle/subtlest pressed (6) reliés à leur token, icônes alignées sur la règle du code (contained critical en `on-dark-surface`, inverted), fonds selected des link brand et accents sur `button/color/selected/background/default`. Fond, bordure, focus, opacité disabled, tailles, marges, rayons et spinner : conformes.
+- **Figma, audit reproductible** : les icônes masquées d'une variante n'exposent leurs calques qu'une fois affichées. Un script d'audit doit les afficher le temps de la lecture (environ 1 s par variante).
 
 ## Audit des usages de tokens dans le code (2026-11-25)
 

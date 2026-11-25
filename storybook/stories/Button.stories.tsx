@@ -116,11 +116,16 @@ const meta: Meta<ButtonProps> = {
                 "Déclencher une action immédiate (soumettre, enregistrer, ouvrir une modale, lancer un traitement).",
                 "Hiérarchiser les actions par apparence : `contained` pour l'action principale, `outlined`/`subtle` pour les secondaires.",
               ]}
-              avoid={["Naviguer entre des pages → Breadcrumbs ou SideNavItem."]}
+              avoid={[
+                "Naviguer entre des pages → Breadcrumbs ou SideNavItem.",
+                '`color="inverted"` sur une surface claire : il est fait pour une surface inversée et disparaît ailleurs.',
+                '`color="inverted"` sur une surface navy fixe (`surface.comete`, fonds `boldest`) : `inverted` suit le thème et devient foncé en thème sombre.',
+              ]}
               best={[
                 "Regrouper des actions liées dans un ButtonGroup (action principale à droite).",
                 "Densité alignée sur les champs voisins (`compact`/`default`/`touch`) ; `isLoading` pour désactiver + signaler un traitement.",
                 'Réserver `color="critical"` aux actions destructrices, avec confirmation si irréversible.',
+                'Sur une surface inversée (`surface.inverted` : encart contrasté, bandeau inversé), utiliser `color="inverted"` dans toutes les apparences. Il suit le thème, fonds translucides, anneau de focus dédié.',
               ]}
               accessibility={[
                 "Libellé = verbe d'action explicite ; éviter les libellés vagues (« OK », « Oui »).",
