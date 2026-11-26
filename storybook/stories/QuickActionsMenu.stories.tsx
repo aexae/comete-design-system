@@ -1,19 +1,19 @@
-// QuickActions — stories Storybook (menu d'actions rapides du FAB)
+// QuickActionsMenu — stories Storybook (menu d'actions rapides du FAB)
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import { within, screen, userEvent, expect, waitFor, fn } from "storybook/test";
-import { QuickActions, type QuickAction } from "@aexae/comete-design-system/components";
+import { QuickActionsMenu, type QuickActionsItem } from "@aexae/comete-design-system/components";
 import type { IconName } from "@aexae/comete-icons";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
-import { QuickActionsDemo } from "./_quickActionsDemo";
+import { QuickActionsMenuDemo } from "./_quickActionsMenuDemo";
 
 // -----------------------------------------------------------------------
 // Meta
 
 const meta = {
-  title: "Navigation/BottomNav/QuickActions",
-  component: QuickActions,
+  title: "Navigation/BottomNav/QuickActionsMenu",
+  component: QuickActionsMenu,
   tags: ["autodocs"],
   parameters: {
     docs: {
@@ -58,10 +58,10 @@ const meta = {
     layout: "fullscreen",
   },
   args: { isOpen: false, onOpenChange: fn(), actions: [] },
-} satisfies Meta<typeof QuickActions>;
+} satisfies Meta<typeof QuickActionsMenu>;
 
 export default meta;
-type Story = StoryObj<typeof QuickActions>;
+type Story = StoryObj<typeof QuickActionsMenu>;
 
 /** Nombre maximal de pastilles réglables (le plafond du composant). */
 const SLOTS = [1, 2, 3, 4, 5] as const;
@@ -172,7 +172,7 @@ const PLAYGROUND_ARGS: PlaygroundArgs = {
 };
 
 /** Reconstruit la liste d'actions à partir des controls. */
-function actionsFromArgs(args: PlaygroundArgs): Omit<QuickAction, "onPress">[] {
+function actionsFromArgs(args: PlaygroundArgs): Omit<QuickActionsItem, "onPress">[] {
   return SLOTS.slice(0, args.count).map((n) => ({
     id: `slot${n}`,
     label: args[`label${n}`],
@@ -205,7 +205,7 @@ export const Default: StoryObj<PlaygroundArgs> = {
     // `menuOpen` est l'état réel de la couche : le « + » le met à jour dans le panneau Controls.
     const [, updateArgs] = useArgs<PlaygroundArgs>();
     return (
-      <QuickActionsDemo
+      <QuickActionsMenuDemo
         open={args.menuOpen}
         onOpenChange={(menuOpen) => updateArgs({ menuOpen })}
         actions={actionsFromArgs(args)}
@@ -221,7 +221,7 @@ export const Interactions: Story = {
   tags: ["!dev"],
   globals: { viewport: { value: "cometeMobileAgent", isRotated: false } },
   parameters: { layout: "fullscreen" },
-  render: () => <QuickActionsDemo onAction={onAction} />,
+  render: () => <QuickActionsMenuDemo onAction={onAction} />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const fab = () => canvas.getByRole("button", { name: "Actions rapides", hidden: true });

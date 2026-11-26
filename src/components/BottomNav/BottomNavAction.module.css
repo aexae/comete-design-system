@@ -47,7 +47,7 @@
   pointer-events: none;
 }
 
-/* FAB ouvert : le FAB remonte AU-DESSUS du voile de `QuickActions` (z-index du modal + 2)
+/* FAB ouvert : le FAB remonte AU-DESSUS du voile de `QuickActionsMenu` (z-index du modal + 2)
    pour rester visible net — c'est lui qui referme. Uniquement à l'état ouvert, et SANS
    z-index sur la barre basse : un z-index sur `.nav` créerait un contexte d'empilement où le
    FAB resterait prisonnier sous le voile. Le socle (`.actionCradle`) reste volontairement SOUS

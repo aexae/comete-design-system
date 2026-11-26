@@ -1,11 +1,11 @@
-// Démo partagée de QuickActions : barre basse + FAB + couche d'actions rapides, dans un
+// Démo partagée de QuickActionsMenu : barre basse + FAB + couche d'actions rapides, dans un
 // écran plein viewport (à jouer en viewport mobile). Fichier NON indexé par Storybook.
 import { useState, type ReactNode } from "react";
 import {
   BottomNav,
   BottomNavItem,
-  QuickActions,
-  type QuickAction,
+  QuickActionsMenu,
+  type QuickActionsItem,
 } from "@aexae/comete-design-system/components";
 import css from "./BottomNav.stories.module.css";
 
@@ -17,19 +17,19 @@ import css from "./BottomNav.stories.module.css";
  * ronde en cours : ce n'est pas une création) ni de « Voir les MCE remplis » (navigation →
  * page « Plus »).
  */
-export const MCE_QUICK_ACTIONS: Omit<QuickAction, "onPress">[] = [
+export const MCE_QUICK_ACTIONS: Omit<QuickActionsItem, "onPress">[] = [
   { id: "event", icon: "Campaign", label: "Déclarer un évènement" },
   { id: "patrol", icon: "Patrol", label: "Démarrer une ronde" },
 ];
 
-export function QuickActionsDemo({
+export function QuickActionsMenuDemo({
   actions = MCE_QUICK_ACTIONS,
   onAction,
   initialOpen = false,
   open: controlledOpen,
   onOpenChange,
 }: {
-  actions?: Omit<QuickAction, "onPress">[];
+  actions?: Omit<QuickActionsItem, "onPress">[];
   onAction?: (id: string) => void;
   /** Ouvre la couche dès le rendu (mode non contrôlé). */
   initialOpen?: boolean;
@@ -80,7 +80,7 @@ export function QuickActionsDemo({
           onClick={() => setSelected("MCE")}
         />
       </BottomNav>
-      <QuickActions
+      <QuickActionsMenu
         isOpen={open}
         onOpenChange={setOpen}
         actions={actions.map((a) => ({ ...a, onPress: () => onAction?.(a.id) }))}

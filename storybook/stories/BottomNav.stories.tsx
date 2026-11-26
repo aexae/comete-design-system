@@ -19,7 +19,7 @@ import type { IconName } from "@aexae/comete-icons";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
 import css from "./BottomNav.stories.module.css";
-import { QuickActionsDemo } from "./_quickActionsDemo";
+import { QuickActionsMenuDemo } from "./_quickActionsMenuDemo";
 
 const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
@@ -57,7 +57,7 @@ const meta = {
                 "Icônes explicites et cohérentes ; réserver le débordement à un menu « Plus ».",
                 "Masquer la BottomNav au scroll descendant pour gagner de l'espace, la réafficher au scroll montant.",
                 "Avec un bouton d'action central (BottomNav.Action) : exactement 2 items de chaque côté (2 + Action + 2).",
-                "« Plus » ≠ FAB. L'item « Plus » regroupe des **destinations** secondaires : il mène quelque part (page) ou garde le contexte (popup), puis se sélectionne ou se referme. Le FAB (`BottomNav.Action`) lance une **action** de création : il ouvre un menu d'actions (`QuickActions`), ne se sélectionne jamais et n'est pas une destination.",
+                "« Plus » ≠ FAB. L'item « Plus » regroupe des **destinations** secondaires : il mène quelque part (page) ou garde le contexte (popup), puis se sélectionne ou se referme. Le FAB (`BottomNav.Action`) lance une **action** de création : il ouvre un menu d'actions (`QuickActionsMenu`), ne se sélectionne jamais et n'est pas une destination.",
                 "Ne pas mélanger : pas de destinations derrière le FAB, pas d'actions de création derrière « Plus ».",
               ]}
               accessibility={[
@@ -99,7 +99,7 @@ const meta = {
   },
   decorators: [
     // Cadre de 402px pour les barres complètes ; les stories plein viewport (`noFrame`, ex.
-    // recette QuickActions) s'en passent : un cadre fixe les ferait rétrécir / déborder.
+    // recette QuickActionsMenu) s'en passent : un cadre fixe les ferait rétrécir / déborder.
     (Story: () => ReactNode, context: { parameters: { noFrame?: boolean } }) =>
       context.parameters.noFrame ? (
         <Story />
@@ -415,10 +415,10 @@ export const PlusPageInteractions: Story = {
 };
 
 // -----------------------------------------------------------------------
-// Recette FAB — BottomNav.Action + QuickActions
+// Recette FAB — BottomNav.Action + QuickActionsMenu
 
 /**
- * **Recette FAB** — le bouton d'action central (`BottomNav.Action`) ouvre `QuickActions` : des
+ * **Recette FAB** — le bouton d'action central (`BottomNav.Action`) ouvre `QuickActionsMenu` : des
  * **pastilles flottantes** au-dessus d'un voile, une par action rapide (pastille d'icône à
  * gauche, libellé à droite).
  *
@@ -435,9 +435,9 @@ export const PlusPageInteractions: Story = {
  * La couche est plein écran : la story tourne en **viewport mobile** pour que voile,
  * pastilles et FAB s'alignent.
  */
-export const QuickActionsRecipe: Story = {
+export const QuickActionsMenuRecipe: Story = {
   name: "With FAB — quick actions",
   globals: { viewport: { value: "cometeMobileAgent", isRotated: false } },
   parameters: { controls: { disable: true }, layout: "fullscreen", noFrame: true },
-  render: () => <QuickActionsDemo />,
+  render: () => <QuickActionsMenuDemo />,
 };

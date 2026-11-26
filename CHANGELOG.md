@@ -9,6 +9,15 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Changements cassants (BREAKING, alpha.204)
+
+- **`QuickActions` devient `QuickActionsMenu`**, comme dans Figma, avec le renommage des types et des tokens :
+  - composant `QuickActions` → `QuickActionsMenu` et `QuickActionsProps` → `QuickActionsMenuProps` ;
+  - type d'une action `QuickAction` → `QuickActionsItem` et `QuickActionTone` → `QuickActionsItemTone` ;
+  - tokens 0.48.0 : `--quick-actions-*` → `--quick-actions-menu-*` (rangée `row` → `item`, `color-overlay` → `color-blanket`, `color-row-label` → `item-color-text`), valeurs inchangées ;
+  - variable surchargeable `--quick-actions-offset` → `--quick-actions-menu-offset` ;
+  - story `Navigation/BottomNav/QuickActions` → `Navigation/BottomNav/QuickActionsMenu`.
+
 ### Modifié (alpha.203)
 
 - **QuickActions** : migré sur ses tokens de composant `--quick-actions-*` (tokens 0.47.0) pour le
