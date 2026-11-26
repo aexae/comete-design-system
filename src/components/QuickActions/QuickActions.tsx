@@ -11,6 +11,7 @@ import {
   ModalOverlay as AriaModalOverlay,
 } from "react-aria-components";
 import type { IconName } from "@aexae/comete-icons";
+import { FocusRing } from "../FocusRing/index.js";
 import { IconTile, type IconTileAppearance } from "../IconTile/index.js";
 import styles from "./QuickActions.module.css";
 
@@ -201,14 +202,19 @@ export function QuickActions({
                     onOpenChange(false);
                   }}
                 >
-                  {/* Sans `label`, `IconTile` est `aria-hidden` : c'est la rangée qui porte le nom. */}
-                  <IconTile
-                    icon={action.icon}
-                    appearance={action.tone ?? "comete"}
-                    size="medium"
-                    shape="circle"
-                  />
-                  <span className={styles.label}>{action.label}</span>
+                  {({ isFocusVisible }) => (
+                    <>
+                      {/* Sans `label`, `IconTile` est `aria-hidden` : c'est la rangée qui porte le nom. */}
+                      <IconTile
+                        icon={action.icon}
+                        appearance={action.tone ?? "comete"}
+                        size="medium"
+                        shape="circle"
+                      />
+                      <span className={styles.label}>{action.label}</span>
+                      {isFocusVisible && <FocusRing borderRadius="round" offset={0} />}
+                    </>
+                  )}
                 </AriaButton>
               </li>
             ))}

@@ -20,7 +20,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  background-color: var(--blanket-default);
+  background-color: var(--quick-actions-color-overlay);
 }
 
 .overlay[data-entering] {
@@ -51,12 +51,12 @@
 /* Liste : réserve la place du FAB et de la barre en bas, pour que la dernière rangée
    ne passe pas sous lui. `--quick-actions-offset` est surchargeable (barre plus haute). */
 .list {
-  --quick-actions-offset: calc(var(--size800) * 2);
+  --quick-actions-offset: var(--quick-actions-spacing-list-padding-bottom);
   display: flex;
   flex-direction: column;
-  gap: var(--space150);
+  gap: var(--quick-actions-spacing-list-gap);
   margin: 0;
-  padding: var(--space200) var(--space200)
+  padding: var(--quick-actions-spacing-list-padding) var(--quick-actions-spacing-list-padding)
     calc(var(--quick-actions-offset) + env(safe-area-inset-bottom, 0px));
   list-style: none;
 }
@@ -71,22 +71,24 @@
    coloré, quel que soit le ton. */
 .row {
   pointer-events: auto;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--space200);
+  gap: var(--quick-actions-spacing-row-gap);
   width: 100%;
-  min-height: calc(var(--size500) + var(--space200));
-  padding: var(--space100) var(--space300) var(--space100) var(--space100);
+  min-height: var(--quick-actions-size-row-min-height);
+  padding: var(--quick-actions-spacing-row-padding-y) var(--quick-actions-spacing-row-padding-end)
+    var(--quick-actions-spacing-row-padding-y) var(--quick-actions-spacing-row-padding-start);
   border: 0;
-  border-radius: var(--radius-round);
-  background-color: var(--surface-default);
-  box-shadow: var(--elevation-medium);
+  border-radius: var(--quick-actions-radius-row);
+  background-color: var(--quick-actions-color-row-background-default);
+  box-shadow: var(--quick-actions-elevation-row);
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-s);
   line-height: var(--line-height-ui-s);
   font-weight: var(--font-weight-regular);
-  color: var(--text-default-default);
+  color: var(--quick-actions-color-row-label);
   text-align: start;
   cursor: pointer;
   outline: none;
@@ -94,18 +96,14 @@
 }
 
 .row[data-hovered] {
-  background-color: var(--background-neutral-subtlest-hovered);
+  background-color: var(--quick-actions-color-row-background-hovered);
 }
 
 .row[data-pressed] {
-  background-color: var(--background-neutral-subtlest-pressed);
+  background-color: var(--quick-actions-color-row-background-pressed);
 }
 
-.row[data-focus-visible] {
-  box-shadow:
-    var(--elevation-medium),
-    0 0 0 var(--size025) var(--background-focused-default);
-}
+/* Focus clavier : FocusRing (anneau commun, à fleur de la rangée), rendu dans le composant. */
 
 .label {
   flex: 1 1 auto;

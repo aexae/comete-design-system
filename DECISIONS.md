@@ -2,6 +2,16 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-26 — QuickActions sur la couche composant, bump tokens 0.47.0
+
+**Décisions** (Axel) :
+
+- **QuickActions et sa rangée** passent sur une famille de tokens dédiée `quick-actions.*` (tokens 0.47.0), en code et dans Figma (variables `quick-actions/*` de la collection `component`). La pastille d'icône reste un `IconTile`, la typographie reste sur `base/typography` et l'élévation sur le style d'effet `elevation/medium` dans Figma (une ombre n'est pas une variable).
+- **Focus de la rangée** : `FocusRing` (position `outside`, offset 0, rond), comme les items de la BottomNav. Dans Figma, la variante `focused` est liée à `border/focused`.
+- **Interlignage du libellé** : `line-height/ui/s` (20 px) dans Figma, comme le code. Figma était en `ui/m`.
+- **BottomNav (Figma)** : la cellule `<BottomNav.Action>` est liée à `bottom-nav/spacing/item/padding-y` et `bottom-nav/radius/item`, le gap racine des variantes de `<BottomNavItem>` est à 0. `offset`, `cradle-ring` et les `badge-offset` restent non liés (positions absolues), laissé en l'état.
+- **Bump tokens 0.47.0** : embarque le passage sombre de `bold` (600/500/400) et `boldest` (200/100/50) de la 0.45.0. Card bold comete et brand en texte inversé, `generateBrandTheme` aligné, stories Couleur, Welcome et guidelines du Button mises à jour.
+
 ## 2026-11-25 — Focus du Button inverted, icône du link-subtle, liaisons Figma du ❖ Button
 
 **Décisions** (Axel) :

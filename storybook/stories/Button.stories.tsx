@@ -119,7 +119,7 @@ const meta: Meta<ButtonProps> = {
               avoid={[
                 "Naviguer entre des pages → Breadcrumbs ou SideNavItem.",
                 '`color="inverted"` sur une surface claire : il est fait pour une surface inversée et disparaît ailleurs.',
-                '`color="inverted"` sur une surface navy fixe (`surface.comete`, fonds `boldest`) : `inverted` suit le thème et devient foncé en thème sombre.',
+                '`color="inverted"` sur la surface navy fixe `surface.comete` : `inverted` suit le thème et devient foncé en thème sombre.',
               ]}
               best={[
                 "Regrouper des actions liées dans un ButtonGroup (action principale à droite).",

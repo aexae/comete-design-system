@@ -78,13 +78,16 @@ describe("generateBrandTheme", () => {
     expect(lightnessOf(light["--background-brand-boldest-default"]!)).toBeLessThan(0.3);
   });
 
-  it("should keep boldest darker than bold in light theme and in dark theme", () => {
+  it("should push boldest further from the surface than bold in both themes", () => {
     const theme = generateBrandTheme("#1e3661");
-    for (const mode of [theme.light, theme.dark]) {
-      expect(lightnessOf(mode["--background-brand-boldest-default"]!)).toBeLessThan(
-        lightnessOf(mode["--background-brand-bold-default"]!)
-      );
-    }
+    // Clair : boldest (950) plus sombre que bold (700). Sombre (tokens 0.45.0) : boldest
+    // (200) plus clair que bold (600).
+    expect(lightnessOf(theme.light["--background-brand-boldest-default"]!)).toBeLessThan(
+      lightnessOf(theme.light["--background-brand-bold-default"]!)
+    );
+    expect(lightnessOf(theme.dark["--background-brand-boldest-default"]!)).toBeGreaterThan(
+      lightnessOf(theme.dark["--background-brand-bold-default"]!)
+    );
   });
 
   it("should invert lightness roles between light and dark themes", () => {
