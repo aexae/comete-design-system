@@ -189,18 +189,18 @@ export const Philosophie: Story = {
           <Swatch token="--text-brand-default" label="text" />
         </Stack>
         <Text size="small" color="subtle">
-          <code>boldest</code> est le palier le plus sombre (navy Comète par défaut, miroir de{" "}
-          <code>comete-boldest</code>) : surfaces d&apos;identité ambiantes uniquement (ex.{" "}
-          <code>Card appearance=&quot;bold&quot;</code>), jamais un contrôle. Texte posé dessus en{" "}
-          <code>text.on-dark-surface</code>.
+          <code>boldest</code> est le palier le plus éloigné de la surface (navy Comète par défaut
+          en clair, palier 200 en sombre, miroir de <code>comete-boldest</code>) : surfaces
+          d&apos;identité ambiantes uniquement (ex. <code>Card appearance=&quot;bold&quot;</code>),
+          jamais un contrôle. Texte posé dessus en <code>text.inverted</code>.
         </Text>
       </Section>
 
       <Section title="Palier boldest par famille">
         <Text size="small" color="subtle">
-          Chaque famille a un fond <code>boldest</code> (palier 950, identique en clair et en
-          sombre) pour les surfaces qui restent foncées quel que soit le thème. Jamais un contrôle,
-          texte posé dessus en <code>text.on-dark-surface</code>. Seuls <code>comete</code> et{" "}
+          Chaque famille a un fond <code>boldest</code> qui suit le thème (palier 950 en clair, 200
+          en sombre). La seule surface foncée fixe est <code>surface.comete</code>. Jamais un
+          contrôle, texte posé dessus en <code>text.inverted</code>. Seuls <code>comete</code> et{" "}
           <code>brand</code> ont aussi des tokens <code>text</code>, <code>border</code> et{" "}
           <code>icon</code> <code>boldest</code>.
         </Text>

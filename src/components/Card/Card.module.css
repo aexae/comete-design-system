@@ -192,18 +192,9 @@
   background-color: var(--background-brand-boldest-default);
 }
 
-/* Navy fixe dans les deux thèmes : texte et icônes blancs fixes (text.on-dark-surface,
-   icon.on-dark-surface), pas text.inverted / icon.inverted qui suivent le thème. */
-.bold.color-comete,
-.bold.color-brand {
-  color: var(--text-on-dark-surface);
-  --text-default-default: var(--text-on-dark-surface);
-  --text-subtle-default: var(--text-on-dark-surface);
-  --text-subtlest-default: var(--text-on-dark-surface);
-  --icon-default: var(--icon-on-dark-surface);
-  --icon-subtle: var(--icon-on-dark-surface);
-  --icon-subtlest: var(--icon-on-dark-surface);
-}
+/* comete et brand bold : `boldest` suit le thème depuis les tokens 0.45.0 (navy en clair,
+   palier 200 en sombre). Le texte et les icônes restent donc ceux de `.bold`
+   (text.inverted / icon.inverted), pas les blancs fixes `on-dark-surface`. */
 
 /* ==========================================================================
    Layout drag

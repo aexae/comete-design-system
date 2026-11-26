@@ -167,7 +167,31 @@ describe("QuickActions — règle de couleur (ADR 0002)", () => {
       expect(r.body).not.toMatch(/critical|comete|brand|success|warning|information|accent/);
     }
     const base = rules.find((r) => r.sel === ".row");
-    expect(base?.body).toMatch(/background-color:\s*var\(--surface-default\)/);
+    expect(base?.body).toMatch(
+      /background-color:\s*var\(--quick-actions-color-row-background-default\)/
+    );
+  });
+
+  it("should style the layer only through quick-actions component tokens for colours and spacing", () => {
+    const declarations = [
+      ...css.matchAll(
+        /(background-color|color|gap|padding|min-height|border-radius|box-shadow):([^;]+);/g
+      ),
+    ];
+    expect(declarations.length).toBeGreaterThan(0);
+    for (const [, prop, value] of declarations) {
+      expect(`${prop}:${value}`).toMatch(/var\(--quick-actions-/);
+    }
+  });
+
+  it("should draw the keyboard focus with FocusRing, not a local box-shadow", async () => {
+    const user = userEvent.setup();
+    render(<QuickActions actions={ACTIONS} isOpen onOpenChange={() => undefined} />);
+    await user.tab();
+    const focused = document.activeElement as HTMLElement;
+    expect(focused.className).toContain("row");
+    expect(focused.querySelector(".ring.outside")).not.toBeNull();
+    expect(css).not.toMatch(/data-focus-visible/);
   });
 
   it("should map each of the five semantic tones onto its IconTile appearance", () => {

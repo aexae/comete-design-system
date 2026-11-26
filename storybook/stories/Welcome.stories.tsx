@@ -253,11 +253,11 @@ const SWATCHES: { token: string; label: string; text: string; outlined?: boolean
   },
   { token: "--background-brand-subtler-default", label: "subtler", text: "--text-default-default" },
   { token: "--background-brand-bold-default", label: "bold", text: "--text-inverted-default" },
-  // Surface d'identité navy (pas un contrôle) : texte prévu par le token, text.on-dark-surface.
+  // Surface d'identité (pas un contrôle) : boldest suit le thème, texte en text.inverted.
   {
     token: "--background-brand-boldest-default",
     label: "boldest",
-    text: "--text-on-dark-surface",
+    text: "--text-inverted-default",
   },
   { token: "--border-brand-bold", label: "border", text: "--text-inverted-default" },
   {

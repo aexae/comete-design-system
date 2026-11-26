@@ -3,8 +3,10 @@
 //
 // Principe : la teinte (H) et la chroma (C) viennent du client ; la luminosité (L)
 // de chaque palier est **fixée par le DS** (normalisée par rôle), avec clamp de gamut.
-// Le contraste des fonds `bold` (palier 700, texte inversé 5,3:1) et `boldest` (palier 950,
-// navy, 12:1) avec le texte inversé est ainsi garanti par construction.
+// En clair, le contraste des fonds `bold` (palier 700, texte inversé 5,3:1) et `boldest`
+// (palier 950, navy, 12:1) avec le texte inversé est ainsi garanti par construction. En sombre,
+// `bold` passe en 600/500/400 et `boldest` en 200/100/50 (tokens 0.45.0) : voir le TODO des
+// tokens pour le contraste du texte sur `bold` sombre, encore à arbitrer.
 
 import { hexToRgb, oklchToHex, rgbToOklch } from "./oklch.js";
 
@@ -65,12 +67,12 @@ const LIGHT_MAP: Record<string, Stop> = {
 };
 
 const DARK_MAP: Record<string, Stop> = {
-  "background-brand-bold-default": 50,
-  "background-brand-bold-hovered": 100,
-  "background-brand-bold-pressed": 200,
-  "background-brand-boldest-default": 950,
-  "background-brand-boldest-hovered": 900,
-  "background-brand-boldest-pressed": 800,
+  "background-brand-bold-default": 600,
+  "background-brand-bold-hovered": 500,
+  "background-brand-bold-pressed": 400,
+  "background-brand-boldest-default": 200,
+  "background-brand-boldest-hovered": 100,
+  "background-brand-boldest-pressed": 50,
   "background-brand-subtler-default": 800,
   "background-brand-subtler-hovered": 700,
   "background-brand-subtler-pressed": 600,

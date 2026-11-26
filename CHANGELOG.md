@@ -9,6 +9,20 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Modifié (alpha.203)
+
+- **QuickActions** : migré sur ses tokens de composant `--quick-actions-*` (tokens 0.47.0) pour le
+  voile, le fond de rangée default/hovered/pressed, le libellé, la hauteur minimale, les
+  espacements, le rayon et l'élévation. La pastille reste un `IconTile`. Rendu identique.
+- **QuickActions, focus clavier** : passe par `FocusRing` (anneau `border.focused` commun, à fleur
+  de la rangée) au lieu d'un `box-shadow` local sur `--background-focused-default`.
+- **Tokens 0.45.0 à 0.47.0** : en thème sombre, les fonds `bold` passent en 600/500/400 et
+  `boldest` en 200/100/50 sur toutes les familles. `boldest` suit donc le thème. Card `bold`
+  comete et brand prennent le texte et les icônes inversés de `.bold` (le blanc fixe
+  `on-dark-surface` faisait 1,3:1 sur le 200 sombre). `generateBrandTheme` (BrandProvider) suit
+  les mêmes paliers sombres. Point ouvert côté tokens : le texte inversé sur `bold` sombre est
+  sous AA pour plusieurs familles (Button contained compris), arbitrage en attente.
+
 ### Modifié (alpha.202)
 
 - **Button `inverted`** : anneau de focus dédié, `--button-color-focus-border-inverted`
