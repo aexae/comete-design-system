@@ -2,6 +2,13 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-26 — QuickActions devient QuickActionsMenu, la rangée devient QuickActionsItem
+
+- **Décision** (Axel) : le composant prend le nom de `QuickActionsMenu`, et sa rangée celui de `QuickActionsItem`, en code, dans Figma et dans les tokens (0.48.0, famille `quick-actions-menu`, enfant `item`).
+- **Code** : le type d'une action (`QuickAction`) devient `QuickActionsItem`, pendant de `<QuickActionsItem>` dans Figma. Les classes CSS suivent : `.row` → `.item`, et le `li` devient `.entry`.
+- **Figma** : les deux sets étaient déjà renommés. J'ai mis à jour les noms de calques restés à l'ancien nom (15), les descriptions des sets et les 14 variables (renommées sur place, liaisons conservées, code syntax WEB).
+- **Non tranché** : fond de l'item mixte (`surface` au repos, `background` au survol et à l'appui), à arbitrer avec la doctrine surface / background.
+
 ## 2026-11-26 — QuickActions sur la couche composant, bump tokens 0.47.0
 
 **Décisions** (Axel) :

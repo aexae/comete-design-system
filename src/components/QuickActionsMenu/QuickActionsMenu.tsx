@@ -1,4 +1,4 @@
-// QuickActions — Comète Design System
+// QuickActionsMenu — Comète Design System
 // Menu d'actions rapides du FAB (pattern « speed dial ») : pastilles flottantes au-dessus
 // d'un voile. Construit sur react-aria-components (ModalOverlay / Modal / Dialog), comme
 // Drawer et Spotlight : portail, piège de focus, Échap et retour du focus sur le
@@ -13,7 +13,7 @@ import {
 import type { IconName } from "@aexae/comete-icons";
 import { FocusRing } from "../FocusRing/index.js";
 import { IconTile, type IconTileAppearance } from "../IconTile/index.js";
-import styles from "./QuickActions.module.css";
+import styles from "./QuickActionsMenu.module.css";
 
 // `process` n'est pas typé ici (le DS build avec `types: []`, sans @types/node).
 // Déclaration locale minimale : le bundler du consommateur remplace
@@ -35,18 +35,18 @@ const TONE_RATIONALE =
 
 /**
  * Nature d'une action — **pas son identité** : la palette sémantique des autres composants
- * (`Button` `color`, `Badge` `appearance`). Voir la règle de couleur de {@link QuickActions}.
+ * (`Button` `color`, `Badge` `appearance`). Voir la règle de couleur de {@link QuickActionsMenu}.
  * Aucune restriction au niveau du type : le garde-fou est sur la **composition** (avertissement
  * en développement).
  */
 // Dérivé d'`IconTileAppearance` plutôt que recopié : la pastille EST un `IconTile`, et
 // `Extract` garantit que la liste reste un sous-ensemble de ce que la tuile sait rendre.
-export type QuickActionTone = Extract<
+export type QuickActionsItemTone = Extract<
   IconTileAppearance,
   "comete" | "critical" | "warning" | "success" | "information"
 >;
 
-export interface QuickAction {
+export interface QuickActionsItem {
   /** Identifiant stable (clé de rendu). */
   id: string;
   /** Icône de la pastille d'icône (nom issu de `@aexae/comete-icons`). */
@@ -58,14 +58,14 @@ export interface QuickAction {
    * `information`). La couleur ne va que sur la pastille d'icône, jamais sur la rangée.
    * @default "comete"
    */
-  tone?: QuickActionTone;
+  tone?: QuickActionsItemTone;
   /** Appelé au choix de l'action ; le menu se referme ensuite. */
   onPress: () => void;
 }
 
-export interface QuickActionsProps {
+export interface QuickActionsMenuProps {
   /** Les actions, de 2 à 5 (au-delà : avertissement en développement). */
-  actions: QuickAction[];
+  actions: QuickActionsItem[];
   /** État ouvert / fermé (contrôlé). */
   isOpen: boolean;
   /** Callback au changement d'état (voile, Échap, choix d'une action). */
@@ -78,7 +78,7 @@ export interface QuickActionsProps {
 // Composant
 
 /**
- * QuickActions — menu d'actions rapides du FAB (`BottomNav.Action`) : des **pastilles
+ * QuickActionsMenu — menu d'actions rapides du FAB (`BottomNav.Action`) : des **pastilles
  * flottantes** au-dessus d'un voile, une par action (pastille d'icône à gauche, libellé
  * à droite). La pastille est un `IconTile` (`medium`, `circle`) : c'est le composant du
  * DS pour « une icône sur un fond teinté », on ne le redessine pas ici.
@@ -127,12 +127,12 @@ export interface QuickActionsProps {
  *   rouvrir. Les conteneurs de la couche sont transparents aux clics (seules les rangées les
  *   captent), et l'élément `aria-expanded` est exclu de la fermeture « clic à l'extérieur »
  *   pour le cas où le FAB ne serait pas inerte.
- * - La place est réservée en bas de la liste (variable `--quick-actions-offset`) pour que
+ * - La place est réservée en bas de la liste (variable `--quick-actions-menu-offset`) pour que
  *   la dernière rangée ne passe pas sous le FAB.
  *
  * ```tsx
  * <BottomNav.Action icon="Add" aria-label="Actions rapides" isOpen={open} onPress={() => setOpen((o) => !o)} />
- * <QuickActions
+ * <QuickActionsMenu
  *   isOpen={open}
  *   onOpenChange={setOpen}
  *   actions={[
@@ -142,17 +142,17 @@ export interface QuickActionsProps {
  * />
  * ```
  */
-export function QuickActions({
+export function QuickActionsMenu({
   actions,
   isOpen,
   onOpenChange,
   "aria-label": ariaLabel = "Actions rapides",
-}: QuickActionsProps): ReactElement {
+}: QuickActionsMenuProps): ReactElement {
   if (process.env.NODE_ENV !== "production") {
     if (actions.length > MAX_ACTIONS) {
       // eslint-disable-next-line no-console
       console.warn(
-        `QuickActions : ${actions.length} actions reçues, ${MAX_ACTIONS} au maximum — au-delà, ` +
+        `QuickActionsMenu : ${actions.length} actions reçues, ${MAX_ACTIONS} au maximum — au-delà, ` +
           `il n'y a plus de place entre le FAB et la barre de page. Utiliser un tiroir (Drawer).`
       );
     }
@@ -160,7 +160,7 @@ export function QuickActions({
     if (tones.size > MAX_DISTINCT_TONES) {
       // eslint-disable-next-line no-console
       console.warn(
-        `QuickActions : ${tones.size} tons distincts dans un même menu (${[...tones].join(", ")}). ` +
+        `QuickActionsMenu : ${tones.size} tons distincts dans un même menu (${[...tones].join(", ")}). ` +
           TONE_RATIONALE
       );
     }
@@ -168,7 +168,7 @@ export function QuickActions({
     if (criticalCount > 1) {
       // eslint-disable-next-line no-console
       console.warn(
-        `QuickActions : ${criticalCount} actions portent le ton "critical" — une seule au plus. ` +
+        `QuickActionsMenu : ${criticalCount} actions portent le ton "critical" — une seule au plus. ` +
           TONE_RATIONALE
       );
     }
@@ -191,12 +191,12 @@ export function QuickActions({
             {actions.map((action, index) => (
               <li
                 key={action.id}
-                className={styles.item}
+                className={styles.entry}
                 // Apparition décalée : la rangée la plus proche du FAB (la dernière) d'abord.
                 style={{ "--qa-index": actions.length - 1 - index } as CSSProperties}
               >
                 <AriaButton
-                  className={styles.row}
+                  className={styles.item}
                   onPress={() => {
                     action.onPress();
                     onOpenChange(false);
@@ -225,4 +225,4 @@ export function QuickActions({
   );
 }
 
-QuickActions.displayName = "QuickActions";
+QuickActionsMenu.displayName = "QuickActionsMenu";

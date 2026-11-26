@@ -44,8 +44,8 @@
   z-index: 2;
 }
 
-/* ---- Écran mobile plein viewport (recette QuickActions) ----
-   La couche flottante de `QuickActions` est plein écran (`position: fixed`) : pour que le
+/* ---- Écran mobile plein viewport (recette QuickActionsMenu) ----
+   La couche flottante de `QuickActionsMenu` est plein écran (`position: fixed`) : pour que le
    voile, les pastilles et le FAB s'alignent, la story tourne dans un VRAI viewport mobile
    (viewport Storybook) et la barre est ancrée en bas de ce viewport. */
 .fullScreen {

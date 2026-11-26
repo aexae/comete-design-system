@@ -1,4 +1,4 @@
-// Tests unitaires de QuickActions (menu d'actions rapides du FAB)
+// Tests unitaires de QuickActionsMenu (menu d'actions rapides du FAB)
 import { readFileSync } from "node:fs";
 import { useState } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
@@ -6,9 +6,9 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi, afterEach } from "vitest";
 import { BottomNav } from "../BottomNav/BottomNav";
 import { BottomNavItem } from "../BottomNav/BottomNavItem";
-import { QuickActions, type QuickAction } from "./QuickActions";
+import { QuickActionsMenu, type QuickActionsItem } from "./QuickActionsMenu";
 
-const ACTIONS: QuickAction[] = [
+const ACTIONS: QuickActionsItem[] = [
   {
     id: "report",
     icon: "Report",
@@ -19,8 +19,8 @@ const ACTIONS: QuickAction[] = [
   { id: "scan", icon: "Scanner", label: "Scanner un équipement", onPress: vi.fn() },
 ];
 
-/** FAB (déclencheur) + QuickActions, comme dans l'app. */
-function Harness({ actions = ACTIONS }: { actions?: QuickAction[] }) {
+/** FAB (déclencheur) + QuickActionsMenu, comme dans l'app. */
+function Harness({ actions = ACTIONS }: { actions?: QuickActionsItem[] }) {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -36,7 +36,7 @@ function Harness({ actions = ACTIONS }: { actions?: QuickAction[] }) {
         <BottomNavItem label="Planning" icon="CalendarMonth" />
         <BottomNavItem label="MCE" icon="FormEdit" />
       </BottomNav>
-      <QuickActions actions={actions} isOpen={open} onOpenChange={setOpen} />
+      <QuickActionsMenu actions={actions} isOpen={open} onOpenChange={setOpen} />
     </>
   );
 }
@@ -47,7 +47,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("QuickActions — comportement", () => {
+describe("QuickActionsMenu — comportement", () => {
   it("should trap the focus inside the layer when opened, and close on Escape", async () => {
     const user = userEvent.setup();
     render(<Harness />);
@@ -98,12 +98,12 @@ describe("QuickActions — comportement", () => {
   });
 
   it("should use « Actions rapides » as the default accessible name", async () => {
-    render(<QuickActions actions={ACTIONS} isOpen onOpenChange={() => undefined} />);
+    render(<QuickActionsMenu actions={ACTIONS} isOpen onOpenChange={() => undefined} />);
     expect(await screen.findByRole("dialog", { name: "Actions rapides" })).toBeInTheDocument();
   });
 
   it("should have no « Fermer » button and no description line (label only)", () => {
-    render(<QuickActions actions={ACTIONS} isOpen onOpenChange={() => undefined} />);
+    render(<QuickActionsMenu actions={ACTIONS} isOpen onOpenChange={() => undefined} />);
     expect(screen.queryByRole("button", { name: /fermer/i })).toBeNull();
     // Une rangée = un libellé + une pastille d'icône, rien d'autre.
     const row = screen.getByRole("button", { name: "Scanner un équipement" });
@@ -112,7 +112,7 @@ describe("QuickActions — comportement", () => {
   });
 
   it("should put the icon tile before the label (icon on the left, label on the right)", () => {
-    render(<QuickActions actions={ACTIONS} isOpen onOpenChange={() => undefined} />);
+    render(<QuickActionsMenu actions={ACTIONS} isOpen onOpenChange={() => undefined} />);
     const row = screen.getByRole("button", { name: "Scanner un équipement" });
     const [first, second] = Array.from(row.children);
     // La pastille (décorative) précède le libellé : l'ordre du DOM suit l'ordre visuel.
@@ -121,11 +121,11 @@ describe("QuickActions — comportement", () => {
   });
 });
 
-describe("QuickActions — règle de couleur (ADR 0002)", () => {
+describe("QuickActionsMenu — règle de couleur (ADR 0002)", () => {
   // La pastille est un `IconTile` : son ton se lit sur les classes du DOM rendu
   // (`classNameStrategy: "non-scoped"` en test). La neutralité de la rangée, elle, reste
   // une règle de feuille de style : on la vérifie sur le source CSS.
-  const css = readFileSync("src/components/QuickActions/QuickActions.module.css", "utf8")
+  const css = readFileSync("src/components/QuickActionsMenu/QuickActionsMenu.module.css", "utf8")
     // Les commentaires citent volontairement les tokens : on les ignore.
     .replace(/\/\*[\s\S]*?\*\//g, "");
   const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(([, sel, body]) => ({
@@ -138,13 +138,13 @@ describe("QuickActions — règle de couleur (ADR 0002)", () => {
     screen.getByRole("button", { name: label }).firstElementChild as HTMLElement;
 
   it("should carry the tone as an IconTile appearance, « comete » when omitted", () => {
-    render(<QuickActions actions={ACTIONS} isOpen onOpenChange={() => undefined} />);
+    render(<QuickActionsMenu actions={ACTIONS} isOpen onOpenChange={() => undefined} />);
     expect(tileOf("Signaler une anomalie").className).toContain("critical");
     expect(tileOf("Scanner un équipement").className).toContain("comete");
   });
 
   it("should render a critical action as an IconTile critical, circle, medium", () => {
-    render(<QuickActions actions={ACTIONS} isOpen onOpenChange={() => undefined} />);
+    render(<QuickActionsMenu actions={ACTIONS} isOpen onOpenChange={() => undefined} />);
     const tile = tileOf("Signaler une anomalie");
     expect(tile.className).toContain("iconTile");
     expect(tile.className).toContain("critical");
@@ -160,15 +160,15 @@ describe("QuickActions — règle de couleur (ADR 0002)", () => {
     expect(css).not.toMatch(/data-tone/);
   });
 
-  it("should NEVER colour the row: neutral surface, no critical/brand token on .row", () => {
-    const rowRules = rules.filter((r) => /^\.row(\[|$|:)/.test(r.sel));
-    expect(rowRules.length).toBeGreaterThan(0);
-    for (const r of rowRules) {
+  it("should NEVER colour the item: neutral surface, no critical/brand token on .item", () => {
+    const itemRules = rules.filter((r) => /^\.item(\[|$|:)/.test(r.sel));
+    expect(itemRules.length).toBeGreaterThan(0);
+    for (const r of itemRules) {
       expect(r.body).not.toMatch(/critical|comete|brand|success|warning|information|accent/);
     }
-    const base = rules.find((r) => r.sel === ".row");
+    const base = rules.find((r) => r.sel === ".item");
     expect(base?.body).toMatch(
-      /background-color:\s*var\(--quick-actions-color-row-background-default\)/
+      /background-color:\s*var\(--quick-actions-menu-item-color-background-default\)/
     );
   });
 
@@ -186,10 +186,10 @@ describe("QuickActions — règle de couleur (ADR 0002)", () => {
 
   it("should draw the keyboard focus with FocusRing, not a local box-shadow", async () => {
     const user = userEvent.setup();
-    render(<QuickActions actions={ACTIONS} isOpen onOpenChange={() => undefined} />);
+    render(<QuickActionsMenu actions={ACTIONS} isOpen onOpenChange={() => undefined} />);
     await user.tab();
     const focused = document.activeElement as HTMLElement;
-    expect(focused.className).toContain("row");
+    expect(focused.className).toContain("item");
     expect(focused.querySelector(".ring.outside")).not.toBeNull();
     expect(css).not.toMatch(/data-focus-visible/);
   });
@@ -198,7 +198,7 @@ describe("QuickActions — règle de couleur (ADR 0002)", () => {
     vi.spyOn(console, "warn").mockImplementation(() => undefined);
     const tones = ["comete", "critical", "warning", "success", "information"] as const;
     render(
-      <QuickActions
+      <QuickActionsMenu
         actions={tones.map((tone) => ({
           id: tone,
           icon: "Star" as const,
@@ -216,7 +216,7 @@ describe("QuickActions — règle de couleur (ADR 0002)", () => {
   });
 
   it("should accept the whole palette at the type level (no restriction)", () => {
-    const palette: QuickAction["tone"][] = [
+    const palette: QuickActionsItem["tone"][] = [
       "comete",
       "critical",
       "warning",
@@ -227,8 +227,8 @@ describe("QuickActions — règle de couleur (ADR 0002)", () => {
   });
 });
 
-describe("QuickActions — garde-fou de composition (avertissement, jamais de blocage)", () => {
-  const make = (tones: QuickAction["tone"][]): QuickAction[] =>
+describe("QuickActionsMenu — garde-fou de composition (avertissement, jamais de blocage)", () => {
+  const make = (tones: QuickActionsItem["tone"][]): QuickActionsItem[] =>
     tones.map((tone, i) => ({
       id: String(i),
       icon: "Star",
@@ -240,7 +240,7 @@ describe("QuickActions — garde-fou de composition (avertissement, jamais de bl
   it("should warn when a menu uses more than two distinct tones, explaining why", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     render(
-      <QuickActions
+      <QuickActionsMenu
         actions={make(["comete", "warning", "success"])}
         isOpen
         onOpenChange={() => undefined}
@@ -256,7 +256,7 @@ describe("QuickActions — garde-fou de composition (avertissement, jamais de bl
   it("should still render every action when it warns (warn, never break)", () => {
     vi.spyOn(console, "warn").mockImplementation(() => undefined);
     render(
-      <QuickActions
+      <QuickActionsMenu
         actions={make(["comete", "warning", "success", "information"])}
         isOpen
         onOpenChange={() => undefined}
@@ -269,7 +269,7 @@ describe("QuickActions — garde-fou de composition (avertissement, jamais de bl
   it("should not warn with two distinct tones", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     render(
-      <QuickActions
+      <QuickActionsMenu
         actions={make(["comete", "comete", "critical"])}
         isOpen
         onOpenChange={() => undefined}
@@ -281,7 +281,7 @@ describe("QuickActions — garde-fou de composition (avertissement, jamais de bl
   it("should warn when more than one action is critical", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     render(
-      <QuickActions
+      <QuickActionsMenu
         actions={make(["critical", "critical"])}
         isOpen
         onOpenChange={() => undefined}
@@ -296,35 +296,39 @@ describe("QuickActions — garde-fou de composition (avertissement, jamais de bl
   it("should not warn with a single critical action", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     render(
-      <QuickActions actions={make(["critical", undefined])} isOpen onOpenChange={() => undefined} />
+      <QuickActionsMenu
+        actions={make(["critical", undefined])}
+        isOpen
+        onOpenChange={() => undefined}
+      />
     );
     expect(warn).not.toHaveBeenCalled();
   });
 });
 
-describe("QuickActions — plafond", () => {
+describe("QuickActionsMenu — plafond", () => {
   it("should warn in development beyond five actions", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
-    const six: QuickAction[] = Array.from({ length: 6 }, (_, i) => ({
+    const six: QuickActionsItem[] = Array.from({ length: 6 }, (_, i) => ({
       id: String(i),
       icon: "Star",
       label: `Action ${i + 1}`,
       onPress: () => undefined,
     }));
-    render(<QuickActions actions={six} isOpen onOpenChange={() => undefined} />);
+    render(<QuickActionsMenu actions={six} isOpen onOpenChange={() => undefined} />);
     expect(warn).toHaveBeenCalledOnce();
     expect(warn.mock.calls[0]?.[0]).toMatch(/6 actions/);
   });
 
   it("should not warn up to five actions", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
-    const five: QuickAction[] = Array.from({ length: 5 }, (_, i) => ({
+    const five: QuickActionsItem[] = Array.from({ length: 5 }, (_, i) => ({
       id: String(i),
       icon: "Star",
       label: `Action ${i + 1}`,
       onPress: () => undefined,
     }));
-    render(<QuickActions actions={five} isOpen onOpenChange={() => undefined} />);
+    render(<QuickActionsMenu actions={five} isOpen onOpenChange={() => undefined} />);
     expect(warn).not.toHaveBeenCalled();
   });
 });

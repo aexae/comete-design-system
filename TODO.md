@@ -1,13 +1,15 @@
 # TODO
 
-## QuickActions, BottomNav et bump tokens 0.47.0 (2026-11-26)
+## QuickActionsMenu, BottomNav et bump tokens 0.47.0 (2026-11-26)
+
+- **Fond de l'item, `surface` ou `background`** : `--quick-actions-menu-item-color-background-default` pointe vers `surface.default`, et les états survolé et pressé vers `background.neutral.subtlest.*`. On attend l'arbitrage d'Axel sur la doctrine (une surface n'est pas cliquable). Le point est aussi signalé dans la table de renommage des tokens.
 
 - **Épaisseur des anneaux de focus en dur** : `FocusRing` (`2px` dans `box-shadow`) et `Button` (`outline: 2px`) n'ont pas de token d'épaisseur. Créer un `border-width.focus` (accord d'Axel requis) et le lier aussi dans Figma, où les variantes `focused` sont sur `size025`.
-- **Figma, pastille de `<QuickActionsRow>`** : cadre local `tile` lié aux fonds `*/subtlest`, pas une instance d'`IconTile` comme dans le code. Instancier le composant quand il sera publié dans Figma (la page `❖ IconTile` est marquée « storybook »).
+- **Figma, pastille de `<QuickActionsItem>`** : cadre local `tile` lié aux fonds `*/subtlest`, pas une instance d'`IconTile` comme dans le code. Instancier le composant quand il sera publié dans Figma (la page `❖ IconTile` est marquée « storybook »).
 - **Badge** : le `<Badge>` de la BottomNav (Figma) reste sur `-DEPRECATED-badge/*` (padding, rayon, largeur minimale). Le Badge n'a pas encore de tokens de composant.
 - **Texte sur `bold` sombre** (tokens 0.45.0) : sous AA pour plusieurs familles, Button contained compris. Arbitrage d'Axel en attente côté tokens. Le DS embarque ces valeurs depuis alpha.203.
 - **Card bold comete et brand en sombre** : passées en texte inversé (encre 950 sur palier 200). Rendu à vérifier dans Storybook en thème sombre.
-- **Apparition des rangées QuickActions** : `translateY(var(--space200))` utilise un espacement pour une distance d'animation. Acceptable, mais pas de token de mouvement dédié.
+- **Apparition des items de QuickActionsMenu** : `translateY(var(--space200))` utilise un espacement pour une distance d'animation. Acceptable, mais pas de token de mouvement dédié.
 
 ## Button inverted (2026-11-25)
 

@@ -20,7 +20,7 @@ const RUNTIME_PROPERTIES: Record<string, string> = {
   "--trigger-width": "posée par React Aria sur le Popover",
   "--focus-ring-offset": "posée par FocusRing.tsx",
   "--menu-popover-width": "posée par Menu.tsx",
-  "--qa-index": "posée par QuickActions.tsx",
+  "--qa-index": "posée par QuickActionsMenu.tsx",
   "--sidenav-section-heading-size": "posée par SideNav.tsx",
   "--sidenav-section-heading-line": "surcharge consommateur (SideNav)",
   "--popup-padding": "surcharge consommateur (Popup, SideNav)",

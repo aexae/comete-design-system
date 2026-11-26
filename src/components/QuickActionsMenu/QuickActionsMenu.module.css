@@ -1,11 +1,11 @@
 /* ==========================================================================
-   QuickActions — Comète Design System
+   QuickActionsMenu — Comète Design System
    Pastilles flottantes au-dessus d'un voile (pattern « speed dial »).
    100 % tokens, zéro valeur hardcodée.
 
    RÈGLE DE COULEUR (ADR 0002, « une couleur, un sens ») : la couleur porte la
    NATURE de l'action, jamais son identité, et ne va QUE sur la pastille d'icône —
-   jamais sur la rangée (`.row`), qui reste neutre (surface). La pastille n'est pas
+   jamais sur l'item (`.item`), qui reste neutre (surface). La pastille n'est pas
    dessinée ici : c'est un `IconTile` (`medium`, `circle`), qui porte le fond teinté
    et la couleur du glyphe. Rien dans ce fichier ne doit la redéfinir.
    Palette sémantique (comete, critical, warning, success, information) ; le garde-fou
@@ -20,7 +20,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  background-color: var(--quick-actions-color-overlay);
+  background-color: var(--quick-actions-menu-color-blanket);
 }
 
 .overlay[data-entering] {
@@ -49,58 +49,61 @@
 }
 
 /* Liste : réserve la place du FAB et de la barre en bas, pour que la dernière rangée
-   ne passe pas sous lui. `--quick-actions-offset` est surchargeable (barre plus haute). */
+   ne passe pas sous lui. `--quick-actions-menu-offset` est surchargeable (barre plus haute). */
 .list {
-  --quick-actions-offset: var(--quick-actions-spacing-list-padding-bottom);
+  --quick-actions-menu-offset: var(--quick-actions-menu-list-spacing-padding-bottom);
   display: flex;
   flex-direction: column;
-  gap: var(--quick-actions-spacing-list-gap);
+  gap: var(--quick-actions-menu-list-spacing-gap);
   margin: 0;
-  padding: var(--quick-actions-spacing-list-padding) var(--quick-actions-spacing-list-padding)
-    calc(var(--quick-actions-offset) + env(safe-area-inset-bottom, 0px));
+  padding: var(--quick-actions-menu-list-spacing-padding)
+    var(--quick-actions-menu-list-spacing-padding)
+    calc(var(--quick-actions-menu-offset) + env(safe-area-inset-bottom, 0px));
   list-style: none;
 }
 
 /* Apparition décalée (la rangée proche du FAB d'abord). `--qa-index` est posé par rangée. */
-.item {
-  animation: row-in var(--duration-normal) var(--easing-default) both;
+.entry {
+  animation: item-in var(--duration-normal) var(--easing-default) both;
   animation-delay: calc(var(--qa-index, 0) * var(--duration-fast) / 2);
 }
 
 /* Rangée : pastille d'icône à gauche, libellé à droite. Fond de SURFACE neutre — jamais
    coloré, quel que soit le ton. */
-.row {
+.item {
   pointer-events: auto;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--quick-actions-spacing-row-gap);
+  gap: var(--quick-actions-menu-item-spacing-gap);
   width: 100%;
-  min-height: var(--quick-actions-size-row-min-height);
-  padding: var(--quick-actions-spacing-row-padding-y) var(--quick-actions-spacing-row-padding-end)
-    var(--quick-actions-spacing-row-padding-y) var(--quick-actions-spacing-row-padding-start);
+  min-height: var(--quick-actions-menu-item-size-min-height);
+  padding: var(--quick-actions-menu-item-spacing-padding-y)
+    var(--quick-actions-menu-item-spacing-padding-end)
+    var(--quick-actions-menu-item-spacing-padding-y)
+    var(--quick-actions-menu-item-spacing-padding-start);
   border: 0;
-  border-radius: var(--quick-actions-radius-row);
-  background-color: var(--quick-actions-color-row-background-default);
-  box-shadow: var(--quick-actions-elevation-row);
+  border-radius: var(--quick-actions-menu-item-radius);
+  background-color: var(--quick-actions-menu-item-color-background-default);
+  box-shadow: var(--quick-actions-menu-item-elevation);
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-s);
   line-height: var(--line-height-ui-s);
   font-weight: var(--font-weight-regular);
-  color: var(--quick-actions-color-row-label);
+  color: var(--quick-actions-menu-item-color-text);
   text-align: start;
   cursor: pointer;
   outline: none;
   transition: background-color var(--duration-fast) var(--easing-default);
 }
 
-.row[data-hovered] {
-  background-color: var(--quick-actions-color-row-background-hovered);
+.item[data-hovered] {
+  background-color: var(--quick-actions-menu-item-color-background-hovered);
 }
 
-.row[data-pressed] {
-  background-color: var(--quick-actions-color-row-background-pressed);
+.item[data-pressed] {
+  background-color: var(--quick-actions-menu-item-color-background-pressed);
 }
 
 /* Focus clavier : FocusRing (anneau commun, à fleur de la rangée), rendu dans le composant. */
@@ -128,7 +131,7 @@
   }
 }
 
-@keyframes row-in {
+@keyframes item-in {
   from {
     transform: translateY(var(--space200));
     opacity: 0;
@@ -142,11 +145,11 @@
 @media (prefers-reduced-motion: reduce) {
   .overlay[data-entering],
   .overlay[data-exiting],
-  .item {
+  .entry {
     animation: none;
   }
 
-  .row {
+  .item {
     transition: none;
   }
 }
