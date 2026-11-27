@@ -51,6 +51,7 @@ import {
   ListItemTrailing,
   ListItemSecondaryAction,
 } from "@aexae/comete-design-system/components";
+import { BREAKPOINTS } from "@aexae/comete-design-system";
 
 // -----------------------------------------------------------------------
 // Modèle : facettes + agents (données de la maquette).
@@ -943,7 +944,7 @@ function OptionControls({
 
 // -----------------------------------------------------------------------
 // Bascule popover ↔ feuille : le déclencheur `collapseLabel` du Button se réduit
-// en icône seule sous `@container (max-width: 899px)`, en réagissant au conteneur
+// en icône seule sous `BREAKPOINTS.md` (`@container`), en réagissant au conteneur
 // ancêtre le plus proche (ex. la `Page`, qui déclare `container: … / inline-size`).
 // On observe CE MÊME conteneur pour rendre, dès que le bouton devient une icône,
 // une feuille (bottom sheet) au lieu du popover — comme la recette mobile. Sans
@@ -983,8 +984,8 @@ function useTriggerCollapsed(ref: React.RefObject<HTMLElement | null>, enabled: 
     }
     const ro = new ResizeObserver((entries) => {
       const width = entries[0]?.contentRect.width ?? 0;
-      // Le Button se replie à `max-width: 899px` → largeur conteneur < 900.
-      setCollapsed(width > 0 && width < 900);
+      // Le Button se replie sous `BREAKPOINTS.md` (largeur de conteneur).
+      setCollapsed(width > 0 && width < BREAKPOINTS.md);
     });
     ro.observe(container);
     return () => ro.disconnect();
@@ -995,7 +996,7 @@ function useTriggerCollapsed(ref: React.RefObject<HTMLElement | null>, enabled: 
 /**
  * Vrai quand la largeur de l'élément mesuré passe sous `threshold` px
  * (ResizeObserver sur l'élément lui-même, pas le viewport). Sert au repli
- * Table → liste compacte de `ResultsTable` (cf. décision d'audit : sous ~600px,
+ * Table → liste compacte de `ResultsTable` (cf. décision d'audit : sous `BREAKPOINTS.sm`,
  * le repli téléphone par défaut est la liste, jamais les cartes).
  */
 export function useBelowWidth(
@@ -2313,8 +2314,8 @@ export function ActiveFilterTags({
 
 // -----------------------------------------------------------------------
 // AgentsList — liste compacte d'agents : repli téléphone du tableau (sous
-// ~600px) ET liste de la recette mobile. MÊME liste partout. Décision d'audit
-// (Table.stories « Table to cards ») : sous ~600px, le repli par défaut est la
+// `BREAKPOINTS.sm`) ET liste de la recette mobile. MÊME liste partout. Décision d'audit
+// (Table.stories « Table to cards ») : sous `BREAKPOINTS.sm`, le repli par défaut est la
 // liste compacte, jamais les cartes (une liste de N agents en cartes serait
 // inexploitable).
 
@@ -2372,7 +2373,7 @@ export function ResultsTable({
 }): ReactElement {
   const ref = useRef<HTMLDivElement>(null);
   // 600 = BREAKPOINTS.sm (seuil de repli téléphone).
-  const narrow = useBelowWidth(ref, 600);
+  const narrow = useBelowWidth(ref, BREAKPOINTS.sm);
   const results = filteredAgents(filters, dataset.agents, dataset.applySousTraitants);
   return (
     <div ref={ref}>

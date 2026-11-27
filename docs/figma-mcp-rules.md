@@ -243,16 +243,25 @@ import { Icon } from "@aexae/comete-design-system";
 
 ### Responsive
 
-- Breakpoints : `BREAKPOINTS = { sm: 600, md: 900, lg: 1200 }` dans
-  `src/tokens/breakpoints.ts` (exporté), miroir des tokens `--breakpoint-sm/md/lg`
-  (tokens ≥ 0.49.0). Un `@media` / `@container` ne peut pas lire un
-  `var()` : les seuils sont recopiés en dur dans le CSS et `breakpoints.test.ts` vérifie
-  leur synchronisation. Tout nouveau seuil doit passer par cette source et ce test.
-- Mobile first : `@media (min-width: 600px)` puis `(min-width: 1200px)` (`Grid`).
-- Composants dépendant de leur conteneur : `@container` (`Table`, `Button collapseLabel`
-  dans `Page`).
-- Adaptation tactile : `density="touch"` (48 px) plutôt que des media queries.
-- Viewports Storybook métier : mobile agent 375, tablette manager 768, desktop 1440.
+- **Toute largeur d'écran ou de conteneur passe par un breakpoint nommé** (`sm`, `md`,
+  `lg`) de `BREAKPOINTS` (`src/tokens/breakpoints.ts`, exporté), miroir des tokens
+  `--breakpoint-sm/md/lg` (tokens ≥ 0.49.0). Jamais de seuil propre à un composant.
+- **CSS** : un `@media` / `@container` ne lit pas `var()`. On y écrit la valeur du
+  breakpoint (« à partir de » : `min-width: <bp>px`) ou la valeur moins 1 (« sous » :
+  `max-width: <bp - 1>px`). `breakpoints.test.ts` fait échouer la CI pour toute autre
+  largeur dans `src/**/*.css` et `storybook/stories/*.css`.
+- **JS / TS** : `BREAKPOINTS.md`, `breakpointUp("md")`, `breakpointDown("md")` (chaînes de
+  media query pour `window.matchMedia`). Jamais de nombre en dur.
+- **Commentaires et docs** : citer le nom (`BREAKPOINTS.md`, « sous `md` »), pas la
+  valeur. Dans les textes de stories affichés, interpoler `${BREAKPOINTS.md}`.
+- Règles de navigation (décidées par l'application, pas par le DS) : application
+  `BottomNav` sous `md`, `SideNav` dès `md` ; web `Drawer` sous `lg`, `SideNav`
+  persistante dès `lg`.
+- `Page.Bar` compact et `Button collapseLabel` : sous `md` (container `page`).
+- Mobile first : `Grid` passe en `tablet` dès `sm`, en `desktop` dès `lg`.
+- Adaptation tactile : `density="touch"` (48 px) ou `pointer: coarse`, jamais une largeur.
+- Les viewports Storybook (375, 768, 1440) sont des **tailles d'appareils** pour tester,
+  pas des seuils.
 
 ```css
 /* Pattern type (extrait de Button.module.css) */

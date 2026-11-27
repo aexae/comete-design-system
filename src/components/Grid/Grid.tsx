@@ -13,9 +13,9 @@ import styles from "./Grid.module.css";
  * par breakpoint. Les valeurs omises héritent du breakpoint inférieur.
  *
  * Breakpoints :
- * - `mobile`  — par défaut (< 600px)
- * - `tablet`  — ≥ 600px
- * - `desktop` — ≥ 1200px
+ * - `mobile`  — par défaut (sous `BREAKPOINTS.sm`)
+ * - `tablet`  — à partir de `BREAKPOINTS.sm`
+ * - `desktop` — à partir de `BREAKPOINTS.lg`
  */
 export type GridResponsive<T> =
   | T

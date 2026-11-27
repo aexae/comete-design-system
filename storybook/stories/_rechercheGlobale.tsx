@@ -235,7 +235,7 @@ export function GlobalSearchBar({
    *
    * Le discriminant est le **type de pointeur**, pas la largeur : une
    * tablette en paysage à 1280 px reste tactile. Les seuils de `Grid`
-   * (`BREAKPOINTS.sm` 600px, desktop 1200px) sont des seuils de MISE EN
+   * (`BREAKPOINTS.sm`, `BREAKPOINTS.lg`) sont des seuils de MISE EN
    * PAGE et ne s'appliquent pas ici : s'y fier donnerait la modale et les
    * raccourcis clavier à une tablette large, qui n'a ni clavier ni `esc`.
    *
@@ -516,7 +516,7 @@ export function GlobalSearchDialog({
    *
    * Le discriminant est le **type de pointeur**, pas la largeur : une
    * tablette en paysage à 1280 px reste tactile. Les seuils de `Grid`
-   * (`BREAKPOINTS.sm` 600px, desktop 1200px) sont des seuils de MISE EN
+   * (`BREAKPOINTS.sm`, `BREAKPOINTS.lg`) sont des seuils de MISE EN
    * PAGE et ne s'appliquent pas ici : s'y fier donnerait la modale et les
    * raccourcis clavier à une tablette large, qui n'a ni clavier ni `esc`.
    *
@@ -707,7 +707,7 @@ function PaletteFooter({
    *
    * Le discriminant est le **type de pointeur**, pas la largeur : une
    * tablette en paysage à 1280 px reste tactile. Les seuils de `Grid`
-   * (`BREAKPOINTS.sm` 600px, desktop 1200px) sont des seuils de MISE EN
+   * (`BREAKPOINTS.sm`, `BREAKPOINTS.lg`) sont des seuils de MISE EN
    * PAGE et ne s'appliquent pas ici : s'y fier donnerait la modale et les
    * raccourcis clavier à une tablette large, qui n'a ni clavier ni `esc`.
    *

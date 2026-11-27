@@ -25,7 +25,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "La barre de page unifie le titre, la navigation et les actions globales dans un seul bandeau en haut de la page. Elle bascule automatiquement entre une variante large et une variante compacte épinglée selon la largeur de la Page qui la contient (container query, seuil 900 px), et non celle de l'écran ni de la fenêtre. Elle remplace l'ancien duo TopNav + Page.Header.",
+          "La barre de page unifie le titre, la navigation et les actions globales dans un seul bandeau en haut de la page. Elle bascule automatiquement entre une variante large et une variante compacte épinglée selon la largeur de la Page qui la contient (container query, sous le breakpoint `md`), et non celle de l'écran ni de la fenêtre. Elle remplace l'ancien duo TopNav + Page.Header.",
       },
       page: () => (
         <DocsTabsPage

@@ -176,7 +176,8 @@
   }
 }
 
-@media (max-width: 760px) {
+/* Sous `BREAKPOINTS.md` : hero sur une colonne. */
+@media (max-width: 899px) {
   .page .heroTitle {
     font-size: var(--font-size-ui-xxl);
     line-height: var(--line-height-ui-xxl);

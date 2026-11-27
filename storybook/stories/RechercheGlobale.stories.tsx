@@ -84,7 +84,7 @@ function SearchableAgentsPage({
    *
    * Le discriminant est le **type de pointeur**, pas la largeur : une
    * tablette en paysage à 1280 px reste tactile. Les seuils de `Grid`
-   * (`BREAKPOINTS.sm` 600px, desktop 1200px) sont des seuils de MISE EN
+   * (`BREAKPOINTS.sm`, `BREAKPOINTS.lg`) sont des seuils de MISE EN
    * PAGE et ne s'appliquent pas ici.
    *
    * La prop est **pilotée par la story** : aucune détection d'environnement

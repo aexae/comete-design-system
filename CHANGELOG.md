@@ -9,8 +9,22 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Ajouté (alpha.205)
+
+- **`breakpointUp(bp)` / `breakpointDown(bp)`** (exportés avec `BREAKPOINTS`) : chaînes de media
+  query (`"(min-width: 900px)"`, `"(max-width: 899px)"`) pour `window.matchMedia`, afin que les
+  applications branchent leurs bascules (navigation, mise en page) sur l'échelle du DS sans
+  recopier de valeur.
+
 ### Modifié (alpha.205)
 
+- **Règle de navigation des applications sur les breakpoints** (documentation) : application
+  `BottomNav` sous `md`, `SideNav` dès `md` (au lieu de ≤ 768 / ≥ 769 px) ; web inchangé
+  (`Drawer` sous `lg`, `SideNav` persistante dès `lg`). Entre 768 et 899 px, l'application
+  garde la `BottomNav`.
+- **Garde anti-drift étendue** : `breakpoints.test.ts` refuse toute largeur de `@media` /
+  `@container` hors `BREAKPOINTS` (± 1) dans `src` et les stories. Le hero de la page Welcome
+  passe de 760 px à `md`.
 - **Seuil responsive de `Page` et `Button` aligné sur `BREAKPOINTS.md` (900 px)** : la variante
   compacte de `Page.Bar` (et le comportement compact de la `Page`) ainsi que le repli
   `collapseLabel` du `Button` basculent désormais sous **900 px** de largeur de conteneur

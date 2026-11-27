@@ -256,8 +256,8 @@ export const FiveItems: NavStory = {
 
 /**
  * **Application tablet, portrait** (768 × 1024) — dans l'application, la BottomNav porte la
- * navigation jusqu'à 768 px inclus, tablette portrait comprise ; la SideNav ne prend le
- * relais qu'à partir de 769 px. Navigation seule, pleine largeur, en bas de l'écran.
+ * navigation sous `BREAKPOINTS.md`, tablette portrait comprise ; la SideNav ne prend le
+ * relais qu'à partir de `md`. Navigation seule, pleine largeur, en bas de l'écran.
  */
 export const ApplicationTabletPortrait: NavStory = {
   name: "Application tablet, portrait",

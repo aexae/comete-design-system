@@ -26,3 +26,25 @@ export const BREAKPOINTS = {
 
 /** Nom d'un breakpoint de l'échelle (`"sm" | "md" | "lg"`). */
 export type Breakpoint = keyof typeof BREAKPOINTS;
+
+/**
+ * Media query « à partir de » un breakpoint, ex. `breakpointUp("md")` →
+ * `"(min-width: 900px)"`. À passer à `window.matchMedia` pour brancher un
+ * comportement d'application (navigation, mise en page) sur l'échelle du DS
+ * sans recopier de valeur : il suit tout changement de `BREAKPOINTS`.
+ *
+ * ```ts
+ * const sideNav = window.matchMedia(breakpointUp("md")).matches; // application
+ * ```
+ */
+export function breakpointUp(breakpoint: Breakpoint): string {
+  return `(min-width: ${BREAKPOINTS[breakpoint]}px)`;
+}
+
+/**
+ * Media query « sous » un breakpoint (exclu), ex. `breakpointDown("md")` →
+ * `"(max-width: 899px)"`. Complément exact de {@link breakpointUp}.
+ */
+export function breakpointDown(breakpoint: Breakpoint): string {
+  return `(max-width: ${BREAKPOINTS[breakpoint] - 1}px)`;
+}

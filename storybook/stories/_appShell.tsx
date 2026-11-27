@@ -68,7 +68,7 @@ export function AppNav() {
  * Contenu de page NEUTRE, pour les stories de la SideNav elle-même : une page
  * vide, sur fond neutre. Un contenu réaliste (cartes, messages) attire l'œil et
  * rend la nav illisible comme sujet ; ici la seule chose qui se voit, c'est
- * la navigation et la place qu'elle prend (elle pousse le contenu ≥ 1200 px,
+ * la navigation et la place qu'elle prend (elle pousse le contenu dès `BREAKPOINTS.lg`,
  * passe par-dessus en Drawer en dessous). À placer dans un `Page`, sous une
  * `Page.Bar`.
  */

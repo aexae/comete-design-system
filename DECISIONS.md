@@ -2,6 +2,18 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-27 — Toutes les largeurs d'écran branchées sur `BREAKPOINTS`
+
+- **Décision** (Axel) : aucune largeur d'écran ou de conteneur n'est écrite en dur. Le CSS
+  utilise la valeur d'un breakpoint (ou valeur − 1 pour « sous »), garanti par
+  `breakpoints.test.ts` sur tout `src` et les stories ; le JS utilise `BREAKPOINTS`,
+  `breakpointUp` et `breakpointDown` (nouveaux) ; commentaires et docs citent le nom.
+- **Navigation des applications** : `BottomNav` sous `md`, `SideNav` dès `md` (au lieu de
+  768/769 px, hors échelle). `md` plutôt que `sm` pour garder la tablette portrait (768 px)
+  en `BottomNav`, comme avant. Web inchangé (`lg`).
+- **Raison** : un changement futur des valeurs de `BREAKPOINTS` doit se propager partout sans
+  chasse aux nombres.
+
 ## 2026-11-27 — Seuil compact de Page et Button sur `md`, AGENTS.md en renvoi
 
 - **Décision** (Axel) : la variante compacte de `Page.Bar` et le repli `collapseLabel` du

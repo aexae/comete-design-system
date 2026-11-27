@@ -1,7 +1,7 @@
 // Tests pour la source unique de breakpoints + garde anti-drift CSS ↔ constantes.
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { BREAKPOINTS } from "./breakpoints";
+import { BREAKPOINTS, breakpointDown, breakpointUp } from "./breakpoints";
 
 // Lu depuis la racine du repo (cwd de vitest = racine de la config). Le CSS
 // (@container / @media) ne peut pas lire une constante JS : ces tests
@@ -15,6 +15,12 @@ describe("BREAKPOINTS — source unique", () => {
     expect(BREAKPOINTS).toEqual({ sm: 600, md: 900, lg: 1200 });
     expect(BREAKPOINTS.sm).toBeLessThan(BREAKPOINTS.md);
     expect(BREAKPOINTS.md).toBeLessThan(BREAKPOINTS.lg);
+  });
+
+  it("should build complementary media queries from a breakpoint name", () => {
+    expect(breakpointUp("md")).toBe(`(min-width: ${BREAKPOINTS.md}px)`);
+    expect(breakpointDown("md")).toBe(`(max-width: ${BREAKPOINTS.md - 1}px)`);
+    expect(breakpointUp("lg")).toBe(`(min-width: ${BREAKPOINTS.lg}px)`);
   });
 });
 
@@ -45,6 +51,26 @@ describe("garde anti-drift — CSS reflète BREAKPOINTS", () => {
       const css = readCss(path);
       expect(css).not.toMatch(/(max|min)-width:\s*76[78]px/);
     }
+  });
+
+  it("every @media / @container width in src and stories is a breakpoint", () => {
+    // Seuils admis : BREAKPOINTS[x] (« à partir de » / bornes Table) et
+    // BREAKPOINTS[x] - 1 (« sous », cf. breakpointDown). Tout autre seuil de
+    // largeur est une valeur en dur qui ne suivrait pas l'échelle.
+    const allowed = new Set(Object.values(BREAKPOINTS).flatMap((v) => [v, v - 1]));
+    const list = (dir: string) =>
+      readdirSync(dir, { recursive: true, encoding: "utf8" }).map(
+        (f) => `${dir}/${f.replace(/\\/g, "/")}`
+      );
+    const files = [...list("src"), ...list("storybook/stories")].filter((f) => f.endsWith(".css"));
+    const offenders: string[] = [];
+    for (const file of files) {
+      const css = readCss(file);
+      for (const m of css.matchAll(/@(?:media|container)[^{]*?\((?:min|max)-width:\s*(\d+)px\)/g)) {
+        if (!allowed.has(Number(m[1]))) offenders.push(`${file}: ${m[0]}`);
+      }
+    }
+    expect(offenders).toEqual([]);
   });
 
   it("Grid (media queries viewport) uses sm and lg", () => {

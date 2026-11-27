@@ -39,6 +39,7 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "@aexae/comete-design-system/components";
+import { BREAKPOINTS } from "@aexae/comete-design-system";
 import { AppFooterBrand } from "./_appShell";
 
 // -----------------------------------------------------------------------
@@ -95,8 +96,8 @@ const ZONES: Zone[] = [
   {
     n: "2",
     el: "SideNav",
-    note: "Le menu de gauche : déployé (240 px, mode expanded) ou réduit en rail (80 px, mode rail), jamais agrandi au survol ; le bouton de bascule est dans son en-tête. Il est permanent dans l'application dès 769 px et sur le web dès 1200 px. Sur le web en dessous de 1200 px, il disparaît de l'écran : on l'ouvre dans un Drawer depuis le hamburger du Page.Bar. Dans l'application à 768 px et moins, il n'y en a pas : la BottomNav le remplace.",
-    tech: 'SideNav + SideNav.Provider (mode expanded / rail) : application ≥ 769 px, web ≥ 1200 px ; web sous 1200 px : Drawer placement="left" ; application ≤ 768 px : BottomNav.',
+    note: `Le menu de gauche : déployé (240 px, mode expanded) ou réduit en rail (80 px, mode rail), jamais agrandi au survol ; le bouton de bascule est dans son en-tête. Il est permanent dans l'application dès md (${BREAKPOINTS.md} px) et sur le web dès lg (${BREAKPOINTS.lg} px). Sur le web en dessous de lg, il disparaît de l'écran : on l'ouvre dans un Drawer depuis le hamburger du Page.Bar. Dans l'application sous md, il n'y en a pas : la BottomNav le remplace.`,
+    tech: `SideNav + SideNav.Provider (mode expanded / rail) : application ≥ md (${BREAKPOINTS.md} px), web ≥ lg (${BREAKPOINTS.lg} px) ; web sous lg : Drawer placement="left" ; application sous md : BottomNav.`,
   },
   {
     n: "3",
@@ -294,7 +295,7 @@ const GLOSSAIRE: Array<{ term: string; def: string }> = [
   },
   {
     term: "SideNav",
-    def: "La navigation latérale : déployée (expanded) ou en rail ; permanente dans l'application dès 769 px et sur le web dès 1200 px, dans un Drawer sur le web en dessous.",
+    def: `La navigation latérale : déployée (expanded) ou en rail ; permanente dans l'application dès md (${BREAKPOINTS.md} px) et sur le web dès lg (${BREAKPOINTS.lg} px), dans un Drawer sur le web en dessous.`,
   },
   {
     term: "Liste de section",

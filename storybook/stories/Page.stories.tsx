@@ -214,9 +214,10 @@ function ListingPage({ leading }: { leading?: React.ReactNode }) {
     <Page globalActions={<PageGlobalActions />} style={{ minHeight: "100vh" }}>
       <Page.Bar title="Agents" leading={leading} />
       <Page.Toolbar
-        /* Slot dédié : le layout borne le champ (160–240px), le compresse avec
-           un plancher entre 480 et 767px, et le passe en PLEINE LARGEUR sur sa
-           propre rangée sous 480px — le placeholder n'est jamais tronqué. */
+        /* Slot dédié : le layout borne le champ entre
+           `--page-toolbar-size-search-min-width` et `-max-width`, le comprime
+           quand la place manque et le garde sur la ligne des actions à toutes
+           les largeurs (aucun breakpoint) : le placeholder n'est jamais tronqué. */
         search={
           <SearchField
             aria-label="Rechercher"
