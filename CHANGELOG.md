@@ -9,6 +9,15 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Modifié (alpha.205)
+
+- **Seuil responsive de `Page` et `Button` aligné sur `BREAKPOINTS.md` (900 px)** : la variante
+  compacte de `Page.Bar` (et le comportement compact de la `Page`) ainsi que le repli
+  `collapseLabel` du `Button` basculent désormais sous **900 px** de largeur de conteneur
+  (`@container (max-width: 899px)`), au lieu de 768 px. Le seuil 768 n'appartenait pas à
+  l'échelle `sm`/`md`/`lg`. Entre 768 et 899 px de conteneur, la barre passe donc en compact et
+  les boutons `collapseLabel` en icône seule. `breakpoints.test.ts` garde ce seuil.
+
 ### Changements cassants (BREAKING, alpha.204)
 
 - **`QuickActions` devient `QuickActionsMenu`**, comme dans Figma, avec le renommage des types et des tokens :

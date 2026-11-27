@@ -105,7 +105,7 @@
    viewport : en compact/mobile, les critères sont portés par le badge et la
    feuille (drill-down). ---- */
 
-@container page (max-width: 767px) {
+@container page (max-width: 899px) {
   .hideBlockUnderCompact {
     display: none;
   }

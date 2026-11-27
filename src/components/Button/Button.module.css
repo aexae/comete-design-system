@@ -1043,7 +1043,7 @@
 /* ==========================================================================
    collapseLabel — bouton réductible en icône seule selon le conteneur.
    ========================================================================== */
-@container (max-width: 767px) {
+@container (max-width: 899px) {
   .collapsible .collapsibleLabel {
     display: none;
   }

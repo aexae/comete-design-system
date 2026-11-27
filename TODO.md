@@ -502,9 +502,7 @@ de référence est dans SharePoint › 7-Communication › `_Marque & Charte Com
 
 - ~~**`CLAUDE.md` en partie périmé**~~ : FAIT (Vite + `tsup --dts-only`, arborescence `src/`
   complète, exports, MCP par défaut, priorité composant > sémantique > primitive).
-- **`AGENTS.md` dérive de `CLAUDE.md`** : copie manuelle du 23/10 pour Codex, jamais
-  resynchronisée (commandes `format`, MCP, priorité des tokens absents). Le remplacer par un
-  renvoi vers `CLAUDE.md` ou le générer depuis lui.
+- ~~**`AGENTS.md` dérive de `CLAUDE.md`**~~ : FAIT, réduit à un renvoi vers `CLAUDE.md`.
 - **Aucun mapping Code Connect** (`*.figma.tsx`) : le MCP ne peut pas relier les
   instances `❖` aux composants du code. Piste : `/figma-code-connect` sur les composants
   les plus utilisés (Button, Text, Stack, Icon, Card).
@@ -512,10 +510,14 @@ de référence est dans SharePoint › 7-Communication › `_Marque & Charte Com
   aexae/comete-design-tokens#10, 0.49.0 : `--breakpoint-sm/md/lg` = 600/900/1200).
   Reste, une fois la 0.49.0 publiée : monter la dépendance du DS et ajouter dans
   `breakpoints.test.ts` une garde `--breakpoint-*` == `BREAKPOINTS`.
-- **Seuil hors échelle à 767 px** : `Page.module.css` (`@container page (max-width: 767px)`)
-  et `Button.module.css` (`collapseLabel`) basculent à 768 px, valeur absente de
-  `BREAKPOINTS` et que `breakpoints.test.ts` croit bannie (il ne cherche que `768`). À
-  arbitrer : passer sur `md` (900) ou `sm` (600), ou ajouter un palier à l'échelle.
+- ~~**Seuil hors échelle à 767 px**~~ : FAIT (alpha.205), `Page` et `Button collapseLabel`
+  basculent sous `md` (`max-width: 899px`), gardé par `breakpoints.test.ts`. Restes :
+  - le seuil de navigation de l'application (BottomNav ≤ 768 px, SideNav ≥ 769 px, documenté
+    dans les stories SideNav, BottomNav, PageTemplates et GuidelinesAnatomieListe) reste à
+    768 : c'est un seuil viewport des applications, hors échelle `BREAKPOINTS`. À arbitrer ;
+  - commentaire de `Page.stories.tsx` (« plancher entre 480 et 767px » du champ de recherche) :
+    aucun seuil 480 ni 767 n'existe dans le CSS de `Page`, commentaire périmé ;
+  - Figma : vérifier que la doc de `Page.Bar` / `Button` ne cite pas 768 px.
 - ~~**`vite.lib.config.ts`** : commentaire `libInjectCss` dupliqué~~ : FAIT (l'en-tête
   citait aussi un `tsconfig.build.json` inexistant, corrigé).
 - **Clone local `../comete-icons` en 0.11.1** alors que le DS dépend de 0.14.0 : le

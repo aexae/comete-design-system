@@ -943,7 +943,7 @@ function OptionControls({
 
 // -----------------------------------------------------------------------
 // Bascule popover ↔ feuille : le déclencheur `collapseLabel` du Button se réduit
-// en icône seule sous `@container (max-width: 767px)`, en réagissant au conteneur
+// en icône seule sous `@container (max-width: 899px)`, en réagissant au conteneur
 // ancêtre le plus proche (ex. la `Page`, qui déclare `container: … / inline-size`).
 // On observe CE MÊME conteneur pour rendre, dès que le bouton devient une icône,
 // une feuille (bottom sheet) au lieu du popover — comme la recette mobile. Sans
@@ -983,8 +983,8 @@ function useTriggerCollapsed(ref: React.RefObject<HTMLElement | null>, enabled: 
     }
     const ro = new ResizeObserver((entries) => {
       const width = entries[0]?.contentRect.width ?? 0;
-      // Le Button se replie à `max-width: 767px` → largeur conteneur < 768.
-      setCollapsed(width > 0 && width < 768);
+      // Le Button se replie à `max-width: 899px` → largeur conteneur < 900.
+      setCollapsed(width > 0 && width < 900);
     });
     ro.observe(container);
     return () => ro.disconnect();

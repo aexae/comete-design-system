@@ -30,6 +30,23 @@ describe("garde anti-drift — CSS reflète BREAKPOINTS", () => {
     }
   });
 
+  it("Page.Bar compact et Button collapseLabel basculent sous md", () => {
+    // « Sous md » = largeur < 900 → `max-width: 899px` (container queries).
+    const belowMd = `(max-width: ${BREAKPOINTS.md - 1}px)`;
+    expect(readCss("src/components/Page/Page.module.css")).toContain(`@container page ${belowMd}`);
+    expect(readCss("src/components/Button/Button.module.css")).toContain(`@container ${belowMd}`);
+  });
+
+  it("no component CSS uses the former 767/768 px threshold", () => {
+    for (const path of [
+      "src/components/Page/Page.module.css",
+      "src/components/Button/Button.module.css",
+    ]) {
+      const css = readCss(path);
+      expect(css).not.toMatch(/(max|min)-width:\s*76[78]px/);
+    }
+  });
+
   it("Grid (media queries viewport) uses sm and lg", () => {
     const css = readCss("src/components/Grid/Grid.module.css");
     expect(css).toContain(`@media (min-width: ${BREAKPOINTS.sm}px)`);

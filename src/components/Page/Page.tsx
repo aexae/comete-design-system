@@ -44,7 +44,7 @@ export interface PageProps {
  * - `large` — titre proéminent (32px), pour desktop/tablette.
  * - `compact` — barre de 56px épinglée en haut (sticky), titre tronqué.
  *
- * Omise, la variante est **responsive** : compact sous 768px, large au-dessus.
+ * Omise, la variante est **responsive** : compact sous 900px (`BREAKPOINTS.md`), large au-dessus.
  * Les écrans consommateurs ne devraient normalement pas la forcer.
  */
 export type PageBarSize = "large" | "compact";
@@ -75,7 +75,7 @@ export interface PageBarProps {
   trailing?: ReactNode;
   /**
    * Force la variante d'affichage. Par défaut (omise), la variante est choisie
-   * automatiquement selon le breakpoint (compact < 768px, large ≥ 768px).
+   * automatiquement selon le breakpoint (compact < 900px, large ≥ 900px).
    */
   size?: PageBarSize;
   /** Classe CSS additionnelle. */
@@ -247,7 +247,7 @@ Page.displayName = "Page";
  *
  * Le titre est **responsive** selon la largeur de la Page (via `@container`),
  * sans que le consommateur ne passe `size` : `compact` (barre 56px épinglée,
- * titre tronqué) sous 768px, `large` (titre 32px) au-dessus. `size` permet de
+ * titre tronqué) sous 900px, `large` (titre 32px) au-dessus. `size` permet de
  * forcer une variante si besoin.
  *
  * ```tsx
@@ -296,7 +296,7 @@ PageBar.displayName = "Page.Bar";
  * contrôles) et `end` (actions, poussées à droite).
  *
  * Sur une seule ligne à toutes les largeurs : recherche puis `start` à
- * gauche, `end` à droite. Sous 768px (container `page`), les boutons
+ * gauche, `end` à droite. Sous 900px (container `page`), les boutons
  * `collapseLabel` passent en icône seule et la recherche se comprime jusqu'à
  * son plancher (160px, placeholder préservé) — sans jamais descendre sur une
  * seconde rangée.

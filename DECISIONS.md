@@ -2,6 +2,14 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-27 — Seuil compact de Page et Button sur `md`, AGENTS.md en renvoi
+
+- **Décision** (Axel) : la variante compacte de `Page.Bar` et le repli `collapseLabel` du
+  `Button` basculent sous `BREAKPOINTS.md` (900 px, `@container (max-width: 899px)`) au lieu
+  de 768 px (alpha.205). Le seuil 768 n'appartenait pas à l'échelle 600/900/1200.
+- **Décision** (Axel) : `AGENTS.md` n'est plus une copie de `CLAUDE.md` mais un renvoi vers lui.
+  **Raison** : la copie du 23/10 avait dérivé (commandes, MCP, priorité des tokens).
+
 ## 2026-11-27 — Règles d'intégration Figma via MCP
 
 **Décision** : les règles d'intégration Figma → code vivent dans `docs/figma-mcp-rules.md`,
