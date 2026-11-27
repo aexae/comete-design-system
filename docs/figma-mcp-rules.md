@@ -87,7 +87,7 @@
 | Élévation           | `--elevation-{none…xxlarge}`, `--shadow-{key,ambiant}-N`                                                                        |                                                                                                                   |
 | Animation           | `--duration-{instant,fast,normal,slow,slower}`, `--easing-*`                                                                    |                                                                                                                   |
 | Superposition       | `--z-index-{base,raised,dropdown,sticky,overlay,modal,popover,toast,tooltip}`                                                   |                                                                                                                   |
-| Breakpoints         | `--breakpoint-{sm,md,lg}` (tokens ≥ 0.49.0)                                                                                     | 600 / 900 / 1200 px, inutilisables dans une condition `@media`                                                    |
+| Breakpoints         | `--breakpoint-{watch,mobile,tablet,laptop,desktop,tv}` (tokens ≥ 0.49.0)                                                        | 0 / 280 / 600 / 1200 / 1536 / 1920 px, inutilisables dans une condition `@media`                                  |
 
 Rôles de couleur : `neutral`, `comete` (bleu interactif Comète), `brand` (couleur du
 client, surchargée par `BrandProvider`), `success`, `warning`, `critical`,
@@ -243,22 +243,28 @@ import { Icon } from "@aexae/comete-design-system";
 
 ### Responsive
 
-- **Toute largeur d'écran ou de conteneur passe par un breakpoint nommé** (`sm`, `md`,
-  `lg`) de `BREAKPOINTS` (`src/tokens/breakpoints.ts`, exporté), miroir des tokens
-  `--breakpoint-sm/md/lg` (tokens ≥ 0.49.0). Jamais de seuil propre à un composant.
+- **Toute largeur d'écran ou de conteneur passe par un breakpoint nommé** de `BREAKPOINTS`
+  (`src/tokens/breakpoints.ts`, exporté), miroir des tokens `--breakpoint-*` (tokens ≥ 0.49.0) :
+  `watch` 0 · `mobile` 280 · `tablet` 600 · `laptop` 1200 · `desktop` 1536 · `tv` 1920 (borne
+  basse de chaque plage). Mêmes noms dans Figma (`base/breakpoints`). Jamais de seuil propre à
+  un composant.
 - **CSS** : un `@media` / `@container` ne lit pas `var()`. On y écrit la valeur du
   breakpoint (« à partir de » : `min-width: <bp>px`) ou la valeur moins 1 (« sous » :
   `max-width: <bp - 1>px`). `breakpoints.test.ts` fait échouer la CI pour toute autre
   largeur dans `src/**/*.css` et `storybook/stories/*.css`.
-- **JS / TS** : `BREAKPOINTS.md`, `breakpointUp("md")`, `breakpointDown("md")` (chaînes de
-  media query pour `window.matchMedia`). Jamais de nombre en dur.
-- **Commentaires et docs** : citer le nom (`BREAKPOINTS.md`, « sous `md` »), pas la
-  valeur. Dans les textes de stories affichés, interpoler `${BREAKPOINTS.md}`.
+- **JS / TS** : `BREAKPOINTS.tablet`, `breakpointUp("tablet")`, `breakpointDown("tablet")`
+  (chaînes de media query pour `window.matchMedia`). Jamais de nombre en dur.
+- **Commentaires et docs** : citer le nom (`BREAKPOINTS.tablet`, « sous `tablet` »), pas la
+  valeur. Dans les textes de stories affichés, interpoler `${BREAKPOINTS.tablet}`.
 - Règles de navigation (décidées par l'application, pas par le DS) : application
-  `BottomNav` sous `md`, `SideNav` dès `md` ; web `Drawer` sous `lg`, `SideNav`
-  persistante dès `lg`.
-- `Page.Bar` compact et `Button collapseLabel` : sous `md` (container `page`).
-- Mobile first : `Grid` passe en `tablet` dès `sm`, en `desktop` dès `lg`.
+  `BottomNav` sous `tablet`, `SideNav` dès `tablet` ; web `Drawer` sous `laptop`, `SideNav`
+  persistante dès `laptop`.
+- `Page.Bar` compact et `Button collapseLabel` : sous `tablet` (container `page`).
+- `Table hideBelow` : `"tablet"` ou `"laptop"` (container de la table).
+- Mobile first : `Grid` (`columns={{ mobile, tablet, laptop }}`) passe en `tablet` dès
+  `tablet`, en `laptop` dès `laptop`.
+- `desktop` et `tv` n'ont pas encore d'usage dans le DS. `tv` vise démos et présentations ;
+  un moniteur de bureau en 1920 l'atteint aussi.
 - Adaptation tactile : `density="touch"` (48 px) ou `pointer: coarse`, jamais une largeur.
 - Les viewports Storybook (375, 768, 1440) sont des **tailles d'appareils** pour tester,
   pas des seuils.

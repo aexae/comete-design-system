@@ -506,19 +506,14 @@ de référence est dans SharePoint › 7-Communication › `_Marque & Charte Com
 - **Aucun mapping Code Connect** (`*.figma.tsx`) : le MCP ne peut pas relier les
   instances `❖` aux composants du code. Piste : `/figma-code-connect` sur les composants
   les plus utilisés (Button, Text, Stack, Icon, Card).
-- ~~**Breakpoints : noms et valeurs des tokens**~~ : FAIT côté tokens (PR
-  aexae/comete-design-tokens#10, 0.49.0 : `--breakpoint-sm/md/lg` = 600/900/1200).
-  Reste, une fois la 0.49.0 publiée : monter la dépendance du DS et ajouter dans
-  `breakpoints.test.ts` une garde `--breakpoint-*` == `BREAKPOINTS`.
+- ~~**Breakpoints : noms et valeurs des tokens**~~ : FAIT (PR aexae/comete-design-tokens#10,
+  0.49.0 : `--breakpoint-watch/mobile/tablet/laptop/desktop/tv`). Reste, une fois la 0.49.0
+  publiée : monter la dépendance du DS et ajouter dans `breakpoints.test.ts` une garde
+  `--breakpoint-*` == `BREAKPOINTS`.
 - ~~**Seuil hors échelle à 767 px**~~ : FAIT (alpha.205), `Page` et `Button collapseLabel`
-  basculent sous `md` (`max-width: 899px`), gardé par `breakpoints.test.ts`. Restes :
-  - ~~seuil de navigation de l'application à 768~~ : FAIT, `BottomNav` sous `md`, `SideNav`
-    dès `md` ; toutes les largeurs (CSS, JS, docs) passent par `BREAKPOINTS` ou
-    `breakpointUp/Down`, garde CI sur tout le CSS ;
-  - ~~commentaire périmé de `Page.stories.tsx`~~ : FAIT (tokens nommés, aucun breakpoint) ;
-  - **Applications** : remplacer leurs seuils de navigation en dur (768/769) par
-    `matchMedia(breakpointUp("md"))` (application) et `breakpointUp("lg")` (web) ;
-  - Figma : vérifier que la doc de `Page.Bar` / `Button` ne cite pas 768 px.
+  basculent sous `tablet` (`max-width: 599px`), la navigation de l'application aussi ; toutes
+  les largeurs (CSS, JS, docs) passent par `BREAKPOINTS` ou `breakpointUp/Down`, garde CI sur
+  tout le CSS. Commentaire périmé de `Page.stories.tsx` corrigé.
 - ~~**`vite.lib.config.ts`** : commentaire `libInjectCss` dupliqué~~ : FAIT (l'en-tête
   citait aussi un `tsconfig.build.json` inexistant, corrigé).
 - **Clone local `../comete-icons` en 0.11.1** alors que le DS dépend de 0.14.0 : le
@@ -527,27 +522,17 @@ de référence est dans SharePoint › 7-Communication › `_Marque & Charte Com
   (`Updated upstream` / `Stashed changes`) et un `.git/REBASE_HEAD` du 15/11 traîne.
   Vérifier qu'aucun rebase n'est en suspens (`git status`), puis le supprimer.
 
-## Figma : breakpoints à aligner sur `BREAKPOINTS` (audit du 2026-11-27, non corrigé)
+## Figma : breakpoints alignés sur `BREAKPOINTS` (2026-11-27)
 
-Fichier DS `YO9cW75K8aLcM5BbojZAqB`. Vérification seule, aucune écriture faite.
+Fichier DS `YO9cW75K8aLcM5BbojZAqB`. La mise à jour Figma (collection `base/breakpoints`,
+tableau « Breakpoints » de la page Variables, descriptions du ❖ Page et des gouttières) est
+faite par la session principale, sur l'échelle `watch` 0 · `mobile` 280 · `tablet` 600 ·
+`laptop` 1200 · `desktop` 1536 · `tv` 1920.
 
-- **Collection `base/breakpoints`** : `mobile` (0), `tablet` (600), `laptop` (1200), `desktop`
-  (1920), code syntax `var(--mobile)`… À aligner sur tokens 0.49.0 : `breakpoint/sm` (600),
-  `breakpoint/md` (900, à créer), `breakpoint/lg` (1200), `var(--breakpoint-*)` ; renommer
-  `tablet`/`laptop` en place (liaisons conservées), supprimer `mobile` et `desktop` après
-  vérification qu'aucune variable ne les aliase.
-- **Page Variables, tableau « Breakpoints »** (frame `2407:20298`) : échelle fictive de 8 crans
-  `xs` 0, `sr` 350, `sd` 420, `sm` 600, `md` 900, `lg` 1200, `xl` 1536, `gt` 1920, sans lien avec
-  le code. Garder `sm`/`md`/`lg` avec leurs usages réels (Grid, Table, Page.Bar compact,
-  collapseLabel, navigation).
-- **Description du ❖ Page** (`18862:6708`) : « 24 px à partir de 1200 » → « à partir du
-  breakpoint `lg` ».
-- **Variables `page/spacing/gutter/mobile|laptop`** : descriptions « sous / à partir de 1200 px »
-  (source : `comete-design-tokens/tokens/component/page`, appliquées par `descriptions:apply`).
-  Corriger dans les tokens puis réappliquer.
 - **◆ Browser and devices previews** : variantes `breakpoint = mobile (480–767px)`,
   `tablet (744–1133px)`, `desktop (1768–2159px)`. Ce sont des tailles de maquettes
   d'appareils, pas des seuils, mais la propriété s'appelle `breakpoint` : la renommer
   (`device`) éviterait la confusion.
-- RAS sur les pages SideNav, BottomNav, Page, PageBar, PageToolbar, Button, Table, Drawer,
-  Breadcrumbs, GUIDANCE, Naming conventions et Exemples de pages (aucune largeur citée).
+- **Applications** : remplacer leurs seuils de navigation en dur (768/769) par
+  `matchMedia(breakpointUp("tablet"))` (application) et `breakpointUp("laptop")` (web), et
+  migrer `hideBelow` / `Grid desktop` (voir CHANGELOG alpha.205).

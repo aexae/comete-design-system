@@ -29,12 +29,12 @@ const meta: Meta = {
           "La navigation latérale affiche la structure hiérarchique de l'application dans un panneau vertical permanent (déployé ou en rail). Elle permet de naviguer entre les sections et sous-sections tout en visualisant la position courante.\n\n" +
           "**Règles par contexte et largeur** — le DS ne pose aucune media query, l'app choisit le mode. Trois axes **indépendants** (voir plus bas) : ici, le composant de navigation.\n\n" +
           "| Largeur | Web | Application |\n| --- | --- | --- |\n" +
-          `| < \`md\` (${BREAKPOINTS.md} px) | hamburger + \`Drawer\` à gauche | **BottomNav** |\n` +
-          `| \`md\` à \`lg\` (${BREAKPOINTS.md} à ${BREAKPOINTS.lg} px exclu) | hamburger + \`Drawer\` à gauche | **SideNav** |\n` +
-          `| ≥ \`lg\` (${BREAKPOINTS.lg} px) | **SideNav** persistante, déployée (240 px) ou rail (80 px) | **SideNav** |\n\n` +
-          `Le web bascule à **\`lg\`** (${BREAKPOINTS.lg} px), l'application à **\`md\`** (${BREAKPOINTS.md} px) : deux breakpoints différents de \`BREAKPOINTS\`, assumés. L'application branche sa navigation sur \`breakpointUp("md")\` et le web sur \`breakpointUp("lg")\` (aucune valeur en dur). Sur le web, la SideNav n'est persistante qu'en desktop ; en dessous elle s'affiche dans un **\`Drawer\` à gauche**, par-dessus le viewport, et ne pousse jamais le contenu. Elle ne s'agrandit **jamais au survol** : on la déploie par le bouton de bascule ou \`Ctrl/Cmd+Shift+E\`.\n\n` +
+          `| < \`tablet\` (${BREAKPOINTS.tablet} px) | hamburger + \`Drawer\` à gauche | **BottomNav** |\n` +
+          `| \`tablet\` à \`laptop\` (${BREAKPOINTS.tablet} à ${BREAKPOINTS.laptop} px exclu) | hamburger + \`Drawer\` à gauche | **SideNav** |\n` +
+          `| ≥ \`laptop\` (${BREAKPOINTS.laptop} px) | **SideNav** persistante, déployée (240 px) ou rail (80 px) | **SideNav** |\n\n` +
+          `Le web bascule à **\`laptop\`** (${BREAKPOINTS.laptop} px), l'application à **\`tablet\`** (${BREAKPOINTS.tablet} px) : deux breakpoints différents de \`BREAKPOINTS\`, assumés. L'application branche sa navigation sur \`breakpointUp("tablet")\` et le web sur \`breakpointUp("laptop")\` (aucune valeur en dur). Sur le web, la SideNav n'est persistante qu'en desktop ; en dessous elle s'affiche dans un **\`Drawer\` à gauche**, par-dessus le viewport, et ne pousse jamais le contenu. Elle ne s'agrandit **jamais au survol** : on la déploie par le bouton de bascule ou \`Ctrl/Cmd+Shift+E\`.\n\n` +
           "**Conséquence acceptée** : à 1024 px (un iPad en paysage), l'application affiche une **SideNav** et Safari un **hamburger + `Drawer`**. Même appareil, même orientation, deux navigations : c'est la conséquence mécanique de deux seuils, pas un défaut. Si l'écart gêne en usage réel, ce cas concret servira à rouvrir la règle.\n\n" +
-          `**Les deux autres axes, indépendants de la navigation.** La variante de \`Page.Bar\` suit la largeur de la **Page** (container query, sous \`md\`, ${BREAKPOINTS.md} px), pas celle du viewport. La densité et la taille des cibles suivent le **pointeur** (\`pointer: coarse\`), jamais une largeur : « tablette = tactile » ne veut pas dire « tablette = interface de téléphone ».\n\n` +
+          `**Les deux autres axes, indépendants de la navigation.** La variante de \`Page.Bar\` suit la largeur de la **Page** (container query, sous \`tablet\`, ${BREAKPOINTS.tablet} px), pas celle du viewport. La densité et la taille des cibles suivent le **pointeur** (\`pointer: coarse\`), jamais une largeur : « tablette = tactile » ne veut pas dire « tablette = interface de téléphone ».\n\n` +
           "**Écarté** : un rail de 80 px sur mobile web (310 px de contenu à 390 px, 240 px au minimum exigé par WCAG 1.4.10 Reflow) ; décider sur la plateforme seule, ou sur le pointeur seul ; une barre basse sur le web mobile (sur iOS, la barre d'adresse de Safari est déjà en bas).",
       },
       page: () => (
@@ -42,12 +42,12 @@ const meta: Meta = {
           guidelines={
             <GuidelinesFlat
               when={[
-                `Navigation principale, sur le côté (sections, rubriques). Sur le WEB, persistante en desktop seulement (≥ lg, ${BREAKPOINTS.lg} px) : en dessous, elle devient un Drawer qu'on ouvre. Dans l'APPLICATION, dès md (${BREAKPOINTS.md} px).`,
-                `Quand la hiérarchie de navigation est riche et bénéficie d'un rail réduit (80 px) — web ≥ lg (${BREAKPOINTS.lg} px), application ≥ md (${BREAKPOINTS.md} px).`,
+                `Navigation principale, sur le côté (sections, rubriques). Sur le WEB, persistante en desktop seulement (≥ laptop, ${BREAKPOINTS.laptop} px) : en dessous, elle devient un Drawer qu'on ouvre. Dans l'APPLICATION, dès tablet (${BREAKPOINTS.tablet} px).`,
+                `Quand la hiérarchie de navigation est riche et bénéficie d'un rail réduit (80 px) — web ≥ laptop (${BREAKPOINTS.laptop} px), application ≥ tablet (${BREAKPOINTS.tablet} px).`,
               ]}
               avoid={[
-                `Une navigation d'application sous md (${BREAKPOINTS.md} px) → BottomNav (pas de SideNav sous md dans l'application).`,
-                `Faire disparaître la navigation sur desktop : elle se réduit en rail de 80 px, jamais complètement. Sur le web sous lg (${BREAKPOINTS.lg} px) en revanche, il n'y a pas de nav permanente : hamburger + Drawer.`,
+                `Une navigation d'application sous tablet (${BREAKPOINTS.tablet} px) → BottomNav (pas de SideNav sous tablet dans l'application).`,
+                `Faire disparaître la navigation sur desktop : elle se réduit en rail de 80 px, jamais complètement. Sur le web sous laptop (${BREAKPOINTS.laptop} px) en revanche, il n'y a pas de nav permanente : hamburger + Drawer.`,
                 "Un rail de 80 px sur mobile web, ou une barre basse sur le web mobile.",
                 "Une barre supérieure globale (marque, compte, actions) → Page.Bar.",
                 "Naviguer entre vues d'une même page → Tabs.",
@@ -122,7 +122,7 @@ export const Default: Story = {
 };
 
 /**
- * **Rail (80 px)** — desktop uniquement (≥ `BREAKPOINTS.lg`). La navigation se réduit à un rail de
+ * **Rail (80 px)** — desktop uniquement (≥ `BREAKPOINTS.laptop`). La navigation se réduit à un rail de
  * 80 px (icône 24 px + libellé court dessous) et ne disparaît jamais. Le rail est
  * **fixe** : il ne s'agrandit pas au survol ; on le déploie par le bouton de
  * bascule de l'en-tête ou `Ctrl/Cmd+Shift+E`.
@@ -166,12 +166,12 @@ export const RailInteractions: Story = {
 };
 
 /**
- * **Web sous `BREAKPOINTS.lg` (mobile et tablette en navigateur)** — la SideNav s'affiche dans un **`Drawer` à
+ * **Web sous `BREAKPOINTS.laptop` (mobile et tablette en navigateur)** — la SideNav s'affiche dans un **`Drawer` à
  * gauche** : elle passe **par-dessus** le contenu (voile cliquable) et ne le pousse
  * jamais. Le hamburger de la `Page.Bar` l'ouvre ; elle se referme au voile, à Échap ou
  * au choix d'une rubrique. Pas de rail sur mobile : `showToggle={false}` retire le
- * bouton de bascule de l'en-tête. (Dans l'**application** sous `BREAKPOINTS.md`, pas de
- * SideNav : la BottomNav porte seule la navigation ; dès `md`, c'est la SideNav.)
+ * bouton de bascule de l'en-tête. (Dans l'**application** sous `BREAKPOINTS.tablet`, pas de
+ * SideNav : la BottomNav porte seule la navigation ; dès `tablet`, c'est la SideNav.)
  */
 function MobileWebDemo() {
   const [isOpen, setIsOpen] = useState(false);
@@ -230,7 +230,7 @@ function MobileWebDemo() {
 
 /**
  * **Application tablet, landscape** (1024 × 768) — dans l'application, la SideNav prend le
- * relais de la BottomNav dès `BREAKPOINTS.md`. Ici en rail (80 px), tablette tournée : c'est un outil
+ * relais de la BottomNav dès `BREAKPOINTS.tablet`. Ici en rail (80 px), tablette tournée : c'est un outil
  * de back-office, assis, qui garde la largeur pour le contenu. Navigation seule, sans page
  * autour : la variante de `Page.Bar` selon la largeur de la Page se montre dans la doc de
  * `Page.Bar`.
@@ -243,8 +243,20 @@ export const ApplicationTabletLandscape: Story = {
 };
 
 /**
+ * **Application tablet, portrait** (768 × 1024) — dans l'application, la tablette portrait
+ * est au-dessus de `BREAKPOINTS.tablet` : elle reçoit la SideNav, ici en rail (80 px) pour
+ * laisser la largeur au contenu. La BottomNav reste réservée aux téléphones.
+ */
+export const ApplicationTabletPortrait: Story = {
+  name: "Application tablet, portrait",
+  globals: { viewport: { value: "cometeTabletManager", isRotated: false } },
+  parameters: { layout: "fullscreen", controls: { disable: true } },
+  render: () => <SideNavOnly nav={<AppNav />} mode="rail" />,
+};
+
+/**
  * **Web tablet, landscape** (1024 × 768) — en navigateur, le seuil de la SideNav
- * persistante est `BREAKPOINTS.lg` : à 1024 px, sous `lg`, hamburger + `Drawer`. C'est l'écart assumé avec
+ * persistante est `BREAKPOINTS.laptop` : à 1024 px, sous `laptop`, hamburger + `Drawer`. C'est l'écart assumé avec
  * l'application, où le même iPad en paysage reçoit la SideNav en rail (story
  * « Application tablet, landscape »).
  */

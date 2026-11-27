@@ -74,7 +74,7 @@ export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"
   isFullWidth?: boolean;
   /**
    * Réduit le bouton en **icône seule** (label masqué) lorsque le conteneur
-   * ancêtre le plus proche (`@container`, ex. la `Page`) passe sous `BREAKPOINTS.md`.
+   * ancêtre le plus proche (`@container`, ex. la `Page`) passe sous `BREAKPOINTS.tablet`.
    * Le label reste dans le DOM (infobulle desktop), mais **un `aria-label` est
    * requis** pour conserver le nom accessible une fois réduit. Nécessite une
    * icône (`iconBefore`/`iconAfter`). @default false

@@ -944,7 +944,7 @@ function OptionControls({
 
 // -----------------------------------------------------------------------
 // Bascule popover ↔ feuille : le déclencheur `collapseLabel` du Button se réduit
-// en icône seule sous `BREAKPOINTS.md` (`@container`), en réagissant au conteneur
+// en icône seule sous `BREAKPOINTS.tablet` (`@container`), en réagissant au conteneur
 // ancêtre le plus proche (ex. la `Page`, qui déclare `container: … / inline-size`).
 // On observe CE MÊME conteneur pour rendre, dès que le bouton devient une icône,
 // une feuille (bottom sheet) au lieu du popover — comme la recette mobile. Sans
@@ -984,8 +984,8 @@ function useTriggerCollapsed(ref: React.RefObject<HTMLElement | null>, enabled: 
     }
     const ro = new ResizeObserver((entries) => {
       const width = entries[0]?.contentRect.width ?? 0;
-      // Le Button se replie sous `BREAKPOINTS.md` (largeur de conteneur).
-      setCollapsed(width > 0 && width < BREAKPOINTS.md);
+      // Le Button se replie sous `BREAKPOINTS.tablet` (largeur de conteneur).
+      setCollapsed(width > 0 && width < BREAKPOINTS.tablet);
     });
     ro.observe(container);
     return () => ro.disconnect();
@@ -996,7 +996,7 @@ function useTriggerCollapsed(ref: React.RefObject<HTMLElement | null>, enabled: 
 /**
  * Vrai quand la largeur de l'élément mesuré passe sous `threshold` px
  * (ResizeObserver sur l'élément lui-même, pas le viewport). Sert au repli
- * Table → liste compacte de `ResultsTable` (cf. décision d'audit : sous `BREAKPOINTS.sm`,
+ * Table → liste compacte de `ResultsTable` (cf. décision d'audit : sous `BREAKPOINTS.tablet`,
  * le repli téléphone par défaut est la liste, jamais les cartes).
  */
 export function useBelowWidth(
@@ -2314,8 +2314,8 @@ export function ActiveFilterTags({
 
 // -----------------------------------------------------------------------
 // AgentsList — liste compacte d'agents : repli téléphone du tableau (sous
-// `BREAKPOINTS.sm`) ET liste de la recette mobile. MÊME liste partout. Décision d'audit
-// (Table.stories « Table to cards ») : sous `BREAKPOINTS.sm`, le repli par défaut est la
+// `BREAKPOINTS.tablet`) ET liste de la recette mobile. MÊME liste partout. Décision d'audit
+// (Table.stories « Table to cards ») : sous `BREAKPOINTS.tablet`, le repli par défaut est la
 // liste compacte, jamais les cartes (une liste de N agents en cartes serait
 // inexploitable).
 
@@ -2358,11 +2358,11 @@ export function AgentsList({ results }: { results: Agent[] }): ReactElement {
 
 // -----------------------------------------------------------------------
 // ResultsTable — tableau des agents filtrés, RESPONSIVE (pattern DS Table → List).
-// Seules les colonnes de CONFORT (Diplôme, Contrat) se masquent, sous `lg` : le
+// Seules les colonnes de CONFORT (Diplôme, Contrat) se masquent, sous `laptop` : le
 // tableau descend à 4 colonnes (Agent, Société/Agence, Secteur, Disponibilité)
 // mais JAMAIS en-dessous — on évite ainsi l'état « 2 colonnes + moitié vide ».
 // La recette bascule en liste compacte (`AgentsList`) avant d'arriver là ; le
-// repli interne ci-dessous (`sm`) sert aux usages hors recette.
+// repli interne ci-dessous (`tablet`) sert aux usages hors recette.
 
 export function ResultsTable({
   filters,
@@ -2372,8 +2372,8 @@ export function ResultsTable({
   dataset?: FiltresDataset;
 }): ReactElement {
   const ref = useRef<HTMLDivElement>(null);
-  // 600 = BREAKPOINTS.sm (seuil de repli téléphone).
-  const narrow = useBelowWidth(ref, BREAKPOINTS.sm);
+  // BREAKPOINTS.tablet : seuil de repli téléphone.
+  const narrow = useBelowWidth(ref, BREAKPOINTS.tablet);
   const results = filteredAgents(filters, dataset.agents, dataset.applySousTraitants);
   return (
     <div ref={ref}>
@@ -2386,8 +2386,8 @@ export function ResultsTable({
               <TableHeaderCell>Agent</TableHeaderCell>
               <TableHeaderCell>Société / Agence</TableHeaderCell>
               <TableHeaderCell>Secteur</TableHeaderCell>
-              <TableHeaderCell hideBelow="lg">Diplôme</TableHeaderCell>
-              <TableHeaderCell hideBelow="lg">Contrat</TableHeaderCell>
+              <TableHeaderCell hideBelow="laptop">Diplôme</TableHeaderCell>
+              <TableHeaderCell hideBelow="laptop">Contrat</TableHeaderCell>
               <TableHeaderCell>Disponibilité</TableHeaderCell>
             </TableRow>
           </TableHead>
@@ -2407,8 +2407,8 @@ export function ResultsTable({
                 <TableCell>{a.nom}</TableCell>
                 <TableCell>{a.societe}</TableCell>
                 <TableCell>{a.secteur}</TableCell>
-                <TableCell hideBelow="lg">{a.diplome}</TableCell>
-                <TableCell hideBelow="lg">{a.contrat}</TableCell>
+                <TableCell hideBelow="laptop">{a.diplome}</TableCell>
+                <TableCell hideBelow="laptop">{a.contrat}</TableCell>
                 <TableCell>
                   <Tag
                     label={DISPO_TAG[a.dispo].label}

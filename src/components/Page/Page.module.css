@@ -7,8 +7,8 @@
 
    Layout global :
    - `--page-gutter` — gouttière unique partagée par Bar, Toolbar et Body,
-     responsive : `--page-spacing-gutter-mobile` sous `BREAKPOINTS.lg`,
-     `--page-spacing-gutter-laptop` à partir de `lg`. Héritée par tous les descendants : Bleed isFull la compense, les
+     responsive : `--page-spacing-gutter-mobile` sous `BREAKPOINTS.laptop`,
+     `--page-spacing-gutter-laptop` à partir de `laptop`. Héritée par tous les descendants : Bleed isFull la compense, les
      stories l'utilisent pour aligner du contenu sur le Body.
    - Body utilise `overflow-x: clip` (pas `hidden`) pour que
      `overflow-y: auto` ne force pas `overflow-x: auto` par la spec.
@@ -52,7 +52,7 @@
 /* ==========================================================================
    Page.Bar — barre de page unifiée
    Zones leading / title / trailing. Variante `large` par défaut ; `compact`
-   (56px, épinglée) sous `BREAKPOINTS.md` ou forcée via .compact. Tokens uniquement.
+   (56px, épinglée) sous `BREAKPOINTS.tablet` ou forcée via .compact. Tokens uniquement.
    ========================================================================== */
 
 .bar {
@@ -64,7 +64,7 @@
   flex-shrink: 0;
 
   /* Métriques de la variante compacte — SOURCE UNIQUE, consommée à la fois par
-     la variante responsive (@container sous `md`) et par le modificateur forcé
+     la variante responsive (@container sous `tablet`) et par le modificateur forcé
      `.bar.compact`, pour éviter toute dérive entre les deux. */
   --bar-compact-min-height: var(--page-bar-size-compact-min-height);
   --bar-compact-pad-block: var(--page-bar-spacing-compact-padding-y);
@@ -93,9 +93,9 @@
 }
 
 /* Compact — variante épinglée. Déclarations partagées par le défaut
-   responsive (Page sous `BREAKPOINTS.md`) et le modificateur forcé .compact.
+   responsive (Page sous `BREAKPOINTS.tablet`) et le modificateur forcé .compact.
    Container query : réagit à la largeur de la Page, pas du viewport. */
-@container page (max-width: 899px) {
+@container page (max-width: 599px) {
   .bar:not(.large) {
     position: sticky;
     top: 0;
@@ -132,7 +132,7 @@
   letter-spacing: var(--bar-compact-title-tracking);
 }
 
-/* Large forcée — neutralise les bribes compact même sous `md`. */
+/* Large forcée — neutralise les bribes compact même sous `tablet`. */
 .bar.large {
   position: static;
   min-height: auto;

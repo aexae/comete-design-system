@@ -1059,14 +1059,14 @@ describe("Table — colonnes responsives (hideBelow)", () => {
       <Table aria-label="t">
         <TableHead>
           <TableRow>
-            <TableHeaderCell hideBelow="md">Site</TableHeaderCell>
+            <TableHeaderCell hideBelow="tablet">Site</TableHeaderCell>
           </TableRow>
         </TableHead>
       </Table>
     );
     expect(screen.getByRole("columnheader", { name: "Site" })).toHaveAttribute(
       "data-hide-below",
-      "md"
+      "tablet"
     );
   });
 
@@ -1075,12 +1075,12 @@ describe("Table — colonnes responsives (hideBelow)", () => {
       <Table aria-label="t">
         <TableBody>
           <TableRow>
-            <TableCell hideBelow="lg">06 12 34 56 78</TableCell>
+            <TableCell hideBelow="laptop">06 12 34 56 78</TableCell>
           </TableRow>
         </TableBody>
       </Table>
     );
-    expect(container.querySelector("td")).toHaveAttribute("data-hide-below", "lg");
+    expect(container.querySelector("td")).toHaveAttribute("data-hide-below", "laptop");
   });
 
   it("should not set data-hide-below when the prop is absent (régression)", () => {

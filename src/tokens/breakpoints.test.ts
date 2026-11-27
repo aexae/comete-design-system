@@ -11,50 +11,49 @@ import { BREAKPOINTS, breakpointDown, breakpointUp } from "./breakpoints";
 const readCss = (path: string) => readFileSync(path, "utf8");
 
 describe("BREAKPOINTS — source unique", () => {
-  it("should expose the canonical ascending scale sm/md/lg", () => {
-    expect(BREAKPOINTS).toEqual({ sm: 600, md: 900, lg: 1200 });
-    expect(BREAKPOINTS.sm).toBeLessThan(BREAKPOINTS.md);
-    expect(BREAKPOINTS.md).toBeLessThan(BREAKPOINTS.lg);
+  it("should expose the canonical ascending scale watch → tv", () => {
+    expect(BREAKPOINTS).toEqual({
+      watch: 0,
+      mobile: 280,
+      tablet: 600,
+      laptop: 1200,
+      desktop: 1536,
+      tv: 1920,
+    });
+    const values = Object.values(BREAKPOINTS);
+    expect([...values].sort((x, y) => x - y)).toEqual(values);
   });
 
   it("should build complementary media queries from a breakpoint name", () => {
-    expect(breakpointUp("md")).toBe(`(min-width: ${BREAKPOINTS.md}px)`);
-    expect(breakpointDown("md")).toBe(`(max-width: ${BREAKPOINTS.md - 1}px)`);
-    expect(breakpointUp("lg")).toBe(`(min-width: ${BREAKPOINTS.lg}px)`);
+    expect(breakpointUp("tablet")).toBe(`(min-width: ${BREAKPOINTS.tablet}px)`);
+    expect(breakpointDown("tablet")).toBe(`(max-width: ${BREAKPOINTS.tablet - 1}px)`);
+    expect(breakpointUp("laptop")).toBe(`(min-width: ${BREAKPOINTS.laptop}px)`);
   });
 });
 
+// « Sous » un breakpoint = largeur < valeur → `max-width: valeur − 1`.
+const below = (bp: keyof typeof BREAKPOINTS) => `(max-width: ${BREAKPOINTS[bp] - 1}px)`;
+
 describe("garde anti-drift — CSS reflète BREAKPOINTS", () => {
-  it("Table hideBelow (container queries) mirrors sm/md/lg", () => {
+  it("Table hideBelow (container queries) bascule sous tablet et sous laptop", () => {
     const css = readCss("src/components/Table/Table.module.css");
-    expect(css).toContain(`@container table (max-width: ${BREAKPOINTS.sm}px)`);
-    expect(css).toContain(`@container table (max-width: ${BREAKPOINTS.md}px)`);
-    expect(css).toContain(`@container table (max-width: ${BREAKPOINTS.lg}px)`);
-    // Plus aucun ancien seuil (480 / 768 / 1024).
-    for (const stale of [480, 768, 1024]) {
-      expect(css).not.toContain(`max-width: ${stale}px`);
-    }
+    expect(css).toContain(`@container table ${below("tablet")}`);
+    expect(css).toContain(`@container table ${below("laptop")}`);
+    expect(css).toContain('[data-hide-below="tablet"]');
+    expect(css).toContain('[data-hide-below="laptop"]');
   });
 
-  it("Page.Bar compact et Button collapseLabel basculent sous md", () => {
-    // « Sous md » = largeur < 900 → `max-width: 899px` (container queries).
-    const belowMd = `(max-width: ${BREAKPOINTS.md - 1}px)`;
-    expect(readCss("src/components/Page/Page.module.css")).toContain(`@container page ${belowMd}`);
-    expect(readCss("src/components/Button/Button.module.css")).toContain(`@container ${belowMd}`);
-  });
-
-  it("no component CSS uses the former 767/768 px threshold", () => {
-    for (const path of [
-      "src/components/Page/Page.module.css",
-      "src/components/Button/Button.module.css",
-    ]) {
-      const css = readCss(path);
-      expect(css).not.toMatch(/(max|min)-width:\s*76[78]px/);
-    }
+  it("Page.Bar compact et Button collapseLabel basculent sous tablet", () => {
+    expect(readCss("src/components/Page/Page.module.css")).toContain(
+      `@container page ${below("tablet")}`
+    );
+    expect(readCss("src/components/Button/Button.module.css")).toContain(
+      `@container ${below("tablet")}`
+    );
   });
 
   it("every @media / @container width in src and stories is a breakpoint", () => {
-    // Seuils admis : BREAKPOINTS[x] (« à partir de » / bornes Table) et
+    // Seuils admis : BREAKPOINTS[x] (« à partir de ») et
     // BREAKPOINTS[x] - 1 (« sous », cf. breakpointDown). Tout autre seuil de
     // largeur est une valeur en dur qui ne suivrait pas l'échelle.
     const allowed = new Set(Object.values(BREAKPOINTS).flatMap((v) => [v, v - 1]));
@@ -73,9 +72,9 @@ describe("garde anti-drift — CSS reflète BREAKPOINTS", () => {
     expect(offenders).toEqual([]);
   });
 
-  it("Grid (media queries viewport) uses sm and lg", () => {
+  it("Grid (media queries viewport) uses tablet and laptop", () => {
     const css = readCss("src/components/Grid/Grid.module.css");
-    expect(css).toContain(`@media (min-width: ${BREAKPOINTS.sm}px)`);
-    expect(css).toContain(`@media (min-width: ${BREAKPOINTS.lg}px)`);
+    expect(css).toContain(`@media ${breakpointUp("tablet")}`);
+    expect(css).toContain(`@media ${breakpointUp("laptop")}`);
   });
 });

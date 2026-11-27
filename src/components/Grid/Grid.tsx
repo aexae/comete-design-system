@@ -1,6 +1,6 @@
 // Grid — Comète Design System
 // Primitive de layout : grille CSS responsive (12 colonnes par défaut)
-// avec valeurs par breakpoint mobile / tablet / desktop.
+// avec valeurs par breakpoint mobile / tablet / laptop.
 import type { CSSProperties, ReactElement, ReactNode } from "react";
 import type { StackGap } from "../Stack/Stack.js";
 import styles from "./Grid.module.css";
@@ -13,16 +13,16 @@ import styles from "./Grid.module.css";
  * par breakpoint. Les valeurs omises héritent du breakpoint inférieur.
  *
  * Breakpoints :
- * - `mobile`  — par défaut (sous `BREAKPOINTS.sm`)
- * - `tablet`  — à partir de `BREAKPOINTS.sm`
- * - `desktop` — à partir de `BREAKPOINTS.lg`
+ * - `mobile` — par défaut (sous `BREAKPOINTS.tablet`)
+ * - `tablet` — à partir de `BREAKPOINTS.tablet`
+ * - `laptop` — à partir de `BREAKPOINTS.laptop`
  */
 export type GridResponsive<T> =
   | T
   | {
       mobile?: T;
       tablet?: T;
-      desktop?: T;
+      laptop?: T;
     };
 
 export interface GridProps {
@@ -60,7 +60,7 @@ export interface GridColProps {
 
 function isResponsiveObject<T>(
   value: GridResponsive<T> | undefined
-): value is { mobile?: T; tablet?: T; desktop?: T } {
+): value is { mobile?: T; tablet?: T; laptop?: T } {
   return typeof value === "object" && value !== null;
 }
 
@@ -70,7 +70,7 @@ function responsiveVars(prefix: string, value: GridResponsive<number> | undefine
   if (isResponsiveObject(value)) {
     if (value.mobile !== undefined) vars[`--_${prefix}-mobile`] = value.mobile;
     if (value.tablet !== undefined) vars[`--_${prefix}-tablet`] = value.tablet;
-    if (value.desktop !== undefined) vars[`--_${prefix}-desktop`] = value.desktop;
+    if (value.laptop !== undefined) vars[`--_${prefix}-laptop`] = value.laptop;
   } else {
     vars[`--_${prefix}-mobile`] = value;
   }
@@ -84,7 +84,7 @@ function responsiveVars(prefix: string, value: GridResponsive<number> | undefine
  * Grid — Comète Design System
  *
  * Primitive de layout CSS Grid. Par défaut, une grille 12 colonnes qui
- * s'adapte aux breakpoints `mobile` / `tablet` / `desktop`.
+ * s'adapte aux breakpoints `mobile` / `tablet` / `laptop`.
  *
  * ```tsx
  * import { Grid } from "@aexae/comete-design-system";
@@ -96,7 +96,7 @@ function responsiveVars(prefix: string, value: GridResponsive<number> | undefine
  * </Grid>
  *
  * // Nombre de colonnes responsive
- * <Grid columns={{ mobile: 1, tablet: 2, desktop: 4 }} gap="300">
+ * <Grid columns={{ mobile: 1, tablet: 2, laptop: 4 }} gap="300">
  *   {items.map(...)}
  * </Grid>
  * ```
@@ -134,7 +134,7 @@ Grid.displayName = "Grid";
 /**
  * Grid.Col — cellule d'une `<Grid>`. Occupe `span` colonnes et peut démarrer
  * à une colonne précise via `start`. Les deux props acceptent une valeur
- * responsive (scalaire ou `{ mobile, tablet, desktop }`).
+ * responsive (scalaire ou `{ mobile, tablet, laptop }`).
  */
 function GridCol({
   span = 1,

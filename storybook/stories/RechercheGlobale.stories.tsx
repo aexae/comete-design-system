@@ -84,7 +84,7 @@ function SearchableAgentsPage({
    *
    * Le discriminant est le **type de pointeur**, pas la largeur : une
    * tablette en paysage à 1280 px reste tactile. Les seuils de `Grid`
-   * (`BREAKPOINTS.sm`, `BREAKPOINTS.lg`) sont des seuils de MISE EN
+   * (`BREAKPOINTS.tablet`, `BREAKPOINTS.laptop`) sont des seuils de MISE EN
    * PAGE et ne s'appliquent pas ici.
    *
    * La prop est **pilotée par la story** : aucune détection d'environnement
@@ -138,7 +138,7 @@ function SearchableAgentsPage({
         }
       />
       <Page.Body>
-        <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
+        <Grid columns={{ mobile: 1, tablet: 2, laptop: 3 }} gap="200">
           {Array.from({ length: 6 }, (_, i) => (
             <Grid.Col key={i}>
               <Card appearance="outlined">
@@ -197,7 +197,7 @@ export const TactileMobile: Story = {
 /**
  * **Tactile, tablette** — c'est cette story qui porte la règle : une tablette
  * reçoit la **feuille**, pas la modale, et **aucun raccourci clavier**, alors
- * même qu'elle est plus large que le seuil `BREAKPOINTS.sm` et qu'en paysage
+ * même qu'elle est plus large que le seuil `BREAKPOINTS.tablet` et qu'en paysage
  * elle dépasse le seuil desktop.
  *
  * Le discriminant est le **type de pointeur**, pas la largeur. Sans cette

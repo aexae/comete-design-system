@@ -32,19 +32,19 @@ describe("Grid", () => {
     const style = (container.firstChild as HTMLElement).getAttribute("style");
     expect(style).toContain("--_grid-cols-mobile: 4");
     expect(style).not.toContain("--_grid-cols-tablet");
-    expect(style).not.toContain("--_grid-cols-desktop");
+    expect(style).not.toContain("--_grid-cols-laptop");
   });
 
   it("should inject responsive columns per breakpoint", () => {
     const { container } = render(
-      <Grid columns={{ mobile: 1, tablet: 2, desktop: 4 }}>
+      <Grid columns={{ mobile: 1, tablet: 2, laptop: 4 }}>
         <Grid.Col>Cell</Grid.Col>
       </Grid>
     );
     const style = (container.firstChild as HTMLElement).getAttribute("style");
     expect(style).toContain("--_grid-cols-mobile: 1");
     expect(style).toContain("--_grid-cols-tablet: 2");
-    expect(style).toContain("--_grid-cols-desktop: 4");
+    expect(style).toContain("--_grid-cols-laptop: 4");
   });
 
   it("should only inject the breakpoints provided", () => {
@@ -56,7 +56,7 @@ describe("Grid", () => {
     const style = (container.firstChild as HTMLElement).getAttribute("style");
     expect(style).not.toContain("--_grid-cols-mobile");
     expect(style).toContain("--_grid-cols-tablet: 3");
-    expect(style).not.toContain("--_grid-cols-desktop");
+    expect(style).not.toContain("--_grid-cols-laptop");
   });
 
   it("should apply gap as CSS variables for both axes", () => {
@@ -122,20 +122,20 @@ describe("Grid.Col", () => {
     const style = col.getAttribute("style");
     expect(style).toContain("--_col-span-mobile: 6");
     expect(style).not.toContain("--_col-span-tablet");
-    expect(style).not.toContain("--_col-span-desktop");
+    expect(style).not.toContain("--_col-span-laptop");
   });
 
   it("should inject responsive span per breakpoint", () => {
     const { container } = render(
       <Grid>
-        <Grid.Col span={{ mobile: 12, tablet: 6, desktop: 3 }}>Cell</Grid.Col>
+        <Grid.Col span={{ mobile: 12, tablet: 6, laptop: 3 }}>Cell</Grid.Col>
       </Grid>
     );
     const col = container.querySelectorAll("div")[1] as HTMLElement;
     const style = col.getAttribute("style");
     expect(style).toContain("--_col-span-mobile: 12");
     expect(style).toContain("--_col-span-tablet: 6");
-    expect(style).toContain("--_col-span-desktop: 3");
+    expect(style).toContain("--_col-span-laptop: 3");
   });
 
   it("should inject start when provided and add hasStart class", () => {

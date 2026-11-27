@@ -122,9 +122,9 @@ const meta = {
                   'Aligner les nombres à droite (`align="right"`) et le texte à gauche.',
                   "Colonnes triables via `isSortable` + `aria-sort` ; densité `compact` pour les vues denses.",
                   "Le divider bas disparaît quand un footer/pagination est présent (géré par Table.View).",
-                  "Responsive (`hideBelow`, container queries) : `<Table responsive>` (établit le query container ; requiert une largeur définie, pas un parent shrink-to-fit). Priorisez — identifiant + donnée clé toujours visibles (jamais de `hideBelow`), colonnes de contexte en `md`, colonnes de confort en `lg`. Poser `hideBelow` sur l'en-tête ET chaque cellule de la même colonne.",
+                  "Responsive (`hideBelow`, container queries) : `<Table responsive>` (établit le query container ; requiert une largeur définie, pas un parent shrink-to-fit). Priorisez — identifiant + donnée clé toujours visibles (jamais de `hideBelow`), colonnes de contexte en `tablet`, colonnes de confort en `laptop`. Poser `hideBelow` sur l'en-tête ET chaque cellule de la même colonne.",
                   "Une info masquée doit rester accessible : ligne cliquable vers le détail, ou vue cartes. Le tri d'une colonne masquée reste actif côté données — au consommateur de décider s'il le réinitialise.",
-                  `Sous le breakpoint sm (${BREAKPOINTS.sm} px) de container, ne compressez PAS la table : passez en liste compacte (\`List\` : titre en primary, site/méta en secondary, tag de statut + heure en trailing — le pattern Main courante mobile). Une table à 2 colonnes tronquées rend moins service qu'une ligne de liste dense. Les cartes sont la vue alternative (bascule liste/cartes), pas le repli par défaut. La story *Responsive columns* montre cette limite (${BREAKPOINTS.sm} px = 2 colonnes étirées) ; la story *Table → List* montre le repli.`,
+                  `Sous le breakpoint tablet (${BREAKPOINTS.tablet} px) de container, ne compressez PAS la table : passez en liste compacte (\`List\` : titre en primary, site/méta en secondary, tag de statut + heure en trailing — le pattern Main courante mobile). Une table à 2 colonnes tronquées rend moins service qu'une ligne de liste dense. Les cartes sont la vue alternative (bascule liste/cartes), pas le repli par défaut. La story *Responsive columns* montre cette limite (${BREAKPOINTS.tablet} px = 2 colonnes étirées) ; la story *Table → List* montre le repli.`,
                   "En liste (repli étroit), il n'y a plus d'en-têtes : le tri passe dans un contrôle « Trier par » au-dessus de la liste ; la sélection multiple par case par ligne ou appui long (à brancher sur le hook de sélection).",
                   "Statut → couleur : ne pas coder la couleur en dur dans la cellule ; passer par un mapping centralisé typé `TagStatusColor` et suivre l'axe de l'ADR 0002 — `neutral` (pas commencé) → `information` (en cours) → `warning` (action attendue) → `success` (état souhaité atteint) / `critical` (échec). Voir Foundation/Statut. Les mappings de cette page sont des démonstrations non normatives.",
                   "En méta compacte, l'heure seule aujourd'hui, et uniquement le jour (« Hier ») pour un jour antérieur — pour ne pas fausser la fraîcheur.",
@@ -1330,7 +1330,7 @@ const agentInitials = (name: string) =>
 const onOpenDetail = fn();
 
 /**
- * **Table → List (repli téléphone)** — sous `BREAKPOINTS.sm` de container, on ne compresse
+ * **Table → List (repli téléphone)** — sous `BREAKPOINTS.tablet` de container, on ne compresse
  * pas la table : on bascule en `List`. Cette recette montre le **résultat du
  * repli** sur la donnée `MC_EVENTS` — la liste compacte « Main courante mobile »
  * (type d'événement en primary, site en secondary ; avatar + heure au-dessus
@@ -1453,25 +1453,20 @@ const RESPONSIVE_DOC_ROWS: Array<{
   comportement: string;
 }> = [
   {
-    bp: `≥ ${BREAKPOINTS.lg}px (lg)`,
+    bp: `≥ ${BREAKPOINTS.laptop}px (laptop)`,
     preset: "Desktop exploitation (1440)",
     comportement: "Toutes les colonnes visibles (identifiant + confort + contexte).",
   },
   {
-    bp: `${BREAKPOINTS.md} – ${BREAKPOINTS.lg}px (md → lg)`,
-    preset: "—",
-    comportement: 'Colonnes de confort masquées (hideBelow="lg").',
-  },
-  {
-    bp: `${BREAKPOINTS.sm} – ${BREAKPOINTS.md}px (sm → md)`,
+    bp: `${BREAKPOINTS.tablet} – ${BREAKPOINTS.laptop}px (tablet → laptop)`,
     preset: "Tablette manager (768)",
-    comportement: 'Colonnes de contexte aussi masquées (hideBelow="md").',
+    comportement: 'Colonnes de confort masquées (hideBelow="laptop").',
   },
   {
-    bp: `< ${BREAKPOINTS.sm}px (sm)`,
+    bp: `< ${BREAKPOINTS.tablet}px (sous tablet)`,
     preset: "Mobile agent (375)",
     comportement:
-      'Colonnes secondaires masquées (hideBelow="sm") ; sous ce seuil, préférer le repli en liste compacte (List).',
+      'Colonnes de contexte aussi masquées (hideBelow="tablet") ; sous ce seuil, préférer le repli en liste compacte (List).',
   },
 ];
 
@@ -1522,12 +1517,12 @@ function ResponsiveDocSection(): ReactNode {
       >
         La dégradation est pilotée par <strong>container queries</strong> (la largeur du conteneur
         de la table, pas le viewport) : poser <code>responsive</code> sur la <code>Table</code> puis{" "}
-        <code>hideBelow</code> (<code>&quot;sm&quot;</code>/<code>&quot;md&quot;</code>/
-        <code>&quot;lg&quot;</code>) sur l&apos;en-tête ET chaque cellule d&apos;une colonne. Les
-        identifiants et la donnée clé ne sont jamais masqués ; sous {BREAKPOINTS.sm} px (sm) on
-        bascule en liste compacte. Les presets viewport « Mobile agent / Tablette manager / Desktop
-        exploitation » (barre d&apos;outils Viewport) permettent d&apos;éprouver chaque palier ; la
-        recette <em>Table → List (repli téléphone)</em> illustre le repli en liste.
+        <code>hideBelow</code> (<code>&quot;tablet&quot;</code>/<code>&quot;laptop&quot;</code>) sur
+        l&apos;en-tête ET chaque cellule d&apos;une colonne. Les identifiants et la donnée clé ne
+        sont jamais masqués ; sous {BREAKPOINTS.tablet} px (tablet) on bascule en liste compacte.
+        Les presets viewport « Mobile agent / Tablette manager / Desktop exploitation » (barre
+        d&apos;outils Viewport) permettent d&apos;éprouver chaque palier ; la recette{" "}
+        <em>Table → List (repli téléphone)</em> illustre le repli en liste.
       </p>
       <table
         style={{
@@ -1796,7 +1791,7 @@ function TableCardRecipe({ initialView }: { initialView: "table" | "cards" }) {
             </TableBody>
           </Table>
         ) : (
-          <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="300">
+          <Grid columns={{ mobile: 1, tablet: 2, laptop: 3 }} gap="300">
             {ROWS.map((r) => (
               <Card key={r.id} appearance="outlined">
                 {/* Card = surface nue (aucun padding interne) → on pade le
@@ -1847,7 +1842,7 @@ function TableCardRecipe({ initialView }: { initialView: "table" | "cards" }) {
  * header. Démarre en vue liste.
  *
  * ⚠️ **La bascule liste ↔ cartes est une option par écran, jamais le repli
- * téléphone par défaut.** Sous `BREAKPOINTS.sm`, le repli par défaut est la **liste
+ * téléphone par défaut.** Sous `BREAKPOINTS.tablet`, le repli par défaut est la **liste
  * compacte** (cf. recette `Table → List`) : une liste de 200 sites en cartes
  * est inutilisable. Les cartes sont une vue alternative choisie écran par
  * écran. Décision du doc d'audit — ne pas la rouvrir.

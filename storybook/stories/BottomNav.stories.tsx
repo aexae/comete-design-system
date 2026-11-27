@@ -15,6 +15,7 @@ import {
   ListItemTrailing,
   Page,
 } from "@aexae/comete-design-system/components";
+import { BREAKPOINTS } from "@aexae/comete-design-system";
 import type { IconName } from "@aexae/comete-icons";
 import { DocsTabsPage } from "../.storybook/DocsTabsPage";
 import { GuidelinesFlat } from "./_guidelines";
@@ -44,7 +45,7 @@ const meta = {
             <GuidelinesFlat
               when={[
                 "Navigation principale sur mobile : 3 à 5 destinations de premier niveau accessibles au pouce.",
-                "Quand l'application est installée sur un mobile ou une tablette",
+                `Quand l'application est installée sur un téléphone (sous le breakpoint tablet, ${BREAKPOINTS.tablet} px). Dès tablet, tablette portrait comprise, l'application passe à la SideNav.`,
                 "Applications web progressives (PWA) ou apps hybrides multi-plateformes.",
               ]}
               avoid={[
@@ -251,33 +252,6 @@ export const FiveItems: NavStory = {
     <PhoneScreen>
       <InteractiveBottomNav items={AGENT_ITEMS} active={args.active} />
     </PhoneScreen>
-  ),
-};
-
-/**
- * **Application tablet, portrait** (768 × 1024) — dans l'application, la BottomNav porte la
- * navigation sous `BREAKPOINTS.md`, tablette portrait comprise ; la SideNav ne prend le
- * relais qu'à partir de `md`. Navigation seule, pleine largeur, en bas de l'écran.
- */
-export const ApplicationTabletPortrait: NavStory = {
-  name: "Application tablet, portrait",
-  globals: { viewport: { value: "cometeTabletManager", isRotated: false } },
-  parameters: { layout: "fullscreen", noFrame: true, controls: { include: ["active"] } },
-  argTypes: {
-    active: { name: "Item actif", control: "radio", options: MANAGER_ITEMS.map((i) => i.label) },
-  },
-  args: { active: "Accueil" },
-  render: (args) => (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-end",
-        height: "100vh",
-      }}
-    >
-      <InteractiveBottomNav items={MANAGER_ITEMS} active={args.active} />
-    </div>
   ),
 };
 

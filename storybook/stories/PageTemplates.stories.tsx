@@ -126,7 +126,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Exemples de compositions de page complètes (listes, détails, tableaux de bord) assemblées à partir des composants du DS. Utilisez ces gabarits comme point de départ à copier/adapter, en composant Page avec SideNav/Page.Bar, Grid, Card, etc. Rappel : Banner au-dessus du layout (alerte globale), SectionMessage à l'intérieur du contenu.\n\n**Tablette : trois axes indépendants.** « Tablette = tactile » ne veut pas dire « tablette = interface de téléphone ». (1) La densité et la taille des cibles suivent le type de pointeur (`pointer: coarse`), jamais une largeur. (2) Le composant de navigation suit le contexte et la largeur du viewport, pas le pointeur : dans l'application, `BottomNav` sous `md`, `SideNav` dès `md` ; sur le web, hamburger + `Drawer` sous `lg`, `SideNav` au-delà (breakpoints de `BREAKPOINTS`) (voir la doc de `SideNav`). (3) La variante de `Page.Bar` suit la largeur de la Page, par container query : personne n'a à la décider, elle se déduit.",
+          "Exemples de compositions de page complètes (listes, détails, tableaux de bord) assemblées à partir des composants du DS. Utilisez ces gabarits comme point de départ à copier/adapter, en composant Page avec SideNav/Page.Bar, Grid, Card, etc. Rappel : Banner au-dessus du layout (alerte globale), SectionMessage à l'intérieur du contenu.\n\n**Tablette : trois axes indépendants.** « Tablette = tactile » ne veut pas dire « tablette = interface de téléphone ». (1) La densité et la taille des cibles suivent le type de pointeur (`pointer: coarse`), jamais une largeur. (2) Le composant de navigation suit le contexte et la largeur du viewport, pas le pointeur : dans l'application, `BottomNav` sous `tablet`, `SideNav` dès `tablet` ; sur le web, hamburger + `Drawer` sous `laptop`, `SideNav` au-delà (breakpoints de `BREAKPOINTS`) (voir la doc de `SideNav`). (3) La variante de `Page.Bar` suit la largeur de la Page, par container query : personne n'a à la décider, elle se déduit.",
       },
     },
   },
@@ -549,7 +549,7 @@ interface AgentColumn {
   header: string;
   roles: Role[];
   align?: "left" | "right";
-  hideBelow?: "sm" | "md" | "lg";
+  hideBelow?: "tablet" | "laptop";
   sortable?: boolean;
   sortValue?: (a: Agent) => string | number;
   cell: (a: Agent) => React.ReactNode;
@@ -574,7 +574,7 @@ const AGENT_COLUMNS: AgentColumn[] = [
     id: "mat",
     header: "Matricule",
     roles: ["manager", "client"],
-    hideBelow: "md",
+    hideBelow: "tablet",
     cell: (a) => a.mat,
   },
   {
@@ -582,7 +582,7 @@ const AGENT_COLUMNS: AgentColumn[] = [
     header: "Contrat",
     roles: ["manager", "partenaire", "client"],
     align: "right",
-    hideBelow: "md",
+    hideBelow: "tablet",
     cell: (a) => a.contrat || "—",
   },
   {
@@ -590,7 +590,7 @@ const AGENT_COLUMNS: AgentColumn[] = [
     header: "Heures",
     roles: ["manager", "client"],
     align: "right",
-    hideBelow: "lg",
+    hideBelow: "laptop",
     cell: (a) => a.heures || "—",
   },
   {
@@ -1272,15 +1272,15 @@ function VacationsSection(): React.ReactElement {
               Horaires
             </TableHeaderCell>
             <TableHeaderCell>Agent</TableHeaderCell>
-            <TableHeaderCell hideBelow="md">Profil</TableHeaderCell>
+            <TableHeaderCell hideBelow="tablet">Profil</TableHeaderCell>
             <TableHeaderCell>Activité</TableHeaderCell>
-            <TableHeaderCell align="right" hideBelow="lg">
+            <TableHeaderCell align="right" hideBelow="laptop">
               PP
             </TableHeaderCell>
-            <TableHeaderCell align="right" hideBelow="lg">
+            <TableHeaderCell align="right" hideBelow="laptop">
               PDS
             </TableHeaderCell>
-            <TableHeaderCell align="right" hideBelow="lg">
+            <TableHeaderCell align="right" hideBelow="laptop">
               FDS
             </TableHeaderCell>
             <TableHeaderCell align="right"> </TableHeaderCell>
@@ -1324,21 +1324,21 @@ function VacationsSection(): React.ReactElement {
                   </Text>
                 </Cluster>
               </TableCell>
-              <TableCell hideBelow="md">{v.profil}</TableCell>
+              <TableCell hideBelow="tablet">{v.profil}</TableCell>
               <TableCell>
                 <Tag label={v.activite} appearance="subtle" shape="rounded" />
               </TableCell>
-              <TableCell align="right" hideBelow="lg">
+              <TableCell align="right" hideBelow="laptop">
                 <Text as="span" color="subtlest">
                   —
                 </Text>
               </TableCell>
-              <TableCell align="right" hideBelow="lg">
+              <TableCell align="right" hideBelow="laptop">
                 <Text as="span" color="subtlest">
                   —
                 </Text>
               </TableCell>
-              <TableCell align="right" hideBelow="lg">
+              <TableCell align="right" hideBelow="laptop">
                 <Text as="span" color="subtlest">
                   —
                 </Text>
@@ -1402,7 +1402,7 @@ export const ListeDeSection: Story = {
         <Page.Body>
           <Grid gap="400">
             {/* COLONNE GAUCHE — régions descriptives posées sur le fond. */}
-            <Grid.Col span={{ mobile: 12, tablet: 4, desktop: 3 }}>
+            <Grid.Col span={{ mobile: 12, tablet: 4, laptop: 3 }}>
               <Stack gap="300">
                 {/* Informations */}
                 <Stack gap="150">
@@ -1488,7 +1488,7 @@ export const ListeDeSection: Story = {
             </Grid.Col>
 
             {/* COLONNE DROITE — onglets + liste des vacations. */}
-            <Grid.Col span={{ mobile: 12, tablet: 8, desktop: 9 }}>
+            <Grid.Col span={{ mobile: 12, tablet: 8, laptop: 9 }}>
               <Tabs>
                 <TabList>
                   <Tab id="vacations">
@@ -1600,7 +1600,7 @@ export const Entity: Story = {
       <Page.Bar title="Entité" trailing={<Avatar size="medium" initials="AC" />} />
       <Page.Body>
         <Grid gap="300">
-          <Grid.Col span={{ mobile: 12, tablet: 5, desktop: 4 }}>
+          <Grid.Col span={{ mobile: 12, tablet: 5, laptop: 4 }}>
             <Stack gap="200">
               <Stack gap="200">
                 <Stack direction="row" gap="200" align="center">
@@ -1708,7 +1708,7 @@ export const Entity: Story = {
             </Stack>
           </Grid.Col>
 
-          <Grid.Col span={{ mobile: 12, tablet: 7, desktop: 8 }}>
+          <Grid.Col span={{ mobile: 12, tablet: 7, laptop: 8 }}>
             <Card appearance="outlined">
               <div className={css["cardColumn"]}>
                 <Tabs>
@@ -2076,7 +2076,7 @@ export const Home: StoryObj<{ isNameLoading: boolean }> = {
                   Voir tous
                 </Button>
               </Cluster>
-              <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
+              <Grid columns={{ mobile: 1, tablet: 2, laptop: 3 }} gap="200">
                 {[
                   {
                     site: "Carrefour Market Chatel",
@@ -2199,7 +2199,7 @@ export const Settings: Story = {
                     "Les rôles définissent le niveau d'accès système. Ils ne sont pas personnalisables."
                   }
                 </SectionMessage>
-                <Grid columns={{ mobile: 1, tablet: 2, desktop: 4 }} gap="200">
+                <Grid columns={{ mobile: 1, tablet: 2, laptop: 4 }} gap="200">
                   {[
                     {
                       role: "Administrateur",

@@ -155,7 +155,7 @@ export const Default: Story = {
             <SectionMessage appearance="information" style={{ marginBottom: 16 }}>
               Message d&apos;accueil (texte par défaut)
             </SectionMessage>
-            <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
+            <Grid columns={{ mobile: 1, tablet: 2, laptop: 3 }} gap="200">
               {Array.from({ length: 9 }, (_, i) => (
                 <Grid.Col key={i}>
                   <Card appearance="outlined">
@@ -281,7 +281,7 @@ function ListingPage({ leading }: { leading?: React.ReactNode }) {
         />
       </div>
       <Page.Body>
-        <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
+        <Grid columns={{ mobile: 1, tablet: 2, laptop: 3 }} gap="200">
           {Array.from({ length: 9 }, (_, i) => (
             <Grid.Col key={i}>
               <Card appearance="outlined">

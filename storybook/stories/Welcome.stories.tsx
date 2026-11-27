@@ -222,7 +222,7 @@ function Contents({ index }: { index: Index | undefined }): ReactElement {
   return (
     <Grid columns={{ mobile: 12, tablet: 12 }} gap="150">
       {families.map((f) => (
-        <Grid.Col key={f.name} span={{ mobile: 12, tablet: 6, desktop: 4 }}>
+        <Grid.Col key={f.name} span={{ mobile: 12, tablet: 6, laptop: 4 }}>
           <Card
             appearance="outlined"
             className={css["fill"]}

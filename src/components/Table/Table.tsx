@@ -28,11 +28,10 @@ export type TableAlign = "left" | "center" | "right";
  * Seuil de masquage responsive d'une colonne, exprimé en largeur du
  * **container** de la table (pas du viewport). Valeurs alignées sur la source
  * unique `BREAKPOINTS` (src/tokens/breakpoints.ts) :
- * - `sm` — masquée sous `BREAKPOINTS.sm` de container ;
- * - `md` — masquée sous `BREAKPOINTS.md` ;
- * - `lg` — masquée sous `BREAKPOINTS.lg`.
+ * - `tablet` — masquée sous `BREAKPOINTS.tablet` de container ;
+ * - `laptop` — masquée sous `BREAKPOINTS.laptop`.
  */
-export type TableHideBelow = "sm" | "md" | "lg";
+export type TableHideBelow = "tablet" | "laptop";
 
 /**
  * Séparation visuelle des lignes du corps (utile sur grand écran, où de longues
@@ -246,7 +245,7 @@ export interface TableCellProps {
    * chaque cellule du corps de la MÊME colonne (sinon décalage). Ne jamais
    * poser sur la colonne de sélection ni la colonne d'actions. Une info
    * masquée doit rester atteignable (ligne cliquable vers le détail, ou vue
-   * cartes) ; sous `BREAKPOINTS.sm` de container, préférer une liste compacte (`List`)
+   * cartes) ; sous `BREAKPOINTS.tablet` de container, préférer une liste compacte (`List`)
    * à une table compressée.
    */
   hideBelow?: TableHideBelow;

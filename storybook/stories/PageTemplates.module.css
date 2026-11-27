@@ -81,7 +81,7 @@
   }
 }
 
-/* ---- Show only on desktop (>= 600px) ---- */
+/* ---- Show only on desktop (à partir de BREAKPOINTS.tablet) ---- */
 
 .showOnDesktop {
   display: inline-flex;
@@ -105,7 +105,7 @@
    viewport : en compact/mobile, les critères sont portés par le badge et la
    feuille (drill-down). ---- */
 
-@container page (max-width: 899px) {
+@container page (max-width: 599px) {
   .hideBlockUnderCompact {
     display: none;
   }

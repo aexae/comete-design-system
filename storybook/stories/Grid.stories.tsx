@@ -114,12 +114,12 @@ export const Default: Story = {
   ),
 };
 
-/** Nombre de colonnes responsive : 1 col mobile → 2 tablet → 4 desktop. */
+/** Nombre de colonnes responsive : 1 col mobile → 2 tablet → 4 laptop. */
 export const ResponsiveColumns: Story = {
   name: "Responsive columns",
   args: { gap: "200" },
   render: (args) => (
-    <Grid {...args} columns={{ mobile: 1, tablet: 2, desktop: 4 }}>
+    <Grid {...args} columns={{ mobile: 1, tablet: 2, laptop: 4 }}>
       {Array.from({ length: 8 }, (_, i) => (
         <Grid.Col key={i}>
           <Cell>Item {i + 1}</Cell>
@@ -129,14 +129,14 @@ export const ResponsiveColumns: Story = {
   ),
 };
 
-/** Span responsive : 12 mobile → 6 tablet → 3 desktop. */
+/** Span responsive : 12 mobile → 6 tablet → 3 laptop. */
 export const ResponsiveSpan: Story = {
   name: "Responsive span",
   args: { gap: "200" },
   render: (args) => (
     <Grid {...args}>
       {Array.from({ length: 4 }, (_, i) => (
-        <Grid.Col key={i} span={{ mobile: 12, tablet: 6, desktop: 3 }}>
+        <Grid.Col key={i} span={{ mobile: 12, tablet: 6, laptop: 3 }}>
           <Cell>Item {i + 1}</Cell>
         </Grid.Col>
       ))}

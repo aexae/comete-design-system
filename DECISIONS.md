@@ -2,19 +2,30 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
-## 2026-11-27 — Toutes les largeurs d'écran branchées sur `BREAKPOINTS`
+## 2026-11-27 — Échelle de breakpoints watch → tv, toutes les largeurs branchées dessus
 
-- **Décision** (Axel) : aucune largeur d'écran ou de conteneur n'est écrite en dur. Le CSS
-  utilise la valeur d'un breakpoint (ou valeur − 1 pour « sous »), garanti par
-  `breakpoints.test.ts` sur tout `src` et les stories ; le JS utilise `BREAKPOINTS`,
-  `breakpointUp` et `breakpointDown` (nouveaux) ; commentaires et docs citent le nom.
-- **Navigation des applications** : `BottomNav` sous `md`, `SideNav` dès `md` (au lieu de
-  768/769 px, hors échelle). `md` plutôt que `sm` pour garder la tablette portrait (768 px)
-  en `BottomNav`, comme avant. Web inchangé (`lg`).
-- **Raison** : un changement futur des valeurs de `BREAKPOINTS` doit se propager partout sans
-  chasse aux nombres.
+- **Décision** (Axel) : une seule échelle, mêmes noms dans Figma (`base/breakpoints`), les
+  tokens (`--breakpoint-*`, 0.49.0) et le code (`BREAKPOINTS`) : `watch` 0, `mobile` 280,
+  `tablet` 600, `laptop` 1200, `desktop` 1536, `tv` 1920. Les quatre noms historiques
+  `mobile` / `tablet` / `laptop` / `desktop` sont gardés ; `watch` (montres) et `tv` (démos,
+  présentations) sont ajoutés. Le tableau Figma hérité de comete_webapp (8 crans) est réduit.
+- **Valeurs** : `mobile` 280 pour couvrir l'écran externe des pliants (≈ 280 px) au-dessus des
+  montres (≈ 160–240 px) ; `tablet` 600 et `laptop` 1200 inchangés ; `desktop` 1536, début du
+  petit desktop (plutôt que 1920, grand desktop) ; `tv` 1920, vidéoprojecteurs et TV Full HD
+  (un moniteur 1920 l'atteint aussi, assumé).
+- **`md` (900) supprimé et fusionné dans `tablet`** : `Page.Bar` compact, `Button
+collapseLabel`, `Table hideBelow` (ex-`sm` et ex-`md`) et la navigation de l'application
+  (`BottomNav` sous `tablet`, `SideNav` dès `tablet`, tablette portrait comprise). Web inchangé
+  (`laptop`).
+- **`Grid`** : clé `desktop` renommée `laptop` (même seuil 1200), pour ne pas contredire le
+  breakpoint `desktop` à 1536.
+- **Aucune largeur en dur** : CSS = valeur d'un breakpoint (ou valeur − 1 pour « sous »),
+  garanti par `breakpoints.test.ts` sur tout `src` et les stories ; JS = `BREAKPOINTS`,
+  `breakpointUp`, `breakpointDown` ; commentaires et docs = noms.
+- **Raison** : un vocabulaire unique Figma / tokens / code, et un changement futur de valeur
+  qui se propage sans chasse aux nombres.
 
-## 2026-11-27 — Seuil compact de Page et Button sur `md`, AGENTS.md en renvoi
+## 2026-11-27 — Seuil compact de Page et Button (remplacé, voir ci-dessus), AGENTS.md en renvoi
 
 - **Décision** (Axel) : la variante compacte de `Page.Bar` et le repli `collapseLabel` du
   `Button` basculent sous `BREAKPOINTS.md` (900 px, `@container (max-width: 899px)`) au lieu
@@ -37,7 +48,7 @@ Figma. Un fichier séparé évite d'alourdir `CLAUDE.md` et se relit indépendam
   de l'ancienne règle « sémantique d'abord »), dans `CLAUDE.md` et les règles Figma.
 - **Versionnement** : `docs/figma-mcp-rules.md` est versionné malgré la règle `/docs/*`
   du `.gitignore` (exception ajoutée).
-- **Breakpoints** : les tokens deviennent `--breakpoint-sm/md/lg` aux valeurs de
+- **Breakpoints** (remplacé par l'échelle watch → tv ci-dessus) : les tokens devenaient `--breakpoint-sm/md/lg` aux valeurs de
   `BREAKPOINTS` (600/900/1200), tokens 0.49.0. `BREAKPOINTS` reste la source côté DS :
   une condition `@media` / `@container` ne lit pas `var()`.
 

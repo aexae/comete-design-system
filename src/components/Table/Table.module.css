@@ -42,28 +42,22 @@
 
 /* Colonnes responsives (`hideBelow`) — dégradation desktop → tablette par
    CONTAINER QUERIES (aucune media query viewport). Les conditions @container
-   n'acceptent pas `var()` : les trois seuils reflètent donc « en dur » la
-   source unique `BREAKPOINTS` (src/tokens/breakpoints.ts) — sm 600 / md 900 /
-   lg 1200. La synchro CSS ↔ constantes est garantie par breakpoints.test.ts.
+   n'acceptent pas `var()` : les deux seuils reflètent donc « en dur » la
+   source unique `BREAKPOINTS` (src/tokens/breakpoints.ts) — « sous tablet » et
+   « sous laptop » (valeur du breakpoint − 1). La synchro CSS ↔ constantes est
+   garantie par breakpoints.test.ts.
    Le `display: none` sur <th> ET <td> (border-collapse) fait disparaître la
    colonne proprement : pas de colonne fantôme ni de décalage. */
-@container table (max-width: 600px) {
-  .headerCell[data-hide-below="sm"],
-  .cell[data-hide-below="sm"] {
+@container table (max-width: 599px) {
+  .headerCell[data-hide-below="tablet"],
+  .cell[data-hide-below="tablet"] {
     display: none;
   }
 }
 
-@container table (max-width: 900px) {
-  .headerCell[data-hide-below="md"],
-  .cell[data-hide-below="md"] {
-    display: none;
-  }
-}
-
-@container table (max-width: 1200px) {
-  .headerCell[data-hide-below="lg"],
-  .cell[data-hide-below="lg"] {
+@container table (max-width: 1199px) {
+  .headerCell[data-hide-below="laptop"],
+  .cell[data-hide-below="laptop"] {
     display: none;
   }
 }

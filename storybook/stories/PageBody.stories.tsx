@@ -96,7 +96,7 @@ export const GridLayout: Story = {
       <Page globalActions={null}>
         <AgentsChrome />
         <Page.Body>
-          <Grid columns={{ mobile: 1, tablet: 2, desktop: 3 }} gap="200">
+          <Grid columns={{ mobile: 1, tablet: 2, laptop: 3 }} gap="200">
             {Array.from({ length: 9 }, (_, i) => (
               <Grid.Col key={i}>
                 <Card appearance="outlined">
@@ -145,7 +145,7 @@ export const SidebarLayout: Story = {
         <Page.Bar title="Fiche agent" trailing={<Avatar size="medium" initials="AC" />} />
         <Page.Body>
           <Grid gap="300">
-            <Grid.Col span={{ mobile: 12, tablet: 5, desktop: 4 }}>
+            <Grid.Col span={{ mobile: 12, tablet: 5, laptop: 4 }}>
               <Stack gap="200">
                 <Card appearance="outlined">
                   <Stack padding="100" gap="100">
@@ -181,7 +181,7 @@ export const SidebarLayout: Story = {
                 </Card>
               </Stack>
             </Grid.Col>
-            <Grid.Col span={{ mobile: 12, tablet: 7, desktop: 8 }}>
+            <Grid.Col span={{ mobile: 12, tablet: 7, laptop: 8 }}>
               <Card appearance="outlined">
                 <div style={{ padding: "var(--space200)", width: "100%", minHeight: 300 }}>
                   <span

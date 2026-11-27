@@ -9,28 +9,39 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Changements cassants (BREAKING, alpha.205)
+
+- **Nouvelle échelle `BREAKPOINTS`**, aux noms explicites et alignée sur Figma et les tokens
+  (`--breakpoint-*`, tokens 0.49.0) : `{ watch: 0, mobile: 280, tablet: 600, laptop: 1200,
+desktop: 1536, tv: 1920 }`. Les clés `sm` / `md` / `lg` disparaissent (`sm` → `tablet`,
+  `lg` → `laptop`, `md` fusionné dans `tablet`).
+- **`Table hideBelow`** : `"sm" | "md" | "lg"` → `"tablet" | "laptop"`. Les colonnes en `"sm"` ou
+  `"md"` passent en `"tablet"` (masquées sous 600 px de conteneur), celles en `"lg"` en
+  `"laptop"` (masquées sous 1200 px). Le palier 900 px n'existe plus : les colonnes ex-`md`
+  restent visibles entre 600 et 900 px.
+- **`Grid`** : la clé responsive `desktop` devient `laptop` (même seuil, 1200 px) :
+  `columns={{ mobile, tablet, laptop }}`.
+- **Seuils sous `tablet` (600 px de conteneur)** : variante compacte de `Page.Bar` et repli
+  `collapseLabel` du `Button` (au lieu de 768 px). Entre 600 et 767 px de conteneur, la barre
+  reste donc large et les boutons gardent leur libellé.
+
 ### Ajouté (alpha.205)
 
 - **`breakpointUp(bp)` / `breakpointDown(bp)`** (exportés avec `BREAKPOINTS`) : chaînes de media
-  query (`"(min-width: 900px)"`, `"(max-width: 899px)"`) pour `window.matchMedia`, afin que les
+  query (`"(min-width: 600px)"`, `"(max-width: 599px)"`) pour `window.matchMedia`, afin que les
   applications branchent leurs bascules (navigation, mise en page) sur l'échelle du DS sans
   recopier de valeur.
 
 ### Modifié (alpha.205)
 
-- **Règle de navigation des applications sur les breakpoints** (documentation) : application
-  `BottomNav` sous `md`, `SideNav` dès `md` (au lieu de ≤ 768 / ≥ 769 px) ; web inchangé
-  (`Drawer` sous `lg`, `SideNav` persistante dès `lg`). Entre 768 et 899 px, l'application
-  garde la `BottomNav`.
+- **Règle de navigation des applications** (documentation) : `BottomNav` sous `tablet`,
+  `SideNav` dès `tablet` (au lieu de ≤ 768 / ≥ 769 px) : la tablette portrait passe en
+  `SideNav` (story `SideNav › Application tablet, portrait`, qui remplace
+  `BottomNav › Application tablet, portrait`). Web : `Drawer` sous `laptop`, `SideNav`
+  persistante dès `laptop` (inchangé).
 - **Garde anti-drift étendue** : `breakpoints.test.ts` refuse toute largeur de `@media` /
-  `@container` hors `BREAKPOINTS` (± 1) dans `src` et les stories. Le hero de la page Welcome
-  passe de 760 px à `md`.
-- **Seuil responsive de `Page` et `Button` aligné sur `BREAKPOINTS.md` (900 px)** : la variante
-  compacte de `Page.Bar` (et le comportement compact de la `Page`) ainsi que le repli
-  `collapseLabel` du `Button` basculent désormais sous **900 px** de largeur de conteneur
-  (`@container (max-width: 899px)`), au lieu de 768 px. Le seuil 768 n'appartenait pas à
-  l'échelle `sm`/`md`/`lg`. Entre 768 et 899 px de conteneur, la barre passe donc en compact et
-  les boutons `collapseLabel` en icône seule. `breakpoints.test.ts` garde ce seuil.
+  `@container` hors `BREAKPOINTS` (valeur ou valeur − 1) dans `src` et les stories. Le hero
+  de la page Welcome passe de 760 px à `tablet`.
 
 ### Changements cassants (BREAKING, alpha.204)
 

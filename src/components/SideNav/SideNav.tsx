@@ -32,8 +32,8 @@ declare const process: { env: { NODE_ENV?: string } };
 
 /**
  * Mode d'affichage de la navigation latérale — permanente dans l'**application**
- * dès le breakpoint `md` et sur le **web** dès `lg` (`BREAKPOINTS`, à tester avec
- * `window.matchMedia(breakpointUp("md" | "lg"))`).
+ * dès le breakpoint `tablet` et sur le **web** dès `laptop` (`BREAKPOINTS`, à tester avec
+ * `window.matchMedia(breakpointUp("tablet" | "laptop"))`).
  * - `expanded` — panneau complet 240px (logo + libellés + sections nommées).
  * - `rail` — rail 80px : icône + libellé court dessous.
  *
@@ -41,9 +41,9 @@ declare const process: { env: { NODE_ENV?: string } };
  * au survol** : on passe de l'un à l'autre par le bouton de bascule de l'en-tête
  * ou par `Ctrl/Cmd+Shift+E`.
  *
- * **Sur le web sous `BREAKPOINTS.lg` (tablette comprise), il n'y a pas de nav
+ * **Sur le web sous `BREAKPOINTS.laptop` (tablette comprise), il n'y a pas de nav
  * permanente** : la nav s'affiche dans un `Drawer` (`placement="left"`), par-dessus
- * le contenu, derrière un hamburger. Dans l'**application** sous `BREAKPOINTS.md`, il
+ * le contenu, derrière un hamburger. Dans l'**application** sous `BREAKPOINTS.tablet`, il
  * n'y a pas de SideNav : la `BottomNav` porte seule la navigation.
  */
 export type SideNavMode = "expanded" | "rail";
@@ -557,15 +557,15 @@ SideNavEmpty.displayName = "SideNav.Empty";
  * Mode uncontrolled : passer `defaultMode` (défaut `"expanded"`).
  *
  * ### Règles par plateforme (le DS ne pose aucune media query, l'app décide)
- * - **App sous `BREAKPOINTS.md`** : **pas de SideNav** — la `BottomNav` porte seule la
+ * - **App sous `BREAKPOINTS.tablet`** : **pas de SideNav** — la `BottomNav` porte seule la
  *   navigation.
- * - **Mobile navigateur web ET tablette (sous `BREAKPOINTS.lg`)** : la SideNav passe
+ * - **Mobile navigateur web ET tablette (sous `BREAKPOINTS.laptop`)** : la SideNav passe
  *   **par-dessus** le viewport, dans un `Drawer placement="left"` ouvert par un
  *   bouton hamburger (`Page.Bar.leading`) ; elle ne pousse jamais le contenu.
  *   Dans le Drawer, utiliser `<SideNav.Header showToggle={false} />` — il n'y a
  *   pas de rail à ce format. La tablette suit **exactement** la règle du mobile
  *   web : elle n'a pas la largeur d'un rail de 80px ET d'un contenu confortable.
- * - **Desktop (à partir de `BREAKPOINTS.lg`)** : la nav est **permanente** et ne
+ * - **Desktop (à partir de `BREAKPOINTS.laptop`)** : la nav est **permanente** et ne
  *   disparaît jamais. `expanded` (240px) ou **`rail` (80px)** ; le rail est
  *   **fixe** : il ne s'agrandit pas au survol, on bascule par le bouton de la
  *   nav ou `Ctrl/Cmd+Shift+E` (`expanded` ⇄ `rail`, choix **persisté par
@@ -633,9 +633,9 @@ SideNavProvider.displayName = "SideNav.Provider";
 /**
  * SideNav — Comete Design System
  *
- * Navigation latérale composable, **permanente sur desktop** (dès `BREAKPOINTS.lg`) :
+ * Navigation latérale composable, **permanente sur desktop** (dès `BREAKPOINTS.laptop`) :
  * `expanded` (240px) ou `rail` (80px), jamais masquée et jamais agrandie au
- * survol. Sous `BREAKPOINTS.lg` (tablette comprise), l'app l'affiche dans un `Drawer`
+ * survol. Sous `BREAKPOINTS.laptop` (tablette comprise), l'app l'affiche dans un `Drawer`
  * plutôt que de la rendre en permanence. Lit son mode depuis le
  * `<SideNav.Provider>` parent — à placer à l'intérieur de celui-ci.
  *

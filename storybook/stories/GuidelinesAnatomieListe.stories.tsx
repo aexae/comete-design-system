@@ -96,8 +96,8 @@ const ZONES: Zone[] = [
   {
     n: "2",
     el: "SideNav",
-    note: `Le menu de gauche : déployé (240 px, mode expanded) ou réduit en rail (80 px, mode rail), jamais agrandi au survol ; le bouton de bascule est dans son en-tête. Il est permanent dans l'application dès md (${BREAKPOINTS.md} px) et sur le web dès lg (${BREAKPOINTS.lg} px). Sur le web en dessous de lg, il disparaît de l'écran : on l'ouvre dans un Drawer depuis le hamburger du Page.Bar. Dans l'application sous md, il n'y en a pas : la BottomNav le remplace.`,
-    tech: `SideNav + SideNav.Provider (mode expanded / rail) : application ≥ md (${BREAKPOINTS.md} px), web ≥ lg (${BREAKPOINTS.lg} px) ; web sous lg : Drawer placement="left" ; application sous md : BottomNav.`,
+    note: `Le menu de gauche : déployé (240 px, mode expanded) ou réduit en rail (80 px, mode rail), jamais agrandi au survol ; le bouton de bascule est dans son en-tête. Il est permanent dans l'application dès tablet (${BREAKPOINTS.tablet} px) et sur le web dès laptop (${BREAKPOINTS.laptop} px). Sur le web en dessous de lg, il disparaît de l'écran : on l'ouvre dans un Drawer depuis le hamburger du Page.Bar. Dans l'application sous tablet, il n'y en a pas : la BottomNav le remplace.`,
+    tech: `SideNav + SideNav.Provider (mode expanded / rail) : application ≥ tablet (${BREAKPOINTS.tablet} px), web ≥ laptop (${BREAKPOINTS.laptop} px) ; web sous laptop : Drawer placement="left" ; application sous tablet : BottomNav.`,
   },
   {
     n: "3",
@@ -295,7 +295,7 @@ const GLOSSAIRE: Array<{ term: string; def: string }> = [
   },
   {
     term: "SideNav",
-    def: `La navigation latérale : déployée (expanded) ou en rail ; permanente dans l'application dès md (${BREAKPOINTS.md} px) et sur le web dès lg (${BREAKPOINTS.lg} px), dans un Drawer sur le web en dessous.`,
+    def: `La navigation latérale : déployée (expanded) ou en rail ; permanente dans l'application dès tablet (${BREAKPOINTS.tablet} px) et sur le web dès laptop (${BREAKPOINTS.laptop} px), dans un Drawer sur le web en dessous.`,
   },
   {
     term: "Liste de section",
@@ -636,7 +636,7 @@ function GuidelinesAnatomie(): ReactElement {
 
               <Grid gap="300">
                 {ZONES.map((z) => (
-                  <Grid.Col key={z.n} span={{ mobile: 12, desktop: 6 }}>
+                  <Grid.Col key={z.n} span={{ mobile: 12, laptop: 6 }}>
                     <Cluster gap="150" align="start" style={{ flexWrap: "nowrap" }}>
                       <Num n={z.n} />
                       <Stack gap="050">
@@ -675,7 +675,7 @@ function GuidelinesAnatomie(): ReactElement {
               </Text>
               <Grid gap="300">
                 {ACCUEIL_ITEMS.map((it) => (
-                  <Grid.Col key={it.el} span={{ mobile: 12, desktop: 6 }}>
+                  <Grid.Col key={it.el} span={{ mobile: 12, laptop: 6 }}>
                     <Stack gap="050">
                       <Text size="medium" weight="bold" as="span">
                         {it.el}
@@ -709,7 +709,7 @@ function GuidelinesAnatomie(): ReactElement {
               </Heading>
               <Grid gap="300">
                 {rules.map((r, i) => (
-                  <Grid.Col key={r.n} span={{ mobile: 12, desktop: 6 }}>
+                  <Grid.Col key={r.n} span={{ mobile: 12, laptop: 6 }}>
                     <Stack gap="150">
                       {i >= 2 && <Divider />}
                       <Cluster gap="150" align="baseline" style={{ flexWrap: "nowrap" }}>
@@ -752,7 +752,7 @@ function GuidelinesAnatomie(): ReactElement {
                 {CLIC_INTRO}
               </Text>
               <Grid gap="300">
-                <Grid.Col span={{ mobile: 12, desktop: 6 }}>
+                <Grid.Col span={{ mobile: 12, laptop: 6 }}>
                   <Stack gap="150">
                     <SectionMessage appearance="information" title={CLIC_CALLOUT_TITLE}>
                       {CLIC_CALLOUT}
@@ -767,7 +767,7 @@ function GuidelinesAnatomie(): ReactElement {
                     </TechNote>
                   </Stack>
                 </Grid.Col>
-                <Grid.Col span={{ mobile: 12, desktop: 6 }}>
+                <Grid.Col span={{ mobile: 12, laptop: 6 }}>
                   <Stack gap="100">
                     <Heading size="xsmall" as="h3">
                       {MODALE_TITLE}
@@ -789,7 +789,7 @@ function GuidelinesAnatomie(): ReactElement {
               </Heading>
               <Grid gap="300">
                 {GLOSSAIRE.map((g) => (
-                  <Grid.Col key={g.term} span={{ mobile: 12, desktop: 6 }}>
+                  <Grid.Col key={g.term} span={{ mobile: 12, laptop: 6 }}>
                     <Cluster gap="200" align="baseline" style={{ flexWrap: "nowrap" }}>
                       <div style={{ flex: "0 0 150px" }}>
                         <Text size="medium" weight="bold" as="span">

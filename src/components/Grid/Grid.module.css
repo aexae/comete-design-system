@@ -1,12 +1,11 @@
 /* ==========================================================================
    Grid — Comète Design System
-   CSS Grid responsive avec breakpoints mobile / tablet / desktop.
+   CSS Grid responsive avec breakpoints mobile / tablet / laptop.
    Les variables `--_grid-cols-{bp}` / `--_col-span-{bp}` / `--_col-start-{bp}`
    sont injectées par le composant. Cascade : chaque breakpoint hérite
    du précédent si non défini.
 
-   Seuils : `tablet` = 600px (= BREAKPOINTS.sm), `desktop` = 1200px
-   (= BREAKPOINTS.lg) — cf. la source unique src/tokens/breakpoints.ts. Une
+   Seuils : `tablet` = BREAKPOINTS.tablet, `laptop` = BREAKPOINTS.laptop — cf. la source unique src/tokens/breakpoints.ts. Une
    media query n'acceptant pas `var()`, ces valeurs sont reflétées « en dur »
    ici ; la synchro est garantie par src/tokens/breakpoints.test.ts.
    ========================================================================== */
@@ -31,7 +30,7 @@
 @media (min-width: 1200px) {
   .grid {
     grid-template-columns: repeat(
-      var(--_grid-cols-desktop, var(--_grid-cols-tablet, var(--_grid-cols-mobile, 12))),
+      var(--_grid-cols-laptop, var(--_grid-cols-tablet, var(--_grid-cols-mobile, 12))),
       minmax(0, 1fr)
     );
   }
@@ -64,16 +63,15 @@
 
 @media (min-width: 1200px) {
   .col {
-    grid-column: span
-      var(--_col-span-desktop, var(--_col-span-tablet, var(--_col-span-mobile, 1))) / span
-      var(--_col-span-desktop, var(--_col-span-tablet, var(--_col-span-mobile, 1)));
+    grid-column: span var(--_col-span-laptop, var(--_col-span-tablet, var(--_col-span-mobile, 1))) /
+      span var(--_col-span-laptop, var(--_col-span-tablet, var(--_col-span-mobile, 1)));
   }
   .col.hasStart {
     grid-column-start: var(
-      --_col-start-desktop,
+      --_col-start-laptop,
       var(--_col-start-tablet, var(--_col-start-mobile, auto))
     );
     grid-column-end: span
-      var(--_col-span-desktop, var(--_col-span-tablet, var(--_col-span-mobile, 1)));
+      var(--_col-span-laptop, var(--_col-span-tablet, var(--_col-span-mobile, 1)));
   }
 }
