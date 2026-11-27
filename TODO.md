@@ -1,5 +1,14 @@
 # TODO
 
+## Renommage `subtler` → `subtle`, tokens 0.50.0 (2026-11-27)
+
+- **Applications consommatrices** : toute application qui lit `--background-*-subtler-*`, `--background-selected-subtlest-*` ou qui passe `background="subtler"` à `Bleed` casse en silence (variable CSS non définie, pas d'erreur de build côté CSS). À chercher dans chaque application avant de monter en alpha.206.
+- **Storybook de dev et tokens périmés** : un Storybook lancé avant un bump de tokens continue de servir l'ancienne version (constaté : 0.41.0 servi deux jours après, badge au texte hérité). Rien ne le signale. Piste : afficher la version des tokens chargée dans la barre d'outils, ou un garde au démarrage.
+- **Variable CSS non définie** : `color: var(--token-absent)` retombe sur la couleur héritée sans erreur. Le garde `cssTokens.test.ts` couvre le code du DS, pas un environnement de dev périmé ni les applications.
+- **Branche `docs/figma-mcp-rules`** (autre session, trois commits breakpoints non fusionnés) : elle porte les anciens noms et la version alpha.205. À rebaser sur main, conflits attendus sur les CSS renommés et sur la version.
+- **Kit Power BI** : régénéré avec les tokens 0.50.0, sortie non comparée à la version livrée au consultant. À valider avant relivraison (s'ajoute à l'entrée existante sur les écarts de sortie).
+- **Texte sur `bold` en sombre** : toujours sous AA (encre sur palier 600), arbitrage en attente côté tokens.
+
 ## QuickActionsMenu, BottomNav et bump tokens 0.47.0 (2026-11-26)
 
 - **Fond de l'item, `surface` ou `background`** : `--quick-actions-menu-item-color-background-default` pointe vers `surface.default`, et les états survolé et pressé vers `background.neutral.subtlest.*`. On attend l'arbitrage d'Axel sur la doctrine (une surface n'est pas cliquable). Le point est aussi signalé dans la table de renommage des tokens.

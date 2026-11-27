@@ -38,7 +38,7 @@ function Box({
           position: "relative",
           width: 64,
           height: 32,
-          background: "var(--background-neutral-subtler-default)",
+          background: "var(--background-neutral-subtle-default)",
           borderRadius: borderRadius === "round" ? "1024px" : `${borderRadius}px`,
           display: "flex",
           alignItems: "center",
@@ -122,7 +122,7 @@ export const Default: Story = {
         position: "relative",
         width: 64,
         height: 32,
-        background: "var(--background-neutral-subtler-default)",
+        background: "var(--background-neutral-subtle-default)",
         borderRadius: 4,
       }}
     >

@@ -21,7 +21,7 @@ export type BleedColor =
   | "accentMagenta"
   | "accentBlueGrey"
   | "subtlest"
-  | "subtler"
+  | "subtle"
   | "bold";
 
 export interface BleedProps {

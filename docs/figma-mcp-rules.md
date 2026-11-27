@@ -74,7 +74,7 @@
 
 | Usage               | Pattern                                                                                                                         | Exemples                                                                                                          |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Fond d'élément      | `--background-<rôle>-<intensité>-<état>`                                                                                        | `--background-neutral-subtler-default`, `--background-comete-bold-hovered`                                        |
+| Fond d'élément      | `--background-<rôle>-<intensité>-<état>`                                                                                        | `--background-neutral-subtle-default`, `--background-comete-bold-hovered`                                         |
 | Surface (conteneur) | `--surface[-…]`                                                                                                                 | `--surface-default`, `--surface-raise`, `--surface-sunken`, `--surface-overlay`, `--surface-inverted`             |
 | Texte               | `--text-<rôle>[-état]`                                                                                                          | `--text-default-default`, `--text-subtle`, `--text-subtlest`, `--text-critical`, `--text-link`, `--text-inverted` |
 | Bordure             | `--border-<rôle>[-bold\|-subtle]`                                                                                               | `--border-default`, `--border-focused`, `--border-critical-bold`                                                  |
@@ -92,7 +92,7 @@
 Rôles de couleur : `neutral`, `comete` (bleu interactif Comète), `brand` (couleur du
 client, surchargée par `BrandProvider`), `success`, `warning`, `critical`,
 `information`, `accent-{purple,teal,turquoise,magenta,blue-grey}`, `day`/`night`.
-Intensités : `subtlest` < `subtler` < `bold` < `boldest`. États :
+Intensités : `subtlest` < `subtle` < `bold` < `boldest`. États :
 `default` / `hovered` / `pressed`.
 
 > **`comete` vs `brand`** : `comete-*` = éléments interactifs, jamais surchargés ;

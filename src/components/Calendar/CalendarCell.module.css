@@ -82,22 +82,22 @@ span.cell {
 button.cell:hover:not([data-disabled]):not([data-selected]):not([data-selection-start]):not(
     [data-selection-end]
   ) {
-  background-color: var(--background-neutral-subtler-hovered);
+  background-color: var(--background-neutral-subtle-hovered);
 }
 
 button.cell:active:not([data-disabled]) {
-  background-color: var(--background-neutral-subtler-pressed);
+  background-color: var(--background-neutral-subtle-pressed);
 }
 
 /* Hover fourni explicitement par React Aria (date grid) */
 .cell[data-hovered]:not([data-disabled]):not([data-selected]):not([data-selection-start]):not(
     [data-selection-end]
   ) {
-  background-color: var(--background-neutral-subtler-hovered);
+  background-color: var(--background-neutral-subtle-hovered);
 }
 
 .cell[data-pressed]:not([data-disabled]) {
-  background-color: var(--background-neutral-subtler-pressed);
+  background-color: var(--background-neutral-subtle-pressed);
 }
 
 /* ==========================================================================

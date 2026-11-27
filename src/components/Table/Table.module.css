@@ -131,17 +131,17 @@
 
 /* Row cliquable → cursor pointer + hover subtil */
 .row[data-clickable]:hover {
-  background-color: var(--background-neutral-subtler-hovered);
+  background-color: var(--background-neutral-subtle-hovered);
   cursor: pointer;
 }
 
 /* Row sélectionnée */
 .row[data-selected] {
-  background-color: var(--background-selected-subtlest-default);
+  background-color: var(--background-selected-subtle-default);
 }
 
 .row[data-selected][data-clickable]:hover {
-  background-color: var(--background-selected-subtlest-hovered);
+  background-color: var(--background-selected-subtle-hovered);
 }
 
 /* --------------------------------------------------------------------------

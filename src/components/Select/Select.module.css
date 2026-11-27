@@ -162,24 +162,24 @@
 }
 
 .option[data-hovered] .optionContent {
-  background-color: var(--background-neutral-subtler-hovered);
+  background-color: var(--background-neutral-subtle-hovered);
 }
 
 .option[data-pressed] .optionContent {
-  background-color: var(--background-neutral-subtler-pressed);
+  background-color: var(--background-neutral-subtle-pressed);
 }
 
 .option[data-selected] .optionContent {
-  background-color: var(--background-selected-subtlest-default);
+  background-color: var(--background-selected-subtle-default);
   box-shadow: inset var(--size025) 0 0 0 var(--border-selected);
 }
 
 .option[data-selected][data-hovered] .optionContent {
-  background-color: var(--background-selected-subtlest-hovered);
+  background-color: var(--background-selected-subtle-hovered);
 }
 
 .option[data-selected][data-pressed] .optionContent {
-  background-color: var(--background-selected-subtlest-pressed);
+  background-color: var(--background-selected-subtle-pressed);
 }
 
 .option[data-disabled] .optionContent {

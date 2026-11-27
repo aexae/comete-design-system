@@ -217,7 +217,7 @@
 
 /* Item sélectionné — fond information subtle. */
 .item[data-selected] {
-  background-color: var(--background-selected-subtlest-default);
+  background-color: var(--background-selected-subtle-default);
   color: var(--text-selected);
 }
 
@@ -277,21 +277,21 @@
 
 /* Hover — fond neutre subtle (non-sélectionné). */
 .itemButton[data-hovered]:not([data-selected]) {
-  background-color: var(--background-neutral-subtler-hovered);
+  background-color: var(--background-neutral-subtle-hovered);
 }
 
 /* Pressed — fond plus saturé. */
 .itemButton[data-pressed]:not([data-selected]) {
-  background-color: var(--background-neutral-subtler-pressed);
+  background-color: var(--background-neutral-subtle-pressed);
 }
 
 /* Hover quand sélectionné — assombrir le fond selected. */
 .itemButton[data-selected][data-hovered] {
-  background-color: var(--background-selected-subtlest-hovered);
+  background-color: var(--background-selected-subtle-hovered);
 }
 
 .itemButton[data-selected][data-pressed] {
-  background-color: var(--background-selected-subtlest-pressed);
+  background-color: var(--background-selected-subtle-pressed);
 }
 
 /* Focus-visible — outline conforme aux autres composants (anneau focused). */

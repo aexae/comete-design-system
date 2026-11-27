@@ -255,7 +255,7 @@ function IconWithDownload(props: IconComponentProps): ReactElement {
     padding: "3px 10px",
     border: "1px solid var(--border-default)",
     borderRadius: 5,
-    background: "var(--background-neutral-subtler-default)",
+    background: "var(--background-neutral-subtle-default)",
     color: "var(--text-subtlest-default)",
     cursor: "pointer",
     letterSpacing: "0.03em",
@@ -425,7 +425,7 @@ function IconCard({
         background: isCopied
           ? "var(--background-success-subtlest-default)"
           : isSelected
-            ? "var(--background-selected-subtlest-default)"
+            ? "var(--background-selected-subtle-default)"
             : "transparent",
         cursor: "pointer",
         width: "100%",
@@ -764,7 +764,7 @@ function IconDetailPanel({
                       gap: 6,
                       padding: 12,
                       background: isActive
-                        ? "var(--background-selected-subtlest-default)"
+                        ? "var(--background-selected-subtle-default)"
                         : "var(--surface-sunken-default)",
                       border: `1.5px solid ${isActive ? "var(--border-selected)" : "transparent"}`,
                       borderRadius: 6,

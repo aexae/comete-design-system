@@ -361,7 +361,7 @@ function NavLink({
         padding: "6px 12px",
         border: "none",
         borderLeft: active ? "2px solid var(--border-focused)" : "2px solid transparent",
-        background: active ? "var(--background-selected-subtlest-default)" : "transparent",
+        background: active ? "var(--background-selected-subtle-default)" : "transparent",
         color: active ? "var(--text-selected)" : "var(--text-subtle-default)",
         fontWeight: active ? 600 : 400,
         fontSize: 13,
@@ -412,7 +412,7 @@ function ColorFormatToggle({
               border: "none",
               borderLeft: i === 0 ? "none" : "1px solid var(--border-default)",
               background: active
-                ? "var(--background-selected-subtlest-default)"
+                ? "var(--background-selected-subtle-default)"
                 : "var(--background-field-default)",
               color: active ? "var(--text-selected)" : "var(--text-subtle-default)",
               fontSize: 12,
@@ -469,7 +469,7 @@ function TokenRow({
         padding: "6px 10px",
         border: `1px solid ${isAnyCopied ? "var(--border-focused)" : "transparent"}`,
         borderRadius: 6,
-        background: isAnyCopied ? "var(--background-selected-subtlest-default)" : "transparent",
+        background: isAnyCopied ? "var(--background-selected-subtle-default)" : "transparent",
         width: "100%",
         textAlign: "left",
         transition: "background 0.1s, border-color 0.1s",
@@ -493,7 +493,7 @@ function TokenRow({
             width: 28,
             height: 28,
             borderRadius: 6,
-            background: "var(--background-neutral-subtler-default)",
+            background: "var(--background-neutral-subtle-default)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -808,7 +808,7 @@ function AllTokensTab(): ReactElement {
             Cliquer sur le nom pour copier{" "}
             <code
               style={{
-                background: "var(--background-neutral-subtler-default)",
+                background: "var(--background-neutral-subtle-default)",
                 padding: "1px 4px",
                 borderRadius: 3,
               }}

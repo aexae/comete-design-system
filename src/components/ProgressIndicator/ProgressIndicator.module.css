@@ -95,7 +95,7 @@
 .dot.default,
 .dot.neutral,
 .dot.help {
-  background-color: var(--background-neutral-subtler-default);
+  background-color: var(--background-neutral-subtle-default);
 }
 
 .dot.inverted {

@@ -159,7 +159,7 @@ function IllustrationCard({
         padding: 16,
         border: `1.5px solid ${isCopied ? "var(--border-focused)" : "transparent"}`,
         borderRadius: 12,
-        background: isCopied ? "var(--background-selected-subtlest-default)" : "transparent",
+        background: isCopied ? "var(--background-selected-subtle-default)" : "transparent",
         cursor: "pointer",
         width: "100%",
         transition: "background 0.1s, border-color 0.1s",

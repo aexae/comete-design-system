@@ -15,7 +15,7 @@ declare const styles: {
   readonly "information": string;
   readonly "inline": string;
   readonly "neutral": string;
-  readonly "subtler": string;
+  readonly "subtle": string;
   readonly "subtlest": string;
   readonly "success": string;
   readonly "warning": string;

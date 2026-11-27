@@ -37,7 +37,7 @@
   width: 40px;
   height: 20px;
   border-radius: var(--radius300);
-  background-color: var(--background-neutral-subtler-default);
+  background-color: var(--background-neutral-subtle-default);
   transition: background-color var(--duration-fast) var(--easing-default);
 }
 

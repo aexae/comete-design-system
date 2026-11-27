@@ -177,7 +177,7 @@ button.stepContent:not(:disabled):hover .label:not([data-status="error"]) {
 }
 
 .indicator[data-status="upcoming"] {
-  background-color: var(--background-neutral-subtler-default);
+  background-color: var(--background-neutral-subtle-default);
   color: var(--text-subtle-default);
 }
 

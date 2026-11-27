@@ -182,7 +182,7 @@ export const Philosophie: Story = {
         </Text>
         <Stack direction="row" gap="150" wrap>
           <Swatch token="--background-brand-subtlest-default" label="subtlest" />
-          <Swatch token="--background-brand-subtler-default" label="subtler" />
+          <Swatch token="--background-brand-subtle-default" label="subtle" />
           <Swatch token="--background-brand-bold-default" label="bold" />
           <Swatch token="--background-brand-boldest-default" label="boldest" />
           <Swatch token="--border-brand-bold" label="border" />

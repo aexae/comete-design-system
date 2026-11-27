@@ -43,11 +43,11 @@
 }
 
 .button[data-hovered] {
-  background-color: var(--background-neutral-subtler-hovered);
+  background-color: var(--background-neutral-subtle-hovered);
 }
 
 .button[data-pressed] {
-  background-color: var(--background-neutral-subtler-pressed);
+  background-color: var(--background-neutral-subtle-pressed);
 }
 
 .button[data-focus-visible] {

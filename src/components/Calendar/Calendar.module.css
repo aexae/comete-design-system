@@ -71,11 +71,11 @@
 }
 
 .navButton[data-hovered]:not([data-disabled]) {
-  background-color: var(--background-neutral-subtler-hovered);
+  background-color: var(--background-neutral-subtle-hovered);
 }
 
 .navButton[data-pressed]:not([data-disabled]) {
-  background-color: var(--background-neutral-subtler-pressed);
+  background-color: var(--background-neutral-subtle-pressed);
 }
 
 .navButton[data-disabled] {

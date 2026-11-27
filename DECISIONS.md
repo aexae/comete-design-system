@@ -2,6 +2,22 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-27 — `subtler` devient `subtle`, tokens 0.50.0 (alpha.206, CASSANT)
+
+- **Décision** (Axel) : l'échelle d'emphase des fonds est `subtlest` / `subtle` / `bold` /
+  `boldest`. Le DS suit le renommage des tokens 0.50.0 : `--background-*-subtler-*` devient
+  `--background-*-subtle-*`, `--background-selected-subtlest-*` et
+  `--background-cycle-{day,night}-subtlest-*` deviennent `subtle`. Aucune valeur ne change.
+- **Raison** : cohérence avec `bold` (pas de `bolder`) et avec `text`, `border`, `icon`.
+- **`Bleed`** : la valeur `background="subtler"` devient `background="subtle"` pour suivre le
+  token. Choix de la session, dans l'esprit « harmoniser », cassant pour les applications.
+- **`BrandProvider`** : les variables générées pour la couleur client suivent les nouveaux noms.
+- **Kit Power BI** : passe des tokens 0.41.0 aux 0.50.0 (`--text-inverted-default`).
+- **Ordre** (règle permanente) : niveaux toujours triés `subtlest`, `subtle`, `bold`, `boldest`.
+- **Badge « noir sur bleu »** : pas un défaut du code. Le Storybook local tournait depuis le
+  25/11 et servait encore les tokens 0.41.0, où `--text-inverted-default` n'existe pas. Le
+  texte héritait alors de la couleur du bouton parent. Un redémarrage suffit.
+
 ## 2026-11-27 — Seuil compact de Page et Button sur `md`, AGENTS.md en renvoi
 
 - **Décision** (Axel) : la variante compacte de `Page.Bar` et le repli `collapseLabel` du

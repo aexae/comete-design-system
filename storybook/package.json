@@ -22,7 +22,7 @@
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
-    "@aexae/comete-design-tokens": "0.48.0",
+    "@aexae/comete-design-tokens": "0.50.0",
     "@aexae/comete-icons": "0.14.0",
     "@eslint/compat": "^2.1.1",
     "@eslint/js": "^10.0.1",
