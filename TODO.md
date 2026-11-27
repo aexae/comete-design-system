@@ -447,6 +447,16 @@ de référence est dans SharePoint › 7-Communication › `_Marque & Charte Com
   contournement par `Text` default souligné. Piste : couleur de lien dédiée aux fonds
   subtlest, ou règle d'usage dans les guidelines de `Card` et `SectionMessage`.
 
+- **Storybook dev : faux « Unable to index files … Could not parse import/exports with acorn »**
+  Vu le 24/11/2026 sur `SideNav`, `Snackbar`, `Statut` et `Text` (les quatre stories
+  modifiées par #382) après une mise à jour de `main` pendant que Storybook tournait.
+  Cause : course dans l'indexeur de Storybook 10.6.7 (`updateExtracted`). Un fichier
+  invalidé par le watcher entre la passe stories et la passe docs est relu par le
+  parseur MDX, qui échoue sur du TSX. Les fichiers sont sains (`storybook index` et
+  `tsc --noEmit` passent). Contournement : redémarrer Storybook. Piste : arrêter le
+  serveur de dev avant un `git pull` ou un changement de branche, surveiller un
+  correctif en amont lors du prochain bump de Storybook.
+
 - **Outillage : suites de la montée Storybook 10.6.8 et ESLint 10 (24/11/2026)**
   - `eslint-plugin-react` 7.37.5 et `eslint-plugin-jsx-a11y` 6.10.2 ne déclarent pas ESLint 10
     (peer non satisfait, `pnpm peers check`). Ils tournent grâce à `fixupPluginRules`
@@ -487,3 +497,29 @@ de référence est dans SharePoint › 7-Communication › `_Marque & Charte Com
   - Logos : les fichiers `comete-*` deviennent `comete-software-*` (logo et icône) et
     `comete-company-logo-column-*` (avec signature), `*-inverse` devient `*-inverted`.
     Les références d'images des rapports existants sont à mettre à jour.
+
+## Règles d'intégration Figma / MCP (2026-11-27)
+
+- ~~**`CLAUDE.md` en partie périmé**~~ : FAIT (Vite + `tsup --dts-only`, arborescence `src/`
+  complète, exports, MCP par défaut, priorité composant > sémantique > primitive).
+- **`AGENTS.md` dérive de `CLAUDE.md`** : copie manuelle du 23/10 pour Codex, jamais
+  resynchronisée (commandes `format`, MCP, priorité des tokens absents). Le remplacer par un
+  renvoi vers `CLAUDE.md` ou le générer depuis lui.
+- **Aucun mapping Code Connect** (`*.figma.tsx`) : le MCP ne peut pas relier les
+  instances `❖` aux composants du code. Piste : `/figma-code-connect` sur les composants
+  les plus utilisés (Button, Text, Stack, Icon, Card).
+- ~~**Breakpoints : noms et valeurs des tokens**~~ : FAIT côté tokens (PR
+  aexae/comete-design-tokens#10, 0.49.0 : `--breakpoint-sm/md/lg` = 600/900/1200).
+  Reste, une fois la 0.49.0 publiée : monter la dépendance du DS et ajouter dans
+  `breakpoints.test.ts` une garde `--breakpoint-*` == `BREAKPOINTS`.
+- **Seuil hors échelle à 767 px** : `Page.module.css` (`@container page (max-width: 767px)`)
+  et `Button.module.css` (`collapseLabel`) basculent à 768 px, valeur absente de
+  `BREAKPOINTS` et que `breakpoints.test.ts` croit bannie (il ne cherche que `768`). À
+  arbitrer : passer sur `md` (900) ou `sm` (600), ou ajouter un palier à l'échelle.
+- ~~**`vite.lib.config.ts`** : commentaire `libInjectCss` dupliqué~~ : FAIT (l'en-tête
+  citait aussi un `tsconfig.build.json` inexistant, corrigé).
+- **Clone local `../comete-icons` en 0.11.1** alors que le DS dépend de 0.14.0 : le
+  dépôt local semble en retard (pull à faire avant toute synchro d'icônes).
+- **`git pull` avec autostash** : le 27/11 un pull a laissé `DECISIONS.md` en conflit
+  (`Updated upstream` / `Stashed changes`) et un `.git/REBASE_HEAD` du 15/11 traîne.
+  Vérifier qu'aucun rebase n'est en suspens (`git status`), puis le supprimer.

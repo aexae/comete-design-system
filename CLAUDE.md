@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+Règles d'intégration Figma (MCP) : @docs/figma-mcp-rules.md
+
 ## Commandes essentielles
 
 ```bash
@@ -40,7 +42,9 @@ pnpm clean
 - **React Aria** (`react-aria-components`) — primitives accessibles headless
 - **CSS Modules** — styling scopé, 100% design tokens, zéro valeur hardcodée
 - **@aexae/comete-design-tokens** (peer dep) — CSS custom properties (primitives + semantic light/dark)
-- **tsup** — bundler ESM uniquement, `splitting: false`. React, react-dom, react-aria-components sont externalisés
+- **Vite** (mode library, `vite.lib.config.ts`) — JS + CSS en ESM, `preserveModules`, CSS injectée par `vite-plugin-lib-inject-css`, bannière `"use client"`. Tout import « bare » (node_modules) est externalisé
+- **tsup** (`--dts-only`, `tsup.config.ts`) — uniquement les `.d.ts` bundlés par point d'entrée
+- Chaîne `pnpm build` : `css-types` → Vite → `scripts/plainify-css.mjs` → tsup → `scripts/smoke-dist.mjs`
 - **Vitest** + jsdom + @testing-library/react pour les tests
 - **Storybook 10** dans `storybook/` (workspace pnpm séparé)
 
@@ -48,15 +52,15 @@ pnpm clean
 
 ```
 src/
-├── components/          # Composants React
-│   └── Button/          # Premier composant (React Aria + CSS Modules)
-│       ├── Button.tsx
-│       ├── Button.module.css
-│       ├── Button.test.tsx
-│       └── index.ts
-├── providers/           # ThemeProvider (data-theme light/dark)
-│   └── ThemeProvider/
-├── hooks/               # useTheme
+├── components/          # ~60 composants, un dossier par composant (voir docs/figma-mcp-rules.md §3)
+│   ├── Button/          # Button.tsx, Button.module.css(.d.ts), Button.test.tsx, index.ts
+│   ├── …
+│   └── _states/         # DataStateMessage (états de données partagés)
+├── contexts/            # DensityContext (compact/default/touch), InputContext (disabled → icônes)
+├── hooks/               # useTheme, useHoverIntent, useSlidingIndicator, useTableSelection
+├── providers/           # ThemeProvider (data-theme), BrandProvider (couleur client, OKLCH)
+├── styles/              # typography.module.css, scrollbar.module.css (partagés)
+├── tokens/              # BREAKPOINTS + gardes anti-drift (cssTokens, breakpoints, tokens dépréciés)
 ├── css-modules.d.ts     # Déclaration TS pour les imports .module.css
 └── index.ts             # Entry point principal
 ```
@@ -65,8 +69,8 @@ src/
 
 - `.` → `src/index.ts` — export principal (composants + providers + hooks)
 - `./components` → composants uniquement
-- `./providers` → ThemeProvider
-- `./hooks` → useTheme
+- `./providers` → ThemeProvider, BrandProvider
+- `./hooks` → useTheme, useHoverIntent, useSlidingIndicator, useTableSelection
 
 ### Thème
 
@@ -92,7 +96,8 @@ ComponentName/
 
 - **Aucune valeur hardcodée** — tout passe par les CSS custom properties de `@aexae/comete-design-tokens`
 - Les CSS Modules utilisent les data-attributes React Aria : `[data-hovered]`, `[data-pressed]`, `[data-focus-visible]`, `[data-disabled]`
-- Build : `typed-css-modules` génère les `.d.ts` pour les imports CSS Modules avant tsup
+- Build : `typed-css-modules` (`pnpm css-types`) génère les `.module.css.d.ts` avant Vite
+- Variables CSS posées par le TSX : préfixe `--_` ; toute autre variable runtime se déclare dans `RUNTIME_PROPERTIES` de `src/tokens/cssTokens.test.ts`
 
 ### Tests
 
@@ -119,12 +124,15 @@ git checkout -b component-name   # kebab-case du nom du composant
 
 ### 1. Extraction Figma
 
-Le token Figma est dans `.env` sous la clé `FIGMA_TOKEN`. Le fichier du DS est `YO9cW75K8aLcM5BbojZAqB`.
+Le fichier du DS est `YO9cW75K8aLcM5BbojZAqB`. **Voie par défaut : le MCP Figma**
+(`get_design_context`, `get_screenshot`, `get_variable_defs`), selon
+`docs/figma-mcp-rules.md`. Le REST API reste utile pour les extractions massives
+(audit de toutes les variantes) ; le token est dans `.env` sous la clé `FIGMA_TOKEN`.
 
 ```bash
 curl -s -H "X-Figma-Token: $FIGMA_TOKEN" \
   "https://api.figma.com/v1/files/YO9cW75K8aLcM5BbojZAqB/nodes?ids=NODE_ID" \
-  | python3 -m json.tool > /tmp/component_node.json
+  | python3 -m json.tool > "${TMPDIR:-/tmp}/component_node.json"
 ```
 
 Extraire via des scripts Python inline (`python3 -c "..."`) :
@@ -160,13 +168,13 @@ for t,v in re.findall(r'(--[\w-]+)\s*:\s*(#[0-9a-fA-F]{6})\s*;', root):
 "
 ```
 
-**Priorité tokens** : toujours préférer les tokens sémantiques (`--background-*`, `--text-*`, `--border-*`) aux tokens primitifs (`--cool-grey-*`, `--red-*`, etc.).
+**Priorité tokens** : token de composant (`--button-*`, `--side-nav-*`…) > token sémantique (`--background-*`, `--text-*`, `--border-*`) > primitive (`--cool-grey-*`, `--space*`…). Sans correspondance, demander avant de créer un token (dans `comete-design-tokens`).
 
 ### 2. Fichiers à créer
 
 **`src/components/ComponentName/ComponentName.tsx`**
 
-- `export function ComponentName(props): ReactElement` (pas de forwardRef sauf si ref explicitement nécessaire)
+- `export function ComponentName(props): ReactElement` (pas de forwardRef sauf si ref explicitement nécessaire, comme `Button`)
 - Utiliser React Aria (`react-aria-components`) uniquement pour les composants interactifs
 - Types exportés : `ComponentNameAppearance`, `ComponentNameSize`, `ComponentNameProps`
 - JSDoc sur la fonction et les props non évidentes

@@ -1,5 +1,5 @@
 // Build de la librairie (JS + CSS) via Vite en mode library.
-// Les .d.ts sont émis séparément par `tsc -p tsconfig.build.json`.
+// Les .d.ts sont émis à part, en bundle, par `tsup --dts-only` (voir tsup.config.ts).
 //
 // Pourquoi Vite : c'est le même pipeline CSS que les tests (vitest) et Storybook.
 // tsup ne gère pas les CSS Modules (il émet la CSS en global et vide l'objet
@@ -14,10 +14,6 @@ export default defineConfig({
   // libInjectCss : injecte un `import "./x.css"` (side-effect) en tête de chaque
   // chunk ayant du CSS associé → la feuille de style se charge automatiquement
   // quand on importe un composant (sinon les .css sont émises mais orphelines).
-  // libInjectCss : injecte un `import "./x.css"` (side-effect) en tête de chaque
-  // chunk ayant du CSS associé → la feuille de style se charge automatiquement
-  // quand on importe un composant (sinon les .css sont émises mais orphelines).
-  // Les .d.ts sont émis à part, en bundle, par `tsup --dts-only` (voir tsup.config.ts).
   plugins: [react(), libInjectCss()],
   css: {
     modules: {
