@@ -2,6 +2,33 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-27 — Seuil compact de Page et Button sur `md`, AGENTS.md en renvoi
+
+- **Décision** (Axel) : la variante compacte de `Page.Bar` et le repli `collapseLabel` du
+  `Button` basculent sous `BREAKPOINTS.md` (900 px, `@container (max-width: 899px)`) au lieu
+  de 768 px (alpha.205). Le seuil 768 n'appartenait pas à l'échelle 600/900/1200.
+- **Décision** (Axel) : `AGENTS.md` n'est plus une copie de `CLAUDE.md` mais un renvoi vers lui.
+  **Raison** : la copie du 23/10 avait dérivé (commandes, MCP, priorité des tokens).
+
+## 2026-11-27 — Règles d'intégration Figma via MCP
+
+**Décision** : les règles d'intégration Figma → code vivent dans `docs/figma-mcp-rules.md`,
+importé par `CLAUDE.md` (`@docs/figma-mcp-rules.md`). Le MCP Figma devient la voie par
+défaut ; l'appel REST (`curl` + `FIGMA_TOKEN`) reste réservé aux extractions massives.
+
+**Contexte / raison** : demande de génération des règles de design system pour le MCP
+Figma. Un fichier séparé évite d'alourdir `CLAUDE.md` et se relit indépendamment.
+
+**Compléments** (Axel, même jour) :
+
+- **Priorité des tokens** : token de composant > token sémantique > primitive (inversion
+  de l'ancienne règle « sémantique d'abord »), dans `CLAUDE.md` et les règles Figma.
+- **Versionnement** : `docs/figma-mcp-rules.md` est versionné malgré la règle `/docs/*`
+  du `.gitignore` (exception ajoutée).
+- **Breakpoints** : les tokens deviennent `--breakpoint-sm/md/lg` aux valeurs de
+  `BREAKPOINTS` (600/900/1200), tokens 0.49.0. `BREAKPOINTS` reste la source côté DS :
+  une condition `@media` / `@container` ne lit pas `var()`.
+
 ## 2026-11-26 — QuickActions devient QuickActionsMenu, la rangée devient QuickActionsItem
 
 - **Décision** (Axel) : le composant prend le nom de `QuickActionsMenu`, et sa rangée celui de `QuickActionsItem`, en code, dans Figma et dans les tokens (0.48.0, famille `quick-actions-menu`, enfant `item`).

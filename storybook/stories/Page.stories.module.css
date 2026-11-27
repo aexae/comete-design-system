@@ -4,7 +4,7 @@
 /* Action secondaire (Exporter) : masquée sous le breakpoint compact — repliée
    dans le menu débordement « ⋯ », comme la maquette Figma. Sélecteur
    `button.hideUnderCompact` (0,1,1) pour battre `.button` (0,1,0) sans !important. */
-@container page (max-width: 767px) {
+@container page (max-width: 899px) {
   button.hideUnderCompact {
     display: none;
   }
@@ -14,7 +14,7 @@
    mobile/compact, les critères actifs sont portés par le badge du bouton
    « Filtres » et la feuille (drill-down) — la rangée « FILTRES : … » est une
    affordance desktop uniquement. Bloc générique (pas un bouton). */
-@container page (max-width: 767px) {
+@container page (max-width: 899px) {
   .hideBlockUnderCompact {
     display: none;
   }

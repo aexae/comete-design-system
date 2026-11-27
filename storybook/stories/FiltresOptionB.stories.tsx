@@ -70,7 +70,7 @@ function FiltresOptionB({ role, initial }: { role?: Role; initial?: Filters }): 
   const canSaveViews = role !== "partenaire";
   // Le corps d'un tag actif rouvre le panneau sur sa facette.
   const panel = useFiltresPanelControl();
-  // Sous 768px, la recette adopte la forme mobile — MÊME écran, aucun saut de
+  // Sous 900px, la recette adopte la forme mobile — MÊME écran, aucun saut de
   // layout : la recherche remplit la ligne, le bouton Filtres se replie en icône
   // + feuille (`collapseLabel`), les affordances desktop se masquent (« Filtres
   // enregistrés » vit dans la feuille ; les critères actifs sont portés par le
@@ -79,7 +79,7 @@ function FiltresOptionB({ role, initial }: { role?: Role; initial?: Filters }): 
   // `container-type` sur la racine : le repli du bouton Filtres s'évalue sur la
   // largeur du conteneur (même seuil que `narrow`).
   const rootRef = useRef<HTMLDivElement>(null);
-  const narrow = useBelowWidth(rootRef, 768);
+  const narrow = useBelowWidth(rootRef, 900);
   const results = useMemo(
     () => filteredAgents(f, dataset.agents, dataset.applySousTraitants),
     [f, dataset]

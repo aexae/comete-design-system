@@ -52,7 +52,7 @@
 /* ==========================================================================
    Page.Bar — barre de page unifiée
    Zones leading / title / trailing. Variante `large` par défaut ; `compact`
-   (56px, épinglée) sous 768px ou forcée via .compact. Tokens uniquement.
+   (56px, épinglée) sous 900px (BREAKPOINTS.md) ou forcée via .compact. Tokens uniquement.
    ========================================================================== */
 
 .bar {
@@ -64,7 +64,7 @@
   flex-shrink: 0;
 
   /* Métriques de la variante compacte — SOURCE UNIQUE, consommée à la fois par
-     la variante responsive (@container < 768px) et par le modificateur forcé
+     la variante responsive (@container < 900px) et par le modificateur forcé
      `.bar.compact`, pour éviter toute dérive entre les deux. */
   --bar-compact-min-height: var(--page-bar-size-compact-min-height);
   --bar-compact-pad-block: var(--page-bar-spacing-compact-padding-y);
@@ -93,9 +93,9 @@
 }
 
 /* Compact — variante épinglée. Déclarations partagées par le défaut
-   responsive (Page < 768px) et le modificateur forcé .compact.
+   responsive (Page < 900px) et le modificateur forcé .compact.
    Container query : réagit à la largeur de la Page, pas du viewport. */
-@container page (max-width: 767px) {
+@container page (max-width: 899px) {
   .bar:not(.large) {
     position: sticky;
     top: 0;
@@ -132,7 +132,7 @@
   letter-spacing: var(--bar-compact-title-tracking);
 }
 
-/* Large forcée — neutralise les bribes compact même sous 768px. */
+/* Large forcée — neutralise les bribes compact même sous 900px. */
 .bar.large {
   position: static;
   min-height: auto;

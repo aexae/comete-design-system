@@ -18,9 +18,9 @@ import { INITIAL_VIEWPORTS } from "storybook/viewport";
 // Presets viewport Comète — nommés selon nos usages métier (sécurité privée).
 // Proposés en tête de la liste, avant les presets Storybook par défaut.
 // NB : ce sont des tailles de canvas Storybook (config outillage), pas des
-// design tokens. Les *breakpoints* responsives des composants (ex. Table
-// `hideBelow` : 480 / 768 / 1024) devraient à terme vivre en tokens
-// `--breakpoint-*` dans @aexae/comete-design-tokens (aucun n'existe à ce jour).
+// design tokens. Les *breakpoints* responsives des composants sont
+// `BREAKPOINTS` (600 / 900 / 1200, src/tokens/breakpoints.ts), miroir des
+// tokens `--breakpoint-sm/md/lg` de @aexae/comete-design-tokens (>= 0.49.0).
 
 const COMETE_VIEWPORTS = {
   cometeMobileAgent: {
