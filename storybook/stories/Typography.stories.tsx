@@ -432,7 +432,7 @@ const css = {
     fontSize: 11,
     fontFamily: "var(--font-family-code), monospace",
     color: "var(--text-subtlest-default)",
-    background: "var(--background-neutral-subtler-default)",
+    background: "var(--background-neutral-subtle-default)",
     borderRadius: 4,
     padding: "1px 5px",
     display: "inline-block",
@@ -641,7 +641,7 @@ function FontFamilySection(): ReactElement {
                 fontSize: 11,
                 fontFamily: "var(--font-family-code), monospace",
                 color: "var(--text-subtle-default)",
-                background: "var(--background-neutral-subtler-default)",
+                background: "var(--background-neutral-subtle-default)",
                 padding: "2px 6px",
                 borderRadius: 4,
               }}

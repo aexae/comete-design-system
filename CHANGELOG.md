@@ -9,6 +9,17 @@ entre versions alpha.
 
 ## [Unreleased]
 
+### Changements cassants (BREAKING, alpha.206)
+
+- **Tokens 0.50.0, `subtler` devient `subtle`** : l'échelle d'emphase des fonds est désormais
+  `subtlest` / `subtle` / `bold` / `boldest`. Les applications remplacent
+  `--background-*-subtler-*` par `--background-*-subtle-*`, `--background-selected-subtlest-*`
+  par `--background-selected-subtle-*` et `--background-cycle-{day,night}-subtlest-*` par
+  `--background-cycle-{day,night}-subtle-*`. Aucune valeur ne change. Le peer
+  `@aexae/comete-design-tokens` passe à `^0.50.0`.
+- **`Bleed`** : `background="subtler"` devient `background="subtle"`.
+- **`BrandProvider`** : les variables de marque générées suivent les nouveaux noms.
+
 ### Modifié (alpha.205)
 
 - **Seuil responsive de `Page` et `Button` aligné sur `BREAKPOINTS.md` (900 px)** : la variante

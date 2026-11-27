@@ -120,7 +120,7 @@ const LINK_STYLE = {
 
 const PILL_STYLE = {
   color: "var(--text-information-default)",
-  background: "var(--background-selected-subtlest-default)",
+  background: "var(--background-selected-subtle-default)",
   border: "1px solid var(--border-subtle)",
   borderRadius: "var(--radius150)",
   padding: "0.1em 0.5em",
@@ -181,7 +181,7 @@ function CodeChip({ children }: { children: ReactNode }): ReactElement {
       style={{
         fontFamily: "var(--font-family-code), monospace",
         fontSize: "0.85em",
-        background: "var(--background-neutral-subtler-default)",
+        background: "var(--background-neutral-subtle-default)",
         color: "var(--text-default-default)",
         border: "1px solid var(--border-subtle)",
         borderRadius: "var(--radius150)",

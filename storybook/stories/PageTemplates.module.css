@@ -171,7 +171,7 @@
 /* ---- Placeholder ---- */
 
 .placeholder {
-  background: var(--background-neutral-subtler-default);
+  background: var(--background-neutral-subtle-default);
   border-radius: var(--radius050);
   display: flex;
   align-items: center;
@@ -246,7 +246,7 @@
 .progressTrack {
   height: 4px;
   border-radius: 2px;
-  background: var(--background-neutral-subtler-default);
+  background: var(--background-neutral-subtle-default);
   overflow: hidden;
 }
 

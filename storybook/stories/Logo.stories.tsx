@@ -538,7 +538,7 @@ function LogoCard({
     background: isInverted
       ? "var(--surface-inverted)"
       : isCopied
-        ? "var(--background-selected-subtlest-default)"
+        ? "var(--background-selected-subtle-default)"
         : "transparent",
     transition: "background 0.12s, border-color 0.12s",
   };
@@ -682,7 +682,7 @@ function LogoExplorer(): ReactElement {
   const tabBtnStyle = (active: boolean): CSSProperties => ({
     ...controlStyle,
     background: active
-      ? "var(--background-selected-subtlest-default)"
+      ? "var(--background-selected-subtle-default)"
       : "var(--background-field-default)",
     borderColor: active ? "var(--border-focused)" : "var(--border-default)",
     color: active ? "var(--text-selected)" : "var(--text-default-default)",

@@ -68,16 +68,16 @@
 
 /* Hover — aucun état sélectionné */
 .weekRow:not([data-disabled]):not([data-state]):hover {
-  background-color: var(--background-neutral-subtler-hovered);
+  background-color: var(--background-neutral-subtle-hovered);
 }
 
 .weekRow:not([data-disabled]):not([data-state]):active {
-  background-color: var(--background-neutral-subtler-pressed);
+  background-color: var(--background-neutral-subtle-pressed);
 }
 
 /* Semaine en cours (contient aujourd'hui) */
 .weekRow[data-current-week]:not([data-state]):not([data-disabled]) {
-  background-color: var(--background-neutral-subtler-default);
+  background-color: var(--background-neutral-subtle-default);
 }
 
 /* Désactivé */

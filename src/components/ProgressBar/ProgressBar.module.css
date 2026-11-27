@@ -17,7 +17,7 @@
   flex: 1 1 0%;
   min-width: 0;
   height: var(--size100);
-  background-color: var(--background-neutral-subtler-default);
+  background-color: var(--background-neutral-subtle-default);
   border-radius: var(--radius-round);
   overflow: hidden;
 }

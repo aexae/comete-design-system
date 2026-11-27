@@ -27,11 +27,11 @@
 
   /* Background states (via React Aria data-attributes) */
   &[data-hovered] .itemContainer {
-    background: var(--background-neutral-subtler-hovered);
+    background: var(--background-neutral-subtle-hovered);
   }
 
   &[data-pressed] .itemContainer {
-    background: var(--background-neutral-subtler-pressed);
+    background: var(--background-neutral-subtle-pressed);
   }
 
   &[data-disabled] {
@@ -44,21 +44,21 @@
 
   /* Submenu trigger open state */
   &[data-open] .itemContainer {
-    background: var(--background-neutral-subtler-hovered);
+    background: var(--background-neutral-subtle-hovered);
   }
 
   /* Selected states */
   &[data-selected] .itemContainer {
-    background: var(--background-selected-subtlest-default);
+    background: var(--background-selected-subtle-default);
     box-shadow: inset 2px 0 0 0 var(--border-selected);
   }
 
   &[data-selected][data-hovered] .itemContainer {
-    background: var(--background-selected-subtlest-hovered);
+    background: var(--background-selected-subtle-hovered);
   }
 
   &[data-selected][data-pressed] .itemContainer {
-    background: var(--background-selected-subtlest-pressed);
+    background: var(--background-selected-subtle-pressed);
   }
 
   &[data-selected][data-disabled] .itemContainer {

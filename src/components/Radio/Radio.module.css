@@ -125,7 +125,7 @@
   color: var(--background-neutral-bold-hovered);
 }
 .radio:not([data-disabled]):not([data-selected])[data-hovered] .indicator::before {
-  background-color: var(--background-neutral-subtler-hovered);
+  background-color: var(--background-neutral-subtle-hovered);
 }
 
 /* Hover — selected */
@@ -141,7 +141,7 @@
   color: var(--background-neutral-bold-pressed);
 }
 .radio:not([data-disabled]):not([data-selected])[data-pressed] .indicator::before {
-  background-color: var(--background-neutral-subtler-pressed);
+  background-color: var(--background-neutral-subtle-pressed);
 }
 
 /* Pressed — selected */

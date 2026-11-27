@@ -94,7 +94,7 @@
 }
 .checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-hovered]
   .indicator::before {
-  background-color: var(--background-neutral-subtler-hovered);
+  background-color: var(--background-neutral-subtle-hovered);
 }
 
 /* Hover — checked / indeterminate */
@@ -114,7 +114,7 @@
 }
 .checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-pressed]
   .indicator::before {
-  background-color: var(--background-neutral-subtler-pressed);
+  background-color: var(--background-neutral-subtle-pressed);
 }
 
 /* Pressed — checked / indeterminate */

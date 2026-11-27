@@ -78,12 +78,12 @@
 
 /* Hover */
 .item[data-hovered]:not([data-selected]):not([data-disabled]) {
-  background: var(--background-neutral-subtler-hovered);
+  background: var(--background-neutral-subtle-hovered);
 }
 
 /* Pressed */
 .item[data-pressed]:not([data-selected]):not([data-disabled]) {
-  background: var(--background-neutral-subtler-pressed);
+  background: var(--background-neutral-subtle-pressed);
 }
 
 /* --------------------------------------------------------------------------

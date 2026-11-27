@@ -48,8 +48,8 @@
 .subtlest {
   background-color: var(--background-neutral-subtlest-default);
 }
-.subtler {
-  background-color: var(--background-neutral-subtler-default);
+.subtle {
+  background-color: var(--background-neutral-subtle-default);
 }
 .bold {
   background-color: var(--background-neutral-bold-default);
@@ -105,7 +105,7 @@
 .bordered.subtlest {
   border-color: var(--border-neutral);
 }
-.bordered.subtler {
+.bordered.subtle {
   border-color: var(--border-neutral);
 }
 .bordered.bold {

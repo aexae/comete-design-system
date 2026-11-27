@@ -51,7 +51,7 @@
   border-color: var(--border-default);
 }
 .subtle.color-neutral {
-  background-color: var(--background-neutral-subtler-default);
+  background-color: var(--background-neutral-subtle-default);
 }
 .bold.color-neutral {
   background-color: var(--background-neutral-bold-default);
@@ -276,7 +276,7 @@
 /* ---- Hover background : subtle ---- */
 
 .subtle.color-neutral[data-interactive]:not([data-dragging]):hover {
-  background-color: var(--background-neutral-subtler-hovered);
+  background-color: var(--background-neutral-subtle-hovered);
 }
 .subtle.color-comete[data-interactive]:not([data-dragging]):hover {
   background-color: var(--background-comete-subtlest-hovered);
@@ -363,7 +363,7 @@
 }
 
 .subtle.color-neutral[data-interactive]:not([data-dragging]):active {
-  background-color: var(--background-neutral-subtler-pressed);
+  background-color: var(--background-neutral-subtle-pressed);
 }
 .subtle.color-comete[data-interactive]:not([data-dragging]):active {
   background-color: var(--background-comete-subtlest-pressed);

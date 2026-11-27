@@ -114,7 +114,7 @@ describe("Bleed", () => {
       "accentMagenta",
       "accentBlueGrey",
       "subtlest",
-      "subtler",
+      "subtle",
       "bold",
     ] as const;
     for (const c of colors) {

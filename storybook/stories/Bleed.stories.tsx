@@ -85,7 +85,7 @@ const meta = {
         "accentMagenta",
         "accentBlueGrey",
         "subtlest",
-        "subtler",
+        "subtle",
         "bold",
       ],
     },

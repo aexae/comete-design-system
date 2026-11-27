@@ -156,9 +156,9 @@ export const AllStates: StoryObj = {
     >
       <CellPreview label="Défaut" />
 
-      <CellPreview label="Survol" background="var(--background-neutral-subtler-hovered)" />
+      <CellPreview label="Survol" background="var(--background-neutral-subtle-hovered)" />
 
-      <CellPreview label="Pressé" background="var(--background-neutral-subtler-pressed)" />
+      <CellPreview label="Pressé" background="var(--background-neutral-subtle-pressed)" />
 
       <CellPreview
         label="Aujourd'hui"

@@ -188,14 +188,14 @@
    ========================================================================== */
 
 .subtle.neutral {
-  background: var(--background-neutral-subtler-default);
+  background: var(--background-neutral-subtle-default);
   color: var(--text-default-default);
 }
 .subtle.neutral.interactive:hover {
-  background: var(--background-neutral-subtler-hovered);
+  background: var(--background-neutral-subtle-hovered);
 }
 .subtle.neutral.interactive:active {
-  background: var(--background-neutral-subtler-pressed);
+  background: var(--background-neutral-subtle-pressed);
 }
 
 .subtle.comete {
