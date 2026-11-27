@@ -2,6 +2,16 @@
 
 > Journal des décisions (date, décision, contexte / raison).
 
+## 2026-11-27 — Icône d'ouverture / fermeture de la navigation
+
+- **Décision** (Axel) : plus d'icône hamburger (`Menu`). À toutes les largeurs, l'icône montre
+  l'action : `LeftPanelOpen` quand la nav est masquée ou en rail (Page.Bar sous `laptop`, bascule
+  rail → déployé), `LeftPanelClose` quand elle est visible (bascule déployé → rail, fermeture du
+  `Drawer` depuis l'en-tête de la nav via `SideNav.Header onClose`).
+- **Figma** : les `Page.Bar` de « ◆ Exemples de pages » (tablette, mobile) utilisent
+  `LeftPanelOpen` (vérifié le 27/11). Reste à dessiner le bouton `LeftPanelClose` dans l'en-tête
+  de la nav affichée dans un Drawer.
+
 ## 2026-11-27 — Échelle de breakpoints watch → tv, toutes les largeurs branchées dessus
 
 - **Décision** (Axel) : une seule échelle, mêmes noms dans Figma (`base/breakpoints`), les

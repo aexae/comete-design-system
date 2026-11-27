@@ -43,7 +43,7 @@ declare const process: { env: { NODE_ENV?: string } };
  *
  * **Sur le web sous `BREAKPOINTS.laptop` (tablette comprise), il n'y a pas de nav
  * permanente** : la nav s'affiche dans un `Drawer` (`placement="left"`), par-dessus
- * le contenu, derrière un hamburger. Dans l'**application** sous `BREAKPOINTS.tablet`, il
+ * le contenu, ouverte par un bouton `LeftPanelOpen`. Dans l'**application** sous `BREAKPOINTS.tablet`, il
  * n'y a pas de SideNav : la `BottomNav` porte seule la navigation.
  */
 export type SideNavMode = "expanded" | "rail";
@@ -109,6 +109,15 @@ export interface SideNavHeaderProps {
    * dans un `Drawer` sur mobile web. @default true
    */
   showToggle?: boolean;
+  /**
+   * Ferme la navigation quand elle est affichée **dans un `Drawer`** (web sous
+   * `BREAKPOINTS.laptop`). Fourni, l'en-tête affiche un bouton `LeftPanelClose`
+   * (« Fermer la navigation ») qui appelle `onClose`, à la place de la bascule
+   * `expanded` ⇄ `rail` (pas de rail dans un Drawer). Règle d'icône commune à
+   * toutes les largeurs : l'icône montre l'action, `LeftPanelClose` quand la nav
+   * est visible, `LeftPanelOpen` quand elle est masquée ou en rail.
+   */
+  onClose?: () => void;
 }
 
 export interface SideNavItemProps {
@@ -210,15 +219,22 @@ export function SideNavHeader({
   description,
   className,
   showToggle: showToggleProp = true,
+  onClose,
 }: SideNavHeaderProps): ReactElement {
   const { mode, setMode } = useContext(SideNavContext);
   // Le bouton de bascule vit DANS la nav (décision produit). Rendu seulement sous
   // un `SideNav.Provider` (setMode disponible) et si `showToggle` n'est pas
   // désactivé. En rail, il déploie ; en expanded, il réduit en rail.
-  const showToggle = showToggleProp && Boolean(setMode);
-  const willExpand = mode === "rail";
+  // Dans un Drawer (`onClose`), le bouton ferme la nav au lieu de la basculer.
+  const showToggle = showToggleProp && (Boolean(onClose) || Boolean(setMode));
+  const willExpand = !onClose && mode === "rail";
   const toggleIcon = willExpand ? "LeftPanelOpen" : "LeftPanelClose";
-  const toggleLabel = willExpand ? "Déployer la navigation" : "Réduire la navigation";
+  const toggleLabel = onClose
+    ? "Fermer la navigation"
+    : willExpand
+      ? "Déployer la navigation"
+      : "Réduire la navigation";
+  const toggleShortcut = onClose ? "" : " (Ctrl+Shift+E)";
 
   return (
     <div className={[styles.header, className].filter(Boolean).join(" ")}>
@@ -232,12 +248,12 @@ export function SideNavHeader({
       {showToggle && (
         // `title` (tooltip natif avec le raccourci) porté par l'enveloppe : le
         // Button du DS n'expose pas `title` ; l'`aria-label` reste sur le bouton.
-        <span className={styles.headerToggle} title={`${toggleLabel} (Ctrl+Shift+E)`}>
+        <span className={styles.headerToggle} title={`${toggleLabel}${toggleShortcut}`}>
           <Button
             appearance="subtle"
             color="subtlest"
             iconBefore={toggleIcon}
-            onPress={() => setMode?.(willExpand ? "expanded" : "rail")}
+            onPress={() => (onClose ? onClose() : setMode?.(willExpand ? "expanded" : "rail"))}
             aria-label={toggleLabel}
           />
         </span>
@@ -561,9 +577,9 @@ SideNavEmpty.displayName = "SideNav.Empty";
  *   navigation.
  * - **Mobile navigateur web ET tablette (sous `BREAKPOINTS.laptop`)** : la SideNav passe
  *   **par-dessus** le viewport, dans un `Drawer placement="left"` ouvert par un
- *   bouton hamburger (`Page.Bar.leading`) ; elle ne pousse jamais le contenu.
- *   Dans le Drawer, utiliser `<SideNav.Header showToggle={false} />` — il n'y a
- *   pas de rail à ce format. La tablette suit **exactement** la règle du mobile
+ *   bouton `LeftPanelOpen` (`Page.Bar.leading`) ; elle ne pousse jamais le contenu.
+ *   Dans le Drawer, utiliser `<SideNav.Header onClose={…} />` : le bouton
+ *   `LeftPanelClose` de l'en-tête ferme le Drawer (pas de rail à ce format). La tablette suit **exactement** la règle du mobile
  *   web : elle n'a pas la largeur d'un rail de 80px ET d'un contenu confortable.
  * - **Desktop (à partir de `BREAKPOINTS.laptop`)** : la nav est **permanente** et ne
  *   disparaît jamais. `expanded` (240px) ou **`rail` (80px)** ; le rail est

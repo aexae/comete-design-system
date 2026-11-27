@@ -58,12 +58,12 @@ export interface PageBarProps {
   /**
    * Zone unique à gauche du titre. Une seule affordance de navigation à la
    * fois (jamais deux) :
-   * - **page racine** → menu hamburger (mobile web : ouvre la SideNav dans un `Drawer`) ;
-   * - **page de détail** → bouton retour, qui *remplace* le hamburger.
+   * - **page racine** → bouton `LeftPanelOpen` (web sous `BREAKPOINTS.laptop` : ouvre la SideNav dans un `Drawer`) ;
+   * - **page de détail** → bouton retour, qui *remplace* le bouton `LeftPanelOpen`.
    *
-   * La visibilité du hamburger est **pilotée par l'app** : elle ne le rend que
+   * La visibilité du bouton `LeftPanelOpen` est **pilotée par l'app** : elle ne le rend que
    * lorsque la SideNav est repliée (elle gère déjà cet état via son propre
-   * breakpoint). Sur desktop, SideNav persistante ⇒ pas de hamburger ici.
+   * breakpoint). Sur desktop, SideNav persistante ⇒ pas de bouton d'ouverture ici.
    */
   leading?: ReactNode;
   /**
@@ -240,7 +240,7 @@ Page.displayName = "Page";
 /**
  * Page.Bar — barre de page unifiée (titre + navigation + actions globales).
  *
- * Trois zones : `leading` (une seule affordance nav — hamburger OU retour),
+ * Trois zones : `leading` (une seule affordance nav — ouverture de la nav `LeftPanelOpen` OU retour),
  * `title` (obligatoire, rendu en `<h1>`) et un `trailing` où le layout `Page`
  * injecte les actions globales (notifications, réglages, avatar) ; la page peut
  * y ajouter des actions spécifiques via `trailing`.

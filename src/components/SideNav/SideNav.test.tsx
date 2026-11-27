@@ -588,6 +588,29 @@ describe("SideNav", () => {
       expect(onModeChange).toHaveBeenLastCalledWith("expanded");
     });
 
+    it("should render a LeftPanelClose button calling onClose instead of the mode toggle (Drawer)", async () => {
+      const onClose = vi.fn();
+      render(
+        <SideNav.Provider>
+          <SideNav>
+            <SideNav.Header companyName="App" onClose={onClose} />
+          </SideNav>
+        </SideNav.Provider>
+      );
+      expect(screen.queryByRole("button", { name: "Réduire la navigation" })).toBeNull();
+      await userEvent.click(screen.getByRole("button", { name: "Fermer la navigation" }));
+      expect(onClose).toHaveBeenCalledTimes(1);
+    });
+
+    it("should render the close button with onClose even outside a Provider", () => {
+      render(
+        <SideNav>
+          <SideNav.Header companyName="App" onClose={() => undefined} />
+        </SideNav>
+      );
+      expect(screen.getByRole("button", { name: "Fermer la navigation" })).toBeInTheDocument();
+    });
+
     it("should hide the header toggle when showToggle is false (Drawer on mobile web)", () => {
       render(
         <SideNav.Provider>

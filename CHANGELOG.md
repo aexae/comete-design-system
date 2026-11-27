@@ -27,6 +27,9 @@ desktop: 1536, tv: 1920 }`. Les clés `sm` / `md` / `lg` disparaissent (`sm` →
 
 ### Ajouté (alpha.205)
 
+- **`SideNav.Header` : prop `onClose`** pour la nav affichée dans un `Drawer` (web sous `laptop`) :
+  l'en-tête affiche un bouton `LeftPanelClose` « Fermer la navigation » à la place de la bascule
+  rail. Remplace l'usage `showToggle={false}` dans le Drawer (toujours disponible).
 - **`breakpointUp(bp)` / `breakpointDown(bp)`** (exportés avec `BREAKPOINTS`) : chaînes de media
   query (`"(min-width: 600px)"`, `"(max-width: 599px)"`) pour `window.matchMedia`, afin que les
   applications branchent leurs bascules (navigation, mise en page) sur l'échelle du DS sans
@@ -34,6 +37,10 @@ desktop: 1536, tv: 1920 }`. Les clés `sm` / `md` / `lg` disparaissent (`sm` →
 
 ### Modifié (alpha.205)
 
+- **Icône d'ouverture de la navigation cohérente à toutes les largeurs** : l'icône montre
+  l'action. `LeftPanelOpen` quand la nav est masquée ou en rail (bouton de la `Page.Bar` qui ouvre
+  le `Drawer`, bascule rail → déployé), `LeftPanelClose` quand elle est visible (bascule
+  déployé → rail, fermeture du `Drawer`). L'icône `Menu` (hamburger) n'est plus utilisée.
 - **Règle de navigation des applications** (documentation) : `BottomNav` sous `tablet`,
   `SideNav` dès `tablet` (au lieu de ≤ 768 / ≥ 769 px) : la tablette portrait passe en
   `SideNav` (story `SideNav › Application tablet, portrait`, qui remplace

@@ -298,7 +298,9 @@ function ListingPage({ leading }: { leading?: React.ReactNode }) {
   );
 }
 
-const HAMBURGER = <Button appearance="subtle" iconBefore="Menu" aria-label="Ouvrir le menu" />;
+const NAV_OPEN = (
+  <Button appearance="subtle" iconBefore="LeftPanelOpen" aria-label="Ouvrir la navigation" />
+);
 
 /**
  * **Full page — responsive.** Une seule story : changer le viewport via la
@@ -306,13 +308,13 @@ const HAMBURGER = <Button appearance="subtle" iconBefore="Menu" aria-label="Ouvr
  * page — Grid (media queries), Page.Bar (`@container` : large ⇄ compacte
  * épinglée) et Page.Toolbar (wrap, « Filtres » en icône seule ronde,
  * « Exporter » replié dans « ⋯ »). Le placeholder « Rechercher » n'est jamais
- * tronqué (min-width sur le champ). Le hamburger est montré en permanence pour
+ * tronqué (min-width sur le champ). Le bouton LeftPanelOpen est montré en permanence pour
  * la démo — en contexte réel, l'app ne le rend que SideNav repliée.
  */
 export const FullPage: Story = {
   name: "Full page",
   parameters: { controls: { disable: true }, layout: "fullscreen" },
-  render: () => <ListingPage leading={HAMBURGER} />,
+  render: () => <ListingPage leading={NAV_OPEN} />,
 };
 
 // -----------------------------------------------------------------------
@@ -331,7 +333,13 @@ export const StickyBarBehaviour: Story = {
       <Page.Bar
         size="compact"
         title="Agents"
-        leading={<Button appearance="subtle" iconBefore="Menu" aria-label="Ouvrir le menu" />}
+        leading={
+          <Button
+            appearance="subtle"
+            iconBefore="LeftPanelOpen"
+            aria-label="Ouvrir la navigation"
+          />
+        }
       />
       <Page.Toolbar
         search={<SearchField aria-label="Rechercher" placeholder="Rechercher…" />}

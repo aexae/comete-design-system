@@ -259,6 +259,8 @@ import { Icon } from "@aexae/comete-design-system";
 - Règles de navigation (décidées par l'application, pas par le DS) : application
   `BottomNav` sous `tablet`, `SideNav` dès `tablet` ; web `Drawer` sous `laptop`, `SideNav`
   persistante dès `laptop`.
+- Icône de navigation : `LeftPanelOpen` quand la nav est masquée ou en rail, `LeftPanelClose`
+  quand elle est visible (jamais `Menu`/hamburger). Dans un `Drawer`, `SideNav.Header onClose`.
 - `Page.Bar` compact et `Button collapseLabel` : sous `tablet` (container `page`).
 - `Table hideBelow` : `"tablet"` ou `"laptop"` (container de la table).
 - Mobile first : `Grid` (`columns={{ mobile, tablet, laptop }}`) passe en `tablet` dès

@@ -29,11 +29,11 @@ const meta: Meta = {
           "La navigation latérale affiche la structure hiérarchique de l'application dans un panneau vertical permanent (déployé ou en rail). Elle permet de naviguer entre les sections et sous-sections tout en visualisant la position courante.\n\n" +
           "**Règles par contexte et largeur** — le DS ne pose aucune media query, l'app choisit le mode. Trois axes **indépendants** (voir plus bas) : ici, le composant de navigation.\n\n" +
           "| Largeur | Web | Application |\n| --- | --- | --- |\n" +
-          `| < \`tablet\` (${BREAKPOINTS.tablet} px) | hamburger + \`Drawer\` à gauche | **BottomNav** |\n` +
-          `| \`tablet\` à \`laptop\` (${BREAKPOINTS.tablet} à ${BREAKPOINTS.laptop} px exclu) | hamburger + \`Drawer\` à gauche | **SideNav** |\n` +
+          `| < \`tablet\` (${BREAKPOINTS.tablet} px) | bouton LeftPanelOpen + \`Drawer\` à gauche | **BottomNav** |\n` +
+          `| \`tablet\` à \`laptop\` (${BREAKPOINTS.tablet} à ${BREAKPOINTS.laptop} px exclu) | bouton LeftPanelOpen + \`Drawer\` à gauche | **SideNav** |\n` +
           `| ≥ \`laptop\` (${BREAKPOINTS.laptop} px) | **SideNav** persistante, déployée (240 px) ou rail (80 px) | **SideNav** |\n\n` +
           `Le web bascule à **\`laptop\`** (${BREAKPOINTS.laptop} px), l'application à **\`tablet\`** (${BREAKPOINTS.tablet} px) : deux breakpoints différents de \`BREAKPOINTS\`, assumés. L'application branche sa navigation sur \`breakpointUp("tablet")\` et le web sur \`breakpointUp("laptop")\` (aucune valeur en dur). Sur le web, la SideNav n'est persistante qu'en desktop ; en dessous elle s'affiche dans un **\`Drawer\` à gauche**, par-dessus le viewport, et ne pousse jamais le contenu. Elle ne s'agrandit **jamais au survol** : on la déploie par le bouton de bascule ou \`Ctrl/Cmd+Shift+E\`.\n\n` +
-          "**Conséquence acceptée** : à 1024 px (un iPad en paysage), l'application affiche une **SideNav** et Safari un **hamburger + `Drawer`**. Même appareil, même orientation, deux navigations : c'est la conséquence mécanique de deux seuils, pas un défaut. Si l'écart gêne en usage réel, ce cas concret servira à rouvrir la règle.\n\n" +
+          "**Conséquence acceptée** : à 1024 px (un iPad en paysage), l'application affiche une **SideNav** et Safari un **bouton LeftPanelOpen + `Drawer`**. Même appareil, même orientation, deux navigations : c'est la conséquence mécanique de deux seuils, pas un défaut. Si l'écart gêne en usage réel, ce cas concret servira à rouvrir la règle.\n\n" +
           `**Les deux autres axes, indépendants de la navigation.** La variante de \`Page.Bar\` suit la largeur de la **Page** (container query, sous \`tablet\`, ${BREAKPOINTS.tablet} px), pas celle du viewport. La densité et la taille des cibles suivent le **pointeur** (\`pointer: coarse\`), jamais une largeur : « tablette = tactile » ne veut pas dire « tablette = interface de téléphone ».\n\n` +
           "**Écarté** : un rail de 80 px sur mobile web (310 px de contenu à 390 px, 240 px au minimum exigé par WCAG 1.4.10 Reflow) ; décider sur la plateforme seule, ou sur le pointeur seul ; une barre basse sur le web mobile (sur iOS, la barre d'adresse de Safari est déjà en bas).",
       },
@@ -47,7 +47,7 @@ const meta: Meta = {
               ]}
               avoid={[
                 `Une navigation d'application sous tablet (${BREAKPOINTS.tablet} px) → BottomNav (pas de SideNav sous tablet dans l'application).`,
-                `Faire disparaître la navigation sur desktop : elle se réduit en rail de 80 px, jamais complètement. Sur le web sous laptop (${BREAKPOINTS.laptop} px) en revanche, il n'y a pas de nav permanente : hamburger + Drawer.`,
+                `Faire disparaître la navigation sur desktop : elle se réduit en rail de 80 px, jamais complètement. Sur le web sous laptop (${BREAKPOINTS.laptop} px) en revanche, il n'y a pas de nav permanente : bouton LeftPanelOpen + Drawer.`,
                 "Un rail de 80 px sur mobile web, ou une barre basse sur le web mobile.",
                 "Une barre supérieure globale (marque, compte, actions) → Page.Bar.",
                 "Naviguer entre vues d'une même page → Tabs.",
@@ -168,9 +168,9 @@ export const RailInteractions: Story = {
 /**
  * **Web sous `BREAKPOINTS.laptop` (mobile et tablette en navigateur)** — la SideNav s'affiche dans un **`Drawer` à
  * gauche** : elle passe **par-dessus** le contenu (voile cliquable) et ne le pousse
- * jamais. Le hamburger de la `Page.Bar` l'ouvre ; elle se referme au voile, à Échap ou
- * au choix d'une rubrique. Pas de rail sur mobile : `showToggle={false}` retire le
- * bouton de bascule de l'en-tête. (Dans l'**application** sous `BREAKPOINTS.tablet`, pas de
+ * jamais. Le bouton `LeftPanelOpen` de la `Page.Bar` l'ouvre ; elle se referme par le bouton `LeftPanelClose` de son en-tête, au voile, à Échap ou
+ * au choix d'une rubrique. Pas de rail sur mobile : `onClose` remplace la bascule de
+ * l'en-tête par le bouton `LeftPanelClose`, qui ferme le Drawer. (Dans l'**application** sous `BREAKPOINTS.tablet`, pas de
  * SideNav : la BottomNav porte seule la navigation ; dès `tablet`, c'est la SideNav.)
  */
 function MobileWebDemo() {
@@ -184,7 +184,7 @@ function MobileWebDemo() {
             <Button
               appearance="subtle"
               color="subtlest"
-              iconBefore="Menu"
+              iconBefore="LeftPanelOpen"
               aria-label="Ouvrir la navigation"
               aria-expanded={isOpen}
               onPress={() => setIsOpen(true)}
@@ -214,7 +214,7 @@ function MobileWebDemo() {
                 logo={<Logo entity="cafe" format="icon" />}
                 companyName="Pro Sécurité"
                 description="Espace manager"
-                showToggle={false}
+                onClose={() => setIsOpen(false)}
               />
               <AppNav />
               <SideNav.Footer>
@@ -256,7 +256,7 @@ export const ApplicationTabletPortrait: Story = {
 
 /**
  * **Web tablet, landscape** (1024 × 768) — en navigateur, le seuil de la SideNav
- * persistante est `BREAKPOINTS.laptop` : à 1024 px, sous `laptop`, hamburger + `Drawer`. C'est l'écart assumé avec
+ * persistante est `BREAKPOINTS.laptop` : à 1024 px, sous `laptop`, bouton `LeftPanelOpen` + `Drawer`. C'est l'écart assumé avec
  * l'application, où le même iPad en paysage reçoit la SideNav en rail (story
  * « Application tablet, landscape »).
  */
@@ -269,7 +269,7 @@ export const WebTabletLandscape: Story = {
 
 /**
  * **Web tablet, portrait** (768 × 1024) — en navigateur, la tablette portrait n'a pas la
- * largeur d'un rail ET d'un contenu confortable : hamburger + `Drawer` à gauche, comme sur
+ * largeur d'un rail ET d'un contenu confortable : bouton `LeftPanelOpen` + `Drawer` à gauche, comme sur
  * mobile web.
  */
 export const WebTabletPortrait: Story = {
@@ -294,7 +294,7 @@ export const MobileWebInteractions: Story = {
   render: () => <MobileWebDemo />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const hamburger = () => canvas.getByRole("button", { name: "Ouvrir la navigation" });
+    const openNav = () => canvas.getByRole("button", { name: "Ouvrir la navigation" });
     const drawer = () => document.querySelector('[role="dialog"]');
 
     await step("fermé au départ, contenu visible", async () => {
@@ -302,22 +302,40 @@ export const MobileWebInteractions: Story = {
       await expect(canvas.getByRole("heading", { name: "Accueil" })).toBeVisible();
     });
 
-    await step("le hamburger ouvre la nav dans un Drawer, par-dessus le contenu", async () => {
-      await userEvent.click(hamburger());
-      await waitFor(() => expect(drawer()).not.toBeNull());
+    await step(
+      "le bouton LeftPanelOpen ouvre la nav dans un Drawer, par-dessus le contenu",
+      async () => {
+        await userEvent.click(openNav());
+        await waitFor(() => expect(drawer()).not.toBeNull());
+        const dialog = within(drawer() as HTMLElement);
+        await expect(dialog.getByRole("link", { name: "Agents" })).toBeInTheDocument();
+        // Pas de rail dans le Drawer : l'en-tête porte LeftPanelClose (fermer), pas la bascule.
+        await expect(dialog.queryByRole("button", { name: "Réduire la navigation" })).toBeNull();
+        // Attendre la fin de l'animation d'entrée du Drawer avant de juger la visibilité.
+        await waitFor(() =>
+          expect(dialog.getByRole("button", { name: "Fermer la navigation" })).toBeVisible()
+        );
+      }
+    );
+
+    await step("se referme par le bouton LeftPanelClose de l'en-tête", async () => {
       const dialog = within(drawer() as HTMLElement);
-      await expect(dialog.getByRole("link", { name: "Agents" })).toBeInTheDocument();
-      // Pas de rail sur mobile : aucun bouton de bascule dans l'en-tête.
-      await expect(dialog.queryByRole("button", { name: /navigation/i })).toBeNull();
+      await userEvent.click(dialog.getByRole("button", { name: "Fermer la navigation" }));
+      await waitFor(() => expect(drawer()).toBeNull());
     });
 
-    await step("se referme avec Échap", async () => {
+    await step("se rouvre, puis se referme avec Échap", async () => {
+      await userEvent.click(openNav());
+      await waitFor(() => expect(drawer()).not.toBeNull());
+    });
+
+    await step("Échap ferme le Drawer", async () => {
       await userEvent.keyboard("{Escape}");
       await waitFor(() => expect(drawer()).toBeNull());
     });
 
     await step("se referme au choix d'une rubrique", async () => {
-      await userEvent.click(hamburger());
+      await userEvent.click(openNav());
       await waitFor(() => expect(drawer()).not.toBeNull());
       const link = within(drawer() as HTMLElement).getByRole("link", { name: "Agents" });
       link.addEventListener("click", (e) => e.preventDefault(), { once: true });

@@ -43,7 +43,7 @@ const meta = {
               ]}
               best={[
                 "Ne passer que `title` en usage réel ; laisser le gabarit choisir la variante selon la largeur de la Page (container query), pas celle du viewport.",
-                "Une seule affordance de navigation dans `leading` (hamburger ou retour).",
+                "Une seule affordance de navigation dans `leading` (ouverture de la nav LeftPanelOpen ou retour).",
                 "Ne pas confondre largeur et pointeur : la barre bascule sur la largeur de la Page, alors que la mise en page tactile (cibles, densité) se décide sur le type de pointeur, jamais sur la largeur.",
               ]}
               accessibility={[

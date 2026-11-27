@@ -536,3 +536,10 @@ faite par la session principale, sur l'échelle `watch` 0 · `mobile` 280 · `ta
 - **Applications** : remplacer leurs seuils de navigation en dur (768/769) par
   `matchMedia(breakpointUp("tablet"))` (application) et `breakpointUp("laptop")` (web), et
   migrer `hideBelow` / `Grid desktop` (voir CHANGELOG alpha.205).
+
+## Navigation : icône LeftPanelOpen / LeftPanelClose (2026-11-27)
+
+- **Figma** : dessiner l'état « nav dans un Drawer » avec le bouton `LeftPanelClose` dans
+  l'en-tête (`SideNav.Header onClose` en code) ; aucun exemple ne le montre aujourd'hui.
+- **Applications** : remplacer l'icône `Menu` du bouton d'ouverture de la nav par
+  `LeftPanelOpen`, et `showToggle={false}` par `onClose` dans le Drawer.

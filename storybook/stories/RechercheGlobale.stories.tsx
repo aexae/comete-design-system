@@ -189,7 +189,9 @@ export const TactileMobile: Story = {
   render: () => (
     <SearchableAgentsPage
       isTouch
-      leading={<Button appearance="subtle" iconBefore="Menu" aria-label="Ouvrir le menu" />}
+      leading={
+        <Button appearance="subtle" iconBefore="LeftPanelOpen" aria-label="Ouvrir la navigation" />
+      }
     />
   ),
 };
@@ -210,7 +212,9 @@ export const TactileTablette: Story = {
   render: () => (
     <SearchableAgentsPage
       isTouch
-      leading={<Button appearance="subtle" iconBefore="Menu" aria-label="Ouvrir le menu" />}
+      leading={
+        <Button appearance="subtle" iconBefore="LeftPanelOpen" aria-label="Ouvrir la navigation" />
+      }
     />
   ),
 };

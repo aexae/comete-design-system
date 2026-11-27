@@ -96,13 +96,13 @@ const ZONES: Zone[] = [
   {
     n: "2",
     el: "SideNav",
-    note: `Le menu de gauche : déployé (240 px, mode expanded) ou réduit en rail (80 px, mode rail), jamais agrandi au survol ; le bouton de bascule est dans son en-tête. Il est permanent dans l'application dès tablet (${BREAKPOINTS.tablet} px) et sur le web dès laptop (${BREAKPOINTS.laptop} px). Sur le web en dessous de lg, il disparaît de l'écran : on l'ouvre dans un Drawer depuis le hamburger du Page.Bar. Dans l'application sous tablet, il n'y en a pas : la BottomNav le remplace.`,
+    note: `Le menu de gauche : déployé (240 px, mode expanded) ou réduit en rail (80 px, mode rail), jamais agrandi au survol ; le bouton de bascule est dans son en-tête. Il est permanent dans l'application dès tablet (${BREAKPOINTS.tablet} px) et sur le web dès laptop (${BREAKPOINTS.laptop} px). Sur le web en dessous de lg, il disparaît de l'écran : on l'ouvre dans un Drawer depuis le bouton LeftPanelOpen du Page.Bar (LeftPanelClose dans l'en-tête de la nav pour la refermer). Dans l'application sous tablet, il n'y en a pas : la BottomNav le remplace.`,
     tech: `SideNav + SideNav.Provider (mode expanded / rail) : application ≥ tablet (${BREAKPOINTS.tablet} px), web ≥ laptop (${BREAKPOINTS.laptop} px) ; web sous laptop : Drawer placement="left" ; application sous tablet : BottomNav.`,
   },
   {
     n: "3",
     el: "Page.Bar",
-    note: "La barre de page, en trois parties : à gauche une seule affordance de navigation (un retour, ou le hamburger du Drawer en mobile web), suivie du titre de l'écran, aligné à gauche ; à droite les « Actions app », celles qui valent pour toute l'application (recherche, notifications, réglages), les mêmes sur tous les écrans. Il n'y a pas de fil d'Ariane.",
+    note: "La barre de page, en trois parties : à gauche une seule affordance de navigation (un retour, ou le bouton LeftPanelOpen qui ouvre le Drawer sur le web sous laptop), suivie du titre de l'écran, aligné à gauche ; à droite les « Actions app », celles qui valent pour toute l'application (recherche, notifications, réglages), les mêmes sur tous les écrans. Il n'y a pas de fil d'Ariane.",
     tech: "Page.Bar : leading, title (rendu en h1, aligné à gauche), trailing. Les Actions app viennent du layout (Page globalActions), pas de la page. Props : size large ou compact.",
   },
   {
